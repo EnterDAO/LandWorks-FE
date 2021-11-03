@@ -1,0 +1,23 @@
+@import 'src/styles/text';
+
+.component {
+  @include font-p1-semi-bold;
+  width: 100%;
+  min-height: 64px;
+  padding: 20px 24px;
+  background: var(--theme-input-background);
+  border: 1px solid var(--theme-border-color);
+  border-radius: 12px;
+  color: var(--theme-primary-color);
+
+  &:hover,
+  &:focus,
+  &.ant-input-focused {
+    border-color: var(--theme-secondary-color) !important;
+    box-shadow: none;
+  }
+
+  &::placeholder {
+    color: var(--theme-input-placeholder);
+  }
+}

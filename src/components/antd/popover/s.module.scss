@@ -1,0 +1,30 @@
+@import 'src/styles/text';
+
+.overlay:global(.ant-popover) {
+  :global(.ant-popover-inner) {
+    background: var(--theme-card-color);
+    border-radius: 12px;
+  }
+
+  :global(.ant-popover-arrow) {
+    border-color: var(--theme-card-color);
+    display: none;
+  }
+
+  :global(.ant-popover-title) {
+    @include font-p1-semi-bold;
+    padding: 24px;
+    border-bottom: 1px solid var(--theme-border-color);
+    color: var(--theme-primary-color);
+  }
+
+  :global(.ant-popover-inner-content) {
+    padding: 24px;
+  }
+
+  &.noPadding {
+    :global(.ant-popover-inner-content) {
+      padding: 0;
+    }
+  }
+}

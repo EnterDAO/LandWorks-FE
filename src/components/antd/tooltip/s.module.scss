@@ -1,0 +1,39 @@
+@import 'src/styles/text';
+
+.overlay:global(.ant-tooltip) {
+  max-width: 360px;
+
+  :global(.ant-tooltip-inner) {
+    @include font-p1-regular;
+    max-width: 360px;
+    padding: 16px;
+    background: var(--theme-tooltip-bg);
+    box-shadow: var(--theme-overlay-shadow);
+    border-radius: 4px;
+    color: var(--theme-primary-color);
+  }
+
+  :global(.ant-tooltip-arrow-content) {
+    background: var(--theme-tooltip-bg);
+  }
+
+  &.hint {
+    :global(.ant-tooltip-inner) {
+      min-height: auto;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 18px;
+      text-align: center;
+      padding: 4px 12px;
+      background: var(--theme-primary-color);
+      color: var(--theme-card-color);
+      border-radius: 100px;
+      box-shadow: 0 0 2px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    :global(.ant-tooltip-arrow-content) {
+      background: var(--theme-primary-color);
+      box-shadow: 0 0 2px 0 rgba(255, 255, 255, 0.6);
+    }
+  }
+}

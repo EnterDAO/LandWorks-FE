@@ -1,0 +1,267 @@
+.footer {
+  background: #080629;
+  grid-area: footer;
+  margin-top: auto;
+
+  .row {
+    border-bottom: 1px solid #2F2B73;
+    padding: 60px 0;
+    display: flex;
+    flex-wrap: wrap;
+
+    &:last-of-type {
+      border: 0;
+    }
+
+    @media (max-width: 767px) {
+      flex-direction: column;
+    }
+  }
+
+  .subscribeBlock {
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+
+    .subscribeWrap {
+      max-width: 380px;
+      width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+      width: 100%;
+      text-align: center;
+      align-items: center;
+    }
+
+    @media (max-width: 480px) {
+      .subscribeWrap {
+        max-width: 100%;
+      }
+    }
+  }
+
+  .sBlock {
+    margin: 0 auto;
+
+    @media (max-width: 1024px) {
+      text-align: center;
+      margin: 44px auto 0;
+    }
+  }
+
+  .sLinksWrap {
+    margin-top: 14px;
+  }
+
+  .sLink {
+    display: inline-flex;
+    margin-right: 16px;
+    width: 50px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    background: #131044;
+    border: 1px solid #2E2978;
+    border-radius: 4px;
+    color: #fff;
+
+    @media (max-width: 768px) {
+      width: 44px;
+      height: 44px;
+      margin: 0 8px 16px;
+    }
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+
+    > svg {
+      color: #fff;
+    }
+
+    &:hover,
+    &:active {
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  .navWrap {
+    flex-wrap: nowrap;
+  }
+
+  .navBlocksWrap {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 60px;
+    flex-grow: 1;
+    justify-content: space-around;
+
+    @media (max-width: 1024px) {
+      justify-content: flex-start;
+    }
+    @media (max-width: 768px) {
+      padding-left: 0;
+      margin-top: 44px;
+    }
+  }
+
+  .navBlock {
+    display: inline-block;
+    padding: 20px;
+
+    @media (max-width: 1024px) {
+      flex-basis: 50%;
+    }
+
+    @media (max-width: 768px) {
+      padding: 20px 0;
+    }
+
+    .navTitle {
+      margin: 0 0 20px;
+    }
+
+    .link {
+      display: flex;
+      align-items: center;
+      color: #fff;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 20px;
+    }
+
+    .link:hover,
+    .link:active {
+      opacity: 0.8;
+    }
+
+    .link[aria-disabled='true'] {
+      cursor: default;
+      color: #717980;
+    }
+  }
+
+  .logoWrap {
+    max-width: 30%;
+
+    @media (max-width: 768px) {
+      max-width: 100%;
+    }
+  }
+
+  .logoLink {
+    display: inline-flex;
+    align-items: center;
+    margin-right: auto;
+    margin-bottom: 9px;
+  }
+
+  .logo {
+    margin-right: 3px;
+    width: 56px;
+    height: 56px;
+
+    @media (max-width: 768px) {
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  .logoText {
+    color: #fff;
+  }
+
+  .title {
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0;
+  }
+
+  .subscribeWrap {
+    position: relative;
+    margin-top: 12px;
+
+    .subscribeInput {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 300;
+      line-height: 20px;
+      letter-spacing: 0;
+      text-align: left;
+      padding: 15px 148px 15px 16px;
+      width: 100%;
+      color: #000;
+
+      @media (max-width: 767px) {
+        padding: 15px 16px;
+      }
+    }
+
+    .subscribeButton {
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      padding: 8px;
+      transform: translate(0, -50%);
+
+      @media (max-width: 767px) {
+        position: static;
+        transform: none;
+        margin-top: 8px;
+        width: 100%;
+      }
+    }
+  }
+
+  .copyrightsBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 0;
+
+    .copyrightLinks {
+      margin-left: auto;
+      display: flex;
+    }
+
+    .copyrightLink {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 17px;
+    }
+
+    a.copyrightLink:hover {
+      color: #fff;
+    }
+
+    .copyrightLink + .copyrightLink {
+      margin-left: 14px;
+    }
+
+    @media (max-width: 767px) {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 30px 0;
+
+      .copyrightLinks {
+        margin: 20px 0 0;
+        flex-direction: column;
+      }
+
+      .copyrightLink + .copyrightLink {
+        margin: 20px 0 0;
+      }
+    }
+  }
+}

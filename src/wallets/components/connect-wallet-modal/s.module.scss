@@ -1,0 +1,19 @@
+.button {
+  min-height: 96px;
+  max-height: 96px;
+
+  &:hover {
+    background-color: #1F1B59 !important;
+  }
+
+  .walletIcon {
+    filter: grayscale(100%) opacity(60%);
+    transition: filter 0.2s ease-out !important;
+    color: var(--theme-primary-color);
+    width: 100%;
+  }
+
+  &:hover .walletIcon {
+    filter: grayscale(0%) opacity(100%);
+  }
+}

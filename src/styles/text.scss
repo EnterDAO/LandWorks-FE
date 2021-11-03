@@ -1,0 +1,249 @@
+@import "./variables.scss";
+@import "./utils.scss";
+
+@font-face {
+  font-family: 'Poppins', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  src: url('../resources/fonts/poppins/Poppins-Medium.eot') format('eot');
+  src: url('../resources/fonts/poppins/Poppins-Medium.woff2') format('woff2'),
+  url('../resources/fonts/poppins/Poppins-Medium.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Poppins', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  src: url('../resources/fonts/poppins/Poppins-Bold.eot') format('eot');
+  src: url('../resources/fonts/poppins/Poppins-Bold.woff2') format('woff2'),
+  url('../resources/fonts/poppins/Poppins-Bold.woff') format('woff');
+}
+
+@mixin font($size, $height, $weight: normal, $style: normal, $family: var(--font-family)) {
+  font-family: $family;
+  font-weight: $weight;
+  font-style: $style;
+  font-size: #{$size};
+  line-height: #{$height};
+}
+
+@mixin font-label($size, $height, $weight: normal) {
+  @include font($size, $height, $weight);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@mixin font-h1-bold {
+  @include font(var(--font-size-h1), calc(var(--font-size-h1) + 8px), bold);
+}
+
+@mixin font-h1-semi-bold {
+  @include font(var(--font-size-h1), calc(var(--font-size-h1) + 8px), 600);
+}
+
+@mixin font-h1-regular {
+  @include font(var(--font-size-h1), calc(var(--font-size-h1) + 8px));
+}
+
+@mixin font-h2-bold {
+  @include font(var(--font-size-h2), calc(var(--font-size-h2) + 8px), bold);
+}
+
+@mixin font-h2-semi-bold {
+  @include font(var(--font-size-h2), calc(var(--font-size-h2) + 8px), 600);
+}
+
+@mixin font-h2-regular {
+  @include font(var(--font-size-h2), calc(var(--font-size-h2) + 8px));
+}
+
+@mixin font-h3-bold {
+  @include font(var(--font-size-h3), calc(var(--font-size-h3) + 6px), bold);
+}
+
+@mixin font-h3-semi-bold {
+  @include font(var(--font-size-h3), calc(var(--font-size-h3) + 6px), 600);
+}
+
+@mixin font-h3-regular {
+  @include font(var(--font-size-h3), calc(var(--font-size-h3) + 6px));
+}
+
+@mixin font-p1-bold {
+  @include font(var(--font-size-p1), calc(var(--font-size-p1) + 8px), bold);
+}
+
+@mixin font-p1-semi-bold {
+  @include font(var(--font-size-p1), calc(var(--font-size-p1) + 8px), 600);
+}
+
+@mixin font-p1-regular {
+  @include font(var(--font-size-p1), calc(var(--font-size-p1) + 8px));
+}
+
+@mixin font-p2-bold {
+  @include font(var(--font-size-p2), calc(var(--font-size-p2) + 10px), bold);
+}
+
+@mixin font-p2-semi-bold {
+  @include font(var(--font-size-p2), calc(var(--font-size-p2) + 10px), 600);
+}
+
+@mixin font-p2-regular {
+  @include font(var(--font-size-p2), calc(var(--font-size-p2) + 10px));
+}
+
+@mixin font-lb1-bold {
+  @include font-label(var(--font-size-lb1), calc(var(--font-size-lb1) + 10px), bold);
+}
+
+@mixin font-lb1-semi-bold {
+  @include font-label(var(--font-size-lb1), calc(var(--font-size-lb1) + 10px), 600);
+}
+
+@mixin font-lb1-regular {
+  @include font-label(var(--font-size-lb1), calc(var(--font-size-lb1) + 10px));
+}
+
+@mixin font-lb2-bold {
+  @include font-label(var(--font-size-lb2), calc(var(--font-size-lb2) + 4px), bold);
+}
+
+@mixin font-lb2-semi-bold {
+  @include font-label(var(--font-size-lb2), calc(var(--font-size-lb2) + 4px), 600);
+}
+
+@mixin font-lb2-regular {
+  @include font-label(var(--font-size-lb2), calc(var(--font-size-lb2) + 4px));
+}
+
+@mixin font-sm-bold {
+  @include font(var(--font-size-sm), calc(var(--font-size-sm) + 4px), bold);
+}
+
+@mixin font-sm-semi-bold {
+  @include font(var(--font-size-sm), calc(var(--font-size-sm) + 4px), 600);
+}
+
+@mixin font-sm-regular {
+  @include font(var(--font-size-sm), calc(var(--font-size-sm) + 4px));
+}
+
+@mixin text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-ellipsis {
+  @include text-ellipsis;
+}
+
+@mixin text-wrap {
+  width: auto;
+  white-space: pre-wrap;
+  overflow: hidden;
+}
+
+.text-wrap {
+  @include text-wrap;
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+$text-aligns: left, center, right;
+
+@each $textAlign in $text-aligns {
+  .text-#{$textAlign} {
+    text-align: #{$textAlign};
+  }
+}
+
+.text-h1 {
+  font-size: var(--font-size-h1);
+  line-height: calc(var(--font-size-h1) + 8px);
+}
+
+.text-h2 {
+  font-size: var(--font-size-h2);
+  line-height: calc(var(--font-size-h2) + 8px);
+}
+
+.text-h3 {
+  font-size: var(--font-size-h3);
+  line-height: calc(var(--font-size-h3) + 6px);
+}
+
+.text-p1 {
+  font-size: var(--font-size-p1);
+  line-height: calc(var(--font-size-p1) + 8px);
+}
+
+.text-p2 {
+  font-size: var(--font-size-p2);
+  line-height: calc(var(--font-size-p2) + 10px);
+}
+
+.text-lb1 {
+  font-size: var(--font-size-lb1);
+  line-height: calc(var(--font-size-lb1) + 10px);
+}
+
+.text-lb2 {
+  font-size: var(--font-size-lb2);
+  line-height: calc(var(--font-size-lb2) + 4px);
+}
+
+.text-sm {
+  font-size: var(--font-size-sm);
+  line-height: calc(var(--font-size-sm) + 4px);
+}
+
+.fw-bold {
+  font-weight: bold;
+}
+
+.fw-semibold {
+  font-weight: 600;
+}
+
+.fw-normal {
+  font-weight: normal;
+}
+
+// Typography
+.h1-bold {
+  font-weight: $h1-bold;
+  color: $black;
+  font-size: $h1;
+
+  @include md {
+    font-size: $h1-mobile;
+  }
+}
+
+.h2-bold {
+  font-weight: $h1-bold;
+  color: $black;
+  font-size: $h2;
+
+  @include md {
+    font-size: $h2-mobile;
+  }
+}
+
+.text {
+  font-size: $text;
+  color: $blackish;
+}
+
+.text-white {
+  font-size: $text;
+  color: $white;
+}
+
+.text-center {
+  text-align: center;
+}
