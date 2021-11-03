@@ -1,6 +1,6 @@
-import womanImage from '../../components/metapassCard/assets/woman.png';
+import womanImage from '../../components/land-works-card/assets/woman.png';
 
-export const metapassMockData = [
+export const landsMockData = [
   { id: '1', imageUrl: womanImage },
   { id: '2', imageUrl: womanImage },
   { id: '3', imageUrl: womanImage },

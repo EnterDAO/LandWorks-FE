@@ -2,30 +2,22 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Card, Col, Image, Row } from 'antd';
 
-import { padMetapassTokenId } from 'modules/metapass/helpers/helpers';
+import { padMetapassTokenId } from 'modules/land-works/helpers/helpers';
 
 import enterDaoImage from '../../../../resources/png/enterdao.png';
 import loadingWomanImage from './assets/loadingWoman.png';
 
 import './index.scss';
 
-interface IMetapassCardProps {
+interface ILandWorksCardProps {
   pass: any;
 }
-const MetapassCard: React.FC<IMetapassCardProps> = ({ pass }) => {
+const LandWorksCard: React.FC<ILandWorksCardProps> = ({ pass }) => {
   const history = useHistory();
 
   return (
     <Col className="metapass-card-wrapper" xl={6} md={8} sm={12} xs={24}>
       <Card className="metapass-card" onClick={() => history.push(`./${pass.id}`)}>
-        {/* <Row className="metapass-ranking-row" justify="space-between">
-          <Col span={1}>
-            <span className="metapass-rank">#1</span>
-          </Col>
-          <Col span={14}>
-            <span className="metapass-rarity-score">Rarity score: 1000</span>
-          </Col>
-        </Row> */}
         <Row>
           <Image
             placeholder={<Image className="metapass-image" src={loadingWomanImage} preview={false} />}
@@ -51,4 +43,4 @@ const MetapassCard: React.FC<IMetapassCardProps> = ({ pass }) => {
   );
 };
 
-export default MetapassCard;
+export default LandWorksCard;

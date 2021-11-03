@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Row } from 'antd';
 
-import { IMetapassProperty } from 'modules/metapass/views/single-metapass-view/models/IMetapassProperty';
+import { IMetapassProperty } from 'modules/land-works/views/single-metapass-view/models/IMetapassProperty';
 
 import './index.scss';
 

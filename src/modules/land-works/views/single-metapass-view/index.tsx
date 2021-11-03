@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { Col, Image, Row } from 'antd';
 
-import MetapassDescription from 'modules/metapass/components/metapassDescription';
-import { MetapassMetadata } from 'modules/metapass/components/metapassMetadata';
-import { MetapassProperties } from 'modules/metapass/components/metapassProperties';
-import { MetapassTabs } from 'modules/metapass/components/metapassTabs';
-import { padMetapassTokenId } from 'modules/metapass/helpers/helpers';
-import { MetapassTab } from 'modules/metapass/views/single-metapass-view/models/MetapassTab';
+import MetapassDescription from 'modules/land-works/components/metapassDescription';
+import { MetapassMetadata } from 'modules/land-works/components/metapassMetadata';
+import { MetapassProperties } from 'modules/land-works/components/metapassProperties';
+import { MetapassTabs } from 'modules/land-works/components/metapassTabs';
+import { padMetapassTokenId } from 'modules/land-works/helpers/helpers';
+import { MetapassTab } from 'modules/land-works/views/single-metapass-view/models/MetapassTab';
 
-import loadingWomanImage from '../../components/metapassCard/assets/loadingWoman.png';
-import womanImage from '../../components/metapassCard/assets/woman.png';
+import loadingWomanImage from '../../components/land-works-card/assets/loadingWoman.png';
+import womanImage from '../../components/land-works-card/assets/woman.png';
 import arrowLeft from './assets/arrow-left.svg';
 import outLink from './assets/link-out.svg';
 import { IMetapassProperty } from './models/IMetapassProperty';
