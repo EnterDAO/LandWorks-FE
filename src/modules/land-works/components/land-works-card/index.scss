@@ -1,10 +1,8 @@
 @import "../../../../styles/variables.scss";
 @import "../../../../styles/utils.scss";
 
-.metapass {
+.land {
   &-card-wrapper {
-    // margin-right: 30px;
-    // margin-bottom: 15px;
     color: $black;
   }
   &-card {
@@ -18,9 +16,11 @@
   }
 
   &-name {
-    font-size: $text;
-    font-weight: bold;
-    color: $black;
+    font-size: 18px;
+    font-weight: 500;
+    color: $brown;
+    text-transform: uppercase;
+    margin-bottom: 20px;
   }
   &-ranking-row {
     margin-bottom: 12px;
@@ -41,17 +41,8 @@
   }
   &-id {
     font-size: 12px;
-    color: $pinkish;
   }
-  &-dao-row {
-    margin-top: 11px;
-  }
-  &-enterdao-name {
-    margin-left: 6px;
-    font-size: 12px;
-    line-height: 20px;
-    color: $black;
-  }
+
 }
 .enterdao-icon {
   width: 20px;
@@ -59,4 +50,24 @@
 }
 .ant-card-body {
   padding: 20px 15px;
+}
+
+.name-label-container {
+  width: 20px;
+  height: 20px;
+  right: -5%;
+  position: absolute;
+  background: linear-gradient(98.73deg, #DD3DCB 0%, #DD3DCB 100%);
+  box-shadow: -2px 0px 4px rgb(239, 0, 210);
+  border-radius: 18px 18px 0px 0px;
+  transform: rotate(-90deg);
+  width: 25px;
+  height: 23px;
+
+  img {
+    transform: rotate(90deg);
+    position: absolute;
+    left: 35%;
+    top: 30%;
+  }
 }

@@ -12,7 +12,7 @@ import { landsMockData } from './mockLands';
 import './index.scss';
 
 const Lands: React.FC = () => {
-  const pageSizeOptions = ['12', '24', '48'];
+  const pageSizeOptions = ['6', '12', '24'];
 
   const [lands, setLands] = useState(landsMockData);
   const [totalLands, setTotalLands] = useState(landsMockData.length);
@@ -54,6 +54,12 @@ const Lands: React.FC = () => {
     console.log(placeChangeEvent);
   };
 
+  useEffect(() => {
+    const offset = (page - 1) * pageSize;
+    const fileredLands = landsMockData.slice(offset, offset + pageSize);
+    setLands(fileredLands);
+  }, [sortDir, page, pageSize]);
+
   return (
     <div className="content-container">
       <Row className="lands-container">
@@ -75,7 +81,7 @@ const Lands: React.FC = () => {
               { sm: 16, md: 16, lg: 32 },
             ]}>
             {lands.map(land => (
-              <LandWorkCard key={land.id} pass={land} />
+              <LandWorkCard key={land.id} land={land} />
             ))}
           </Row>
         </Col>
