@@ -11,7 +11,7 @@ import ThemeSwitcher from './components/theme-switcher';
 
 import s from './s.module.scss';
 
-const MetapassView = lazy(() => import('modules/metapass'));
+const MetapassView = lazy(() => import('modules/land-works'));
 
 const LayoutView: React.FC = () => {
   return (
@@ -23,8 +23,8 @@ const LayoutView: React.FC = () => {
             <ErrorBoundary>
               <Suspense fallback={<AntdSpin className="pv-24 ph-64" style={{ width: '100%' }} />}>
                 <Switch>
-                  <Route path="/metapass" component={MetapassView} />
-                  <Redirect from="/" to="/metapass" />
+                  <Route path="/land-works" component={MetapassView} />
+                  <Redirect from="/" to="/land-works" />
                 </Switch>
               </Suspense>
             </ErrorBoundary>
