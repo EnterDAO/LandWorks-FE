@@ -1,11 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { bottom, end } from '@popperjs/core';
 import { Card, Col, Image, Row } from 'antd';
 import { getEtherscanAddressUrl, getHumanValue, shortenAddr } from 'web3/utils';
 
-import { padMetapassTokenId } from 'modules/land-works/helpers/helpers';
+import Icon from 'components/custom/icon';
 
-import enterDaoImage from '../../../../resources/png/enterdao.png';
 import landImage from './assets/land.png';
 import vectorImage from './assets/Vector.png';
 
@@ -19,7 +19,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
 
   return (
     <Col className="land-card-wrapper" xl={8} md={8} sm={12} xs={24}>
-      <Card className="land-card" onClick={() => history.push(`./${land.id}`)}>
+      <Card className="land-card">
         <Row>
           <Col span={24}>
             <p className="land-name">
@@ -32,28 +32,42 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
         </Row>
         <Row>
           <Image
+            onClick={() => history.push(`./${land.id}`)}
             placeholder={<Image className="land-image" src={landImage} preview={false} />}
             className="land-image"
             src={land.imageUrl}
             preview={false}
           />
         </Row>
-        <Row className="land-info-row" justify="space-between">
-          <Col span={17}>
-            <span className="land-name">By {shortenAddr(land.owner)}</span>
+        <Row>
+          <Col span={12}>
+            <Row className="land-info-row" align={bottom}>
+              <Col span={24}>
+                <span className="land-owner">
+                  BY <span className="land-owner-address">{shortenAddr(land.owner, 4, 3)}</span>
+                </span>
+              </Col>
+              <Col span={24}>
+                <span className="land-price-info">
+                  <span className="price">{land.price}</span>
+                  <Icon name="token-eth" className="eth-icon" />
+                  <span className="per-day">/ day</span>
+                  <button onClick={() => console.log('show me the info')}>
+                    <Icon name="info-outlined" className="info-icon" />
+                  </button>
+                </span>
+              </Col>
+            </Row>
           </Col>
-          <Col style={{ textAlign: 'right' }} span={7}>
-            <span className="land-id">ID: #{padMetapassTokenId(land.id)}</span>
-          </Col>
-        </Row>
-        <Row className="land-info-row" justify="space-between">
-          <Col span={17}>
-            <img alt="EnterDao Icon" className="enterdao-icon" src={enterDaoImage}></img>
-            <span className="land-name">{land.price} / day</span>
-            <img alt="EnterDao Icon" className="enterdao-icon" src={enterDaoImage}></img>
-          </Col>
-          <Col style={{ textAlign: 'right' }} span={7}>
-            <span className="land-id">{land.availability}</span>
+          <Col span={12}>
+            <Row className="land-available-row" justify={end}>
+              <Col span={24}>
+                <p className="available-heading">Available now</p>
+              </Col>
+              <Col span={24}>
+                <p className="available-period"> 2-5 days</p>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Card>

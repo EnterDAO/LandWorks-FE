@@ -42,7 +42,6 @@
   &-id {
     font-size: 12px;
   }
-
 }
 .enterdao-icon {
   width: 20px;
@@ -50,6 +49,65 @@
 }
 .ant-card-body {
   padding: 20px 15px;
+}
+
+.land-info-row {
+  .land-owner {
+    color: $brown;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .land-owner-address {
+    color: #8e0f7e;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .land-price-info {
+    .price {
+      color: rgba(85, 44, 73, 1);
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .eth-icon {
+      height: 20px;
+      vertical-align: text-bottom;
+    }
+
+    .info-icon {
+      height: 16px;
+      vertical-align: text-bottom;
+    }
+
+    .per-day {
+      color: rgba(177, 174, 201, 1)
+    }
+
+    button {
+      border: none;
+      background: none;
+      padding: 0;
+    }
+  }
+}
+
+.land-available-row {
+  text-align: end;
+  margin-top: 16px;
+
+  .available-heading {
+    color: rgba(131, 118, 127, 1);
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .available-period {
+    color:rgba(85, 44, 73, 1);
+    font-size: 18px;
+    font-weight: 700;
+  }
 }
 
 .name-label-container {
