@@ -7,6 +7,7 @@ import { LandsClaim } from 'modules/land-works/components/lands-claim';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sorter';
 import { SortDirection } from 'modules/land-works/components/lands-price-sorter/models/SortDirection';
+import { useWallet } from 'wallets/wallet';
 
 import { landsMockData } from './mockLands';
 
@@ -14,6 +15,7 @@ import './index.scss';
 
 const Lands: React.FC = () => {
   const pageSizeOptions = ['6', '12', '24'];
+  const wallet = useWallet();
 
   const [lands, setLands] = useState(landsMockData);
   const [totalLands, setTotalLands] = useState(landsMockData.length);
@@ -75,9 +77,11 @@ const Lands: React.FC = () => {
             <Col>
               <LandsPlaceSorter onPlaceChange={onPlaceChange} />
             </Col>
-            <Col flex="auto" className="lands-claim-container">
-              <LandsClaim />
-            </Col>
+            {wallet.account && (
+              <Col flex="auto" className="lands-claim-container">
+                <LandsClaim />
+              </Col>
+            )}
           </Row>
           <Row
             gutter={[
