@@ -3,6 +3,7 @@ import { Col, Pagination, Row } from 'antd';
 
 import LandWorkCard from 'modules/land-works/components/land-works-card';
 import { LandsAvailableSorter } from 'modules/land-works/components/lands-available-sorter';
+import { LandsClaim } from 'modules/land-works/components/lands-claim';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sorter';
 import { SortDirection } from 'modules/land-works/components/lands-price-sorter/models/SortDirection';
@@ -64,7 +65,7 @@ const Lands: React.FC = () => {
     <div className="content-container">
       <Row className="lands-container">
         <Col span={24}>
-          <Row className="filters" gutter={20}>
+          <Row className="filters" gutter={20} align={'middle'}>
             <Col>
               <LandsPriceSorter sortDir={sortDir} onSortDirectionChange={onSortDirectionChange} />
             </Col>
@@ -73,6 +74,9 @@ const Lands: React.FC = () => {
             </Col>
             <Col>
               <LandsPlaceSorter onPlaceChange={onPlaceChange} />
+            </Col>
+            <Col flex="auto" className="lands-claim-container">
+              <LandsClaim />
             </Col>
           </Row>
           <Row
