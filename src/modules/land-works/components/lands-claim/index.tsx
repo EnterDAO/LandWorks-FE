@@ -6,7 +6,12 @@ import Icon from 'components/custom/icon';
 
 import './index.scss';
 
-export const LandsClaim: React.FC = () => {
+interface props {
+  setShowClaimModal: (isShown: boolean) => void;
+}
+
+export const LandsClaim: React.FC<props> = (props: props) => {
+  const { setShowClaimModal } = props;
   return (
     <Row className="claim-component-container">
       <Col span={16} className="info-container">
@@ -20,7 +25,7 @@ export const LandsClaim: React.FC = () => {
           className="claim-button"
           type="primary"
           onClick={() => {
-            console.log('show modal');
+            setShowClaimModal(true);
           }}>
           Claim
         </Button>

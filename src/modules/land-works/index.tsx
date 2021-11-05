@@ -41,8 +41,8 @@ const MetapassView: React.FC = () => {
       <Suspense fallback={<AntdSpin />}>
         <Switch>
           <Route path="/land-works" exact component={OwnedPasses} />
-          <Route path="/mint-view" exact component={MintView} />
-          <Route path="/land-works/:tokenId" exact component={SinglePass} />
+          {/* <Route path="/mint-view" exact component={MintView} /> */}
+          {/* <Route path="/land-works/:tokenId" exact component={SinglePass} /> */}
           <Redirect to="/land-works" />
         </Switch>
       </Suspense>

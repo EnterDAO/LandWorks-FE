@@ -4,6 +4,7 @@ import { Col, Pagination, Row } from 'antd';
 import LandWorkCard from 'modules/land-works/components/land-works-card';
 import { LandsAvailableSorter } from 'modules/land-works/components/lands-available-sorter';
 import { LandsClaim } from 'modules/land-works/components/lands-claim';
+import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sorter';
 import { SortDirection } from 'modules/land-works/components/lands-price-sorter/models/SortDirection';
@@ -19,6 +20,7 @@ const Lands: React.FC = () => {
 
   const [lands, setLands] = useState(landsMockData);
   const [totalLands, setTotalLands] = useState(landsMockData.length);
+  const [showClaimModal, setShowClaimModal] = useState(false);
 
   const [sortDir, setSortDir] = useState(SortDirection.ASC);
   const [byAvailability, setByAvailability] = useState(false);
@@ -79,7 +81,7 @@ const Lands: React.FC = () => {
             </Col>
             {wallet.account && (
               <Col flex="auto" className="lands-claim-container">
-                <LandsClaim />
+                <LandsClaim setShowClaimModal={setShowClaimModal} />
               </Col>
             )}
           </Row>
@@ -105,6 +107,8 @@ const Lands: React.FC = () => {
           />
         </Col>
       </Row>
+
+      <ClaimModal onCancel={() => setShowClaimModal(false)} visible={showClaimModal} />
     </div>
   );
 };
