@@ -34,7 +34,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
         </Row>
         <Row>
           <Image
-            onClick={() => history.push(`./${land.id}`)}
+            onClick={() => history.push(`./land-works/land/${land.id}`)}
             placeholder={<Image className="land-image" src={landImage} preview={false} />}
             className="land-image"
             src={land.imageUrl}
