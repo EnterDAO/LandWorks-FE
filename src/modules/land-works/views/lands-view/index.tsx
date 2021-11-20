@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Pagination, Row } from 'antd';
 
+import { LandMap } from 'modules/land-works/components/land-card-map';
 import LandWorkCard from 'modules/land-works/components/land-works-card';
 import { LandsAvailableSorter } from 'modules/land-works/components/lands-available-sorter';
 import { LandsClaim } from 'modules/land-works/components/lands-claim';
@@ -67,6 +68,9 @@ const Lands: React.FC = () => {
 
   return (
     <div className="content-container">
+      <Row>
+        <LandMap />
+      </Row>
       <Row className="lands-container">
         <Col span={24}>
           <Row className="filters" gutter={20} align={'middle'}>
