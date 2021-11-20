@@ -7,7 +7,6 @@ import { useReload } from 'hooks/useReload';
 import { useWallet } from 'wallets/wallet';
 
 import { getNftMeta, getNftMetaType } from '../../api';
-import MintSuccessComponent from '../../components/mint-success-preview';
 import MetapassErc721Contract from '../../contracts/MetapassErc721Contract';
 
 export type MetapassType = {
@@ -54,12 +53,7 @@ const MetapassProvider: FC = props => {
   return (
     <MetapassContext.Provider value={value}>
       {children}
-      <ContractListener
-        contract={metapassContract}
-        renderSuccess={res => {
-          return <MintSuccessComponent result={res?.result} />;
-        }}
-      />
+      <ContractListener contract={metapassContract} />
     </MetapassContext.Provider>
   );
 };

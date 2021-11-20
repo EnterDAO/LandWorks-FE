@@ -7,15 +7,12 @@ import cn from 'classnames';
 
 import Button from 'components/antd/button';
 import Divider from 'components/antd/divider';
-import Popover from 'components/antd/popover';
-import Tooltip from 'components/antd/tooltip';
 import ExternalLink from 'components/custom/externalLink';
-import Grid from 'components/custom/grid';
 import Icon from 'components/custom/icon';
-import { Text } from 'components/custom/typography';
 import { useGeneral } from 'components/providers/general-provider';
 import { EnterToken } from 'components/providers/known-tokens-provider';
 import { useWarning } from 'components/providers/warning-provider';
+import { LandsNav } from 'modules/land-works/components/lands-header-nav';
 import ConnectedWallet from 'wallets/components/connected-wallet';
 import { MetamaskConnector } from 'wallets/connectors/metamask';
 import { useWallet } from 'wallets/wallet';
@@ -28,11 +25,6 @@ const LayoutHeader: React.FC = () => {
   const { navOpen, setNavOpen, toggleDarkTheme, isDarkTheme } = useGeneral();
   const [referenceElement, setReferenceElement] = useState<any>();
   const [popperElement, setPopperElement] = useState<any>();
-  const [popper1visible, setPopper1visible] = useState<boolean>(false);
-  const [popper2visible, setPopper2visible] = useState<boolean>(false);
-  const [popper3visible, setPopper3visible] = useState<boolean>(false);
-  const [popper4visible, setPopper4visible] = useState<boolean>(false);
-  const [popper5visible, setPopper5visible] = useState<boolean>(false);
   const wallet = useWallet();
   const { warns } = useWarning();
 
@@ -79,6 +71,8 @@ const LayoutHeader: React.FC = () => {
         <Icon name="png/enterdao" width="auto" height="auto" className={s.logo} />
       </ExternalLink>
       <h1 className={s.title}>LandWorks</h1>
+
+      <LandsNav />
 
       {!isMobile && wallet.isActive && wallet.connector?.id === 'metamask' && (
         <div className={s.addTokenWrapper}>
