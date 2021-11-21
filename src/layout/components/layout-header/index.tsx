@@ -70,9 +70,11 @@ const LayoutHeader: React.FC = () => {
       <ExternalLink href="https://enterdao.xyz/" target="_self">
         <Icon name="png/enterdao" width="auto" height="auto" className={s.logo} />
       </ExternalLink>
-      <h1 className={s.title}>LandWorks</h1>
+      <h1 className={s.title} style={{ marginRight: wallet.account ? '0' : 'auto' }}>
+        LandWorks
+      </h1>
 
-      <LandsNav />
+      {wallet.account && <LandsNav />}
 
       {!isMobile && wallet.isActive && wallet.connector?.id === 'metamask' && (
         <div className={s.addTokenWrapper}>
