@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { end } from '@popperjs/core';
 import { Col, Pagination, Row } from 'antd';
 
 import LandWorkCard from 'modules/land-works/components/land-works-card';
+import { LandsAction } from 'modules/land-works/components/lands-action';
 import { LandsAvailableSorter } from 'modules/land-works/components/lands-available-sorter';
-import { LandsClaim } from 'modules/land-works/components/lands-claim';
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sorter';
@@ -69,6 +70,28 @@ const Lands: React.FC = () => {
     <div className="content-container">
       <Row className="lands-container">
         <Col span={24}>
+          <Row justify={end} className="actions-container">
+            {wallet.account && (
+              <Col style={{ marginRight: '30px' }} className="lands-claim-container">
+                <LandsAction
+                  onButtonClick={setShowClaimModal}
+                  buttonText={'VIEW'}
+                  subHeading="There is avalailable"
+                  mainHeading="Adjacent land"
+                />
+              </Col>
+            )}
+            {wallet.account && (
+              <Col className="lands-claim-container">
+                <LandsAction
+                  onButtonClick={setShowClaimModal}
+                  buttonText={'CLAIM '}
+                  subHeading="You have"
+                  mainHeading="Unclaimed rent"
+                />
+              </Col>
+            )}
+          </Row>
           <Row className="filters" gutter={20} align={'middle'}>
             <Col>
               <LandsPriceSorter sortDir={sortDir} onSortDirectionChange={onSortDirectionChange} />
@@ -79,11 +102,6 @@ const Lands: React.FC = () => {
             <Col>
               <LandsPlaceSorter onPlaceChange={onPlaceChange} />
             </Col>
-            {wallet.account && (
-              <Col flex="auto" className="lands-claim-container">
-                <LandsClaim setShowClaimModal={setShowClaimModal} />
-              </Col>
-            )}
           </Row>
           <Row
             gutter={[
