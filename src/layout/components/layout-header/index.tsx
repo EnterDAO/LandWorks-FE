@@ -68,7 +68,7 @@ const LayoutHeader: React.FC = () => {
   return (
     <div className={s.component} ref={setReferenceElement}>
       <ExternalLink href="https://enterdao.xyz/" target="_self">
-        <Icon name="png/enterdao" width="auto" height="auto" className={s.logo} />
+        <Icon name="png/LandWorksLogo" width="auto" height="auto" className={s.logo} />
       </ExternalLink>
       <h1 className={s.title} style={{ marginRight: wallet.account ? '0' : 'auto' }}>
         LandWorks
@@ -79,7 +79,7 @@ const LayoutHeader: React.FC = () => {
       {!isMobile && wallet.isActive && wallet.connector?.id === 'metamask' && (
         <div className={s.addTokenWrapper}>
           <button type="button" onClick={handleAddProjectToken} className={s.addTokenButton}>
-            <Icon name="png/add-enter" width={32} height={32} />
+            <Icon name="png/ListProperty" width={32} height={32} style={{ transform: 'scale(1.5)' }} />
           </button>
         </div>
       )}

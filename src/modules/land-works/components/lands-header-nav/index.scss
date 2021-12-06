@@ -1,24 +1,37 @@
 .lands-nav-container {
     margin-left: auto !important;
     margin-right: auto !important;
-
-    .ant-menu-horizonta{
-        border-bottom: none !important;
-    }
+    background-color: transparent;
+    border: none;
 
     .ant-menu-item {
-        margin: 0 !important;
-        padding: 0 20px !important;
-        font-size: 16px;
+        color: rgba(185, 185, 211, 1) !important;
+        text-align: center;
+        padding: 0px 10px 0px 10px !important;
+        min-width: 90px;
+        border-radius: 12px;
+        background: #161622;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+
 
         &:hover {
             border-bottom: none !important;
-            color: rgba(217, 38, 135, 1) !important;
+            background: #161622;
         }
     }
+
     .ant-menu-item-selected {
         font-weight: 700 !important;
         color: rgba(217, 38, 135, 1) !important;
-        border-bottom: 6px solid rgba(217, 38, 135, 1) !important;
+        border-bottom: none !important;
+        background: rgba(93, 143, 240, 1);
+        color: white !important;
+        box-shadow: 0px 0px 20px rgba(93, 143, 240, 0.4);
+
+        &:hover {
+            background: rgba(93, 143, 240, 1);
+        }
     }
+
 }

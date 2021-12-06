@@ -1,20 +1,22 @@
 import React, { CSSProperties } from 'react';
 import cn from 'classnames';
 
+import addEnterSrc from 'resources/png/add-enter.png';
+import axsSrc from 'resources/png/axie.png';
+import enterStarSrc from 'resources/png/enter-star.png';
+import enterdaoSrc from 'resources/png/enterdao.png';
+import LandWorksLogo from 'resources/png/landWorks.png';
+import ListProperty from 'resources/png/listProperty.png';
+import manaSrc from 'resources/png/mana.png';
+import sandSrc from 'resources/png/sandbox.png';
+import telegramSrc from 'resources/png/telegram.png';
 import aaveSrc from 'resources/png/token-aave.png';
+import eslpSrc from 'resources/png/token-eslp.png';
 import ilvSrc from 'resources/png/token-ilv.png';
 import linkSrc from 'resources/png/token-link.png';
 import sushiSrc from 'resources/png/token-sushi.png';
 import uslpSrc from 'resources/png/token-uslp.png';
-import eslpSrc from 'resources/png/token-eslp.png';
 import universeSrc from 'resources/png/universe.png';
-import enterdaoSrc from 'resources/png/enterdao.png';
-import manaSrc from 'resources/png/mana.png';
-import sandSrc from 'resources/png/sandbox.png';
-import axsSrc from 'resources/png/axie.png';
-import addEnterSrc from 'resources/png/add-enter.png';
-import enterStarSrc from 'resources/png/enter-star.png';
-import telegramSrc from 'resources/png/telegram.png';
 import Sprite from 'resources/svg/icons-sprite.svg';
 
 import s from './s.module.scss';
@@ -163,7 +165,9 @@ export type IconNames =
   | 'core-drops'
   | 'png/add-enter'
   | 'png/telegram'
-  | 'static/add-token';
+  | 'static/add-token'
+  | 'png/LandWorksLogo'
+  | 'png/ListProperty';
 
 export type IconProps = {
   name: IconNames;
@@ -213,6 +217,10 @@ const Icon: React.FC<IconProps> = props => {
           return enterStarSrc;
         case 'png/telegram':
           return telegramSrc;
+        case 'png/LandWorksLogo':
+          return LandWorksLogo;
+        case 'png/ListProperty':
+          return ListProperty;
         default:
           return '';
       }

@@ -163,17 +163,17 @@ const ConnectedWallet: React.FC = () => {
       <Button type="link" className={s.accountLink}>
         <Grid flow="col" align="center">
           <Identicon address={wallet.account} width={24} height={24} className="mr-8" />
-          <Text type="p1" color="primary" className={cn(s.walletAddress, 'mr-4')}>
+          <Text type="p1" style={{ color: 'white' }} className={cn(s.walletAddress, 'mr-4')}>
             {shortenAddr(wallet.account, 4, 3)}
           </Text>
-          <Icon name="dropdown-arrow" className={s.dropdownArrow} />
+          <Icon name="dropdown" style={{ color: 'white' }} className={s.dropdownArrow} />
         </Grid>
       </Button>
     </Popover>
   );
 
   return (
-    <Grid flow="col" gap={20} justify="center" align="center">
+    <Grid flow="col" gap={20} justify="center" align="center" className={s.hamburger}>
       {/* ToDo: NotificationSection, uncomment if needed */}
       {/* <NotificationSection /> */}
       {/* <Divider type="vertical" style={{ minHeight: 28 }} /> */}
