@@ -4,6 +4,10 @@
     background-color: transparent;
     border: none;
 
+    @media (max-width: 768px) {
+        display: none;
+    }
+
     .ant-menu-item {
         color: rgba(185, 185, 211, 1) !important;
         text-align: center;

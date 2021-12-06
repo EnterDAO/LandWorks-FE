@@ -80,7 +80,7 @@ const ConnectedWallet: React.FC = () => {
                 <Text type="p1" color="secondary">
                   Wallet
                 </Text>
-                <Text type="p1" weight="semibold" color="primary">
+                <Text type="p1" weight="semibold" color="white">
                   {wallet.connecting?.name}
                 </Text>
               </Grid>
@@ -101,7 +101,7 @@ const ConnectedWallet: React.FC = () => {
 
   if (!wallet.isActive) {
     return !isMobile ? (
-      <button type="button" className="button-ghost" onClick={() => wallet.showWalletsModal()}>
+      <button type="button" className="button-primary" onClick={() => wallet.showWalletsModal()}>
         <span>Sign in</span>
       </button>
     ) : null;
@@ -138,7 +138,7 @@ const ConnectedWallet: React.FC = () => {
               <Text type="p1" color="secondary">
                 Wallet
               </Text>
-              <Text type="p1" weight="semibold" color="primary">
+              <Text type="p1" weight="semibold" color="white">
                 {wallet.connector?.name}
               </Text>
             </Grid>
@@ -147,7 +147,7 @@ const ConnectedWallet: React.FC = () => {
               <Text type="p1" color="secondary">
                 Network
               </Text>
-              <Text type="p1" weight="semibold" color="primary">
+              <Text type="p1" weight="semibold" color="white">
                 {wallet.networkName}
               </Text>
             </Grid>

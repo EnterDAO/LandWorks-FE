@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { isMobile } from 'react-device-detect';
+import { isDesktop, isMobile } from 'react-device-detect';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
 import { Link, useRouteMatch } from 'react-router-dom';
+import { Col, Row } from 'antd';
 import cn from 'classnames';
 
 import Button from 'components/antd/button';
@@ -13,6 +14,7 @@ import { useGeneral } from 'components/providers/general-provider';
 import { EnterToken } from 'components/providers/known-tokens-provider';
 import { useWarning } from 'components/providers/warning-provider';
 import { LandsNav } from 'modules/land-works/components/lands-header-nav';
+import { LandsNavMobile } from 'modules/land-works/components/lands-header-nav-mobile';
 import ConnectedWallet from 'wallets/components/connected-wallet';
 import { MetamaskConnector } from 'wallets/connectors/metamask';
 import { useWallet } from 'wallets/wallet';
@@ -70,22 +72,21 @@ const LayoutHeader: React.FC = () => {
       <ExternalLink href="https://enterdao.xyz/" target="_self">
         <Icon name="png/LandWorksLogo" width="auto" height="auto" className={s.logo} />
       </ExternalLink>
-      <h1 className={s.title} style={{ marginRight: wallet.account ? '0' : 'auto' }}>
-        LandWorks
-      </h1>
+      <h1 className={`${s.title} ${wallet.account ? 'logged' : ''}`}>LandWorks</h1>
 
       {wallet.account && <LandsNav />}
 
-      {!isMobile && wallet.isActive && wallet.connector?.id === 'metamask' && (
+      {wallet.isActive && wallet.connector?.id === 'metamask' && (
         <div className={s.addTokenWrapper}>
           <button type="button" onClick={handleAddProjectToken} className={s.addTokenButton}>
             <Icon name="png/ListProperty" width={32} height={32} style={{ transform: 'scale(1.5)' }} />
           </button>
         </div>
       )}
+
       <ConnectedWallet />
       <Button type="link" className={s.burger} onClick={() => setNavOpen(prevState => !prevState)}>
-        <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-primary-color)' }} />
+        <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
       </Button>
       {navOpen &&
         ReactDOM.createPortal(
@@ -103,41 +104,11 @@ const LayoutHeader: React.FC = () => {
             {...attributes.popper}>
             <div className={s.mobileInner}>
               <div className={s.mobileMenuInner}>
-                <div className={s.mobileMenuBlock}>
-                  <h3>Info</h3>
-                  <ExternalLink
-                    href="https://medium.com/enterdao/enterdao-whitepaper-27447f7400c8"
-                    className={s.dropdownLink}
-                    onClick={() => setNavOpen(false)}>
-                    <Icon name="whitepaper" width={20} height={20} className={s.dropdownIcon} />
-                    <span>Whitepaper</span>
-                  </ExternalLink>
-                  <ExternalLink
-                    href="https://enterdao.xyz/team"
-                    className={s.dropdownLink}
-                    onClick={() => setNavOpen(false)}>
-                    <Icon name="team" width={20} height={20} className={s.dropdownIcon} />
-                    <span>Team</span>
-                  </ExternalLink>
-                  <ExternalLink
-                    href="https://docs.enterdao.xyz/"
-                    className={s.dropdownLink}
-                    onClick={() => setNavOpen(false)}>
-                    <Icon name="docs" width={20} height={20} className={s.dropdownIcon} />
-                    <span>Docs</span>
-                  </ExternalLink>
-                </div>
-                <div className={s.mobileMenuBlock}>
-                  <h3>DAO</h3>
-                  <Link to="/governance" className={s.dropdownLink} onClick={() => setNavOpen(false)}>
-                    <Icon name="governance" width={20} height={20} className={s.dropdownIcon} />
-                    <span>Governance</span>
-                  </Link>
-                  <Link to="/yield-farming" className={s.dropdownLink} onClick={() => setNavOpen(false)}>
-                    <Icon name="yield-farming" width={20} height={20} className={s.dropdownIcon} />
-                    <span>Yield farming</span>
-                  </Link>
-                </div>
+                <Row style={{ width: '100%' }}>
+                  <Col span={24}>
+                    <LandsNavMobile setNavOpen={setNavOpen} />
+                  </Col>
+                </Row>
                 {!wallet.isActive && !isMobile ? (
                   <div style={{ textAlign: 'center', padding: '0 20px', width: '100%' }}>
                     <Divider />
@@ -154,10 +125,6 @@ const LayoutHeader: React.FC = () => {
                   </div>
                 ) : null}
               </div>
-              <button type="button" className={s.themeSwitcher} onClick={toggleDarkTheme}>
-                <Icon name={isDarkTheme ? 'theme-switcher-sun' : 'theme-switcher-moon'} width={24} height={24} />
-                <span>{isDarkTheme ? 'Switch to light mode' : 'Switch to dark mode'}</span>
-              </button>
             </div>
           </div>,
           modalRoot,
