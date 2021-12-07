@@ -1,22 +1,15 @@
-import React, { FormEvent, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import * as Antd from 'antd';
 import { Col, Row } from 'antd';
-import AntdSpin from 'antd/lib/spin';
 import cn from 'classnames';
 
-import Tooltip from 'components/antd/tooltip';
 import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
-import { Text } from 'components/custom/typography';
-import config, { ENTR_MARKET_LINK, ENTR_MARKET_LIQUIDITY_LINK } from 'config';
 
 import s from './s.module.scss';
 
 const LayoutFooter: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
-
   const getYear = () => {
     return new Date().getFullYear();
   };
@@ -24,56 +17,67 @@ const LayoutFooter: React.FC = () => {
   return (
     <footer className={s.footer}>
       <div className="container-limit">
-        <Row className={s.footerContent}>
-          <Col span={19} style={{ paddingTop: '30px' }}>
+        <Row
+          className={s.footerContent}
+          gutter={[
+            { xs: 8, sm: 16, md: 24, lg: 32 },
+            { xs: 8, sm: 16, md: 24, lg: 32 },
+          ]}>
+          <Col xs={24} sm={24} md={24} lg={19} xl={19} style={{ paddingTop: '30px' }}>
             <Row>
-              <Col span={12}>
+              <Col xs={24} sm={24} md={24} lg={14} xl={12}>
                 <Row align={'middle'} gutter={20}>
-                  <Col span={4}>
+                  <Col xs={6} sm={3} md={4} lg={4} xl={4} style={{ textAlign: 'center' }}>
                     <Icon name="png/enterdao" width="56" height="56" />
                   </Col>
-                  <Col span={18}>
+                  <Col xs={18} sm={21} md={20} lg={18} xl={18}>
                     <p className={s.text}>
                       Rent or Lend metaverse assets through community-owned Marketplace, governed by the $ENTR token.
                     </p>
                   </Col>
                 </Row>
               </Col>
-              <Col span={12} push={3}>
-                <span className={s.text}>a project by EnterDAO </span>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 24 }}
+                lg={{ span: 10 }}
+                xl={{ span: 10 }}
+                style={{ textAlign: 'end' }}>
+                <span className={s.text}>- a project by EnterDAO </span>
                 <Icon name="png/enterdao" width="56" height="56" />
               </Col>
             </Row>
           </Col>
-          <Col span={5}>
-            <Row>
-              <Col span={12}>
-                <Row>
-                  <Col>
-                    <a href="#" className={s.linkTitle}>
+          <Col xs={24} sm={24} md={24} lg={5} xl={5} className={s.nav}>
+            <Row justify="center">
+              <Col xs={10} sm={10} md={10} lg={12} xl={12}>
+                <Row justify="center">
+                  <Col xs={13} sm={13} md={13} lg={24} xl={24}>
+                    <Link to="/" className={s.linkTitle}>
                       Products
-                    </a>
+                    </Link>
                   </Col>
-                  <Col>
-                    <a href="#" className={(s.linkAnchor, s.linkLandWorks)}>
+                  <Col xs={13} sm={13} md={13} lg={24} xl={24}>
+                    <Link to="/" className={(s.linkAnchor, s.linkLandWorks)}>
                       LandWorks
-                    </a>
+                    </Link>
                   </Col>
-                  <Col>
-                    <a href="#" className={s.linkAnchor}>
+                  <Col xs={13} sm={13} md={13} lg={24} xl={24}>
+                    <Link to="/" className={s.linkAnchor}>
                       MetaPortal
-                    </a>
+                    </Link>
                   </Col>
                 </Row>
               </Col>
-              <Col span={12}>
-                <Row>
-                  <Col>
+              <Col xs={14} sm={10} md={10} lg={12} xl={12}>
+                <Row justify="center">
+                  <Col xs={13} sm={13} md={13} lg={24} xl={24}>
                     <a href="#" className={s.linkTitle}>
                       NFT Drops
                     </a>
                   </Col>
-                  <Col>
+                  <Col xs={13} sm={13} md={13} lg={24} xl={24}>
                     <a href="#" className={s.linkAnchor}>
                       Sharded Minds
                     </a>
