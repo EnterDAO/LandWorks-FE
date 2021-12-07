@@ -128,8 +128,7 @@
     line-height: 13px;
   }
 
-
-  &.loged {
+  &.logged {
     margin-right: 0;
 
     @media (max-width: 768px) {
@@ -260,4 +259,8 @@
   @media (max-width: 768px) {
     display: none;
   }
+}
+
+.mobileNavOpen {
+  background: none;
 }

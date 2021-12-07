@@ -94,14 +94,16 @@ const ConnectedWallet: React.FC = () => {
           </div>
         }
         trigger="click">
-        <Button type="primary">Connecting...</Button>
+        <Button type="primary" className={s.buttonConnecting}>
+          Connecting...
+        </Button>
       </Popover>
     );
   }
 
   if (!wallet.isActive) {
     return !isMobile ? (
-      <button type="button" className="button-primary" onClick={() => wallet.showWalletsModal()}>
+      <button type="button" className={`button-primary ${s.signBtnDesktop}`} onClick={() => wallet.showWalletsModal()}>
         <span>Sign in</span>
       </button>
     ) : null;

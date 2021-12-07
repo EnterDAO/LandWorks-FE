@@ -46,17 +46,34 @@ export const LandsNavMobile: React.FC<INavProps> = ({ setNavOpen }) => {
         <hr></hr>
       </Col>
       <Col span={12} className="menu-user-address">
-        <Identicon address={wallet.account} width={40} height={40} />
-        <ExternalLink href={getEtherscanAddressUrl(wallet.account!)}>
-          <Text type="p1" weight="semibold" color="blue">
-            {shortenAddr(wallet.account, 8, 8)}
-          </Text>
-        </ExternalLink>
+        {wallet.account && (
+          <>
+            <Identicon address={wallet.account} width={40} height={40} />
+            <ExternalLink href={getEtherscanAddressUrl(wallet.account!)}>
+              <Text type="h2" weight="semibold" color="white">
+                {shortenAddr(wallet.account, 4, 3)}
+              </Text>
+            </ExternalLink>
+          </>
+        )}
       </Col>
       <Col span={12}>
-        <button type="button" className="button button-ghost" onClick={() => wallet.disconnect()}>
-          <span>Disconnect</span>
-        </button>
+        {!wallet.isActive ? (
+          <button
+            type="button"
+            className="button-primary"
+            onClick={() => {
+              setNavOpen(false);
+              wallet.showWalletsModal();
+            }}
+            style={{ margin: '20px auto 0' }}>
+            <span>Sign in</span>
+          </button>
+        ) : (
+          <button type="button" className="button button-ghost" onClick={() => wallet.disconnect()}>
+            <span>Disconnect</span>
+          </button>
+        )}
       </Col>
     </Row>
   );

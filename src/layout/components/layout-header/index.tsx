@@ -24,7 +24,7 @@ import s from './s.module.scss';
 const modalRoot = document.getElementById('modal-root') || document.body;
 
 const LayoutHeader: React.FC = () => {
-  const { navOpen, setNavOpen, toggleDarkTheme, isDarkTheme } = useGeneral();
+  const { navOpen, setNavOpen } = useGeneral();
   const [referenceElement, setReferenceElement] = useState<any>();
   const [popperElement, setPopperElement] = useState<any>();
   const wallet = useWallet();
@@ -44,9 +44,6 @@ const LayoutHeader: React.FC = () => {
       setNavOpen(false);
     }
   }, [window.innerWidth]);
-
-  const isGovernancePage = useRouteMatch('/governance');
-  const isMetapassPage = useRouteMatch('/metapass');
 
   async function handleAddProjectToken() {
     if (wallet.connector?.id === 'metamask') {
@@ -68,11 +65,11 @@ const LayoutHeader: React.FC = () => {
   }
 
   return (
-    <div className={s.component} ref={setReferenceElement}>
-      <ExternalLink href="https://enterdao.xyz/" target="_self">
+    <div className={`${s.component} ${navOpen ? `${s.mobileNavOpen}` : ''}`} ref={setReferenceElement}>
+      <ExternalLink href="/" target="_self">
         <Icon name="png/LandWorksLogo" width="auto" height="auto" className={s.logo} />
       </ExternalLink>
-      <h1 className={`${s.title} ${wallet.account ? 'logged' : ''}`}>LandWorks</h1>
+      <h1 className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`}>LandWorks</h1>
 
       {wallet.account && <LandsNav />}
 
@@ -109,21 +106,6 @@ const LayoutHeader: React.FC = () => {
                     <LandsNavMobile setNavOpen={setNavOpen} />
                   </Col>
                 </Row>
-                {!wallet.isActive && !isMobile ? (
-                  <div style={{ textAlign: 'center', padding: '0 20px', width: '100%' }}>
-                    <Divider />
-                    <button
-                      type="button"
-                      className="button-ghost"
-                      onClick={() => {
-                        setNavOpen(false);
-                        wallet.showWalletsModal();
-                      }}
-                      style={{ margin: '20px auto 0' }}>
-                      <span>Sign in</span>
-                    </button>
-                  </div>
-                ) : null}
               </div>
             </div>
           </div>,
