@@ -39,12 +39,8 @@ const Lands: React.FC = () => {
     }
   };
 
-  const onSortDirectionChange = (sortDir: SortDirection) => {
-    if (sortDir === SortDirection.ASC) {
-      setSortDir(SortDirection.DESC);
-    } else {
-      setSortDir(SortDirection.ASC);
-    }
+  const onSortDirectionChange = (event: any) => {
+    console.log(event);
   };
 
   const onSortByAvailability = (availabilityEvent: any) => {
@@ -94,7 +90,7 @@ const Lands: React.FC = () => {
           </Row>
           <Row className="filters" gutter={20} align={'middle'}>
             <Col>
-              <LandsPriceSorter sortDir={sortDir} onSortDirectionChange={onSortDirectionChange} />
+              <LandsPriceSorter onSortDirectionChange={onSortDirectionChange} />
             </Col>
             <Col>
               <LandsAvailableSorter availableOnly={byAvailability} onAvailableChange={onSortByAvailability} />
