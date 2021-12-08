@@ -1,0 +1,51 @@
+.wrapper {
+  padding-top: 165px;
+  position: relative;
+  // remove when adding other sections
+  min-height: 1300px;
+
+  .left-blocks,
+  .right-blocks {
+    position: absolute;
+  }
+
+  .left-blocks {
+    left: 0;
+    top: 470px;
+  }
+
+  .right-blocks {
+    right: 35px;
+    top: 45px;
+  }
+
+  h2,
+  h1 {
+    text-transform: uppercase;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  h2 {
+    color: var(--theme-primary-color);
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    position: relative;
+    font-size: 46px;
+    color: var(--theme-accent-color);
+    text-shadow: var(--theme-accent-shadow);
+    padding-bottom: 75px;
+
+    &:after {
+      content: '';
+      height: 32px;
+      width: 1px;
+      background: var(--theme-line-color);
+      position: absolute;
+      bottom: 22px;
+      left: 60px;
+    }
+  }
+}

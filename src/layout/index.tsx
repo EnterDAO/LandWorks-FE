@@ -12,6 +12,7 @@ import ThemeSwitcher from './components/theme-switcher';
 import s from './s.module.scss';
 
 const MetapassView = lazy(() => import('modules/land-works'));
+const LandingView = lazy(() => import('modules/landing'));
 
 const LayoutView: React.FC = () => {
   return (
@@ -24,7 +25,7 @@ const LayoutView: React.FC = () => {
               <Suspense fallback={<AntdSpin className="pv-24 ph-64" style={{ width: '100%' }} />}>
                 <Switch>
                   <Route path="/land-works" component={MetapassView} />
-                  <Redirect from="/" to="/land-works" />
+                  <Route path="/" component={LandingView} />
                 </Switch>
               </Suspense>
             </ErrorBoundary>

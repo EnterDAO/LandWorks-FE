@@ -75,19 +75,19 @@ body.mobile-menu-open {
   --font-size-sm: 12px;
 
   --theme-body-color: #161622; // grey50
-  --theme-card-color: #1E1E2E;
-  --theme-overlay-color: #F9F0F8;
+  --theme-card-color: #1e1e2e;
+  --theme-overlay-color: #f9f0f8;
   --theme-mask-color: rgba(0, 0, 0, 0.08);
-  --theme-border-color: #F2EDF1; // grey100
+  --theme-border-color: #f2edf1; // grey100
   --theme-icon-color: #aaafb3; // grey300
   --theme-icon-hover-color: #060a0d; // grey900
 
-  --theme-primary-color: #552C49;
-  --theme-secondary-color: #83767F;
+  --theme-primary-color: #552c49;
+  --theme-secondary-color: #83767f;
   --theme-secondary-color-rgb: 113, 121, 128; // grey500
   --theme-default-color: #aaafb3; // grey300
 
-  --theme-card-shadow: 0px 5px 18px #F7F0F6;
+  --theme-card-shadow: 0px 5px 18px #f7f0f6;
   --theme-modal-shadow: 0 0 1px rgba(6, 10, 13, 0.4), 0 16px 32px rgba(19, 32, 43, 0.4);
   --theme-overlay-shadow: 0 0 1px rgba(0, 0, 0, 0.4), 0 32px 64px rgba(113, 121, 128, 0.32);
 
@@ -121,22 +121,22 @@ body.mobile-menu-open {
 
   --horizontal-padding: 64px;
 
-  --gradient-green: linear-gradient(135deg, #2DD867 15.57%, #27DDC3 84.88%); // rgb(188, 235, 0) rgb(0, 234, 234)
+  --gradient-green: linear-gradient(135deg, #2dd867 15.57%, #27ddc3 84.88%); // rgb(188, 235, 0) rgb(0, 234, 234)
   --gradient-green-opacity: linear-gradient(135deg, rgba(188, 235, 0, 0.16) 15.57%, rgba(0, 234, 234, 0.16) 84.88%);
   --gradient-green-safe: #2ad0ca;
-  --gradient-red: linear-gradient(135deg, #DE4B4B 0%, #F15E1F 100%); // rgb(255, 116, 57) rgb(255, 57, 188)
+  --gradient-red: linear-gradient(135deg, #de4b4b 0%, #f15e1f 100%); // rgb(255, 116, 57) rgb(255, 57, 188)
   --gradient-red-opacity: linear-gradient(135deg, rgba(255, 116, 57, 0.16) 15.57%, rgba(255, 57, 188, 0.16) 84.88%);
   --gradient-red-safe: #ff4949;
-  --gradient-blue: linear-gradient(135deg, #81B5F3 0%, #13A5D3 100%); // rgb(145, 79, 230) rgb(49, 108, 223)
+  --gradient-blue: linear-gradient(135deg, #81b5f3 0%, #13a5d3 100%); // rgb(145, 79, 230) rgb(49, 108, 223)
   --gradient-blue-opacity: linear-gradient(135deg, rgba(145, 79, 230, 0.16) 15.57%, rgba(49, 108, 223, 0.16) 84.88%);
-  --gradient-blue-safe: #81B5F3;
-  --gradient-pink: linear-gradient(135deg, #DD3DCB 0%, #EF9C92 100%);
+  --gradient-blue-safe: #81b5f3;
+  --gradient-pink: linear-gradient(135deg, #dd3dcb 0%, #ef9c92 100%);
 
-  --theme-tooltip-bg: #F9F0F8;
-  --theme-tooltip-item-bg-active: #EF9C92;
+  --theme-tooltip-bg: #f9f0f8;
+  --theme-tooltip-item-bg-active: #ef9c92;
 
-  --theme-header-shadow: 5px 0px 20px #F1DBEE;
-  --theme-selection-color: #EF9C92
+  --theme-header-shadow: 5px 0px 20px #f1dbee;
+  --theme-selection-color: #ef9c92;
 }
 
 @media (max-width: 1024px) {
@@ -152,7 +152,6 @@ body.mobile-menu-open {
   }
 }
 
-
 @media (max-width: 768px) {
   :root {
     --horizontal-padding: 24px;
@@ -160,27 +159,31 @@ body.mobile-menu-open {
 }
 
 [data-theme='dark'] {
-  --theme-body-color: #0B0834;
-  --theme-card-color: #0B0834;
-  --theme-overlay-color: #1F1B59;
+  --theme-body-color: #161622; // grey50
+  --theme-card-color: #1e1e2e;
+  --theme-overlay-color: #1f1b59;
   --theme-mask-color: rgba(32, 37, 41, 0.8);
-  --theme-border-color: #1A164F;
+  --theme-border-color: #1a164f;
+  --theme-line-color: #414163;
   --theme-icon-color: #606268;
   --theme-icon-hover-color: #fff;
-  --theme-icon-hover-gradient: linear-gradient(135deg, #DD3DCB 15%, #EF9C92 85%);
+  --theme-icon-hover-gradient: linear-gradient(135deg, #dd3dcb 15%, #ef9c92 85%);
 
   --theme-primary-color: #fff;
-  --theme-secondary-color: #B3B1CF;
-  --theme-default-color: #B3B1CF;
+  --theme-secondary-color: #b3b1cf;
+  --theme-default-color: #b3b1cf;
+  --theme-subtle-color: #b9b9d3;
+  --theme-accent-color: #5d8ff0;
 
   --theme-card-shadow: 0px 12px 25px #161344;
   --theme-modal-shadow: 0px 12px 25px #161344;
   --theme-overlay-shadow: 0px 12px 25px #161344;
+  --theme-accent-shadow: 0 0 20px rgba(93, 143, 240, 0.5);
 
   --theme-input-background: #1d1d1d;
   --theme-input-placeholder: #606268;
 
-  --theme-tooltip-bg: #1F1B59;
+  --theme-tooltip-bg: #1f1b59;
   --theme-tooltip-item-bg-active: #161344;
 
   --theme-header-shadow: 0px 12px 25px #161344;
@@ -222,7 +225,6 @@ button {
 .ant-switch.ant-switch[aria-checked='true'] {
   background: var(--gradient-green);
 }
-
 
 .ant-spin .ant-spin-dot {
   color: var(--theme-secondary-color);
