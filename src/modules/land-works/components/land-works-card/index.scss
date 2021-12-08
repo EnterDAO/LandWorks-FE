@@ -5,20 +5,23 @@
   &-card-wrapper {
     color: $black;
   }
+
   &-card {
     cursor: pointer;
-    box-shadow: 0px 5px 18px #F7F0F6;
-    border-radius: 6px;
+    border-radius: 7px;
+    border: none;
   }
 
   &-card:hover {
     box-shadow: 0px 5px 18px #D4ABCF;
+    border: 1px solid white;
+    border-radius: 6px;
   }
 
   &-name {
     font-size: 18px;
-    font-weight: 500;
-    color: $brown;
+    font-weight: bold;
+    color: white;
     text-transform: uppercase;
     margin-bottom: 20px;
   }
@@ -49,9 +52,15 @@
 }
 .ant-card-body {
   padding: 20px 15px;
+  background-color:#27273A;
+  border-radius: 6px;
 }
 
 .land-info-row {
+  .price-eth-container {
+    display: flex;
+    align-items: center;
+  }
   .land-owner {
     color: $brown;
     font-size: 12px;
@@ -64,11 +73,18 @@
     font-weight: 600;
   }
 
+  .price-eth {
+    color: white;
+    font-size: 20px;
+    margin-left: 5px;
+    font-weight: 700;
+  }
+
   .land-price-info {
     .price {
-      color: rgba(85, 44, 73, 1);
-      font-weight: 700;
-      font-size: 20px;
+      color: rgba(177, 174, 201, 1);
+      font-size: 14px;
+      margin-right: 5px;
     }
 
     .eth-icon {
@@ -98,13 +114,13 @@
   margin-top: 16px;
 
   .available-heading {
-    color: rgba(131, 118, 127, 1);
+    color: white;
     font-size: 14px;
     font-weight: 400;
   }
 
   .available-period {
-    color:rgba(85, 44, 73, 1);
+    color: white;
     font-size: 18px;
     font-weight: 700;
   }

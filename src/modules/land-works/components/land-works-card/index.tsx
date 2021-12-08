@@ -44,15 +44,13 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
         <Row>
           <Col span={12}>
             <Row className="land-info-row" align={bottom}>
-              <Col span={24}>
-                <span className="land-owner">
-                  BY <span className="land-owner-address">{shortenAddr(land.owner, 4, 3)}</span>
-                </span>
+              <Col span={24} className="price-eth-container">
+                <Icon name="png/eth" className="eth-icon" />
+                <span className="price-eth">{land.price}</span>
               </Col>
               <Col span={24}>
                 <span className="land-price-info">
-                  <span className="price">{land.price}</span>
-                  <Icon name="token-eth" className="eth-icon" />
+                  <span className="price">$220</span>
                   <span className="per-day">/ day</span>
                   <button onClick={() => setShowChart(!showChart)}>
                     <Icon name="info-outlined" className="info-icon" />
