@@ -5,6 +5,7 @@ import addEnterSrc from 'resources/png/add-enter.png';
 import axsSrc from 'resources/png/axie.png';
 import enterStarSrc from 'resources/png/enter-star.png';
 import enterdaoSrc from 'resources/png/enterdao.png';
+import eth from 'resources/png/eth.png';
 import LandWorksLogo from 'resources/png/landWorks.png';
 import ListProperty from 'resources/png/listProperty.png';
 import manaSrc from 'resources/png/mana.png';
@@ -54,6 +55,7 @@ export type TokenIconNames =
   | 'png/ilv'
   | 'png/uslp'
   | 'png/eslp'
+  | 'png/eth'
   | 'cream_finance'
   | 'yearn_finance';
 
@@ -167,6 +169,7 @@ export type IconNames =
   | 'png/telegram'
   | 'static/add-token'
   | 'png/LandWorksLogo'
+  | 'png/eth'
   | 'png/ListProperty';
 
 export type IconProps = {
@@ -221,6 +224,8 @@ const Icon: React.FC<IconProps> = props => {
           return LandWorksLogo;
         case 'png/ListProperty':
           return ListProperty;
+        case 'png/eth':
+          return eth;
         default:
           return '';
       }
