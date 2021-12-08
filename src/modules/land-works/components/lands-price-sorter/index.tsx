@@ -1,20 +1,27 @@
 import React from 'react';
 
-import sortImg from './assets/sorting.svg';
-import { SortDirection } from './models/SortDirection';
+// import { Select } from 'antd';
+import Select from 'components/antd/select';
 
 import './index.scss';
 
+const options = [
+  {
+    label: 'Hottest first',
+    value: 1,
+  },
+  {
+    label: 'Price: low first',
+    value: 2,
+  },
+  {
+    label: 'Price: high first',
+    value: 3,
+  },
+];
 interface ILandsSorterProps {
-  onSortDirectionChange: (sortDir: SortDirection) => void;
-  sortDir: SortDirection;
+  onSortDirectionChange: (event: any) => void;
 }
-export const LandsPriceSorter: React.FC<ILandsSorterProps> = ({ onSortDirectionChange, sortDir }) => {
-  const transformStyle = sortDir === SortDirection.DESC ? { transform: 'rotateX(180deg)' } : {};
-  return (
-    <div className="price-sort-wrapper" onClick={() => onSortDirectionChange(sortDir)}>
-      <span className="label">Sort by price</span>
-      <img style={transformStyle} className="sort-image" alt="asc" src={sortImg}></img>
-    </div>
-  );
+export const LandsPriceSorter: React.FC<ILandsSorterProps> = ({ onSortDirectionChange }) => {
+  return <Select options={options} defaultValue="Hotest first" onChange={onSortDirectionChange}></Select>;
 };
