@@ -65,6 +65,8 @@ body.mobile-menu-open {
 
 :root {
   --font-family: 'Poppins', sans-serif;
+  --font-size-landing-h1: 46px;
+  --font-size-landing-h2: 24px;
   --font-size-h1: 32px;
   --font-size-h2: 24px;
   --font-size-h3: 18px;
@@ -141,6 +143,8 @@ body.mobile-menu-open {
 
 @media (max-width: 1024px) {
   :root {
+    --font-size-landing-h1: 32px;
+    --font-size-landing-h2: 18px;
     --font-size-h1: 24px;
     --font-size-h2: 18px;
     --font-size-h3: 14px;
@@ -154,6 +158,8 @@ body.mobile-menu-open {
 
 @media (max-width: 768px) {
   :root {
+    --font-size-landing-h1: 26px;
+    --font-size-landing-h2: 16px;
     --horizontal-padding: 24px;
   }
 }

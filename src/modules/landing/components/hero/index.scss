@@ -1,8 +1,6 @@
 .wrapper {
-  padding-top: 165px;
+  padding: 165px 0;
   position: relative;
-  // remove when adding other sections
-  min-height: 1300px;
 
   .left-blocks,
   .right-blocks {
@@ -28,12 +26,13 @@
 
   h2 {
     color: var(--theme-primary-color);
+    font-size: var(--font-size-landing-h2);
     margin-bottom: 4px;
   }
 
   h1 {
     position: relative;
-    font-size: 46px;
+    font-size: var(--font-size-landing-h1);
     color: var(--theme-accent-color);
     text-shadow: var(--theme-accent-shadow);
     padding-bottom: 75px;
