@@ -103,7 +103,12 @@ const ConnectedWallet: React.FC = () => {
 
   if (!wallet.isActive) {
     return !isMobile ? (
-      <button type="button" className={`button-primary ${s.signBtnDesktop}`} onClick={() => wallet.showWalletsModal()}>
+      <button
+        type="button"
+        disabled
+        className={`button-primary ${s.signBtnDesktop}`}
+        // onClick={() => wallet.showWalletsModal()}
+        onClick={() => {}}>
         <span>Sign in</span>
       </button>
     ) : null;

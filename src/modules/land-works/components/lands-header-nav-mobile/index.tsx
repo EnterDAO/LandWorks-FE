@@ -18,8 +18,8 @@ export const LandsNavMobile: React.FC<INavProps> = ({ setNavOpen }) => {
   const wallet = useWallet();
 
   return (
-    <Row className="lands-nav-container-mobile" gutter={[16, 16]}>
-      <Col span={24}>
+    <Row className="lands-nav-container-mobile" justify="end" gutter={[16, 16]}>
+      {/* <Col span={24}>
         <Link to="/#" className="menu-item-mobile active" onClick={() => setNavOpen(false)}>
           <span>All</span>
         </Link>
@@ -56,17 +56,17 @@ export const LandsNavMobile: React.FC<INavProps> = ({ setNavOpen }) => {
             </ExternalLink>
           </>
         )}
-      </Col>
-      <Col span={12}>
+      </Col>*/}
+      <Col>
         {!wallet.isActive ? (
           <button
+            disabled
             type="button"
             className="button-primary"
             onClick={() => {
-              setNavOpen(false);
-              wallet.showWalletsModal();
-            }}
-            style={{ margin: '20px auto 0' }}>
+              // setNavOpen(false);
+              // wallet.showWalletsModal();
+            }}>
             <span>Sign in</span>
           </button>
         ) : (
