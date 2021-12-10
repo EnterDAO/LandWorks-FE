@@ -101,7 +101,7 @@
 }
 
 .logo {
-  margin-right: 3px;
+  margin-right: 15px;
   width: 56px;
   height: 56px;
 
@@ -112,9 +112,9 @@
 }
 
 .title {
-  font-family: 'Poppins', sans-serif;
-  color: rgba(185, 185, 211, 1);
-  font-size: 18px;
+  font-family: var(--font-family), sans-serif;
+  color: var(--theme-subtle-color);
+  font-size: var(--font-size-p1);
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
