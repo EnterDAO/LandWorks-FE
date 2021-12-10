@@ -28,7 +28,7 @@ const LayoutFooter: React.FC = () => {
               <Col xs={24} sm={24} md={24} lg={14} xl={12}>
                 <Row align={'middle'} gutter={20}>
                   <Col xs={6} sm={3} md={4} lg={4} xl={4} style={{ textAlign: 'center' }}>
-                    <Icon name="png/enterdao" width="56" height="56" />
+                    <Icon name="png/LandWorksLogo" width="56" height="56" />
                   </Col>
                   <Col xs={18} sm={21} md={20} lg={18} xl={18}>
                     <p className={s.text}>
@@ -73,14 +73,14 @@ const LayoutFooter: React.FC = () => {
               <Col xs={14} sm={10} md={10} lg={12} xl={12}>
                 <Row justify="center">
                   <Col xs={13} sm={13} md={13} lg={24} xl={24}>
-                    <a href="#" className={s.linkTitle}>
+                    <Link to="/" className={s.linkTitle}>
                       NFT Drops
-                    </a>
+                    </Link>
                   </Col>
                   <Col xs={13} sm={13} md={13} lg={24} xl={24}>
-                    <a href="#" className={s.linkAnchor}>
+                    <Link to="/" className={s.linkAnchor}>
                       Sharded Minds
-                    </a>
+                    </Link>
                   </Col>
                 </Row>
               </Col>
@@ -90,6 +90,10 @@ const LayoutFooter: React.FC = () => {
         <div className={cn(s.row, s.copyrightsBlock)}>
           <div className={s.copyrightLink}>Enterdao.xyz © {getYear()}. Open-sourced.</div>
           <div className={s.sLinksWrap}>
+            {/* //TODO:: Update the icon with Github */}
+            <ExternalLink href="https://github.com/EnterDAO" className={s.sLink}>
+              <Icon name="twitter" width="20" height="20" />
+            </ExternalLink>
             <ExternalLink href="https://twitter.com/EnterDao" className={s.sLink}>
               <Icon name="twitter" width="20" height="20" />
             </ExternalLink>
