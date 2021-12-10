@@ -63,7 +63,7 @@ const LayoutFooter: React.FC = () => {
                       LandWorks
                     </Link>
                   </Col>
-                  <Col xs={13} sm={13} md={13} lg={24} xl={24}>
+                  <Col xs={13} sm={13} md={13} lg={24} xl={24} className={s.commingSoon}>
                     <Link to="/" className={s.linkAnchor}>
                       MetaPortal
                     </Link>
@@ -92,7 +92,7 @@ const LayoutFooter: React.FC = () => {
           <div className={s.sLinksWrap}>
             {/* //TODO:: Update the icon with Github */}
             <ExternalLink href="https://github.com/EnterDAO" className={s.sLink}>
-              <Icon name="twitter" width="20" height="20" />
+              <Icon name="png/Github" width="20" height="20" />
             </ExternalLink>
             <ExternalLink href="https://twitter.com/EnterDao" className={s.sLink}>
               <Icon name="twitter" width="20" height="20" />
