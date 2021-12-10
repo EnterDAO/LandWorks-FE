@@ -7,8 +7,6 @@ import WarningProvider from 'components/providers/warning-provider';
 import LayoutFooter from 'layout/components/layout-footer';
 import LayoutHeader from 'layout/components/layout-header';
 
-import ThemeSwitcher from './components/theme-switcher';
-
 import s from './s.module.scss';
 
 const MetapassView = lazy(() => import('modules/land-works'));
@@ -31,7 +29,6 @@ const LayoutView: React.FC = () => {
             </ErrorBoundary>
           </main>
           <LayoutFooter />
-          <ThemeSwitcher />
         </WarningProvider>
       </div>
     </div>
