@@ -57,6 +57,18 @@
           margin-right: 0;
         }
       }
+
+      @media all and (max-width: 768px) {
+        text-align: center;
+        div:first-of-type {
+          margin-top: 10px;
+        }
+
+        div:last-of-type {
+          margin-top: 10px;
+          margin-right: 0;
+        }
+      }
     }
 
     .right-bullets {
@@ -76,6 +88,18 @@
 
         div:last-of-type {
           margin-top: 20%;
+          margin-left: 0;
+        }
+      }
+
+      @media all and (max-width: 768px) {
+        text-align: center;
+        div:first-of-type {
+          margin-top: 10px;
+        }
+
+        div:last-of-type {
+          margin-top: 10px;
           margin-left: 0;
         }
       }

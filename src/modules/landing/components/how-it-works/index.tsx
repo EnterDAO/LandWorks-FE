@@ -16,7 +16,7 @@ export const HowItWorks: React.FC = () => (
             </Col>
           </Row>
           <Row justify="center">
-            <Col span={8} className="left-bullets">
+            <Col sm={20} md={8} className="left-bullets">
               <div>
                 <h3>Affordability</h3>
                 <p>Rent land that will otherwise be prohibitevely expensive</p>
@@ -26,10 +26,10 @@ export const HowItWorks: React.FC = () => (
                 <p>Rent land that will otherwise be unavailble</p>
               </div>
             </Col>
-            <Col span={8} className="middle-graphics">
+            <Col sm={10} md={8} className="middle-graphics">
               <HowItWorksGraphics />
             </Col>
-            <Col span={8} className="right-bullets">
+            <Col sm={20} md={8} className="right-bullets">
               <div>
                 <h3>Governance</h3>
                 <p>Fully decentralised. $ENTR holders govern the future of the protocol</p>
