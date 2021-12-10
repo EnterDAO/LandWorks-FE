@@ -2,6 +2,10 @@
   position: relative;
   padding-bottom: 210px;
 
+  @media all and (max-width: 1024px) {
+    padding-bottom: 110px;
+  }
+
   &:after {
     content: '';
     height: 62px;
@@ -23,7 +27,11 @@
     text-transform: uppercase;
     color: var(--theme-subtle-color);
     margin: 0;
-    padding: 56px 0 190px;
+    padding: 56px 0 130px;
+
+    @media all and (max-width: 1024px) {
+      padding-bottom: 45px;
+    }
 
     &:before {
       content: '';

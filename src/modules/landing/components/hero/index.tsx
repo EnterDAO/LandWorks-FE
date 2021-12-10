@@ -15,6 +15,8 @@ export const Hero: React.FC = () => {
   useEffect(() => {
     tl.current = gsap
       .timeline()
+      .repeat(-1)
+      .delay(2)
       .set(q('.first-ether'), { perspective: 300 })
       .set(q('.second-ether'), { perspective: 300 })
       .set(q('.third-ether'), { perspective: 300 })
@@ -86,7 +88,8 @@ export const Hero: React.FC = () => {
         opacity: 0,
         y: -105,
         rotationY: 360,
-      });
+      })
+      .delay(2);
   }, []);
 
   return (
