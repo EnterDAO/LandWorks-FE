@@ -29,12 +29,27 @@
     position: absolute;
     right: 0;
     top: 0;
+    .ant-select-selector {
+      background: none;
+    }
+
+    .ant-select-arrow {
+      color: white;
+    }
   }
 
   .ant-pagination-item, .ant-pagination-item-link, .ant-select-selector {
+    color: $white;
     border-radius: 10px;
-    color: $black;
+    a {
+      color: $white;
+    }
     font-weight: 700;
+    background: none;
+
+    &:hover {
+      border: 1px solid #E255CF;
+    }
   }
 
   .ant-select-selector {
@@ -42,9 +57,10 @@
   }
 
   .ant-pagination-item-active {
+    background: none;
     border: 1px solid #E255CF;
     a {
-      color: $black !important;
+      color: $white !important;
     }
   }
 
