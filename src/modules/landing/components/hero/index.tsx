@@ -9,7 +9,7 @@ import './index.scss';
 
 export const Hero: React.FC = () => {
   const el = useRef() as React.MutableRefObject<HTMLDivElement>;
-  const tl = useRef();
+  const tl = useRef({});
   const q = gsap.utils.selector(el);
 
   useEffect(() => {
