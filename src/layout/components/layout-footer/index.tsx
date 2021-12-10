@@ -77,8 +77,8 @@ const LayoutFooter: React.FC = () => {
                       NFT Drops
                     </Link>
                   </Col>
-                  <Col xs={13} sm={13} md={13} lg={24} xl={24}>
-                    <Link to="/" className={s.linkAnchor}>
+                  <Col xs={13} sm={13} md={13} lg={24} xl={24} className={s.commingSoon}>
+                    <Link to="/" className={`${s.linkAnchor}`}>
                       Sharded Minds
                     </Link>
                   </Col>

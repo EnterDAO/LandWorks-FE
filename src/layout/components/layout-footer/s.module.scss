@@ -47,6 +47,22 @@
     margin-bottom: 20px;
   }
 
+
+  .commingSoon:hover {
+    // pointer-events: none;
+
+    &::before {
+      content: "Comming Soon";
+      position: absolute;
+      left: 0;
+      transform: translate(-15%, -100%);
+      padding: 6px 18px;
+      border-radius: 20px;
+      background: rgb(31, 26, 26);
+      white-space: nowrap;
+    }
+  }
+
   .linkAnchor {
     font-weight: 400;
     font-size: 14px;
