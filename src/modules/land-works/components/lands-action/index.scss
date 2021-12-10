@@ -1,6 +1,8 @@
 .claim-component-container {
   width: 325px;
-  background: #F7F0F6;
+  border: 0;
+  background: var(--gradient-pink);
+  box-shadow: 0px 4px 20px rgba(255, 255, 255, 0.29);
   border-radius: 4px;
   padding: 17px;
 
@@ -8,13 +10,13 @@
     padding-right: 27px;
 
     .total-label {
-      color: rgba(157, 154, 189, 1);
+      color: white;
       font-weight: 400;
       font-size: 14px;
     }
 
     .total-value {
-      color: rgba(46, 41, 120, 1);
+      color: white;
       font-weight: 700;
       font-size: 22px;
     }
@@ -23,5 +25,9 @@
       width: 22px;
       vertical-align: text-bottom;
     }
+  }
+
+  .claim-button {
+    background: white !important;
   }
 }
