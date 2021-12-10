@@ -12,7 +12,7 @@ export const About: React.FC = () => (
       <Row justify="center">
         <Col span={8}>
           <p className="description">
-            The protocol enables <strong>renting</strong> of land in <strong>Web3 metaverse</strong> games
+            LandWorks enables <strong>renting</strong> of land in <strong>Web3 metaverse</strong> games
           </p>
         </Col>
       </Row>
