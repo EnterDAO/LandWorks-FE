@@ -2,6 +2,10 @@
   padding: 165px 0;
   position: relative;
 
+  @media all and (max-width: 660px) {
+    padding: 200px 0 100px;
+  }
+
   .left-blocks,
   .right-blocks {
     position: absolute;
@@ -10,11 +14,35 @@
   .left-blocks {
     left: 0;
     top: 470px;
+
+    @media all and (max-width: 1024px) {
+      width: 200px;
+      height: auto;
+    }
+
+    @media all and (max-width: 660px) {
+      width: 100px;
+      height: auto;
+    }
   }
 
   .right-blocks {
     right: 35px;
     top: 45px;
+
+    @media all and (max-width: 1024px) {
+      svg {
+        width: 400px;
+        height: auto;
+      }
+    }
+
+    @media all and (max-width: 660px) {
+      svg {
+        width: 200px;
+        height: auto;
+      }
+    }
   }
 
   h2,
@@ -46,5 +74,14 @@
       bottom: 22px;
       left: 60px;
     }
+  }
+
+  .first-pattern,
+  .second-pattern,
+  .third-pattern,
+  .first-ether,
+  .second-ether,
+  .third-ether {
+    opacity: 0;
   }
 }
