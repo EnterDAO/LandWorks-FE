@@ -6,6 +6,7 @@ import axsSrc from 'resources/png/axie.png';
 import enterStarSrc from 'resources/png/enter-star.png';
 import enterdaoSrc from 'resources/png/enterdao.png';
 import eth from 'resources/png/eth.png';
+import hot from 'resources/png/hot.png';
 import LandWorksLogo from 'resources/png/landWorks.png';
 import ListProperty from 'resources/png/listProperty.png';
 import manaSrc from 'resources/png/mana.png';
@@ -18,6 +19,7 @@ import linkSrc from 'resources/png/token-link.png';
 import sushiSrc from 'resources/png/token-sushi.png';
 import uslpSrc from 'resources/png/token-uslp.png';
 import universeSrc from 'resources/png/universe.png';
+import you from 'resources/png/you.png';
 import Sprite from 'resources/svg/icons-sprite.svg';
 
 import s from './s.module.scss';
@@ -170,6 +172,8 @@ export type IconNames =
   | 'static/add-token'
   | 'png/LandWorksLogo'
   | 'png/eth'
+  | 'png/hot'
+  | 'png/you'
   | 'png/ListProperty';
 
 export type IconProps = {
@@ -226,6 +230,10 @@ const Icon: React.FC<IconProps> = props => {
           return ListProperty;
         case 'png/eth':
           return eth;
+        case 'png/hot':
+          return hot;
+        case 'png/you':
+          return you;
         default:
           return '';
       }
