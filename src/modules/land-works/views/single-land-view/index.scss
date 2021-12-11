@@ -7,14 +7,14 @@
 
   .head-nav {
     button {
-      border: 1px solid rgba(241, 215, 239, 1) !important;
       padding: 10px 25px 10px 20px !important;
-      box-shadow: 0px 4px 7px rgba(241, 219, 238, 0.3);
       border-radius: 23px;
-      color: rgba(217, 38, 135, 1) !important;
+      color: rgba(93, 143, 240, 1) !important;
+      background: #27273A;
+      border-radius: 23px;
 
       svg {
-        color: rgba(217, 38, 135, 1);
+        color: rgba(93, 143, 240, 1) !important;
         height: 15px;
         vertical-align: text-bottom;
       }
