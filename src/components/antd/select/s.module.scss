@@ -4,17 +4,20 @@
   min-height: 48px;
   position: relative;
   padding: 1px;
-  border-radius: 12px;
+  border-radius: 23px;
+  color: white !important;
+  min-width: 170px;
+  background: #27273A;
 
   &:global(.ant-select-focused) {
     :global(.ant-select-selector) {
       box-shadow: none !important;
-      border-color: var(--theme-border-color) !important;
+      border-color: #FFFFFF !important;
     }
   }
 
   &:hover {
-    background: linear-gradient(135deg, #DD3DCB 15.57%, #EF9C92 84.88%);
+    background: #27273A;
   }
 
   &:global(.ant-select-sm) {
@@ -36,31 +39,32 @@
   }
 
   &:global(.ant-select-open) {
-    background: linear-gradient(135deg, #DD3DCB 15.57%, #EF9C92 84.88%);
+    // background: linear-gradient(135deg, #DD3DCB 15.57%, #EF9C92 84.88%);
+    background: #27273A;
 
     :global(.ant-select-arrow) svg {
       transform: rotate(-180deg);
     }
 
     :global(.ant-select-selector) {
-      background: var(--theme-card-color);
+      background: #27273A;
       box-shadow: none;
-      border-color: var(--theme-border-color) !important;
-      border-radius: 12px;
+      border-color:white !important;
+      border-radius: 23px;
     }
   }
 
   :global(.ant-select-selector) {
-    background: var(--theme-card-color);
+    background: #27273A;
     border: 1px solid var(--theme-border-color);
     height: 48px;
     padding: 12px 32px 12px 16px;
-    border-radius: 12px;
+    border-radius: 23px;
 
     :global(.ant-select-selection-item),
     :global(.ant-select-selection-placeholder) {
       @include font-p1-semi-bold;
-      color: var(--theme-primary-color);
+      color: white;
     }
   }
 
@@ -71,6 +75,7 @@
     top: 50%;
     transform: translateY(-50%);
     width: 24px;
+    color: white;
 
     :global(.ant-spin) {
       margin-top: 4px;
@@ -79,31 +84,33 @@
 }
 
 .dropdown:global(.ant-select-dropdown) {
-  background: var(--theme-tooltip-bg);
+  background: #27273A;
   border: 1px solid var(--theme-tooltip-bg);
-  border-radius: 12px;
+  border-radius: 23px;
   padding: 4px;
   pointer-events: all !important;
+  min-width: 170px;
 
   .option {
     height: 48px;
     padding: 12px;
-    border-radius: 12px;
+    border-radius: 23px;
 
     &:global(.ant-select-item-option-selected) {
-      background: var(--theme-tooltip-item-bg-active);
+      background: #27273A;
     }
 
     :global(.ant-select-item-option-content) {
       @include font-p2-semi-bold;
-      color: var(--theme-secondary-color);
+      color: white;
+      background: #27273A;
     }
 
     &:global(.ant-select-item-option-active) {
-      background: var(--theme-tooltip-item-bg-active);
+      background: #27273A;
 
       :global(.ant-select-item-option-content) {
-        color: var(--theme-primary-color);
+        color: rgba(93, 143, 240, 1);
       }
     }
   }

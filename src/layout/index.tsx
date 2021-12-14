@@ -7,11 +7,10 @@ import WarningProvider from 'components/providers/warning-provider';
 import LayoutFooter from 'layout/components/layout-footer';
 import LayoutHeader from 'layout/components/layout-header';
 
-import ThemeSwitcher from './components/theme-switcher';
-
 import s from './s.module.scss';
 
-const MetapassView = lazy(() => import('modules/metapass'));
+// const MetapassView = lazy(() => import('modules/land-works'));
+const LandingView = lazy(() => import('modules/landing'));
 
 const LayoutView: React.FC = () => {
   return (
@@ -23,14 +22,13 @@ const LayoutView: React.FC = () => {
             <ErrorBoundary>
               <Suspense fallback={<AntdSpin className="pv-24 ph-64" style={{ width: '100%' }} />}>
                 <Switch>
-                  <Route path="/metapass" component={MetapassView} />
-                  <Redirect from="/" to="/metapass" />
+                  {/* <Route path="/land-works" component={MetapassView} /> */}
+                  <Route path="/" component={LandingView} />
                 </Switch>
               </Suspense>
             </ErrorBoundary>
           </main>
           <LayoutFooter />
-          <ThemeSwitcher />
         </WarningProvider>
       </div>
     </div>

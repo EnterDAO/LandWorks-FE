@@ -1,0 +1,64 @@
+.claim-modal {
+    .ant-modal-content{
+        box-shadow: 0px 5px 18px rgba(247, 240, 246, 0.4);
+        border-radius: 6px;
+    }
+
+    .ant-modal-header {
+        padding: 22px 22px 0px 22px;
+        border-bottom: none;
+    }
+
+    .ant-modal-close {
+        top: 22px;
+    }
+
+    .max-transaction-limit {
+        background: #F7E9F1;
+        border: 1px solid #F4D7E7;
+        box-sizing: border-box;
+        border-radius: 4px;
+        padding: 10px;
+        text-align: center;
+        color:  rgba(217, 38, 135, 1);
+    }
+
+    .claim-modal-footer {
+        background: #F7F7FA;
+        border-radius: 4px;
+        padding: 10px;
+        padding-left: 20px!important;
+
+        .prices-container {
+            align-items: center;
+            display: flex;
+        }
+
+        .total-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #9E9BBB;
+        }
+
+        .total-price {
+            display: inline-block;
+            background: #EAEAF4;
+            font-size: 18px;
+            font-weight: 500;
+            color: rgba(85, 44, 73, 1);
+            padding: 3px 12px;
+
+
+            svg {
+                width: 15px;
+                vertical-align: text-top;
+            }
+        }
+
+        .claim-button {
+            display: inline;
+            padding: 8px 20px;
+        }
+    }
+
+}

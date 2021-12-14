@@ -1,0 +1,27 @@
+.claim-component-container {
+  width: 325px;
+  background: #F7F0F6;
+  border-radius: 4px;
+  padding: 17px;
+
+  .info-container {
+    padding-right: 27px;
+
+    .total-label {
+      color: rgba(157, 154, 189, 1);
+      font-weight: 400;
+      font-size: 14px;
+    }
+
+    .total-value {
+      color: rgba(46, 41, 120, 1);
+      font-weight: 700;
+      font-size: 22px;
+    }
+
+    .coin-icon {
+      width: 22px;
+      vertical-align: text-bottom;
+    }
+  }
+}

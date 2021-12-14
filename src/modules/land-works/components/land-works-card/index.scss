@@ -1,0 +1,157 @@
+@import "../../../../styles/variables.scss";
+@import "../../../../styles/utils.scss";
+
+.land {
+  &-card-wrapper {
+    color: $black;
+  }
+
+  &-card {
+    cursor: pointer;
+    border-radius: 7px;
+    border: none;
+  }
+
+  &-card:hover {
+    box-shadow: 0px 5px 18px #D4ABCF;
+    border: 1px solid white;
+    border-radius: 6px;
+  }
+
+  &-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  &-ranking-row {
+    margin-bottom: 12px;
+  }
+  &-rank {
+    font-size: $text;
+    color: $pinkish;
+  }
+  &-rarity-score {
+    font-size: $text;
+    color: $black;
+  }
+  &-image {
+    border-radius: 6px;
+  }
+  &-info-row {
+    margin-top: 16px;
+  }
+  &-id {
+    font-size: 12px;
+  }
+}
+.enterdao-icon {
+  width: 20px;
+  height: 20px;
+}
+.ant-card-body {
+  padding: 20px 15px;
+  background-color:#27273A;
+  border-radius: 6px;
+}
+
+.land-info-row {
+  .price-eth-container {
+    display: flex;
+    align-items: center;
+  }
+  .land-owner {
+    color: $brown;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .land-owner-address {
+    color: #8e0f7e;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .price-eth {
+    color: white;
+    font-size: 20px;
+    margin-left: 5px;
+    font-weight: 700;
+  }
+
+  .land-price-info {
+    .price {
+      color: rgba(177, 174, 201, 1);
+      font-size: 14px;
+      margin-right: 5px;
+    }
+
+    .eth-icon {
+      height: 20px;
+      vertical-align: text-bottom;
+    }
+
+    .info-icon {
+      height: 16px;
+      vertical-align: text-bottom;
+    }
+
+    .per-day {
+      color: rgba(177, 174, 201, 1)
+    }
+
+    button {
+      border: none;
+      background: none;
+      padding: 0;
+    }
+  }
+}
+
+.land-available-row {
+  text-align: end;
+  margin-top: 16px;
+
+  .available-heading {
+    color: white;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .available-period {
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
+
+.name-label-container {
+  width: 20px;
+  height: 20px;
+  right: -5%;
+  position: absolute;
+  background: linear-gradient(98.73deg, #DD3DCB 0%, #DD3DCB 100%);
+  box-shadow: -2px 0px 4px rgb(239, 0, 210);
+  border-radius: 18px 18px 0px 0px;
+  transform: rotate(-90deg);
+  width: 25px;
+  height: 23px;
+
+  img {
+    transform: rotate(90deg);
+    position: absolute;
+    left: 35%;
+    top: 30%;
+  }
+}
+
+.price-chart-container{
+  row-gap: 0px;
+  position: absolute;
+  background: white;
+  top: 95%;
+  border-radius: 6px;
+  box-shadow: 0px 7px 16px rgba(233, 103, 189, 0.38);
+  z-index: 1;
+}

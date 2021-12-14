@@ -1,0 +1,160 @@
+@import "../../../../styles/variables.scss";
+@import "../../../../styles/text.scss";
+
+.single-land-card-container {
+    .card-name {
+      font-weight: 700;
+      font-size: 18px;
+      color: rgba(85, 44, 73, 1);
+      margin-right: 13px;
+    }
+
+    .card-name-hot-label {
+      background: linear-gradient(98.73deg, #DD3DCB 0%, #EF9C92 100%);
+      padding: 5px 10px;
+      box-shadow: 0px 4px 8px rgba(221, 61, 203, 0.38);
+      border-radius: 18px;
+      color: white;
+
+      img.name-label {
+        width: 9px;
+        margin-right: 3px;
+        vertical-align: baseline;
+      }
+    }
+
+    .card-image {
+      max-width: 100%;
+    }
+
+    .properties-container {
+      padding-top: 20px;
+
+      .properties-row {
+        border-bottom: 2px solid rgba(235, 234, 245, 1);
+        padding: 25px 0px;
+      }
+
+      .land-owner {
+        color: $brown;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .land-owner-address {
+        color: rgba(217, 38, 135, 1);
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .land-operator-address {
+        color: rgba(217, 38, 135, 1);
+        font-size: 14px;
+        font-weight: 600;
+
+        svg {
+        color: rgba(217, 38, 135, 1);
+        font-size: 12px;
+        vertical-align: bottom;
+        }
+      }
+
+      .available-heading {
+        color: rgba(131, 118, 127, 1);
+        font-size: 14px;
+        font-weight: 400;
+      }
+
+      .available-period {
+        color:rgba(85, 44, 73, 1);
+        font-size: 18px;
+        font-weight: 700;
+      }
+    }
+
+    .steps-agenda {
+      margin-top: 20px;
+
+      .ant-steps-item-active {
+        .ant-steps-item-icon {
+          background: rgba(217, 38, 135, 1);
+          border: 1px solid rgba(217, 38, 135, 1);
+        }
+      }
+
+      .ant-steps-item {
+        .agenda {
+          border: none;
+          background: none;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .agenda-title-container {
+            background: linear-gradient(98.73deg, #DD3DCB 0%, #EF9C92 100%);
+            padding: 6px 15px;
+            border-radius: 4px;
+            box-shadow: 0px 4px 8px rgba(221, 61, 203, 0.38);
+            color: white;
+            font-weight: 500;
+            font-size: 16px;
+
+            .calendar {
+              width: 18px;
+              vertical-align: bottom;
+              color: white;
+              margin-right: 13px;
+            }
+
+            &.disabled {
+              opacity: 0.3;
+              pointer-events: none;
+              cursor:not-allowed;
+            }
+          }
+
+          .info-icon {
+            width: 16px;
+            color: rgba(177, 174, 201, 1);
+            margin-left: 14px;
+          }
+        }
+      }
+    }
+
+    .history {
+      margin-top: 40px;
+
+      .history-label {
+        font-weight: 700;
+        font-size: 16px;
+        color: rgba(179, 177, 207, 1);
+        margin-bottom: 10px;
+      }
+
+        .history-row {
+          padding-right: 20px;
+          padding-left: 12px;
+          border-radius: 2px;
+
+          &:not(.odd) {
+            background: #e9e9e9;
+          }
+
+          .grey-text {
+            color: rgba(179, 177, 207, 1);
+          }
+
+          .pink-text {
+            color: rgba(217, 38, 135, 1);
+          }
+
+          .black-text {
+            color: rgba(85, 44, 73, 1);
+          }
+        }
+
+
+    }
+  }
+

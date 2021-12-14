@@ -80,7 +80,7 @@ const ConnectedWallet: React.FC = () => {
                 <Text type="p1" color="secondary">
                   Wallet
                 </Text>
-                <Text type="p1" weight="semibold" color="primary">
+                <Text type="p1" weight="semibold" color="white">
                   {wallet.connecting?.name}
                 </Text>
               </Grid>
@@ -94,14 +94,21 @@ const ConnectedWallet: React.FC = () => {
           </div>
         }
         trigger="click">
-        <Button type="primary">Connecting...</Button>
+        <Button type="primary" className={s.buttonConnecting}>
+          Connecting...
+        </Button>
       </Popover>
     );
   }
 
   if (!wallet.isActive) {
     return !isMobile ? (
-      <button type="button" className="button-ghost" onClick={() => wallet.showWalletsModal()}>
+      <button
+        type="button"
+        disabled
+        className={`button-primary ${s.signBtnDesktop}`}
+        // onClick={() => wallet.showWalletsModal()}
+        onClick={() => {}}>
         <span>Sign in</span>
       </button>
     ) : null;
@@ -138,7 +145,7 @@ const ConnectedWallet: React.FC = () => {
               <Text type="p1" color="secondary">
                 Wallet
               </Text>
-              <Text type="p1" weight="semibold" color="primary">
+              <Text type="p1" weight="semibold" color="white">
                 {wallet.connector?.name}
               </Text>
             </Grid>
@@ -147,7 +154,7 @@ const ConnectedWallet: React.FC = () => {
               <Text type="p1" color="secondary">
                 Network
               </Text>
-              <Text type="p1" weight="semibold" color="primary">
+              <Text type="p1" weight="semibold" color="white">
                 {wallet.networkName}
               </Text>
             </Grid>
@@ -163,17 +170,17 @@ const ConnectedWallet: React.FC = () => {
       <Button type="link" className={s.accountLink}>
         <Grid flow="col" align="center">
           <Identicon address={wallet.account} width={24} height={24} className="mr-8" />
-          <Text type="p1" color="primary" className={cn(s.walletAddress, 'mr-4')}>
+          <Text type="p1" style={{ color: 'white' }} className={cn(s.walletAddress, 'mr-4')}>
             {shortenAddr(wallet.account, 4, 3)}
           </Text>
-          <Icon name="dropdown-arrow" className={s.dropdownArrow} />
+          <Icon name="dropdown" style={{ color: 'white' }} className={s.dropdownArrow} />
         </Grid>
       </Button>
     </Popover>
   );
 
   return (
-    <Grid flow="col" gap={20} justify="center" align="center">
+    <Grid flow="col" gap={20} justify="center" align="center" className={s.hamburger}>
       {/* ToDo: NotificationSection, uncomment if needed */}
       {/* <NotificationSection /> */}
       {/* <Divider type="vertical" style={{ minHeight: 28 }} /> */}
