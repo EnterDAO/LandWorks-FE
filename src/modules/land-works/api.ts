@@ -135,6 +135,7 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]) {
   }).then((async response => {
     console.log(response);
     // TODO: convert to proper model if necessary
+    // TODO: might be possible to have duplicate assets, those should be filtered out
 
     return { ...response.data };
   }))
