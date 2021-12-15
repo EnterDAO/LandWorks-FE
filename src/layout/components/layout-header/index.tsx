@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { isDesktop, isMobile } from 'react-device-detect';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
-import { Link, useRouteMatch } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 
@@ -15,6 +13,7 @@ import { EnterToken } from 'components/providers/known-tokens-provider';
 import { useWarning } from 'components/providers/warning-provider';
 import { LandsNav } from 'modules/land-works/components/lands-header-nav';
 import { LandsNavMobile } from 'modules/land-works/components/lands-header-nav-mobile';
+import { ListModal } from 'modules/land-works/components/lands-list-modal';
 import ConnectedWallet from 'wallets/components/connected-wallet';
 import { MetamaskConnector } from 'wallets/connectors/metamask';
 import { useWallet } from 'wallets/wallet';
@@ -27,6 +26,7 @@ const LayoutHeader: React.FC = () => {
   const { navOpen, setNavOpen } = useGeneral();
   const [referenceElement, setReferenceElement] = useState<any>();
   const [popperElement, setPopperElement] = useState<any>();
+  const [showListModal, setShowListModal] = useState<boolean>();
   const wallet = useWallet();
   const { warns } = useWarning();
 
@@ -45,25 +45,6 @@ const LayoutHeader: React.FC = () => {
     }
   }, [window.innerWidth]);
 
-  async function handleAddProjectToken() {
-    if (wallet.connector?.id === 'metamask') {
-      try {
-        const connector = new MetamaskConnector({ supportedChainIds: [] });
-        await connector.addToken({
-          type: 'ERC20',
-          options: {
-            address: EnterToken.address,
-            symbol: EnterToken.symbol,
-            decimals: EnterToken.decimals,
-            image: `${window.location.origin}/enterdao.png`,
-          },
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }
-
   return (
     <div className={`${s.component} ${navOpen ? `${s.mobileNavOpen}` : ''}`} ref={setReferenceElement}>
       <ExternalLink href="/" target="_self">
@@ -75,7 +56,7 @@ const LayoutHeader: React.FC = () => {
 
       {wallet.isActive && wallet.connector?.id === 'metamask' && (
         <div className={s.addTokenWrapper}>
-          <button type="button" onClick={handleAddProjectToken} className={s.addTokenButton}>
+          <button type="button" onClick={() => setShowListModal(true)} className={s.addTokenButton}>
             <Icon name="png/ListProperty" width={32} height={32} style={{ transform: 'scale(1.5)' }} />
           </button>
         </div>
@@ -111,6 +92,7 @@ const LayoutHeader: React.FC = () => {
           </div>,
           modalRoot,
         )}
+      <ListModal onCancel={() => setShowListModal(false)} visible={showListModal} />
     </div>
   );
 };
