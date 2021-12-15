@@ -3,6 +3,7 @@ import 'styles/index.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 import ErrorBoundary from 'components/custom/error-boundary';
 import EthWeb3Provider from 'components/providers/eth-web3-provider';
@@ -13,10 +14,10 @@ import WindowStateProvider from 'components/providers/window-state';
 import LayoutView from 'layout';
 import { ReactComponent as StaticSprite } from 'resources/svg/static-sprite.svg';
 import Web3WalletProvider from 'wallets/wallet';
-import ScrollToTop from "./top-scroll";
 
 import { checkFlexGapSupport } from './checkFlexGap';
 import * as sw from './serviceWorker';
+import ScrollToTop from './top-scroll';
 
 const App: React.FC = () => {
   return (
@@ -29,6 +30,7 @@ const App: React.FC = () => {
               <KnownTokensProvider>
                 <Router>
                   <ScrollToTop />
+                  <ToastContainer theme="dark" />
                   <NotificationsProvider>
                     <LayoutView />
                   </NotificationsProvider>

@@ -1,5 +1,6 @@
-@import 'antd.css';
+@import '~antd/dist/antd.css';
 @import '~antd/dist/antd.dark.css';
+@import '~react-toastify/dist/ReactToastify.css';
 @import 'flex';
 @import 'grid';
 @import 'box';
@@ -140,6 +141,29 @@ body.mobile-menu-open {
 
   --theme-header-shadow: 5px 0px 20px #f1dbee;
   --theme-selection-color: #ef9c92;
+
+  --toastify-color-light: var(--theme-primary-color);
+  --toastify-color-dark: var(--theme-modal-color);
+  --toastify-color-info: #5d8ff0;
+  --toastify-color-success: #9bed7e;
+  --toastify-color-warning: #f1c40f;
+  --toastify-color-error: #ed7676;
+  --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+
+  --toastify-icon-color-info: var(--toastify-color-info);
+  --toastify-icon-color-success: var(--toastify-color-success);
+  --toastify-icon-color-warning: var(--toastify-color-warning);
+  --toastify-icon-color-error: var(--toastify-color-error);
+
+  --toastify-toast-width: 320px;
+  --toastify-color-dark: var(--theme-modal-color);
+  --toastify-toast-min-height: 64px;
+  --toastify-toast-max-height: 800px;
+  --toastify-font-family: sans-serif;
+  --toastify-z-index: 9999;
+
+  --toastify-text-color-light: var(--theme-modal-color);
+  --toastify-text-color-dark: var(--theme-primary-color);
 }
 
 @media (max-width: 1024px) {
@@ -199,6 +223,29 @@ body.mobile-menu-open {
   --theme-tooltip-item-bg-active: #161344;
 
   --theme-header-shadow: 0px 12px 25px #161344;
+
+  --toastify-color-light: var(--theme-primary-color);
+  --toastify-color-dark: var(--theme-modal-color);
+  --toastify-color-info: #5d8ff0;
+  --toastify-color-success: #9bed7e;
+  --toastify-color-warning: #f1c40f;
+  --toastify-color-error: #ed7676;
+  --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+
+  --toastify-icon-color-info: var(--toastify-color-info);
+  --toastify-icon-color-success: var(--toastify-color-success);
+  --toastify-icon-color-warning: var(--toastify-color-warning);
+  --toastify-icon-color-error: var(--toastify-color-error);
+
+  --toastify-toast-width: 320px;
+  --toastify-color-dark: var(--theme-modal-color);
+  --toastify-toast-min-height: 64px;
+  --toastify-toast-max-height: 800px;
+  --toastify-font-family: sans-serif;
+  --toastify-z-index: 9999;
+
+  --toastify-text-color-light: var(--theme-modal-color);
+  --toastify-text-color-dark: var(--theme-primary-color);
 }
 
 :focus:not(:focus-visible) {

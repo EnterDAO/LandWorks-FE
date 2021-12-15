@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { end } from '@popperjs/core';
 import { Col, Pagination, Row } from 'antd';
 
@@ -88,6 +89,18 @@ const Lands: React.FC = () => {
     getUser(wallet.account);
     getAssets(page, pageSize, DECENTRALAND_METAVERSE, lastRentEnd, sortColumn, sortDir);
   }, [page, pageSize, sortColumn, sortDir, byAvailability, wallet.account]);
+
+  toast.success('Property listed successfully.', {
+    position: toast.POSITION.TOP_RIGHT,
+    className: 'success-toast',
+    style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
+  });
+
+  toast.error('There was an error while listing the property.', {
+    position: toast.POSITION.TOP_RIGHT,
+    className: 'error-toast',
+    style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
+  });
 
   return (
     <div className='content-container'>
