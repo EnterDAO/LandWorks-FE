@@ -81,6 +81,7 @@ export type AssetEntity = {
   pricePerSecond: BigNumber;
   unclaimedRentFee: BigNumber;
   paymentToken: PaymentToken;
+  consumer?: IdEntity;
   isHot: boolean;
   decentralandData?: DecentralandData;
   owner: IdEntity;
@@ -239,6 +240,7 @@ export function fetchAsset(
                 pricePerSecond
                 lastRentEnd
                 status
+                consumer
                 decentralandData {
                     metadata
                     isLAND

@@ -13,6 +13,7 @@ import { RentModal } from '../../components/lands-rent-modal';
 import './index.scss';
 import { AssetEntity, CoordinatesLAND, fetchAdjacentDecentralandAssets, fetchAsset } from '../../api';
 import { useWallet } from '../../../../wallets/wallet';
+import { AssetStatus } from '../../models/AssetStatus';
 
 const SingleLand: React.FC = () => {
   const wallet = useWallet();
@@ -60,7 +61,14 @@ const SingleLand: React.FC = () => {
   };
 
   const shouldShowWithdraw = () => {
-    return wallet.account && wallet.account === asset?.owner?.id.toLowerCase() && asset?.status === 'DELISTED';
+    return isOwnerOrConsumer()
+      && asset?.status === AssetStatus.DELISTED;
+  };
+
+  const isOwnerOrConsumer = () => {
+    return wallet.account
+      && (wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase()
+        || wallet.account.toLowerCase() === asset?.consumer?.id.toLowerCase());
   };
 
   const handleWithdraw = () => {
@@ -79,11 +87,11 @@ const SingleLand: React.FC = () => {
             Back
           </span>
         </Button>
-        <Button type='light' className='back-btn' onClick={() => console.log('edit')}>
+        {isOwnerOrConsumer() && <Button type='light' className='back-btn' onClick={() => console.log('edit')}>
           <span>
             Edit
           </span>
-        </Button>
+        </Button>}
         {shouldShowWithdraw() &&
           <button type='button' className='button-primary' onClick={handleWithdraw}>
             <span>WITHDRAW</span>

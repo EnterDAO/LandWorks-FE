@@ -8,7 +8,7 @@ import { LandsAvailableSorter } from 'modules/land-works/components/lands-availa
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sorter';
-import { SortDirection } from 'modules/land-works/components/lands-price-sorter/models/SortDirection';
+import { SortDirection } from 'modules/land-works/models/SortDirection';
 import { useWallet } from 'wallets/wallet';
 
 import { landsMockData } from './mockLands';
