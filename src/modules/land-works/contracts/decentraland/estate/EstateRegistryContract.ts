@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { AbiItem } from 'web3-utils';
-import { Web3ContractAbiItem } from 'web3/web3Contract';
+import { BatchContractMethod, Web3ContractAbiItem } from 'web3/web3Contract';
 import ERC721Contract from '../../erc721/ERC721Contract';
 
 import EstateRegistryABI from './abi.json';
@@ -47,11 +47,15 @@ export default class EstateRegistryContract extends ERC721Contract {
    */
   async getEstateData(tokenId: BigNumber): Promise<any> {
     const estateSize = await this.call('getEstateSize', [tokenId]);
-    const promises = [];
+
+    const batch: BatchContractMethod[] = [];
     for (let i = 0; i < estateSize; i++) {
-      promises.push(this.call('estateLandIds', [tokenId, i]));
+      batch.push({
+        method: 'estateLandIds',
+        methodArgs: [tokenId, i],
+      });
     }
-    const landIds = await Promise.all(promises);
+    const landIds = await this.batch(batch);
 
     return {
       estateSize,
