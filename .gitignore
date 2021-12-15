@@ -4,3 +4,4 @@ node_modules
 # JetBrains IDEA
 .idea
 /build
+.firebase
