@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'antd';
 
 import Button from 'components/antd/button';
@@ -8,68 +8,100 @@ import { Text } from 'components/custom/typography';
 import { LandClaimCheckBox } from 'modules/land-works/components/land-claim-modal-checkbox';
 
 import './index.scss';
+import { AssetEntity } from '../../api';
+import { useLandworks } from '../../providers/landworks-provider';
+import BigNumber from 'bignumber.js';
 
 type Props = ModalProps & {
-  txHash?: string;
+  rentFees?: AssetEntity[];
   renderProgress?: () => React.ReactNode;
   renderSuccess?: () => React.ReactNode;
 };
 
-type ICheckboxInfo = {
-  name: string;
-  price: number;
-  icon: TokenIconNames;
-};
-
-const inputsData: ICheckboxInfo[] = [
-  { name: 'Land (90, -111)', price: 0.54, icon: 'token-eth' },
-  { name: 'Land (90, -111)', price: 0.54, icon: 'token-usdc' },
-  { name: 'Land (90, -111)', price: 0.54, icon: 'token-usdc' },
-  { name: 'Land (90, -111)', price: 0.54, icon: 'token-eth' },
-  { name: 'Land (90, -111)', price: 0.54, icon: 'token-usdc' },
-  { name: 'Land (90, -111)', price: 0.54, icon: 'token-eth' },
-];
-
 export const ClaimModal: React.FC<Props> = props => {
-  const { txHash, renderProgress, renderSuccess, ...modalProps } = props;
+  const landWorksCtx = useLandworks();
+  const { landWorksContract } = landWorksCtx;
+
+  const { rentFees, renderProgress, renderSuccess, ...modalProps } = props;
+
+  const [assets, setAssets] = useState([] as AssetEntity[]);
+  const [totalEth, setTotalEth] = useState(BigNumber.ZERO);
+  const [totalUsdc, setTotalUsdc] = useState(BigNumber.ZERO);
+
+  async function claim() {
+    try {
+      const assetIds = assets.map(a => new BigNumber(a.id));
+      await landWorksContract?.claimMultipleRentFees(assetIds);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  function calculateTotals() {
+    let totalEth = BigNumber.ZERO;
+    let totalUsdc = BigNumber.ZERO;
+    for (const asset of assets) {
+      if (asset.paymentToken.symbol === 'ETH') {
+        totalEth = asset.unclaimedRentFee.plus(totalEth);
+      } else {
+        totalUsdc = asset.unclaimedRentFee.plus(totalUsdc);
+      }
+    }
+
+    setTotalEth(totalEth);
+    setTotalUsdc(totalUsdc);
+  }
+
+  function updateAssets(isChecked: boolean, asset: AssetEntity): void {
+    if (isChecked) {
+      setAssets([...assets, asset]);
+    } else {
+      setAssets(assets.filter(i => i.id !== asset.id));
+    }
+  }
+
+  useEffect(() => {
+    calculateTotals();
+  }, [assets]);
 
   return (
     <Modal
       width={471}
-      className="claim-modal"
+      className='claim-modal'
       title={<p style={{ textAlign: 'center', fontSize: '16px' }}>Claim</p>}
       {...modalProps}>
-      <Text type="p1" color="secondary" align="center" className="subtitle">
+      <Text type='p1' color='secondary' align='center' className='subtitle'>
         Select the properties you want to claim your rent for
       </Text>
       <Row gutter={[10, 10]}>
-        {inputsData.map(data => (
+        {rentFees?.map(data => (
           <Col span={24}>
-            <LandClaimCheckBox data={data} />
+            <LandClaimCheckBox key={data.id} onSelected={updateAssets} data={data} />
           </Col>
         ))}
-        <Col span={24} className="max-transaction-limit">
+        <Col span={24} className='max-transaction-limit'>
           <p>You have reached the limit of max claims in one transaction.</p>
         </Col>
-        <Col span={24} className="claim-modal-footer">
+        <Col span={24} className='claim-modal-footer'>
           <Row>
-            <Col span={19} className="prices-container">
+            <Col span={19} className='prices-container'>
               <p>
-                <span className="total-label">Total:</span>{' '}
-                <span className="total-price">
-                  434 <Icon name="token-eth" className="eth-icon" />
+                <span className='total-label'>Total:</span>{' '}
+                <span className='total-price'>
+                  {totalEth.toString()} <Icon name='token-eth' className='eth-icon' />
                 </span>{' '}
-                <span className="total-price">
-                  434 <Icon name="token-usdc" className="eth-icon" />
+                <span className='total-price'>
+                  {totalUsdc.toString()} <Icon name='token-usdc' className='eth-icon' />
                 </span>
               </p>
             </Col>
             <Col span={5}>
               <Button
-                className="claim-button"
-                type="primary"
+                className='claim-button'
+                type='primary'
                 onClick={() => {
                   console.log('do claiming stuff here');
+                  claim();
                 }}>
                 Claim
               </Button>

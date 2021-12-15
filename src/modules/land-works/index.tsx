@@ -5,7 +5,7 @@ import AntdSpin from 'antd/lib/spin';
 
 import { useWarning } from 'components/providers/warning-provider';
 
-import MetapassProvider from './providers/metapass-provider';
+import LandworksProvider from './providers/landworks-provider';
 
 const OwnedPasses = lazy(() => import('./views/lands-view'));
 const SingleLand = lazy(() => import('./views/single-land-view'));
@@ -36,7 +36,7 @@ const MetapassView: React.FC = () => {
   }, [isMobile]);
 
   return (
-    <MetapassProvider>
+    <LandworksProvider>
       <Suspense fallback={<AntdSpin />}>
         <Switch>
           <Route path="/land-works" exact component={OwnedPasses} />
@@ -44,7 +44,7 @@ const MetapassView: React.FC = () => {
           <Redirect to="/land-works" />
         </Switch>
       </Suspense>
-    </MetapassProvider>
+    </LandworksProvider>
   );
 };
 

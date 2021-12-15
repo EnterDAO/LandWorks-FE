@@ -1,4 +1,4 @@
-export const enum SortDirection {
-  'ASC',
-  'DESC',
-}
+export const SortDirection = {
+  ASC: 'asc',
+  DESC: 'desc',
+};
