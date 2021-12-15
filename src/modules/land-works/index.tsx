@@ -5,9 +5,9 @@ import AntdSpin from 'antd/lib/spin';
 
 import { useWarning } from 'components/providers/warning-provider';
 
-import LandworksProvider from './providers/landworks-provider';
 import EstateRegistryProvider from './providers/decentraland/estate-registry-provider';
 import LandRegistryProvider from './providers/decentraland/land-registry-provider';
+import LandworksProvider from './providers/landworks-provider';
 
 const OwnedPasses = lazy(() => import('./views/lands-view'));
 const SingleLand = lazy(() => import('./views/single-land-view'));
@@ -24,12 +24,6 @@ const MetapassView: React.FC = () => {
         closable: true,
         storageIdentity: 'bb_desktop_metamask_tx_warn',
       });
-    } else {
-      warningDestructor = warning.addWarn({
-        text: 'Do not send funds directly to the contract!',
-        closable: true,
-        storageIdentity: 'bb_send_funds_warn',
-      });
     }
 
     return () => {
@@ -43,8 +37,8 @@ const MetapassView: React.FC = () => {
       <EstateRegistryProvider> </EstateRegistryProvider>
       <Suspense fallback={<AntdSpin />}>
         <Switch>
-          <Route path='/land-works' exact component={OwnedPasses} />
-          <Route path='/land-works/land/:tokenId' exact component={SingleLand} />
+          <Route path="/land-works" exact component={OwnedPasses} />
+          <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
           {/*<Redirect to="/land-registry-provider-works" />*/}
         </Switch>
       </Suspense>
