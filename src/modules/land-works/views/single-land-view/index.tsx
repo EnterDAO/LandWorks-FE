@@ -17,6 +17,8 @@ const SingleLand: React.FC = () => {
   // const { tokenId } = useParams<{ tokenId: string }>();
   const [lands, setLands] = useState(landsMockData.slice(0, 2));
 
+  const handleWithdraw = () => {};
+
   return (
     <div className="content-container single-card-section">
       <Row className="head-nav" style={{ marginBottom: '20px' }}>
@@ -26,6 +28,9 @@ const SingleLand: React.FC = () => {
             Back
           </span>
         </Button>
+        <button type="button" className="button-primary" onClick={handleWithdraw}>
+          <span>WITHDRAW</span>
+        </button>
       </Row>
       <SingleViewLandCard />
       <SingleViewLandHistory />

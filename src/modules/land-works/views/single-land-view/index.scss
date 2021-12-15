@@ -6,12 +6,13 @@
   margin-bottom: 20px;
 
   .head-nav {
-    button {
+    button.back-btn {
       padding: 10px 25px 10px 20px !important;
       border-radius: 23px;
       color: rgba(93, 143, 240, 1) !important;
       background: #27273A;
       border-radius: 23px;
+      margin-right: auto;
 
       svg {
         color: rgba(93, 143, 240, 1) !important;
