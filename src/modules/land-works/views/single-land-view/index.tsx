@@ -6,6 +6,7 @@ import Button from 'components/antd/button';
 import Icon, { TokenIconNames } from 'components/custom/icon';
 
 import LandWorkCard from '../../components/land-works-card';
+import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
 import { landsMockData } from './mockLands';
 
@@ -27,6 +28,7 @@ const SingleLand: React.FC = () => {
         </Button>
       </Row>
       <SingleViewLandCard />
+      <SingleViewLandHistory />
       <Row className="pooling-section">
         <Col className="pooling-heading">Pooling </Col>
         <Col className="pooling-description">

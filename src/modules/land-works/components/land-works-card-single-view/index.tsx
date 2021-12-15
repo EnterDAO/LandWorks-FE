@@ -17,57 +17,6 @@ const SingleViewLandCard: React.FC = () => {
           <Col span={24}>
             <img alt="vector Icon" className="card-image" src={cardImage}></img>
           </Col>
-          {/* <Col>
-            <Row className="history">
-              <Col span={24} className="history-label">
-                Rent History
-              </Col>
-              <Row gutter={[5, 5]} className="history-rows-container">
-                <Col span={24}>
-                  <Row>
-                    <Col className="history-row">
-                      <p>
-                        <span className="grey-text">by</span>
-                        <span className="pink-text"> comomonsur.eth</span>
-                        <span className="grey-text"> from</span>
-                        <span className="black-text"> 12:23:45 11.09.2021</span>
-                        <span className="grey-text"> to</span>
-                        <span className="black-text"> 13:00:00 15.09.2021</span>
-                      </p>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col span={24}>
-                  <Row>
-                    <Col className="history-row odd">
-                      <p>
-                        <span className="grey-text">by</span>
-                        <span className="pink-text"> comomonsur.eth</span>
-                        <span className="grey-text"> from</span>
-                        <span className="black-text"> 12:23:45 11.09.2021</span>
-                        <span className="grey-text"> to</span>
-                        <span className="black-text"> 13:00:00 15.09.2021</span>
-                      </p>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col span={24}>
-                  <Row>
-                    <Col className="history-row">
-                      <p>
-                        <span className="grey-text">by</span>
-                        <span className="pink-text"> comomonsur.eth</span>
-                        <span className="grey-text"> from</span>
-                        <span className="black-text"> 12:23:45 11.09.2021</span>
-                        <span className="grey-text"> to</span>
-                        <span className="black-text"> 13:00:00 15.09.2021</span>
-                      </p>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Row>
-          </Col> */}
         </Row>
       </Col>
       <Col span={12} className="properties-container">
