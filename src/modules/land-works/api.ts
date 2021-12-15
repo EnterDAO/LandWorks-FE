@@ -66,12 +66,14 @@ export type PaymentToken = {
 }
 
 export type AssetEntity = {
-  assetId: number;
+  id: string;
   name: string;
   minPeriod: BigNumber;
   maxPeriod: BigNumber;
   pricePerSecond: BigNumber;
+  unclaimedRentFee: BigNumber;
   paymentToken: PaymentToken;
+  isHot: boolean;
 }
 
 export type RentEntity = {
@@ -91,6 +93,7 @@ export type UserEntity = {
   assets: any;
   consumerTo: any;
   rents: any;
+  unclaimedRentAssets: any[]
 }
 
 export type ClaimHistory = {
@@ -178,10 +181,11 @@ export function fetchTokenPayments() {
  */
 export function fetchAsset(
   id: string,
+  page: number = 1,
   rentsSize: number = 5) {
   return GraphClient.get({
     query: gql`
-        query GetAsset($id: String, $first: Int) {
+        query GetAsset($id: String, $first: Int, $offset: Int) {
             asset(id: $id) {
                 metaverse {
                     name
@@ -215,7 +219,7 @@ export function fetchAsset(
                         id
                     }
                 }
-                rents(first: $first, orderBy: end, orderDirection: desc) {
+                rents(first: $first, skip: $offset, orderBy: end, orderDirection: desc) {
                     id
                     renter {
                         id
@@ -238,6 +242,7 @@ export function fetchAsset(
     variables: {
       id: id,
       first: rentsSize,
+      skip: rentsSize * (page - 1),
     },
   })
   .then((async response => {
@@ -282,6 +287,7 @@ export function fetchAssetRents(
                         id
                         name
                         symbol
+                        decimals
                     }
                 }
             }
@@ -316,18 +322,39 @@ export function fetchAssetRents(
  * Gets all the assets, rents and consumerTo assets for a given user.
  * @param address The address of the user
  */
-export function fetchUser(address: string) {
+export function fetchUser(address: string): Promise<UserEntity> {
   return GraphClient.get({
     query: gql`
         query GetUser($id: String) {
             user(id: $id) {
                 id
                 consumerTo {
+                    id
                     unclaimedRentFee
+                    paymentToken {
+                        id
+                        name
+                        symbol
+                        decimals
+                    }
+                    decentralandData {
+                        metadata
+                        coordinates {
+                            id
+                        }
+                    }
                 }
                 assets {
+                    id
                     unclaimedRentFee
+                    paymentToken {
+                        id
+                        name
+                        symbol
+                        decimals
+                    }
                     decentralandData {
+                        metadata
                         coordinates {
                             id
                         }
@@ -353,14 +380,16 @@ export function fetchUser(address: string) {
     console.log(response);
 
     const result = { ...response.data.user };
-    const hasAssetsWithUnclaimedRentFee = response.data.user.assets.some((a: any) => a.unclaimedRentFee > 0);
-    const hasConsumerAssetsWithUnclaimedRentFee = response.data.user.consumerTo?.assets.some((a: any) => a.unclaimedRentFee > 0);
-    result.hasUnclaimedRent = hasAssetsWithUnclaimedRentFee || hasConsumerAssetsWithUnclaimedRentFee;
+    const unclaimedRentFeeAssets = result.assets?.filter((a: any) => BigNumber.from(a.unclaimedRentFee)?.gt(0));
+    const unclaimedRentFeeConsumerAssets = result.consumerTo?.filter((a: any) => BigNumber.from(a.unclaimedRentFee)?.gt(0));
+    const mergedUnclaimed = [...unclaimedRentFeeAssets, ...unclaimedRentFeeConsumerAssets];
+    result.unclaimedRentAssets = parseAssets([...new Map(mergedUnclaimed.map(v => [v.id, v])).values()]);
+    result.hasUnclaimedRent = result.unclaimedRentAssets.length > 0;
     return result;
   }))
   .catch(e => {
     console.log(e);
-    return { data: [], meta: { count: 0, block: 0 } };
+    return {} as UserEntity;
   });
 }
 
@@ -431,7 +460,7 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
   metaverse: string = '1',
   lastRentEnd: string = '0',
   orderColumn: string = 'totalRents',
-  isAscending: boolean = true,
+  orderDirection: string,
 ): Promise<PaginatedResult<AssetEntity>> {
 
   return GraphClient.get({
@@ -456,25 +485,23 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
                 lastRentEnd
                 totalRents
             }
-            overview (id: "OVERVIEW") {
-                totalListings
-            }
         }
     `,
     variables: {
       lastRentEnd: lastRentEnd,
       metaverse: metaverse,
       orderColumn: orderColumn,
-      orderDirection: isAscending ? 'asc' : 'desc',
+      orderDirection: orderDirection,
     },
   })
   .then((async response => {
-    console.log(response);
-
-    const result = parseAssets(response);
     // Paginate the result
-    result.data = result.data.slice(limit * (page - 1), limit * page);
-    return result;
+    const paginatedAssets = response.data.assets.slice(limit * (page - 1), limit * page);
+
+    return {
+      data: parseAssets(paginatedAssets),
+      meta: { count: response.data.assets.length },
+    };
   }))
   .catch(e => {
     console.log(e);
@@ -482,20 +509,18 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
   });
 }
 
-function parseAssets(response: any): PaginatedResult<AssetEntity> {
-  let result: PaginatedResult<AssetEntity> = {
-    data: [],
-    meta: { count: response.data.overview.totalListings },
-  };
+function parseAssets(assets: any[]): AssetEntity[] {
+  let result = [] as AssetEntity[];
 
-  for (let i = 0; i < response.data.assets.length; i++) {
-    const graphAsset = response.data.assets[i];
+  for (let i = 0; i < assets.length; i++) {
+    const graphAsset = assets[i];
     const liteAsset: AssetEntity = { ...graphAsset };
-    liteAsset.assetId = Number.parseInt(graphAsset.id);
     liteAsset.pricePerSecond = getHumanValue(new BigNumber(graphAsset.pricePerSecond), graphAsset.paymentToken.decimals)!;
     liteAsset.name = getDecentralandAssetName(graphAsset.decentralandData);
     liteAsset.paymentToken = { ...graphAsset.paymentToken };
-    result.data.push(liteAsset);
+    liteAsset.isHot = graphAsset.totalRents > 0;
+    liteAsset.unclaimedRentFee = getHumanValue(new BigNumber(graphAsset.unclaimedRentFee), graphAsset.paymentToken.decimals)!;
+    result.push(liteAsset);
   }
 
   return result;
@@ -511,5 +536,6 @@ function getDecentralandAssetName(decentralandData: any): string {
   if (decentralandData.coordinates.length > 1) {
     return 'Estate';
   }
-  return decentralandData.coordinates[0].id;
+  const coordinates = decentralandData.coordinates[0].id.split('-');
+  return `LAND (${coordinates[0]}, ${coordinates[1]})`;
 }

@@ -46,6 +46,7 @@ const config = {
     },
     merkleDistributor: toLowerCase(process.env.REACT_APP_CONTRACT_MERKLE_DISTRIBUTOR_ADDR),
     metapassContract: toLowerCase(process.env.REACT_APP_METAPASS_ADDR),
+    landworksContract: toLowerCase(process.env.REACT_APP_LANDWORKS_ADDR)
   },
   web3: {
     chainId: Number(process.env.REACT_APP_WEB3_CHAIN_ID),
