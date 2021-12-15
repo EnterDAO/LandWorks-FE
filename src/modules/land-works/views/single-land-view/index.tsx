@@ -8,6 +8,7 @@ import Icon, { TokenIconNames } from 'components/custom/icon';
 import LandWorkCard from '../../components/land-works-card';
 import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
+import { RentModal } from '../../components/lands-rent-modal';
 import { landsMockData } from './mockLands';
 
 import './index.scss';
@@ -16,6 +17,7 @@ const SingleLand: React.FC = () => {
   // const history = useHistory();
   // const { tokenId } = useParams<{ tokenId: string }>();
   const [lands, setLands] = useState(landsMockData.slice(0, 2));
+  const [showRentModal, setShowRentModal] = useState(false);
 
   const handleWithdraw = () => {};
 
@@ -32,7 +34,7 @@ const SingleLand: React.FC = () => {
           <span>WITHDRAW</span>
         </button>
       </Row>
-      <SingleViewLandCard />
+      <SingleViewLandCard setShowRentModal={setShowRentModal} />
       <SingleViewLandHistory />
       <Row className="pooling-section">
         <Col className="pooling-heading">Pooling </Col>
@@ -48,6 +50,8 @@ const SingleLand: React.FC = () => {
           </Row>
         </Col>
       </Row>
+
+      <RentModal onCancel={() => setShowRentModal(false)} visible={showRentModal} />
     </div>
   );
 };

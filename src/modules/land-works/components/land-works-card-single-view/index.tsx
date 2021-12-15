@@ -9,7 +9,11 @@ import './index.scss';
 
 const { Step } = Steps;
 
-const SingleViewLandCard: React.FC = () => {
+type SingleLandProps = {
+  setShowRentModal: (isShown: boolean) => void;
+};
+
+const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal }) => {
   return (
     <Row gutter={40} className="single-land-card-container">
       <Col span={12}>
@@ -63,7 +67,7 @@ const SingleViewLandCard: React.FC = () => {
                 </Row>
               </Col>
               <Col push={4} span={8} className="rent-btn-container">
-                <button type="button" className={`button-primary `} onClick={() => {}}>
+                <button type="button" className={`button-primary `} onClick={() => setShowRentModal(true)}>
                   <span>Rent now</span>
                 </button>
               </Col>

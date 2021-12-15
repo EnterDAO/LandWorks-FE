@@ -3,6 +3,7 @@ import cn from 'classnames';
 
 import addEnterSrc from 'resources/png/add-enter.png';
 import axsSrc from 'resources/png/axie.png';
+import calendar from 'resources/png/calendar.png';
 import enterStarSrc from 'resources/png/enter-star.png';
 import enterdaoSrc from 'resources/png/enterdao.png';
 import eth from 'resources/png/eth.png';
@@ -176,6 +177,7 @@ export type IconNames =
   | 'png/Github'
   | 'png/hot'
   | 'png/you'
+  | 'png/calendar'
   | 'png/ListProperty';
 
 export type IconProps = {
@@ -238,6 +240,8 @@ const Icon: React.FC<IconProps> = props => {
           return hot;
         case 'png/you':
           return you;
+        case 'png/calendar':
+          return calendar;
         default:
           return '';
       }

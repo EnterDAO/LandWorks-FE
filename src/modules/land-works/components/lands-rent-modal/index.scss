@@ -1,0 +1,83 @@
+.rent-modal {
+    .ant-modal-content{
+        background: #27273A;
+        border-radius: 10px;
+        box-shadow: none;
+    }
+
+    .calendar-button {
+        color: white !important;
+        max-width: 155px;
+        height: 36px;
+    }
+
+    .ant-modal-header {
+        padding: 22px 22px 0px 22px;
+        border-bottom: none;
+    }
+
+    .ant-modal-close {
+        top: 22px;
+    }
+
+    .light-text {
+        color: rgba(185, 185, 211, 1);
+    }
+
+    .bold-white-text {
+        color: #FFFFFF;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .info-icon {
+        width: 16px;
+        height: 16px;
+        vertical-align: middle;
+        margin-left: 5px;
+    }
+
+    .oprator-container {
+        margin-top: 20px;
+
+        .operator-address {
+            margin-top: 5px;
+            padding: 10px;
+            background: #161622;
+            border-radius: 12px;
+            color: rgba(185, 185, 211, 1);
+        }
+    }
+
+    .rent-modal-footer {
+        background: #161622;
+        border-radius: 12px;
+        padding: 10px;
+        padding-left: 20px!important;
+
+        .rent-button {
+            color: white;
+            width: 100%;
+        }
+        .total-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: white !important;
+        }
+        .total-price {
+            display: inline-block;
+            background: #EAEAF4;
+            font-size: 18px;
+            font-weight: 500;
+            color: rgba(85, 44, 73, 1);
+            padding: 3px 12px;
+
+
+            svg {
+                width: 15px;
+                vertical-align: text-top;
+            }
+        }
+    }
+
+}
