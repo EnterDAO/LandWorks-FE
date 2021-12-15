@@ -1,9 +1,10 @@
 import React from 'react';
-import { Checkbox, Col, Row } from 'antd';
+import { Col, Row } from 'antd';
 
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon, { TokenIconNames } from 'components/custom/icon';
+import { Text } from 'components/custom/typography';
 import { LandClaimCheckBox } from 'modules/land-works/components/land-claim-modal-checkbox';
 
 import './index.scss';
@@ -33,7 +34,14 @@ export const ClaimModal: React.FC<Props> = props => {
   const { txHash, renderProgress, renderSuccess, ...modalProps } = props;
 
   return (
-    <Modal width={471} className="claim-modal" title={<p style={{ textAlign: 'center' }}>Claim</p>} {...modalProps}>
+    <Modal
+      width={471}
+      className="claim-modal"
+      title={<p style={{ textAlign: 'center', fontSize: '16px' }}>Claim</p>}
+      {...modalProps}>
+      <Text type="p1" color="secondary" align="center" className="subtitle">
+        Select the properties you want to claim your rent for
+      </Text>
       <Row gutter={[10, 10]}>
         {inputsData.map(data => (
           <Col span={24}>

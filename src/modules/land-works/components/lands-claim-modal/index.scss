@@ -1,64 +1,78 @@
 .claim-modal {
-    .ant-modal-content{
-        box-shadow: 0px 5px 18px rgba(247, 240, 246, 0.4);
-        border-radius: 6px;
+  .subtitle {
+    margin-bottom: 20px;
+  }
+
+  .ant-modal-content {
+    border-radius: 10px;
+  }
+
+  .ant-modal-header {
+    padding: 22px 22px 0px 22px;
+    border-bottom: none;
+    background: var(--theme-modal-color);
+  }
+
+  .ant-modal-close {
+    top: 22px;
+  }
+
+  .max-transaction-limit {
+    background: var(--theme-warning-background);
+    border: 1px solid var(--theme-warning-border);
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 8px 14px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--theme-warning-color);
+    margin: 5px 0 10px;
+  }
+
+  .claim-modal-footer {
+    background: transparent;
+    border-radius: 10px;
+    padding: 12px 20px;
+    border: 1px solid var(--theme-checkbox-color);
+
+    .prices-container {
+      align-items: center;
+      display: flex;
     }
 
-    .ant-modal-header {
-        padding: 22px 22px 0px 22px;
-        border-bottom: none;
+    .total-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--theme-subtle-color);
+      margin-right: 10px;
+      padding-left: 20px;
     }
 
-    .ant-modal-close {
-        top: 22px;
+    .total-price {
+      display: inline-block;
+      background: var(--theme-card-color);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--theme-primary-color);
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-right: 5px;
+
+      svg {
+        width: 15px;
+        vertical-align: text-top;
+      }
     }
 
-    .max-transaction-limit {
-        background: #F7E9F1;
-        border: 1px solid #F4D7E7;
-        box-sizing: border-box;
-        border-radius: 4px;
-        padding: 10px;
-        text-align: center;
-        color:  rgba(217, 38, 135, 1);
+    .claim-button {
+      display: inline;
+      padding: 8px 20px;
+      text-transform: uppercase;
+      color: var(--theme-primary-color);
+
+      &:hover {
+        color: var(--theme-primary-color);
+      }
     }
-
-    .claim-modal-footer {
-        background: #F7F7FA;
-        border-radius: 4px;
-        padding: 10px;
-        padding-left: 20px!important;
-
-        .prices-container {
-            align-items: center;
-            display: flex;
-        }
-
-        .total-label {
-            font-size: 16px;
-            font-weight: 500;
-            color: #9E9BBB;
-        }
-
-        .total-price {
-            display: inline-block;
-            background: #EAEAF4;
-            font-size: 18px;
-            font-weight: 500;
-            color: rgba(85, 44, 73, 1);
-            padding: 3px 12px;
-
-
-            svg {
-                width: 15px;
-                vertical-align: text-top;
-            }
-        }
-
-        .claim-button {
-            display: inline;
-            padding: 8px 20px;
-        }
-    }
-
+  }
 }

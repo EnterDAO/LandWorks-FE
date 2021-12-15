@@ -18,12 +18,12 @@ export const LandClaimCheckBox: React.FC<props> = props => {
   const [checked, setChecked] = useState(false);
   return (
     <Row className={`claim-input-container ${checked ? 'checked' : ''}`} align={'middle'}>
-      <Col span={20}>
+      <Col span={18}>
         <Checkbox className="land-name-checkbox" onChange={e => setChecked(e.target.checked)}>
           {name}
         </Checkbox>
       </Col>
-      <Col span={4}>
+      <Col span={6} className="price">
         <span className="price-checkbox">{price}</span>
         <Icon name={icon} className="eth-icon" />
       </Col>
