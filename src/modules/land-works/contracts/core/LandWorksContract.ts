@@ -217,4 +217,25 @@ export default class LandWorksContract extends Web3Contract {
         from: this.account,
       }).then();
   }
+
+  /**
+   * Updates the corresponding Estate/LAND operator from the given rent.
+   * @param assetId The target asset id
+   * @param rentId The target rent id
+   */
+  updateState(
+    assetId: BigNumber,
+    rentId: BigNumber
+  ): Promise<void> {
+    if (!this.account) {
+      return Promise.reject();
+    }
+    return this.send('updateState',
+      [
+        assetId,
+        rentId,
+      ], {
+        from: this.account,
+      }).then();
+  }
 }
