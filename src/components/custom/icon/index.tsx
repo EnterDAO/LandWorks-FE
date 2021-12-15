@@ -7,6 +7,7 @@ import enterStarSrc from 'resources/png/enter-star.png';
 import enterdaoSrc from 'resources/png/enterdao.png';
 import eth from 'resources/png/eth.png';
 import Github from 'resources/png/github.png';
+import hot from 'resources/png/hot.png';
 import LandWorksLogo from 'resources/png/landWorks.png';
 import ListProperty from 'resources/png/listProperty.png';
 import manaSrc from 'resources/png/mana.png';
@@ -19,6 +20,7 @@ import linkSrc from 'resources/png/token-link.png';
 import sushiSrc from 'resources/png/token-sushi.png';
 import uslpSrc from 'resources/png/token-uslp.png';
 import universeSrc from 'resources/png/universe.png';
+import you from 'resources/png/you.png';
 import Sprite from 'resources/svg/icons-sprite.svg';
 
 import s from './s.module.scss';
@@ -172,6 +174,8 @@ export type IconNames =
   | 'png/LandWorksLogo'
   | 'png/eth'
   | 'png/Github'
+  | 'png/hot'
+  | 'png/you'
   | 'png/ListProperty';
 
 export type IconProps = {
@@ -230,6 +234,10 @@ const Icon: React.FC<IconProps> = props => {
           return eth;
         case 'png/Github':
           return Github;
+        case 'png/hot':
+          return hot;
+        case 'png/you':
+          return you;
         default:
           return '';
       }
