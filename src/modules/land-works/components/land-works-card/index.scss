@@ -57,6 +57,11 @@
   border-radius: 10px;
 }
 
+.land-name {
+  display: flex;
+  justify-content: space-between;
+}
+
 .land-info-row {
   .price-eth-container {
     display: flex;
@@ -127,23 +132,22 @@
   }
 }
 
-.name-label-container {
-  width: 20px;
-  height: 20px;
-  right: -5%;
-  position: absolute;
-  background: linear-gradient(98.73deg, #dd3dcb 0%, #dd3dcb 100%);
-  box-shadow: -2px 0px 4px rgb(239, 0, 210);
-  border-radius: 18px 18px 0px 0px;
-  transform: rotate(-90deg);
-  width: 25px;
-  height: 23px;
+.label {
+  background: #1e1e2e;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 12px;
+}
 
-  img {
-    transform: rotate(90deg);
-    position: absolute;
-    left: 35%;
-    top: 30%;
+.card-name-hot-label {
+  color: #dd3dcb;
+
+  img.name-label {
+    width: 11px;
+    height: 13px;
+    margin-right: 3px;
+    vertical-align: baseline;
   }
 }
 

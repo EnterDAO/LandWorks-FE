@@ -25,9 +25,10 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
         <Row>
           <Col span={24}>
             <p className="land-name">
-              {land.name}
-              <span className="name-label-container">
-                <img alt="vector Icon" className="name-label" src={vectorImage}></img>
+              <span>{land.name}</span>
+              <span className="label card-name-hot-label">
+                <Icon name="png/hot" className="name-label" />
+                HOT
               </span>
             </p>
           </Col>

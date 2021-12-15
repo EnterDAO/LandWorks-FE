@@ -1,80 +1,148 @@
 .rent-modal {
-    .ant-modal-content{
-        background: #27273A;
-        border-radius: 10px;
-        box-shadow: none;
+  .ant-modal-content {
+    border-radius: 10px;
+    box-shadow: none;
+  }
+
+  .ant-modal-header {
+    background: var(--theme-modal-color);
+    padding: 22px;
+    border-bottom: none;
+  }
+
+  .ant-modal-close {
+    top: 22px;
+  }
+
+  .light-text {
+    color: rgba(185, 185, 211, 1);
+  }
+
+  .ant-picker.ant-picker-borderless.button-primary {
+    padding: 6px 16px;
+    cursor: pointer;
+
+    .ant-picker-input {
+      display: flex;
+      flex-direction: row-reverse;
     }
 
-    .ant-modal-header {
-        padding: 22px;
-        border-bottom: none;
+    svg {
+      fill: var(--theme-primary-color);
+      margin-right: 12px;
     }
 
-    .ant-modal-close {
-        top: 22px;
+    input {
+      cursor: pointer;
+      color: var(--theme-primary-color);
+      font-size: var(--font-size-p1);
+
+      &::placeholder {
+        color: var(--theme-primary-color);
+        opacity: 1;
+      }
+
+      &:-ms-input-placeholder {
+        color: var(--theme-primary-color);
+      }
+
+      &::-ms-input-placeholder {
+        color: var(--theme-primary-color);
+      }
     }
+  }
 
-    .light-text {
-        color: rgba(185, 185, 211, 1);
+  .bold-white-text {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .info-icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-left: 5px;
+  }
+
+  .oprator-container {
+    margin-top: 20px;
+
+    .operator-address {
+      margin-top: 5px;
+      padding: 10px;
+      background: #161622;
+      border-radius: 12px;
+      color: rgba(185, 185, 211, 1);
     }
+  }
 
-    .bold-white-text {
-        color: #FFFFFF;
-        font-weight: bold;
-        font-size: 16px;
-    }
+  .rent-modal-footer {
+    background: #161622;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 10px;
 
-    .info-icon {
-        width: 16px;
-        height: 16px;
-        vertical-align: middle;
-        margin-left: 5px;
-    }
+    .rent-button {
+      color: var(--theme-primary-color);
+      width: 100%;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      height: 44px;
 
-    .oprator-container {
-        margin-top: 20px;
+      > div {
+        height: 100%;
 
-        .operator-address {
-            margin-top: 5px;
-            padding: 10px;
-            background: #161622;
-            border-radius: 12px;
-            color: rgba(185, 185, 211, 1);
+        .ant-col {
+          display: flex;
+          align-items: center;
         }
+      }
+
+      .rent-label {
+        font-weight: 400;
+        padding-right: 14px;
+        margin-right: 12px;
+        border-right: 1px solid rgba(255, 255, 255, 0.22);
+        height: 100%;
+        line-height: 44px;
+      }
+
+      strong {
+        display: flex;
+        align-items: center;
+
+        span {
+          margin-left: 14px;
+        }
+      }
+
+      &:hover {
+        color: var(--theme-primary-color);
+      }
+
+      .eth-icon {
+        width: 12px;
+        margin-left: 4px;
+      }
     }
-
-    .rent-modal-footer {
-        background: #161622;
-        border-radius: 12px;
-        padding: 15px;
-        margin-top: 10px;
-
-        .rent-button {
-            color: white;
-            width: 100%;
-            height: 44px;
-
-            &:hover {
-                color: white;
-            }
-
-            .eth-icon {
-                width: 15px;
-                vertical-align: middle;
-            }
-        }
-        .total-label {
-            font-size: 16px;
-            font-weight: 500;
-            color: white !important;
-        }
-        .total-price {
-            display: inline-block;
-            background: #EAEAF4;
-            font-size: 18px;
-            font-weight: 500;
-            color: rgba(85, 44, 73, 1);
-            padding: 3px 12px;
-        }
+    .total-label {
+      font-size: 16px;
+      font-weight: 500;
+      color: white !important;
     }
+    .total-price {
+      display: inline-block;
+      background: #eaeaf4;
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(85, 44, 73, 1);
+      padding: 3px 12px;
+    }
+  }
+
+  .ant-picker-panel-container {
+    background: var(--theme-card-color);
+  }
 }

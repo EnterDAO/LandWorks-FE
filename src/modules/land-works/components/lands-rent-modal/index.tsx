@@ -34,7 +34,7 @@ export const RentModal: React.FC<Props> = props => {
                   </p>
                 </Col>
                 <Col span={24}>
-                  <DatePicker bordered={false} />
+                  <DatePicker bordered={false} className="button-primary" />
                 </Col>
               </Row>
             </Col>
@@ -71,10 +71,10 @@ export const RentModal: React.FC<Props> = props => {
                 }}>
                 <Row>
                   <Col>
-                    <span>Rent Now </span>
-                    <span>
-                      2,231 <Icon name="token-eth" className="eth-icon" /> $4446.44
-                    </span>
+                    <span className="rent-label">Rent Now </span>
+                    <strong>
+                      2,231 <Icon name="token-eth" className="eth-icon" /> <span>$4446.44</span>
+                    </strong>
                   </Col>
                 </Row>
               </Button>
