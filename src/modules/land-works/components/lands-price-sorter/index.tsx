@@ -23,5 +23,5 @@ interface ILandsSorterProps {
   onSortDirectionChange: (event: any) => void;
 }
 export const LandsPriceSorter: React.FC<ILandsSorterProps> = ({ onSortDirectionChange }) => {
-  return <Select options={options} defaultValue="Hotest first" onChange={onSortDirectionChange}></Select>;
+  return <Select options={options} defaultValue="Hottest first" onChange={onSortDirectionChange}></Select>;
 };
