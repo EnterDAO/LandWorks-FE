@@ -40,11 +40,13 @@ const SingleLand: React.FC = () => {
           The following properties are adjacent to this property. You can rent the adjacent properties to maximise the
           land you want to build scenes/experiences on
         </Col>
-        <Row gutter={[15, 15]} style={{ paddingTop: '27px' }}>
-          {lands.map(land => (
-            <LandWorkCard key={land.id} land={land} />
-          ))}
-        </Row>
+        <Col span={24}>
+          <Row gutter={[15, 15]} style={{ paddingTop: '27px' }}>
+            {lands.map(land => (
+              <LandWorkCard key={land.id} land={land} />
+            ))}
+          </Row>
+        </Col>
       </Row>
     </div>
   );
