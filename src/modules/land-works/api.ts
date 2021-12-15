@@ -102,6 +102,49 @@ export type ClaimHistory = {
 }
 
 /**
+ * Gets all Decentraland assets, that have coordinates from the provided.
+ * @param coordinates An array of coordinates, each coordinate in the following format: `{x}-{y}`.
+ */
+export function fetchAdjacentDecentralandAssets(coordinates: string[]) {
+  return GraphClient.get({
+    query: gql`
+        query getAdjacentAssets($ids: [String]) {
+            coordinatesLANDs(where:{id_in: $ids}) {
+                id
+                data {
+                    id
+                    asset{
+                        id
+                        minPeriod
+                        maxPeriod
+                        pricePerSecond
+                        lastRentEnd
+                        paymentToken {
+                            name
+                            symbol
+                            decimals
+                        }
+                    }
+                }
+            }
+        }
+    `,
+    variables: {
+      ids: coordinates,
+    },
+  }).then((async response => {
+    console.log(response);
+    // TODO: convert to proper model if necessary
+
+    return { ...response.data };
+  }))
+  .catch(e => {
+    console.log(e);
+    return { data: {} };
+  });
+}
+
+/**
  * Gets all token payments, which includes address, symbol, name, decimals and fee percentage.
  */
 export function fetchTokenPayments() {
@@ -115,7 +158,7 @@ export function fetchTokenPayments() {
                 decimals
                 feePercentage
             }
-        }`
+        }`,
   }).then((async response => {
     console.log(response);
 
@@ -156,8 +199,8 @@ export function fetchAsset(
                 maxFutureTime
                 lastRentEnd
                 paymentToken {
-                    id,
-                    name,
+                    id
+                    name
                     symbol
                 }
                 totalRents
@@ -166,7 +209,7 @@ export function fetchAsset(
                 lastRentEnd
                 status
                 decentralandData {
-                    metadata,
+                    metadata
                     coordinates {
                         id
                     }
@@ -193,11 +236,12 @@ export function fetchAsset(
     `,
     variables: {
       id: id,
-      first: rentsSize
+      first: rentsSize,
     },
   })
   .then((async response => {
     console.log(response);
+    // TODO: convert to proper model
 
     return { ...response.data.asset };
   }))
@@ -276,18 +320,18 @@ export function fetchUser(address: string) {
     query: gql`
         query GetUser($id: String) {
             user(id: $id) {
-                id,
+                id
                 consumerTo {
                     unclaimedRentFee
                 }
                 assets {
-                    unclaimedRentFee,
+                    unclaimedRentFee
                     decentralandData {
                         coordinates {
                             id
                         }
                     }
-                },
+                }
                 rents {
                     asset {
                         decentralandData {
@@ -359,6 +403,7 @@ export function fetchUserClaimHistory(
   })
   .then((async response => {
     console.log(response);
+    // TODO: convert to proper model if necessary
 
     return response.data.user?.claimHistory;
   }))
@@ -392,21 +437,21 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
     query: gql`
         query GetAssets($metaverse: String, $lastRentEnd: String, $orderColumn: String, $orderDirection: String) {
             assets (where: {metaverse: $metaverse, lastRentEnd_gte: $lastRentEnd}, orderBy: $orderColumn, orderDirection: $orderDirection) {
-                id,
-                minPeriod,
-                maxPeriod,
-                pricePerSecond,
+                id
+                minPeriod
+                maxPeriod
+                pricePerSecond
                 paymentToken {
-                    name,
-                    symbol,
-                    decimals,
-                },
+                    name
+                    symbol
+                    decimals
+                }
                 decentralandData {
-                    metadata,
+                    metadata
                     coordinates {
                         id
                     }
-                },
+                }
                 lastRentEnd
                 totalRents
             }
