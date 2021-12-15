@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { AbiItem } from 'web3-utils';
-import Web3Contract, { BatchContractMethod, Web3ContractAbiItem } from 'web3/web3Contract';
+import { Web3ContractAbiItem } from 'web3/web3Contract';
 import ERC721Contract from '../../erc721/ERC721Contract';
 
 import LANDRegistryABI from './abi.json';
@@ -33,12 +33,12 @@ export default class LANDRegistryContract extends ERC721Contract {
     return this.batch([
       {
         method: 'decodeTokenId',
-        methodArgs: [tokenId]
+        methodArgs: [tokenId],
       },
       {
         method: 'tokenMetadata',
-        methodArgs: [tokenId]
-      }
+        methodArgs: [tokenId],
+      },
     ]);
   }
 }

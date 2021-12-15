@@ -28,10 +28,10 @@ export default class ERC20Contract extends Web3Contract {
       },
       {
         method: 'allowance',
-        transform: value => new BigNumber(value)
-      }
+        transform: value => new BigNumber(value),
+      },
     ])
-      .then(([balance, allowance]) => ({balance, allowance}));
+      .then(([balance, allowance]) => ({ balance, allowance }));
   }
 
   /**

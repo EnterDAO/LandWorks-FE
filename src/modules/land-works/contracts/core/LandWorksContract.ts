@@ -69,7 +69,7 @@ export default class LandWorksContract extends Web3Contract {
     maxPeriod: BigNumber,
     maxFutureTime: BigNumber,
     paymentToken: string,
-    pricePerSecond: BigNumber
+    pricePerSecond: BigNumber,
   ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
@@ -93,7 +93,7 @@ export default class LandWorksContract extends Web3Contract {
    * @param assetId The target asset.
    */
   delist(
-    assetId: BigNumber
+    assetId: BigNumber,
   ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
@@ -111,7 +111,7 @@ export default class LandWorksContract extends Web3Contract {
    * @param assetId The target asset.
    */
   withdraw(
-    assetId: BigNumber
+    assetId: BigNumber,
   ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
@@ -166,7 +166,7 @@ export default class LandWorksContract extends Web3Contract {
         operator,
       ], {
         from: this.account,
-        value: totalFee
+        value: totalFee,
       }).then();
   }
 
@@ -188,7 +188,7 @@ export default class LandWorksContract extends Web3Contract {
       [
         assetId,
         period,
-        operator
+        operator,
       ], {
         from: this.account,
       }).then();
@@ -203,7 +203,7 @@ export default class LandWorksContract extends Web3Contract {
   updateOperator(
     assetId: BigNumber,
     rentId: BigNumber,
-    operator: string
+    operator: string,
   ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
@@ -212,7 +212,7 @@ export default class LandWorksContract extends Web3Contract {
       [
         assetId,
         rentId,
-        operator
+        operator,
       ], {
         from: this.account,
       }).then();
