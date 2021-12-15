@@ -6,6 +6,8 @@ import AntdSpin from 'antd/lib/spin';
 import { useWarning } from 'components/providers/warning-provider';
 
 import LandworksProvider from './providers/landworks-provider';
+import EstateRegistryProvider from './providers/decentraland/estate-registry-provider';
+import LandRegistryProvider from './providers/decentraland/land-registry-provider';
 
 const OwnedPasses = lazy(() => import('./views/lands-view'));
 const SingleLand = lazy(() => import('./views/single-land-view'));
@@ -37,11 +39,13 @@ const MetapassView: React.FC = () => {
 
   return (
     <LandworksProvider>
+      <LandRegistryProvider></LandRegistryProvider>
+      <EstateRegistryProvider> </EstateRegistryProvider>
       <Suspense fallback={<AntdSpin />}>
         <Switch>
-          <Route path="/land-works" exact component={OwnedPasses} />
-          <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
-          {/*<Redirect to="/land-works" />*/}
+          <Route path='/land-works' exact component={OwnedPasses} />
+          <Route path='/land-works/land/:tokenId' exact component={SingleLand} />
+          {/*<Redirect to="/land-registry-provider-works" />*/}
         </Switch>
       </Suspense>
     </LandworksProvider>

@@ -30,15 +30,21 @@ export default class LANDRegistryContract extends ERC721Contract {
    * @param tokenId
    */
   async getTokenData(tokenId: BigNumber): Promise<any> {
-    return this.batch([
-      {
-        method: 'decodeTokenId',
-        methodArgs: [tokenId],
-      },
+    const data = await this.batch([
       {
         method: 'tokenMetadata',
         methodArgs: [tokenId],
       },
+      {
+        method: 'decodeTokenId',
+        methodArgs: [tokenId],
+      },
     ]);
+
+    return {
+      id: tokenId,
+      name: data[0],
+      coords: data[1],
+    }
   }
 }

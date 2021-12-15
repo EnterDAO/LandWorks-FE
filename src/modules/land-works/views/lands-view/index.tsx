@@ -101,7 +101,7 @@ const Lands: React.FC = () => {
             {/*      onButtonClick={setShowClaimModal}*/}
             {/*      buttonText={'VIEW'}*/}
             {/*      subHeading='There is avalailable'*/}
-            {/*      mainHeading='Adjacent land'*/}
+            {/*      mainHeading='Adjacent land-registry-provider'*/}
             {/*    />*/}
             {/*  </Col>*/}
             {/*)}*/}

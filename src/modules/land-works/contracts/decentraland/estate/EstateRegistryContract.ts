@@ -32,13 +32,18 @@ export default class EstateRegistryContract extends ERC721Contract {
    */
   async getTokenData(user: string, index: number): Promise<any> {
     const tokenId = await this.call('tokenOfOwnerByIndex', [user, index]); // Get the token ID
-    const promises = [];
-    promises.push(
-      this.call('getMetadata', [tokenId]),
+    const promises = [
+      this.call('getMetadata', tokenId),
       this.getEstateData(tokenId),
-    );
+    ];
 
-    return Promise.all(promises);
+    const result = await Promise.all(promises);
+
+    return {
+      id: tokenId,
+      name: result [0],
+      landIds: result [1],
+    };
   }
 
   /**
