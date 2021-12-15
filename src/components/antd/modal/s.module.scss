@@ -4,8 +4,9 @@
   border-radius: 12px;
 
   :global(.ant-modal-content) {
-    box-shadow: var(--theme-modal-shadow);
-    border-radius: 12px;
+    box-shadow: transparent;
+    border-radius: 10px;
+    background-color: var(--theme-modal-color);
   }
 
   :global(.ant-modal-close) {
@@ -38,9 +39,9 @@
   }
 
   :global(.ant-modal-body) {
-    background: var(--theme-card-color);
+    background: var(--theme-modal-color);
     overflow-y: auto;
-    border-radius: 12px;
+    border-radius: 10px;
   }
 
   :global(.ant-modal-header) + :global(.ant-modal-body) {

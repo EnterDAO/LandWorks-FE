@@ -1,6 +1,6 @@
 import React from 'react';
+import { Col, Row } from 'antd';
 
-import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Grid from 'components/custom/grid';
 import { IconWallet } from 'components/custom/icon-wallet';
@@ -56,29 +56,23 @@ const ConnectWalletModal: React.FC<ConnectWalletModalProps> = props => {
   }
 
   return (
-    <Modal width={568} {...modalProps}>
-      <Grid flow="row" gap={40}>
-        <Grid flow="row" gap={24}>
-          <Text type="h1" weight="bold" color="primary" align="center">
-            Select Wallet
-          </Text>
-          <Text type="p1" color="secondary" align="center">
-            Please pick a wallet to connect to EnterDAO
+    <Modal width={376} {...modalProps} className="sign-in-modal">
+      <Grid flow="row" gap={12}>
+        <Grid flow="row">
+          <Text type="h3" weight="bold" color="primary" align="center" style={{ marginBottom: '20px' }}>
+            Sign in with
           </Text>
         </Grid>
 
-        <Grid gap={24} colsTemplate="repeat(auto-fit, minmax(120px, 240px))">
-          {WalletConnectors.map(connector => (
-            <Button
-              key={connector.id}
-              type="select"
-              className={s.button}
-              style={{ height: '96px' }}
-              onClick={() => handleConnectorSelect(connector)}>
-              <IconWallet wallet={connector.id} style={{ maxHeight: 32 }} className={s.walletIcon} />
-            </Button>
-          ))}
-        </Grid>
+        {WalletConnectors.map(connector => (
+          <Row>
+            <Col span={24}>
+              <button key={connector.id} className={s.button} onClick={() => handleConnectorSelect(connector)}>
+                <IconWallet wallet={connector.id} style={{ maxHeight: 28 }} className={s.walletIcon} />
+              </button>
+            </Col>
+          </Row>
+        ))}
 
         <Grid flow="row">
           <Text type="p1" color="secondary" align="center">
