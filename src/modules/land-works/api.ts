@@ -113,7 +113,7 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]) {
                 id
                 data {
                     id
-                    asset{
+                    asset {
                         id
                         minPeriod
                         maxPeriod
