@@ -14,7 +14,7 @@ import { useWallet } from 'wallets/wallet';
 import { landsMockData } from './mockLands';
 
 import './index.scss';
-import { fetchOverviewData } from '../../api';
+import { fetchAssetsByMetaverseAndGteLastRentEndWithOrder, fetchOverviewData } from '../../api';
 
 const Lands: React.FC = () => {
   const pageSizeOptions = ['6', '12', '24'];
@@ -58,7 +58,6 @@ const Lands: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchOverviewData();
     const offset = (page - 1) * pageSize;
     const fileredLands = landsMockData.slice(offset, offset + pageSize);
     setLands(fileredLands);

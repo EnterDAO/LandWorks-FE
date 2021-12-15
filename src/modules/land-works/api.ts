@@ -42,7 +42,6 @@ export function fetchOverviewData(): Promise<APIOverviewData> {
     `,
   })
   .then(result => {
-    debugger;
     console.log(result);
     return {
       ...result.data.overview,
@@ -365,8 +364,8 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
 
   return GraphClient.get({
     query: gql`
-        query GetAssets($metaverse: String, $lastRentEnd: String, $orderColumn: String, $orderDirection: Boolean) {
-            assets (where: {metaverse: $metaverse, lastRentEnd_gte: $lastRentEnd}, orderBy: $orderColumn, orderDirection: orderDirection) {
+        query GetAssets($metaverse: String, $lastRentEnd: String, $orderColumn: String, $orderDirection: String) {
+            assets (where: {metaverse: $metaverse, lastRentEnd_gte: $lastRentEnd}, orderBy: $orderColumn, orderDirection: $orderDirection) {
                 id,
                 minPeriod,
                 maxPeriod,
