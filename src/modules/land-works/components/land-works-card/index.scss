@@ -1,5 +1,5 @@
-@import "../../../../styles/variables.scss";
-@import "../../../../styles/utils.scss";
+@import '../../../../styles/variables.scss';
+@import '../../../../styles/utils.scss';
 
 .land {
   &-card-wrapper {
@@ -8,14 +8,15 @@
 
   &-card {
     cursor: pointer;
-    border-radius: 7px;
-    border: none;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease-out;
+    background: none;
   }
 
   &-card:hover {
-    box-shadow: 0px 5px 18px #D4ABCF;
-    border: 1px solid white;
-    border-radius: 6px;
+    box-shadow: 0px 5px 18px rgba(255, 255, 255, 0.3);
+    border: 2px solid var(--theme-primary-color);
   }
 
   &-name {
@@ -52,8 +53,8 @@
 }
 .ant-card-body {
   padding: 20px 15px;
-  background-color:#27273A;
-  border-radius: 6px;
+  background-color: var(--theme-modal-color);
+  border-radius: 10px;
 }
 
 .land-info-row {
@@ -98,7 +99,7 @@
     }
 
     .per-day {
-      color: rgba(177, 174, 201, 1)
+      color: rgba(177, 174, 201, 1);
     }
 
     button {
@@ -131,7 +132,7 @@
   height: 20px;
   right: -5%;
   position: absolute;
-  background: linear-gradient(98.73deg, #DD3DCB 0%, #DD3DCB 100%);
+  background: linear-gradient(98.73deg, #dd3dcb 0%, #dd3dcb 100%);
   box-shadow: -2px 0px 4px rgb(239, 0, 210);
   border-radius: 18px 18px 0px 0px;
   transform: rotate(-90deg);
@@ -146,7 +147,7 @@
   }
 }
 
-.price-chart-container{
+.price-chart-container {
   row-gap: 0px;
   position: absolute;
   background: white;
