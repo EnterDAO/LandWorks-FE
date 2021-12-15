@@ -5,14 +5,8 @@
         box-shadow: none;
     }
 
-    .calendar-button {
-        color: white !important;
-        max-width: 155px;
-        height: 36px;
-    }
-
     .ant-modal-header {
-        padding: 22px 22px 0px 22px;
+        padding: 22px;
         border-bottom: none;
     }
 
@@ -52,12 +46,22 @@
     .rent-modal-footer {
         background: #161622;
         border-radius: 12px;
-        padding: 10px;
-        padding-left: 20px!important;
+        padding: 15px;
+        margin-top: 10px;
 
         .rent-button {
             color: white;
             width: 100%;
+            height: 44px;
+
+            &:hover {
+                color: white;
+            }
+
+            .eth-icon {
+                width: 15px;
+                vertical-align: middle;
+            }
         }
         .total-label {
             font-size: 16px;
@@ -71,13 +75,6 @@
             font-weight: 500;
             color: rgba(85, 44, 73, 1);
             padding: 3px 12px;
-
-
-            svg {
-                width: 15px;
-                vertical-align: text-top;
-            }
         }
     }
-
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Row } from 'antd';
+import { Col, DatePicker, Row } from 'antd';
 
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
@@ -34,15 +34,7 @@ export const RentModal: React.FC<Props> = props => {
                   </p>
                 </Col>
                 <Col span={24}>
-                  <Button
-                    className="calendar-button"
-                    type="primary"
-                    onClick={() => {
-                      console.log('do claiming stuff here');
-                    }}>
-                    <Icon name="png/calendar" className="info-icon light-text" />
-                    Rent Until..
-                  </Button>
+                  <DatePicker bordered={false} />
                 </Col>
               </Row>
             </Col>
@@ -69,9 +61,7 @@ export const RentModal: React.FC<Props> = props => {
               <p className="operator-address">0X99AA5721188BFF33</p>
             </Col>
           </Row>
-        </Col>
-        <Col span={24} className="rent-modal-footer">
-          <Row>
+          <Row className="rent-modal-footer">
             <Col span={24}>
               <Button
                 className="rent-button"
@@ -79,10 +69,14 @@ export const RentModal: React.FC<Props> = props => {
                 onClick={() => {
                   console.log('do rent stuff here');
                 }}>
-                <span>Rent Now</span>
-                <span>
-                  2,231 <Icon name="token-eth" className="eth-icon" /> $4446.44
-                </span>
+                <Row>
+                  <Col>
+                    <span>Rent Now </span>
+                    <span>
+                      2,231 <Icon name="token-eth" className="eth-icon" /> $4446.44
+                    </span>
+                  </Col>
+                </Row>
               </Button>
             </Col>
           </Row>
