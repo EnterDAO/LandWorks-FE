@@ -102,13 +102,39 @@ export type ClaimHistory = {
 }
 
 /**
+ * Gets all token payments, which includes address, symbol, name, decimals and fee percentage.
+ */
+export function fetchTokenPayments() {
+  return GraphClient.get({
+    query: gql`
+        query GetTokenPayments {
+            paymentTokens {
+                id
+                name
+                symbol
+                decimals
+                feePercentage
+            }
+        }`
+  }).then((async response => {
+    console.log(response);
+
+    return { ...response.data.paymentTokens };
+  }))
+  .catch(e => {
+    console.log(e);
+    return { data: {} };
+  });
+}
+
+/**
  * Gets all the information for a given asset, including its first five rents
  * @param id The address of the rent
- * @param first How many rents to be queried
+ * @param rentsSize How many rents to be queried
  */
 export function fetchAsset(
   id: string,
-  first: number = 5) {
+  rentsSize: number = 5) {
   return GraphClient.get({
     query: gql`
         query GetAsset($id: String, $first: Int) {
@@ -167,7 +193,7 @@ export function fetchAsset(
     `,
     variables: {
       id: id,
-      first: first
+      first: rentsSize
     },
   })
   .then((async response => {
@@ -275,7 +301,7 @@ export function fetchUser(address: string) {
         }
     `,
     variables: {
-      id: address,
+      id: address.toLowerCase(),
     },
   })
   .then((async response => {
@@ -328,13 +354,13 @@ export function fetchUserClaimHistory(
         }
     `,
     variables: {
-      id: address,
+      id: address.toLowerCase(),
     },
   })
   .then((async response => {
     console.log(response);
 
-    return response.data.user.claimHistory;
+    return response.data.user?.claimHistory;
   }))
   .catch(e => {
     console.log(e);
