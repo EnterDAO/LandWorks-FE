@@ -9,7 +9,7 @@ import LayoutHeader from 'layout/components/layout-header';
 
 import s from './s.module.scss';
 
-// const MetapassView = lazy(() => import('modules/land-works'));
+const MetapassView = lazy(() => import('modules/land-works'));
 const LandingView = lazy(() => import('modules/landing'));
 
 const LayoutView: React.FC = () => {
@@ -22,7 +22,7 @@ const LayoutView: React.FC = () => {
             <ErrorBoundary>
               <Suspense fallback={<AntdSpin className="pv-24 ph-64" style={{ width: '100%' }} />}>
                 <Switch>
-                  {/* <Route path="/land-works" component={MetapassView} /> */}
+                  <Route path="/land-works" component={MetapassView} />
                   <Route path="/" component={LandingView} />
                 </Switch>
               </Suspense>
