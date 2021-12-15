@@ -55,6 +55,14 @@ export function fetchOverviewData(): Promise<APIOverviewData> {
 
 export type DecentralandData = {
   metadata: string;
+  isLAND: boolean;
+  coordinates: any[];
+}
+
+export type CoordinatesLAND = {
+  id: string;
+  x: string;
+  y: string;
 }
 
 export type PaymentToken = {
@@ -74,17 +82,26 @@ export type AssetEntity = {
   unclaimedRentFee: BigNumber;
   paymentToken: PaymentToken;
   isHot: boolean;
+  decentralandData?: DecentralandData;
+  owner: IdEntity;
+  operator: string;
+  status: string;
+  rents: RentEntity[];
+}
+
+export type IdEntity = {
+  id: string;
 }
 
 export type RentEntity = {
   id: string;
-  rentAddress: string;
   operator: string;
   start: BigNumber;
   end: BigNumber;
   txHash: string;
   fee: any
   paymentToken: PaymentToken;
+  renter: IdEntity;
 }
 
 export type UserEntity = {
@@ -108,7 +125,7 @@ export type ClaimHistory = {
  * Gets all Decentraland assets, that have coordinates from the provided.
  * @param coordinates An array of coordinates, each coordinate in the following format: `{x}-{y}`.
  */
-export function fetchAdjacentDecentralandAssets(coordinates: string[]) {
+export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<AssetEntity[]> {
   return GraphClient.get({
     query: gql`
         query getAdjacentAssets($ids: [String]) {
@@ -127,6 +144,15 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]) {
                             symbol
                             decimals
                         }
+                        decentralandData {
+                            metadata
+                            isLAND
+                            coordinates {
+                                id
+                                x
+                                y
+                            }
+                        }
                     }
                 }
             }
@@ -137,14 +163,14 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]) {
     },
   }).then((async response => {
     console.log(response);
-    // TODO: convert to proper model if necessary
-    // TODO: might be possible to have duplicate assets, those should be filtered out
+    const mappedAssets = response.data.coordinatesLANDs?.map((coords: any) => coords.data.asset);
+    const uniqueAssets = parseAssets([...new Map(mappedAssets.map((v: any) => [v.id, v])).values()]);
 
-    return { ...response.data };
+    return uniqueAssets;
   }))
   .catch(e => {
     console.log(e);
-    return { data: {} };
+    return [];
   });
 }
 
@@ -182,7 +208,7 @@ export function fetchTokenPayments() {
 export function fetchAsset(
   id: string,
   page: number = 1,
-  rentsSize: number = 5) {
+  rentsSize: number = 5): Promise<AssetEntity> {
   return GraphClient.get({
     query: gql`
         query GetAsset($id: String, $first: Int, $offset: Int) {
@@ -215,8 +241,11 @@ export function fetchAsset(
                 status
                 decentralandData {
                     metadata
+                    isLAND
                     coordinates {
                         id
+                        x
+                        y
                     }
                 }
                 rents(first: $first, skip: $offset, orderBy: end, orderDirection: desc) {
@@ -248,12 +277,13 @@ export function fetchAsset(
   .then((async response => {
     console.log(response);
     // TODO: convert to proper model
+    const asset = parseAsset(response.data.asset);
 
-    return { ...response.data.asset };
+    return asset;
   }))
   .catch(e => {
     console.log(e);
-    return { data: {} };
+    return {} as AssetEntity;
   });
 }
 
@@ -305,7 +335,6 @@ export function fetchAssetRents(
     const result: PaginatedResult<RentEntity> = {
       data: (response.data.asset.rents ?? []).map((item: any) => ({
         ...item,
-        rentAddress: item.renter.id,
       })),
       meta: { count: response.data.assets.totalRents },
     };
@@ -339,6 +368,7 @@ export function fetchUser(address: string): Promise<UserEntity> {
                     }
                     decentralandData {
                         metadata
+                        isLAND
                         coordinates {
                             id
                         }
@@ -355,6 +385,7 @@ export function fetchUser(address: string): Promise<UserEntity> {
                     }
                     decentralandData {
                         metadata
+                        isLAND
                         coordinates {
                             id
                         }
@@ -409,6 +440,7 @@ export function fetchUserClaimHistory(
                         decentralandData {
                             id
                             metadata
+                            isLAND
                             coordinates {
                                 id
                             }
@@ -478,6 +510,7 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
                 }
                 decentralandData {
                     metadata
+                    isLAND
                     coordinates {
                         id
                     }
@@ -512,18 +545,21 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
 function parseAssets(assets: any[]): AssetEntity[] {
   let result = [] as AssetEntity[];
 
-  for (let i = 0; i < assets.length; i++) {
-    const graphAsset = assets[i];
-    const liteAsset: AssetEntity = { ...graphAsset };
-    liteAsset.pricePerSecond = getHumanValue(new BigNumber(graphAsset.pricePerSecond), graphAsset.paymentToken.decimals)!;
-    liteAsset.name = getDecentralandAssetName(graphAsset.decentralandData);
-    liteAsset.paymentToken = { ...graphAsset.paymentToken };
-    liteAsset.isHot = graphAsset.totalRents > 0;
-    liteAsset.unclaimedRentFee = getHumanValue(new BigNumber(graphAsset.unclaimedRentFee), graphAsset.paymentToken.decimals)!;
-    result.push(liteAsset);
+  for (const asset of assets) {
+    result.push(parseAsset(asset));
   }
-
   return result;
+}
+
+function parseAsset(asset: any): AssetEntity {
+  const liteAsset: AssetEntity = { ...asset };
+  liteAsset.pricePerSecond = getHumanValue(new BigNumber(asset.pricePerSecond), asset.paymentToken.decimals)!;
+  liteAsset.name = getDecentralandAssetName(asset.decentralandData);
+  liteAsset.paymentToken = { ...asset.paymentToken };
+  liteAsset.isHot = asset.totalRents > 0;
+  liteAsset.unclaimedRentFee = getHumanValue(new BigNumber(asset.unclaimedRentFee), asset.paymentToken.decimals)!;
+
+  return liteAsset;
 }
 
 function getDecentralandAssetName(decentralandData: any): string {

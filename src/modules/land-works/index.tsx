@@ -41,7 +41,7 @@ const MetapassView: React.FC = () => {
         <Switch>
           <Route path="/land-works" exact component={OwnedPasses} />
           <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
-          <Redirect to="/land-works" />
+          {/*<Redirect to="/land-works" />*/}
         </Switch>
       </Suspense>
     </LandworksProvider>

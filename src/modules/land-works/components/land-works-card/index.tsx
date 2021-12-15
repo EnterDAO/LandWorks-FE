@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { bottom, end } from '@popperjs/core';
 import { Card, Col, Image, Row } from 'antd';
-import { getEtherscanAddressUrl, getHumanValue, shortenAddr } from 'web3/utils';
 
 import Icon from 'components/custom/icon';
 
 import { LandCartChart } from '../land-cart-chart';
 import landImage from './assets/land.png';
-import vectorImage from './assets/Vector.png';
 
 import './index.scss';
 
@@ -35,10 +33,10 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
         </Row>
         <Row>
           <Image
-            onClick={() => history.push(`./land-works/land/${land.id}`)}
+            onClick={() => history.push(`/land-works/land/${land.id}`)}
             placeholder={<Image className="land-image" src={landImage} preview={false} />}
             className="land-image"
-            src={land.imageUrl}
+            src={landImage}
             preview={false}
           />
         </Row>
