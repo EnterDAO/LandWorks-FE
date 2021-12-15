@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { bottom, end } from '@popperjs/core';
 import { Card, Col, Image, Row } from 'antd';
@@ -17,6 +17,8 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   const history = useHistory();
   const [showChart, setShowChart] = useState(false);
 
+  useEffect(() => {}, [land]);
+
   return (
     <Col className="land-card-wrapper" xl={8} md={8} sm={12} xs={24}>
       <Card className="land-card">
@@ -24,10 +26,10 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
           <Col span={24}>
             <p className="land-name">
               <span>{land.name}</span>
-              <span className="label card-name-hot-label">
-                <Icon name="png/hot" className="name-label" />
+              {land.isHot && <span className='label card-name-hot-label'>
+                <Icon name='png/hot' className='name-label' />
                 HOT
-              </span>
+              </span>}
             </p>
           </Col>
         </Row>
