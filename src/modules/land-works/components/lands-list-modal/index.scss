@@ -1,3 +1,21 @@
 .list-modal {
-   
+    .ant-modal-header {
+        padding: 22px 22px 0px 22px;
+        border-bottom: none;
+        background: var(--theme-modal-color);
+      }
+
+      .ant-modal-close {
+        top: 22px;
+      }
+
+      .drop-heading {
+          margin-left: 5px;
+      }
+
+      .price-container {
+        background: #1E1E2E;
+        border-radius: 4px;
+        padding: 10px 15px;
+    }
 }

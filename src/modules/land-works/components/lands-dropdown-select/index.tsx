@@ -17,5 +17,7 @@ interface IProps {
 }
 
 export const Dropdown: React.FC<IProps> = ({ onChange, options, initialValuе }) => {
-  return <Select options={options} defaultValue={initialValuе.value} onChange={onChange}></Select>;
+  return (
+    <Select options={options} defaultValue={initialValuе.value} onChange={onChange} className="drop-select"></Select>
+  );
 };

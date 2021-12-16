@@ -1,0 +1,35 @@
+.period-select-component {
+    display: inline-block;
+
+    .lands-period-drop {
+        background: var(--theme-modal-color) !important;
+        height: 36px !important;
+        border-radius: 12px !important;
+        min-width: auto !important;
+
+        .ant-select-selector {
+            background: rgba(22, 22, 34, 1) !important;
+            border: none !important;
+            height: 36px !important;
+            padding: 6px 17px 0px 18px !important;
+            border-radius: 12px !important;
+        }
+
+        .ant-select-arrow {
+            top: 42% !important;
+            right: 9px !important;
+        }
+    }
+
+    .ant-input.period-input {
+        background: rgba(22, 22, 34, 1) !important;
+        border: none;
+        border-radius: 12px !important;
+        width: 50px !important;
+        padding: 7px 7px 7px 17px !important;
+
+        &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: white;
+          }
+    }
+}
