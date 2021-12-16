@@ -9,9 +9,10 @@ import { LandCartChart } from '../land-cart-chart';
 import landImage from './assets/land.png';
 
 import './index.scss';
+import { AssetEntity } from '../../api';
 
 interface ILandWorksCardProps {
-  land: any;
+  land: AssetEntity;
 }
 const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   const history = useHistory();
@@ -47,12 +48,12 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
             <Row className="land-info-row" align={bottom}>
               <Col span={24} className="price-eth-container">
                 <Icon name="png/eth" className="eth-icon" />
-                <span className="price-eth">{land.price}</span>
+                <span className="price-eth">{land.pricePerMagnitude.price}</span>
               </Col>
               <Col span={24}>
                 <span className="land-price-info">
                   <span className="price">$220</span>
-                  <span className="per-day">/ day</span>
+                  <span className="per-day">/ {land.pricePerMagnitude.magnitude}</span>
                   <button onClick={() => setShowChart(!showChart)}>
                     <Icon name="info-outlined" className="info-icon" />
                   </button>
@@ -66,7 +67,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
                 <p className="available-heading">Available now</p>
               </Col>
               <Col span={24}>
-                <p className="available-period"> 2-5 days</p>
+                <p className="available-period">{land.availability}</p>
               </Col>
             </Row>
           </Col>

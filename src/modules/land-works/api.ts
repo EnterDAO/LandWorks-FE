@@ -2,6 +2,12 @@ import { gql } from '@apollo/client';
 import BigNumber from 'bignumber.js';
 import { GraphClient } from '../../web3/graph/client';
 import { getHumanValue } from '../../web3/utils';
+import { calculatePricePerMagnitude, getFormattedTime, getNowTs } from '../../utils';
+import {
+  DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS,
+  MONTH_IN_SECONDS, WEEK_IN_SECONDS,
+  YEAR_IN_SECONDS,
+} from '../../utils/date';
 
 const BASE_URL = process.env.REACT_APP_MINT_METADATA_URL;
 
@@ -53,6 +59,11 @@ export function fetchOverviewData(): Promise<APIOverviewData> {
   });
 }
 
+export type PricePerMagnitude = {
+  price: string;
+  magnitude: string;
+}
+
 export type DecentralandData = {
   metadata: string;
   isLAND: boolean;
@@ -79,9 +90,11 @@ export type AssetEntity = {
   minPeriod: BigNumber;
   maxPeriod: BigNumber;
   pricePerSecond: BigNumber;
+  pricePerMagnitude: PricePerMagnitude;
   unclaimedRentFee: BigNumber;
   paymentToken: PaymentToken;
   consumer?: IdEntity;
+  availability: string;
   isHot: boolean;
   decentralandData?: DecentralandData;
   owner: IdEntity;
@@ -234,6 +247,7 @@ export function fetchAsset(
                     id
                     name
                     symbol
+                    decimals
                 }
                 totalRents
                 unclaimedRentFee
@@ -560,6 +574,19 @@ function parseAsset(asset: any): AssetEntity {
   liteAsset.paymentToken = { ...asset.paymentToken };
   liteAsset.isHot = asset.totalRents > 0;
   liteAsset.unclaimedRentFee = getHumanValue(new BigNumber(asset.unclaimedRentFee), asset.paymentToken.decimals)!;
+
+  // Calculates the intervals for availability
+  const now = getNowTs();
+  const maxFutureTimeRent = new BigNumber(asset.lastRentEnd).plus(asset.maxFutureTime).minus(asset.maxPeriod);
+  let maxRent = asset.maxPeriod;
+  if (now < asset.lastRentEnd && maxFutureTimeRent.lt(asset.maxPeriod)) {
+    maxRent = maxFutureTimeRent.toNumber();
+  }
+
+  const maxAvailablity = getFormattedTime(maxRent);
+  liteAsset.availability = `${getFormattedTime(asset.minPeriod)}-${maxAvailablity}`;
+  liteAsset.pricePerMagnitude = calculatePricePerMagnitude(liteAsset.pricePerSecond, maxAvailablity!.split(' ')[1]);
+  console.log(liteAsset);
 
   return liteAsset;
 }

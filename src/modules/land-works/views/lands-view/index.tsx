@@ -16,6 +16,7 @@ import { landsMockData } from './mockLands';
 
 import './index.scss';
 import { AssetEntity, fetchAssetsByMetaverseAndGteLastRentEndWithOrder, fetchUser, UserEntity } from '../../api';
+import { getNowTs } from '../../../../utils';
 
 const DECENTRALAND_METAVERSE = '1';
 const DEFAULT_LAST_RENT_END = '0';
@@ -61,7 +62,7 @@ const Lands: React.FC = () => {
     if (checked !== undefined) {
       setByAvailability(checked);
     }
-    setLastRentEnd(checked ? Math.round(Date.now() / 1000).toString() : DEFAULT_LAST_RENT_END);
+    setLastRentEnd(checked ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
     setPage(1);
   };
 

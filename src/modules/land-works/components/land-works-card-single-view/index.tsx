@@ -74,7 +74,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
               </Col>
               <Col span={10}>
                 <span className='available-heading'>Available now</span>{' '}
-                <span className='available-period'>2-55 days</span>
+                <span className='available-period'>{asset?.availability}</span>
               </Col>
             </Row>
           </Col>
@@ -84,11 +84,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                 <Row>
                   <Col push={5} span={19} className='eth-price-container'>
                     <Icon name='png/eth' className='eth-icon' />
-                    <span className='price-eth'>0.336</span>
+                    <span className='price-eth'>{asset?.pricePerMagnitude?.price}</span>
                   </Col>
                   <Col push={7} span={17} className='usd-price-container'>
                     <span className='price'>$220</span>
-                    <span className='per-day'>/ day</span>
+                    <span className='per-day'>/ {asset?.pricePerMagnitude?.magnitude}</span>
                     <Icon name='info-outlined' className='info-icon' />
                   </Col>
                 </Row>
