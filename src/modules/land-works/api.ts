@@ -375,6 +375,9 @@ export function fetchUser(address: string): Promise<UserEntity> {
                 id
                 consumerTo {
                     id
+                    minPeriod
+                    maxPeriod
+                    maxFutureTime
                     unclaimedRentFee
                     paymentToken {
                         id
@@ -392,6 +395,9 @@ export function fetchUser(address: string): Promise<UserEntity> {
                 }
                 assets {
                     id
+                    minPeriod
+                    maxPeriod
+                    maxFutureTime
                     unclaimedRentFee
                     paymentToken {
                         id
@@ -586,7 +592,6 @@ function parseAsset(asset: any): AssetEntity {
   const maxAvailablity = getFormattedTime(maxRent);
   liteAsset.availability = `${getFormattedTime(asset.minPeriod)}-${maxAvailablity}`;
   liteAsset.pricePerMagnitude = calculatePricePerMagnitude(liteAsset.pricePerSecond, maxAvailablity!.split(' ')[1]);
-  console.log(liteAsset);
 
   return liteAsset;
 }

@@ -33,10 +33,8 @@ const SingleLand: React.FC = () => {
   };
 
   const getNeighbours = (coordinates: CoordinatesLAND): string[] => {
-    console.log(coordinates.y);
     const numX = +coordinates.x;
     const numY = +coordinates.y;
-    console.log(numY);
     return [
       `${numX - 1}-${numY - 1}`,
       `${numX - 1}-${numY}`,

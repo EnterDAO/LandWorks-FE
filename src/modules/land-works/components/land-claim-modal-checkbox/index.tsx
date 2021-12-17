@@ -30,7 +30,7 @@ export const LandClaimCheckBox: React.FC<props> = props => {
         </Checkbox>
       </Col>
       <Col span={6} className='price'>
-        <span className='price-checkbox'>{unclaimedRentFee.toString()}</span>
+        <span className='price-checkbox'>{unclaimedRentFee.toString(10)}</span>
         <Icon name={icon} className='eth-icon' />
       </Col>
     </Row>

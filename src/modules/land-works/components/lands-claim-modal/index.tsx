@@ -18,6 +18,8 @@ type Props = ModalProps & {
   renderSuccess?: () => React.ReactNode;
 };
 
+const MAX_CLAIM_SELECTED_ASSETS = 3; // Can be updated to 7-8
+
 export const ClaimModal: React.FC<Props> = props => {
   const landWorksCtx = useLandworks();
   const { landWorksContract } = landWorksCtx;
@@ -52,6 +54,14 @@ export const ClaimModal: React.FC<Props> = props => {
     setTotalUsdc(totalUsdc);
   }
 
+  const hasSelectedAssets = () => {
+    return assets.length > 0;
+  }
+
+  const hasReachedMaxClaimsLimit = () => {
+    return assets.length > MAX_CLAIM_SELECTED_ASSETS;
+  }
+
   function updateAssets(isChecked: boolean, asset: AssetEntity): void {
     if (isChecked) {
       setAssets([...assets, asset]);
@@ -79,25 +89,26 @@ export const ClaimModal: React.FC<Props> = props => {
             <LandClaimCheckBox key={data.id} onSelected={updateAssets} data={data} />
           </Col>
         ))}
-        <Col span={24} className='max-transaction-limit'>
+        {hasReachedMaxClaimsLimit() && <Col span={24} className='max-transaction-limit'>
           <p>You have reached the limit of max claims in one transaction.</p>
-        </Col>
-        <Col span={24} className='claim-modal-footer'>
+        </Col>}
+        {hasSelectedAssets() && <Col span={24} className='claim-modal-footer'>
           <Row>
             <Col span={19} className='prices-container'>
               <p>
                 <span className='total-label'>Total:</span>{' '}
                 <span className='total-price'>
-                  {totalEth.toString()} <Icon name='token-eth' className='eth-icon' />
+                  {totalEth.toString(10)} <Icon name='token-eth' className='eth-icon' />
                 </span>{' '}
                 <span className='total-price'>
-                  {totalUsdc.toString()} <Icon name='token-usdc' className='eth-icon' />
+                  {totalUsdc.toString(10)} <Icon name='token-usdc' className='eth-icon' />
                 </span>
               </p>
             </Col>
             <Col span={5}>
               <Button
                 className='claim-button'
+                disabled={hasReachedMaxClaimsLimit()}
                 type='primary'
                 onClick={() => {
                   console.log('do claiming stuff here');
@@ -107,7 +118,7 @@ export const ClaimModal: React.FC<Props> = props => {
               </Button>
             </Col>
           </Row>
-        </Col>
+        </Col>}
       </Row>
     </Modal>
   );
