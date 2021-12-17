@@ -201,8 +201,6 @@ export function fetchTokenPayments() {
             }
         }`,
   }).then((async response => {
-    console.log(response);
-
     return { ...response.data.paymentTokens };
   }))
   .catch(e => {
@@ -267,7 +265,6 @@ export function fetchAsset(
     },
   })
   .then((async response => {
-    console.log(response);
     return parseAsset(response.data.asset);
   }))
   .catch(e => {
@@ -319,13 +316,11 @@ export function fetchAssetRents(
     },
   })
   .then((async response => {
-    console.log(response);
-
     const result: PaginatedResult<RentEntity> = {
       data: (response.data.asset.rents ?? []).map((item: any) => ({
         ...item,
         renterAddress: item.renter.id,
-        price: `${item.paymentToken.symbol} ${getHumanValue(new BigNumber(item.fee), item.paymentToken.decimals)!.toString(10)}`
+        price: `${item.paymentToken.symbol} ${getHumanValue(new BigNumber(item.fee), item.paymentToken.decimals)!.toString(10)}`,
       })),
       meta: { count: response.data.asset.totalRents },
     };
@@ -382,7 +377,6 @@ export function fetchAssetUserRents(
     },
   })
   .then((async response => {
-    console.log(response);
     // Paginate the result
     const paginatedRents = response.data.asset.rents.slice(limit * (page - 1), limit * page);
 
@@ -390,7 +384,7 @@ export function fetchAssetUserRents(
       data: paginatedRents.map((item: any) => ({
         ...item,
         renterAddress: item.renter.id,
-        price: `${item.paymentToken.symbol} ${getHumanValue(new BigNumber(item.fee), item.paymentToken.decimals)!.toString(10)}`
+        price: `${item.paymentToken.symbol} ${getHumanValue(new BigNumber(item.fee), item.paymentToken.decimals)!.toString(10)}`,
       })),
       meta: { count: response.data.asset.rents.length },
     };
@@ -405,10 +399,10 @@ export function fetchAssetUserRents(
 }
 
 /**
- * Gets all the assets, rents and consumerTo assets for a given user.
+ * Gets all the assets and consumerTo assets for a given user.
  * @param address The address of the user
  */
-export function fetchUser(address: string): Promise<UserEntity> {
+export function fetchUserAssets(address: string): Promise<UserEntity> {
   return GraphClient.get({
     query: gql`
         query GetUser($id: String) {
@@ -471,8 +465,6 @@ export function fetchUser(address: string): Promise<UserEntity> {
     },
   })
   .then((async response => {
-    console.log(response);
-
     const result = { ...response.data.user };
     const unclaimedRentFeeAssets = result.assets?.filter((a: any) => BigNumber.from(a.unclaimedRentFee)?.gt(0));
     const unclaimedRentFeeConsumerAssets = result.consumerTo?.filter((a: any) => BigNumber.from(a.unclaimedRentFee)?.gt(0));
@@ -480,6 +472,68 @@ export function fetchUser(address: string): Promise<UserEntity> {
     result.unclaimedRentAssets = parseAssets([...new Map(mergedUnclaimed.map(v => [v.id, v])).values()]);
     result.hasUnclaimedRent = result.unclaimedRentAssets.length > 0;
     return result;
+  }))
+  .catch(e => {
+    console.log(e);
+    return {} as UserEntity;
+  });
+}
+
+/**
+ * Gets user's rents from GraphQL. Filters out only the last rent for an asset.
+ * TODO: Can be optimised, query should be done in the reverse order.
+ * @param address The address of the user
+ * @param page Which page to load. Default 1
+ * @param limit How many items per page. Default 6
+ */
+export function fetchUserLastRentPerAsset(
+  address: string,
+  page = 1,
+  limit = 6): Promise<any> {
+  return GraphClient.get({
+    query: gql`
+        query GetUserRents($id:String) {
+            user(id: $id) {
+                rents(orderBy: end, orderDirection: desc) {
+                    id
+                    operator
+                    end
+                    asset {
+                        id
+                        decentralandData {
+                            id
+                            metadata
+                            isLAND
+                            coordinates {
+                                id
+                                x
+                                y
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    `,
+    variables: {
+      id: address.toLowerCase(),
+    },
+  })
+  .then((async response => {
+    // Filter out rents for the same asset
+    const filteredRents = response.data.user.rents
+      .filter(
+        (element: any, index: number, array: any) => array
+          .findIndex(
+            (t: any) => (t.asset.id === element.asset.id)) === index);
+
+    const paginatedRents = filteredRents.slice(limit * (page - 1), limit * page);
+
+    return paginatedRents
+      .map((element: any) => ({
+        ...element,
+        name: getDecentralandAssetName(element.asset.decentralandData),
+      }));
   }))
   .catch(e => {
     console.log(e);
@@ -527,7 +581,6 @@ export function fetchUserClaimHistory(
     },
   })
   .then((async response => {
-    console.log(response);
     // TODO: convert to proper model if necessary
 
     return response.data.user?.claimHistory;
@@ -542,7 +595,7 @@ export function fetchUserClaimHistory(
  * Gets Assets by metaverse id, and gte (greater or equal) than the last rent end,
  * ordered by a given column in ascending/descending order
  * @param page Which page to load. Default 1
- * @param limit how many items per page. Default 6
+ * @param limit How many items per page. Default 6
  * @param metaverse The target metaverse id. Default '1', which is considered Decentraland
  * @param lastRentEnd A timestamp (in seconds), which will be used to query assets with lastRentEnd greater than the given.
  * @param orderColumn The name of the order column

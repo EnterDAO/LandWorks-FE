@@ -13,7 +13,12 @@ import { SortDirection } from 'modules/land-works/models/SortDirection';
 import { useWallet } from 'wallets/wallet';
 
 import './index.scss';
-import { AssetEntity, fetchAssetsByMetaverseAndGteLastRentEndWithOrder, fetchUser, UserEntity } from '../../api';
+import {
+  AssetEntity,
+  fetchAssetsByMetaverseAndGteLastRentEndWithOrder,
+  fetchUserAssets,
+  UserEntity,
+} from '../../api';
 import { getNowTs } from '../../../../utils';
 
 const DECENTRALAND_METAVERSE = '1';
@@ -71,7 +76,6 @@ const Lands: React.FC = () => {
 
   const getAssets = async (page: number, pageSize: number, metaverse: string, lastRentEnd: string, orderColumn: string, sortDir: string) => {
     const lands = await fetchAssetsByMetaverseAndGteLastRentEndWithOrder(page, pageSize, metaverse, lastRentEnd, orderColumn, sortDir);
-    console.log(lands);
     setLands(lands.data);
     setTotalLands(lands?.meta.count);
   };
@@ -79,7 +83,7 @@ const Lands: React.FC = () => {
   const getUser = async (account: string | undefined) => {
     let user = {} as UserEntity;
     if (account) {
-      user = await fetchUser(account);
+      user = await fetchUserAssets(account);
     }
     setUser(user);
   };
