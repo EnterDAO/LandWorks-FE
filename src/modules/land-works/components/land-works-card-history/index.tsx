@@ -80,6 +80,8 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
   const onAllSelected = () => setAreAllSelected(true);
   const onYouSelected = () => setAreAllSelected(false);
 
+  const showYoursSection = () => wallet.account && rents.length > 0;
+
   const getRents = async (assetId: string, page: number, pageSize: number) => {
     if (!assetId) {
       return [];
@@ -120,7 +122,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
             }}>
               All
             </button>
-            {wallet.account && <button className='btn yours-btn' onClick={() => {
+            {showYoursSection() && <button className='btn yours-btn' onClick={() => {
               onYouSelected();
             }}>
               Yours

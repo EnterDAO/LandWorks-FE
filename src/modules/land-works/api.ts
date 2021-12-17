@@ -44,7 +44,6 @@ export function fetchOverviewData(): Promise<APIOverviewData> {
     `,
   })
   .then(result => {
-    console.log(result);
     return {
       ...result.data.overview,
     };
@@ -319,13 +318,13 @@ export function fetchAssetRents(
     const result: PaginatedResult<RentEntity> = {
       data: (response.data.asset.rents ?? []).map((item: any) => ({
         ...item,
+        key: item.id,
         renterAddress: item.renter.id,
         price: `${item.paymentToken.symbol} ${getHumanValue(new BigNumber(item.fee), item.paymentToken.decimals)!.toString(10)}`,
       })),
       meta: { count: response.data.asset.totalRents },
     };
 
-    console.log(result);
     return result;
   }))
   .catch(e => {
@@ -389,7 +388,6 @@ export function fetchAssetUserRents(
       meta: { count: response.data.asset.rents.length },
     };
 
-    console.log(result);
     return result;
   }))
   .catch(e => {
