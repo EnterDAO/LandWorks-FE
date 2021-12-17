@@ -14,6 +14,7 @@ import './index.scss';
 import { AssetEntity, CoordinatesLAND, fetchAdjacentDecentralandAssets, fetchAsset } from '../../api';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetStatus } from '../../models/AssetStatus';
+import LandWorksContract from '../../contracts/core/LandWorksContract';
 
 const SingleLand: React.FC = () => {
   const wallet = useWallet();
@@ -96,7 +97,7 @@ const SingleLand: React.FC = () => {
           </button>}
       </Row>
       <SingleViewLandCard setShowRentModal={setShowRentModal} asset={asset} />
-      <SingleViewLandHistory />
+      <SingleViewLandHistory assetId={tokenId}/>
       <Row className='pooling-section'>
         <Col className='pooling-heading'>Pooling </Col>
         <Col className='pooling-description'>

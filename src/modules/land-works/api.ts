@@ -106,12 +106,14 @@ export type IdEntity = {
 export type RentEntity = {
   id: string;
   operator: string;
-  start: BigNumber;
-  end: BigNumber;
+  start: string;
+  end: string;
   txHash: string;
   fee: any
   paymentToken: PaymentToken;
   renter: IdEntity;
+  renterAddress: string;
+  price: string
 }
 
 export type UserEntity = {
@@ -172,7 +174,6 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
       ids: coordinates,
     },
   }).then((async response => {
-    console.log(response);
     const mappedAssets = response.data.coordinatesLANDs?.map((coords: any) => coords.data.asset);
     const uniqueAssets = parseAssets([...new Map(mappedAssets.map((v: any) => [v.id, v])).values()]);
 
@@ -213,12 +214,9 @@ export function fetchTokenPayments() {
 /**
  * Gets all the information for a given asset, including its first five rents
  * @param id The address of the rent
- * @param rentsSize How many rents to be queried
  */
 export function fetchAsset(
-  id: string,
-  page: number = 1,
-  rentsSize: number = 5): Promise<AssetEntity> {
+  id: string): Promise<AssetEntity> {
   return GraphClient.get({
     query: gql`
         query GetAsset($id: String, $first: Int, $offset: Int) {
@@ -260,38 +258,17 @@ export function fetchAsset(
                         y
                     }
                 }
-                rents(first: $first, skip: $offset, orderBy: end, orderDirection: desc) {
-                    id
-                    renter {
-                        id
-                    }
-                    start
-                    operator
-                    end
-                    txHash
-                    fee
-                    paymentToken {
-                        id
-                        name
-                        symbol
-                    }
-                }
                 operator
             }
         }
     `,
     variables: {
       id: id,
-      first: rentsSize,
-      skip: rentsSize * (page - 1),
     },
   })
   .then((async response => {
     console.log(response);
-    // TODO: convert to proper model
-    const asset = parseAsset(response.data.asset);
-
-    return asset;
+    return parseAsset(response.data.asset);
   }))
   .catch(e => {
     console.log(e);
@@ -347,10 +324,78 @@ export function fetchAssetRents(
     const result: PaginatedResult<RentEntity> = {
       data: (response.data.asset.rents ?? []).map((item: any) => ({
         ...item,
+        renterAddress: item.renter.id,
+        price: `${item.paymentToken.symbol} ${getHumanValue(new BigNumber(item.fee), item.paymentToken.decimals)!.toString(10)}`
       })),
-      meta: { count: response.data.assets.totalRents },
+      meta: { count: response.data.asset.totalRents },
     };
 
+    console.log(result);
+    return result;
+  }))
+  .catch(e => {
+    console.log(e);
+    return { data: [], meta: { count: 0 } };
+  });
+}
+
+/**
+ * Gets the rents by chunks for a given asset, ordered by `end` in descending order.
+ * @param id The id of the asset
+ * @param renter The address of the renter
+ * @param page Which page to load. Default 1
+ * @param limit How many items per page. Default 5
+ */
+export function fetchAssetUserRents(
+  id: string,
+  renter: string,
+  page = 1,
+  limit = 5,
+): Promise<PaginatedResult<RentEntity>> {
+  return GraphClient.get({
+    query: gql`
+        query GetAssetUserRents($id:String, $renter: String) {
+            asset(id: $id) {
+                rents(where: {renter: $renter}, orderBy: end, orderDirection: desc) {
+                    id
+                    renter {
+                        id
+                    }
+                    start
+                    operator
+                    end
+                    txHash
+                    fee
+                    paymentToken {
+                        id
+                        name
+                        symbol
+                        decimals
+                    }
+                }
+            }
+        }
+    `,
+    variables: {
+      id: id,
+      renter: renter,
+    },
+  })
+  .then((async response => {
+    console.log(response);
+    // Paginate the result
+    const paginatedRents = response.data.asset.rents.slice(limit * (page - 1), limit * page);
+
+    const result: PaginatedResult<RentEntity> = {
+      data: paginatedRents.map((item: any) => ({
+        ...item,
+        renterAddress: item.renter.id,
+        price: `${item.paymentToken.symbol} ${getHumanValue(new BigNumber(item.fee), item.paymentToken.decimals)!.toString(10)}`
+      })),
+      meta: { count: response.data.asset.rents.length },
+    };
+
+    console.log(result);
     return result;
   }))
   .catch(e => {

@@ -12,8 +12,6 @@ import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sort
 import { SortDirection } from 'modules/land-works/models/SortDirection';
 import { useWallet } from 'wallets/wallet';
 
-import { landsMockData } from './mockLands';
-
 import './index.scss';
 import { AssetEntity, fetchAssetsByMetaverseAndGteLastRentEndWithOrder, fetchUser, UserEntity } from '../../api';
 import { getNowTs } from '../../../../utils';
@@ -28,7 +26,7 @@ const Lands: React.FC = () => {
   const wallet = useWallet();
 
   const [lands, setLands] = useState([] as AssetEntity[]);
-  const [totalLands, setTotalLands] = useState(landsMockData.length);
+  const [totalLands, setTotalLands] = useState(lands.length);
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [sortColumn, setSortColumn] = useState(sortColumns[0]);
   const [user, setUser] = useState({} as UserEntity);
