@@ -3,11 +3,7 @@ import BigNumber from 'bignumber.js';
 import { GraphClient } from '../../web3/graph/client';
 import { getHumanValue } from '../../web3/utils';
 import { calculatePricePerMagnitude, getFormattedTime, getNowTs } from '../../utils';
-import {
-  DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS,
-  MONTH_IN_SECONDS, WEEK_IN_SECONDS,
-  YEAR_IN_SECONDS,
-} from '../../utils/date';
+import { constants } from 'ethers';
 
 const BASE_URL = process.env.REACT_APP_MINT_METADATA_URL;
 
@@ -580,6 +576,7 @@ function parseAsset(asset: any): AssetEntity {
   liteAsset.paymentToken = { ...asset.paymentToken };
   liteAsset.isHot = asset.totalRents > 0;
   liteAsset.unclaimedRentFee = getHumanValue(new BigNumber(asset.unclaimedRentFee), asset.paymentToken.decimals)!;
+  liteAsset.operator = asset.operator ?? constants.AddressZero;
 
   // Calculates the intervals for availability
   const now = getNowTs();
@@ -604,7 +601,7 @@ function getDecentralandAssetName(decentralandData: any): string {
     return decentralandData.metadata;
   }
   if (decentralandData.coordinates.length > 1) {
-    return 'Estate';
+    return `Estate (${decentralandData.coordinates.length} LAND)`;
   }
   const coordinates = decentralandData.coordinates[0].id.split('-');
   return `LAND (${coordinates[0]}, ${coordinates[1]})`;

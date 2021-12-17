@@ -8,6 +8,7 @@ import cardImage from './assets/card.png';
 import './index.scss';
 import { AssetEntity, RentEntity } from '../../api';
 import { useWallet } from '../../../../wallets/wallet';
+import { shortenAddr } from '../../../../web3/utils';
 
 const { Step } = Steps;
 
@@ -65,7 +66,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
             <Row>
               <Col span={14}>
                 <span className='land-owner'>
-                  BY <span className='land-owner-address'>{asset?.owner?.id.toLowerCase()}</span>
+                  BY <span className='land-owner-address'>{shortenAddr(asset?.owner?.id.toLowerCase())}</span>
                 </span>
                 {shouldShowYou() && <span className='label card-name-you-label'>
                   <Icon name='png/you' className='name-label' />
@@ -108,7 +109,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                     Current operator <Icon name='info-outlined' className='info-icon' />
                   </Col>
                   <Col span={24}>
-                    <p className='land-operator-address'>{asset?.operator}</p>
+                    <p className='land-operator-address'>{shortenAddr(asset?.operator)}</p>
                   </Col>
                 </Row>
               </Col>
