@@ -30,21 +30,19 @@ const SingleLand: React.FC = () => {
     for (const coordinates of coordinatesList) {
       neighbours = [...neighbours, ...getNeighbours(coordinates)];
     }
-    return [...new Set(neighbours)];
+
+    return [...new Set(neighbours)]
+      .filter(item => !coordinatesList.some(l => l.id === item));
   };
 
   const getNeighbours = (coordinates: CoordinatesLAND): string[] => {
     const numX = +coordinates.x;
     const numY = +coordinates.y;
     return [
-      `${numX - 1}-${numY - 1}`,
       `${numX - 1}-${numY}`,
-      `${numX - 1}-${numY + 1}`,
       `${numX}-${numY - 1}`,
       `${numX}-${numY + 1}`,
-      `${numX + 1}-${numY - 1}`,
       `${numX + 1}-${numY}`,
-      `${numX + 1}-${numY + 1}`,
     ];
   };
 
