@@ -88,7 +88,8 @@ const styles = {
   }),
 };
 
-const CurrencyDropdown = () => {
+const CurrencyDropdown = (props: any) => {
+  const { changeHandler } = props;
   const Option = (props: any) => {
     const { data } = props;
 
@@ -129,6 +130,7 @@ const CurrencyDropdown = () => {
     <Select
       options={options}
       styles={styles}
+      onChange={changeHandler}
       components={{
         Option,
         ValueContainer,

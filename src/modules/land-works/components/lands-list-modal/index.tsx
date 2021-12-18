@@ -135,6 +135,10 @@ export const ListModal: React.FC<Props> = props => {
     console.log(e);
   };
 
+  const handleCurrencyChange = (e: any) => {
+    console.log(e);
+  };
+
   return (
     <Modal
       width={750}
@@ -218,7 +222,7 @@ export const ListModal: React.FC<Props> = props => {
             <Col span={24}>
               <Row>
                 <Col span={12}>
-                  <CurrencyDropdown />
+                  <CurrencyDropdown changeHandler={handleCurrencyChange} />
                   0,56652 $255 / day
                 </Col>
                 <Col span={12}>
