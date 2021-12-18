@@ -3,6 +3,8 @@ import { Input } from 'antd';
 
 import Select from 'components/antd/select';
 
+import { LandsInput } from '../lands-input';
+
 import './index.scss';
 
 type Item = {
@@ -20,7 +22,7 @@ interface IProps {
 export const LandsPeriodDropdown: React.FC<IProps> = ({ onChange, onInputChange, options, initialValuе }) => {
   return (
     <div className="period-select-component">
-      <Input placeholder="1" className="period-input" onChange={onInputChange} />
+      <LandsInput onInputChange={onInputChange} />
       <Select options={options} defaultValue={initialValuе.value} onChange={onChange} className="lands-period-drop" />
     </div>
   );

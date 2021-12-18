@@ -1,0 +1,11 @@
+.ant-input.custom-lands-input {
+    background: rgba(22, 22, 34, 1) !important;
+    border: none;
+    border-radius: 12px !important;
+    width: 50px !important;
+    padding: 7px 7px 7px 17px !important;
+
+    &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: white;
+        }
+}

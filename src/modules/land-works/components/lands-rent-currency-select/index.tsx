@@ -16,6 +16,7 @@ const styles = {
     borderRadius: '15px',
     cursor: 'pointer',
     position: 'relative',
+    display: 'inline-block',
   }),
   menu: (defaultStyles: any) => ({
     ...defaultStyles,
