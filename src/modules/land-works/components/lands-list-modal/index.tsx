@@ -5,8 +5,8 @@ import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon, { TokenIconNames } from 'components/custom/icon';
 
-import { CustomDropdown } from '../lands-custom-select';
 import { Dropdown } from '../lands-dropdown-select';
+import CurrencyDropdown from '../lands-rent-currency-select';
 import { LandsPeriodDropdown } from '../lands-rent-period-select';
 
 import './index.scss';
@@ -218,11 +218,7 @@ export const ListModal: React.FC<Props> = props => {
             <Col span={24}>
               <Row>
                 <Col span={12}>
-                  <CustomDropdown
-                    options={PropertyOptions}
-                    onChange={handlePropertyChange}
-                    initialValuе={PropertyOptions[0]}
-                  />
+                  <CurrencyDropdown />
                   0,56652 $255 / day
                 </Col>
                 <Col span={12}>
