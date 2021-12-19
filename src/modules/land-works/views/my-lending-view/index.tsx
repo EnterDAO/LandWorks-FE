@@ -1,43 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { end } from '@popperjs/core';
 import { Col, Row } from 'antd';
 
-import { UserEntity, fetchUserAssets } from 'modules/land-works/api';
+import { AssetEntity, UserEntity, fetchUserAssets } from 'modules/land-works/api';
+import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
 import LandsRentingSorter from 'modules/land-works/components/land-renting-sorter';
 import LandWorksCard from 'modules/land-works/components/land-works-card';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { useWallet } from 'wallets/wallet';
 
+import './index.scss';
+
 const LendingView = () => {
   const wallet = useWallet();
 
-  const [lands, setLands] = useState<any>([]);
+  const [assets, setAssets] = useState([] as AssetEntity[]);
   const [user, setUser] = useState({} as UserEntity);
 
-  const getUser = async (account: string | undefined) => {
-    let user = {} as UserEntity;
-    // let assetRents;
-    if (account) {
-      user = await fetchUserAssets(account);
-      // Combine consumerTo + assets and remove duplicate
-      // assetRents = await fetchAssetRents(account);
-    }
-    setUser(user);
+  const getUser = async (account: string) => {
+    const user = await fetchUserAssets(account);
+    console.log('USER:');
     console.log(user);
-    // console.log('ASSET RENTS:');
-    // console.log(assetRents);
-    // user.rents.forEach((rent: any) => {
-    //   const rentAsset = user.assets.find(
-    //     (a: any) => a.decentralandData.coordinates[0].id === rent.asset.decentralandData.coordinates[0].id,
-    //   );
-    //   if (rentAsset) {
-    //     setLands((l: any) => [...l, rentAsset]);
-    //   }
-    // });
+    // Combine consumerTo + assets and remove duplicate
+    setUser(user);
+    setAssets(user.unclaimedRentAssets);
   };
 
   useEffect(() => {
-    getUser(wallet.account);
+    if (wallet.account) {
+      getUser(wallet.account);
+    }
   }, []);
 
   const onPlaceChange = (placeChangeEvent: any) => {
@@ -54,19 +45,6 @@ const LendingView = () => {
     <div className="content-container">
       <Row className="lands-container">
         <Col span={24}>
-          <Row justify={end} className="actions-container">
-            {/* Removed for MVP version due to lack of view for adjacent lands*/}
-            {/*{wallet.account &&  (*/}
-            {/*  <Col style={{ marginRight: '30px' }} className='lands-claim-container'>*/}
-            {/*    <LandsAction*/}
-            {/*      onButtonClick={setShowClaimModal}*/}
-            {/*      buttonText={'VIEW'}*/}
-            {/*      subHeading='There is avalailable'*/}
-            {/*      mainHeading='Adjacent land-registry-provider'*/}
-            {/*    />*/}
-            {/*  </Col>*/}
-            {/*)}*/}
-          </Row>
           <Row className="filters" gutter={20} align={'middle'}>
             <Col>
               <LandsRentingSorter onRentSortChange={onRentSortChange} />
@@ -80,10 +58,15 @@ const LendingView = () => {
               { sm: 16, md: 16, lg: 32 },
               { sm: 16, md: 16, lg: 32 },
             ]}>
-            {[].map((land: any) => (
+            {assets.map((land: any) => (
               <LandWorksCard key={land.id} land={land} />
             ))}
           </Row>
+        </Col>
+      </Row>
+      <Row gutter={40} className="claim-history-container">
+        <Col span={24} style={{ padding: '0px' }}>
+          <ClaimHistoryTable userAddress={wallet.account || ''} />
         </Col>
       </Row>
     </div>

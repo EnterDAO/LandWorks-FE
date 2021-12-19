@@ -1,0 +1,96 @@
+import React, { useEffect, useState } from 'react';
+import { Col, Row, Table } from 'antd';
+import { shortenAddr } from 'web3/utils';
+
+import { timestampSecondsToDate } from 'helpers/helpers';
+import { ClaimHistory, fetchUserClaimHistory } from 'modules/land-works/api';
+
+import './index.scss';
+
+interface IClaimHistoryTableProps {
+  userAddress: string;
+}
+
+const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) => {
+  const pageSizeOptions = ['5', '10', '20'];
+  const [claimHistory, setClaimHistory] = useState([] as ClaimHistory[]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(Number(pageSizeOptions[0]));
+  const [totalClaims, setTotalClaims] = useState(0);
+
+  const fetchClaimHistory = async () => {
+    if (userAddress) {
+      const claimHistory = await fetchUserClaimHistory(userAddress);
+      console.log('CLAIM HISTORY:');
+      console.log(claimHistory);
+      setClaimHistory(claimHistory);
+      setTotalClaims(claimHistory.length);
+    }
+  };
+  useEffect(() => {
+    fetchClaimHistory();
+  }, [userAddress]);
+
+  const onPaginationChange = (page: number, newPageSize?: number | undefined) => {
+    setPage(page);
+    if (newPageSize) {
+      setPageSize(newPageSize);
+
+      // TODO: this will probably need to be modified to scroll you up to the beginning of the table
+      if (pageSize === newPageSize || newPageSize < pageSize) {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      }
+    }
+  };
+
+  const columns = [
+    {
+      title: 'Property',
+      dataIndex: 'asset',
+      render: (asset: any) => {
+        console.log(asset);
+        const properyName = asset.decentralandData.metadata;
+        return <p>{properyName}</p>;
+      },
+    },
+    {
+      title: 'Tx hash',
+      dataIndex: 'txHash',
+      render: (txHash: string) => <p className="by-text">{shortenAddr(txHash)}</p>, // TODO: On click should open getEtherscanTxUrl(text) in another tab
+    },
+    {
+      title: 'Amount',
+      dataIndex: 'amount',
+      render: (amount: string) => <p>{amount}</p>,
+    },
+    {
+      title: 'Date',
+      dataIndex: 'timestamp',
+      render: (timestamp: string) => <p>{timestampSecondsToDate(timestamp, 'HH:mm:ss dd.MM.yyyy')}</p>,
+    },
+  ];
+
+  return (
+    <Row className="history">
+      <Col span={24}>
+        <span className="history-heading">Rent History</span>
+      </Col>
+      <Col span={24}>
+        <Table
+          columns={columns}
+          dataSource={claimHistory}
+          size="small"
+          className="history-table"
+          pagination={{
+            current: page,
+            total: totalClaims,
+            defaultPageSize: pageSize,
+            onChange: (page: number, pageSize?: number | undefined) => onPaginationChange(page, pageSize),
+          }}
+        />
+      </Col>
+    </Row>
+  );
+};
+
+export default ClaimHistoryTable;
