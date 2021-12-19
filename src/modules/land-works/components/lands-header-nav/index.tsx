@@ -11,7 +11,7 @@ export const LandsNav: React.FC = () => {
   const rentingPathname = '/land-works/renting';
   const lendingPathname = '/land-works/lending';
 
-  const getInitialNav = () => {
+  const getNavKey = () => {
     // eslint-disable-next-line no-restricted-globals
     const path = location.pathname;
     switch (path) {
@@ -22,11 +22,11 @@ export const LandsNav: React.FC = () => {
       case lendingPathname:
         return '3';
       default:
-        return '1';
+        return '0';
     }
   };
 
-  const [current, setCurrent] = useState<string>(getInitialNav());
+  const [current, setCurrent] = useState<string>(getNavKey());
 
   const handleClick = (e: any) => {
     setCurrent(e.key);
