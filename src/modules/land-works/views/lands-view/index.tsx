@@ -12,10 +12,14 @@ import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sort
 import { SortDirection } from 'modules/land-works/models/SortDirection';
 import { useWallet } from 'wallets/wallet';
 
-import { landsMockData } from './mockLands';
-
 import './index.scss';
-import { AssetEntity, fetchAssetsByMetaverseAndGteLastRentEndWithOrder, fetchUser, UserEntity } from '../../api';
+import {
+  AssetEntity,
+  fetchAssetsByMetaverseAndGteLastRentEndWithOrder,
+  fetchUserAssets,
+  UserEntity,
+} from '../../api';
+import { getNowTs } from '../../../../utils';
 
 const DECENTRALAND_METAVERSE = '1';
 const DEFAULT_LAST_RENT_END = '0';
@@ -27,7 +31,7 @@ const Lands: React.FC = () => {
   const wallet = useWallet();
 
   const [lands, setLands] = useState([] as AssetEntity[]);
-  const [totalLands, setTotalLands] = useState(landsMockData.length);
+  const [totalLands, setTotalLands] = useState(lands.length);
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [sortColumn, setSortColumn] = useState(sortColumns[0]);
   const [user, setUser] = useState({} as UserEntity);
@@ -61,7 +65,7 @@ const Lands: React.FC = () => {
     if (checked !== undefined) {
       setByAvailability(checked);
     }
-    setLastRentEnd(checked ? Math.round(Date.now() / 1000).toString() : DEFAULT_LAST_RENT_END);
+    setLastRentEnd(checked ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
     setPage(1);
   };
 
@@ -72,7 +76,6 @@ const Lands: React.FC = () => {
 
   const getAssets = async (page: number, pageSize: number, metaverse: string, lastRentEnd: string, orderColumn: string, sortDir: string) => {
     const lands = await fetchAssetsByMetaverseAndGteLastRentEndWithOrder(page, pageSize, metaverse, lastRentEnd, orderColumn, sortDir);
-    console.log(lands);
     setLands(lands.data);
     setTotalLands(lands?.meta.count);
   };
@@ -80,7 +83,7 @@ const Lands: React.FC = () => {
   const getUser = async (account: string | undefined) => {
     let user = {} as UserEntity;
     if (account) {
-      user = await fetchUser(account);
+      user = await fetchUserAssets(account);
     }
     setUser(user);
   };

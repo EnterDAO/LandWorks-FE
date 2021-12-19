@@ -4,14 +4,18 @@ import { Input } from 'antd';
 import Icon from 'components/custom/icon';
 
 import './index.scss';
+import { useWallet } from '../../../../wallets/wallet';
 
 type Iprops = {
   text: string;
 };
 
 const TableInput: React.FC<Iprops> = ({ text }) => {
+  const wallet = useWallet();
+
   const [disabled, setDisabled] = useState<boolean>(true);
   const [editedValue, setEditedValue] = useState<string>(text);
+
   const handleSave = () => {
     // TODO:: trigger some checks, SC interations ..
     setDisabled(true);

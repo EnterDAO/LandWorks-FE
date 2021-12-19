@@ -1,31 +1,65 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'antd';
 import { uniqueId } from 'lodash';
 
 import TableInput from '../land-works-table-input';
 
 import './index.scss';
+import { fetchAssetRents, fetchAssetUserRents, RentEntity } from '../../api';
+import { shortenAddr } from '../../../../web3/utils';
+import { useWallet } from '../../../../wallets/wallet';
+import { getNowTs } from '../../../../utils';
 
-const SingleViewLandHistory: React.FC = () => {
-  const isYou = true;
+type SingleViewRentHistoryProps = {
+  assetId: string;
+};
+
+const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }) => {
+  const wallet = useWallet();
+  const pageSizeOptions = ['5', '10', '20'];
+  const [areAllSelected, setAreAllSelected] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(+pageSizeOptions[0]);
+  const [rents, setRents] = useState([] as RentEntity[]);
+  const [totalRents, setTotalRents] = useState(rents.length);
+
   const columns = [
     {
       title: 'by',
-      dataIndex: 'by',
-      render: (text: string) => <p className={`${isYou ? 'by-you-text' : 'by-text'}`}>{text}</p>,
+      dataIndex: 'renterAddress',
+      render: (text: string) => {
+        let isYou = false;
+        let showText = shortenAddr(text);
+        if (wallet.account && wallet.account!.toLowerCase() === text.toLowerCase()) {
+          isYou = true;
+          showText += ` (you)`;
+        }
+        return <p className={`${isYou ? 'by-you-text' : 'by-text'}`}>{showText}</p>;
+      },
     },
     {
       title: 'from',
-      dataIndex: 'from',
+      dataIndex: 'start',
     },
     {
       title: 'to',
-      dataIndex: 'to',
-      render: (text: string) => (
-        <p>
-          {text} <span className="label upcoming">upcoming</span>
-        </p>
-      ),
+      dataIndex: 'end',
+      render: (text: string, record: RentEntity, index: any) => {
+        let isUpcoming = false;
+        let isActive = false;
+        const now = getNowTs();
+        if (now < Number(record.start)) {
+          isUpcoming = true;
+        } else if (Number(record.start) <= now  && now <= Number(record.end)) {
+          isActive = true;
+        }
+
+        return (
+          <p>
+            {text} <>{isUpcoming && <span className='label upcoming'>upcoming</span>}</>
+            <>{isActive && <span className='label active'>active</span>}</>
+          </p>);
+      },
     },
     {
       title: 'Configured operator',
@@ -35,7 +69,7 @@ const SingleViewLandHistory: React.FC = () => {
     {
       title: 'Tx hash',
       dataIndex: 'txHash',
-      render: (text: string) => <p className="by-text">{text}</p>,
+      render: (text: string) => <p className='by-text'>{shortenAddr(text)}</p>, // TODO: On click should open getEtherscanTxUrl(text) in another tab
     },
     {
       title: 'price',
@@ -43,69 +77,64 @@ const SingleViewLandHistory: React.FC = () => {
     },
   ];
 
-  const data = [
-    {
-      key: '1',
-      by: 'krisko.eth (you)',
-      from: '12:23 11.09.21',
-      to: '13:00 15.09.21',
-      operator: '0X4583282111aa23',
-      txHash: '0x148426fdc...ad0',
-      price: 'ETH 233,45 $211.55',
-    },
-    {
-      key: '2',
-      by: 'krisko.eth (you)',
-      from: '06:00 06.09.21',
-      to: '06:00 07.09.21',
-      operator: '0X56879908dd1ff',
-      txHash: '0x4f4e0f2cb...152',
-      price: 'ETH 233,45 $200',
-    },
-    {
-      key: '3',
-      by: '0X4583282111aa23',
-      from: '07:00 01.09.21',
-      to: '07:00 02.09.21',
-      operator: 'george.eth',
-      txHash: '0xb5c8bd9430b6...170a',
-      price: 'ETH 250 $211.55',
-    },
-    {
-      key: '4',
-      by: '0X4583282111aa23',
-      from: '06:00 06.09.21',
-      to: '11:00 07.09.21',
-      operator: 'dani.eth',
-      txHash: '0x4f4e0f2cb72e7...152',
-      price: 'ETH 233,45 $211.55',
-    },
-    {
-      key: '5',
-      by: '0X56879908dd1ff',
-      from: '01:00 01.09.21',
-      to: '05:00 02.09.21',
-      operator: '0X4583282111aa23',
-      txHash: '0xb5c8bd9430b...70a',
-      price: 'ETH 250 $211.55',
-    },
-  ];
+  const onAllSelected = () => setAreAllSelected(true);
+  const onYouSelected = () => setAreAllSelected(false);
+
+  const showYoursSection = () => wallet.account && rents.length > 0;
+
+  const getRents = async (assetId: string, page: number, pageSize: number) => {
+    if (!assetId) {
+      return [];
+    }
+
+    const rents = areAllSelected ?
+      await fetchAssetRents(assetId, page, pageSize) :
+      await fetchAssetUserRents(assetId, wallet.account?.toLowerCase()!, page, pageSize);
+
+    setRents(rents.data);
+    setTotalRents(rents?.meta.count);
+  };
+
+  const onPaginationChange = (page: number, newPageSize?: number | undefined) => {
+    setPage(page);
+    if (newPageSize) {
+      setPageSize(newPageSize);
+
+      // TODO: this will probably need to be modified to scroll you up to the beginning of the table
+      if (pageSize === newPageSize || newPageSize < pageSize) {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      }
+    }
+  };
+
+  useEffect(() => {
+    getRents(assetId, page, pageSize);
+  }, [assetId, page, pageSize, areAllSelected, wallet.account]);
 
   return (
-    <Row gutter={40} className="single-land-history-container">
+    <Row gutter={40} className='single-land-history-container'>
       <Col span={24} style={{ padding: '0px' }}>
-        <Row className="history">
+        <Row className='history'>
           <Col span={24}>
-            <span className="history-heading">Rent History</span>
-            <button className="btn all-btn" onClick={() => {}}>
+            <span className='history-heading'>Rent History</span>
+            <button className='btn all-btn' onClick={() => {
+              onAllSelected();
+            }}>
               All
             </button>
-            <button className="btn yours-btn" onClick={() => {}}>
+            {showYoursSection() && <button className='btn yours-btn' onClick={() => {
+              onYouSelected();
+            }}>
               Yours
-            </button>
+            </button>}
           </Col>
           <Col span={24}>
-            <Table columns={columns} dataSource={data} size="small" className="history-table" />
+            <Table columns={columns} dataSource={rents} size='small' className='history-table' pagination={{
+              current: page,
+              total: totalRents,
+              defaultPageSize: pageSize,
+              onChange: (page: number, pageSize?: number | undefined) => onPaginationChange(page, pageSize),
+            }} />
           </Col>
         </Row>
       </Col>

@@ -14,6 +14,7 @@ import './index.scss';
 import { AssetEntity, CoordinatesLAND, fetchAdjacentDecentralandAssets, fetchAsset } from '../../api';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetStatus } from '../../models/AssetStatus';
+import LandWorksContract from '../../contracts/core/LandWorksContract';
 
 const SingleLand: React.FC = () => {
   const wallet = useWallet();
@@ -29,23 +30,19 @@ const SingleLand: React.FC = () => {
     for (const coordinates of coordinatesList) {
       neighbours = [...neighbours, ...getNeighbours(coordinates)];
     }
-    return [...new Set(neighbours)];
+
+    return [...new Set(neighbours)]
+      .filter(item => !coordinatesList.some(l => l.id === item));
   };
 
   const getNeighbours = (coordinates: CoordinatesLAND): string[] => {
-    console.log(coordinates.y);
     const numX = +coordinates.x;
     const numY = +coordinates.y;
-    console.log(numY);
     return [
-      `${numX - 1}-${numY - 1}`,
       `${numX - 1}-${numY}`,
-      `${numX - 1}-${numY + 1}`,
       `${numX}-${numY - 1}`,
       `${numX}-${numY + 1}`,
-      `${numX + 1}-${numY - 1}`,
       `${numX + 1}-${numY}`,
-      `${numX + 1}-${numY + 1}`,
     ];
   };
 
@@ -98,7 +95,7 @@ const SingleLand: React.FC = () => {
           </button>}
       </Row>
       <SingleViewLandCard setShowRentModal={setShowRentModal} asset={asset} />
-      <SingleViewLandHistory />
+      <SingleViewLandHistory assetId={tokenId}/>
       <Row className='pooling-section'>
         <Col className='pooling-heading'>Pooling </Col>
         <Col className='pooling-description'>

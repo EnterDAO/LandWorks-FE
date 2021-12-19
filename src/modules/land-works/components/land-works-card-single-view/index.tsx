@@ -8,6 +8,8 @@ import cardImage from './assets/card.png';
 import './index.scss';
 import { AssetEntity, RentEntity } from '../../api';
 import { useWallet } from '../../../../wallets/wallet';
+import { shortenAddr } from '../../../../web3/utils';
+import { AssetStatus } from '../../models/AssetStatus';
 
 const { Step } = Steps;
 
@@ -21,9 +23,15 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
 
   const [lastRent, setLastRent] = useState({} as RentEntity);
 
-  const shouldShowYou = () => {
-    return wallet.account && wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase();
+  const isOwnerOrConsumer = () => {
+    return wallet.account
+      && (wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase()
+        || wallet.account.toLowerCase() === asset?.consumer?.id.toLowerCase());
   };
+
+  const isListed = () => asset?.status === AssetStatus.LISTED;
+
+  const shouldShowClaimButton = () => isOwnerOrConsumer() && asset!.unclaimedRentFee.gt(0);
 
   const shouldShowUpdateOperator = () => {
     if (!asset?.rents) {
@@ -35,7 +43,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
 
     const isLastRent = asset.rents[0].renter.id.toLowerCase() === wallet.account?.toLowerCase();
     return wallet.account && isLastRent;
-  }
+  };
 
   useEffect(() => {
   }, [asset, wallet.account]);
@@ -65,17 +73,20 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
             <Row>
               <Col span={14}>
                 <span className='land-owner'>
-                  BY <span className='land-owner-address'>{asset?.owner?.id.toLowerCase()}</span>
+                  BY <span className='land-owner-address'>{shortenAddr(asset?.owner?.id.toLowerCase())}</span>
                 </span>
-                {shouldShowYou() && <span className='label card-name-you-label'>
+                {isOwnerOrConsumer() && <span className='label card-name-you-label'>
                   <Icon name='png/you' className='name-label' />
                   YOU
                 </span>}
               </Col>
-              <Col span={10}>
+              {!isListed() && <Col span={10}>
+                <span className='available-heading'>Delisted</span>
+              </Col>}
+              {isListed() && <Col span={10}>
                 <span className='available-heading'>Available now</span>{' '}
-                <span className='available-period'>2-55 days</span>
-              </Col>
+                <span className='available-period'>{asset?.availability}</span>
+              </Col>}
             </Row>
           </Col>
           <Col span={24} className='rent-section'>
@@ -84,20 +95,27 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                 <Row>
                   <Col push={5} span={19} className='eth-price-container'>
                     <Icon name='png/eth' className='eth-icon' />
-                    <span className='price-eth'>0.336</span>
+                    <span className='price-eth'>{asset?.pricePerMagnitude?.price}</span>
                   </Col>
                   <Col push={7} span={17} className='usd-price-container'>
                     <span className='price'>$220</span>
-                    <span className='per-day'>/ day</span>
+                    <span className='per-day'>/ {asset?.pricePerMagnitude?.magnitude}</span>
                     <Icon name='info-outlined' className='info-icon' />
                   </Col>
                 </Row>
               </Col>
-              <Col push={4} span={8} className='rent-btn-container'>
-                <button type='button' className={`button-primary `} onClick={() => setShowRentModal(true)}>
+              {shouldShowClaimButton() && <Col push={4} span={8} className='rent-btn-container'>
+                <button type='button' className={`button-primary `}
+                        onClick={() => console.log('claim')}>
+                  <span>Claim rent</span>
+                </button>
+              </Col>}
+              {!isOwnerOrConsumer() && <Col push={4} span={8} className='rent-btn-container'>
+                <button type='button' className={`button-primary `} disabled={!isListed()}
+                        onClick={() => setShowRentModal(true)}>
                   <span>Rent now</span>
                 </button>
-              </Col>
+              </Col>}
             </Row>
           </Col>
           <Col span={24} className='properties-row operator-container'>
@@ -108,7 +126,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                     Current operator <Icon name='info-outlined' className='info-icon' />
                   </Col>
                   <Col span={24}>
-                    <p className='land-operator-address'>{asset?.operator}</p>
+                    <p className='land-operator-address'>{shortenAddr(asset?.operator)}</p>
                   </Col>
                 </Row>
               </Col>
