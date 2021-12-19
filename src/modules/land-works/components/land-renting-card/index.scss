@@ -1,0 +1,104 @@
+@import '../../../../styles/variables.scss';
+@import '../../../../styles/utils.scss';
+
+.rent-land {
+  &-card-wrapper {
+    color: $black;
+  }
+
+  &-card {
+    cursor: pointer;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease-out;
+    background: none;
+  }
+
+  &-card:hover {
+    box-shadow: 0px 5px 18px rgba(255, 255, 255, 0.3);
+    border: 2px solid var(--theme-primary-color);
+  }
+
+  &-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  &-ranking-row {
+    margin-bottom: 12px;
+  }
+  &-rank {
+    font-size: $text;
+    color: $pinkish;
+  }
+  &-rarity-score {
+    font-size: $text;
+    color: $black;
+  }
+  &-image {
+    border-radius: 6px;
+  }
+  &-info-row {
+    margin-top: 16px;
+  }
+  &-id {
+    font-size: 12px;
+  }
+}
+.enterdao-icon {
+  width: 20px;
+  height: 20px;
+}
+.ant-card-body {
+  padding: 20px 15px;
+  background-color: var(--theme-modal-color);
+  border-radius: 10px;
+}
+
+.land-name {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rent-land-info-row {
+  .rent-operator-address {
+    color: #5D8FF0;
+    font-weight: 600;
+  }
+  .rent-date-container{
+    align-items: end;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.label {
+  background: #1e1e2e;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.card-name-hot-label {
+  color: #dd3dcb;
+
+  img.name-label {
+    width: 11px;
+    height: 13px;
+    margin-right: 3px;
+    vertical-align: baseline;
+  }
+}
+
+.price-chart-container {
+  row-gap: 0px;
+  position: absolute;
+  background: white;
+  top: 95%;
+  border-radius: 6px;
+  box-shadow: 0px 7px 16px rgba(233, 103, 189, 0.38);
+  z-index: 1;
+}
