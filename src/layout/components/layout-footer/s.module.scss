@@ -48,11 +48,11 @@
   }
 
 
-  .commingSoon:hover {
+  .comingSoon:hover {
     // pointer-events: none;
 
     &::before {
-      content: "Comming Soon";
+      content: "Coming Soon";
       position: absolute;
       left: 0;
       transform: translate(-15%, -100%);
