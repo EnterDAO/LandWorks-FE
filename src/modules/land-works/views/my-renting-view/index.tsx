@@ -1,60 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import { end } from '@popperjs/core';
-import { Col, Row } from 'antd';
+import { Col, Pagination, Row } from 'antd';
 
-import { UserEntity, fetchUser } from 'modules/land-works/api';
+import { UserEntity, fetchUserLastRentPerAsset } from 'modules/land-works/api';
 import LandRentingCard from 'modules/land-works/components/land-renting-card';
 import LandsRentingSorter from 'modules/land-works/components/land-renting-sorter';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { useWallet } from 'wallets/wallet';
 
-import { landsMockData } from '../lands-view/mockLands';
+import './index.scss';
 
 const RentingView = () => {
   const wallet = useWallet();
+  const pageSizeOptions = ['6', '12', '24'];
 
-  const [lands, setLands] = useState(landsMockData);
-  const [user, setUser] = useState({} as UserEntity);
+  const [rents, setRents] = useState([] as any);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(Number(pageSizeOptions[0]));
+  const [totalRents, setTotalRents] = useState(0);
 
-  const getUser = async (account: string | undefined) => {
-    let user = {} as UserEntity;
-    if (account) {
-      user = await fetchUser(account);
-    }
-    setUser(user);
+  const fetchRents = async (account: string) => {
+    const rents = await fetchUserLastRentPerAsset(account, page, pageSize);
+    setRents(rents.data);
+    setTotalRents(rents.meta.count);
   };
 
   useEffect(() => {
-    getUser(wallet.account);
-  }, []);
+    if (wallet.account) {
+      fetchRents(wallet.account);
+    }
+  }, [pageSize, page, wallet.account]);
 
   const onPlaceChange = (placeChangeEvent: any) => {
     // TODO:: some filtering here
-    console.log(placeChangeEvent);
   };
 
   const onRentSortChange = (sortEvent: any) => {
     // TODO:: some filtering here
-    console.log(sortEvent);
+  };
+
+  const onPaginationChange = (page: number, pageSize?: number | undefined) => {
+    setPage(page);
+    if (pageSize) {
+      setPageSize(pageSize);
+    }
   };
 
   return (
     <div className="content-container">
       <Row className="lands-container">
         <Col span={24}>
-          <Row justify={end} className="actions-container">
-            {/* Removed for MVP version due to lack of view for adjacent lands*/}
-            {/*{wallet.account &&  (*/}
-            {/*  <Col style={{ marginRight: '30px' }} className='lands-claim-container'>*/}
-            {/*    <LandsAction*/}
-            {/*      onButtonClick={setShowClaimModal}*/}
-            {/*      buttonText={'VIEW'}*/}
-            {/*      subHeading='There is avalailable'*/}
-            {/*      mainHeading='Adjacent land-registry-provider'*/}
-            {/*    />*/}
-            {/*  </Col>*/}
-            {/*)}*/}
-          </Row>
           <Row className="filters" gutter={20} align={'middle'}>
             <Col>
               <LandsRentingSorter onRentSortChange={onRentSortChange} />
@@ -68,10 +63,23 @@ const RentingView = () => {
               { sm: 16, md: 16, lg: 32 },
               { sm: 16, md: 16, lg: 32 },
             ]}>
-            {lands.map((land: any) => (
-              <LandRentingCard key={land.id} land={land} userAddress={wallet.account || ''} />
+            {rents.map((rent: any) => (
+              <LandRentingCard key={rent.id} land={rent} userAddress={wallet.account || ''} />
             ))}
           </Row>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={24} className="rent-lands-pagination">
+          <Pagination
+            locale={{ items_per_page: '' }}
+            current={page}
+            total={totalRents}
+            defaultPageSize={pageSize}
+            showSizeChanger
+            pageSizeOptions={pageSizeOptions}
+            onChange={onPaginationChange}
+          />
         </Col>
       </Row>
     </div>

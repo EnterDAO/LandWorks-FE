@@ -7,19 +7,38 @@ import './index.scss';
 export const LandsNav: React.FC = () => {
   const history = useHistory();
 
-  const [current, setCurrent] = useState<string>('1');
+  const allPathname = '/land-works';
+  const rentingPathname = '/land-works/renting';
+  const lendingPathname = '/land-works/lending';
+
+  const getInitialNav = () => {
+    // eslint-disable-next-line no-restricted-globals
+    const path = location.pathname;
+    switch (path) {
+      case allPathname:
+        return '1';
+      case rentingPathname:
+        return '2';
+      case lendingPathname:
+        return '3';
+      default:
+        return '1';
+    }
+  };
+
+  const [current, setCurrent] = useState<string>(getInitialNav());
+
   const handleClick = (e: any) => {
     setCurrent(e.key);
-    // TODO:: use Router here
     switch (e.key) {
       case '1':
-        history.push('/land-works');
+        history.push(allPathname);
         break;
       case '2':
-        history.push('/land-works/renting');
+        history.push(rentingPathname);
         break;
       case '3':
-        history.push('/land-works/lending');
+        history.push(lendingPathname);
         break;
       default:
         break;
