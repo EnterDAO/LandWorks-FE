@@ -5,6 +5,10 @@ import { shortenAddr } from 'web3/utils';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ClaimHistory, fetchUserClaimHistory } from 'modules/land-works/api';
 
+import LandTableTxHash from '../land-table-tx-hash';
+import LandWorksTableDate from '../land-works-table-date';
+import LandTablePrice from '../land-works-table-price';
+
 import './index.scss';
 
 interface IClaimHistoryTableProps {
@@ -50,30 +54,36 @@ const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) =
       render: (asset: any) => {
         console.log(asset);
         const properyName = asset.decentralandData.metadata;
-        return <p>{properyName}</p>;
+        return <p>{properyName || 'Unknow property'}</p>;
       },
     },
     {
       title: 'Tx hash',
       dataIndex: 'txHash',
-      render: (txHash: string) => <p className="by-text">{shortenAddr(txHash)}</p>, // TODO: On click should open getEtherscanTxUrl(text) in another tab
+      render: (txHash: string) => <LandTableTxHash txHash={txHash} />,
     },
     {
       title: 'Amount',
-      dataIndex: 'amount',
-      render: (amount: string) => <p>{amount}</p>,
+      dataIndex: ['amount'],
+      render: (amount: string, data: any) => (
+        <LandTablePrice
+          tokenDecimals={data.paymentToken.decimals}
+          tokenSymbol={data.paymentToken.symbol}
+          weiAmount={Number(data.amount)}
+        />
+      ),
     },
     {
       title: 'Date',
       dataIndex: 'timestamp',
-      render: (timestamp: string) => <p>{timestampSecondsToDate(timestamp, 'HH:mm:ss dd.MM.yyyy')}</p>,
+      render: (timestamp: string) => <LandWorksTableDate timestamp={timestamp} dateFormat={'HH:mm:ss dd.MM.yyyy'} />,
     },
   ];
 
   return (
     <Row className="history">
       <Col span={24}>
-        <span className="history-heading">Rent History</span>
+        <span className="history-heading">Claim History</span>
       </Col>
       <Col span={24}>
         <Table
