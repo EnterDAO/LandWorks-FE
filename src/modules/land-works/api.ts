@@ -320,10 +320,7 @@ export function fetchAssetRents(id: string, page = 1, limit = 5): Promise<Pagina
           ...item,
           key: item.id,
           renterAddress: item.renter.id,
-          price: `${item.paymentToken.symbol} ${getHumanValue(
-            new BigNumber(item.fee),
-            item.paymentToken.decimals,
-          )!.toString(10)}`,
+          price: item.fee,
         })),
         meta: { count: response.data.asset.totalRents },
       };
