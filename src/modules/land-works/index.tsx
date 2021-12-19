@@ -9,6 +9,8 @@ import EstateRegistryProvider from './providers/decentraland/estate-registry-pro
 import LandRegistryProvider from './providers/decentraland/land-registry-provider';
 import LandworksProvider from './providers/landworks-provider';
 
+const RentingView = lazy(() => import('./views/my-renting-view'));
+const LendingView = lazy(() => import('./views/my-lending-view'));
 const OwnedPasses = lazy(() => import('./views/lands-view'));
 const SingleLand = lazy(() => import('./views/single-land-view'));
 
@@ -39,6 +41,9 @@ const MetapassView: React.FC = () => {
         <Switch>
           <Route path="/land-works" exact component={OwnedPasses} />
           <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
+          <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
+          <Route path="/land-works/lending" exact component={LendingView} />
+          <Route path="/land-works/renting" exact component={RentingView} />
           {/*<Redirect to="/land-registry-provider-works" />*/}
         </Switch>
       </Suspense>
