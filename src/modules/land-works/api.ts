@@ -383,10 +383,7 @@ export function fetchAssetUserRents(
         data: paginatedRents.map((item: any) => ({
           ...item,
           renterAddress: item.renter.id,
-          price: `${item.paymentToken.symbol} ${getHumanValue(
-            new BigNumber(item.fee),
-            item.paymentToken.decimals,
-          )!.toString(10)}`,
+          price: item.fee,
         })),
         meta: { count: response.data.asset.rents.length },
       };
@@ -598,7 +595,7 @@ export function fetchUserClaimHistory(address: string): Promise<ClaimHistory[]> 
  * @param metaverse The target metaverse id. Default '1', which is considered Decentraland
  * @param lastRentEnd A timestamp (in seconds), which will be used to query assets with lastRentEnd greater than the given.
  * @param orderColumn The name of the order column
- * @param isAscending Whether the order is ascending
+ * @param orderDirection asc or desc
  * Default '0'. Used to determined Availability of assets
  */
 export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
