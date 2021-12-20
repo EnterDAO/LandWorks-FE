@@ -93,17 +93,17 @@ const Lands: React.FC = () => {
     getAssets(page, pageSize, DECENTRALAND_METAVERSE, lastRentEnd, sortColumn, sortDir);
   }, [page, pageSize, sortColumn, sortDir, byAvailability, wallet.account]);
 
-  toast.success('Property listed successfully.', {
-    position: toast.POSITION.TOP_RIGHT,
-    className: 'success-toast',
-    style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
-  });
+  // toast.success('Property listed successfully.', {
+  //   position: toast.POSITION.TOP_RIGHT,
+  //   className: 'success-toast',
+  //   style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
+  // });
 
-  toast.error('There was an error while listing the property.', {
-    position: toast.POSITION.TOP_RIGHT,
-    className: 'error-toast',
-    style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
-  });
+  // toast.error('There was an error while listing the property.', {
+  //   position: toast.POSITION.TOP_RIGHT,
+  //   className: 'error-toast',
+  //   style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
+  // });
 
   return (
     <div className='content-container'>

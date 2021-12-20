@@ -163,7 +163,7 @@ export const ListModal: React.FC<Props> = props => {
       title={<p style={{ textAlign: 'left', fontSize: '18px', fontWeight: '700' }}>List Property</p>}
       {...modalProps}>
       <Row gutter={[10, 10]}>
-        <Col span={24}>
+        <Col span={24} style={{ margin: '10px 0' }}>
           <Row gutter={[16, 16]}>
             <Col span={12}>
               <Row>
@@ -177,7 +177,7 @@ export const ListModal: React.FC<Props> = props => {
             </Col>
             <Col span={12}>
               <Row>
-                <Col span={24} className="drop-heading">
+                <Col span={24}>
                   <p className="drop-heading">Property</p>
                 </Col>
                 <Col span={24}>
@@ -192,12 +192,12 @@ export const ListModal: React.FC<Props> = props => {
           </Row>
         </Col>
         <Col span={24}>
-          <Row style={{ borderBottom: '1px solid' }}>
+          <Row className="rent-period">
             <Col span={8}>Rent Period</Col>
             <Col span={14}>
               <Row gutter={[16, 16]}>
-                <Col span={12}>
-                  min <Checkbox onChange={handleMinCheckboxChange} />
+                <Col span={12} className="checkbox-wrapper">
+                  <Checkbox onChange={handleMinCheckboxChange} /> min
                   <LandsPeriodDropdown
                     options={MinRentPeriodOptions}
                     onChange={handleMinSelectChange}
@@ -205,8 +205,8 @@ export const ListModal: React.FC<Props> = props => {
                     initialValuе={MinRentPeriodOptions[0]}
                   />
                 </Col>
-                <Col span={12}>
-                  max <Checkbox onChange={handleMaxCheckboxChange} />
+                <Col span={12} className="checkbox-wrapper">
+                  <Checkbox onChange={handleMaxCheckboxChange} /> max
                   <LandsPeriodDropdown
                     options={MaxRentPeriodOptions}
                     onChange={handleMaxSelectChange}
@@ -218,7 +218,8 @@ export const ListModal: React.FC<Props> = props => {
             </Col>
           </Row>
         </Col>
-        <Col span={24}>
+        <Col span={24} className="future-period-wrapper">
+          <Checkbox onChange={handleMaxCheckboxChange} />
           <span style={{ marginRight: '15px' }}>At any given time to be rented out at most</span>
           <LandsPeriodDropdown
             options={AtMostRentPeriodOptions}
@@ -238,10 +239,13 @@ export const ListModal: React.FC<Props> = props => {
             <Col span={24}>Price</Col>
             <Col span={24}>
               <Row>
-                <Col span={12}>
+                <Col span={12} className="currency-wrapper">
                   <CurrencyDropdown changeHandler={handleCurrencyChange} />
-                  <LandsInput onInputChange={handleCostEthChange} customClassName="price-eth-input" />
-                  <LandsInput onInputChange={handleCostUsdChange} customClassName="price-usd-input" />/ day
+                  <div className="price-input-wrapper">
+                    <LandsInput onInputChange={handleCostEthChange} customClassName="price-eth-input" />
+                    <LandsInput onInputChange={handleCostUsdChange} customClassName="price-usd-input" />
+                  </div>
+                  <span>/ day</span>
                 </Col>
                 <Col span={12}>
                   <Row>

@@ -8,6 +8,7 @@
 @import 'utils';
 @import 'button';
 @import 'rechart';
+@import 'inputs';
 
 html {
   block-size: 100%;
@@ -189,7 +190,8 @@ body.mobile-menu-open {
   }
 }
 
-[data-theme='dark'], [data-theme='light'] {
+[data-theme='dark'],
+[data-theme='light'] {
   --theme-body-color: #161622; // grey50
   --theme-card-color: #1e1e2e;
   --theme-overlay-color: #1f1b59;

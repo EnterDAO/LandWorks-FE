@@ -1,0 +1,8 @@
+input.ant-input,
+.ant-input-focused {
+  &:focus,
+  &:active {
+    outline: 0;
+    box-shadow: 0 0 0 transparent;
+  }
+}
