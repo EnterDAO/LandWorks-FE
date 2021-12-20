@@ -22,7 +22,7 @@ const LendingView = () => {
     console.log(user);
     // Combine consumerTo + assets and remove duplicate
     setUser(user);
-    setAssets(user.unclaimedRentAssets);
+    setAssets(user.ownerAndConsumerAssets);
   };
 
   useEffect(() => {

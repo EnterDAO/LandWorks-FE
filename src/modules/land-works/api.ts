@@ -124,6 +124,7 @@ export type UserEntity = {
   consumerTo: any;
   rents: any;
   unclaimedRentAssets: any[];
+  ownerAndConsumerAssets: AssetEntity[];
 };
 
 export type ClaimHistory = {
@@ -412,6 +413,7 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
             maxPeriod
             maxFutureTime
             unclaimedRentFee
+            pricePerSecond
             paymentToken {
               id
               name
@@ -432,6 +434,7 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
             maxPeriod
             maxFutureTime
             unclaimedRentFee
+            pricePerSecond
             paymentToken {
               id
               name
@@ -464,12 +467,15 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
   })
     .then(async response => {
       const result = { ...response.data.user };
-      const unclaimedRentFeeAssets = result.assets?.filter((a: any) => BigNumber.from(a.unclaimedRentFee)?.gt(0));
-      const unclaimedRentFeeConsumerAssets = result.consumerTo?.filter((a: any) =>
-        BigNumber.from(a.unclaimedRentFee)?.gt(0),
+      const ownerAndConsumerAssets = [...result.assets, ...result.consumerTo];
+      const uniqueAssets = [...new Map(ownerAndConsumerAssets.map(v => [v.id, v])).values()].sort(
+        (a: AssetEntity, b: AssetEntity) => Number(b.id) - Number(a.id),
       );
-      const mergedUnclaimed = [...unclaimedRentFeeAssets, ...unclaimedRentFeeConsumerAssets];
-      result.unclaimedRentAssets = parseAssets([...new Map(mergedUnclaimed.map(v => [v.id, v])).values()]);
+
+      result.ownerAndConsumerAssets = parseAssets(uniqueAssets);
+      result.unclaimedRentAssets = parseAssets(
+        uniqueAssets.filter((a: any) => BigNumber.from(a.unclaimedRentFee)?.gt(0)),
+      );
       result.hasUnclaimedRent = result.unclaimedRentAssets.length > 0;
       return result;
     })
