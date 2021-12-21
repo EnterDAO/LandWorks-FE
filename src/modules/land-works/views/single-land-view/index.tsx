@@ -5,16 +5,17 @@ import { Col, Image, Row } from 'antd';
 import Button from 'components/antd/button';
 import Icon, { TokenIconNames } from 'components/custom/icon';
 
+import { useWallet } from '../../../../wallets/wallet';
+import { AssetEntity, CoordinatesLAND, fetchAdjacentDecentralandAssets, fetchAsset } from '../../api';
 import LandWorkCard from '../../components/land-works-card';
 import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
 import { RentModal } from '../../components/lands-rent-modal';
+import { WarningModal } from '../../components/lands-warning-modal';
+import LandWorksContract from '../../contracts/core/LandWorksContract';
+import { AssetStatus } from '../../models/AssetStatus';
 
 import './index.scss';
-import { AssetEntity, CoordinatesLAND, fetchAdjacentDecentralandAssets, fetchAsset } from '../../api';
-import { useWallet } from '../../../../wallets/wallet';
-import { AssetStatus } from '../../models/AssetStatus';
-import LandWorksContract from '../../contracts/core/LandWorksContract';
 
 const SingleLand: React.FC = () => {
   const wallet = useWallet();
@@ -31,19 +32,13 @@ const SingleLand: React.FC = () => {
       neighbours = [...neighbours, ...getNeighbours(coordinates)];
     }
 
-    return [...new Set(neighbours)]
-      .filter(item => !coordinatesList.some(l => l.id === item));
+    return [...new Set(neighbours)].filter(item => !coordinatesList.some(l => l.id === item));
   };
 
   const getNeighbours = (coordinates: CoordinatesLAND): string[] => {
     const numX = +coordinates.x;
     const numY = +coordinates.y;
-    return [
-      `${numX - 1}-${numY}`,
-      `${numX}-${numY - 1}`,
-      `${numX}-${numY + 1}`,
-      `${numX + 1}-${numY}`,
-    ];
+    return [`${numX - 1}-${numY}`, `${numX}-${numY - 1}`, `${numX}-${numY + 1}`, `${numX + 1}-${numY}`];
   };
 
   const getData = async (tokenId: string) => {
@@ -58,47 +53,58 @@ const SingleLand: React.FC = () => {
   };
 
   const shouldShowWithdraw = () => {
-    return isOwnerOrConsumer()
-      && asset?.status === AssetStatus.DELISTED;
+    return isOwnerOrConsumer() && asset?.status === AssetStatus.DELISTED;
   };
 
   const isOwnerOrConsumer = () => {
-    return wallet.account
-      && (wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase()
-        || wallet.account.toLowerCase() === asset?.consumer?.id.toLowerCase());
+    return (
+      wallet.account &&
+      (wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase() ||
+        wallet.account.toLowerCase() === asset?.consumer?.id.toLowerCase())
+    );
   };
 
-  const handleWithdraw = () => {
-  };
+  const handleWithdraw = () => {};
 
   useEffect(() => {
     getData(tokenId);
   }, [tokenId, wallet.account]);
 
   return (
-    <div className='content-container single-card-section'>
-      <Row className='head-nav' style={{ marginBottom: '20px' }}>
-        <Button type='light' className='back-btn' onClick={() => console.log('go back')}>
+    <div className="content-container single-card-section">
+      <WarningModal
+        onCancel={() => {}}
+        text={
+          <>
+            The property is rented until <strong>12.11.2021 12:35</strong>. Delisting the property now will make it
+            unavailable for new renters. You will be able to withdraw your property from the Protocol once all rents
+            end.
+          </>
+        }
+      />
+      <Row className="head-nav" style={{ marginBottom: '20px' }}>
+        <Button type="light" className="back-btn" onClick={() => console.log('go back')}>
           <span>
-            <Icon name='arrow-back' className='eth-icon' />
+            <Icon name="arrow-back" className="eth-icon" />
             Back
           </span>
         </Button>
-        {isOwnerOrConsumer() && <Button type='light' className='back-btn' onClick={() => console.log('edit')}>
-          <span>
-            Edit
-          </span>
-        </Button>}
-        {shouldShowWithdraw() &&
-          <button type='button' className='button-primary' onClick={handleWithdraw}>
+        {isOwnerOrConsumer() && (
+          <Button type="light" className="back-btn" onClick={() => console.log('edit')}>
+            <span>Edit</span>
+          </Button>
+        )}
+        {shouldShowWithdraw() && (
+          <button type="button" className="button-primary" onClick={handleWithdraw}>
             <span>WITHDRAW</span>
-          </button>}
+          </button>
+        )}
       </Row>
       <SingleViewLandCard setShowRentModal={setShowRentModal} asset={asset} />
-      <SingleViewLandHistory assetId={tokenId}/>
-      <Row className='pooling-section'>
-        <Col className='pooling-heading'>Pooling </Col>
-        <Col className='pooling-description'>
+      <SingleViewLandHistory assetId={tokenId} />
+      <Row className="pooling-section">
+        <Col className="pooling-heading">Pooling </Col>
+        <Col className="pooling-description">
           The following properties are adjacent to this property. You can rent the adjacent properties to maximise the
           land you want to build scenes/experiences on
         </Col>

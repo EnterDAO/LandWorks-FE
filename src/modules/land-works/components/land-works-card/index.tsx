@@ -5,20 +5,32 @@ import { Card, Col, Image, Row } from 'antd';
 
 import Icon from 'components/custom/icon';
 
+import { AssetEntity } from '../../api';
 import { LandCartChart } from '../land-cart-chart';
 import landImage from './assets/land.png';
 
 import './index.scss';
-import { AssetEntity } from '../../api';
 
 interface ILandWorksCardProps {
   land: AssetEntity;
 }
+
 const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   const history = useHistory();
   const [showChart, setShowChart] = useState(false);
 
-  useEffect(() => {}, [land]);
+  useEffect(() => {
+    flexFont();
+  }, [land]);
+
+  const flexFont = () => {
+    var divs = document.getElementsByClassName('price-eth');
+    for (var i = 0; i < divs.length; i++) {
+      let element = divs[i] as HTMLElement;
+      var relFontsize = element.offsetWidth * 0.05;
+      element.style.fontSize = relFontsize + 'px';
+    }
+  };
 
   return (
     <Col className="land-card-wrapper" xl={8} md={8} sm={12} xs={24}>
@@ -27,10 +39,12 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
           <Col span={24}>
             <p className="land-name">
               <span>{land.name}</span>
-              {land.isHot && <span className='label card-name-hot-label'>
-                <Icon name='png/hot' className='name-label' />
-                HOT
-              </span>}
+              {land.isHot && (
+                <span className="label card-name-hot-label">
+                  <Icon name="png/hot" className="name-label" />
+                  HOT
+                </span>
+              )}
             </p>
           </Col>
         </Row>
@@ -44,7 +58,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
           />
         </Row>
         <Row>
-          <Col span={12}>
+          <Col span={16}>
             <Row className="land-info-row" align={bottom}>
               <Col span={24} className="price-eth-container">
                 <Icon name="png/eth" className="eth-icon" />
@@ -61,7 +75,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
               </Col>
             </Row>
           </Col>
-          <Col span={12}>
+          <Col span={8}>
             <Row className="land-available-row" justify={end}>
               <Col span={24}>
                 <p className="available-heading">Available now</p>
