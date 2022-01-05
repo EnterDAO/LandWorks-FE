@@ -1,9 +1,12 @@
 import React from 'react';
-import { Col, DatePicker, Row } from 'antd';
+import { Col, Row } from 'antd';
+import moment from 'moment';
 
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon, { TokenIconNames } from 'components/custom/icon';
+
+import { RentDatePicker } from '../lands-rent-date-picker';
 
 import './index.scss';
 
@@ -15,6 +18,15 @@ type Props = ModalProps & {
 
 export const RentModal: React.FC<Props> = props => {
   const { txHash, renderProgress, renderSuccess, ...modalProps } = props;
+
+  const minStartDate = moment.unix(1641390556); // 5
+  const minRentPeriod = moment.unix(1641562583); // 7
+  const maxEndDate = moment.unix(1641821784); // 10
+
+  const handleRentDateChange = (date: any) => {
+    // Those are the start and the end dates, upon ok press
+    console.log(date);
+  };
 
   return (
     <Modal
@@ -34,7 +46,12 @@ export const RentModal: React.FC<Props> = props => {
                   </p>
                 </Col>
                 <Col span={24}>
-                  <DatePicker bordered={false} className="button-primary" />
+                  <RentDatePicker
+                    minStartDate={minStartDate}
+                    minRentPeriod={minRentPeriod}
+                    maxEndDate={maxEndDate}
+                    handleRentDateChange={handleRentDateChange}
+                  />
                 </Col>
               </Row>
             </Col>
