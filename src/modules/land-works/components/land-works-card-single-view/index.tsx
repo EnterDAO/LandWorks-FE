@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Steps } from 'antd';
+import { Col, Image, Row, Steps } from 'antd';
 import BigNumber from 'bignumber.js';
 
 import Icon from 'components/custom/icon';
 import { getTokenPrice } from 'components/providers/known-tokens-provider';
+import { getLandImageUrl } from 'helpers/helpers';
 
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, RentEntity } from '../../api';
@@ -70,7 +71,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
       <Col span={12}>
         <Row>
           <Col span={24}>
-            <img alt="vector Icon" className="card-image" src={cardImage}></img>
+            <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)}></img>
           </Col>
         </Row>
       </Col>

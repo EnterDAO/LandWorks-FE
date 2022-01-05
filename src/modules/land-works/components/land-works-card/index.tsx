@@ -3,9 +3,11 @@ import { useHistory } from 'react-router-dom';
 import { bottom, end } from '@popperjs/core';
 import { Card, Col, Image, Row } from 'antd';
 import BigNumber from 'bignumber.js';
+import { addSeconds } from 'date-fns';
 
 import Icon from 'components/custom/icon';
 import { getTokenPrice } from 'components/providers/known-tokens-provider';
+import { getLandImageUrl } from 'helpers/helpers';
 
 import { AssetEntity } from '../../api';
 import { LandCartChart } from '../land-cart-chart';
@@ -63,7 +65,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
             onClick={() => history.push(`/land-works/land/${land.id}`)}
             placeholder={<Image className="land-image" src={landImage} preview={false} />}
             className="land-image"
-            src={landImage}
+            src={getLandImageUrl(land)}
             preview={false}
           />
         </Row>

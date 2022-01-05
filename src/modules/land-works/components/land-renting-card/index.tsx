@@ -6,7 +6,7 @@ import { ethers } from 'ethers';
 import { shortenAddr } from 'web3/utils';
 
 import Icon from 'components/custom/icon';
-import { isDateBeforeNow as isTimestampBeforeNow, timestampSecondsToDate } from 'helpers/helpers';
+import { getLandImageUrl, isDateBeforeNow as isTimestampBeforeNow, timestampSecondsToDate } from 'helpers/helpers';
 
 import landImage from '../land-works-card/assets/land.png';
 
@@ -43,7 +43,7 @@ const LandRentingCard: React.FC<ILandRentingCardProps> = ({ land, userAddress })
             onClick={() => history.push(`/land-works/land/${land.asset.id}`)}
             placeholder={<Image className="rent-land-image" src={landImage} preview={false} />}
             className="rent-land-image"
-            src={landImage}
+            src={getLandImageUrl(land.asset)}
             preview={false}
           />
         </Row>
