@@ -62,7 +62,8 @@ const RentingView = () => {
             gutter={[
               { sm: 16, md: 16, lg: 32 },
               { sm: 16, md: 16, lg: 32 },
-            ]}>
+            ]}
+          >
             {rents.map((rent: any) => (
               <LandRentingCard key={rent.id} land={rent} userAddress={wallet.account || ''} />
             ))}

@@ -28,7 +28,7 @@ const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) =
       console.log('CLAIM HISTORY:');
       console.log(claimHistory);
       setClaimHistory(claimHistory);
-      setTotalClaims(claimHistory.length);
+      setTotalClaims(claimHistory?.length || 0);
     }
   };
   useEffect(() => {

@@ -22,7 +22,7 @@ const LendingView = () => {
     console.log(user);
     // Combine consumerTo + assets and remove duplicate
     setUser(user);
-    setAssets(user.ownerAndConsumerAssets);
+    setAssets(user?.ownerAndConsumerAssets || []);
   };
 
   useEffect(() => {
@@ -57,7 +57,8 @@ const LendingView = () => {
             gutter={[
               { sm: 16, md: 16, lg: 32 },
               { sm: 16, md: 16, lg: 32 },
-            ]}>
+            ]}
+          >
             {assets.map((land: any) => (
               <LandWorksCard key={land.id} land={land} />
             ))}
