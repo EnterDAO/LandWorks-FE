@@ -1,12 +1,9 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select, { components } from 'react-select';
 
 import Icon, { TokenIconNames } from 'components/custom/icon';
 
-const options = [
-  { value: 'eth', label: 'eth' },
-  { value: 'weth', label: 'weth' },
-];
+import { PaymentToken, fetchTokenPayments } from '../../api';
 
 const styles = {
   container: (defaultStyles: any) => ({
@@ -90,11 +87,12 @@ const styles = {
 };
 
 const CurrencyDropdown = (props: any) => {
-  const { changeHandler } = props;
+  const { changeHandler, paymentTokens } = props;
+
   const Option = (props: any) => {
     const { data } = props;
 
-    const iconName: TokenIconNames = `token-${data.label}` as TokenIconNames;
+    const iconName: TokenIconNames = `token-${data?.symbol.toLowerCase()}` as TokenIconNames;
     return (
       <div className={`available-select`}>
         <components.Option className="option" {...props}>
@@ -102,7 +100,7 @@ const CurrencyDropdown = (props: any) => {
             name={iconName}
             style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
           />
-          <label className="option">{data?.label}</label>
+          <label className="option">{data?.symbol}</label>
         </components.Option>
       </div>
     );
@@ -115,13 +113,17 @@ const CurrencyDropdown = (props: any) => {
 
     const usedValue = value || defaultValue;
 
-    const iconName: TokenIconNames = `token-${usedValue.label}` as TokenIconNames;
+    if (usedValue === undefined) {
+      return <></>;
+    }
+
+    const iconName: TokenIconNames = `token-${usedValue.symbol.toLowerCase()}` as TokenIconNames;
 
     return (
       <components.ValueContainer {...props}>
         <Icon name={iconName} style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }} />
         <label className="option" style={{ fontSize: '14px', color: 'white' }}>
-          {value?.label || defaultValue.label}
+          {value?.symbol || defaultValue.symbol}
         </label>
       </components.ValueContainer>
     );
@@ -129,7 +131,7 @@ const CurrencyDropdown = (props: any) => {
 
   return (
     <Select
-      options={options}
+      options={paymentTokens}
       styles={styles}
       onChange={changeHandler}
       components={{

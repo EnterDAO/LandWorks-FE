@@ -3,7 +3,6 @@ import { AbiItem } from 'web3-utils';
 import Web3Contract from 'web3/web3Contract';
 
 export default abstract class ERC721Contract extends Web3Contract {
-
   protected constructor(abi: AbiItem[], address: string) {
     super([...abi], address, '');
 
@@ -17,19 +16,17 @@ export default abstract class ERC721Contract extends Web3Contract {
   /**
    * Gives permission to `to` to transfer `tokenId` token to another account.
    */
-  approve(
-    to: string,
-    tokenId: BigNumber): Promise<void> {
+  approve(to: string, tokenId: BigNumber | string): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
 
-    return this.send('approve',
-      [
-        to,
-        tokenId
-      ], {
-        from: this.account,
-      }).then();
+    return this.send('approve', [to, tokenId], {
+      from: this.account,
+    }).then();
+  }
+
+  getApproved(tokenId: BigNumber | string): Promise<string> {
+    return this.call('getApproved', [tokenId]);
   }
 }

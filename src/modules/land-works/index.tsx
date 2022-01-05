@@ -36,20 +36,22 @@ const MetapassView: React.FC = () => {
 
   return (
     <LandworksProvider>
-      <LandRegistryProvider></LandRegistryProvider>
-      <EstateRegistryProvider> </EstateRegistryProvider>
-      <Suspense fallback={<AntdSpin />}>
-        <Switch>
-          <Route path="/land-works" exact component={OwnedPasses} />
-          <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
-          <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
-          <Route path="/land-works/lending" exact component={LendingView} />
-          <Route path="/land-works/renting" exact component={RentingView} />
-          <Route path="/land-works/list-property" exact component={ListProperty} />
-          <Route path="/land-works/edit-property" exact component={ListProperty} />
-          {/*<Redirect to="/land-registry-provider-works" />*/}
-        </Switch>
-      </Suspense>
+      <LandRegistryProvider>
+        <EstateRegistryProvider>
+          <Suspense fallback={<AntdSpin />}>
+            <Switch>
+              <Route path="/land-works" exact component={OwnedPasses} />
+              <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
+              <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
+              <Route path="/land-works/lending" exact component={LendingView} />
+              <Route path="/land-works/renting" exact component={RentingView} />
+              <Route path="/land-works/list-property" exact component={ListProperty} />
+              <Route path="/land-works/edit-property" exact component={ListProperty} />
+              {/*<Redirect to="/land-registry-provider-works" />*/}
+            </Switch>
+          </Suspense>
+        </EstateRegistryProvider>
+      </LandRegistryProvider>
     </LandworksProvider>
   );
 };

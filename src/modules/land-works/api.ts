@@ -14,7 +14,7 @@ export async function getNftMeta(id: string | number): Promise<any> {
 
   const req = await fetch(URL);
 
-  const result = await req.text().then((data) => JSON.parse(data));
+  const result = await req.text().then(data => JSON.parse(data));
   return result;
 }
 
@@ -45,12 +45,12 @@ export function fetchOverviewData(): Promise<APIOverviewData> {
       }
     `,
   })
-    .then((result) => {
+    .then(result => {
       return {
         ...result.data.overview,
       };
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return { data: {} };
     });
@@ -74,8 +74,8 @@ export type CoordinatesLAND = {
 };
 
 export type PaymentToken = {
-  address: string;
-  feePercentage: BigNumber;
+  id: string;
+  feePercentage: BigNumber | number;
   name: string;
   symbol: string;
   decimals: number;
@@ -176,13 +176,13 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
       ids: coordinates,
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       const mappedAssets = response.data.coordinatesLANDs?.map((coords: any) => coords.data.asset);
       const uniqueAssets = parseAssets([...new Map(mappedAssets.map((v: any) => [v.id, v])).values()]);
 
       return uniqueAssets;
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return [];
     });
@@ -191,7 +191,7 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
 /**
  * Gets all token payments, which includes address, symbol, name, decimals and fee percentage.
  */
-export function fetchTokenPayments() {
+export function fetchTokenPayments(): Promise<PaymentToken[]> {
   return GraphClient.get({
     query: gql`
       query GetTokenPayments {
@@ -205,12 +205,12 @@ export function fetchTokenPayments() {
       }
     `,
   })
-    .then(async (response) => {
-      return { ...response.data.paymentTokens };
+    .then(async response => {
+      return [...response.data.paymentTokens];
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
-      return { data: {} };
+      return [];
     });
 }
 
@@ -268,10 +268,10 @@ export function fetchAsset(id: string): Promise<AssetEntity> {
       id: id,
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       return parseAsset(response.data.asset);
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return {} as AssetEntity;
     });
@@ -316,7 +316,7 @@ export function fetchAssetRents(id: string, page = 1, limit = 5): Promise<Pagina
       limit: limit,
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       const result: PaginatedResult<RentEntity> = {
         data: (response.data.asset.rents ?? []).map((item: any) => ({
           ...item,
@@ -329,7 +329,7 @@ export function fetchAssetRents(id: string, page = 1, limit = 5): Promise<Pagina
 
       return result;
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return { data: [], meta: { count: 0 } };
     });
@@ -346,7 +346,7 @@ export function fetchAssetUserRents(
   id: string,
   renter: string,
   page = 1,
-  limit = 5
+  limit = 5,
 ): Promise<PaginatedResult<RentEntity>> {
   return GraphClient.get({
     query: gql`
@@ -378,7 +378,7 @@ export function fetchAssetUserRents(
       renter: renter,
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       // Paginate the result
       const paginatedRents = response.data.asset.rents.slice(limit * (page - 1), limit * page);
 
@@ -393,7 +393,7 @@ export function fetchAssetUserRents(
 
       return result;
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return { data: [], meta: { count: 0 } };
     });
@@ -467,21 +467,21 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
       id: address.toLowerCase(),
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       const result = { ...response.data.user };
       const ownerAndConsumerAssets = [...result.assets, ...result.consumerTo];
-      const uniqueAssets = [...new Map(ownerAndConsumerAssets.map((v) => [v.id, v])).values()].sort(
-        (a: AssetEntity, b: AssetEntity) => Number(b.id) - Number(a.id)
+      const uniqueAssets = [...new Map(ownerAndConsumerAssets.map(v => [v.id, v])).values()].sort(
+        (a: AssetEntity, b: AssetEntity) => Number(b.id) - Number(a.id),
       );
 
       result.ownerAndConsumerAssets = parseAssets(uniqueAssets);
       result.unclaimedRentAssets = parseAssets(
-        uniqueAssets.filter((a: any) => BigNumber.from(a.unclaimedRentFee)?.gt(0))
+        uniqueAssets.filter((a: any) => BigNumber.from(a.unclaimedRentFee)?.gt(0)),
       );
       result.hasUnclaimedRent = result.unclaimedRentAssets.length > 0;
       return result;
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return {} as UserEntity;
     });
@@ -525,7 +525,7 @@ export function fetchUserLastRentPerAsset(address: string, page = 1, limit = 6):
       id: address.toLowerCase(),
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       // Filter out rents for the same asset
       if (!response?.data?.user?.rents) {
         return {
@@ -535,7 +535,7 @@ export function fetchUserLastRentPerAsset(address: string, page = 1, limit = 6):
       }
       const filteredRents = response.data.user.rents.filter(
         (element: any, index: number, array: any) =>
-          array.findIndex((t: any) => t.asset.id === element.asset.id) === index
+          array.findIndex((t: any) => t.asset.id === element.asset.id) === index,
       );
 
       const paginatedRents = filteredRents.slice(limit * (page - 1), limit * page);
@@ -547,7 +547,7 @@ export function fetchUserLastRentPerAsset(address: string, page = 1, limit = 6):
         meta: { count: filteredRents.length },
       };
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return {} as UserEntity;
     });
@@ -591,12 +591,12 @@ export function fetchUserClaimHistory(address: string): Promise<ClaimHistory[]> 
       id: address.toLowerCase(),
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       // TODO: convert to proper model if necessary
 
       return response.data.user?.claimHistory;
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return { data: [], meta: { count: 0 } };
     });
@@ -619,7 +619,7 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
   metaverse: string = '1',
   lastRentEnd: string = '0',
   orderColumn: string = 'totalRents',
-  orderDirection: string
+  orderDirection: string,
 ): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
     query: gql`
@@ -657,7 +657,7 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
       orderDirection: orderDirection,
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       // Paginate the result
       const paginatedAssets = response.data.assets.slice(limit * (page - 1), limit * page);
 
@@ -666,7 +666,7 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
         meta: { count: response.data.assets.length },
       };
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return { data: [], meta: { count: 0, block: 0 } };
     });
@@ -695,8 +695,9 @@ function parseAsset(asset: any): AssetEntity {
   const maxFutureTimeRent = new BigNumber(asset.lastRentEnd).plus(asset.maxFutureTime).minus(asset.maxPeriod);
   let maxRent = asset.maxPeriod;
   if (now < asset.lastRentEnd && maxFutureTimeRent.lt(asset.maxPeriod)) {
-    maxRent = maxFutureTimeRent.toNumber();
+    maxRent = maxFutureTimeRent;
   }
+  console.log(maxRent);
 
   const maxAvailablity = getFormattedTime(maxRent);
   liteAsset.availability = `${getFormattedTime(asset.minPeriod)}-${maxAvailablity}`;

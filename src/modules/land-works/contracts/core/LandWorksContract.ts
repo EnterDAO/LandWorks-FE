@@ -1,12 +1,12 @@
-import { AbiItem } from 'web3-utils';
 import BigNumber from 'bignumber.js';
+import { AbiItem } from 'web3-utils';
 import Web3Contract, { Web3ContractAbiItem } from 'web3/web3Contract';
-import LandWorksABI from './abi.json';
 
+import LandWorksABI from './abi.json';
 
 export default class LandWorksContract extends Web3Contract {
   constructor(abi: AbiItem[], address: string) {
-    super([...LandWorksABI as Web3ContractAbiItem[], ...abi], address, '');
+    super([...(LandWorksABI as Web3ContractAbiItem[]), ...abi], address, '');
 
     this.on(Web3Contract.UPDATE_ACCOUNT, () => {
       if (!this.account) {
@@ -27,19 +27,21 @@ export default class LandWorksContract extends Web3Contract {
    * @param pricePerSecond
    */
   list(
-    metaverseId: BigNumber,
+    metaverseId: BigNumber | number,
     metaverseRegistry: string,
-    metaverseAssetId: BigNumber,
+    metaverseAssetId: BigNumber | string,
     minPeriod: BigNumber,
     maxPeriod: BigNumber,
     maxFutureTime: BigNumber,
     paymentToken: string,
-    pricePerSecond: BigNumber): Promise<void> {
+    pricePerSecond: BigNumber | string,
+  ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
 
-    return this.send('list',
+    return this.send(
+      'list',
       [
         metaverseId,
         metaverseRegistry,
@@ -49,9 +51,11 @@ export default class LandWorksContract extends Web3Contract {
         maxFutureTime,
         paymentToken,
         pricePerSecond,
-      ], {
+      ],
+      {
         from: this.account,
-      }).then();
+      },
+    ).then();
   }
 
   /**
@@ -75,53 +79,35 @@ export default class LandWorksContract extends Web3Contract {
       return Promise.reject();
     }
 
-    return this.send('updateConditions',
-      [
-        assetId,
-        minPeriod,
-        maxPeriod,
-        maxFutureTime,
-        paymentToken,
-        pricePerSecond,
-      ], {
-        from: this.account,
-      }).then();
+    return this.send('updateConditions', [assetId, minPeriod, maxPeriod, maxFutureTime, paymentToken, pricePerSecond], {
+      from: this.account,
+    }).then();
   }
 
   /**
    * Delists the asset.
    * @param assetId The target asset.
    */
-  delist(
-    assetId: BigNumber,
-  ): Promise<void> {
+  delist(assetId: BigNumber): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
-    return this.send('delist',
-      [
-        assetId,
-      ], {
-        from: this.account,
-      }).then();
+    return this.send('delist', [assetId], {
+      from: this.account,
+    }).then();
   }
 
   /**
    * Withdraws the asset.
    * @param assetId The target asset.
    */
-  withdraw(
-    assetId: BigNumber,
-  ): Promise<void> {
+  withdraw(assetId: BigNumber): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
-    return this.send('withdraw',
-      [
-        assetId,
-      ], {
-        from: this.account,
-      }).then();
+    return this.send('withdraw', [assetId], {
+      from: this.account,
+    }).then();
   }
 
   /**
@@ -132,12 +118,9 @@ export default class LandWorksContract extends Web3Contract {
     if (!this.account) {
       return Promise.reject();
     }
-    return this.send('claimMultipleRentFees',
-      [
-        assetIds,
-      ], {
-        from: this.account,
-      }).then();
+    return this.send('claimMultipleRentFees', [assetIds], {
+      from: this.account,
+    }).then();
   }
 
   /**
@@ -159,15 +142,10 @@ export default class LandWorksContract extends Web3Contract {
 
     const totalFee = period.multipliedBy(pricePerSecond);
 
-    return this.send('rentDecentraland',
-      [
-        assetId,
-        period,
-        operator,
-      ], {
-        from: this.account,
-        value: totalFee,
-      }).then();
+    return this.send('rentDecentraland', [assetId, period, operator], {
+      from: this.account,
+      value: totalFee,
+    }).then();
   }
 
   /**
@@ -176,22 +154,13 @@ export default class LandWorksContract extends Web3Contract {
    * @param operator The operator to be set.
    * @param period The period (in seconds) for the rent.
    */
-  rentDecentralandWithERC20(
-    assetId: BigNumber,
-    operator: string,
-    period: BigNumber,
-  ): Promise<void> {
+  rentDecentralandWithERC20(assetId: BigNumber, operator: string, period: BigNumber): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
-    return this.send('rentDecentraland',
-      [
-        assetId,
-        period,
-        operator,
-      ], {
-        from: this.account,
-      }).then();
+    return this.send('rentDecentraland', [assetId, period, operator], {
+      from: this.account,
+    }).then();
   }
 
   /**
@@ -200,22 +169,13 @@ export default class LandWorksContract extends Web3Contract {
    * @param rentId The target rent.
    * @param operator The to-be-set operator.
    */
-  updateOperator(
-    assetId: BigNumber,
-    rentId: BigNumber,
-    operator: string,
-  ): Promise<void> {
+  updateOperator(assetId: BigNumber, rentId: BigNumber, operator: string): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
-    return this.send('updateOperator',
-      [
-        assetId,
-        rentId,
-        operator,
-      ], {
-        from: this.account,
-      }).then();
+    return this.send('updateOperator', [assetId, rentId, operator], {
+      from: this.account,
+    }).then();
   }
 
   /**
@@ -223,19 +183,12 @@ export default class LandWorksContract extends Web3Contract {
    * @param assetId The target asset id
    * @param rentId The target rent id
    */
-  updateState(
-    assetId: BigNumber,
-    rentId: BigNumber
-  ): Promise<void> {
+  updateState(assetId: BigNumber, rentId: BigNumber): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
-    return this.send('updateState',
-      [
-        assetId,
-        rentId,
-      ], {
-        from: this.account,
-      }).then();
+    return this.send('updateState', [assetId, rentId], {
+      from: this.account,
+    }).then();
   }
 }

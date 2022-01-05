@@ -6,9 +6,6 @@ import config from 'config';
 import { useReload } from 'hooks/useReload';
 import { useWallet } from 'wallets/wallet';
 
-import { getNftMeta, getNftMetaType } from '../../../api';
-import MetapassErc721Contract from '../../../contracts/MetapassErc721Contract';
-import LandWorksContract from '../../../contracts/core/LandWorksContract';
 import EstateRegistryContract from '../../../contracts/decentraland/estate/EstateRegistryContract';
 
 export type EstateRegistryType = {
@@ -40,20 +37,12 @@ const EstateRegistryProvider: FC = props => {
     console.log(estateRegistryContract);
   }, [walletCtx.provider]);
 
-  const getData = async (account: string) => {
-    const result = await estateRegistryContract.getUserData(account);
-    console.log(result);
-  }
-
   useEffect(() => {
     estateRegistryContract.setAccount(walletCtx.account);
-    if (walletCtx.account) {
-      getData(walletCtx.account);
-    }
   }, [walletCtx.account]);
 
   const value: EstateRegistryType = {
-    estateRegistryContract
+    estateRegistryContract,
   };
 
   return (

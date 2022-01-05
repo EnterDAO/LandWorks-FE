@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
+import { useHistory } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 
 import Button from 'components/antd/button';
-import Divider from 'components/antd/divider';
 import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import { useGeneral } from 'components/providers/general-provider';
-import { EnterToken } from 'components/providers/known-tokens-provider';
 import { useWarning } from 'components/providers/warning-provider';
 import { LandsNav } from 'modules/land-works/components/lands-header-nav';
 import { LandsNavMobile } from 'modules/land-works/components/lands-header-nav-mobile';
-import { ListModal } from 'modules/land-works/components/lands-list-modal';
 import ConnectedWallet from 'wallets/components/connected-wallet';
-import { MetamaskConnector } from 'wallets/connectors/metamask';
 import { useWallet } from 'wallets/wallet';
 
 import s from './s.module.scss';
@@ -23,10 +20,10 @@ import s from './s.module.scss';
 const modalRoot = document.getElementById('modal-root') || document.body;
 
 const LayoutHeader: React.FC = () => {
+  const history = useHistory();
   const { navOpen, setNavOpen } = useGeneral();
   const [referenceElement, setReferenceElement] = useState<any>();
   const [popperElement, setPopperElement] = useState<any>();
-  const [showListModal, setShowListModal] = useState<boolean>();
   const wallet = useWallet();
   const { warns } = useWarning();
 
@@ -56,7 +53,7 @@ const LayoutHeader: React.FC = () => {
 
       {wallet.isActive && wallet.connector?.id === 'metamask' && (
         <div className={s.addTokenWrapper}>
-          <button type="button" onClick={() => setShowListModal(true)} className={s.addTokenButton}>
+          <button type="button" onClick={() => history.push('/land-works/list-property')} className={s.addTokenButton}>
             <Icon name="png/ListProperty" width={32} height={32} style={{ transform: 'scale(1.5)' }} />
           </button>
         </div>
@@ -92,7 +89,6 @@ const LayoutHeader: React.FC = () => {
           </div>,
           modalRoot,
         )}
-      <ListModal onCancel={() => setShowListModal(false)} visible={showListModal} />
     </div>
   );
 };

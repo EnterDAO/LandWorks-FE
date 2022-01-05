@@ -1,14 +1,13 @@
 import BigNumber from 'bignumber.js';
 import { AbiItem } from 'web3-utils';
 import { Web3ContractAbiItem } from 'web3/web3Contract';
-import ERC721Contract from '../../erc721/ERC721Contract';
 
+import ERC721Contract from '../../erc721/ERC721Contract';
 import LANDRegistryABI from './abi.json';
 
 export default class LANDRegistryContract extends ERC721Contract {
-
   constructor(abi: AbiItem[], address: string) {
-    super([...LANDRegistryABI as Web3ContractAbiItem[], ...abi], address);
+    super([...(LANDRegistryABI as Web3ContractAbiItem[]), ...abi], address);
   }
 
   /**
@@ -32,19 +31,25 @@ export default class LANDRegistryContract extends ERC721Contract {
   async getTokenData(tokenId: BigNumber): Promise<any> {
     const data = await this.batch([
       {
-        method: 'tokenMetadata',
+        method: 'tokenMetadata', // LAND name
         methodArgs: [tokenId],
       },
       {
-        method: 'decodeTokenId',
+        method: 'decodeTokenId', // coordinates
         methodArgs: [tokenId],
       },
     ]);
 
+    let name = data[0];
+    if (name === '') {
+      name = `LAND (${data[1][0]}, ${data[1][1]})`;
+    }
+
     return {
       id: tokenId,
-      name: data[0],
+      name: name,
       coords: data[1],
-    }
+      isLAND: true,
+    };
   }
 }

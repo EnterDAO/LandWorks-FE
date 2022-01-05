@@ -7,7 +7,7 @@ import './index.scss';
 
 type Item = {
   label: string;
-  value: number | string;
+  value: any;
 };
 
 interface IProps {

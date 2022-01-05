@@ -4,7 +4,7 @@ import Web3Contract from 'web3/web3Contract';
 
 import config from 'config';
 import { useReload } from 'hooks/useReload';
-import wallet, { useWallet } from 'wallets/wallet';
+import { useWallet } from 'wallets/wallet';
 
 import LANDRegistryContract from '../../../contracts/decentraland/land/LANDRegistryContract';
 
@@ -37,20 +37,12 @@ const LandRegistryProvider: FC = props => {
     console.log(landRegistryContract);
   }, [walletCtx.provider]);
 
-  const getData = async (account: string) => {
-    const result = await landRegistryContract.getUserData(account);
-    console.log(result);
-  }
-
   useEffect(() => {
     landRegistryContract.setAccount(walletCtx.account);
-    if (walletCtx.account) {
-      getData(walletCtx.account);
-    }
   }, [walletCtx.account]);
 
   const value: LandRegistryType = {
-    landRegistryContract
+    landRegistryContract,
   };
 
   return (

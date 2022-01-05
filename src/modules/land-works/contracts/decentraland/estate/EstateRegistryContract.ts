@@ -1,14 +1,13 @@
 import BigNumber from 'bignumber.js';
 import { AbiItem } from 'web3-utils';
 import { BatchContractMethod, Web3ContractAbiItem } from 'web3/web3Contract';
-import ERC721Contract from '../../erc721/ERC721Contract';
 
+import ERC721Contract from '../../erc721/ERC721Contract';
 import EstateRegistryABI from './abi.json';
 
 export default class EstateRegistryContract extends ERC721Contract {
-
   constructor(abi: AbiItem[], address: string) {
-    super([...EstateRegistryABI as Web3ContractAbiItem[], ...abi], address);
+    super([...(EstateRegistryABI as Web3ContractAbiItem[]), ...abi], address);
   }
 
   /**
@@ -32,17 +31,19 @@ export default class EstateRegistryContract extends ERC721Contract {
    */
   async getTokenData(user: string, index: number): Promise<any> {
     const tokenId = await this.call('tokenOfOwnerByIndex', [user, index]); // Get the token ID
-    const promises = [
-      this.call('getMetadata', [tokenId]),
-      this.getEstateData(tokenId),
-    ];
+    const promises = [this.call('getMetadata', [tokenId]), this.getEstateData(tokenId)];
 
     const result = await Promise.all(promises);
+    let name = result[0];
+    if (name === '') {
+      name = `ESTATE (${result[1].estateSize} LAND)`;
+    }
 
     return {
       id: tokenId,
-      name: result [0],
-      landIds: result [1],
+      name: name,
+      landIds: result[1],
+      isLAND: false,
     };
   }
 
