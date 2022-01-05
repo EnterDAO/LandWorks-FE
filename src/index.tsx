@@ -19,6 +19,7 @@ import { checkFlexGapSupport } from './checkFlexGap';
 import * as sw from './serviceWorker';
 import ScrollToTop from './top-scroll';
 
+window.process = {} as any;
 const App: React.FC = () => {
   return (
     <ErrorBoundary>
@@ -52,7 +53,7 @@ document.body.addEventListener('mousedown', () => {
   document.body.classList.add('using-mouse');
 });
 
-document.body.addEventListener('keydown', event => {
+document.body.addEventListener('keydown', (event) => {
   if (event.key === 'Tab') {
     document.body.classList.remove('using-mouse');
   }
