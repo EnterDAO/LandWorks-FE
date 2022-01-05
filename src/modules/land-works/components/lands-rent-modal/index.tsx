@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
-import Icon, { TokenIconNames } from 'components/custom/icon';
+import Icon from 'components/custom/icon';
 
 import { RentDatePicker } from '../lands-rent-date-picker';
 

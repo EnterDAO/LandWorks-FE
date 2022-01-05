@@ -1,11 +1,11 @@
 import { DatePicker } from 'antd';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 
 const { RangePicker } = DatePicker;
 
-export const RentDatePicker = props => {
-  const {minStartDate, minRentPeriod, maxEndDate, handleRentDateChange} = props;
-  function range(start, end) {
+export const RentDatePicker = (props: any) => {
+  const { minStartDate, minRentPeriod, maxEndDate, handleRentDateChange } = props;
+  function range(start: any, end: any) {
     const result = [];
     for (let i = start; i < end; i++) {
       result.push(i);
@@ -13,7 +13,7 @@ export const RentDatePicker = props => {
     return result;
   }
 
-  const disabledDate = (current) => {
+  const disabledDate = (current: any) => {
     // The date is before the allowed min period
     const tooEarlyDate = current.date() < minRentPeriod.date();
     const tooEarlyMonth = current.month() === minRentPeriod.month();
@@ -30,10 +30,10 @@ export const RentDatePicker = props => {
     return tooLate;
   };
 
-  function disabledRangeTime(current, type) {
-    const minRentDate = current.date() === minRentPeriod.date();
-    const minRentMonth = current.month() === minRentPeriod.month();
-    const minRentYear = current.year() === minRentPeriod.year();
+  function disabledRangeTime(current: Moment | null, type: string): any {
+    const minRentDate = current?.date() === minRentPeriod.date();
+    const minRentMonth = current?.month() === minRentPeriod.month();
+    const minRentYear = current?.year() === minRentPeriod.year();
 
     const isMinRentDate = minRentDate && minRentMonth && minRentYear;
 
@@ -44,9 +44,9 @@ export const RentDatePicker = props => {
       };
     }
 
-    const maxDate = current.date() === maxEndDate.date();
-    const maxMonth = current.month() === maxEndDate.month();
-    const maxYear = current.year() === maxEndDate.year();
+    const maxDate = current?.date() === maxEndDate.date();
+    const maxMonth = current?.month() === maxEndDate.month();
+    const maxYear = current?.year() === maxEndDate.year();
 
     const isMaxRangeDate = maxDate && maxMonth && maxYear;
 
