@@ -640,7 +640,7 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
     query: gql`
       query GetAssets($metaverse: String, $lastRentEnd: String, $orderColumn: String, $orderDirection: String) {
         assets(
-          where: { metaverse: $metaverse, lastRentEnd_gte: $lastRentEnd }
+          where: { metaverse: $metaverse, lastRentEnd_lte: $lastRentEnd }
           orderBy: $orderColumn
           orderDirection: $orderDirection
         ) {
