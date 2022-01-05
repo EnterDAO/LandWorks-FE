@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { bottom, end } from '@popperjs/core';
 import { Card, Col, Image, Row } from 'antd';
+import BigNumber from 'bignumber.js';
 
 import Icon from 'components/custom/icon';
+import { getTokenPrice } from 'components/providers/known-tokens-provider';
 
 import { AssetEntity } from '../../api';
 import { LandCartChart } from '../land-cart-chart';
@@ -18,10 +20,18 @@ interface ILandWorksCardProps {
 const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   const history = useHistory();
   const [showChart, setShowChart] = useState(false);
+  const [usdPrice, setUsdPrice] = useState('0');
 
   useEffect(() => {
     flexFont();
+    getUsdPrice();
   }, [land]);
+
+  const getUsdPrice = () => {
+    const ethPrice = new BigNumber(getTokenPrice(land.paymentToken.symbol) || '0');
+    const ethToUsdPrice = ethPrice.multipliedBy(land.pricePerMagnitude.price);
+    setUsdPrice(ethToUsdPrice.toFixed());
+  };
 
   const flexFont = () => {
     var divs = document.getElementsByClassName('price-eth');
@@ -66,7 +76,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
               </Col>
               <Col span={24}>
                 <span className="land-price-info">
-                  <span className="price">$220</span>
+                  <span className="price">${usdPrice}</span>
                   <span className="per-day">/ {land.pricePerMagnitude.magnitude}</span>
                   <button onClick={() => setShowChart(!showChart)}>
                     <Icon name="info-outlined" className="info-icon" />

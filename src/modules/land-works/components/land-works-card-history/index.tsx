@@ -88,6 +88,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
           tokenDecimals={data.paymentToken.decimals}
           tokenSymbol={data.paymentToken.symbol}
           weiAmount={Number(data.price)}
+          dateTimestamp={data.timestamp}
         />
       ),
     },
@@ -137,7 +138,8 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
               className="btn all-btn"
               onClick={() => {
                 onAllSelected();
-              }}>
+              }}
+            >
               All
             </button>
             {showYoursSection() && (
@@ -145,7 +147,8 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
                 className="btn yours-btn"
                 onClick={() => {
                   onYouSelected();
-                }}>
+                }}
+              >
                 Yours
               </button>
             )}

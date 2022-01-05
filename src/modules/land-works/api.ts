@@ -298,6 +298,7 @@ export function fetchAssetRents(id: string, page = 1, limit = 5): Promise<Pagina
             operator
             end
             txHash
+            timestamp
             fee
             paymentToken {
               id
@@ -360,6 +361,7 @@ export function fetchAssetUserRents(
             operator
             end
             txHash
+            timestamp
             fee
             paymentToken {
               id
@@ -501,6 +503,7 @@ export function fetchUserLastRentPerAsset(address: string, page = 1, limit = 6):
             id
             operator
             end
+            timestamp
             asset {
               id
               decentralandData {
