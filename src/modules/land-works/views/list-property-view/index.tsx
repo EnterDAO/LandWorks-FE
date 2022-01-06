@@ -18,7 +18,13 @@ import { useEstateRegistry } from '../../providers/decentraland/estate-registry-
 import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
 import { useLandworks } from '../../providers/landworks-provider';
 
-import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, WEEK_IN_SECONDS } from '../../../../utils/date';
+import {
+  DAY_IN_SECONDS,
+  HOUR_IN_SECONDS,
+  MINUTE_IN_SECONDS,
+  ONE_HUNDRED_YEARS_IN_SECONDS,
+  WEEK_IN_SECONDS,
+} from '../../../../utils/date';
 import { DEFAULT_ADDRESS, MAX_UINT_256, ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
 
 import './index.scss';
@@ -96,7 +102,7 @@ type DecentralandNFT = {
 };
 
 const DEFAULT_MIN_PERIOD = new BigNumber(1);
-const DEFAULT_MAX_PERIOD = MAX_UINT_256;
+const DEFAULT_MAX_PERIOD = new BigNumber(ONE_HUNDRED_YEARS_IN_SECONDS);
 const FEE_PRECISION = 100_000;
 const DEFAULT_PROPERTY = { label: '', value: '' };
 

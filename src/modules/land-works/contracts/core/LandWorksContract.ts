@@ -131,7 +131,7 @@ export default class LandWorksContract extends Web3Contract {
    * @param pricePerSecond The current price per second for rentals of the given asset.
    */
   rentDecentralandWithETH(
-    assetId: BigNumber,
+    assetId: BigNumber | string,
     operator: string,
     period: BigNumber,
     pricePerSecond: BigNumber,
@@ -142,7 +142,7 @@ export default class LandWorksContract extends Web3Contract {
 
     const totalFee = period.multipliedBy(pricePerSecond);
 
-    return this.send('rentDecentraland', [assetId, period, operator], {
+    return this.send('rentDecentraland', [assetId, period.toNumber(), operator], {
       from: this.account,
       value: totalFee,
     }).then();
@@ -154,7 +154,7 @@ export default class LandWorksContract extends Web3Contract {
    * @param operator The operator to be set.
    * @param period The period (in seconds) for the rent.
    */
-  rentDecentralandWithERC20(assetId: BigNumber, operator: string, period: BigNumber): Promise<void> {
+  rentDecentralandWithERC20(assetId: BigNumber | string, operator: string, period: BigNumber): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
@@ -169,7 +169,7 @@ export default class LandWorksContract extends Web3Contract {
    * @param rentId The target rent.
    * @param operator The to-be-set operator.
    */
-  updateOperator(assetId: BigNumber, rentId: BigNumber, operator: string): Promise<void> {
+  updateOperator(assetId: BigNumber | string, rentId: BigNumber | string, operator: string): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
@@ -183,7 +183,7 @@ export default class LandWorksContract extends Web3Contract {
    * @param assetId The target asset id
    * @param rentId The target rent id
    */
-  updateState(assetId: BigNumber, rentId: BigNumber): Promise<void> {
+  updateState(assetId: BigNumber | string, rentId: BigNumber | string): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }

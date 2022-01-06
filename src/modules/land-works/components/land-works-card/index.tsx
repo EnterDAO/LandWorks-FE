@@ -93,7 +93,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
                 <p className="available-heading">Available now</p>
               </Col>
               <Col span={24}>
-                <p className="available-period">{land.availability}</p>
+                <p className="available-period">{land.availability?.label}</p>
               </Col>
             </Row>
           </Col>

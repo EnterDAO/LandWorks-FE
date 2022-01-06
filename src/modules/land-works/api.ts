@@ -7,6 +7,7 @@ import { GraphClient } from '../../web3/graph/client';
 import { getFormattedTime, getNowTs } from '../../utils';
 import { DAY_IN_SECONDS, ONE_HUNDRED_YEARS_IN_SECONDS, ONE_SECOND } from '../../utils/date';
 import { MAX_UINT_256, getHumanValue } from '../../web3/utils';
+import { AssetStatus } from './models/AssetStatus';
 
 const BASE_URL = process.env.REACT_APP_MINT_METADATA_URL;
 
@@ -94,7 +95,7 @@ export type AssetEntity = {
   unclaimedRentFee: BigNumber;
   paymentToken: PaymentToken;
   consumer?: IdEntity;
-  availability: string;
+  availability: AssetAvailablity;
   isHot: boolean;
   decentralandData?: DecentralandData;
   owner: IdEntity;
@@ -102,6 +103,13 @@ export type AssetEntity = {
   status: string;
   rents: RentEntity[];
   isAvailable: boolean;
+};
+
+export type AssetAvailablity = {
+  label: string;
+  maxRentDate: number;
+  minRentDate: number;
+  startRentDate: number;
 };
 
 export type IdEntity = {
@@ -228,6 +236,7 @@ export function fetchAsset(id: string): Promise<AssetEntity> {
     query: gql`
       query GetAsset($id: String, $first: Int, $offset: Int) {
         asset(id: $id) {
+          id
           metaverse {
             name
           }
@@ -622,7 +631,7 @@ export function fetchUserClaimHistory(address: string): Promise<ClaimHistory[]> 
 }
 
 /**
- * Gets Assets by metaverse id, and gte (greater or equal) than the last rent end,
+ * Gets Listed Assets by metaverse id, and gte (greater or equal) than the last rent end,
  * ordered by a given column in ascending/descending order
  * @param page Which page to load. Default 1
  * @param limit How many items per page. Default 6
@@ -632,7 +641,7 @@ export function fetchUserClaimHistory(address: string): Promise<ClaimHistory[]> 
  * @param orderDirection asc or desc
  * Default '0'. Used to determined Availability of assets
  */
-export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
+export function fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
   page = 1,
   limit = 6,
   metaverse = '1',
@@ -642,9 +651,9 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
 ): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
     query: gql`
-      query GetAssets($metaverse: String, $lastRentEnd: String, $orderColumn: String, $orderDirection: String) {
+      query GetAssets($metaverse: String, $lastRentEnd: String, $orderColumn: String, $orderDirection: String, $status: String) {
         assets(
-          where: { metaverse: $metaverse, lastRentEnd_lte: $lastRentEnd }
+          where: { metaverse: $metaverse, lastRentEnd_gte: $lastRentEnd, status: $status }
           orderBy: $orderColumn
           orderDirection: $orderDirection
         ) {
@@ -678,6 +687,7 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
       metaverse: metaverse,
       orderColumn: orderColumn,
       orderDirection: orderDirection,
+      status: AssetStatus.LISTED,
     },
   })
     .then(async response => {
@@ -743,7 +753,7 @@ function getDecentralandAssetName(decentralandData: any): string {
   return `LAND (${coordinates[0]}, ${coordinates[1]})`;
 }
 
-function getAvailability(asset: any): string {
+function getAvailability(asset: any): AssetAvailablity {
   let minAvailability = '';
   let hasMinAvailability = false;
   let maxAvailability = '';
@@ -756,14 +766,18 @@ function getAvailability(asset: any): string {
 
   const now = getNowTs();
   const startRent = new BigNumber(Math.max(now, Number(asset.lastRentEnd)));
+  const minRentDate = startRent.plus(asset.minPeriod);
   const maxRent = startRent.plus(asset.maxPeriod);
   const maxFutureTime = new BigNumber(now).plus(asset.maxFutureTime);
 
   const maxRentPeriod = maxRent.lt(maxFutureTime) ? new BigNumber(asset.maxPeriod) : maxFutureTime.minus(startRent);
 
+  let maxRentDate = startRent.plus(maxRentPeriod);
   if (maxRentPeriod.lt(ONE_HUNDRED_YEARS_IN_SECONDS)) {
     maxAvailability = getFormattedTime(maxRentPeriod.toNumber());
     hasMaxAvailablity = true;
+  } else {
+    maxRentDate = startRent.plus(ONE_HUNDRED_YEARS_IN_SECONDS);
   }
 
   let result = '';
@@ -783,5 +797,10 @@ function getAvailability(asset: any): string {
     }
   }
 
-  return result;
+  return {
+    startRentDate: startRent.toNumber(),
+    minRentDate: minRentDate.toNumber(),
+    maxRentDate: maxRentDate.toNumber(),
+    label: result,
+  };
 }

@@ -1,41 +1,127 @@
-import React from 'react';
-import { Col, Row } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Col, Input, Row } from 'antd';
+import BigNumber from 'bignumber.js';
 import moment from 'moment';
 
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon from 'components/custom/icon';
-import { getTokenIconName } from 'helpers/helpers';
+import { getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
 
+import { AssetAvailablity, PaymentToken } from '../../api';
 import { RentDatePicker } from '../lands-rent-date-picker';
 
+import { formatBigNumber, getFormattedTime, isValidAddress } from '../../../../utils';
+
 import './index.scss';
+import { getTokenPrice } from '../../../../components/providers/known-tokens-provider';
+import { useWallet } from '../../../../wallets/wallet';
+import { useLandworks } from '../../providers/landworks-provider';
+import { getHumanValue } from '../../../../web3/utils';
 
 type Props = ModalProps & {
   txHash?: string;
+  availability?: AssetAvailablity;
+  assetId?: string;
+  pricePerSecond?: BigNumber;
+  paymentToken?: PaymentToken;
   renderProgress?: () => React.ReactNode;
   renderSuccess?: () => React.ReactNode;
 };
 
-export const RentModal: React.FC<Props> = (props) => {
-  const { txHash, renderProgress, renderSuccess, ...modalProps } = props;
+export const RentModal: React.FC<Props> = props => {
+  const { txHash, availability, assetId, pricePerSecond, paymentToken, renderProgress, renderSuccess, ...modalProps } = props;
 
-  const minStartDate = moment.unix(1641390556); // 5
-  const minRentPeriod = moment.unix(1641562583); // 7
-  const maxEndDate = moment.unix(1641821784); // 10
+  const minStartDate = moment.unix(availability?.startRentDate || 0);
+  const minRentPeriod = moment.unix(availability?.minRentDate || 0);
+  const maxEndDate = moment.unix(availability?.maxRentDate || 0);
 
-  const handleRentDateChange = (date: any) => {
+  const wallet = useWallet();
+  const landworks = useLandworks();
+
+  const { landWorksContract } = landworks;
+
+  const [editedValue, setEditedValue] = useState<string>('');
+  const [period, setPeriod] = useState(0);
+  const [endDate, setEndDate] = useState('');
+  const [isRentDisabled, setRentDisabled] = useState(true);
+  const [totalPrice, setTotalPrice] = useState(new BigNumber(0));
+  const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
+  const [errAddressMessage, setErrAddressMessage] = useState<string>('');
+
+  const handleRentDateChange = (date: moment.Moment[]) => {
     // Those are the start and the end dates, upon ok press
-    console.log(date);
+    const start = date[0];
+    const end = date[1];
+
+    const period = end.unix() - start.unix();
+    setPeriod(period);
+    setEndDate(timestampSecondsToDate(end.unix().toString()));
   };
+
+  const isYou = () => {
+    return wallet.account && wallet.account.toLowerCase() === editedValue.toLowerCase();
+  };
+
+  const calculatePrices = async () => {
+    const decimalPrice = getHumanValue(new BigNumber(pricePerSecond || 0), paymentToken?.decimals);
+    const totalPrice = new BigNumber(period).multipliedBy(decimalPrice!);
+    setTotalPrice(totalPrice);
+    const usdTokenPrice = getTokenPrice(paymentToken?.symbol || 'eth');
+    const usdPrice = usdTokenPrice?.multipliedBy(totalPrice || 0);
+    setUsdPrice(usdPrice || new BigNumber(0));
+  };
+
+  const handleChange = (e: any) => {
+    if (isValidAddress(e.target.value)) {
+      setErrAddressMessage('');
+    } else {
+      setErrAddressMessage('Invalid address provided');
+    }
+    setEditedValue(e.target.value);
+  };
+
+  const handleRent = async () => {
+    if (!isValidForm()) {
+      return;
+    }
+
+    try {
+      if (paymentToken?.symbol.toLowerCase() === 'eth') {
+        await landWorksContract?.rentDecentralandWithETH(assetId!, editedValue, new BigNumber(period), pricePerSecond!);
+      } else {
+        await landWorksContract?.rentDecentralandWithERC20(assetId!, editedValue,  new BigNumber(period));
+      }
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
+
+  const isValidForm = () => {
+    return isValidAddress(editedValue) && period > 0;
+  }
+
+  useEffect(() => {
+    calculatePrices();
+  }, [period]);
+
+  useEffect(() => {
+    if (wallet.account) {
+      setEditedValue(wallet.account);
+    }
+  }, [wallet.account]);
+
+  useEffect(() => {
+    setRentDisabled(!isValidForm());
+  }, [editedValue, period]);
 
   return (
     <Modal
       width={376}
       className="rent-modal"
       title={<p style={{ textAlign: 'center' }}>Rent details</p>}
-      {...modalProps}
-    >
+      {...modalProps}>
       <Row gutter={[10, 10]}>
         <Col span={24}>
           <Row justify="center">
@@ -60,10 +146,10 @@ export const RentModal: React.FC<Props> = (props) => {
             <Col span={12} style={{ textAlign: 'end' }}>
               <Row gutter={[16, 5]} style={{ paddingTop: '10px' }}>
                 <Col span={24}>
-                  <p className="light-text">5 days</p>
+                  <p className="light-text">{getFormattedTime(period)}</p>
                 </Col>
                 <Col span={24} className="bold-white-text">
-                  11.15.2021
+                  {endDate}
                 </Col>
               </Row>
             </Col>
@@ -74,10 +160,16 @@ export const RentModal: React.FC<Props> = (props) => {
                 Operator
                 <Icon name="info-outlined" className="info-icon light-text" />
               </p>
-              <p className="light-text">you</p>
+              <p>{errAddressMessage}</p>
+              {isYou() && <p className="light-text">you</p>}
             </Col>
             <Col span={24}>
-              <p className="operator-address">0X99AA5721188BFF33</p>
+              <Input
+                placeholder="Operator Address"
+                bordered={false}
+                defaultValue={editedValue}
+                onChange={handleChange}
+              />
             </Col>
           </Row>
           <Row className="rent-modal-footer">
@@ -85,15 +177,13 @@ export const RentModal: React.FC<Props> = (props) => {
               <Button
                 className="rent-button"
                 type="primary"
-                onClick={() => {
-                  console.log('do rent stuff here');
-                }}
-              >
+                disabled={isRentDisabled}
+                onClick={handleRent}>
                 <Row>
                   <Col>
                     <span className="rent-label">Rent Now </span>
                     <strong>
-                      2,231 <Icon name={getTokenIconName('png/eth')} className="eth-icon" /> <span>$4446.44</span>
+                      {formatBigNumber(totalPrice)} <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" /> <span>${formatBigNumber(usdPrice)}</span>
                     </strong>
                   </Col>
                 </Row>

@@ -5,7 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Col, Image, Row } from 'antd';
 
 import Button from 'components/antd/button';
-import Icon, { TokenIconNames } from 'components/custom/icon';
+import Icon from 'components/custom/icon';
 
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, CoordinatesLAND, fetchAdjacentDecentralandAssets, fetchAsset } from '../../api';
@@ -14,7 +14,6 @@ import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
 import { RentModal } from '../../components/lands-rent-modal';
 import { WarningModal } from '../../components/lands-warning-modal';
-import LandWorksContract from '../../contracts/core/LandWorksContract';
 import { AssetStatus } from '../../models/AssetStatus';
 
 import './index.scss';
@@ -34,7 +33,7 @@ const SingleLand: React.FC = () => {
       neighbours = [...neighbours, ...getNeighbours(coordinates)];
     }
 
-    return [...new Set(neighbours)].filter((item) => !coordinatesList.some((l) => l.id === item));
+    return [...new Set(neighbours)].filter(item => !coordinatesList.some(l => l.id === item));
   };
 
   const getNeighbours = (coordinates: CoordinatesLAND): string[] => {
@@ -112,14 +111,17 @@ const SingleLand: React.FC = () => {
         </Col>
         <Col span={24}>
           <Row gutter={[15, 15]} style={{ paddingTop: '27px' }}>
-            {lands.map((land) => (
+            {lands.map(land => (
               <LandWorkCard key={land.id} land={land} />
             ))}
           </Row>
         </Col>
       </Row>
 
-      <RentModal onCancel={() => setShowRentModal(false)} visible={showRentModal} />
+      <RentModal onCancel={() => setShowRentModal(false)}
+       visible={showRentModal}
+       availability={asset.availability}
+       assetId={asset.id} pricePerSecond={asset.pricePerSecond} paymentToken={asset.paymentToken}/>
     </div>
   );
 };

@@ -12,7 +12,7 @@ import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sort
 import { SortDirection } from 'modules/land-works/models/SortDirection';
 import { useWallet } from 'wallets/wallet';
 
-import { AssetEntity, UserEntity, fetchAssetsByMetaverseAndGteLastRentEndWithOrder, fetchUserAssets } from '../../api';
+import { AssetEntity, UserEntity, fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder, fetchUserAssets } from '../../api';
 
 import { getNowTs } from '../../../../utils';
 
@@ -79,7 +79,7 @@ const Lands: React.FC = () => {
     orderColumn: string,
     sortDir: string
   ) => {
-    const lands = await fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
+    const lands = await fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
       page,
       pageSize,
       metaverse,

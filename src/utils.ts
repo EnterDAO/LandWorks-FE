@@ -43,6 +43,14 @@ export function getFormattedTime(value: number): string {
   return formattedDuration.split(',')[0];
 }
 
+export function formatBigNumber(value: BigNumber): string {
+  if (value.gt(1)) {
+    return value.toFixed(2)
+  } else {
+    return value.toPrecision(1)
+  }
+}
+
 /**
  * Converts pricePerSecond to a price depending on the magnitude (year, month, week, day, hour, minute, second)
  * @param pricePerSecond
