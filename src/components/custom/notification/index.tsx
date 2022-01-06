@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
@@ -25,6 +26,7 @@ import { getSessionContractByAddress, setSessionContractByAddress } from 'utils/
 
 import s from './s.module.scss';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 window['dateFns'] = dateFns;
 const colorPairs: Record<'green' | 'red' | 'blue', [string, string]> = {
@@ -37,7 +39,7 @@ function getProposalLink(id: number): React.ReactNode {
   return <Link className="link-blue" to={`/governance/proposals/${id}`}>{`PID-${id}`}</Link>;
 }
 
-function getStrongText(text: string = ''): React.ReactNode {
+function getStrongText(text = ''): React.ReactNode {
   return (
     <Text type="p2" tag="strong" weight="bold" color="primary">
       {text}
@@ -49,6 +51,7 @@ function getRelativeTime(seconds: number) {
   return formatDuration(intervalToDuration({ start: 0, end: seconds * 1000 }));
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 function getData(n: NotificationType, reload: Function): [IconNames, [string, string], React.ReactNode] {
   switch (n.notificationType) {
     case 'proposal-created':

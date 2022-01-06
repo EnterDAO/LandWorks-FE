@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Col, Image, Row } from 'antd';
@@ -64,7 +66,7 @@ const SingleLand: React.FC = () => {
     );
   };
 
-  const handleWithdraw = () => {};
+  const handleWithdraw = () => {console.log("withdraw")};
 
   useEffect(() => {
     getData(tokenId);
@@ -73,7 +75,7 @@ const SingleLand: React.FC = () => {
   return (
     <div className="content-container single-card-section">
       <WarningModal
-        onCancel={() => {}}
+        onCancel={() => {console.log("cancel")}}
         text={
           <>
             The property is rented until <strong>12.11.2021 12:35</strong>. Delisting the property now will make it

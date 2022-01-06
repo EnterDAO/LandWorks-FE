@@ -14,7 +14,9 @@ function parseValues(values: Array<any>): Array<any> {
         if (typeof value === 'object') {
           return value;
         }
-      } catch {}
+      } catch {
+        console.error("error caught in abi parseValues")
+      }
     }
 
     return item;
@@ -37,7 +39,7 @@ export class AbiInterface {
       const fragment =
         typeof functionFragment === 'string' ? FunctionFragment.fromString(functionFragment) : functionFragment;
       return defaultAbiCoder.encode(fragment.inputs, parseValues(values ?? []));
-    } catch (e) {
+    } catch (e: any) {
       console.error('AbiInterface::encodeFunctionData', e.message);
     }
 
@@ -50,7 +52,7 @@ export class AbiInterface {
         typeof functionFragment === 'string' ? FunctionFragment.fromString(functionFragment) : functionFragment;
       const hexData = data.indexOf('0x') !== 0 ? `0x${data}` : data;
       return defaultAbiCoder.decode(fragment.inputs, hexData);
-    } catch (e) {
+    } catch (e: any) {
       console.error('AbiInterface::decodeFunctionData', e.message);
     }
 
@@ -60,7 +62,7 @@ export class AbiInterface {
   static getFunctionFragmentFrom(signature: string): AbiFunctionFragment | undefined {
     try {
       return FunctionFragment.fromString(signature);
-    } catch (e) {
+    } catch (e: any) {
       console.error('AbiInterface::getFunctionFragmentFrom', e.message);
     }
 
@@ -77,7 +79,7 @@ export class AbiInterface {
       }
 
       return JSON.stringify(param, null, 2);
-    } catch (e) {
+    } catch (e: any) {
       console.error('AbiInterface::stringifyParamValue', e.message);
     }
 

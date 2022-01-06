@@ -12,12 +12,13 @@ export class GraphClient {
    * @param options GraphQL options
    * @param primary Whether to use the primary or the fallback node. Defaults to primary
    */
-  public static async get(options: any, primary: boolean = true): Promise<ApolloQueryResult<any>> {
+  public static async get(options: any, primary = true): Promise<ApolloQueryResult<any>> {
     const client = GraphClient._getClient(primary);
 
     try {
       return await client.query(options);
     } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       console.log(`Call to Graph at URL: ${client.link.options.uri} failed!`);
       // Try getting result through the fallback provider

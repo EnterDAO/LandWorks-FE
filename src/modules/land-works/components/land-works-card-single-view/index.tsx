@@ -64,8 +64,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
     getUsdPrice();
   }, [asset]);
 
-  useEffect(() => {}, [asset, wallet.account]);
-
   return (
     <Row gutter={40} className="single-land-card-container">
       <Col span={12}>
@@ -184,7 +182,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                   </p>
                 </Col>
                 <Col span={9} className="update-operator-btn">
-                  <button type="button" onClick={() => {}}>
+                  <button type="button" onClick={() => {console.log("updating operator")}}>
                     <span>UPDATE OPERATOR</span>
                   </button>
                 </Col>

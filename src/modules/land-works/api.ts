@@ -635,10 +635,10 @@ export function fetchUserClaimHistory(address: string): Promise<ClaimHistory[]> 
 export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
   page = 1,
   limit = 6,
-  metaverse: string = '1',
-  lastRentEnd: string = '0',
-  orderColumn: string = 'totalRents',
-  orderDirection: string,
+  metaverse = '1',
+  lastRentEnd = '0',
+  orderColumn = 'totalRents',
+  orderDirection: string
 ): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
     query: gql`
@@ -696,7 +696,7 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
 }
 
 function parseAssets(assets: any[]): AssetEntity[] {
-  let result = [] as AssetEntity[];
+  const result = [] as AssetEntity[];
 
   for (const asset of assets) {
     result.push(parseAsset(asset));

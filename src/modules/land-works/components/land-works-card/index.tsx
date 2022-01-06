@@ -35,10 +35,10 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   };
 
   const flexFont = () => {
-    var divs = document.getElementsByClassName('price-eth');
-    for (var i = 0; i < divs.length; i++) {
-      let element = divs[i] as HTMLElement;
-      var relFontsize = element.offsetWidth * 0.05;
+    const divs = document.getElementsByClassName('price-eth');
+    for (let i = 0; i < divs.length; i++) {
+      const element = divs[i] as HTMLElement;
+      const relFontsize = element.offsetWidth * 0.05;
       element.style.fontSize = relFontsize + 'px';
     }
   };

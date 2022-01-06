@@ -38,7 +38,7 @@ BigNumber.from = (value?: BigNumber.Value): BigNumber | undefined => {
 BigNumber.sumEach = <T = any>(items: T[], predicate: (item: T) => BigNumber | undefined): BigNumber | undefined => {
   let sum = BigNumber.ZERO;
 
-  for (let item of items) {
+  for (const item of items) {
     const val = predicate?.(item);
 
     if (!val || val.isNaN()) {
@@ -160,7 +160,7 @@ export function formatNumber(value: number | BigNumber | undefined, options?: Fo
   }).format(val);
 }
 
-export function formatPercent(value: number | BigNumber | undefined, decimals: number = 2): string | undefined {
+export function formatPercent(value: number | BigNumber | undefined, decimals = 2): string | undefined {
   if (value === undefined || Number.isNaN(value)) {
     return undefined;
   }
@@ -195,6 +195,7 @@ export function formatToken(value: number | BigNumber | undefined, options?: For
   }
 
   if (options) {
+    // eslint-disable-next-line no-prototype-builtins
     if (options.hasOwnProperty('scale') && options.scale === undefined) {
       return undefined;
     }

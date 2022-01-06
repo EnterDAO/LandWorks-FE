@@ -359,7 +359,9 @@ const KnownTokensProvider: FC = (props) => {
 
           console.log(`[Token Price] ${token.symbol} = ${formatUSD(token.price)}`);
         });
-      } catch {}
+      } catch {
+        console.log("error caught")
+      }
 
       reload();
     })();

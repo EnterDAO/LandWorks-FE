@@ -60,7 +60,7 @@ class Web3Contract extends EventEmitter {
   static UPDATE_ACCOUNT = 'update:account';
   static UPDATE_DATA = 'update:data';
 
-  static sendIncNumber: number = 0;
+  static sendIncNumber = 0;
   static requestsPool: Map<any, Method[]> = new Map();
 
   static addRequest(source: Web3Contract, request: Method) {
@@ -110,8 +110,8 @@ class Web3Contract extends EventEmitter {
     this.address = address;
     this.name = name;
 
-    this._callContract = (new DEFAULT_WEB3.eth.Contract(abi, address) as any) as EthContract;
-    this._sendContract = (new DEFAULT_WEB3.eth.Contract(abi, address) as any) as EthContract;
+    this._callContract = new DEFAULT_WEB3.eth.Contract(abi, address) as any as EthContract;
+    this._sendContract = new DEFAULT_WEB3.eth.Contract(abi, address) as any as EthContract;
   }
 
   get writeFunctions(): AbiItem[] {

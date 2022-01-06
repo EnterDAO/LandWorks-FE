@@ -106,7 +106,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
 
     const rents = areAllSelected
       ? await fetchAssetRents(assetId, page, pageSize)
-      : await fetchAssetUserRents(assetId, wallet.account?.toLowerCase()!, page, pageSize);
+      : await fetchAssetUserRents(assetId, wallet.account?.toLowerCase() || "", page, pageSize);
 
     setRents(rents.data);
     setTotalRents(rents?.meta.count);
