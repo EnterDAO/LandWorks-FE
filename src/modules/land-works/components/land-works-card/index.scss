@@ -67,6 +67,7 @@
     display: flex;
     align-items: center;
   }
+
   .land-owner {
     color: $brown;
     font-size: 12px;
@@ -149,6 +150,11 @@
     margin-right: 3px;
     vertical-align: baseline;
   }
+}
+
+.card-name-estate-label {
+  margin-left: 10px;
+  color: rgba(93, 143, 240, 1);
 }
 
 .price-chart-container {

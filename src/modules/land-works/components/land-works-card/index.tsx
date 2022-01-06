@@ -56,6 +56,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
                   HOT
                 </span>
               )}
+              {!land.decentralandData?.isLAND && <span className="label card-name-estate-label">ESTATE</span>}
             </p>
           </Col>
         </Row>
