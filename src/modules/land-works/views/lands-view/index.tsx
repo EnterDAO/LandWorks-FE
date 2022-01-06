@@ -12,14 +12,11 @@ import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sort
 import { SortDirection } from 'modules/land-works/models/SortDirection';
 import { useWallet } from 'wallets/wallet';
 
-import './index.scss';
-import {
-  AssetEntity,
-  fetchAssetsByMetaverseAndGteLastRentEndWithOrder,
-  fetchUserAssets,
-  UserEntity,
-} from '../../api';
+import { AssetEntity, UserEntity, fetchAssetsByMetaverseAndGteLastRentEndWithOrder, fetchUserAssets } from '../../api';
+
 import { getNowTs } from '../../../../utils';
+
+import './index.scss';
 
 const DECENTRALAND_METAVERSE = '1';
 const DEFAULT_LAST_RENT_END = '0';
@@ -74,8 +71,23 @@ const Lands: React.FC = () => {
     console.log(placeChangeEvent);
   };
 
-  const getAssets = async (page: number, pageSize: number, metaverse: string, lastRentEnd: string, orderColumn: string, sortDir: string) => {
-    const lands = await fetchAssetsByMetaverseAndGteLastRentEndWithOrder(page, pageSize, metaverse, lastRentEnd, orderColumn, sortDir);
+  const getAssets = async (
+    page: number,
+    pageSize: number,
+    metaverse: string,
+    lastRentEnd: string,
+    orderColumn: string,
+    sortDir: string
+  ) => {
+    const lands = await fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
+      page,
+      pageSize,
+      metaverse,
+      lastRentEnd,
+      orderColumn,
+      sortDir
+    );
+
     setLands(lands.data);
     setTotalLands(lands?.meta.count);
   };
@@ -106,10 +118,10 @@ const Lands: React.FC = () => {
   // });
 
   return (
-    <div className='content-container'>
-      <Row className='lands-container'>
+    <div className="content-container">
+      <Row className="lands-container">
         <Col span={24}>
-          <Row justify={end} className='actions-container'>
+          <Row justify={end} className="actions-container">
             {/* Removed for MVP version due to lack of view for adjacent lands*/}
             {/*{wallet.account &&  (*/}
             {/*  <Col style={{ marginRight: '30px' }} className='lands-claim-container'>*/}
@@ -122,17 +134,17 @@ const Lands: React.FC = () => {
             {/*  </Col>*/}
             {/*)}*/}
             {user.hasUnclaimedRent && (
-              <Col className='lands-claim-container'>
+              <Col className="lands-claim-container">
                 <LandsAction
                   onButtonClick={setShowClaimModal}
                   buttonText={'CLAIM '}
-                  subHeading='You have'
-                  mainHeading='Unclaimed rent'
+                  subHeading="You have"
+                  mainHeading="Unclaimed rent"
                 />
               </Col>
             )}
           </Row>
-          <Row className='filters' gutter={20} align={'middle'}>
+          <Row className="filters" gutter={20} align={'middle'}>
             <Col>
               <LandsPriceSorter onSortDirectionChange={onSortDirectionChange} />
             </Col>
@@ -147,26 +159,35 @@ const Lands: React.FC = () => {
             gutter={[
               { sm: 16, md: 16, lg: 32 },
               { sm: 16, md: 16, lg: 32 },
-            ]}>
-            {lands.map(land => (
-              <LandWorkCard key={land.id} land={land} />
-            ))}
+            ]}
+          >
+            {lands.length ? (
+              lands.map((land) => <LandWorkCard key={land.id} land={land} />)
+            ) : (
+              <div>No properties are currently listed</div>
+            )}
           </Row>
         </Col>
-        <Col span={24} className='lands-pagination'>
-          <Pagination
-            locale={{ items_per_page: '' }}
-            current={page}
-            total={totalLands}
-            defaultPageSize={pageSize}
-            showSizeChanger
-            pageSizeOptions={pageSizeOptions}
-            onChange={onPaginationChange}
-          />
-        </Col>
+        {!!lands.length && (
+          <Col span={24} className="lands-pagination">
+            <Pagination
+              locale={{ items_per_page: '' }}
+              current={page}
+              total={totalLands}
+              defaultPageSize={pageSize}
+              showSizeChanger
+              pageSizeOptions={pageSizeOptions}
+              onChange={onPaginationChange}
+            />
+          </Col>
+        )}
       </Row>
 
-      <ClaimModal onCancel={() => setShowClaimModal(false)} visible={showClaimModal}  rentFees={user?.unclaimedRentAssets}/>
+      <ClaimModal
+        onCancel={() => setShowClaimModal(false)}
+        visible={showClaimModal}
+        rentFees={user?.unclaimedRentAssets}
+      />
     </div>
   );
 };

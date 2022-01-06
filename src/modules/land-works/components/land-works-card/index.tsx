@@ -3,14 +3,13 @@ import { useHistory } from 'react-router-dom';
 import { bottom, end } from '@popperjs/core';
 import { Card, Col, Image, Row } from 'antd';
 import BigNumber from 'bignumber.js';
-import { addSeconds } from 'date-fns';
 
 import Icon from 'components/custom/icon';
 import { getTokenPrice } from 'components/providers/known-tokens-provider';
 import { getLandImageUrl } from 'helpers/helpers';
 
 import { AssetEntity } from '../../api';
-import { LandCartChart } from '../land-cart-chart';
+import { PricePerSecondInfo } from '../price-per-second-info';
 import landImage from './assets/land.png';
 
 import './index.scss';
@@ -101,7 +100,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
         {showChart && (
           <Row className="price-chart-container">
             <Col span={24}>
-              <LandCartChart />
+              <PricePerSecondInfo pricePerSecond={land.pricePerSecond.toFixed()} />
             </Col>
           </Row>
         )}
