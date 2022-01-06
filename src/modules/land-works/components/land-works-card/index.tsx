@@ -31,7 +31,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   const getUsdPrice = () => {
     const ethPrice = new BigNumber(getTokenPrice(land.paymentToken.symbol) || '0');
     const ethToUsdPrice = ethPrice.multipliedBy(land.pricePerMagnitude.price);
-    setUsdPrice(ethToUsdPrice.toFixed());
+    setUsdPrice(ethToUsdPrice.toFixed(2).replace(/\.00$/, ''));
   };
 
   const flexFont = () => {
@@ -44,7 +44,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   };
 
   return (
-    <Col className="land-card-wrapper" xl={8} md={8} sm={12} xs={24}>
+    <Col className="land-card-wrapper" xl={8} md={12} sm={24} xs={24}>
       <Card className="land-card">
         <Row>
           <Col span={24}>
@@ -60,7 +60,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
             </p>
           </Col>
         </Row>
-        <Row>
+        <Row className="image-wrapper">
           <Image
             onClick={() => history.push(`/land-works/land/${land.id}`)}
             placeholder={<Image className="land-image" src={landImage} preview={false} />}

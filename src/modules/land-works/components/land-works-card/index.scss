@@ -4,6 +4,10 @@
 .land {
   &-card-wrapper {
     color: $black;
+
+    @media all and (max-width: 760px) {
+      margin-bottom: 20px;
+    }
   }
 
   &-card {
@@ -22,7 +26,7 @@
   &-name {
     font-size: 18px;
     font-weight: bold;
-    color: white;
+    color: var(--theme-primary-color);
     text-transform: uppercase;
     margin-bottom: 20px;
   }
@@ -36,9 +40,6 @@
   &-rarity-score {
     font-size: $text;
     color: $black;
-  }
-  &-image {
-    border-radius: 6px;
   }
   &-info-row {
     margin-top: 16px;
@@ -113,6 +114,18 @@
       background: none;
       padding: 0;
     }
+  }
+}
+
+.image-wrapper {
+  max-height: 200px;
+  overflow: hidden;
+
+  > div {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

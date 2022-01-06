@@ -1,5 +1,5 @@
-@import "../../../../styles/variables.scss";
-@import "../../../../styles/text.scss";
+@import '../../../../styles/variables.scss';
+@import '../../../../styles/text.scss';
 
 .lands-container {
   .filters {
@@ -11,15 +11,19 @@
       color: rgba(0, 0, 0, 0.2);
     }
 
+    .ant-select-single {
+      font-size: 14px;
+      font-weight: 400;
+    }
+
     .ant-input-affix-wrapper {
-      border: 1px solid #F2EDF1;
+      border: 1px solid #f2edf1;
     }
   }
 
   .actions-container {
     margin-bottom: 30px;
   }
-
 }
 
 .lands-pagination {
@@ -38,7 +42,9 @@
     }
   }
 
-  .ant-pagination-item, .ant-pagination-item-link, .ant-select-selector {
+  .ant-pagination-item,
+  .ant-pagination-item-link,
+  .ant-select-selector {
     color: $white;
     border-radius: 10px;
     a {
@@ -48,17 +54,17 @@
     background: none;
 
     &:hover {
-      border: 1px solid #E255CF;
+      border: 1px solid #e255cf;
     }
   }
 
   .ant-select-selector {
-    border: 1px solid #F2EDF1 !important;
+    border: 1px solid #f2edf1 !important;
   }
 
   .ant-pagination-item-active {
     background: none;
-    border: 1px solid #E255CF;
+    border: 1px solid #e255cf;
     a {
       color: $white !important;
     }
@@ -73,4 +79,3 @@
   justify-content: flex-end;
   display: flex;
 }
-

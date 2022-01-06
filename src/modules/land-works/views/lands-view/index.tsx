@@ -144,7 +144,7 @@ const Lands: React.FC = () => {
               </Col>
             )}
           </Row>
-          <Row className="filters" gutter={20} align={'middle'}>
+          <Row className="filters" gutter={20}>
             <Col>
               <LandsPriceSorter onSortDirectionChange={onSortDirectionChange} />
             </Col>
@@ -157,12 +157,11 @@ const Lands: React.FC = () => {
           </Row>
           <Row
             gutter={[
-              { sm: 16, md: 16, lg: 32 },
-              { sm: 16, md: 16, lg: 32 },
-            ]}
-          >
+              { xs: 16, sm: 16, md: 16, lg: 32 },
+              { xs: 16, sm: 16, md: 16, lg: 32 },
+            ]}>
             {lands.length ? (
-              lands.map((land) => <LandWorkCard key={land.id} land={land} />)
+              lands.map(land => <LandWorkCard key={land.id} land={land} />)
             ) : (
               <div>No properties are currently listed</div>
             )}
