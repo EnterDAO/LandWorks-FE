@@ -64,24 +64,28 @@ const RentingView = () => {
               { sm: 16, md: 16, lg: 32 },
             ]}
           >
-            {rents.map((rent: any) => (
-              <LandRentingCard key={rent.id} land={rent} userAddress={wallet.account || ''} />
-            ))}
+            {rents.length ? (
+              rents.map((rent: any) => <LandRentingCard key={rent.id} land={rent} userAddress={wallet.account || ''} />)
+            ) : (
+              <div>No rents found</div>
+            )}
           </Row>
         </Col>
       </Row>
       <Row>
-        <Col span={24} className="rent-lands-pagination">
-          <Pagination
-            locale={{ items_per_page: '' }}
-            current={page}
-            total={totalRents}
-            defaultPageSize={pageSize}
-            showSizeChanger
-            pageSizeOptions={pageSizeOptions}
-            onChange={onPaginationChange}
-          />
-        </Col>
+        {!!rents.length && (
+          <Col span={24} className="rent-lands-pagination">
+            <Pagination
+              locale={{ items_per_page: '' }}
+              current={page}
+              total={totalRents}
+              defaultPageSize={pageSize}
+              showSizeChanger
+              pageSizeOptions={pageSizeOptions}
+              onChange={onPaginationChange}
+            />
+          </Col>
+        )}
       </Row>
     </div>
   );

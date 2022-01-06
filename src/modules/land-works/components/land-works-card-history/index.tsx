@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Table } from 'antd';
+import { Col, ConfigProvider, Empty, Row, Table } from 'antd';
 import { uniqueId } from 'lodash';
 
 import { timestampSecondsToDate } from 'helpers/helpers';
@@ -154,18 +154,22 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
             )}
           </Col>
           <Col span={24}>
-            <Table
-              columns={columns}
-              dataSource={rents}
-              size="small"
-              className="history-table"
-              pagination={{
-                current: page,
-                total: totalRents,
-                defaultPageSize: pageSize,
-                onChange: (page: number, pageSize?: number | undefined) => onPaginationChange(page, pageSize),
-              }}
-            />
+            <ConfigProvider
+              renderEmpty={() => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No rent history found" />}
+            >
+              <Table
+                columns={columns}
+                dataSource={rents}
+                size="small"
+                className="history-table"
+                pagination={{
+                  current: page,
+                  total: totalRents,
+                  defaultPageSize: pageSize,
+                  onChange: (page: number, pageSize?: number | undefined) => onPaginationChange(page, pageSize),
+                }}
+              />
+            </ConfigProvider>
           </Col>
         </Row>
       </Col>

@@ -59,9 +59,11 @@ const LendingView = () => {
               { sm: 16, md: 16, lg: 32 },
             ]}
           >
-            {assets.map((land: any) => (
-              <LandWorksCard key={land.id} land={land} />
-            ))}
+            {assets.length ? (
+              assets.map((land: any) => <LandWorksCard key={land.id} land={land} />)
+            ) : (
+              <div>No lends founds</div>
+            )}
           </Row>
         </Col>
       </Row>

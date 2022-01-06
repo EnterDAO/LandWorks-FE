@@ -20,7 +20,7 @@ import './index.scss';
 const SingleLand: React.FC = () => {
   const wallet = useWallet();
 
-  // const history = useHistory();
+  const history = useHistory();
   const { tokenId } = useParams<{ tokenId: string }>();
   const [asset, setAsset] = useState({} as AssetEntity);
   const [lands, setLands] = useState([] as AssetEntity[]);
@@ -32,7 +32,7 @@ const SingleLand: React.FC = () => {
       neighbours = [...neighbours, ...getNeighbours(coordinates)];
     }
 
-    return [...new Set(neighbours)].filter(item => !coordinatesList.some(l => l.id === item));
+    return [...new Set(neighbours)].filter((item) => !coordinatesList.some((l) => l.id === item));
   };
 
   const getNeighbours = (coordinates: CoordinatesLAND): string[] => {
@@ -83,7 +83,7 @@ const SingleLand: React.FC = () => {
         }
       />
       <Row className="head-nav" style={{ marginBottom: '20px' }}>
-        <Button type="light" className="back-btn" onClick={() => console.log('go back')}>
+        <Button type="light" className="back-btn" onClick={() => history.goBack()}>
           <span>
             <Icon name="arrow-back" className="eth-icon" />
             Back
@@ -110,7 +110,7 @@ const SingleLand: React.FC = () => {
         </Col>
         <Col span={24}>
           <Row gutter={[15, 15]} style={{ paddingTop: '27px' }}>
-            {lands.map(land => (
+            {lands.map((land) => (
               <LandWorkCard key={land.id} land={land} />
             ))}
           </Row>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Table } from 'antd';
+import { Col, ConfigProvider, Empty, Row, Table } from 'antd';
 import { shortenAddr } from 'web3/utils';
 
 import { timestampSecondsToDate } from 'helpers/helpers';
@@ -87,18 +87,22 @@ const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) =
         <span className="history-heading">Claim History</span>
       </Col>
       <Col span={24}>
-        <Table
-          columns={columns}
-          dataSource={claimHistory}
-          size="small"
-          className="history-table"
-          pagination={{
-            current: page,
-            total: totalClaims,
-            defaultPageSize: pageSize,
-            onChange: (page: number, pageSize?: number | undefined) => onPaginationChange(page, pageSize),
-          }}
-        />
+        <ConfigProvider
+          renderEmpty={() => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No claim history found" />}
+        >
+          <Table
+            columns={columns}
+            dataSource={claimHistory}
+            size="small"
+            className="history-table"
+            pagination={{
+              current: page,
+              total: totalClaims,
+              defaultPageSize: pageSize,
+              onChange: (page: number, pageSize?: number | undefined) => onPaginationChange(page, pageSize),
+            }}
+          />
+        </ConfigProvider>
       </Col>
     </Row>
   );
