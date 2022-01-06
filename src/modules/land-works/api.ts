@@ -4,8 +4,9 @@ import { constants } from 'ethers';
 
 import { GraphClient } from '../../web3/graph/client';
 
-import { calculatePricePerMagnitude, getFormattedTime, getNowTs } from '../../utils';
-import { getHumanValue } from '../../web3/utils';
+import { getFormattedTime, getNowTs } from '../../utils';
+import { DAY_IN_SECONDS, ONE_HUNDRED_YEARS_IN_SECONDS, ONE_SECOND } from '../../utils/date';
+import { MAX_UINT_256, getHumanValue } from '../../web3/utils';
 
 const BASE_URL = process.env.REACT_APP_MINT_METADATA_URL;
 
@@ -14,7 +15,7 @@ export async function getNftMeta(id: string | number): Promise<any> {
 
   const req = await fetch(URL);
 
-  const result = await req.text().then((data) => JSON.parse(data));
+  const result = await req.text().then(data => JSON.parse(data));
   return result;
 }
 
@@ -45,12 +46,12 @@ export function fetchOverviewData(): Promise<APIOverviewData> {
       }
     `,
   })
-    .then((result) => {
+    .then(result => {
       return {
         ...result.data.overview,
       };
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return { data: {} };
     });
@@ -88,6 +89,7 @@ export type AssetEntity = {
   minPeriod: BigNumber;
   maxPeriod: BigNumber;
   pricePerSecond: BigNumber;
+  humanPricePerSecond: BigNumber;
   pricePerMagnitude: PricePerMagnitude;
   unclaimedRentFee: BigNumber;
   paymentToken: PaymentToken;
@@ -99,6 +101,7 @@ export type AssetEntity = {
   operator: string;
   status: string;
   rents: RentEntity[];
+  isAvailable: boolean;
 };
 
 export type IdEntity = {
@@ -178,13 +181,13 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
       ids: coordinates,
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       const mappedAssets = response.data.coordinatesLANDs?.map((coords: any) => coords.data.asset);
       const uniqueAssets = parseAssets([...new Map(mappedAssets.map((v: any) => [v.id, v])).values()]);
 
       return uniqueAssets;
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return [];
     });
@@ -207,10 +210,10 @@ export function fetchTokenPayments(): Promise<PaymentToken[]> {
       }
     `,
   })
-    .then(async (response) => {
+    .then(async response => {
       return [...response.data.paymentTokens];
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return [];
     });
@@ -271,10 +274,10 @@ export function fetchAsset(id: string): Promise<AssetEntity> {
       id: id,
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       return parseAsset(response.data.asset);
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return {} as AssetEntity;
     });
@@ -319,7 +322,7 @@ export function fetchAssetRents(id: string, page = 1, limit = 5): Promise<Pagina
       limit: limit,
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       const result: PaginatedResult<RentEntity> = {
         data: (response.data.asset.rents ?? []).map((item: any) => ({
           ...item,
@@ -332,7 +335,7 @@ export function fetchAssetRents(id: string, page = 1, limit = 5): Promise<Pagina
 
       return result;
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return { data: [], meta: { count: 0 } };
     });
@@ -349,7 +352,7 @@ export function fetchAssetUserRents(
   id: string,
   renter: string,
   page = 1,
-  limit = 5
+  limit = 5,
 ): Promise<PaginatedResult<RentEntity>> {
   return GraphClient.get({
     query: gql`
@@ -381,7 +384,7 @@ export function fetchAssetUserRents(
       renter: renter,
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       // Paginate the result
       const paginatedRents = response.data.asset.rents.slice(limit * (page - 1), limit * page);
 
@@ -396,7 +399,7 @@ export function fetchAssetUserRents(
 
       return result;
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return { data: [], meta: { count: 0 } };
     });
@@ -443,6 +446,7 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
             maxFutureTime
             unclaimedRentFee
             pricePerSecond
+            lastRentEnd
             paymentToken {
               id
               name
@@ -478,21 +482,21 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
       id: address.toLowerCase(),
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       const result = { ...response.data.user };
       const ownerAndConsumerAssets = [...result.assets, ...result.consumerTo];
-      const uniqueAssets = [...new Map(ownerAndConsumerAssets.map((v) => [v.id, v])).values()].sort(
-        (a: AssetEntity, b: AssetEntity) => Number(b.id) - Number(a.id)
+      const uniqueAssets = [...new Map(ownerAndConsumerAssets.map(v => [v.id, v])).values()].sort(
+        (a: AssetEntity, b: AssetEntity) => Number(b.id) - Number(a.id),
       );
 
       result.ownerAndConsumerAssets = parseAssets(uniqueAssets);
       result.unclaimedRentAssets = parseAssets(
-        uniqueAssets.filter((a: any) => BigNumber.from(a.unclaimedRentFee)?.gt(0))
+        uniqueAssets.filter((a: any) => BigNumber.from(a.unclaimedRentFee)?.gt(0)),
       );
       result.hasUnclaimedRent = result.unclaimedRentAssets.length > 0;
       return result;
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return {} as UserEntity;
     });
@@ -537,7 +541,7 @@ export function fetchUserLastRentPerAsset(address: string, page = 1, limit = 6):
       id: address.toLowerCase(),
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       // Filter out rents for the same asset
       if (!response?.data?.user?.rents) {
         return {
@@ -547,7 +551,7 @@ export function fetchUserLastRentPerAsset(address: string, page = 1, limit = 6):
       }
       const filteredRents = response.data.user.rents.filter(
         (element: any, index: number, array: any) =>
-          array.findIndex((t: any) => t.asset.id === element.asset.id) === index
+          array.findIndex((t: any) => t.asset.id === element.asset.id) === index,
       );
 
       const paginatedRents = filteredRents.slice(limit * (page - 1), limit * page);
@@ -559,7 +563,7 @@ export function fetchUserLastRentPerAsset(address: string, page = 1, limit = 6):
         meta: { count: filteredRents.length },
       };
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return {} as UserEntity;
     });
@@ -606,12 +610,12 @@ export function fetchUserClaimHistory(address: string): Promise<ClaimHistory[]> 
       id: address.toLowerCase(),
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       // TODO: convert to proper model if necessary
 
       return response.data.user?.claimHistory;
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return { data: [], meta: { count: 0 } };
     });
@@ -634,7 +638,7 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
   metaverse: string = '1',
   lastRentEnd: string = '0',
   orderColumn: string = 'totalRents',
-  orderDirection: string
+  orderDirection: string,
 ): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
     query: gql`
@@ -648,6 +652,7 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
           metaverseAssetId
           minPeriod
           maxPeriod
+          maxFutureTime
           pricePerSecond
           paymentToken {
             name
@@ -675,7 +680,7 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
       orderDirection: orderDirection,
     },
   })
-    .then(async (response) => {
+    .then(async response => {
       // Paginate the result
       const paginatedAssets = response.data.assets.slice(limit * (page - 1), limit * page);
 
@@ -684,7 +689,7 @@ export function fetchAssetsByMetaverseAndGteLastRentEndWithOrder(
         meta: { count: response.data.assets.length },
       };
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
       return { data: [], meta: { count: 0, block: 0 } };
     });
@@ -701,7 +706,7 @@ function parseAssets(assets: any[]): AssetEntity[] {
 
 function parseAsset(asset: any): AssetEntity {
   const liteAsset: AssetEntity = { ...asset };
-  liteAsset.pricePerSecond = getHumanValue(new BigNumber(asset.pricePerSecond), asset.paymentToken.decimals)!;
+  liteAsset.humanPricePerSecond = getHumanValue(new BigNumber(asset.pricePerSecond), asset.paymentToken.decimals)!;
   liteAsset.name = getDecentralandAssetName(asset.decentralandData);
   liteAsset.paymentToken = { ...asset.paymentToken };
   liteAsset.isHot = asset.totalRents > 0;
@@ -710,16 +715,16 @@ function parseAsset(asset: any): AssetEntity {
 
   // Calculates the intervals for availability
   const now = getNowTs();
-  const maxFutureTimeRent = new BigNumber(asset.lastRentEnd).plus(asset.maxFutureTime).minus(asset.maxPeriod);
-  let maxRent = asset.maxPeriod;
-  if (now < asset.lastRentEnd && maxFutureTimeRent.lt(asset.maxPeriod)) {
-    maxRent = maxFutureTimeRent;
-  }
-  console.log(maxRent);
+  const startRent = Math.max(now, Number(asset.lastRentEnd));
 
-  const maxAvailablity = getFormattedTime(maxRent);
-  liteAsset.availability = `${getFormattedTime(asset.minPeriod)}-${maxAvailablity}`;
-  liteAsset.pricePerMagnitude = calculatePricePerMagnitude(liteAsset.pricePerSecond, maxAvailablity!.split(' ')[1]);
+  liteAsset.isAvailable = new BigNumber(startRent)
+    .plus(asset.minPeriod)
+    .lt(new BigNumber(now).plus(asset.maxFutureTime));
+  liteAsset.availability = getAvailability(liteAsset);
+  liteAsset.pricePerMagnitude = {
+    price: liteAsset.humanPricePerSecond.multipliedBy(DAY_IN_SECONDS).toString(10),
+    magnitude: 'day',
+  };
 
   return liteAsset;
 }
@@ -736,4 +741,47 @@ function getDecentralandAssetName(decentralandData: any): string {
   }
   const coordinates = decentralandData.coordinates[0].id.split('-');
   return `LAND (${coordinates[0]}, ${coordinates[1]})`;
+}
+
+function getAvailability(asset: any): string {
+  let minAvailability = '';
+  let hasMinAvailability = false;
+  let maxAvailability = '';
+  let hasMaxAvailablity = false;
+
+  if (!new BigNumber(asset.minPeriod).eq(ONE_SECOND) && !new BigNumber(asset.minPeriod).eq(MAX_UINT_256)) {
+    minAvailability = getFormattedTime(asset.minPeriod);
+    hasMinAvailability = true;
+  }
+
+  const now = getNowTs();
+  const startRent = new BigNumber(Math.max(now, Number(asset.lastRentEnd)));
+  const maxRent = startRent.plus(asset.maxPeriod);
+  const maxFutureTime = new BigNumber(now).plus(asset.maxFutureTime);
+
+  const maxRentPeriod = maxRent.lt(maxFutureTime) ? new BigNumber(asset.maxPeriod) : maxFutureTime.minus(startRent);
+
+  if (maxRentPeriod.lt(ONE_HUNDRED_YEARS_IN_SECONDS)) {
+    maxAvailability = getFormattedTime(maxRentPeriod.toNumber());
+    hasMaxAvailablity = true;
+  }
+
+  let result = '';
+  if (hasMinAvailability) {
+    if (hasMaxAvailablity) {
+      result += minAvailability;
+    } else {
+      result += `Min ${minAvailability}`;
+    }
+  }
+
+  if (hasMaxAvailablity) {
+    if (hasMinAvailability) {
+      result += `-${maxAvailability}`;
+    } else {
+      result += `Max ${maxAvailability}`;
+    }
+  }
+
+  return result;
 }

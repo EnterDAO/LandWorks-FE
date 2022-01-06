@@ -1,9 +1,12 @@
+import BigNumber from 'bignumber.js';
 import add from 'date-fns/add';
 import formatDuration from 'date-fns/formatDuration';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import { isAddress } from 'web3-utils';
 import { DEFAULT_ADDRESS } from 'web3/utils';
-import BigNumber from 'bignumber.js';
+
+import { PricePerMagnitude } from './modules/land-works/api';
+
 import {
   DAY_IN_SECONDS,
   HOUR_IN_SECONDS,
@@ -12,7 +15,6 @@ import {
   WEEK_IN_SECONDS,
   YEAR_IN_SECONDS,
 } from './utils/date';
-import { PricePerMagnitude } from './modules/land-works/api';
 
 export function getNowTs(): number {
   return Math.floor(Date.now() / 1_000);
@@ -22,11 +24,7 @@ export function inRange(value: number, min: number, max: number): boolean {
   return min < value && value < max;
 }
 
-export function getFormattedTime(value?: number): string | undefined {
-  if (value === undefined) {
-    return undefined;
-  }
-
+export function getFormattedTime(value: number): string {
   const start = new Date().getTime();
   const end = add(start, { seconds: value }).valueOf();
 

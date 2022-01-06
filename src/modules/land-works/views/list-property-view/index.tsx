@@ -28,21 +28,6 @@ const PlaceOptions = [
   },
 ];
 
-const PropertyOptions = [
-  {
-    label: 'Hottest first',
-    value: 1,
-  },
-  {
-    label: 'Price: low first',
-    value: 2,
-  },
-  {
-    label: 'Price: high first',
-    value: 3,
-  },
-];
-
 const MinRentPeriodOptions = [
   {
     label: 'mins',
