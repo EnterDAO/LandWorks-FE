@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 
 import Icon from 'components/custom/icon';
 import { getTokenPrice } from 'components/providers/known-tokens-provider';
-import { getLandImageUrl } from 'helpers/helpers';
+import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
 
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, RentEntity } from '../../api';
@@ -119,7 +119,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
               <Col span={12}>
                 <Row>
                   <Col push={5} span={19} className="eth-price-container">
-                    <Icon name="png/eth" className="eth-icon" />
+                    <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" />
                     <span className="price-eth">{asset?.pricePerMagnitude?.price}</span>
                   </Col>
                   <Col push={7} span={17} className="usd-price-container">

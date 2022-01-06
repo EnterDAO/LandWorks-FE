@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 
 import Icon from 'components/custom/icon';
 import { getTokenPrice } from 'components/providers/known-tokens-provider';
-import { getLandImageUrl } from 'helpers/helpers';
+import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
 
 import { AssetEntity } from '../../api';
 import { PricePerSecondInfo } from '../price-per-second-info';
@@ -72,7 +72,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
           <Col span={16}>
             <Row className="land-info-row" align={bottom}>
               <Col span={24} className="price-eth-container">
-                <Icon name="png/eth" className="eth-icon" />
+                <Icon name={getTokenIconName(land.paymentToken.symbol)} className="eth-icon" />
                 <span className="price-eth">{land.pricePerMagnitude.price}</span>
               </Col>
               <Col span={24}>

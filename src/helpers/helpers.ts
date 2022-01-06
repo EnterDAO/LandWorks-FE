@@ -45,3 +45,14 @@ export const getLandImageUrl = (land: AssetEntity | undefined) => {
     return imageUrl;
   }
 };
+
+export const getTokenIconName = (tokenSymbol: string) => {
+  switch (tokenSymbol.toLowerCase()) {
+    case 'eth':
+      return 'png/eth';
+    case 'usdc':
+      return 'token-usdc';
+    default:
+      return 'png/eth';
+  }
+};

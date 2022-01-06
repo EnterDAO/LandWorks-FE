@@ -5,6 +5,7 @@ import moment from 'moment';
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon from 'components/custom/icon';
+import { getTokenIconName } from 'helpers/helpers';
 
 import { RentDatePicker } from '../lands-rent-date-picker';
 
@@ -16,7 +17,7 @@ type Props = ModalProps & {
   renderSuccess?: () => React.ReactNode;
 };
 
-export const RentModal: React.FC<Props> = props => {
+export const RentModal: React.FC<Props> = (props) => {
   const { txHash, renderProgress, renderSuccess, ...modalProps } = props;
 
   const minStartDate = moment.unix(1641390556); // 5
@@ -33,7 +34,8 @@ export const RentModal: React.FC<Props> = props => {
       width={376}
       className="rent-modal"
       title={<p style={{ textAlign: 'center' }}>Rent details</p>}
-      {...modalProps}>
+      {...modalProps}
+    >
       <Row gutter={[10, 10]}>
         <Col span={24}>
           <Row justify="center">
@@ -85,12 +87,13 @@ export const RentModal: React.FC<Props> = props => {
                 type="primary"
                 onClick={() => {
                   console.log('do rent stuff here');
-                }}>
+                }}
+              >
                 <Row>
                   <Col>
                     <span className="rent-label">Rent Now </span>
                     <strong>
-                      2,231 <Icon name="token-eth" className="eth-icon" /> <span>$4446.44</span>
+                      2,231 <Icon name={getTokenIconName('png/eth')} className="eth-icon" /> <span>$4446.44</span>
                     </strong>
                   </Col>
                 </Row>

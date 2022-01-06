@@ -21,6 +21,7 @@ import linkSrc from 'resources/png/token-link.png';
 import sushiSrc from 'resources/png/token-sushi.png';
 import uslpSrc from 'resources/png/token-uslp.png';
 import universeSrc from 'resources/png/universe.png';
+import usdcSrc from 'resources/png/usdc.png';
 import you from 'resources/png/you.png';
 import Sprite from 'resources/svg/icons-sprite.svg';
 
@@ -191,7 +192,7 @@ export type IconProps = {
   src?: string;
 };
 
-const Icon: React.FC<IconProps> = props => {
+const Icon: React.FC<IconProps> = (props) => {
   const { name, width = 24, height = 24, rotate, color, className, style, src, ...rest } = props;
 
   const isStatic = (name ?? '').indexOf('static/') === 0;
@@ -242,6 +243,8 @@ const Icon: React.FC<IconProps> = props => {
           return you;
         case 'png/calendar':
           return calendar;
+        case 'token-usdc':
+          return usdcSrc;
         default:
           return '';
       }
@@ -265,7 +268,8 @@ const Icon: React.FC<IconProps> = props => {
       width={width}
       height={height ?? width}
       style={style}
-      {...rest}>
+      {...rest}
+    >
       {!isStatic ? <use xlinkHref={`${Sprite}#icon__${name}`} /> : <use xlinkHref={`#icon__${name}`} />}
     </svg>
   );
