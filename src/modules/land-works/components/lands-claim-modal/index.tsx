@@ -55,13 +55,14 @@ export const ClaimModal: React.FC<Props> = (props) => {
     setTotalUsdc(totalUsdc);
   }
 
-  const hasSelectedAssets = () => {
-    return assets.length > 0;
-  };
-
   const hasReachedMaxClaimsLimit = () => {
     return assets.length > MAX_CLAIM_SELECTED_ASSETS;
   };
+
+  const isClaimDisabled = () => {
+    return assets.length === 0 || hasReachedMaxClaimsLimit();
+  };
+
 
   function updateAssets(isChecked: boolean, asset: AssetEntity): void {
     if (isChecked) {
@@ -96,36 +97,34 @@ export const ClaimModal: React.FC<Props> = (props) => {
             <p>You have reached the limit of max claims in one transaction.</p>
           </Col>
         )}
-        {hasSelectedAssets() && (
-          <Col span={24} className="claim-modal-footer">
-            <Row>
-              <Col span={19} className="prices-container">
-                <p>
-                  <span className="total-label">Total:</span>{' '}
-                  <span className="total-price">
-                    {totalEth.toString(10)} <Icon name="png/eth" className="eth-icon" />
-                  </span>{' '}
-                  <span className="total-price">
-                    {totalUsdc.toString(10)} <Icon name="token-usdc" className="eth-icon" />
-                  </span>
-                </p>
-              </Col>
-              <Col span={5}>
-                <Button
-                  className="claim-button"
-                  disabled={hasReachedMaxClaimsLimit()}
-                  type="primary"
-                  onClick={() => {
-                    console.log('do claiming stuff here');
-                    claim();
-                  }}
-                >
-                  Claim
-                </Button>
-              </Col>
-            </Row>
-          </Col>
-        )}
+        <Col span={24} className="claim-modal-footer">
+          <Row>
+            <Col span={19} className="prices-container">
+              <p>
+                <span className="total-label">Total:</span>{' '}
+                <span className="total-price">
+                  {totalEth.toString(10)} <Icon name="png/eth" className="eth-icon" />
+                </span>{' '}
+                <span className="total-price">
+                  {totalUsdc.toString(10)} <Icon name="token-usdc" className="eth-icon" />
+                </span>
+              </p>
+            </Col>
+            <Col span={5}>
+              <Button
+                className="claim-button"
+                disabled={isClaimDisabled()}
+                type="primary"
+                onClick={() => {
+                  console.log('do claiming stuff here');
+                  claim();
+                }}
+              >
+                Claim
+              </Button>
+            </Col>
+          </Row>
+        </Col>
       </Row>
     </Modal>
   );
