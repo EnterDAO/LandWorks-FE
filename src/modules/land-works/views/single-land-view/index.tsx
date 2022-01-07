@@ -33,7 +33,7 @@ const SingleLand: React.FC = () => {
       neighbours = [...neighbours, ...getNeighbours(coordinates)];
     }
 
-    return [...new Set(neighbours)].filter(item => !coordinatesList.some(l => l.id === item));
+    return [...new Set(neighbours)].filter((item) => !coordinatesList.some((l) => l.id === item));
   };
 
   const getNeighbours = (coordinates: CoordinatesLAND): string[] => {
@@ -65,7 +65,9 @@ const SingleLand: React.FC = () => {
     );
   };
 
-  const handleWithdraw = () => {console.log("withdraw")};
+  const handleWithdraw = () => {
+    console.log('withdraw');
+  };
 
   useEffect(() => {
     getData(tokenId);
@@ -74,7 +76,9 @@ const SingleLand: React.FC = () => {
   return (
     <div className="content-container single-card-section">
       <WarningModal
-        onCancel={() => {console.log("cancel")}}
+        onCancel={() => {
+          console.log('cancel');
+        }}
         text={
           <>
             The property is rented until <strong>12.11.2021 12:35</strong>. Delisting the property now will make it
@@ -111,17 +115,21 @@ const SingleLand: React.FC = () => {
         </Col>
         <Col span={24}>
           <Row gutter={[15, 15]} style={{ paddingTop: '27px' }}>
-            {lands.map(land => (
+            {lands.map((land) => (
               <LandWorkCard key={land.id} land={land} />
             ))}
           </Row>
         </Col>
       </Row>
 
-      <RentModal onCancel={() => setShowRentModal(false)}
-       visible={showRentModal}
-       availability={asset.availability}
-       assetId={asset.id} pricePerSecond={asset.pricePerSecond} paymentToken={asset.paymentToken}/>
+      <RentModal
+        onCancel={() => setShowRentModal(false)}
+        visible={showRentModal}
+        availability={asset.availability}
+        assetId={asset.id}
+        pricePerSecond={asset.pricePerSecond}
+        paymentToken={asset.paymentToken}
+      />
     </div>
   );
 };

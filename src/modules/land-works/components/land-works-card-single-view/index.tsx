@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import Countdown, { CountdownTimeDelta } from 'react-countdown';
 import { Col, Image, Row, Steps } from 'antd';
 import BigNumber from 'bignumber.js';
+import { format } from 'date-fns';
 
 import Icon from 'components/custom/icon';
 import { getTokenPrice } from 'components/providers/known-tokens-provider';
-import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
+import { getLandImageUrl, getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
 
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, RentEntity, fetchAssetRentByTimestamp } from '../../api';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 
-import { getNowTs } from '../../../../utils';
+import { getFormattedTime, getNowTs } from '../../../../utils';
 import { shortenAddr } from '../../../../web3/utils';
 
 import './index.scss';
@@ -48,6 +50,10 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
       currentRent?.operator?.toLowerCase() !== asset?.operator?.toLowerCase();
 
     return wallet.account && validOperator;
+  };
+
+  const shouldShowRenterCountdown = () => {
+    return currentRent?.renter?.id.toLowerCase() === wallet.account?.toLowerCase();
   };
 
   const getUsdPrice = () => {
@@ -109,6 +115,14 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
       const relFontsize = element.offsetWidth * 0.05;
       element.style.fontSize = relFontsize + 'px';
     }
+  };
+
+  const renderCountdown = (props: CountdownTimeDelta) => {
+    const days = props.days > 0 ? `${props.days} days ` : '';
+    const hours = props.hours > 0 ? `${props.hours} hours ` : '';
+    const minutes = props.hours > 0 ? `${props.minutes} minutes` : '';
+    const remaining = days || hours || minutes ? ' remaining' : '';
+    return <p className="remaining-time">{days + hours + minutes + remaining}</p>;
   };
 
   return (
@@ -203,12 +217,18 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
               </Col>
               <Col span={12} style={{ textAlign: 'end' }}>
                 <Row>
-                  <Col span={24}>
-                    <p className="rented-on">Rented on 05.11.2021</p>
-                  </Col>
-                  <Col span={24}>
-                    <p className="remaining-time">5 days, 11 hours, 5mins remaining</p>
-                  </Col>
+                  {shouldShowRenterCountdown() && (
+                    <>
+                      <Col span={24}>
+                        {currentRent.start && (
+                          <p className="rented-on">Rented on {timestampSecondsToDate(currentRent.start)}</p>
+                        )}
+                      </Col>
+                      <Col span={24}>
+                        <Countdown date={Number(currentRent.end) * 1000} renderer={renderCountdown} />
+                      </Col>
+                    </>
+                  )}
                 </Row>
               </Col>
             </Row>
