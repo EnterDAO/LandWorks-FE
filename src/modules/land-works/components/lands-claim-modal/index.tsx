@@ -78,7 +78,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
 
   return (
     <Modal
-      width={471}
+      width={600}
       className="claim-modal"
       title={<p style={{ textAlign: 'center', fontSize: '16px' }}>Claim</p>}
       {...modalProps}

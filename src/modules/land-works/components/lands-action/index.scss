@@ -1,24 +1,24 @@
 .claim-component-container {
-  width: 325px;
+  width: 342px;
+  height: 100px;
   border: 0;
-  background: var(--gradient-pink);
-  box-shadow: 0px 4px 20px rgba(255, 255, 255, 0.29);
-  border-radius: 4px;
-  padding: 17px;
+  position: relative;
 
   .info-container {
-    padding-right: 27px;
-
     .total-label {
-      color: white;
+      color: var(--theme-primary-color);
       font-weight: 400;
       font-size: 14px;
+      opacity: 0.8;
+      padding-left: 30px;
+      padding-top: 23px;
     }
 
     .total-value {
-      color: white;
+      color: var(--theme-primary-color);
       font-weight: 700;
-      font-size: 22px;
+      font-size: 20px;
+      padding-left: 30px;
     }
 
     .coin-icon {
@@ -28,6 +28,14 @@
   }
 
   .claim-button {
-    background: white !important;
+    margin-top: 25px;
+    background: var(--theme-primary-color) !important;
+  }
+
+  .background {
+    position: absolute;
+    left: -100px;
+    top: -100px;
+    pointer-events: none;
   }
 }
