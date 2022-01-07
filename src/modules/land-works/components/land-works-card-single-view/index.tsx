@@ -65,6 +65,14 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
     }
   };
 
+  const handleRent = async () => {
+    if (!wallet.isActive) {
+      wallet.showWalletsModal();
+    } else {
+      setShowRentModal(true);
+    }
+  };
+
   useEffect(() => {
     getUsdPrice();
   }, [asset]);
@@ -145,7 +153,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                     type="button"
                     className={`button-primary `}
                     disabled={!isListed()}
-                    onClick={() => setShowRentModal(true)}>
+                    onClick={handleRent}>
                     <span>Rent now</span>
                   </button>
                 </Col>
