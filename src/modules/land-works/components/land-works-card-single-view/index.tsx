@@ -7,13 +7,14 @@ import { getTokenPrice } from 'components/providers/known-tokens-provider';
 import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
 
 import { useWallet } from '../../../../wallets/wallet';
-import { AssetEntity, RentEntity } from '../../api';
+import { AssetEntity, RentEntity, fetchAssetRentByTimestamp } from '../../api';
 import { AssetStatus } from '../../models/AssetStatus';
+import { useLandworks } from '../../providers/landworks-provider';
 
+import { getNowTs } from '../../../../utils';
 import { shortenAddr } from '../../../../web3/utils';
 
 import './index.scss';
-import { useLandworks } from '../../providers/landworks-provider';
 
 type SingleLandProps = {
   setShowRentModal: (isShown: boolean) => void;
@@ -22,7 +23,7 @@ type SingleLandProps = {
 
 const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset }) => {
   const wallet = useWallet();
-  const landWorks = useLandworks()
+  const landWorks = useLandworks();
 
   const { landWorksContract } = landWorks;
 
@@ -42,8 +43,9 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
   const shouldShowClaimButton = () => isOwnerOrConsumer() && asset?.unclaimedRentFee.gt(0);
 
   const shouldShowUpdateOperator = () => {
-    const validOperator = currentRent?.renter?.id.toLowerCase() === wallet.account?.toLowerCase()
-      && currentRent?.operator?.toLowerCase() !== asset?.operator?.toLowerCase();
+    const validOperator =
+      currentRent?.renter?.id.toLowerCase() === wallet.account?.toLowerCase() &&
+      currentRent?.operator?.toLowerCase() !== asset?.operator?.toLowerCase();
 
     return wallet.account && validOperator;
   };
@@ -56,9 +58,19 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
     }
   };
 
+  const getCurrentRent = async () => {
+    if (asset?.id) {
+      const rent = await fetchAssetRentByTimestamp(asset.id, getNowTs());
+      setCurrentRent(rent);
+    }
+  };
+
   const handleUpdateOperator = async () => {
     try {
-      await landWorksContract?.updateState(asset!.id, currentRent!.id);
+      const rentArray = currentRent.id.split('-');
+      if (rentArray.length === 2) {
+        await landWorksContract?.updateState(asset!.id, rentArray[1]);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -82,10 +94,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   useEffect(() => {
     getUsdPrice();
+    getCurrentRent();
     flexFont();
   }, [asset, wallet.account]);
 
@@ -162,19 +175,15 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                 </Row>
               </Col>
               {shouldShowClaimButton() && (
-                  <button type="button" className={`button-primary `} onClick={handleClaim}>
-                    <span>Claim rent</span>
-                  </button>
-                )}
-                {!isOwnerOrConsumer() && (
-                  <button
-                    type="button"
-                    className={`button-primary `}
-                    disabled={!isListed()}
-                    onClick={handleRent}>
-                    <span>Rent now</span>
-                  </button>
-                )}
+                <button type="button" className={`button-primary `} onClick={handleClaim}>
+                  <span>Claim rent</span>
+                </button>
+              )}
+              {!isOwnerOrConsumer() && (
+                <button type="button" className={`button-primary `} disabled={!isListed()} onClick={handleRent}>
+                  <span>Rent now</span>
+                </button>
+              )}
             </Row>
           </Col>
           <Col span={24} className="properties-row operator-container">
