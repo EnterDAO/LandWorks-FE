@@ -60,7 +60,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
             </p>
           </Col>
         </Row>
-        <Row className="image-wrapper">
+        <Row className="image-list-wrapper">
           <Image
             onClick={() => history.push(`/land-works/land/${land.id}`)}
             placeholder={<Image className="land-image" src={landImage} preview={false} />}
@@ -70,7 +70,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
           />
         </Row>
         <Row>
-          <Col span={16}>
+          <Col span={14}>
             <Row className="land-info-row" align={bottom}>
               <Col span={24} className="price-eth-container">
                 <Icon name={getTokenIconName(land.paymentToken.symbol)} className="eth-icon" />
@@ -87,7 +87,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
               </Col>
             </Row>
           </Col>
-          <Col span={8}>
+          <Col span={10}>
             <Row className="land-available-row" justify={end}>
               {land.availability.isCurrentlyAvailable && (
                 <Col span={24}>

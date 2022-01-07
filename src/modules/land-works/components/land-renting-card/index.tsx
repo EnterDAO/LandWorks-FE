@@ -38,7 +38,7 @@ const LandRentingCard: React.FC<ILandRentingCardProps> = ({ land, userAddress })
             </p>
           </Col>
         </Row>
-        <Row>
+        <Row className="image-list-wrapper">
           <Image
             onClick={() => history.push(`/land-works/land/${land.asset.id}`)}
             placeholder={<Image className="rent-land-image" src={landImage} preview={false} />}

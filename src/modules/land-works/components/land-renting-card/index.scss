@@ -66,19 +66,18 @@
 }
 .rent-land-info-row {
   .rent-operator-address {
-    color: #5D8FF0;
+    color: #5d8ff0;
     font-weight: 600;
   }
-  .rent-date-container{
+  .rent-date-container {
     align-items: end;
     display: flex;
     flex-direction: column;
   }
 
   .rent-date {
-    color: #5D8FF0;
+    color: #5d8ff0;
     font-weight: 600;
-
   }
 }
 
@@ -106,7 +105,6 @@
   color: rgba(93, 143, 240, 1);
 }
 
-
 .price-chart-container {
   row-gap: 0px;
   position: absolute;
@@ -115,4 +113,16 @@
   border-radius: 6px;
   box-shadow: 0px 7px 16px rgba(233, 103, 189, 0.38);
   z-index: 1;
+}
+
+.image-list-wrapper {
+  max-height: 200px;
+  overflow: hidden;
+
+  > div {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

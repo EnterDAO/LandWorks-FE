@@ -190,7 +190,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                     <Icon name="info-outlined" className="info-icon" />
                   </Col>
                 </Row>
-              </Col>
               {shouldShowClaimButton() && (
                 <button type="button" className={`button-primary `} onClick={handleClaim}>
                   <span>Claim rent</span>
@@ -201,6 +200,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                   <span>Rent now</span>
                 </button>
               )}
+              </Col>
             </Row>
           </Col>
           <Col span={24} className="properties-row operator-container">
