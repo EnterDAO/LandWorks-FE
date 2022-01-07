@@ -559,8 +559,12 @@ const ListView: React.FC = () => {
                 </Row>
               </Col>
             </Row>
+            {errMessage && 
+            <Row>
+              <Col span={24} className="error-wrapper">{errMessage}</Col>
+            </Row>
+            }
           </Col>
-          <span style={{ marginLeft: '15px' }}>{errMessage}</span>
         </Row>
       </Col>
     </Row>
