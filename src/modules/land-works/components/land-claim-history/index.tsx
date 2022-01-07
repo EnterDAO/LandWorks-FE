@@ -10,6 +10,7 @@ import LandWorksTableDate from '../land-works-table-date';
 import LandTablePrice from '../land-works-table-price';
 
 import './index.scss';
+import { getDecentralandAssetName } from '../../../../utils';
 
 interface IClaimHistoryTableProps {
   userAddress: string;
@@ -53,8 +54,8 @@ const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) =
       dataIndex: 'asset',
       render: (asset: any) => {
         console.log(asset);
-        const properyName = asset.decentralandData.metadata;
-        return <p>{properyName || 'Unknow property'}</p>;
+        const properyName = getDecentralandAssetName(asset.decentralandData);
+        return <p>{properyName || 'Unknown property'}</p>;
       },
     },
     {

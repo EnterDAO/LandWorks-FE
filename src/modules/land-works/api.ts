@@ -4,7 +4,7 @@ import { constants } from 'ethers';
 
 import { GraphClient } from '../../web3/graph/client';
 
-import { getFormattedTime, getNowTs } from '../../utils';
+import { getDecentralandAssetName, getFormattedTime, getNowTs } from '../../utils';
 import { DAY_IN_SECONDS, ONE_HUNDRED_YEARS_IN_SECONDS, ONE_SECOND } from '../../utils/date';
 import { MAX_UINT_256, getHumanValue } from '../../web3/utils';
 import { AssetStatus } from './models/AssetStatus';
@@ -620,8 +620,6 @@ export function fetchUserClaimHistory(address: string): Promise<ClaimHistory[]> 
     },
   })
     .then(async response => {
-      // TODO: convert to proper model if necessary
-
       return response.data.user?.claimHistory;
     })
     .catch(e => {
@@ -739,19 +737,6 @@ function parseAsset(asset: any): AssetEntity {
   return liteAsset;
 }
 
-function getDecentralandAssetName(decentralandData: any): string {
-  if (decentralandData === null) {
-    return '';
-  }
-  if (decentralandData.metadata !== '') {
-    return decentralandData.metadata;
-  }
-  if (decentralandData.coordinates.length > 1) {
-    return `Estate (${decentralandData.coordinates.length} LAND)`;
-  }
-  const coordinates = decentralandData.coordinates[0].id.split('-');
-  return `LAND (${coordinates[0]}, ${coordinates[1]})`;
-}
 
 function getAvailability(asset: any): AssetAvailablity {
   let minAvailability = '';

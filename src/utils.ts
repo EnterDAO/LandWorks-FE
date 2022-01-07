@@ -5,7 +5,7 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 import { isAddress } from 'web3-utils';
 import { DEFAULT_ADDRESS } from 'web3/utils';
 
-import { PricePerMagnitude } from './modules/land-works/api';
+import { DecentralandData, PricePerMagnitude } from './modules/land-works/api';
 
 import {
   DAY_IN_SECONDS,
@@ -150,6 +150,21 @@ export function getFormattedDuration(value?: number, endValue?: number): string 
 export function isValidAddress(value: string | undefined): boolean {
   return !!value && isAddress(value) && value !== DEFAULT_ADDRESS;
 }
+
+export function getDecentralandAssetName(decentralandData: DecentralandData): string {
+  if (decentralandData === null) {
+    return '';
+  }
+  if (decentralandData.metadata !== '') {
+    return decentralandData.metadata;
+  }
+  if (decentralandData.coordinates.length > 1) {
+    return `Estate (${decentralandData.coordinates.length} LAND)`;
+  }
+  const coordinates = decentralandData.coordinates[0].id.split('-');
+  return `LAND (${coordinates[0]}, ${coordinates[1]})`;
+}
+
 
 export function doSequential<T, K = any>(
   tasks: T[],
