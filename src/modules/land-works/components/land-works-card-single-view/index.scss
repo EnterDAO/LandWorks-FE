@@ -1,191 +1,227 @@
-@import "../../../../styles/variables.scss";
-@import "../../../../styles/text.scss";
+@import '../../../../styles/variables.scss';
+@import '../../../../styles/text.scss';
 
 .single-land-card-container {
-  background: #27273A;
+  background: #27273a;
   border-radius: 10px;
   padding: 20px 0px;
 
-    .card-name {
-      font-weight: 700;
-      font-size: 18px;
-      color: white;
-      margin-right: 13px;
-    }
+  .availability {
+    display: flex;
+    justify-content: flex-end;
+  }
 
-    .label {
-      background: #1E1E2E;
-      padding: 5px 10px;
-      border-radius: 5px;
-      font-weight: 700;
-    }
+  .rent-price {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
 
-    .card-name-hot-label {
-      color: #DD3DCB;
-
-      img.name-label {
-        width: 13px;
-        height: 13px;
-        margin-right: 3px;
-        vertical-align: baseline;
-      }
-    }
-
-    .card-name-estate-label {
-      margin-left: 10px;
-      color: rgba(93, 143, 240, 1);
-    }
-
-    .card-name-you-label {
-      margin-left: 10px;
-      color: #D92687;
-      display: inline-flex;
+    @media all and (max-width: 400px) {
+      flex-direction: column;
       justify-content: center;
       align-items: center;
 
-      img.name-label {
-        width: 13px;
-        height: 13px;
-        margin-right: 3px;
-        vertical-align: baseline;
+      button {
+        margin-top: 20px;
       }
     }
 
-
-    .card-image {
-      max-width: 100%;
+    .price-wrapper {
+      flex-grow: 1;
     }
 
-    .properties-container {
-      .properties-row {
-        padding: 20px 0px;
+    button {
+      flex-shrink: 0;
+    }
+  }
+
+  .image-wrapper {
+    @media all and (max-width: 769px) {
+      max-height: 200px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+  }
+
+  .card-name {
+    font-weight: 700;
+    font-size: 18px;
+    color: white;
+    margin-right: 13px;
+  }
+
+  .label {
+    background: #1e1e2e;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 700;
+  }
+
+  .card-name-hot-label {
+    color: #dd3dcb;
+
+    img.name-label {
+      width: 13px;
+      height: 13px;
+      margin-right: 3px;
+      vertical-align: baseline;
+    }
+  }
+
+  .card-name-estate-label {
+    margin-left: 10px;
+    color: rgba(93, 143, 240, 1);
+  }
+
+  .card-name-you-label {
+    margin-left: 10px;
+    color: #d92687;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    img.name-label {
+      width: 13px;
+      height: 13px;
+      margin-right: 3px;
+      vertical-align: baseline;
+    }
+  }
+
+  .card-image {
+    max-width: 100%;
+  }
+
+  .properties-container {
+    .properties-row {
+      padding: 20px 0px;
+    }
+
+    .land-owner {
+      color: rgba(93, 143, 240, 0.4);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .land-owner-address {
+      color: rgba(93, 143, 240, 1);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .available-heading {
+      color: #b9b9d3;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .available-period {
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .rent-section {
+      background: #1e1e2e;
+      border-radius: 25px;
+      padding: 15px 0px;
+
+      .eth-price-container {
+        display: flex;
+        align-items: center;
+
+        .price-eth {
+          margin-left: 10px;
+          width: calc(100% - 34px);
+          font-size: 20px;
+          color: var(--theme-primary-color);
+          font-weight: bold;
+        }
       }
 
-      .land-owner {
-        color: rgba(93, 143, 240, 0.4);
-        font-size: 12px;
-        font-weight: 600;
+      .usd-price-container {
+        display: flex;
+        align-items: center;
+
+        .price {
+          font-size: 14px;
+          margin-right: 35px;
+        }
+        .per-day {
+          font-size: 14px;
+          margin-right: 15px;
+        }
+        .info-icon {
+          color: #b9b9d3;
+          width: 16px;
+          height: 16px;
+        }
       }
 
-      .land-owner-address {
+      .rent-btn-container {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .operator-container {
+      .current-address {
+        display: flex;
+        align-items: center;
+
+        .info-icon {
+          width: 16;
+          height: 16px;
+        }
+      }
+
+      .land-operator-address {
         color: rgba(93, 143, 240, 1);
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
       }
 
-      .available-heading {
-        color: #B9B9D3;
-        font-size: 14px;
+      .rented-on {
         font-weight: 400;
+        color: rgba(185, 185, 211, 1);
       }
 
-      .available-period {
-        color: #FFFFFF;
-        font-size: 18px;
-        font-weight: 700;
+      .remaining-time {
+        font-size: 16px;
+        font-weight: bold;
+        background: -webkit-linear-gradient(rgba(221, 61, 203, 1), rgba(239, 156, 146, 1));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+
+    .operator-update-container {
+      .info-warning-text {
+        padding: 10px;
+        color: #d92687;
+        background: #321e29;
+        border: 1px solid #4d2f3f;
+        border-radius: 4px;
       }
 
-      .rent-section {
-        background: #1E1E2E;
-        border-radius: 25px;
-        padding: 15px 0px;
+      .update-operator-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-        .eth-price-container {
-          display: flex;
-          align-items: center;
-
-          .price-eth {
-            margin-left: 10px;
-            font-size: 20px;
-            color: #FFFFFF;
-            font-weight: bold;
-          }
-        }
-
-        .usd-price-container {
-          display: flex;
-          align-items: center;
-
-          .price {
-            font-size: 14px;
-            margin-right: 35px;
-          }
-          .per-day {
-            font-size: 14px;
-            margin-right: 15px;
-          }
-          .info-icon {
-            color: #B9B9D3;
-            width: 16px;
-            height: 16px;
-          }
-        }
-
-        .rent-btn-container {
-          display: flex;
-          align-items: center;
-        }
-
-      }
-
-      .operator-container {
-
-        .current-address {
-          display: flex;
-          align-items: center;
-
-          .info-icon {
-            width: 16;
-            height: 16px;
-          }
-        }
-
-        .land-operator-address {
-          color: rgba(93, 143, 240, 1);
+        button {
+          background: #f8f8ff;
+          border-radius: 10px;
+          padding: 10px 15px;
+          color: #161622;
           font-size: 14px;
           font-weight: 600;
-        }
-
-        .rented-on {
-          font-weight: 400;
-          color: rgba(185, 185, 211, 1);
-        }
-
-        .remaining-time {
-          font-size: 16px;
-          font-weight: bold;
-          background: -webkit-linear-gradient(rgba(221, 61, 203, 1), rgba(239, 156, 146, 1));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-      }
-
-      .operator-update-container {
-        .info-warning-text {
-          padding: 10px;
-          color: #D92687;
-          background: #321E29;
-          border: 1px solid #4D2F3F;
-          border-radius: 4px;
-        }
-
-        .update-operator-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          button {
-            background: #F8F8FF;
-            border-radius: 10px;
-            padding: 10px 15px;
-            color: #161622;
-            font-size: 14px;
-            font-weight: 600;
-            border: none;
-          }
+          border: none;
         }
       }
     }
   }
-
+}

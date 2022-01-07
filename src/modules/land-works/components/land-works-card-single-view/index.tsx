@@ -52,7 +52,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
     if (asset?.paymentToken) {
       const ethPrice = new BigNumber(getTokenPrice(asset.paymentToken.symbol) || '0');
       const ethToUsdPrice = ethPrice.multipliedBy(asset.pricePerMagnitude.price);
-      setUsdPrice(ethToUsdPrice.toFixed());
+      setUsdPrice(ethToUsdPrice.toFixed(2).replace(/\.00$/, ''));
     }
   };
 
@@ -86,18 +86,30 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
 
   useEffect(() => {
     getUsdPrice();
+    flexFont();
   }, [asset]);
+
+  useEffect(() => {}, [asset, wallet.account]);
+
+  const flexFont = () => {
+    var divs = document.getElementsByClassName('price-eth');
+    for (var i = 0; i < divs.length; i++) {
+      let element = divs[i] as HTMLElement;
+      var relFontsize = element.offsetWidth * 0.05;
+      element.style.fontSize = relFontsize + 'px';
+    }
+  };
 
   return (
     <Row gutter={40} className="single-land-card-container">
-      <Col span={12}>
+      <Col md={12} sm={24}>
         <Row>
-          <Col span={24}>
+          <Col span={24} className="image-wrapper">
             <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)}></img>
           </Col>
         </Row>
       </Col>
-      <Col span={12} className="properties-container">
+      <Col md={12} sm={24} className="properties-container">
         <Row>
           <Col span={24}>
             <span className="card-name">{asset?.name}</span>
@@ -112,7 +124,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
           </Col>
           <Col span={24} className="properties-row">
             <Row>
-              <Col span={14}>
+              <Col span={8}>
                 <span className="land-owner">
                   BY <span className="land-owner-address">{shortenAddr(asset?.owner?.id.toLowerCase())}</span>
                 </span>
@@ -124,12 +136,12 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                 )}
               </Col>
               {!isListed() && (
-                <Col span={10}>
+                <Col span={16} className="availability">
                   <span className="available-heading">Delisted</span>
                 </Col>
               )}
               {isListed() && (
-                <Col span={10}>
+                <Col span={16} className="availability">
                   <span className="available-heading">Available now</span>{' '}
                   <span className="available-period">{asset?.availability?.label}</span>
                 </Col>
@@ -138,13 +150,13 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
           </Col>
           <Col span={24} className="rent-section">
             <Row>
-              <Col span={12}>
-                <Row>
-                  <Col push={5} span={19} className="eth-price-container">
+              <Col span={24} className="rent-price">
+                <Row className="price-wrapper">
+                  <Col span={24} className="eth-price-container">
                     <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" />
                     <span className="price-eth">{asset?.pricePerMagnitude?.price}</span>
                   </Col>
-                  <Col push={7} span={17} className="usd-price-container">
+                  <Col push={2} span={22} className="usd-price-container">
                     <span className="price">${usdPrice}</span>
                     <span className="per-day">/ {asset?.pricePerMagnitude?.magnitude}</span>
                     <Icon name="info-outlined" className="info-icon" />
@@ -152,14 +164,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                 </Row>
               </Col>
               {shouldShowClaimButton() && (
-                <Col push={4} span={8} className="rent-btn-container">
                   <button type="button" className={`button-primary `} onClick={handleClaim}>
                     <span>Claim rent</span>
                   </button>
-                </Col>
-              )}
-              {!isOwnerOrConsumer() && (
-                <Col push={4} span={8} className="rent-btn-container">
+                )}
+                {!isOwnerOrConsumer() && (
                   <button
                     type="button"
                     className={`button-primary `}
@@ -167,8 +176,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                     onClick={handleRent}>
                     <span>Rent now</span>
                   </button>
-                </Col>
-              )}
+                )}
             </Row>
           </Col>
           <Col span={24} className="properties-row operator-container">
