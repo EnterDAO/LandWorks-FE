@@ -87,7 +87,7 @@ const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) =
       <Col span={24}>
         <span className="history-heading">Claim History</span>
       </Col>
-      <Col span={24}>
+      <Col className="table-wrapper" span={24}>
         <ConfigProvider
           renderEmpty={() => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No claim history found" />}
         >

@@ -161,7 +161,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
               </button>
             )}
           </Col>
-          <Col span={24}>
+          <Col span={24} className="table-wrapper">
             <ConfigProvider
               renderEmpty={() => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No rent history found" />}>
               <Table
