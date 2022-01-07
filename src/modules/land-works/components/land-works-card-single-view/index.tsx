@@ -153,7 +153,10 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
               )}
               {isListed() && (
                 <Col span={16} className="availability">
-                  <span className="available-heading">Available now</span>{' '}
+                  {asset?.availability.isCurrentlyAvailable && <span className="available-heading">Available now</span>}
+                  {asset?.availability.availabilityAfter && (
+                    <span className="available-heading">{`Available after ${asset.availability.availabilityAfter}`}</span>
+                  )}{' '}
                   <span className="available-period">{asset?.availability?.label}</span>
                 </Col>
               )}

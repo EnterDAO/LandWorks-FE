@@ -89,9 +89,16 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
           </Col>
           <Col span={8}>
             <Row className="land-available-row" justify={end}>
-              <Col span={24}>
-                <p className="available-heading">Available now</p>
-              </Col>
+              {land.availability.isCurrentlyAvailable && (
+                <Col span={24}>
+                  <p className="available-heading">Available now</p>
+                </Col>
+              )}
+              {land.availability.availabilityAfter && (
+                <Col span={24}>
+                  <p className="available-heading">{`Available after ${land.availability.availabilityAfter}`}</p>
+                </Col>
+              )}
               <Col span={24}>
                 <p className="available-period">{land.availability?.label}</p>
               </Col>

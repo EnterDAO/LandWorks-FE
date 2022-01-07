@@ -106,6 +106,8 @@ export type AssetEntity = {
 };
 
 export type AssetAvailablity = {
+  isCurrentlyAvailable: boolean;
+  availabilityAfter: string;
   label: string;
   maxRentDate: number;
   minRentDate: number;
@@ -832,6 +834,8 @@ function getAvailability(asset: any): AssetAvailablity {
   }
 
   return {
+    isCurrentlyAvailable: now > Number(asset.lastRentEnd),
+    availabilityAfter: getFormattedTime(startRent.toNumber() - now),
     startRentDate: startRent.toNumber(),
     minRentDate: minRentDate.toNumber(),
     maxRentDate: maxRentDate.toNumber(),
