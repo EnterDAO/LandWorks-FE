@@ -102,6 +102,7 @@ export type AssetEntity = {
   operator: string;
   status: string;
   rents: RentEntity[];
+  lastRentEnd: string;
   isAvailable: boolean;
 };
 
@@ -168,6 +169,7 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
               maxPeriod
               pricePerSecond
               lastRentEnd
+              status
               paymentToken {
                 name
                 symbol
@@ -433,6 +435,7 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
             maxFutureTime
             unclaimedRentFee
             pricePerSecond
+            status
             paymentToken {
               id
               name
@@ -458,6 +461,7 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
             unclaimedRentFee
             pricePerSecond
             lastRentEnd
+            status
             paymentToken {
               id
               name
@@ -593,6 +597,7 @@ export function fetchUserClaimHistory(address: string): Promise<ClaimHistory[]> 
           claimHistory(orderBy: timestamp, orderDirection: desc) {
             asset {
               metaverseAssetId
+              status
               decentralandData {
                 id
                 metadata
@@ -729,6 +734,7 @@ export function fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
           }
           lastRentEnd
           totalRents
+          status
         }
       }
     `,
@@ -774,12 +780,11 @@ function parseAsset(asset: any): AssetEntity {
   liteAsset.operator = asset.operator ?? constants.AddressZero;
 
   // Calculates the intervals for availability
-  const now = getNowTs();
-  const startRent = Math.max(now, Number(asset.lastRentEnd));
+  // const now = getNowTs();
+  //  const startRent = Math.max(now, Number(asset.lastRentEnd));
+  // liteAsset.isAvailable = new BigNumber(startRent).plus(asset.minPeriod).lt(new BigNumber(now).plus(asset.maxFutureTime));
 
-  liteAsset.isAvailable = new BigNumber(startRent)
-    .plus(asset.minPeriod)
-    .lt(new BigNumber(now).plus(asset.maxFutureTime));
+  liteAsset.isAvailable = asset.status === AssetStatus.LISTED;
   liteAsset.availability = getAvailability(liteAsset);
   liteAsset.pricePerMagnitude = {
     price: liteAsset.humanPricePerSecond.multipliedBy(DAY_IN_SECONDS).toString(10),

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Col, Image, Row } from 'antd';
+import BigNumber from 'bignumber.js';
 
 import Button from 'components/antd/button';
 import Icon from 'components/custom/icon';
@@ -15,17 +16,23 @@ import SingleViewLandCard from '../../components/land-works-card-single-view';
 import { RentModal } from '../../components/lands-rent-modal';
 import { WarningModal } from '../../components/lands-warning-modal';
 import { AssetStatus } from '../../models/AssetStatus';
+import { useLandworks } from '../../providers/landworks-provider';
+
+import { getNowTs } from '../../../../utils';
 
 import './index.scss';
 
 const SingleLand: React.FC = () => {
   const wallet = useWallet();
 
+  const { landWorksContract } = useLandworks();
+
   const history = useHistory();
   const { tokenId } = useParams<{ tokenId: string }>();
   const [asset, setAsset] = useState({} as AssetEntity);
   const [lands, setLands] = useState([] as AssetEntity[]);
   const [showRentModal, setShowRentModal] = useState(false);
+  const [showWarningModal, setShowWarningModal] = useState(false);
 
   const calculateNeighbours = (coordinatesList: CoordinatesLAND[]): string[] => {
     let neighbours = [] as string[];
@@ -57,6 +64,15 @@ const SingleLand: React.FC = () => {
     return isOwnerOrConsumer() && asset?.status === AssetStatus.DELISTED;
   };
 
+  const shouldShowDelist = () => {
+    return isOwnerOrConsumer() && asset?.status === AssetStatus.LISTED;
+  };
+
+  // Case when you do 2 in 1 Delist + Withdraw
+  const isDirectWithdraw = () => {
+    return isOwnerOrConsumer() && asset?.status === AssetStatus.LISTED && getNowTs() > Number(asset.lastRentEnd);
+  };
+
   const isOwnerOrConsumer = () => {
     return (
       wallet.account &&
@@ -65,8 +81,36 @@ const SingleLand: React.FC = () => {
     );
   };
 
-  const handleWithdraw = () => {
-    console.log('withdraw');
+  const handleWithdraw = async () => {
+    if (!asset.id || !wallet.account) {
+      return;
+    }
+    try {
+      await landWorksContract?.withdraw(asset.id);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleDelistButton = () => {
+    if (isDirectWithdraw()) {
+      handleDelist();
+    } else {
+      setShowWarningModal(true);
+    }
+  };
+
+  const handleDelist = async () => {
+    if (!asset.id || !wallet.account) {
+      return;
+    }
+
+    try {
+      await landWorksContract?.delist(asset.id);
+      setShowWarningModal(false);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {
@@ -77,11 +121,13 @@ const SingleLand: React.FC = () => {
     <div className="content-container single-card-section">
       <WarningModal
         onCancel={() => {
-          console.log('cancel');
+          setShowWarningModal(false);
         }}
+        onOk={handleDelist}
+        visible={showWarningModal}
         text={
           <>
-            The property is rented until <strong>12.11.2021 12:35</strong>. Delisting the property now will make it
+            The property is rented until <strong>{asset.lastRentEnd}</strong>. Delisting the property now will make it
             unavailable for new renters. You will be able to withdraw your property from the Protocol once all rents
             end.
           </>
@@ -98,6 +144,11 @@ const SingleLand: React.FC = () => {
           <Button type="light" className="back-btn" onClick={() => console.log('edit')}>
             <span>Edit</span>
           </Button>
+        )}
+        {shouldShowDelist() && (
+          <button type="button" className="button-primary" onClick={handleDelistButton}>
+            <span>{isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
+          </button>
         )}
         {shouldShowWithdraw() && (
           <button type="button" className="button-primary" onClick={handleWithdraw}>
