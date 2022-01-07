@@ -114,7 +114,7 @@ export default class LandWorksContract extends Web3Contract {
    * Claims the rent fees for the given assets.
    * @param assetIds An array of asset IDs
    */
-  claimMultipleRentFees(assetIds: BigNumber[]) {
+  claimMultipleRentFees(assetIds: BigNumber[] | string[]) {
     if (!this.account) {
       return Promise.reject();
     }

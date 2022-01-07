@@ -9,7 +9,6 @@ import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, RentEntity } from '../../api';
 import { AssetStatus } from '../../models/AssetStatus';
-import cardImage from './assets/card.png';
 
 import { shortenAddr } from '../../../../web3/utils';
 
@@ -72,6 +71,18 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
       setShowRentModal(true);
     }
   };
+
+  const handleClaim = async () => {
+    if (!wallet.account) {
+      return;
+    }
+
+    try {
+      await landWorksContract?.claimMultipleRentFees([asset!.id]);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   useEffect(() => {
     getUsdPrice();
@@ -142,7 +153,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
               </Col>
               {shouldShowClaimButton() && (
                 <Col push={4} span={8} className="rent-btn-container">
-                  <button type="button" className={`button-primary `} onClick={() => console.log('claim')}>
+                  <button type="button" className={`button-primary `} onClick={handleClaim}>
                     <span>Claim rent</span>
                   </button>
                 </Col>
