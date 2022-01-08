@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js';
 import Button from 'components/antd/button';
 import Icon from 'components/custom/icon';
 
+import ExternalLink from '../../../../components/custom/externalLink';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, CoordinatesLAND, fetchAdjacentDecentralandAssets, fetchAsset } from '../../api';
 import LandWorkCard from '../../components/land-works-card';
@@ -19,6 +20,7 @@ import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 
 import { getNowTs } from '../../../../utils';
+import { getEtherscanTxUrl } from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -61,16 +63,16 @@ const SingleLand: React.FC = () => {
   };
 
   const shouldShowWithdraw = () => {
-    return isOwnerOrConsumer() && asset?.status === AssetStatus.DELISTED;
+    return isOwner() && asset?.status === AssetStatus.DELISTED;
   };
 
   const shouldShowDelist = () => {
-    return isOwnerOrConsumer() && asset?.status === AssetStatus.LISTED;
+    return isOwner() && asset?.status === AssetStatus.LISTED;
   };
 
   // Case when you do 2 in 1 Delist + Withdraw
   const isDirectWithdraw = () => {
-    return isOwnerOrConsumer() && asset?.status === AssetStatus.LISTED && getNowTs() > Number(asset.lastRentEnd);
+    return isOwner() && asset?.status === AssetStatus.LISTED && getNowTs() > Number(asset.lastRentEnd);
   };
 
   const isOwnerOrConsumer = () => {
@@ -79,6 +81,10 @@ const SingleLand: React.FC = () => {
       (wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase() ||
         wallet.account.toLowerCase() === asset?.consumer?.id.toLowerCase())
     );
+  };
+
+  const isOwner = () => {
+    return wallet.account && wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase();
   };
 
   const handleWithdraw = async () => {
@@ -144,6 +150,11 @@ const SingleLand: React.FC = () => {
           <Button type="light" className="back-btn" onClick={() => console.log('edit')}>
             <span>Edit</span>
           </Button>
+        )}
+        {isOwner() && (
+          <ExternalLink href="https://dao.enterdao.xyz/yield-farming" className="button-primary">
+            STAKE
+          </ExternalLink>
         )}
         {shouldShowDelist() && (
           <button type="button" className="button-primary" onClick={handleDelistButton}>

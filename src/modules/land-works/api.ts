@@ -435,6 +435,7 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
             maxFutureTime
             unclaimedRentFee
             pricePerSecond
+            lastRentEnd
             status
             paymentToken {
               id
