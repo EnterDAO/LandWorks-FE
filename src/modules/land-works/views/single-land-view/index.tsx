@@ -147,7 +147,7 @@ const SingleLand: React.FC = () => {
           </span>
         </Button>
         {isOwnerOrConsumer() && (
-          <Button type="light" className="back-btn" onClick={() => console.log('edit')}>
+          <Button type="light" className="back-btn" onClick={() => history.push('/land-works/edit-property', asset)}>
             <span>Edit</span>
           </Button>
         )}

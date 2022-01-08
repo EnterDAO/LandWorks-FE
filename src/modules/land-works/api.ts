@@ -89,6 +89,7 @@ export type AssetEntity = {
   name: string;
   minPeriod: BigNumber;
   maxPeriod: BigNumber;
+  maxFutureTime: BigNumber;
   pricePerSecond: BigNumber;
   humanPricePerSecond: BigNumber;
   pricePerMagnitude: PricePerMagnitude;
