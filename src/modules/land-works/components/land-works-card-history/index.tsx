@@ -73,15 +73,20 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
     {
       title: 'Configured operator',
       dataIndex: 'operator',
-      render: (operator: string, data: any) => (
-        <TableInput
-          operator={operator}
-          assetId={assetId}
-          rentId={data.id}
-          renter={data.renter.id}
-          key={operator + uniqueId()}
-        />
-      ),
+      render: (operator: string, data: any) => {
+        const now = getNowTs();
+        const isRentActive = Number(data.start) <= now && now <= Number(data.end);
+        return (
+          <TableInput
+            operator={operator}
+            assetId={assetId}
+            rentId={data.id}
+            renter={data.renter.id}
+            key={operator + uniqueId()}
+            isRentActive={isRentActive}
+          />
+        );
+      },
     },
     {
       title: 'Tx hash',
@@ -105,7 +110,8 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
   const onAllSelected = () => setAreAllSelected(true);
   const onYouSelected = () => setAreAllSelected(false);
 
-  const showYoursSection = () => wallet.account && rents.length > 0;
+  const showYoursSection = () =>
+    wallet.account && rents.filter((r) => r.operator.toLowerCase() === wallet.account?.toLowerCase()).length > 0;
 
   const getRents = async (assetId: string, page: number, pageSize: number) => {
     if (!assetId) {
@@ -148,22 +154,20 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
               className="btn all-btn"
               onClick={() => {
                 onAllSelected();
-              }}>
+              }}
+            >
               All
             </button>
             {showYoursSection() && (
-              <button
-                className="btn yours-btn"
-                onClick={() => {
-                  onYouSelected();
-                }}>
+              <button className="btn yours-btn" onClick={onYouSelected}>
                 Yours
               </button>
             )}
           </Col>
           <Col span={24} className="table-wrapper">
             <ConfigProvider
-              renderEmpty={() => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No rent history found" />}>
+              renderEmpty={() => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No rent history found" />}
+            >
               <Table
                 columns={columns}
                 dataSource={rents}

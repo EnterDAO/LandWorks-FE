@@ -1,34 +1,37 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Input } from 'antd';
-import web3 from "web3"
+import web3 from 'web3';
+
 import Icon from 'components/custom/icon';
-import { toast } from "react-toastify";
-import './index.scss';
-import { useWallet } from '../../../../wallets/wallet';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
+
+import { useWallet } from '../../../../wallets/wallet';
+
+import './index.scss';
 
 type Iprops = {
   operator: string;
   assetId: string;
   rentId: string;
   renter: string;
+  isRentActive: boolean;
 };
 
-const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter }) => {
+const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isRentActive }) => {
   const wallet = useWallet();
-  const landWorks = useLandworks()
+  const landWorks = useLandworks();
 
   const { landWorksContract } = landWorks;
-
 
   const [disabled, setDisabled] = useState<boolean>(true);
   const [newOperator, setNewOperator] = useState<string>(operator);
   const [canEditOperator, setCanEditOperator] = useState(false);
 
   const handleSave = async () => {
-    if(landWorksContract) {
+    if (landWorksContract) {
       try {
-        if(!web3.utils.isAddress(newOperator)) {
+        if (!web3.utils.isAddress(newOperator)) {
           toast.error('The new operator address is invalid.', {
             position: toast.POSITION.TOP_RIGHT,
             className: 'error-toast',
@@ -37,7 +40,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter }) => 
           return;
         }
 
-        if(newOperator.toLowerCase() === operator.toLowerCase()) {
+        if (newOperator.toLowerCase() === operator.toLowerCase()) {
           toast.error('New operator is the same as the current one.', {
             position: toast.POSITION.TOP_RIGHT,
             className: 'error-toast',
@@ -46,13 +49,13 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter }) => 
           return;
         }
 
-        const rentArray = rentId.split("-")
-        if(rentArray.length === 2) {
+        const rentArray = rentId.split('-');
+        if (rentArray.length === 2) {
           await landWorksContract.updateOperator(assetId, rentArray[1], newOperator);
           setDisabled(true);
         }
-      } catch(err: any) {
-        console.log(err.message)
+      } catch (err: any) {
+        console.log(err.message);
       }
     }
   };
@@ -68,10 +71,10 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter }) => 
 
   useEffect(() => {
     // Check if renter is equal to connected wallet address
-    if (wallet.account && wallet.account.toLowerCase() === renter.toLowerCase()) {
-      setCanEditOperator(true)
+    if (wallet.account && wallet.account.toLowerCase() === renter.toLowerCase() && isRentActive) {
+      setCanEditOperator(true);
     }
-  }, [])
+  }, []);
 
   return (
     <div className="operator">
@@ -84,9 +87,9 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter }) => 
         defaultValue={newOperator}
         onChange={handleChange}
       />
-      {!canEditOperator ?
-      <></> :
-      disabled ? (
+      {!canEditOperator ? (
+        <></>
+      ) : disabled ? (
         <button className="edit-btn" onClick={() => setDisabled(false)}>
           <Icon name="pencil-outlined" className="pencil-icon"></Icon>
         </button>
@@ -100,7 +103,6 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter }) => 
           </button>
         </>
       )}
-
     </div>
   );
 };
