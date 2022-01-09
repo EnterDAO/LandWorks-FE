@@ -75,6 +75,12 @@
       border-radius: 12px;
       color: rgba(185, 185, 211, 1);
     }
+    input {
+      padding: 10px;
+      background: #161622;
+      border-radius: 12px;
+      margin: 15px 0px;
+    }
   }
 
   .rent-modal-footer {
@@ -87,8 +93,8 @@
       color: var(--theme-primary-color);
       width: 100%;
       padding: 0 16px;
-      display: flex;
-      align-items: center;
+      // display: flex;
+      // align-items: center;
       height: 44px;
 
       > div {
@@ -99,14 +105,24 @@
           align-items: center;
         }
       }
+      .rent-label-container{
+        text-align: center;
+        display: flex;
+        justify-content: center;
 
+      }
       .rent-label {
-        font-weight: 400;
+        font-weight: 500;
         padding-right: 14px;
         margin-right: 12px;
-        border-right: 1px solid rgba(255, 255, 255, 0.22);
         height: 100%;
         line-height: 44px;
+      }
+
+      .price-col {
+        text-align: center;
+        display: flex;
+        justify-content: space-around;
       }
 
       strong {
@@ -123,8 +139,9 @@
       }
 
       .eth-icon {
-        width: 12px;
-        margin-left: 4px;
+        width: 17px;
+        height: 17px;
+        margin-left: 7px;
       }
     }
     .total-label {

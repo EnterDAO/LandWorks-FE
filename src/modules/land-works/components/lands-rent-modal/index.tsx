@@ -7,17 +7,18 @@ import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon from 'components/custom/icon';
 import { getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
+import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
+import { getTokenPrice } from '../../../../components/providers/known-tokens-provider';
+import { useWallet } from '../../../../wallets/wallet';
 import { AssetAvailablity, PaymentToken } from '../../api';
+import { useLandworks } from '../../providers/landworks-provider';
 import { RentDatePicker } from '../lands-rent-date-picker';
 
 import { formatBigNumber, getFormattedTime, isValidAddress } from '../../../../utils';
+import { getHumanValue } from '../../../../web3/utils';
 
 import './index.scss';
-import { getTokenPrice } from '../../../../components/providers/known-tokens-provider';
-import { useWallet } from '../../../../wallets/wallet';
-import { useLandworks } from '../../providers/landworks-provider';
-import { getHumanValue } from '../../../../web3/utils';
 
 type Props = ModalProps & {
   txHash?: string;
@@ -29,8 +30,18 @@ type Props = ModalProps & {
   renderSuccess?: () => React.ReactNode;
 };
 
-export const RentModal: React.FC<Props> = props => {
-  const { txHash, availability, assetId, pricePerSecond, paymentToken, renderProgress, renderSuccess, ...modalProps } = props;
+export const RentModal: React.FC<Props> = (props) => {
+  const {
+    txHash,
+    availability,
+    assetId,
+    pricePerSecond,
+    paymentToken,
+    onCancel,
+    renderProgress,
+    renderSuccess,
+    ...modalProps
+  } = props;
 
   const minStartDate = moment.unix(availability?.startRentDate || 0);
   const minRentPeriod = moment.unix(availability?.minRentDate || 0);
@@ -90,17 +101,19 @@ export const RentModal: React.FC<Props> = props => {
       if (paymentToken?.symbol.toLowerCase() === 'eth') {
         await landWorksContract?.rentDecentralandWithETH(assetId!, editedValue, new BigNumber(period), pricePerSecond!);
       } else {
-        await landWorksContract?.rentDecentralandWithERC20(assetId!, editedValue,  new BigNumber(period));
+        await landWorksContract?.rentDecentralandWithERC20(assetId!, editedValue, new BigNumber(period));
       }
-    }
-    catch (e) {
+      showToastNotification(ToastType.Success, 'Property rented successfuly!');
+      onCancel();
+    } catch (e) {
+      showToastNotification(ToastType.Error, 'There was an error while renting the property.');
       console.log(e);
     }
-  }
+  };
 
   const isValidForm = () => {
     return isValidAddress(editedValue) && period > 0;
-  }
+  };
 
   useEffect(() => {
     calculatePrices();
@@ -118,14 +131,16 @@ export const RentModal: React.FC<Props> = props => {
 
   return (
     <Modal
-      width={376}
+      width={680}
       className="rent-modal"
       title={<p style={{ textAlign: 'center' }}>Rent details</p>}
-      {...modalProps}>
+      onCancel={onCancel}
+      {...modalProps}
+    >
       <Row gutter={[10, 10]}>
         <Col span={24}>
           <Row justify="center">
-            <Col span={12}>
+            <Col span={16}>
               <Row gutter={[16, 10]}>
                 <Col span={24}>
                   <p className="light-text">
@@ -143,7 +158,7 @@ export const RentModal: React.FC<Props> = props => {
                 </Col>
               </Row>
             </Col>
-            <Col span={12} style={{ textAlign: 'end' }}>
+            <Col span={8} style={{ textAlign: 'end' }}>
               <Row gutter={[16, 5]} style={{ paddingTop: '10px' }}>
                 <Col span={24}>
                   <p className="light-text">{getFormattedTime(period)}</p>
@@ -175,17 +190,32 @@ export const RentModal: React.FC<Props> = props => {
           <Row className="rent-modal-footer">
             <Col span={24}>
               <Button
+                style={{ display: 'block' }}
                 className="rent-button"
                 type="primary"
                 disabled={isRentDisabled}
-                onClick={handleRent}>
-                <Row>
-                  <Col>
+                onClick={handleRent}
+              >
+                <Row justify="center">
+                  <Col
+                    className="rent-label-container"
+                    span={8}
+                    style={{ borderRight: '1px solid rgba(255, 255, 255, 0.22)' }}
+                  >
                     <span className="rent-label">Rent Now </span>
+                  </Col>
+                  <Col className="price-col" span={16}>
                     <strong>
-                      {formatBigNumber(totalPrice)} <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" /> <span>${formatBigNumber(usdPrice)}</span>
+                      {totalPrice.toFixed()}{' '}
+                      <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" />{' '}
+                    </strong>
+
+                    <strong>
+                      <span>${formatBigNumber(usdPrice)}</span>
                     </strong>
                   </Col>
+                  {/* <Col className="price-col" span={10}>
+                  </Col> */}
                 </Row>
               </Button>
             </Col>
