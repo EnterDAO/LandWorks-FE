@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 
 import Button from 'components/antd/button';
 import Icon from 'components/custom/icon';
+import { getTokenIconName } from 'helpers/helpers';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
@@ -621,7 +622,7 @@ const ListView: React.FC = () => {
                         <Row>
                           <Col span={24}>
                             <Icon
-                              name="token-weth"
+                              name={getTokenIconName(paymentToken.symbol)}
                               className="info-icon"
                               style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
                             />

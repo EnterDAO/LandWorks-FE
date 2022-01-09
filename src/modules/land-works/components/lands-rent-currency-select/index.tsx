@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Select, { components } from 'react-select';
 
 import Icon, { TokenIconNames } from 'components/custom/icon';
-
-import { PaymentToken, fetchTokenPayments } from '../../api';
+import { getTokenIconName } from 'helpers/helpers';
 
 const styles = {
   container: (defaultStyles: any) => ({
@@ -92,12 +91,11 @@ const CurrencyDropdown = (props: any) => {
   const Option = (props: any) => {
     const { data } = props;
 
-    const iconName: TokenIconNames = `token-${data?.symbol.toLowerCase()}` as TokenIconNames;
     return (
       <div className={`available-select`}>
         <components.Option className="option" {...props}>
           <Icon
-            name={iconName}
+            name={getTokenIconName(data?.symbol || 'png/eth')}
             style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
           />
           <label className="option">{data?.symbol}</label>
@@ -117,11 +115,12 @@ const CurrencyDropdown = (props: any) => {
       return <></>;
     }
 
-    const iconName: TokenIconNames = `token-${usedValue.symbol.toLowerCase()}` as TokenIconNames;
-
     return (
       <components.ValueContainer {...props}>
-        <Icon name={iconName} style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }} />
+        <Icon
+          name={getTokenIconName(value?.symbol || defaultValue.symbol || 'png/eth')}
+          style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
+        />
         <label className="option" style={{ fontSize: '14px', color: 'white' }}>
           {value?.symbol || defaultValue.symbol}
         </label>

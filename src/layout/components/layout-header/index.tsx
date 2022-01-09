@@ -44,9 +44,9 @@ const LayoutHeader: React.FC = () => {
 
   return (
     <div className={`${s.component} ${navOpen ? `${s.mobileNavOpen}` : ''}`} ref={setReferenceElement}>
-      <ExternalLink href="/" target="_self">
+      <div style={{ cursor: 'pointer' }} onClick={() => history.push('/')}>
         <Icon name="png/LandWorksLogo" width="auto" height="auto" className={s.logo} />
-      </ExternalLink>
+      </div>
       <h1 className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`}>LandWorks</h1>
 
       {wallet.account && <LandsNav />}
@@ -60,7 +60,7 @@ const LayoutHeader: React.FC = () => {
       )}
 
       <ConnectedWallet />
-      <Button type="link" className={s.burger} onClick={() => setNavOpen(prevState => !prevState)}>
+      <Button type="link" className={s.burger} onClick={() => setNavOpen((prevState) => !prevState)}>
         <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
       </Button>
       {navOpen &&
@@ -76,7 +76,8 @@ const LayoutHeader: React.FC = () => {
                 '--top': `${state?.modifiersData?.popperOffsets?.y || 0}px`,
               } as React.CSSProperties
             }
-            {...attributes.popper}>
+            {...attributes.popper}
+          >
             <div className={s.mobileInner}>
               <div className={s.mobileMenuInner}>
                 <Row style={{ width: '100%' }}>
@@ -87,7 +88,7 @@ const LayoutHeader: React.FC = () => {
               </div>
             </div>
           </div>,
-          modalRoot,
+          modalRoot
         )}
     </div>
   );
