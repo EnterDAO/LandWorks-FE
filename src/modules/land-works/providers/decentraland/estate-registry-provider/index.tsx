@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React, { FC, createContext, useContext, useEffect, useMemo, useState } from 'react';
 import ContractListener from 'web3/components/contract-listener';
 import Web3Contract from 'web3/web3Contract';
@@ -12,13 +13,16 @@ export type EstateRegistryType = {
   estateRegistryContract?: EstateRegistryContract;
   setEstateTxInProgress: React.Dispatch<React.SetStateAction<boolean>>;
   estateTxInProgress: boolean;
+  estateTxHash: string;
+  setEstateTxHash: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const EstateRegistryContext = createContext<EstateRegistryType>({
   estateRegistryContract: undefined,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setEstateTxInProgress: () => {},
   estateTxInProgress: false,
+  estateTxHash: '',
+  setEstateTxHash: () => {},
 });
 
 export function useEstateRegistry(): EstateRegistryType {
@@ -32,6 +36,7 @@ const EstateRegistryProvider: FC = (props) => {
   const [reload] = useReload();
 
   const [estateTxInProgress, setEstateTxInProgress] = useState(false);
+  const [estateTxHash, setEstateTxHash] = useState('');
 
   const estateRegistryContract = useMemo(() => {
     const estateRegistry = new EstateRegistryContract([], config.contracts.decentraland.estateRegistry);
@@ -52,12 +57,18 @@ const EstateRegistryProvider: FC = (props) => {
     estateRegistryContract,
     estateTxInProgress,
     setEstateTxInProgress,
+    estateTxHash,
+    setEstateTxHash,
   };
 
   return (
     <EstateRegistryContext.Provider value={value}>
       {children}
-      <ContractListener contract={estateRegistryContract} setLandworksTxInProgress={setEstateTxInProgress} />
+      <ContractListener
+        contract={estateRegistryContract}
+        setLandworksTxInProgress={setEstateTxInProgress}
+        setTxHash={setEstateTxHash}
+      />
     </EstateRegistryContext.Provider>
   );
 };

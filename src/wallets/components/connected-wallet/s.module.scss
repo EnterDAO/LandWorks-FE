@@ -116,3 +116,29 @@
 .loadingBackground {
   background: linear-gradient(98.73deg, #DD3DCB 0%, #EF9C92 100%) !important;
 }
+
+
+#txPopoverContainer {
+  padding: 30px 10px;
+  background: #27273A;
+  border-radius: 10px;
+}
+
+#txInfoContainer {
+  background: #161622;
+  border-radius: 6px;
+}
+
+#txStatus {
+  
+}
+
+#txEtherscanLink {
+  color: #D92687;
+  cursor: pointer;
+}
+
+#txDisconnectContainer {
+  cursor: pointer;
+  font-weight: 400;
+}

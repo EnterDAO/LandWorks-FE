@@ -8,6 +8,7 @@ type Props = {
   renderProgress?: (meta?: Web3SendMeta) => React.ReactNode;
   renderSuccess?: (meta?: Web3SendMeta) => React.ReactNode;
   setLandworksTxInProgress: React.Dispatch<React.SetStateAction<boolean>>;
+  setTxHash: React.Dispatch<React.SetStateAction<string>>;
 };
 
 type TxStatus = {
@@ -17,7 +18,7 @@ type TxStatus = {
 };
 
 const ContractListener: React.FC<Props> = (props) => {
-  const { contract, renderProgress, renderSuccess, setLandworksTxInProgress } = props;
+  const { contract, renderProgress, renderSuccess, setLandworksTxInProgress, setTxHash } = props;
 
   const [userRejectedVisible, setUserRejected] = React.useState(false);
 
@@ -34,6 +35,7 @@ const ContractListener: React.FC<Props> = (props) => {
 
     function onHash(txHash: string, meta: Web3SendMeta) {
       setLandworksTxInProgress(true);
+      setTxHash(txHash);
       setTxStatus((prevState) => ({
         ...prevState,
         visible: true,
@@ -44,6 +46,7 @@ const ContractListener: React.FC<Props> = (props) => {
 
     function onSuccess(result: any, meta: Web3SendMeta) {
       setLandworksTxInProgress(false);
+      setTxHash('');
       setTxStatus((prevState) =>
         prevState.meta?.id === meta.id
           ? {
@@ -57,6 +60,7 @@ const ContractListener: React.FC<Props> = (props) => {
 
     function onFail(error: any, meta: Web3SendMeta) {
       setLandworksTxInProgress(false);
+      setTxHash('');
       if (error.code === 4001) {
         setUserRejected(true);
       } else {

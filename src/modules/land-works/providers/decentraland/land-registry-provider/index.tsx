@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React, { FC, createContext, useContext, useEffect, useMemo, useState } from 'react';
 import ContractListener from 'web3/components/contract-listener';
 import Web3Contract from 'web3/web3Contract';
@@ -12,13 +13,16 @@ export type LandRegistryType = {
   landRegistryContract?: LANDRegistryContract;
   setLandTxInProgress: React.Dispatch<React.SetStateAction<boolean>>;
   landTxInProgress: boolean;
+  landTxHash: string;
+  setLandTxHash: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const LandRegistryContext = createContext<LandRegistryType>({
   landRegistryContract: undefined,
   landTxInProgress: false,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setLandTxInProgress: () => {},
+  landTxHash: '',
+  setLandTxHash: () => {},
 });
 
 export function useLandRegistry(): LandRegistryType {
@@ -28,6 +32,7 @@ export function useLandRegistry(): LandRegistryType {
 const LandRegistryProvider: FC = (props) => {
   const { children } = props;
   const [landTxInProgress, setLandTxInProgress] = useState(false);
+  const [landTxHash, setLandTxHash] = useState('');
   const walletCtx = useWallet();
   const [reload] = useReload();
 
@@ -50,12 +55,18 @@ const LandRegistryProvider: FC = (props) => {
     landRegistryContract,
     landTxInProgress,
     setLandTxInProgress,
+    landTxHash,
+    setLandTxHash,
   };
 
   return (
     <LandRegistryContext.Provider value={value}>
       {children}
-      <ContractListener contract={landRegistryContract} setLandworksTxInProgress={setLandTxInProgress} />
+      <ContractListener
+        contract={landRegistryContract}
+        setLandworksTxInProgress={setLandTxInProgress}
+        setTxHash={setLandTxHash}
+      />
     </LandRegistryContext.Provider>
   );
 };

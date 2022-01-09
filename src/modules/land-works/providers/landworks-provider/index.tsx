@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React, { FC, createContext, useContext, useEffect, useMemo, useState } from 'react';
 import ContractListener from 'web3/components/contract-listener';
 import Web3Contract from 'web3/web3Contract';
@@ -12,13 +13,16 @@ export type LandworksType = {
   landWorksContract?: LandWorksContract;
   landworksTxInProgress: boolean;
   setLandworksTxInProgress: React.Dispatch<React.SetStateAction<boolean>>;
+  landworksTxHash: string;
+  setLandworksTxHash: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const LandWorksContext = createContext<LandworksType>({
   landWorksContract: undefined,
   landworksTxInProgress: false,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setLandworksTxInProgress: () => {},
+  landworksTxHash: '',
+  setLandworksTxHash: () => {},
 });
 
 export function useLandworks(): LandworksType {
@@ -31,6 +35,7 @@ const LandWorksProvider: FC = (props) => {
   const walletCtx = useWallet();
   const [reload] = useReload();
   const [landworksTxInProgress, setLandworksTxInProgress] = useState(false);
+  const [landworksTxHash, setLandworksTxHash] = useState('');
 
   const landWorksContract = useMemo(() => {
     const landworks = new LandWorksContract([], config.contracts.landworksContract);
@@ -51,12 +56,18 @@ const LandWorksProvider: FC = (props) => {
     landWorksContract,
     landworksTxInProgress,
     setLandworksTxInProgress,
+    landworksTxHash,
+    setLandworksTxHash,
   };
 
   return (
     <LandWorksContext.Provider value={value}>
       {children}
-      <ContractListener contract={landWorksContract} setLandworksTxInProgress={setLandworksTxInProgress} />
+      <ContractListener
+        contract={landWorksContract}
+        setLandworksTxInProgress={setLandworksTxInProgress}
+        setTxHash={setLandworksTxHash}
+      />
     </LandWorksContext.Provider>
   );
 };

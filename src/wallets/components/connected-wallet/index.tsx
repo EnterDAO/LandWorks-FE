@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
+import { Link } from 'react-router-dom';
 import cn from 'classnames';
 import { getEtherscanAddressUrl, shortenAddr } from 'web3/utils';
 
@@ -15,7 +16,7 @@ import { Text } from 'components/custom/typography';
 import { useNotifications } from 'components/providers/notifications-provider';
 import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
-import { LandWorksContext, useLandworks } from 'modules/land-works/providers/landworks-provider';
+import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 import Notifications from 'wallets/components/notifications';
 import { useWallet } from 'wallets/wallet';
 
@@ -61,9 +62,9 @@ const NotificationSection: React.FC = () => {
 const ConnectedWallet: React.FC = () => {
   const wallet = useWallet();
 
-  const { landworksTxInProgress } = useLandworks();
-  const { landTxInProgress } = useLandRegistry();
-  const { estateTxInProgress } = useEstateRegistry();
+  const { landworksTxInProgress, landworksTxHash } = useLandworks();
+  const { landTxInProgress, landTxHash } = useLandRegistry();
+  const { estateTxInProgress, estateTxHash } = useEstateRegistry();
 
   console.log(`landsworksTxInProgress: ${landworksTxInProgress}`);
   console.log(`landTxInProgress: ${landTxInProgress}`);
@@ -73,9 +74,9 @@ const ConnectedWallet: React.FC = () => {
     landworksTxInProgress || landTxInProgress || estateTxInProgress
   );
 
-  useEffect(() => {
-    console.log(`Should show loading1: ${landworksTxInProgress || landTxInProgress || estateTxInProgress}`);
+  const [txHash, setTxHash] = useState(landworksTxHash || landTxHash || estateTxHash);
 
+  useEffect(() => {
     if (landworksTxInProgress || landTxInProgress || estateTxInProgress) {
       setIsAnyTxInProgress(true);
     } else {
@@ -83,7 +84,10 @@ const ConnectedWallet: React.FC = () => {
     }
   }, [landworksTxInProgress, landTxInProgress, estateTxInProgress]);
 
-  console.log(`Should show loading2: ${landworksTxInProgress || landTxInProgress || estateTxInProgress}`);
+  useEffect(() => {
+    setTxHash(landworksTxHash || landTxHash || estateTxHash);
+  }, [landworksTxHash, landTxHash, estateTxHash]);
+
   if (wallet.connecting) {
     return (
       <Popover
@@ -207,6 +211,42 @@ const ConnectedWallet: React.FC = () => {
     </Popover>
   );
 
+  const TxSection = (
+    <Popover
+      placement="bottomRight"
+      trigger="click"
+      noPadding
+      className={s.popover}
+      content={
+        <div id={s.txPopoverContainer}>
+          <div id={s.txInfoContainer}>
+            <div id={s.txStatus}>Transaction in progress</div>
+            <div
+              onClick={() => {
+                window.open(`https://etherscan.io/tx/${txHash}`, '_blank')?.focus();
+              }}
+              id={s.txEtherscanLink}
+            >
+              View on etherscan
+            </div>
+          </div>
+          <br />
+          <div id={s.txDisconnectContainer}>Disconnect</div>
+        </div>
+      }
+    >
+      <Button type="link" className={s.accountLink}>
+        <Grid flow="col" align="center">
+          <div className={s.loader}></div>
+          <Text type="p1" style={{ color: 'white' }} className={cn(s.walletAddress, 'mr-4')}>
+            {shortenAddr(wallet.account, 4, 3)}
+          </Text>
+          <Icon name="dropdown" style={{ color: 'white' }} className={s.dropdownArrow} />
+        </Grid>
+      </Button>
+    </Popover>
+  );
+
   return (
     <Grid
       flow="col"
@@ -218,7 +258,7 @@ const ConnectedWallet: React.FC = () => {
       {/* ToDo: NotificationSection, uncomment if needed */}
       {/* <NotificationSection /> */}
       {/* <Divider type="vertical" style={{ minHeight: 28 }} /> */}
-      {AccountSection}
+      {isTxInProgress ? TxSection : AccountSection}
     </Grid>
   );
 };
