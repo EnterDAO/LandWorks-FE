@@ -18,7 +18,6 @@ interface ILandRentingCardProps {
 }
 const LandRentingCard: React.FC<ILandRentingCardProps> = ({ land, userAddress }) => {
   const history = useHistory();
-
   return (
     <Col className="rent-land-card-wrapper" xl={8} md={8} sm={12} xs={24}>
       <Card className="rent-land-card">
@@ -57,7 +56,7 @@ const LandRentingCard: React.FC<ILandRentingCardProps> = ({ land, userAddress })
                 <Row>
                   <span className="rent-operator-address">
                     {shortenAddr(land.operator || ethers.constants.AddressZero)}
-                    {land.operator && land.operator === userAddress && ' (YOU)'}
+                    {land.operator && land.operator.toLowerCase() === userAddress.toLowerCase() && ' (YOU)'}
                   </span>
                 </Row>
               </Col>
