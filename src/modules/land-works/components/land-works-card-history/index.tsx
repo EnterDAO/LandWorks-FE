@@ -31,7 +31,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
   const dateFormat = 'HH:mm dd.MM.yyyy';
   const columns = [
     {
-      title: 'by',
+      title: 'By',
       dataIndex: 'renterAddress',
       render: (text: string) => {
         let isYou = false;
@@ -44,12 +44,12 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
       },
     },
     {
-      title: 'from',
+      title: 'From',
       dataIndex: 'start',
       render: (start: string) => <LandWorksTableDate timestamp={start} dateFormat={dateFormat} />,
     },
     {
-      title: 'to',
+      title: 'To',
       dataIndex: 'end',
       render: (end: string, record: RentEntity, index: any) => {
         let isUpcoming = false;
@@ -94,7 +94,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
       render: (txHash: string) => <LandTableTxHash txHash={txHash} />, // TODO: On click should open getEtherscanTxUrl(text) in another tab
     },
     {
-      title: 'price',
+      title: 'Price',
       dataIndex: 'price',
       render: (amount: string, data: any) => (
         <LandTablePrice

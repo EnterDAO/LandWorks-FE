@@ -17,8 +17,16 @@
       svg {
         color: rgba(93, 143, 240, 1) !important;
         height: 15px;
-        vertical-align: text-bottom;
+        vertical-align: middle;
       }
+    }
+
+    button.edit-btn {
+      padding: 10px 20px 10px 20px !important;
+      border-radius: 12px;
+      background: #177ddc;
+      color: white !important;
+      margin-right: auto;
     }
   }
 

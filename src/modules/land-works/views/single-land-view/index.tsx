@@ -140,29 +140,33 @@ const SingleLand: React.FC = () => {
         }
       />
       <Row className="head-nav" style={{ marginBottom: '20px' }}>
-        <Button type="light" className="back-btn" onClick={() => history.goBack()}>
+        <Button style={{ marginRight: 20 }} type="light" className="back-btn" onClick={() => history.goBack()}>
           <span>
             <Icon name="arrow-back" className="eth-icon" />
             Back
           </span>
         </Button>
         {isOwnerOrConsumer() && (
-          <Button type="light" className="back-btn" onClick={() => history.push('/land-works/edit-property', asset)}>
-            <span>Edit</span>
+          <Button type="light" className="edit-btn" onClick={() => history.push('/land-works/edit-property', asset)}>
+            <span>EDIT</span>
           </Button>
         )}
         {isOwner() && (
-          <ExternalLink href="https://dao.enterdao.xyz/yield-farming" className="button-primary">
+          <ExternalLink
+            style={{ marginRight: 20, fontSize: 14 }}
+            href="https://dao.enterdao.xyz/yield-farming"
+            className="button-primary"
+          >
             STAKE
           </ExternalLink>
         )}
         {shouldShowDelist() && (
-          <button type="button" className="button-primary" onClick={handleDelistButton}>
+          <button style={{ fontSize: 14 }} type="button" className="button-primary" onClick={handleDelistButton}>
             <span>{isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
           </button>
         )}
         {shouldShowWithdraw() && (
-          <button type="button" className="button-primary" onClick={handleWithdraw}>
+          <button style={{ fontSize: 14 }} type="button" className="button-primary" onClick={handleWithdraw}>
             <span>WITHDRAW</span>
           </button>
         )}

@@ -149,7 +149,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
           </Col>
           <Col span={24} className="properties-row">
             <Row>
-              <Col span={8}>
+              <Col span={10}>
                 <span className="land-owner">
                   BY <span className="land-owner-address">{shortenAddr(asset?.owner?.id.toLowerCase())}</span>
                 </span>
@@ -161,12 +161,12 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                 )}
               </Col>
               {!isListed() && (
-                <Col span={16} className="availability">
-                  <span className="available-heading">Delisted</span>
+                <Col span={13} className="availability">
+                  <span className="available-heading delisted-heading">Delisted</span>
                 </Col>
               )}
               {isListed() && (
-                <Col span={16} className="availability">
+                <Col span={13} className="availability">
                   {asset?.availability.isCurrentlyAvailable && <span className="available-heading">Available now</span>}
                   {asset?.availability.availabilityAfter && (
                     <span className="available-heading">{`Available after ${asset.availability.availabilityAfter}`}</span>
@@ -190,16 +190,22 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                     <Icon name="info-outlined" className="info-icon" />
                   </Col>
                 </Row>
-              {shouldShowClaimButton() && (
-                <button type="button" className={`button-primary `} onClick={handleClaim}>
-                  <span>Claim rent</span>
-                </button>
-              )}
-              {!isOwnerOrConsumer() && (
-                <button type="button" className={`button-primary `} disabled={!isListed()} onClick={handleRent}>
-                  <span>Rent now</span>
-                </button>
-              )}
+                {shouldShowClaimButton() && (
+                  <button type="button" className={`button-primary `} onClick={handleClaim}>
+                    <span>CLAIM RENT</span>
+                  </button>
+                )}
+                {!isOwnerOrConsumer() && (
+                  <button
+                    style={{ fontWeight: 500 }}
+                    type="button"
+                    className={`button-primary `}
+                    disabled={!isListed()}
+                    onClick={handleRent}
+                  >
+                    <span>RENT NOW</span>
+                  </button>
+                )}
               </Col>
             </Row>
           </Col>
