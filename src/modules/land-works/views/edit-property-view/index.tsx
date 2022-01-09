@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js';
 import Button from 'components/antd/button';
 import Icon from 'components/custom/icon';
 import { getTokenIconName } from 'helpers/helpers';
+import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
@@ -394,7 +395,9 @@ const ListView: React.FC = () => {
         paymentToken.id,
         pricePerSecond.toFixed(0)
       );
+      showToastNotification(ToastType.Success, 'Property listed successfully!');
     } catch (e) {
+      showToastNotification(ToastType.Error, 'There was an error while listing the property.');
       console.log(e);
     }
   };

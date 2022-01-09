@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import Icon from 'components/custom/icon';
 import { getTokenPrice } from 'components/providers/known-tokens-provider';
 import { getLandImageUrl, getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
+import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, RentEntity, fetchAssetRentByTimestamp } from '../../api';
@@ -76,8 +77,10 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
       const rentArray = currentRent.id.split('-');
       if (rentArray.length === 2) {
         await landWorksContract?.updateState(asset!.id, rentArray[1]);
+        showToastNotification(ToastType.Success, 'Operator updated successfully!');
       }
     } catch (e) {
+      showToastNotification(ToastType.Error, 'There was an error while updating the operator.');
       console.log(e);
     }
   };
@@ -97,7 +100,9 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
 
     try {
       await landWorksContract?.claimMultipleRentFees([asset!.id]);
+      showToastNotification(ToastType.Success, 'Rent claimed successfully!');
     } catch (e) {
+      showToastNotification(ToastType.Error, 'There was an error while claiming the rent.');
       console.log(e);
     }
   };

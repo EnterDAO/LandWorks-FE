@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 
 import Button from 'components/antd/button';
 import Icon from 'components/custom/icon';
+import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import ExternalLink from '../../../../components/custom/externalLink';
 import { useWallet } from '../../../../wallets/wallet';
@@ -97,7 +98,9 @@ const SingleLand: React.FC = () => {
     }
     try {
       await landWorksContract?.withdraw(asset.id);
+      showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
     } catch (e) {
+      showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
       console.log(e);
     }
   };
@@ -117,8 +120,10 @@ const SingleLand: React.FC = () => {
 
     try {
       await landWorksContract?.delist(asset.id);
+      showToastNotification(ToastType.Success, 'Property delisted successfully!');
       setShowWarningModal(false);
     } catch (e) {
+      showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
       console.log(e);
     }
   };

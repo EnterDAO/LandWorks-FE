@@ -4,6 +4,7 @@ import { Input } from 'antd';
 import web3 from 'web3';
 
 import Icon from 'components/custom/icon';
+import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 
 import { useWallet } from '../../../../wallets/wallet';
@@ -52,9 +53,12 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isRen
         const rentArray = rentId.split('-');
         if (rentArray.length === 2) {
           await landWorksContract.updateOperator(assetId, rentArray[1], newOperator);
+          showToastNotification(ToastType.Success, 'Operator updated successfully!');
+
           setDisabled(true);
         }
       } catch (err: any) {
+        showToastNotification(ToastType.Error, 'There was an error while updating the operator.');
         console.log(err.message);
       }
     }

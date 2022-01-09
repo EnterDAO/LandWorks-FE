@@ -6,6 +6,7 @@ import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon, { TokenIconNames } from 'components/custom/icon';
 import { Text } from 'components/custom/typography';
+import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { LandClaimCheckBox } from 'modules/land-works/components/land-claim-modal-checkbox';
 
 import { AssetEntity } from '../../api';
@@ -35,7 +36,9 @@ export const ClaimModal: React.FC<Props> = (props) => {
     try {
       const assetIds = assets.map((a) => new BigNumber(a.id));
       await landWorksContract?.claimMultipleRentFees(assetIds);
+      showToastNotification(ToastType.Success, 'Rent claimed successfully!');
     } catch (e) {
+      showToastNotification(ToastType.Error, 'There was an error while claiming the rent.');
       console.log(e);
     }
   }
@@ -62,7 +65,6 @@ export const ClaimModal: React.FC<Props> = (props) => {
   const isClaimDisabled = () => {
     return assets.length === 0 || hasReachedMaxClaimsLimit();
   };
-
 
   function updateAssets(isChecked: boolean, asset: AssetEntity): void {
     if (isChecked) {
