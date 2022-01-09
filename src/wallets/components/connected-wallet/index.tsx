@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Link } from 'react-router-dom';
 import cn from 'classnames';
-import { getEtherscanAddressUrl, shortenAddr } from 'web3/utils';
+import { getEtherscanAddressUrl, getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
 import Button from 'components/antd/button';
 import Divider from 'components/antd/divider';
@@ -223,7 +223,7 @@ const ConnectedWallet: React.FC = () => {
             <div id={s.txStatus}>Transaction in progress</div>
             <div
               onClick={() => {
-                window.open(`https://etherscan.io/tx/${txHash}`, '_blank')?.focus();
+                window.open(`${getEtherscanTxUrl(txHash)}`, '_blank')?.focus();
               }}
               id={s.txEtherscanLink}
             >
