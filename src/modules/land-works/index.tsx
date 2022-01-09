@@ -5,10 +5,6 @@ import AntdSpin from 'antd/lib/spin';
 
 import { useWarning } from 'components/providers/warning-provider';
 
-import EstateRegistryProvider from './providers/decentraland/estate-registry-provider';
-import LandRegistryProvider from './providers/decentraland/land-registry-provider';
-import LandworksProvider from './providers/landworks-provider';
-
 const RentingView = lazy(() => import('./views/my-renting-view'));
 const LendingView = lazy(() => import('./views/my-lending-view'));
 const OwnedPasses = lazy(() => import('./views/lands-view'));
@@ -16,7 +12,7 @@ const SingleLand = lazy(() => import('./views/single-land-view'));
 const ListProperty = lazy(() => import('./views/list-property-view'));
 const EditProperty = lazy(() => import('./views/edit-property-view'));
 
-const MetapassView: React.FC = () => {
+const LandworksView: React.FC = () => {
   const warning = useWarning();
 
   React.useEffect(() => {
@@ -36,25 +32,19 @@ const MetapassView: React.FC = () => {
   }, [isMobile]);
 
   return (
-    <LandworksProvider>
-      <LandRegistryProvider>
-        <EstateRegistryProvider>
-          <Suspense fallback={<AntdSpin />}>
-            <Switch>
-              <Route path="/land-works" exact component={OwnedPasses} />
-              <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
-              <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
-              <Route path="/land-works/lending" exact component={LendingView} />
-              <Route path="/land-works/renting" exact component={RentingView} />
-              <Route path="/land-works/list-property" exact component={ListProperty} />
-              <Route path="/land-works/edit-property" exact component={EditProperty} />
-              {/*<Redirect to="/land-registry-provider-works" />*/}
-            </Switch>
-          </Suspense>
-        </EstateRegistryProvider>
-      </LandRegistryProvider>
-    </LandworksProvider>
+    <Suspense fallback={<AntdSpin />}>
+      <Switch>
+        <Route path="/land-works" exact component={OwnedPasses} />
+        <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
+        <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
+        <Route path="/land-works/lending" exact component={LendingView} />
+        <Route path="/land-works/renting" exact component={RentingView} />
+        <Route path="/land-works/list-property" exact component={ListProperty} />
+        <Route path="/land-works/edit-property" exact component={EditProperty} />
+        {/*<Redirect to="/land-registry-provider-works" />*/}
+      </Switch>
+    </Suspense>
   );
 };
 
-export default MetapassView;
+export default LandworksView;

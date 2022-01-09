@@ -1,4 +1,4 @@
-import React, { FC, createContext, useContext, useEffect, useMemo } from 'react';
+import React, { FC, createContext, useContext, useEffect, useMemo, useState } from 'react';
 import ContractListener from 'web3/components/contract-listener';
 import Web3Contract from 'web3/web3Contract';
 
@@ -6,27 +6,31 @@ import config from 'config';
 import { useReload } from 'hooks/useReload';
 import { useWallet } from 'wallets/wallet';
 
-import { getNftMeta, getNftMetaType } from '../../api';
-import MetapassErc721Contract from '../../contracts/MetapassErc721Contract';
 import LandWorksContract from '../../contracts/core/LandWorksContract';
 
 export type LandworksType = {
   landWorksContract?: LandWorksContract;
+  landworksTxInProgress: boolean;
+  setLandworksTxInProgress: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const LandWorksContext = createContext<LandworksType>({
+export const LandWorksContext = createContext<LandworksType>({
   landWorksContract: undefined,
+  landworksTxInProgress: false,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setLandworksTxInProgress: () => {},
 });
 
 export function useLandworks(): LandworksType {
   return useContext(LandWorksContext);
 }
 
-const LandWorksProvider: FC = props => {
+const LandWorksProvider: FC = (props) => {
   const { children } = props;
 
   const walletCtx = useWallet();
   const [reload] = useReload();
+  const [landworksTxInProgress, setLandworksTxInProgress] = useState(false);
 
   const landWorksContract = useMemo(() => {
     const landworks = new LandWorksContract([], config.contracts.landworksContract);
@@ -44,13 +48,15 @@ const LandWorksProvider: FC = props => {
   }, [walletCtx.account]);
 
   const value: LandworksType = {
-    landWorksContract
+    landWorksContract,
+    landworksTxInProgress,
+    setLandworksTxInProgress,
   };
 
   return (
     <LandWorksContext.Provider value={value}>
       {children}
-      <ContractListener contract={landWorksContract} />
+      <ContractListener contract={landWorksContract} setLandworksTxInProgress={setLandworksTxInProgress} />
     </LandWorksContext.Provider>
   );
 };

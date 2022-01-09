@@ -1,4 +1,4 @@
-import React, { FC, createContext, useContext, useEffect, useMemo } from 'react';
+import React, { FC, createContext, useContext, useEffect, useMemo, useState } from 'react';
 import ContractListener from 'web3/components/contract-listener';
 import Web3Contract from 'web3/web3Contract';
 
@@ -10,19 +10,24 @@ import LANDRegistryContract from '../../../contracts/decentraland/land/LANDRegis
 
 export type LandRegistryType = {
   landRegistryContract?: LANDRegistryContract;
+  setLandTxInProgress: React.Dispatch<React.SetStateAction<boolean>>;
+  landTxInProgress: boolean;
 };
 
 const LandRegistryContext = createContext<LandRegistryType>({
   landRegistryContract: undefined,
+  landTxInProgress: false,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setLandTxInProgress: () => {},
 });
 
 export function useLandRegistry(): LandRegistryType {
   return useContext(LandRegistryContext);
 }
 
-const LandRegistryProvider: FC = props => {
+const LandRegistryProvider: FC = (props) => {
   const { children } = props;
-
+  const [landTxInProgress, setLandTxInProgress] = useState(false);
   const walletCtx = useWallet();
   const [reload] = useReload();
 
@@ -43,12 +48,14 @@ const LandRegistryProvider: FC = props => {
 
   const value: LandRegistryType = {
     landRegistryContract,
+    landTxInProgress,
+    setLandTxInProgress,
   };
 
   return (
     <LandRegistryContext.Provider value={value}>
       {children}
-      <ContractListener contract={landRegistryContract} />
+      <ContractListener contract={landRegistryContract} setLandworksTxInProgress={setLandTxInProgress} />
     </LandRegistryContext.Provider>
   );
 };

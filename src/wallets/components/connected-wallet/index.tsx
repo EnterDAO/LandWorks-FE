@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import cn from 'classnames';
 import { getEtherscanAddressUrl, shortenAddr } from 'web3/utils';
@@ -13,6 +13,9 @@ import IconNotification from 'components/custom/icon-notification';
 import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
 import { useNotifications } from 'components/providers/notifications-provider';
+import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
+import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
+import { LandWorksContext, useLandworks } from 'modules/land-works/providers/landworks-provider';
 import Notifications from 'wallets/components/notifications';
 import { useWallet } from 'wallets/wallet';
 
@@ -23,11 +26,10 @@ const NotificationSection: React.FC = () => {
 
   const markAllAsRead = () => {
     if (notifications.length) {
-      setNotificationsReadUntil(Math.max(...notifications.map(n => n.startsOn)));
+      setNotificationsReadUntil(Math.max(...notifications.map((n) => n.startsOn)));
     }
   };
-  const hasUnread = notificationsReadUntil ? notifications.some(n => n.startsOn > notificationsReadUntil) : false;
-
+  const hasUnread = notificationsReadUntil ? notifications.some((n) => n.startsOn > notificationsReadUntil) : false;
   return (
     <Popover
       placement="bottomRight"
@@ -47,7 +49,8 @@ const NotificationSection: React.FC = () => {
           </div>
           <Notifications />
         </div>
-      }>
+      }
+    >
       <IconNotification width={24} height={24} notificationSize={8} bubble={hasUnread} className={s.notificationIcon}>
         <Icon name="notification" width={24} height={24} color="inherit" />
       </IconNotification>
@@ -58,6 +61,29 @@ const NotificationSection: React.FC = () => {
 const ConnectedWallet: React.FC = () => {
   const wallet = useWallet();
 
+  const { landworksTxInProgress } = useLandworks();
+  const { landTxInProgress } = useLandRegistry();
+  const { estateTxInProgress } = useEstateRegistry();
+
+  console.log(`landsworksTxInProgress: ${landworksTxInProgress}`);
+  console.log(`landTxInProgress: ${landTxInProgress}`);
+  console.log(`estateTxInProgress: ${estateTxInProgress}`);
+
+  const [isTxInProgress, setIsAnyTxInProgress] = useState(
+    landworksTxInProgress || landTxInProgress || estateTxInProgress
+  );
+
+  useEffect(() => {
+    console.log(`Should show loading1: ${landworksTxInProgress || landTxInProgress || estateTxInProgress}`);
+
+    if (landworksTxInProgress || landTxInProgress || estateTxInProgress) {
+      setIsAnyTxInProgress(true);
+    } else {
+      setIsAnyTxInProgress(false);
+    }
+  }, [landworksTxInProgress, landTxInProgress, estateTxInProgress]);
+
+  console.log(`Should show loading2: ${landworksTxInProgress || landTxInProgress || estateTxInProgress}`);
   if (wallet.connecting) {
     return (
       <Popover
@@ -93,7 +119,8 @@ const ConnectedWallet: React.FC = () => {
             </Grid>
           </div>
         }
-        trigger="click">
+        trigger="click"
+      >
         <Button type="primary" className={s.buttonConnecting}>
           Connecting...
         </Button>
@@ -161,10 +188,16 @@ const ConnectedWallet: React.FC = () => {
             </button>
           </Grid>
         </div>
-      }>
+      }
+    >
       <Button type="link" className={s.accountLink}>
         <Grid flow="col" align="center">
-          <Identicon address={wallet.account} width={24} height={24} className="mr-8" />
+          {isTxInProgress ? (
+            <div className={s.loader}></div>
+          ) : (
+            <Identicon address={wallet.account} width={24} height={24} className="mr-8" />
+          )}
+
           <Text type="p1" style={{ color: 'white' }} className={cn(s.walletAddress, 'mr-4')}>
             {shortenAddr(wallet.account, 4, 3)}
           </Text>
@@ -175,7 +208,13 @@ const ConnectedWallet: React.FC = () => {
   );
 
   return (
-    <Grid flow="col" gap={20} justify="center" align="center" className={s.hamburger}>
+    <Grid
+      flow="col"
+      gap={20}
+      justify="center"
+      align="center"
+      className={cn(s.hamburger, isTxInProgress ? s.loadingBackground : '')}
+    >
       {/* ToDo: NotificationSection, uncomment if needed */}
       {/* <NotificationSection /> */}
       {/* <Divider type="vertical" style={{ minHeight: 28 }} /> */}
