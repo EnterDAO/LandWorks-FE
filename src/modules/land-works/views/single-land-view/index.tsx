@@ -20,7 +20,6 @@ import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 
 import { getNowTs } from '../../../../utils';
-import { getEtherscanTxUrl } from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -32,7 +31,7 @@ const SingleLand: React.FC = () => {
   const history = useHistory();
   const { tokenId } = useParams<{ tokenId: string }>();
   const [asset, setAsset] = useState({} as AssetEntity);
-  const [lands, setLands] = useState([] as AssetEntity[]);
+  const [adjacentLands, setAdjacentLands] = useState([] as AssetEntity[]);
   const [showRentModal, setShowRentModal] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
 
@@ -53,13 +52,18 @@ const SingleLand: React.FC = () => {
 
   const getData = async (tokenId: string) => {
     const asset = await fetchAsset(tokenId);
+    if (!asset.id) {
+      //TODO: Maybe show error or special component when property can't be found
+      history.push('/land-works');
+      return;
+    }
     setAsset(asset);
 
     const assetCoordinates = asset?.decentralandData?.coordinates!;
     const neighbours = calculateNeighbours(assetCoordinates);
 
     const adjacentLands = await fetchAdjacentDecentralandAssets(neighbours);
-    setLands(adjacentLands);
+    setAdjacentLands(adjacentLands);
   };
 
   const shouldShowWithdraw = () => {
@@ -181,9 +185,13 @@ const SingleLand: React.FC = () => {
         </Col>
         <Col span={24}>
           <Row gutter={[15, 15]} style={{ paddingTop: '27px' }}>
-            {lands.map((land) => (
-              <LandWorkCard key={land.id} land={land} />
-            ))}
+            {adjacentLands.length ? (
+              adjacentLands.map((land) => <LandWorkCard key={land.id} land={land} />)
+            ) : (
+              <div>
+                <span>No adjacent lands found</span>
+              </div>
+            )}
           </Row>
         </Col>
       </Row>
