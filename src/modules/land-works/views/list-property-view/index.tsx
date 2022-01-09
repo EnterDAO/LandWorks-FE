@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Checkbox, Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
@@ -111,6 +112,7 @@ const ListView: React.FC = () => {
   const landworks = useLandworks();
   const estateRegistry = useEstateRegistry();
   const landRegistry = useLandRegistry();
+  const history = useHistory();
 
   const { landWorksContract } = landworks;
   const { landRegistryContract } = landRegistry;
@@ -311,7 +313,7 @@ const ListView: React.FC = () => {
         maxPeriod,
         maxFutureTime,
         paymentToken.id,
-        pricePerSecond.toFixed(0),
+        pricePerSecond.toFixed(0)
       );
     } catch (e) {
       console.log(e);
@@ -325,7 +327,7 @@ const ListView: React.FC = () => {
 
     const estates = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
     const lands = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
-    const mergedProperties = [...estates, ...lands].map(e => ({ label: e.name, value: JSON.stringify(e) }));
+    const mergedProperties = [...estates, ...lands].map((e) => ({ label: e.name, value: JSON.stringify(e) }));
     setProperties(mergedProperties);
     if (mergedProperties.length > 0) {
       setInitialProperty(mergedProperties[0]);
@@ -402,7 +404,7 @@ const ListView: React.FC = () => {
   return (
     <Row gutter={[10, 10]} justify="center" className="list-view">
       <Col span={24} className="head-nav content-container">
-        <Button type="light" className="back-btn" onClick={() => console.log('go back')}>
+        <Button type="light" className="back-btn" onClick={() => history.goBack()}>
           <span>
             <Icon name="arrow-back" className="eth-icon" />
             Back
@@ -499,7 +501,8 @@ const ListView: React.FC = () => {
                           type="button"
                           className="button-primary action-btn"
                           onClick={handleApprove}
-                          disabled={approveDisabled}>
+                          disabled={approveDisabled}
+                        >
                           <span>APPROVE</span>
                         </button>
                       </Col>
@@ -509,7 +512,8 @@ const ListView: React.FC = () => {
                           type="button"
                           className="button-primary action-btn"
                           onClick={handleConfirmListing}
-                          disabled={listDisabled}>
+                          disabled={listDisabled}
+                        >
                           <span>CONFIRM LISTING</span>
                         </button>
                       </Col>
@@ -559,11 +563,13 @@ const ListView: React.FC = () => {
                 </Row>
               </Col>
             </Row>
-            {errMessage && 
-            <Row>
-              <Col span={24} className="error-wrapper">{errMessage}</Col>
-            </Row>
-            }
+            {errMessage && (
+              <Row>
+                <Col span={24} className="error-wrapper">
+                  {errMessage}
+                </Col>
+              </Row>
+            )}
           </Col>
         </Row>
       </Col>

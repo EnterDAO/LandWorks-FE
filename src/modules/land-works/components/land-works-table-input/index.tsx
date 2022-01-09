@@ -74,7 +74,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isRen
     if (wallet.account && wallet.account.toLowerCase() === renter.toLowerCase() && isRentActive) {
       setCanEditOperator(true);
     }
-  }, []);
+  }, [isRentActive, wallet.account]);
 
   return (
     <div className="operator">

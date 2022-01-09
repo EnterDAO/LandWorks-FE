@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { Checkbox, Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
@@ -109,6 +109,7 @@ const ListView: React.FC = () => {
   const estateRegistry = useEstateRegistry();
   const landRegistry = useLandRegistry();
   const location = useLocation();
+  const history = useHistory();
 
   const { landWorksContract } = landworks;
   const { landRegistryContract } = landRegistry;
@@ -481,7 +482,7 @@ const ListView: React.FC = () => {
   return (
     <Row gutter={[10, 10]} justify="center" className="list-view">
       <Col span={24} className="head-nav content-container">
-        <Button type="light" className="back-btn" onClick={() => console.log('go back')}>
+        <Button type="light" className="back-btn" onClick={() => history.goBack()}>
           <span>
             <Icon name="arrow-back" className="eth-icon" />
             Back

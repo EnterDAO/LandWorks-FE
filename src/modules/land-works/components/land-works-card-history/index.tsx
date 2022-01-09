@@ -81,7 +81,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
             operator={operator}
             assetId={assetId}
             rentId={data.id}
-            renter={data.renter.id}
+            renter={data.renterAddress}
             key={operator + uniqueId()}
             isRentActive={isRentActive}
           />
