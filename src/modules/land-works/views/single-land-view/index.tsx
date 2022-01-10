@@ -84,9 +84,10 @@ const SingleLand: React.FC = () => {
     return isOwner() && asset?.status === AssetStatus.LISTED && getNowTs() > Number(asset.lastRentEnd);
   };
 
-  const isOwnerOrConsumer = () => {
+  const shouldShowEditButton = () => {
     return (
       wallet.account &&
+      asset.status === AssetStatus.LISTED &&
       (wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase() ||
         wallet.account.toLowerCase() === asset?.consumer?.id.toLowerCase())
     );
@@ -159,7 +160,7 @@ const SingleLand: React.FC = () => {
             Back
           </span>
         </Button>
-        {isOwnerOrConsumer() && (
+        {shouldShowEditButton() && (
           <Button type="light" className="edit-btn" onClick={() => history.push('/land-works/edit-property', asset)}>
             <span>EDIT</span>
           </Button>
