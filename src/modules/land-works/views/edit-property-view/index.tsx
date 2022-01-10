@@ -11,7 +11,6 @@ import { getTokenPrice } from 'components/providers/known-tokens-provider';
 import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
-import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, PaymentToken, fetchTokenPayments } from '../../api';
 import { Dropdown } from '../../components/lands-dropdown-select';
@@ -19,13 +18,12 @@ import { EditViewLandDropdown } from '../../components/lands-edit-dropdown-selec
 import { LandsEditInput } from '../../components/lands-edit-input';
 import { LandsEditPeriodDropdown } from '../../components/lands-edit-rent-period-select';
 import CurrencyDropdown from '../../components/lands-rent-currency-select';
-import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
-import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
+import { WarningModal } from '../../components/lands-warning-modal';
 import { useLandworks } from '../../providers/landworks-provider';
 
-import { getFormattedTime, getNowTs } from '../../../../utils';
+import { getFormattedTime } from '../../../../utils';
 import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, WEEK_IN_SECONDS } from '../../../../utils/date';
-import { DEFAULT_ADDRESS, MAX_UINT_256, ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
+import { MAX_UINT_256, ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -109,14 +107,10 @@ const DEFAULT_PROPERTY = { label: '', value: '' };
 const ListView: React.FC = () => {
   const walletCtx = useWallet();
   const landworks = useLandworks();
-  const estateRegistry = useEstateRegistry();
-  const landRegistry = useLandRegistry();
   const location = useLocation();
   const history = useHistory();
 
   const { landWorksContract } = landworks;
-  const { landRegistryContract } = landRegistry;
-  const { estateRegistryContract } = estateRegistry;
 
   const [asset, setAsset] = useState<AssetEntity>(location.state as AssetEntity);
 
@@ -133,7 +127,6 @@ const ListView: React.FC = () => {
   const [maxPeriodSelectedOption, setMaxPeriodSelectedOption] = useState(MaxRentPeriodOptions[0]); // Selected Option Value for the select menu
 
   const [maxFutureTime, setMaxFutureTime] = useState(DEFAULT_MAX_PERIOD);
-  const [isMaxFutureTimeSelected, setMaxFutureTimeSelected] = useState(false);
   const [maxFutureTimeInput, setMaxFutureTimeInput] = useState(DEFAULT_MIN_PERIOD);
   const [maxFutureTimePeriod, setMaxFuturePeriodType] = useState(BigNumber.from(AtMostRentPeriodOptions[0].value));
   const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[0]); // Selected Option Value for the select menu
@@ -152,16 +145,17 @@ const ListView: React.FC = () => {
   const [pricePerSecond, setPricePerSecond] = useState(ZERO_BIG_NUMBER);
   const [usdPrice, setUsdPrice] = useState('0');
 
-  const [approveDisabled, setApproveDisabled] = useState(true);
-  const [listDisabled, setListDisabled] = useState(true);
-
   const [errMessage, setErrMessage] = useState('');
+  const [showWarningModal, setShowWarningModal] = useState(false);
+
+  const [saveDisabled, setSaveDisabled] = useState(false);
 
   useEffect(() => {
     // Pre-populate user properties
     const properyOption = { label: asset.name, value: JSON.stringify(asset) };
     setProperties([properyOption]);
     setInitialProperty(properyOption);
+    setSelectedProperty(JSON.parse(properyOption.value));
 
     // Pre-populate minPeriod values
     if (asset.minPeriod) {
@@ -174,7 +168,8 @@ const ListView: React.FC = () => {
         const [timeValue, timeType] = getFormattedTime(Number(asset.minPeriod)).split(' ');
         setMinInput(new BigNumber(timeValue));
 
-        const optionByType = MinRentPeriodOptions.find((o) => o.label.includes(timeType));
+        const typeSuffix = timeType.substr(0, 3);
+        const optionByType = MinRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
         const optionIndex = MinRentPeriodOptions.indexOf(optionByType!);
 
         setMinPeriodSelectedOption(MinRentPeriodOptions[optionIndex]);
@@ -194,7 +189,8 @@ const ListView: React.FC = () => {
         const [timeValue, timeType] = getFormattedTime(Number(asset.maxPeriod)).split(' ');
         setMaxInput(new BigNumber(timeValue));
 
-        const optionByType = MaxRentPeriodOptions.find((o) => o.label.includes(timeType));
+        const typeSuffix = timeType.substr(0, 3);
+        const optionByType = MaxRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
         const optionIndex = MaxRentPeriodOptions.indexOf(optionByType!);
 
         setMaxPeriodSelectedOption(MaxRentPeriodOptions[optionIndex]);
@@ -204,16 +200,19 @@ const ListView: React.FC = () => {
 
     // Pre-populate at most given Time
     if (asset.maxFutureTime) {
-      const hasCustomMaxFutureTime = new BigNumber(asset.maxFutureTime).lt(DEFAULT_MAX_PERIOD);
+      const maxFutureTimeBigNumber = new BigNumber(asset.maxFutureTime);
+      const hasCustomMaxFutureTime = maxFutureTimeBigNumber.lt(DEFAULT_MAX_PERIOD);
 
       if (hasCustomMaxFutureTime) {
-        setMaxFutureTimeSelected(true);
-
         // Example 3600 is getting parsed to [1, hour]
-        const [timeValue, timeType] = getFormattedTime(Number(asset.maxFutureTime)).split(' ');
+        const [timeValue, timeType] = getFormattedTime(maxFutureTimeBigNumber.toNumber()).split(' ');
         setMaxFutureTimeInput(new BigNumber(timeValue));
+        // TODO:: There is a problem with parsing time for example
+        // Parse the date only to days and from there on % 7 === 0 show weeks, otherwise days
+        // 7257600 should return 12 weeks, but now returns 2 months
 
-        const optionByType = AtMostRentPeriodOptions.find((o) => o.label.includes(timeType));
+        const typeSuffix = timeType.substr(0, 3);
+        const optionByType = AtMostRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
         const optionIndex = AtMostRentPeriodOptions.indexOf(optionByType!);
 
         setMaxFutureSelectedOption(AtMostRentPeriodOptions[optionIndex]);
@@ -294,31 +293,17 @@ const ListView: React.FC = () => {
     }
   };
 
-  const handleAtMostCheckboxChange = (e: any) => {
-    setMaxFutureTimeSelected(e.target.checked);
-    if (e.target.checked) {
-      setMaxFutureTime(maxInput?.multipliedBy(maxFutureTimePeriod!)!);
-    } else {
-      setMaxFutureTime(DEFAULT_MAX_PERIOD);
-    }
-  };
-
   const handleAtMostSelectChange = (e: any) => {
     const { value: val } = e;
     const value = BigNumber.from(val);
     setMaxFuturePeriodType(value);
-
-    if (isMaxFutureTimeSelected) {
-      setMaxFutureTime(maxFutureTimeInput?.multipliedBy(value!)!);
-    }
+    setMaxFutureTime(maxFutureTimeInput?.multipliedBy(value!)!);
   };
 
   const handleAtMostInputChange = (e: any) => {
     const value = BigNumber.from(e.target.value);
     setMaxFutureTimeInput(value!);
-    if (isMaxFutureTimeSelected) {
-      setMaxFutureTime(value?.multipliedBy(maxFutureTimePeriod!)!);
-    }
+    setMaxFutureTime(value?.multipliedBy(maxFutureTimePeriod!)!);
   };
 
   const handleCurrencyChange = (e: any) => {
@@ -358,39 +343,47 @@ const ListView: React.FC = () => {
   };
 
   const evaluateInput = () => {
-    let isApproveDisabled = true;
-    if (minPeriod?.gt(maxPeriod)) {
+    if (!minPeriod && isMinPeriodSelected) {
+      setErrMessage('Min Period Must be set');
+      setSaveDisabled(true);
+    } else if (minPeriod?.gt(maxPeriod)) {
       setErrMessage('Min Period exceeds Max Period');
+      setSaveDisabled(true);
+    } else if (!maxPeriod && isMaxPeriodSelected) {
+      setErrMessage('Max Period Must be set');
+      setSaveDisabled(true);
     } else if (maxPeriod?.gt(maxFutureTime)) {
       setErrMessage('Max Period exceeds Max Future Time');
+      setSaveDisabled(true);
+    } else if (!maxFutureTime) {
+      setErrMessage('Max Future Period Must be set');
+      setSaveDisabled(true);
     } else if (pricePerSecond.eq(ZERO_BIG_NUMBER)) {
       setErrMessage('Price cannot be zero');
+      setSaveDisabled(true);
     } else if (selectedProperty === null) {
       setErrMessage('no property selected');
+      setSaveDisabled(true);
     } else {
       setErrMessage('');
-      isApproveDisabled = false;
-      evaluateSelectedProperty();
+      setSaveDisabled(false);
     }
-
-    setApproveDisabled(isApproveDisabled);
   };
 
-  const evaluateSelectedProperty = async () => {
-    if (selectedProperty) {
-      let approvedAddress: string;
-      if (selectedProperty.isLAND) {
-        approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
-      } else {
-        approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
-      }
-      if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
-        setApproveDisabled(true);
-        setListDisabled(false);
-      } else {
-        setApproveDisabled(false);
-        setListDisabled(true);
-      }
+  const handleSave = async () => {
+    setShowWarningModal(false);
+
+    try {
+      const updateTx = await landWorksContract?.updateConditions(
+        asset.id,
+        minPeriod,
+        maxPeriod,
+        maxFutureTime,
+        paymentToken.id,
+        pricePerSecond.toFixed(0)
+      );
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -407,10 +400,6 @@ const ListView: React.FC = () => {
     calculatePricePerSecond();
     getUsdPrice(asset.paymentToken.symbol, tokenCost?.toNumber() || 0);
   }, [paymentToken, tokenCost]);
-
-  useEffect(() => {
-    evaluateSelectedProperty();
-  }, [selectedProperty]);
 
   return (
     <Row gutter={[10, 10]} justify="center" className="list-view">
@@ -477,7 +466,7 @@ const ListView: React.FC = () => {
                       onChange={handleMaxSelectChange}
                       onInputChange={handleMaxInputChange}
                       initialValuе={maxPeriodSelectedOption}
-                      inputValue={maxInput.toNumber()}
+                      inputValue={maxInput?.toNumber()}
                     />
                   </Col>
                 </Row>
@@ -485,7 +474,6 @@ const ListView: React.FC = () => {
             </Row>
           </Col>
           <Col span={24} className="future-period-wrapper">
-            <Checkbox onChange={handleAtMostCheckboxChange} checked={isMaxFutureTimeSelected} />
             <span style={{ marginRight: '15px' }}>At any given time to be rented out at most</span>
             <LandsEditPeriodDropdown
               options={AtMostRentPeriodOptions}
@@ -524,10 +512,8 @@ const ListView: React.FC = () => {
                         <button
                           type="button"
                           className="button-primary action-btn"
-                          onClick={() => {
-                            console.log('save');
-                          }}
-                          // disabled={approveDisabled}
+                          onClick={() => setShowWarningModal(true)}
+                          disabled={saveDisabled}
                         >
                           <span>Save</span>
                         </button>
@@ -562,7 +548,7 @@ const ListView: React.FC = () => {
                         <Row>
                           <Col span={24}>
                             <Icon
-                              name={getTokenIconName(paymentToken.symbol)}
+                              name={getTokenIconName(paymentToken.symbol || '')}
                               className="info-icon"
                               style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
                             />
@@ -582,6 +568,16 @@ const ListView: React.FC = () => {
           <span style={{ marginLeft: '15px' }}>{errMessage}</span>
         </Row>
       </Col>
+      <WarningModal
+        onCancel={() => {
+          setShowWarningModal(false);
+        }}
+        onOk={handleSave}
+        visible={showWarningModal}
+        text={
+          <>Changing the payment type will enforce the payout of any unclaimed rent accumulated for this property.</>
+        }
+      />
     </Row>
   );
 };

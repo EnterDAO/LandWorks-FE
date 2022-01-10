@@ -68,12 +68,12 @@ export default class LandWorksContract extends Web3Contract {
    * @param pricePerSecond The price per second in the lowest denomination.
    */
   updateConditions(
-    assetId: BigNumber,
+    assetId: BigNumber | string,
     minPeriod: BigNumber,
     maxPeriod: BigNumber,
     maxFutureTime: BigNumber,
     paymentToken: string,
-    pricePerSecond: BigNumber
+    pricePerSecond: BigNumber | string
   ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
