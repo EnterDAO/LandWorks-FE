@@ -7,9 +7,10 @@ interface IProps {
   onInputChange: (event: any) => void;
   customClassName?: string;
   value?: number;
+  disabled?: boolean;
 }
 
-export const LandsEditInput: React.FC<IProps> = ({ onInputChange, customClassName, value }) => {
+export const LandsEditInput: React.FC<IProps> = ({ onInputChange, customClassName, value, disabled }) => {
   return (
     <Input
       // placeholder="1"
@@ -18,6 +19,7 @@ export const LandsEditInput: React.FC<IProps> = ({ onInputChange, customClassNam
       className={`custom-lands-input ${customClassName}`}
       onChange={onInputChange}
       value={value}
+      disabled={disabled}
     />
   );
 };

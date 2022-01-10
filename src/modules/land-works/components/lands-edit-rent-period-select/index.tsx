@@ -16,6 +16,7 @@ interface IProps {
   options: any[];
   initialValuе?: Item;
   inputValue?: number;
+  disabled?: boolean;
 }
 
 export const LandsEditPeriodDropdown: React.FC<IProps> = ({
@@ -24,11 +25,18 @@ export const LandsEditPeriodDropdown: React.FC<IProps> = ({
   options,
   initialValuе,
   inputValue,
+  disabled,
 }) => {
   return (
     <div className="period-select-component">
-      <LandsEditInput onInputChange={onInputChange} value={inputValue} />
-      <Select options={options} value={initialValuе} onChange={onChange} className="lands-period-drop" />
+      <LandsEditInput onInputChange={onInputChange} value={inputValue} disabled={disabled} />
+      <Select
+        options={options}
+        isDisabled={disabled}
+        value={initialValuе}
+        onChange={onChange}
+        className="lands-period-drop"
+      />
     </div>
   );
 };

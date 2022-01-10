@@ -244,23 +244,27 @@ const ListView: React.FC = () => {
     if (e.target.checked) {
       setMinPeriod(minInput?.multipliedBy(minPeriodType!));
     } else {
+      // Reset to defaults
       setMinPeriod(DEFAULT_MIN_PERIOD);
+      setMinInput(DEFAULT_MIN_PERIOD);
+      setMinPeriodType(BigNumber.from(MinRentPeriodOptions[0].value));
+      setMinPeriodSelectedOption(MinRentPeriodOptions[0]);
     }
   };
 
   const handleMinSelectChange = (e: any) => {
     const { value: val } = e;
     const value = BigNumber.from(val);
-    setMinPeriodType(value);
-
-    // We have to update the Select accordingly to those mappings
-    // Example 3600 is getting parsed to [1, hour]
-    const [timeValue, timeType] = getFormattedTime(Number(val)).split(' ');
-    const optionByType = MinRentPeriodOptions.find((o) => o.label.includes(timeType));
-    const optionIndex = MinRentPeriodOptions.indexOf(optionByType!);
-    setMinPeriodSelectedOption(MinRentPeriodOptions[optionIndex]);
 
     if (isMinPeriodSelected) {
+      setMinPeriodType(value);
+
+      // Example 3600 is getting parsed to [1, hour]
+      const [timeValue, timeType] = getFormattedTime(Number(val)).split(' ');
+      const optionByType = MinRentPeriodOptions.find((o) => o.label.includes(timeType));
+      const optionIndex = MinRentPeriodOptions.indexOf(optionByType!);
+
+      setMinPeriodSelectedOption(MinRentPeriodOptions[optionIndex]);
       setMinPeriod(minInput?.multipliedBy(value!));
     }
   };
@@ -478,6 +482,7 @@ const ListView: React.FC = () => {
                       onInputChange={handleMinInputChange}
                       initialValuе={minPeriodSelectedOption}
                       inputValue={minInput?.toNumber()}
+                      disabled={!isMinPeriodSelected}
                     />
                   </Col>
                   <Col span={12} className="checkbox-wrapper">
@@ -488,6 +493,7 @@ const ListView: React.FC = () => {
                       onInputChange={handleMaxInputChange}
                       initialValuе={maxPeriodSelectedOption}
                       inputValue={maxInput?.toNumber()}
+                      disabled={!isMaxPeriodSelected}
                     />
                   </Col>
                 </Row>
