@@ -141,7 +141,6 @@ const ListView: React.FC = () => {
   const [properties, setProperties] = useState([] as any[]);
   const [initialProperty, setInitialProperty] = useState(DEFAULT_PROPERTY);
   const [selectedProperty, setSelectedProperty] = useState(null as DecentralandNFT | null);
-  const [isSelectedPropertyApproved, setApprovedSelectedProperty] = useState(false);
 
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState({} as PaymentToken);
@@ -232,11 +231,6 @@ const ListView: React.FC = () => {
 
   const handlePlaceChange = (e: any) => {
     console.log(e);
-  };
-
-  const handlePropertyChange = (e: any) => {
-    const property = JSON.parse(e);
-    setSelectedProperty(property);
   };
 
   const handleMinCheckboxChange = (e: any) => {
@@ -336,29 +330,6 @@ const ListView: React.FC = () => {
     setTokenCost(value!);
   };
 
-  const handleApprove = async () => {
-    if (selectedProperty === null) {
-      return;
-    }
-
-    try {
-      let approvedAddress = DEFAULT_ADDRESS;
-      if (selectedProperty.isLAND) {
-        const tx = await landRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
-        approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
-      } else {
-        await estateRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
-        approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
-      }
-      if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
-        setApproveDisabled(true);
-        setListDisabled(false);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const calculateTotalAndFeePrecision = () => {
     const fee = tokenCost?.multipliedBy(paymentToken.feePercentage).dividedBy(FEE_PRECISION);
     const earnings = tokenCost?.minus(fee!);
@@ -372,61 +343,10 @@ const ListView: React.FC = () => {
     setPricePerSecond(pricePerSecond);
   };
 
-  const handleConfirmListing = async () => {
-    console.log(selectedProperty);
-    console.log(paymentToken);
-    console.log(minPeriod!.toString(10));
-    console.log(maxPeriod.toString(10));
-    console.log(maxFutureTime.toString(10));
-
-    if (selectedProperty === null) {
-      return;
-    }
-
-    const metaverseRegistry = selectedProperty.isLAND
-      ? config.contracts.decentraland.landRegistry
-      : config.contracts.decentraland.estateRegistry;
-
-    try {
-      await landWorksContract?.list(
-        PlaceOptions[0].value,
-        metaverseRegistry,
-        selectedProperty.id,
-        minPeriod,
-        maxPeriod,
-        maxFutureTime,
-        paymentToken.id,
-        pricePerSecond.toFixed(0)
-      );
-      showToastNotification(ToastType.Success, 'Property listed successfully!');
-    } catch (e) {
-      showToastNotification(ToastType.Error, 'There was an error while listing the property.');
-      console.log(e);
-    }
-  };
-
   const getUsdPrice = (symbol: string, price: string | number) => {
     const ethPrice = new BigNumber(getTokenPrice(symbol) || '0');
     const ethToUsdPrice = ethPrice.multipliedBy(price);
     setUsdPrice(ethToUsdPrice.toFixed(2).replace(/\.00$/, ''));
-  };
-
-  const getUserNfts = async () => {
-    if (!walletCtx.account) {
-      return;
-    }
-
-    const estates = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
-    const lands = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
-    const mergedProperties = [...estates, ...lands].map((e) => ({ label: e.name, value: JSON.stringify(e) }));
-    setProperties(mergedProperties);
-    if (mergedProperties.length > 0) {
-      setInitialProperty(mergedProperties[0]);
-      setSelectedProperty(JSON.parse(mergedProperties[0].value));
-    } else {
-      setInitialProperty(DEFAULT_PROPERTY);
-      setSelectedProperty(null);
-    }
   };
 
   const getPaymentTokens = async () => {
@@ -475,7 +395,6 @@ const ListView: React.FC = () => {
   };
 
   useEffect(() => {
-    // getUserNfts();
     getPaymentTokens();
   }, [walletCtx.account]);
 
@@ -525,7 +444,9 @@ const ListView: React.FC = () => {
                   <Col span={24}>
                     <EditViewLandDropdown
                       options={properties}
-                      onChange={handlePropertyChange}
+                      onChange={() => {
+                        console.log('');
+                      }}
                       initialValuе={initialProperty}
                       disabled={true}
                     />
@@ -603,7 +524,9 @@ const ListView: React.FC = () => {
                         <button
                           type="button"
                           className="button-primary action-btn"
-                          onClick={handleApprove}
+                          onClick={() => {
+                            console.log('save');
+                          }}
                           // disabled={approveDisabled}
                         >
                           <span>Save</span>
