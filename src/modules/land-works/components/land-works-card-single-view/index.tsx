@@ -71,10 +71,9 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
       const rent = await fetchAssetRentByTimestamp(asset.id, getNowTs());
       setCurrentRent(rent);
       if (wallet.account) {
-        if (wallet.account.toLowerCase() === currentRent.renter?.id) {
+        if (wallet.account.toLowerCase() === rent.renter?.id) {
           setCountDownTimestamp(rent.end);
           setCountDownRent(rent);
-          console.log(rent);
         } else {
           const rent = await fetchUserFirstRentByTimestamp(asset.id, wallet.account.toLowerCase(), getNowTs());
           setCountDownTimestamp(rent.start);
@@ -137,9 +136,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
   const renderCountdown = (props: CountdownTimeDelta) => {
     const days = props.days > 0 ? `${props.days} days ` : '';
     const hours = props.hours > 0 ? `${props.hours} hours ` : '';
-    const minutes = props.minutes > 0 ? `${props.minutes} minutes` : '';
-    const remaining = days || hours || minutes ? ' remaining' : '';
-    return <p className="remaining-time">{days + hours + minutes + remaining}</p>;
+    const minutes = props.minutes > 0 ? `${props.minutes} minutes ` : '';
+    const seconds = props.seconds > 0 ? `${props.seconds} seconds` : '';
+    const expired = days || hours || minutes || seconds;
+    const placeholder = expired ? `${days}${hours}${minutes}${seconds} remaining` : '';
+    return <p className="remaining-time">{placeholder}</p>;
   };
 
   return (
