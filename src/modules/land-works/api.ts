@@ -758,7 +758,7 @@ export function fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
         $status: String
       ) {
         assets(
-          where: { metaverse: $metaverse, lastRentEnd_gte: $lastRentEnd, status: $status }
+          where: { metaverse: $metaverse, ${lastRentEnd != '0' ? 'lastRentEnd_lt: $lastRentEnd' : ''}, status: $status }
           orderBy: $orderColumn
           orderDirection: $orderDirection
         ) {
