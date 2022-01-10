@@ -24,7 +24,7 @@ export function inRange(value: number, min: number, max: number): boolean {
   return min < value && value < max;
 }
 
-export function getFormattedTime(value: number): string {
+export function getFormattedTime(value: number, options?: string[]): string {
   const start = new Date().getTime();
   const end = add(start, { seconds: value }).valueOf();
 
@@ -34,7 +34,7 @@ export function getFormattedTime(value: number): string {
   });
 
   const formattedDuration = formatDuration(duration, {
-    format: ['months', 'days', 'hours', 'minutes', 'seconds'],
+    format: options?.length ? options : ['months', 'days', 'hours', 'minutes', 'seconds'],
     delimiter: ',',
     zero: false,
   });
@@ -45,9 +45,9 @@ export function getFormattedTime(value: number): string {
 
 export function formatBigNumber(value: BigNumber): string {
   if (value.gt(1)) {
-    return value.toFixed(2)
+    return value.toFixed(2);
   } else {
-    return value.toPrecision(1)
+    return value.toPrecision(1);
   }
 }
 
@@ -165,10 +165,9 @@ export function getDecentralandAssetName(decentralandData: DecentralandData): st
   return `LAND (${coordinates[0]}, ${coordinates[1]})`;
 }
 
-
 export function doSequential<T, K = any>(
   tasks: T[],
-  callback: (task: T, index: number) => Promise<K>,
+  callback: (task: T, index: number) => Promise<K>
 ): Promise<(K | undefined)[]> {
   const results: (K | undefined)[] = [];
 
@@ -177,9 +176,9 @@ export function doSequential<T, K = any>(
       (p, task, index) =>
         p
           .then(() => callback(task, index))
-          .then(result => results.push(result))
+          .then((result) => results.push(result))
           .catch(() => results.push(undefined)) as Promise<any>,
-      Promise.resolve(),
+      Promise.resolve()
     )
     .then(() => results);
 }
