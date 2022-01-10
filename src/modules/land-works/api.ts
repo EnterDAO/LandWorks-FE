@@ -169,6 +169,7 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
               metaverseAssetId
               minPeriod
               maxPeriod
+              maxFutureTime
               pricePerSecond
               lastRentEnd
               status
@@ -196,7 +197,9 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
     },
   })
     .then(async (response) => {
-      const mappedAssets = response.data.coordinatesLANDs?.map((coords: any) => coords.data.asset);
+      const mappedAssets = response.data.coordinatesLANDs
+        ?.map((coords: any) => coords.data.asset)
+        .filter((a: any) => a.status === AssetStatus.LISTED);
       const uniqueAssets = parseAssets([...new Map(mappedAssets.map((v: any) => [v.id, v])).values()]);
 
       return uniqueAssets;
