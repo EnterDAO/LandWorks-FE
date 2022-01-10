@@ -11,6 +11,13 @@ interface IProps {
 
 export const LandsEditInput: React.FC<IProps> = ({ onInputChange, customClassName, value }) => {
   return (
-    <Input placeholder="1" className={`custom-lands-input ${customClassName}`} onChange={onInputChange} value={value} />
+    <Input
+      // placeholder="1"
+      step="0.01"
+      type="number"
+      className={`custom-lands-input ${customClassName}`}
+      onChange={onInputChange}
+      value={value}
+    />
   );
 };

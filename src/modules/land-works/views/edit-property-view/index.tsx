@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 
 import Button from 'components/antd/button';
 import Icon from 'components/custom/icon';
+import { getTokenPrice } from 'components/providers/known-tokens-provider';
 import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
@@ -150,6 +151,7 @@ const ListView: React.FC = () => {
   const [protocolFee, setProtocolFee] = useState(ZERO_BIG_NUMBER);
   const [feePercentage, setFeePercentage] = useState(0);
   const [pricePerSecond, setPricePerSecond] = useState(ZERO_BIG_NUMBER);
+  const [usdPrice, setUsdPrice] = useState('0');
 
   const [approveDisabled, setApproveDisabled] = useState(true);
   const [listDisabled, setListDisabled] = useState(true);
@@ -218,6 +220,11 @@ const ListView: React.FC = () => {
         setMaxFutureSelectedOption(AtMostRentPeriodOptions[optionIndex]);
         setMaxFuturePeriodType(BigNumber.from(optionByType?.value));
       }
+    }
+
+    // Get usd price per day for the asset
+    if (asset.paymentToken) {
+      getUsdPrice(asset.paymentToken.symbol, asset.pricePerMagnitude.price);
     }
 
     console.log(asset);
@@ -325,12 +332,8 @@ const ListView: React.FC = () => {
   };
 
   const handleCostEthChange = (e: any) => {
-    if (e.target.value) {
-      setTokenCost(new BigNumber(e.target.value));
-    } else {
-      // TODO: this might have a better way of doing it
-      setTokenCost(new BigNumber(1));
-    }
+    const value = BigNumber.from(e.target.value || '');
+    setTokenCost(value!);
   };
 
   const handleApprove = async () => {
@@ -400,6 +403,12 @@ const ListView: React.FC = () => {
       showToastNotification(ToastType.Error, 'There was an error while listing the property.');
       console.log(e);
     }
+  };
+
+  const getUsdPrice = (symbol: string, price: string | number) => {
+    const ethPrice = new BigNumber(getTokenPrice(symbol) || '0');
+    const ethToUsdPrice = ethPrice.multipliedBy(price);
+    setUsdPrice(ethToUsdPrice.toFixed(2).replace(/\.00$/, ''));
   };
 
   const getUserNfts = async () => {
@@ -477,6 +486,7 @@ const ListView: React.FC = () => {
   useEffect(() => {
     calculateTotalAndFeePrecision();
     calculatePricePerSecond();
+    getUsdPrice(asset.paymentToken.symbol, tokenCost?.toNumber() || 0);
   }, [paymentToken, tokenCost]);
 
   useEffect(() => {
@@ -578,8 +588,12 @@ const ListView: React.FC = () => {
                   <Col span={12} className="currency-wrapper">
                     <CurrencyDropdown changeHandler={handleCurrencyChange} paymentTokens={paymentTokens} />
                     <div className="price-input-wrapper">
-                      <LandsEditInput onInputChange={handleCostEthChange} customClassName="price-eth-input" />
-                      <span>123$</span>
+                      <LandsEditInput
+                        onInputChange={handleCostEthChange}
+                        value={tokenCost?.toNumber()}
+                        customClassName="price-eth-input"
+                      />
+                      <span>{usdPrice}$</span>
                     </div>
                     <span>/ day</span>
                   </Col>
@@ -611,7 +625,7 @@ const ListView: React.FC = () => {
                               className="info-icon"
                               style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
                             />
-                            <span className="earning-text">{earnings.toString(10)} </span>
+                            <span className="earning-text">{earnings?.toString(10) || 0} </span>
                           </Col>
                           <Col>
                             <p>Your Earnings</p>
@@ -629,7 +643,7 @@ const ListView: React.FC = () => {
                               className="info-icon"
                               style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
                             />
-                            <span className="earning-text">{protocolFee.toString(10)} </span>
+                            <span className="earning-text">{protocolFee?.toString(10) || 0} </span>
                           </Col>
                           <Col>
                             <p>{feePercentage}% Protocol fee</p>
