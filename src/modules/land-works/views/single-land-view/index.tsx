@@ -75,6 +75,10 @@ const SingleLand: React.FC = () => {
     return isOwner() && asset?.status === AssetStatus.LISTED;
   };
 
+  const shouldShowStake = () => {
+    return isOwner() && asset?.status === AssetStatus.LISTED;
+  };
+
   // Case when you do 2 in 1 Delist + Withdraw
   const isDirectWithdraw = () => {
     return isOwner() && asset?.status === AssetStatus.LISTED && getNowTs() > Number(asset.lastRentEnd);
@@ -160,7 +164,7 @@ const SingleLand: React.FC = () => {
             <span>EDIT</span>
           </Button>
         )}
-        {isOwner() && (
+        {shouldShowStake() && (
           <ExternalLink
             style={{ marginRight: 20, fontSize: 14 }}
             href="https://dao.enterdao.xyz/yield-farming"

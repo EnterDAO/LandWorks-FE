@@ -125,6 +125,7 @@ export type RentEntity = {
   operator: string;
   start: string;
   end: string;
+  timestamp: string;
   txHash: string;
   fee: any;
   paymentToken: PaymentToken;
@@ -516,6 +517,50 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
     .catch((e) => {
       console.log(e);
       return {} as UserEntity;
+    });
+}
+
+/**
+ * Gets user's first rent by timestamp for the given asset from GraphQL.
+ * @param asset The target asset id
+ * @param renter The address of the renter
+ * @param startTimestamp The start timestamp
+ */
+export function fetchUserFirstRentByTimestamp(
+  asset: string,
+  renter: string,
+  startTimestamp: number
+): Promise<RentEntity> {
+  return GraphClient.get({
+    query: gql`
+      query GetUserFirstRent($assetId: String, $renter: String, $startTimestamp: BigInt) {
+        rents(first: 1, orderBy: start, where: { asset: $assetId, start_gte: $startTimestamp, renter: $renter }) {
+          id
+          start
+          end
+          timestamp
+          renter {
+            id
+          }
+        }
+      }
+    `,
+    variables: {
+      assetId: asset,
+      renter: renter,
+      startTimestamp: startTimestamp,
+    },
+  })
+    .then(async (response) => {
+      if (response.data.rents.length > 0) {
+        return response.data.rents[0];
+      }
+
+      return {};
+    })
+    .catch((e) => {
+      console.log(e);
+      return {} as RentEntity;
     });
 }
 

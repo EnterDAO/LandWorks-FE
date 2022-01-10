@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Countdown, { CountdownTimeDelta } from 'react-countdown';
-import { Col, Image, Row, Steps } from 'antd';
+import { Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
-import { format } from 'date-fns';
 
 import Icon from 'components/custom/icon';
 import { getTokenPrice } from 'components/providers/known-tokens-provider';
@@ -10,11 +9,11 @@ import { getLandImageUrl, getTokenIconName, timestampSecondsToDate } from 'helpe
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import { useWallet } from '../../../../wallets/wallet';
-import { AssetEntity, RentEntity, fetchAssetRentByTimestamp } from '../../api';
+import { AssetEntity, RentEntity, fetchAssetRentByTimestamp, fetchUserFirstRentByTimestamp } from '../../api';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 
-import { getFormattedTime, getNowTs } from '../../../../utils';
+import { getNowTs } from '../../../../utils';
 import { shortenAddr } from '../../../../web3/utils';
 
 import './index.scss';
@@ -32,6 +31,8 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
 
   const [currentRent, setCurrentRent] = useState({} as RentEntity);
   const [usdPrice, setUsdPrice] = useState('0');
+  const [countDownRent, setCountDownRent] = useState({} as RentEntity);
+  const [countDownTimestamp, setCountDownTimestamp] = useState('0');
 
   const isOwnerOrConsumer = () => {
     return (
@@ -54,7 +55,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
   };
 
   const shouldShowRenterCountdown = () => {
-    return currentRent?.renter?.id.toLowerCase() === wallet.account?.toLowerCase();
+    return countDownRent?.renter?.id.toLowerCase() === wallet.account?.toLowerCase();
   };
 
   const getUsdPrice = () => {
@@ -65,10 +66,21 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
     }
   };
 
-  const getCurrentRent = async () => {
+  const getCurrentAndCountdownRents = async () => {
     if (asset?.id) {
       const rent = await fetchAssetRentByTimestamp(asset.id, getNowTs());
       setCurrentRent(rent);
+      if (wallet.account) {
+        if (wallet.account.toLowerCase() === currentRent.renter?.id) {
+          setCountDownTimestamp(rent.end);
+          setCountDownRent(rent);
+          console.log(rent);
+        } else {
+          const rent = await fetchUserFirstRentByTimestamp(asset.id, wallet.account.toLowerCase(), getNowTs());
+          setCountDownTimestamp(rent.start);
+          setCountDownRent(rent);
+        }
+      }
     }
   };
 
@@ -109,7 +121,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
 
   useEffect(() => {
     getUsdPrice();
-    getCurrentRent();
+    getCurrentAndCountdownRents();
     flexFont();
   }, [asset, wallet.account]);
 
@@ -125,7 +137,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
   const renderCountdown = (props: CountdownTimeDelta) => {
     const days = props.days > 0 ? `${props.days} days ` : '';
     const hours = props.hours > 0 ? `${props.hours} hours ` : '';
-    const minutes = props.hours > 0 ? `${props.minutes} minutes` : '';
+    const minutes = props.minutes > 0 ? `${props.minutes} minutes` : '';
     const remaining = days || hours || minutes ? ' remaining' : '';
     return <p className="remaining-time">{days + hours + minutes + remaining}</p>;
   };
@@ -231,12 +243,12 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                   {shouldShowRenterCountdown() && (
                     <>
                       <Col span={24}>
-                        {currentRent.start && (
-                          <p className="rented-on">Rented on {timestampSecondsToDate(currentRent.start)}</p>
+                        {countDownRent.timestamp && (
+                          <p className="rented-on">Rented on {timestampSecondsToDate(countDownRent.timestamp)}</p>
                         )}
                       </Col>
                       <Col span={24}>
-                        <Countdown date={Number(currentRent.end) * 1000} renderer={renderCountdown} />
+                        <Countdown date={Number(countDownTimestamp) * 1000} renderer={renderCountdown} />
                       </Col>
                     </>
                   )}
