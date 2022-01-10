@@ -372,6 +372,7 @@ const ListView: React.FC = () => {
 
   const handleSave = async () => {
     setShowWarningModal(false);
+    setSaveDisabled(true);
 
     try {
       const updateTx = await landWorksContract?.updateConditions(
@@ -382,9 +383,13 @@ const ListView: React.FC = () => {
         paymentToken.id,
         pricePerSecond.toFixed(0)
       );
+      showToastNotification(ToastType.Success, 'Property Updated successfully!');
     } catch (e) {
       console.log(e);
+      showToastNotification(ToastType.Error, 'There was an error while updating the property.');
     }
+
+    setSaveDisabled(false);
   };
 
   useEffect(() => {
