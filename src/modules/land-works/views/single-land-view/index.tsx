@@ -153,13 +153,7 @@ const SingleLand: React.FC = () => {
           </>
         }
       />
-      <Row className="head-nav" style={{ marginBottom: '20px' }}>
-        <Button style={{ marginRight: 20 }} type="light" className="back-btn" onClick={() => history.goBack()}>
-          <span>
-            <Icon name="arrow-back" className="eth-icon" />
-            Back
-          </span>
-        </Button>
+      <Row className="head-nav">
         {shouldShowEditButton() && (
           <Button type="light" className="edit-btn" onClick={() => history.push('/land-works/edit-property', asset)}>
             <span>EDIT</span>

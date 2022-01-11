@@ -12,27 +12,16 @@
       display: flex;
     }
 
-    button.back-btn {
-      padding: 10px 25px 10px 20px !important;
-      border-radius: 23px;
-      color: rgba(93, 143, 240, 1) !important;
-      background: #27273a;
-      border-radius: 23px;
-      margin-right: auto;
+    button {
+      margin-bottom: 20px;
 
-      svg {
-        color: rgba(93, 143, 240, 1) !important;
-        height: 15px;
-        vertical-align: middle;
+      .edit-btn {
+        padding: 10px 20px 10px 20px !important;
+        border-radius: 12px;
+        background: #177ddc;
+        color: white !important;
+        margin-right: auto;
       }
-    }
-
-    button.edit-btn {
-      padding: 10px 20px 10px 20px !important;
-      border-radius: 12px;
-      background: #177ddc;
-      color: white !important;
-      margin-right: auto;
     }
   }
 

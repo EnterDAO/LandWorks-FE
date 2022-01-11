@@ -454,14 +454,6 @@ const ListView: React.FC = () => {
 
   return (
     <Row gutter={[10, 10]} justify="center" className="list-view">
-      <Col span={24} className="head-nav content-container">
-        <Button type="light" className="back-btn" onClick={() => history.goBack()}>
-          <span>
-            <Icon name="arrow-back" className="eth-icon" />
-            Back
-          </span>
-        </Button>
-      </Col>
       <Col sm={24} lg={16}>
         <Row className="list-view-wrapper">
           <Col span={24} style={{ margin: '10px 0' }}>
