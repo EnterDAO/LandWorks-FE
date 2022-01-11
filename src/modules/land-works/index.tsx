@@ -3,7 +3,9 @@ import { isMobile } from 'react-device-detect';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import AntdSpin from 'antd/lib/spin';
 
+import ProtectedRoute from 'components/custom/protected-route';
 import { useWarning } from 'components/providers/warning-provider';
+import { useWallet } from 'wallets/wallet';
 
 const RentingView = lazy(() => import('./views/my-renting-view'));
 const LendingView = lazy(() => import('./views/my-lending-view'));
@@ -14,7 +16,7 @@ const EditProperty = lazy(() => import('./views/edit-property-view'));
 
 const LandworksView: React.FC = () => {
   const warning = useWarning();
-
+  const walletCtx = useWallet();
   React.useEffect(() => {
     let warningDestructor: () => void;
 
@@ -37,10 +39,34 @@ const LandworksView: React.FC = () => {
         <Route path="/land-works" exact component={OwnedPasses} />
         <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
         <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
-        <Route path="/land-works/lending" exact component={LendingView} />
-        <Route path="/land-works/renting" exact component={RentingView} />
-        <Route path="/land-works/list-property" exact component={ListProperty} />
-        <Route path="/land-works/edit-property" exact component={EditProperty} />
+        <ProtectedRoute
+          isAuthenticated={!!walletCtx.account}
+          authenticationPath="/"
+          path="/land-works/lending"
+          exact
+          component={LendingView}
+        />
+        <ProtectedRoute
+          isAuthenticated={!!walletCtx.account}
+          authenticationPath="/"
+          path="/land-works/renting"
+          exact
+          component={RentingView}
+        />
+        <ProtectedRoute
+          isAuthenticated={!!walletCtx.account}
+          authenticationPath="/"
+          path="/land-works/list-property"
+          exact
+          component={ListProperty}
+        />
+        <ProtectedRoute
+          isAuthenticated={!!walletCtx.account}
+          authenticationPath="/"
+          path="/land-works/edit-property"
+          exact
+          component={EditProperty}
+        />
         {/*<Redirect to="/land-registry-provider-works" />*/}
       </Switch>
     </Suspense>

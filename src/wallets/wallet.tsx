@@ -64,11 +64,11 @@ export function useWallet(): Wallet {
   return React.useContext(WalletContext);
 }
 
-const WalletProvider: React.FC = props => {
+const WalletProvider: React.FC = (props) => {
   const web3React = useWeb3React();
 
   const [sessionProvider, setSessionProvider, removeSessionProvider] = useSessionStorage<string | undefined>(
-    'wallet_provider',
+    'wallet_provider'
   );
 
   const [initialized, setInitialized] = React.useState<boolean>(false);
@@ -138,13 +138,13 @@ const WalletProvider: React.FC = props => {
 
       setConnecting(undefined);
     },
-    [web3React, connectingRef, setConnecting, setSessionProvider, disconnect],
+    [web3React, connectingRef, setConnecting, setSessionProvider, disconnect]
   );
 
   React.useEffect(() => {
     (async () => {
       if (sessionProvider) {
-        const walletConnector = WalletConnectors.find(c => c.id === sessionProvider);
+        const walletConnector = WalletConnectors.find((c) => c.id === sessionProvider);
 
         if (walletConnector) {
           connect(walletConnector).catch(Error);
@@ -171,7 +171,7 @@ const WalletProvider: React.FC = props => {
       connect,
       disconnect,
     }),
-    [web3React, initialized, connecting, activeConnector, activeProvider, disconnect, connect],
+    [web3React, initialized, connecting, activeConnector, activeProvider, disconnect, connect]
   );
 
   return (
@@ -190,7 +190,7 @@ function getLibrary(provider: any) {
   return library;
 }
 
-const Web3WalletProvider: React.FC = props => {
+const Web3WalletProvider: React.FC = (props) => {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <WalletProvider>{props.children}</WalletProvider>
