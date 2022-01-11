@@ -6,6 +6,8 @@ import { StringNullableChain } from 'lodash';
 import { convertTokenInUSD, getTokenPriceForDate } from 'components/providers/known-tokens-provider';
 import { timestampSecondsToDate } from 'helpers/helpers';
 
+import { formatBigNumber } from '../../../../utils';
+
 interface ILandTablePriceProps {
   tokenSymbol: string;
   tokenDecimals: number;
@@ -27,8 +29,8 @@ const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDeci
     const formatedAmount = new BigNumber(ethers.utils.formatUnits(weiAmount, tokenDecimals));
     const usdEthPrice = await getTokenPriceForDate(tokenSymbol, date);
     const usdPrice = formatedAmount.multipliedBy(usdEthPrice);
-    setUsdPrice(usdPrice.toFixed());
-    setFormattedAmount(formatedAmount.toFixed());
+    setUsdPrice(formatBigNumber(usdPrice));
+    setFormattedAmount(formatBigNumber(formatedAmount));
   };
 
   return (
