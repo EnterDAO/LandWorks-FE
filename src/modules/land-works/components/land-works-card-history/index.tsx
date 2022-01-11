@@ -84,7 +84,8 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
       dataIndex: 'operator',
       render: (operator: string, data: any) => {
         const now = getNowTs();
-        const isRentActive = Number(data.start) <= now && now <= Number(data.end);
+        const isActiveRent = Number(data.start) <= now && now < Number(data.end);
+        const isUpcomingRent = Number(data.start) >= now;
         return (
           <TableInput
             operator={operator}
@@ -92,7 +93,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
             rentId={data.id}
             renter={data.renterAddress}
             key={operator + uniqueId()}
-            isRentActive={isRentActive}
+            isEditable={isActiveRent || isUpcomingRent}
           />
         );
       },

@@ -16,10 +16,10 @@ type Iprops = {
   assetId: string;
   rentId: string;
   renter: string;
-  isRentActive: boolean;
+  isEditable: boolean;
 };
 
-const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isRentActive }) => {
+const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEditable }) => {
   const wallet = useWallet();
   const landWorks = useLandworks();
 
@@ -75,10 +75,10 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isRen
 
   useEffect(() => {
     // Check if renter is equal to connected wallet address
-    if (wallet.account && wallet.account.toLowerCase() === renter.toLowerCase() && isRentActive) {
+    if (wallet.account && wallet.account.toLowerCase() === renter.toLowerCase() && isEditable) {
       setCanEditOperator(true);
     }
-  }, [isRentActive, wallet.account]);
+  }, [isEditable, wallet.account]);
 
   return (
     <div className="operator">
