@@ -4,7 +4,7 @@
       padding: 10px 25px 10px 20px !important;
       border-radius: 23px;
       color: rgba(93, 143, 240, 1) !important;
-      background: #27273A;
+      background: #27273a;
       border-radius: 23px;
       margin-right: auto;
 
@@ -145,4 +145,16 @@
     border-radius: 4px;
     padding: 5px 10px;
   }
+}
+
+.error-wrapper {
+  background: var(--theme-warning-background);
+  border: 1px solid var(--theme-warning-border);
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 8px 14px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--theme-warning-color);
+  margin-top: 20px;
 }

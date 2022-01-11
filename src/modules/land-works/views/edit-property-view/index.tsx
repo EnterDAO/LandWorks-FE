@@ -462,7 +462,7 @@ const ListView: React.FC = () => {
           </span>
         </Button>
       </Col>
-      <Col span={16}>
+      <Col sm={24} lg={16}>
         <Row className="list-view-wrapper">
           <Col span={24} style={{ margin: '10px 0' }}>
             <Row gutter={[16, 16]}>
@@ -618,7 +618,11 @@ const ListView: React.FC = () => {
               </Col>
             </Row>
           </Col>
-          <span style={{ marginLeft: '15px' }}>{errMessage}</span>
+          {errMessage && (
+              <Col span={24} className="error-wrapper">
+                {errMessage}
+              </Col>
+            )}
         </Row>
       </Col>
       <WarningModal
