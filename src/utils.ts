@@ -43,11 +43,11 @@ export function getFormattedTime(value: number, options?: string[]): string {
   return formattedDuration.split(',')[0];
 }
 
-export function formatBigNumber(value: BigNumber): string {
+export function formatBigNumber(value: BigNumber, decimalPlaces = 12): string {
   if (value.gt(1)) {
     return value.toFixed(2);
   } else {
-    return value.toPrecision(1);
+    return value.dp() > decimalPlaces ? value.toFixed(decimalPlaces) : value.toPrecision(2);
   }
 }
 
