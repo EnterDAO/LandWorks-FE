@@ -54,6 +54,7 @@ BigNumber.sumEach = <T = any>(items: T[], predicate: (item: T) => BigNumber | un
 export const MAX_UINT_256 = new BigNumber(2).pow(256).minus(1);
 export const ZERO_BIG_NUMBER = new BigNumber(0);
 export const DEFAULT_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const ONE_ADDRESS = '0x0000000000000000000000000000000000000001'; // In LandWorks, ETH is set as this address for payments.
 
 export function getEtherscanTxUrl(txHash?: string, chainId = config.web3.chainId): string | undefined {
   if (txHash) {
@@ -90,7 +91,7 @@ export function getEtherscanAddressUrl(address?: string, chainId = config.web3.c
 export function getEtherscanABIUrl(
   address?: string,
   apiKey?: string,
-  chainId = config.web3.chainId,
+  chainId = config.web3.chainId
 ): string | undefined {
   if (address) {
     switch (chainId) {
@@ -127,7 +128,7 @@ export function formatBigValue(
   value?: BigNumber | number,
   decimals = 4,
   defaultValue = '-',
-  minDecimals: number | undefined = undefined,
+  minDecimals: number | undefined = undefined
 ): string {
   if (value === undefined) {
     return defaultValue;
@@ -228,7 +229,7 @@ type FormatUSDOptions = {
 
 export function formatUSD(
   value: number | BigNumber | string | undefined,
-  options?: FormatUSDOptions,
+  options?: FormatUSDOptions
 ): string | undefined {
   let val = value;
 
@@ -302,7 +303,7 @@ export function fetchContractABI(address: string): any {
   }
 
   return fetch(url)
-    .then(result => result.json())
+    .then((result) => result.json())
     .then(({ status, result }: { status: string; result: string }) => {
       if (status === '1') {
         return JSON.parse(result);
@@ -321,9 +322,9 @@ type GasPriceResult = {
 
 export function fetchGasPrice(): Promise<GasPriceResult> {
   return fetch(`https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${config.web3.etherscan.apiKey}`)
-    .then(result => result.json())
-    .then(result => result.result)
-    .then(result => {
+    .then((result) => result.json())
+    .then((result) => result.result)
+    .then((result) => {
       return {
         veryFast: Number(result.FastGasPrice),
         fast: Number(result.ProposeGasPrice),

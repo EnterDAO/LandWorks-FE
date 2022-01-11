@@ -128,23 +128,21 @@ export default class LandWorksContract extends Web3Contract {
    * @param assetId The given asset.
    * @param operator The operator to be set.
    * @param period The period (in seconds) for the rent.
-   * @param pricePerSecond The current price per second for rentals of the given asset.
+   * @param value The value to be sent.
    */
   rentDecentralandWithETH(
     assetId: BigNumber | string,
     operator: string,
     period: BigNumber,
-    pricePerSecond: BigNumber
+    value: BigNumber
   ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
 
-    const totalFee = period.multipliedBy(pricePerSecond);
-
     return this.send('rentDecentraland', [assetId, period.toNumber(), operator], {
       from: this.account,
-      value: totalFee,
+      value: value,
     }).then();
   }
 

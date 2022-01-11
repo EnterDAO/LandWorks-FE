@@ -10,13 +10,15 @@ import { getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import { getTokenPrice } from '../../../../components/providers/known-tokens-provider';
+import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
+import Erc20Contract from '../../../../web3/erc20Contract';
 import { AssetAvailablity, PaymentToken } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
 import { RentDatePicker } from '../lands-rent-date-picker';
 
 import { formatBigNumber, getFormattedTime, isValidAddress } from '../../../../utils';
-import { getHumanValue } from '../../../../web3/utils';
+import { ONE_ADDRESS, getHumanValue } from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -59,6 +61,8 @@ export const RentModal: React.FC<Props> = (props) => {
   const [totalPrice, setTotalPrice] = useState(new BigNumber(0));
   const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
   const [errAddressMessage, setErrAddressMessage] = useState<string>('');
+  const [erc20Contract, setErc20Contract] = useState(new Erc20Contract([], ''));
+  const [approveValue, setApproveValue] = useState(new BigNumber(0));
 
   const handleRentDateChange = (date: moment.Moment[]) => {
     // Those are the start and the end dates, upon ok press
@@ -83,6 +87,10 @@ export const RentModal: React.FC<Props> = (props) => {
     setUsdPrice(usdPrice || new BigNumber(0));
   };
 
+  const shouldShowApproveButton = () => {
+    return paymentToken && paymentToken.id !== ONE_ADDRESS;
+  };
+
   const handleChange = (e: any) => {
     if (isValidAddress(e.target.value)) {
       setErrAddressMessage('');
@@ -92,16 +100,31 @@ export const RentModal: React.FC<Props> = (props) => {
     setEditedValue(e.target.value);
   };
 
+  const handleApprove = async () => {
+    if (paymentToken === undefined || paymentToken.id !== ONE_ADDRESS) {
+      return;
+    }
+
+    try {
+      await erc20Contract.approve(true, config.contracts.landworksContract);
+      showToastNotification(ToastType.Success, `${paymentToken.symbol} approved successfully.`);
+    } catch (e) {
+      console.log(e);
+      showToastNotification(ToastType.Error, 'There was an error while approviing');
+    }
+  };
+
   const handleRent = async () => {
     if (!isValidForm()) {
       return;
     }
 
     try {
+      const bnPeriod = new BigNumber(period);
       if (paymentToken?.symbol.toLowerCase() === 'eth') {
-        await landWorksContract?.rentDecentralandWithETH(assetId!, editedValue, new BigNumber(period), pricePerSecond!);
+        await landWorksContract?.rentDecentralandWithETH(assetId!, editedValue, bnPeriod, approveValue);
       } else {
-        await landWorksContract?.rentDecentralandWithERC20(assetId!, editedValue, new BigNumber(period));
+        await landWorksContract?.rentDecentralandWithERC20(assetId!, editedValue, bnPeriod);
       }
       showToastNotification(ToastType.Success, 'Property rented successfuly!');
       onCancel();
@@ -117,17 +140,33 @@ export const RentModal: React.FC<Props> = (props) => {
 
   useEffect(() => {
     calculatePrices();
+    setApproveValue(new BigNumber(period).multipliedBy(pricePerSecond!));
   }, [period]);
 
   useEffect(() => {
     if (wallet.account) {
       setEditedValue(wallet.account);
+      erc20Contract.setAccount(wallet.account);
+    } else {
+      onCancel();
     }
   }, [wallet.account]);
 
   useEffect(() => {
     setRentDisabled(!isValidForm());
   }, [editedValue, period]);
+
+  useEffect(() => {
+    if (paymentToken) {
+      const contract = new Erc20Contract([], paymentToken.id);
+      if (wallet.account && wallet.provider) {
+        contract.setAccount(wallet.account);
+        contract.setProvider(wallet.provider);
+        contract.loadAllowance(config.contracts.landworksContract).catch(Error);
+      }
+      setErc20Contract(contract);
+    }
+  }, [paymentToken]);
 
   return (
     <Modal
@@ -184,11 +223,19 @@ export const RentModal: React.FC<Props> = (props) => {
                 bordered={false}
                 defaultValue={editedValue}
                 onChange={handleChange}
+                value={editedValue}
               />
             </Col>
           </Row>
           <Row className="rent-modal-footer">
-            <Col span={24}>
+            {shouldShowApproveButton() && (
+              <Col span={6}>
+                <Button type="primary" onClick={handleApprove}>
+                  APPROVE
+                </Button>
+              </Col>
+            )}
+            <Col span={18}>
               <Button
                 style={{ display: 'block' }}
                 className="rent-button"
