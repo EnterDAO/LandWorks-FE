@@ -12,6 +12,8 @@ import { AssetEntity } from '../../api';
 import { PricePerSecondInfo } from '../price-per-second-info';
 import landImage from './assets/land.png';
 
+import { formatBigNumber } from '../../../../utils';
+
 import './index.scss';
 
 interface ILandWorksCardProps {
@@ -31,7 +33,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   const getUsdPrice = () => {
     const ethPrice = new BigNumber(getTokenPrice(land.paymentToken.symbol) || '0');
     const ethToUsdPrice = ethPrice.multipliedBy(land.pricePerMagnitude.price);
-    setUsdPrice(ethToUsdPrice.toFixed(2).replace(/\.00$/, ''));
+    setUsdPrice(formatBigNumber(ethToUsdPrice));
   };
 
   const flexFont = () => {

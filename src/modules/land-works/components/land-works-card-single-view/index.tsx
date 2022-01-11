@@ -15,7 +15,7 @@ import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 import chainPng from './assets/chain.png';
 
-import { getNowTs } from '../../../../utils';
+import { formatBigNumber, getNowTs } from '../../../../utils';
 import { shortenAddr } from '../../../../web3/utils';
 
 import './index.scss';
@@ -64,7 +64,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
     if (asset?.paymentToken) {
       const ethPrice = new BigNumber(getTokenPrice(asset.paymentToken.symbol) || '0');
       const ethToUsdPrice = ethPrice.multipliedBy(asset.pricePerMagnitude.price);
-      setUsdPrice(ethToUsdPrice.toFixed(2).replace(/\.00$/, ''));
+      setUsdPrice(formatBigNumber(ethToUsdPrice));
     }
   };
 
