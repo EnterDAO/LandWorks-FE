@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, ConfigProvider, Empty, Row, Table } from 'antd';
 import { uniqueId } from 'lodash';
 
+import ExternalLink from 'components/custom/externalLink';
 import { timestampSecondsToDate } from 'helpers/helpers';
 
 import { useWallet } from '../../../../wallets/wallet';
@@ -12,7 +13,7 @@ import TableInput from '../land-works-table-input';
 import LandTablePrice from '../land-works-table-price';
 
 import { getNowTs } from '../../../../utils';
-import { shortenAddr } from '../../../../web3/utils';
+import { getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -40,7 +41,15 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
           isYou = true;
           showText += ` (you)`;
         }
-        return <p className={`${isYou ? 'by-you-text' : 'by-text'}`}>{showText}</p>;
+
+        return (
+          <ExternalLink
+            href={getEtherscanAddressUrl(wallet.account)}
+            className={`${isYou ? 'by-you-text' : 'by-text'}`}
+          >
+            {showText}
+          </ExternalLink>
+        );
       },
     },
     {
