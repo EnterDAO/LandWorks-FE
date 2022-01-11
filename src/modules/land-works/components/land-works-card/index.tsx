@@ -70,7 +70,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
           />
         </Row>
         <Row>
-          <Col span={14}>
+          <Col span={12}>
             <Row className="land-info-row" align={bottom}>
               <Col span={24} className="price-eth-container">
                 <Icon name={getTokenIconName(land.paymentToken.symbol)} className="eth-icon" />
@@ -87,7 +87,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
               </Col>
             </Row>
           </Col>
-          <Col span={10}>
+          <Col span={12}>
             <Row className="land-available-row" justify={end}>
               {land.isAvailable && land.availability.isCurrentlyAvailable && (
                 <Col span={24}>
