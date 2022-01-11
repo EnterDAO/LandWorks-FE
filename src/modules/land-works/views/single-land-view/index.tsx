@@ -187,24 +187,22 @@ const SingleLand: React.FC = () => {
       </Row>
       <SingleViewLandCard setShowRentModal={setShowRentModal} asset={asset} />
       <SingleViewLandHistory assetId={tokenId} />
-      <Row className="pooling-section">
-        <Col className="pooling-heading">Pooling </Col>
-        <Col className="pooling-description">
-          The following properties are adjacent to this property. You can rent the adjacent properties to maximise the
-          land you want to build scenes/experiences on
-        </Col>
-        <Col span={24}>
-          <Row gutter={[15, 15]} style={{ paddingTop: '27px' }}>
-            {adjacentLands.length ? (
-              adjacentLands.map((land) => <LandWorkCard key={land.id} land={land} />)
-            ) : (
-              <div>
-                <span>No adjacent lands found</span>
-              </div>
-            )}
-          </Row>
-        </Col>
-      </Row>
+      {!!adjacentLands.length && (
+        <Row className="pooling-section">
+          <Col className="pooling-heading">Pooling </Col>
+          <Col className="pooling-description">
+            The following properties are adjacent to this property. You can rent the adjacent properties to maximise the
+            land you want to build scenes/experiences on
+          </Col>
+          <Col span={24}>
+            <Row gutter={[15, 15]} style={{ paddingTop: '27px' }}>
+              {adjacentLands.map((land) => (
+                <LandWorkCard key={land.id} land={land} />
+              ))}
+            </Row>
+          </Col>
+        </Row>
+      )}
 
       <RentModal
         onCancel={() => setShowRentModal(false)}
