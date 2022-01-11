@@ -45,7 +45,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
 
   return (
     <Col className="land-card-wrapper" xl={8} md={12} sm={24} xs={24}>
-      <Card className="land-card">
+      <Card className="land-card" onClick={() => history.push(`/land-works/land/${land.id}`)}>
         <Row>
           <Col span={24}>
             <p className="land-name">
@@ -62,7 +62,6 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
         </Row>
         <Row className="image-list-wrapper">
           <Image
-            onClick={() => history.push(`/land-works/land/${land.id}`)}
             placeholder={<Image className="land-image" src={landImage} preview={false} />}
             className="land-image"
             src={getLandImageUrl(land)}
