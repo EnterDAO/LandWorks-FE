@@ -3,6 +3,7 @@ import Countdown, { CountdownTimeDelta } from 'react-countdown';
 import { Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
+import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import { getTokenPrice } from 'components/providers/known-tokens-provider';
 import { getLandImageUrl, getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
@@ -12,6 +13,7 @@ import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, RentEntity, fetchAssetRentByTimestamp, fetchUserFirstRentByTimestamp } from '../../api';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
+import chainPng from './assets/chain.png';
 
 import { getNowTs } from '../../../../utils';
 import { shortenAddr } from '../../../../web3/utils';
@@ -154,7 +156,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
       </Col>
       <Col md={12} sm={24} className="properties-container">
         <Row>
-          <Col span={24}>
+          <Col span={16}>
             <span className="card-name">{asset?.name}</span>
 
             {asset?.isHot && (
@@ -165,6 +167,16 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
             )}
             <span className="label card-name-estate-label">{asset?.decentralandData?.isLAND ? 'LAND' : 'ESTATE'}</span>
           </Col>
+          <Col span={7}>
+            <ExternalLink
+              className="marketplace-link"
+              target={'_blank'}
+              href={`https://market.decentraland.org/contracts/0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d/tokens/${asset?.metaverseAssetId}`}
+            >
+              <img style={{ marginRight: 5 }} src={chainPng} /> <span>Marketplace</span>
+            </ExternalLink>
+          </Col>
+
           <Col span={24} className="properties-row">
             <Row>
               <Col span={10}>
