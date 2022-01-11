@@ -40,7 +40,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
     const divs = document.getElementsByClassName('price-eth');
     for (let i = 0; i < divs.length; i++) {
       const element = divs[i] as HTMLElement;
-      const relFontsize = element.offsetWidth * 0.05;
+      const relFontsize = element.offsetWidth * 0.085;
       element.style.fontSize = relFontsize + 'px';
     }
   };

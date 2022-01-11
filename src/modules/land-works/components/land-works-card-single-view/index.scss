@@ -37,13 +37,15 @@
   }
 
   .image-wrapper {
+    max-height: 280px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     @media all and (max-width: 769px) {
-      max-height: 200px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       margin-bottom: 20px;
+      max-height: 200px;
     }
   }
 
@@ -98,7 +100,7 @@
 
   .properties-container {
     .properties-row {
-      padding: 20px 0px;
+      padding: 20px 0;
     }
 
     .land-owner {
@@ -123,7 +125,6 @@
       color: rgba(93, 143, 240, 1);
       font-size: 16px;
       font-weight: 600;
-
     }
 
     .available-period {
@@ -237,7 +238,7 @@
   align-items: center;
   display: flex;
   justify-content: flex-end;
-  color: #5D8FF0;
+  color: #5d8ff0;
   font-weight: bold;
   font-size: 12px;
 }
