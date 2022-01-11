@@ -165,25 +165,27 @@ const SingleLand: React.FC = () => {
             <span>EDIT</span>
           </Button>
         )}
-        {shouldShowStake() && (
-          <ExternalLink
-            style={{ marginRight: 20, fontSize: 14 }}
-            href="https://dao.enterdao.xyz/yield-farming"
-            className="button-primary"
-          >
-            STAKE
-          </ExternalLink>
-        )}
-        {shouldShowDelist() && (
-          <button style={{ fontSize: 14 }} type="button" className="button-primary" onClick={handleDelistButton}>
-            <span>{isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
-          </button>
-        )}
-        {shouldShowWithdraw() && (
-          <button style={{ fontSize: 14 }} type="button" className="button-primary" onClick={handleWithdraw}>
-            <span>WITHDRAW</span>
-          </button>
-        )}
+        <div className='right-wrapper'>
+          {shouldShowStake() && (
+            <ExternalLink
+              style={{ marginRight: 20, fontSize: 14 }}
+              href="https://dao.enterdao.xyz/yield-farming"
+              className="button-primary"
+            >
+              STAKE
+            </ExternalLink>
+          )}
+          {shouldShowDelist() && (
+            <button style={{ fontSize: 14 }} type="button" className="button-subtle" onClick={handleDelistButton}>
+              <span>{isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
+            </button>
+          )}
+          {shouldShowWithdraw() && (
+            <button style={{ fontSize: 14 }} type="button" className="button-subtle" onClick={handleWithdraw}>
+              <span>WITHDRAW</span>
+            </button>
+          )}
+        </div>
       </Row>
       <SingleViewLandCard setShowRentModal={setShowRentModal} asset={asset} />
       <SingleViewLandHistory assetId={tokenId} />
