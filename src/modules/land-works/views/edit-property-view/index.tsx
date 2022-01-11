@@ -21,7 +21,7 @@ import CurrencyDropdown from '../../components/lands-rent-currency-select';
 import { WarningModal } from '../../components/lands-warning-modal';
 import { useLandworks } from '../../providers/landworks-provider';
 
-import { getFormattedTime } from '../../../../utils';
+import { getFormattedTime, getTimeType, secondsToDuration } from '../../../../utils';
 import {
   DAY_IN_SECONDS,
   HOUR_IN_SECONDS,
@@ -170,15 +170,16 @@ const ListView: React.FC = () => {
 
     // Pre-populate minPeriod values
     if (asset.minPeriod) {
-      const hasMinPeriod = new BigNumber(asset.minPeriod).gt(DEFAULT_MIN_PERIOD);
+      const minPeriod: BigNumber = new BigNumber(asset.minPeriod);
+      const hasMinPeriod = minPeriod.gt(DEFAULT_MIN_PERIOD);
       if (hasMinPeriod) {
-        setMinPeriod(new BigNumber(asset.minPeriod));
+        setMinPeriod(minPeriod);
         setMinPeriodSelected(true);
 
-        // Example 3600 is getting parsed to [1, hour]
-        const { timeValue, timeType } = getParsedPeriod(new BigNumber(asset.minPeriod));
+        const parsedDate = secondsToDuration(minPeriod.toNumber());
+        const { timeValue, timeType } = getTimeType(parsedDate);
 
-        setMinInput(new BigNumber(timeValue));
+        setMinInput(new BigNumber(timeValue.toFixed(2)));
 
         const typeSuffix = timeType.substr(0, 3);
         const optionByType = MinRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
@@ -191,16 +192,17 @@ const ListView: React.FC = () => {
 
     // Pre-populate maxPeriod values
     if (asset.maxPeriod) {
-      setMaxPeriod(new BigNumber(asset.maxPeriod));
-      const hasCustomMaxPeriod = new BigNumber(asset.maxPeriod).lt(DEFAULT_MAX_PERIOD);
+      const maxPeriod: BigNumber = new BigNumber(asset.maxPeriod);
+      setMaxPeriod(maxPeriod);
+      const hasCustomMaxPeriod = maxPeriod.lt(DEFAULT_MAX_PERIOD);
 
       if (hasCustomMaxPeriod) {
         setMaxPeriodSelected(true);
 
-        // Example 3600 is getting parsed to [1, hour]
-        const { timeValue, timeType } = getParsedPeriod(new BigNumber(asset.maxPeriod));
+        const parsedDate = secondsToDuration(maxPeriod.toNumber());
+        const { timeValue, timeType } = getTimeType(parsedDate);
 
-        setMaxInput(new BigNumber(timeValue));
+        setMaxInput(new BigNumber(timeValue.toFixed(2)));
 
         const typeSuffix = timeType.substr(0, 3);
         const optionByType = MaxRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
@@ -213,14 +215,14 @@ const ListView: React.FC = () => {
 
     // Pre-populate at most given Time
     if (asset.maxFutureTime) {
-      const maxFutureTimeBigNumber = new BigNumber(asset.maxFutureTime);
-      setMaxFutureTime(maxFutureTimeBigNumber);
-      const hasCustomMaxFutureTime = maxFutureTimeBigNumber.lt(DEFAULT_MAX_PERIOD);
+      const maxFutureTime: BigNumber = new BigNumber(asset.maxFutureTime);
+      setMaxFutureTime(maxFutureTime);
+      const hasCustomMaxFutureTime = maxFutureTime.lt(DEFAULT_MAX_PERIOD);
 
       if (hasCustomMaxFutureTime) {
-        // Example 3600 is getting parsed to [1, hour]
-        const { timeValue, timeType } = getParsedPeriod(maxFutureTimeBigNumber);
-        setMaxFutureTimeInput(new BigNumber(timeValue));
+        const parsedDate = secondsToDuration(maxFutureTime.toNumber());
+        const { timeValue, timeType } = getTimeType(parsedDate);
+        setMaxFutureTimeInput(new BigNumber(timeValue.toFixed(2)));
 
         const typeSuffix = timeType.substr(0, 3);
         const optionByType = AtMostRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
@@ -238,26 +240,6 @@ const ListView: React.FC = () => {
 
     console.log(asset);
   }, [asset]);
-
-  const getParsedPeriod = (time: BigNumber): ParsedTime => {
-    const [timeValue, timeType] = getFormattedTime(time.toNumber(), ['days', 'hours', 'minutes', 'seconds']).split(' ');
-
-    if (timeType === 'days') {
-      const showWeeks = Number(timeValue) % 7 === 0;
-
-      if (showWeeks) {
-        return {
-          timeValue: Number(timeValue) / 7,
-          timeType: 'weeks',
-        };
-      }
-    }
-
-    return {
-      timeValue: Number(timeValue),
-      timeType,
-    };
-  };
 
   const handlePlaceChange = (e: any) => {
     console.log(e);
@@ -283,7 +265,8 @@ const ListView: React.FC = () => {
     if (isMinPeriodSelected) {
       setMinPeriodType(value);
 
-      const { timeValue, timeType } = getParsedPeriod(value!);
+      const parsedDate = secondsToDuration(value?.toNumber()!);
+      const { timeValue, timeType } = getTimeType(parsedDate);
       const typeSuffix = timeType.substr(0, 3);
       const optionByType = MinRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
       const optionIndex = MinRentPeriodOptions.indexOf(optionByType!);
@@ -326,7 +309,8 @@ const ListView: React.FC = () => {
     if (isMaxPeriodSelected) {
       setMaxPeriodType(value);
 
-      const { timeValue, timeType } = getParsedPeriod(value!);
+      const parsedDate = secondsToDuration(value?.toNumber()!);
+      const { timeValue, timeType } = getTimeType(parsedDate);
       const typeSuffix = timeType.substr(0, 3);
       const optionByType = MaxRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
       const optionIndex = MaxRentPeriodOptions.indexOf(optionByType!);
@@ -350,7 +334,8 @@ const ListView: React.FC = () => {
     const value = BigNumber.from(val);
     setMaxFuturePeriodType(value);
 
-    const { timeValue, timeType } = getParsedPeriod(value!);
+    const parsedDate = secondsToDuration(value?.toNumber()!);
+    const { timeValue, timeType } = getTimeType(parsedDate);
     const typeSuffix = timeType.substr(0, 3);
     const optionByType = AtMostRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
     const optionIndex = AtMostRentPeriodOptions.indexOf(optionByType!);

@@ -196,3 +196,86 @@ export function toNumber(value: number | string | undefined): number | undefined
 
   return val;
 }
+
+export type ParsedDate = {
+  minutes: number;
+  hours: number;
+  days: number;
+  weeks: number;
+};
+
+export function secondsToDuration(value: number): ParsedDate {
+  const result: ParsedDate = {
+    minutes: 0,
+    hours: 0,
+    days: 0,
+    weeks: 0,
+  };
+  const secondsToMinutes = (value: number) => {
+    return value / 60;
+  };
+
+  const minutesToHours = (value: number) => {
+    return value / 60;
+  };
+
+  const hoursToDays = (value: number) => {
+    return value / 24;
+  };
+
+  const daysToWeeks = (value: number) => {
+    return value / 7;
+  };
+
+  result.minutes = secondsToMinutes(value);
+  result.hours = minutesToHours(result.minutes);
+  result.days = hoursToDays(result.hours);
+  result.weeks = daysToWeeks(result.days);
+
+  return result;
+}
+
+type ExtractedTime = {
+  timeType: string;
+  timeValue: number;
+};
+
+const TIME_TYPES = {
+  MINUTES: 'minutes',
+  HOURS: 'hours',
+  DAYS: 'days',
+  WEEKS: 'weeks',
+};
+
+export function getTimeType(values: ParsedDate): ExtractedTime {
+  const result: ExtractedTime = {
+    timeType: 'minutes',
+    timeValue: 0,
+  };
+
+  const lessThanHour = values.minutes < 60;
+  if (lessThanHour) {
+    result.timeType = TIME_TYPES.MINUTES;
+    result.timeValue = values.minutes;
+  }
+
+  const moreThanHour = values.hours >= 1;
+  if (moreThanHour) {
+    result.timeType = TIME_TYPES.HOURS;
+    result.timeValue = values.hours;
+  }
+
+  const moreThanDay = values.days >= 1;
+  if (moreThanDay) {
+    result.timeType = TIME_TYPES.DAYS;
+    result.timeValue = values.days;
+  }
+
+  const moreThanWeek = values.weeks >= 1;
+  if (moreThanWeek) {
+    result.timeType = TIME_TYPES.WEEKS;
+    result.timeValue = values.weeks;
+  }
+
+  return result;
+}
