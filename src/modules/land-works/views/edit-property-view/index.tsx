@@ -290,7 +290,8 @@ const ListView: React.FC = () => {
       setMaxPeriod(maxInput?.multipliedBy(maxPeriodType!)!);
     } else {
       setMaxPeriod(maxFutureTime);
-      const [timeValue, timeType] = getFormattedTime(Number(maxFutureTime.toString())).split(' ');
+      const parsedDate = secondsToDuration(maxFutureTime?.toNumber()!);
+      const { timeValue, timeType } = getTimeType(parsedDate);
       setMaxInput(new BigNumber(timeValue));
 
       const typeSuffix = timeType.substr(0, 3);
