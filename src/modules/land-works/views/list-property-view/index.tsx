@@ -406,170 +406,176 @@ const ListView: React.FC = () => {
   }, [selectedProperty]);
 
   return (
-    <Row gutter={[10, 10]} justify="center" className="list-view">
-      <Col span={16}>
-        <Row className="list-view-wrapper">
-          <Col span={24} style={{ margin: '10px 0' }}>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
-                <Row>
-                  <Col span={24}>
-                    <p className="drop-heading">Metaverse</p>
-                  </Col>
-                  <Col span={24}>
-                    <Dropdown options={PlaceOptions} onChange={handlePlaceChange} initialValuе={PlaceOptions[0]} />
-                  </Col>
-                </Row>
-              </Col>
-              <Col span={12}>
-                <Row>
-                  <Col span={24}>
-                    <p className="drop-heading">Property</p>
-                  </Col>
-                  <Col span={24}>
-                    <Dropdown options={properties} onChange={handlePropertyChange} initialValuе={initialProperty} />
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-          <Col span={24}>
-            <Row className="rent-period">
-              <Col span={8}>Rent Period</Col>
-              <Col span={14}>
-                <Row gutter={[16, 16]}>
-                  <Col span={12} className="checkbox-wrapper">
-                    <Checkbox onChange={handleMinCheckboxChange} /> min
-                    <LandsPeriodDropdown
-                      options={MinRentPeriodOptions}
-                      onChange={handleMinSelectChange}
-                      onInputChange={handleMinInputChange}
-                      initialValuе={MinRentPeriodOptions[0]}
-                    />
-                  </Col>
-                  <Col span={12} className="checkbox-wrapper">
-                    <Checkbox onChange={handleMaxCheckboxChange} /> max
-                    <LandsPeriodDropdown
-                      options={MaxRentPeriodOptions}
-                      onChange={handleMaxSelectChange}
-                      onInputChange={handleMaxInputChange}
-                      initialValuе={MaxRentPeriodOptions[0]}
-                    />
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-          <Col span={24} className="future-period-wrapper">
-            <Checkbox onChange={handleAtMostCheckboxChange} />
-            <span style={{ marginRight: '15px' }}>At any given time to be rented out at most</span>
-            <LandsPeriodDropdown
-              options={AtMostRentPeriodOptions}
-              onChange={handleAtMostSelectChange}
-              onInputChange={handleAtMostInputChange}
-              initialValuе={AtMostRentPeriodOptions[0]}
-            />
-            <span style={{ marginLeft: '15px' }}>in the future</span>
-            <Icon
-              name="info-outlined"
-              className="info-icon"
-              style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginLeft: '5px' }}
-            />
-          </Col>
-          <Col span={24}>
-            <Row className="price-container" gutter={[16, 16]}>
-              <Col span={24}>Price</Col>
-              <Col span={24}>
-                <Row>
-                  <Col span={12} className="currency-wrapper">
-                    <CurrencyDropdown changeHandler={handleCurrencyChange} paymentTokens={paymentTokens} />
-                    <div className="price-input-wrapper">
-                      <LandsInput onInputChange={handleCostEthChange} customClassName="price-eth-input" />
-                      <LandsInput onInputChange={handleCostUsdChange} customClassName="price-usd-input" />
-                    </div>
-                    <span>/ day</span>
-                  </Col>
-                  <Col span={12}>
-                    <Row>
-                      <Col span={10}>
-                        <span className="step">1.</span>
-                        <button
-                          type="button"
-                          className="button-primary action-btn"
-                          onClick={handleApprove}
-                          disabled={approveDisabled}
-                        >
-                          <span>APPROVE</span>
-                        </button>
-                      </Col>
-                      <Col span={14}>
-                        <span className="step">2.</span>
-                        <button
-                          type="button"
-                          className="button-primary action-btn"
-                          onClick={handleConfirmListing}
-                          disabled={listDisabled}
-                        >
-                          <span>CONFIRM LISTING</span>
-                        </button>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </Col>
-              <Col span={24}>
-                <Row>
-                  <Col span={10} className="your-earning-container">
-                    <Row>
-                      <Col span={9}>
-                        <Row>
-                          <Col span={24}>
-                            <Icon
-                              name={getTokenIconName(paymentToken.symbol || 'png/eth')}
-                              className="info-icon"
-                              style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
-                            />
-                            <span className="earning-text">{earnings.toString(10)} </span>
-                          </Col>
-                          <Col>
-                            <p>Your Earnings</p>
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col span={2} style={{ display: 'flex', justifyContent: 'center' }}>
-                        +
-                      </Col>
-                      <Col span={13}>
-                        <Row>
-                          <Col span={24}>
-                            <Icon
-                              name={getTokenIconName(paymentToken.symbol || 'png/eth')}
-                              className="info-icon"
-                              style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
-                            />
-                            <span className="earning-text">{protocolFee.toString(10)} </span>
-                          </Col>
-                          <Col>
-                            <p>{feePercentage}% Protocol fee</p>
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            {errMessage && (
-              <Row>
-                <Col span={24} className="error-wrapper">
-                  {errMessage}
+    <section className="list-view">
+      <Row>
+        <Col span={24}>
+          <Row className="list-view-wrapper">
+            <Col span={24} style={{ margin: '10px 0' }}>
+              <Row gutter={[16, 16]}>
+                <Col sm={24} md={12}>
+                  <Row>
+                    <Col span={24}>
+                      <p className="drop-heading">Metaverse</p>
+                    </Col>
+                    <Col span={24}>
+                      <Dropdown options={PlaceOptions} onChange={handlePlaceChange} initialValuе={PlaceOptions[0]} />
+                    </Col>
+                  </Row>
+                </Col>
+                <Col sm={24} md={12}>
+                  <Row>
+                    <Col span={24}>
+                      <p className="drop-heading">Property</p>
+                    </Col>
+                    <Col span={24}>
+                      <Dropdown options={properties} onChange={handlePropertyChange} initialValuе={initialProperty} />
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
-            )}
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+            </Col>
+            <Col span={24}>
+              <Row className="rent-period">
+                <Col sm={24} md={8}>Rent Period</Col>
+                <Col sm={24} md={14}>
+                  <Row gutter={[16, 16]}>
+                    <Col xs={24} sm={12} className="checkbox-wrapper">
+                      <Checkbox onChange={handleMinCheckboxChange} /> min
+                      <LandsPeriodDropdown
+                        options={MinRentPeriodOptions}
+                        onChange={handleMinSelectChange}
+                        onInputChange={handleMinInputChange}
+                        initialValuе={MinRentPeriodOptions[0]}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} className="checkbox-wrapper">
+                      <Checkbox onChange={handleMaxCheckboxChange} /> max
+                      <LandsPeriodDropdown
+                        options={MaxRentPeriodOptions}
+                        onChange={handleMaxSelectChange}
+                        onInputChange={handleMaxInputChange}
+                        initialValuе={MaxRentPeriodOptions[0]}
+                      />
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Col>
+            <Col span={24} className="future-period-wrapper">
+              <div className="period-wrapper">
+                <Checkbox onChange={handleAtMostCheckboxChange} />
+                <span style={{ marginRight: '15px' }}>At any given time to be rented out at most</span>
+              </div>
+              <div className="period-wrapper">
+                <LandsPeriodDropdown
+                  options={AtMostRentPeriodOptions}
+                  onChange={handleAtMostSelectChange}
+                  onInputChange={handleAtMostInputChange}
+                  initialValuе={AtMostRentPeriodOptions[0]}
+                />
+                <span style={{ marginLeft: '15px' }}>in the future</span>
+                <Icon
+                  name="info-outlined"
+                  className="info-icon"
+                  style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginLeft: '5px' }}
+                />
+              </div>
+            </Col>
+            <Col span={24}>
+              <Row className="price-container" gutter={[16, 16]}>
+                <Col span={24}>Price</Col>
+                <Col span={24}>
+                  <Row>
+                    <Col sm={24} md={12} className="currency-wrapper">
+                      <CurrencyDropdown changeHandler={handleCurrencyChange} paymentTokens={paymentTokens} />
+                      <div className="price-input-wrapper">
+                        <LandsInput onInputChange={handleCostEthChange} customClassName="price-eth-input" />
+                        <LandsInput onInputChange={handleCostUsdChange} customClassName="price-usd-input" />
+                      </div>
+                      <span>/ day</span>
+                    </Col>
+                    <Col sm={24} md={12}>
+                      <Row>
+                        <Col span={10}>
+                          <span className="step">1.</span>
+                          <button
+                            type="button"
+                            className="button-primary action-btn"
+                            onClick={handleApprove}
+                            disabled={approveDisabled}
+                          >
+                            <span>APPROVE</span>
+                          </button>
+                        </Col>
+                        <Col span={14}>
+                          <span className="step">2.</span>
+                          <button
+                            type="button"
+                            className="button-primary action-btn"
+                            onClick={handleConfirmListing}
+                            disabled={listDisabled}
+                          >
+                            <span>CONFIRM LISTING</span>
+                          </button>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col span={24}>
+                  <Row>
+                    <Col xs={20} sm={12} md={10} className="your-earning-container">
+                      <Row>
+                        <Col span={9}>
+                          <Row>
+                            <Col span={24}>
+                              <Icon
+                                name={getTokenIconName(paymentToken.symbol || 'png/eth')}
+                                className="info-icon"
+                                style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
+                              />
+                              <span className="earning-text">{earnings.toString(10)} </span>
+                            </Col>
+                            <Col>
+                              <p>Your Earnings</p>
+                            </Col>
+                          </Row>
+                        </Col>
+                        <Col span={2} style={{ display: 'flex', justifyContent: 'center' }}>
+                          +
+                        </Col>
+                        <Col span={13}>
+                          <Row>
+                            <Col span={24}>
+                              <Icon
+                                name={getTokenIconName(paymentToken.symbol || 'png/eth')}
+                                className="info-icon"
+                                style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
+                              />
+                              <span className="earning-text">{protocolFee.toString(10)} </span>
+                            </Col>
+                            <Col>
+                              <p>{feePercentage}% Protocol fee</p>
+                            </Col>
+                          </Row>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+              {errMessage && (
+                <Row>
+                  <Col span={24} className="error-wrapper">
+                    {errMessage}
+                  </Col>
+                </Row>
+              )}
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </section>
   );
 };
 
