@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { Checkbox, Col, Row } from 'antd';
 
 import Icon, { TokenIconNames } from 'components/custom/icon';
+import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 
 import { AssetEntity } from '../../api';
-
-import { formatBigNumber } from '../../../../utils';
 
 import './index.scss';
 
@@ -32,7 +31,7 @@ export const LandClaimCheckBox: React.FC<props> = (props) => {
         </Checkbox>
       </Col>
       <Col span={6} className="price">
-        <span className="price-checkbox">{formatBigNumber(unclaimedRentFee)}</span>
+        <SmallAmountTooltip className="price-checkbox" amount={unclaimedRentFee} />
         <Icon name={icon} className="eth-icon" />
       </Col>
     </Row>

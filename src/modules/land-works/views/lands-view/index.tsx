@@ -12,7 +12,12 @@ import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sort
 import { SortDirection } from 'modules/land-works/models/SortDirection';
 import { useWallet } from 'wallets/wallet';
 
-import { AssetEntity, UserEntity, fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder, fetchUserAssets } from '../../api';
+import {
+  AssetEntity,
+  UserEntity,
+  fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder,
+  fetchUserAssets,
+} from '../../api';
 
 import { getNowTs } from '../../../../utils';
 
@@ -44,9 +49,9 @@ const Lands: React.FC = () => {
     if (newPageSize) {
       setPageSize(newPageSize);
 
-      if (pageSize === newPageSize || newPageSize < pageSize) {
-        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-      }
+      // if (pageSize === newPageSize || newPageSize < pageSize) {
+      //   window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      // }
     }
   };
 
@@ -159,9 +164,10 @@ const Lands: React.FC = () => {
             gutter={[
               { xs: 16, sm: 16, md: 16, lg: 32 },
               { xs: 16, sm: 16, md: 16, lg: 32 },
-            ]}>
+            ]}
+          >
             {lands.length ? (
-              lands.map(land => <LandWorkCard key={land.id} land={land} />)
+              lands.map((land) => <LandWorkCard key={land.id} land={land} />)
             ) : (
               <div>No properties are currently listed</div>
             )}

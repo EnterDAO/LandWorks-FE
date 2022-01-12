@@ -3,10 +3,9 @@ import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 import { StringNullableChain } from 'lodash';
 
+import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { convertTokenInUSD, getTokenPriceForDate } from 'components/providers/known-tokens-provider';
 import { timestampSecondsToDate } from 'helpers/helpers';
-
-import { formatBigNumber } from '../../../../utils';
 
 interface ILandTablePriceProps {
   tokenSymbol: string;
@@ -35,7 +34,9 @@ const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDeci
 
   return (
     <span>
-      {tokenSymbol.toUpperCase()} {formatBigNumber(formatedAmount)} ${formatBigNumber(usdPrice)}
+      <SmallAmountTooltip symbol={tokenSymbol.toUpperCase()} amount={formatedAmount} />
+      {'  '}
+      <SmallAmountTooltip symbol="$" amount={usdPrice} />
     </span>
   );
 };

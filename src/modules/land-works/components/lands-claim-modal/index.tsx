@@ -5,14 +5,13 @@ import BigNumber from 'bignumber.js';
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon, { TokenIconNames } from 'components/custom/icon';
+import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { Text } from 'components/custom/typography';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { LandClaimCheckBox } from 'modules/land-works/components/land-claim-modal-checkbox';
 
 import { AssetEntity } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
-
-import { formatBigNumber } from '../../../../utils';
 
 import './index.scss';
 
@@ -103,16 +102,12 @@ export const ClaimModal: React.FC<Props> = (props) => {
         )}
         <Col span={24} className="claim-modal-footer">
           <Row>
-            <Col span={19} className="prices-container">
-              <p>
-                <span className="total-label">Total:</span>{' '}
-                <span className="total-price">
-                  {formatBigNumber(totalEth)} <Icon name="png/eth" className="eth-icon" />
-                </span>{' '}
-                <span className="total-price">
-                  {formatBigNumber(totalUsdc)} <Icon name="token-usdc" className="eth-icon" />
-                </span>
-              </p>
+            <Col span={19} className="prices-container" style={{ gap: 10 }}>
+              <span className="total-label">Total:</span>{' '}
+              <SmallAmountTooltip className="totalPrice" amount={totalEth} />
+              <Icon name="png/eth" className="eth-icon" />
+              <SmallAmountTooltip className="totalPrice" amount={totalUsdc} />
+              <Icon name="token-usdc" className="eth-icon" />
             </Col>
             <Col span={5}>
               <Button

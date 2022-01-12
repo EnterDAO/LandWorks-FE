@@ -41,7 +41,7 @@ export function formatBigNumber(value: BigNumber): string {
     return '0';
   } else {
     if (value.lt(1e-6)) {
-      return `~ 0.00`;
+      return `~0.00`;
     } else {
       return value.toPrecision(2).replace(/\.?0+$/, '');
     }

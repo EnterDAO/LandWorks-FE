@@ -43,9 +43,9 @@ const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) =
       setPageSize(newPageSize);
 
       // TODO: this will probably need to be modified to scroll you up to the beginning of the table
-      if (pageSize === newPageSize || newPageSize < pageSize) {
-        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-      }
+      // if (pageSize === newPageSize || newPageSize < pageSize) {
+      //   window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      // }
     }
   };
 

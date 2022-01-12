@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js';
 
 import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
+import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { getTokenPrice } from 'components/providers/known-tokens-provider';
 import { getLandImageUrl, getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
@@ -16,7 +17,7 @@ import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 import chainPng from './assets/chain.png';
 
-import { formatBigNumber, getNowTs } from '../../../../utils';
+import { getNowTs } from '../../../../utils';
 import { getDecentralandMarketplaceUrl, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
 
 import './index.scss';
@@ -33,7 +34,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
   const { landWorksContract } = landWorks;
 
   const [currentRent, setCurrentRent] = useState({} as RentEntity);
-  const [usdPrice, setUsdPrice] = useState('0');
+  const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
   const [countDownRent, setCountDownRent] = useState({} as RentEntity);
   const [countDownTimestamp, setCountDownTimestamp] = useState('0');
 
@@ -65,7 +66,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
     if (asset?.paymentToken) {
       const ethPrice = new BigNumber(getTokenPrice(asset.paymentToken.symbol) || '0');
       const ethToUsdPrice = ethPrice.multipliedBy(asset.pricePerMagnitude.price);
-      setUsdPrice(formatBigNumber(ethToUsdPrice));
+      setUsdPrice(ethToUsdPrice);
     }
   };
 
@@ -124,7 +125,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
   useEffect(() => {
     getUsdPrice();
     getCurrentAndCountdownRents();
-    flexFont();
   }, [asset, wallet.account]);
 
   const flexFont = () => {
@@ -218,12 +218,13 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                 <Row className="price-wrapper">
                   <Col span={24} className="eth-price-container">
                     <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" />
-                    <span className="price-eth">
-                      {asset?.pricePerMagnitude ? formatBigNumber(asset?.pricePerMagnitude.price) : '0'}
-                    </span>
+                    <SmallAmountTooltip
+                      className="price-eth"
+                      amount={asset?.pricePerMagnitude ? asset?.pricePerMagnitude.price : new BigNumber('0')}
+                    />
                   </Col>
                   <Col push={2} span={22} className="usd-price-container">
-                    <span className="price">${usdPrice}</span>
+                    <SmallAmountTooltip className="price" symbol="$" amount={usdPrice} />
                     <span className="per-day">/ {asset?.pricePerMagnitude?.magnitude}</span>
                     <Icon name="info-outlined" className="info-icon" />
                   </Col>

@@ -85,7 +85,8 @@
     color: var(--theme-primary-color);
     margin-left: 5px;
     font-weight: 700;
-    width: calc(100% - 24px);
+    // width: calc(100% - 24px);
+    font-size: 14px;
     height: 100%;
   }
 

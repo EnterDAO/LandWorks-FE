@@ -6,6 +6,7 @@ import moment from 'moment';
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon from 'components/custom/icon';
+import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
@@ -17,7 +18,7 @@ import { AssetAvailablity, PaymentToken } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
 import { RentDatePicker } from '../lands-rent-date-picker';
 
-import { formatBigNumber, getFormattedTime, isValidAddress } from '../../../../utils';
+import { getFormattedTime, isValidAddress } from '../../../../utils';
 import { ONE_ADDRESS, getHumanValue } from '../../../../web3/utils';
 
 import './index.scss';
@@ -247,12 +248,14 @@ export const RentModal: React.FC<Props> = (props) => {
                   </Col>
                   <Col className="price-col" span={16}>
                     <strong>
-                      {formatBigNumber(totalPrice)}{' '}
+                      <SmallAmountTooltip amount={totalPrice} />{' '}
                       <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" />{' '}
                     </strong>
 
                     <strong>
-                      <span>${formatBigNumber(usdPrice)}</span>
+                      <span>
+                        <SmallAmountTooltip amount={usdPrice} symbol="$" />
+                      </span>
                     </strong>
                   </Col>
                   {/* <Col className="price-col" span={10}>

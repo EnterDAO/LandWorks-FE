@@ -5,17 +5,15 @@ import { Card, Col, Image, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
 import Icon from 'components/custom/icon';
+import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { getTokenPrice } from 'components/providers/known-tokens-provider';
 import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
 
+import { ReactComponent as EthIcon } from '../../../../resources/svg/eth.svg';
+import { ReactComponent as HotIcon } from '../../../../resources/svg/hot.svg';
 import { AssetEntity } from '../../api';
 import { PricePerSecondInfo } from '../price-per-second-info';
 import landImage from './assets/land.png';
-
-import { formatBigNumber } from '../../../../utils';
-
-import { ReactComponent as HotIcon } from '../../../../resources/svg/hot.svg';
-import { ReactComponent as EthIcon } from '../../../../resources/svg/eth.svg';
 
 import './index.scss';
 
@@ -29,7 +27,6 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
 
   useEffect(() => {
-    flexFont();
     getUsdPrice();
   }, [land]);
 
@@ -78,11 +75,11 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
             <Row className="land-info-row" align={bottom}>
               <Col span={24} className="price-eth-container">
                 <Icon name={getTokenIconName(land.paymentToken.symbol)} className="eth-icon" />
-                <span className="price-eth">{formatBigNumber(land.pricePerMagnitude.price)}</span>
+                <SmallAmountTooltip className="price-eth" amount={land.pricePerMagnitude.price} />
               </Col>
               <Col span={24}>
                 <span className="land-price-info">
-                  <span className="price">${formatBigNumber(usdPrice)}</span>
+                  <SmallAmountTooltip className="price" amount={usdPrice} />
                   <span className="per-day">/ {land.pricePerMagnitude.magnitude}</span>
                   <button onClick={() => setShowChart(!showChart)}>
                     <Icon name="info-outlined" className="info-icon" />
