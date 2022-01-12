@@ -268,6 +268,7 @@ export function fetchAsset(id: string): Promise<AssetEntity> {
             name
             symbol
             decimals
+            feePercentage
           }
           totalRents
           unclaimedRentFee

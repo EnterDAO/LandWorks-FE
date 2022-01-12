@@ -86,7 +86,7 @@ const styles = {
 };
 
 const CurrencyDropdown = (props: any) => {
-  const { changeHandler, paymentTokens } = props;
+  const { changeHandler, paymentTokens, value } = props;
 
   const Option = (props: any) => {
     const { data } = props;
@@ -118,11 +118,11 @@ const CurrencyDropdown = (props: any) => {
     return (
       <components.ValueContainer {...props}>
         <Icon
-          name={getTokenIconName(value?.symbol || defaultValue.symbol || 'png/eth')}
+          name={getTokenIconName(value?.symbol || defaultValue?.symbol || 'png/eth')}
           style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
         />
         <label className="option" style={{ fontSize: '14px', color: 'white' }}>
-          {value?.symbol || defaultValue.symbol}
+          {value?.symbol || defaultValue?.symbol}
         </label>
       </components.ValueContainer>
     );
@@ -133,6 +133,7 @@ const CurrencyDropdown = (props: any) => {
       options={paymentTokens}
       styles={styles}
       onChange={changeHandler}
+      value={value}
       components={{
         Option,
         ValueContainer,

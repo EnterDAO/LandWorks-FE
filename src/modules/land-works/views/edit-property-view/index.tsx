@@ -236,6 +236,11 @@ const ListView: React.FC = () => {
     // Get usd price per day for the asset
     if (asset.paymentToken) {
       getUsdPrice(asset.paymentToken.symbol, asset.pricePerMagnitude.price);
+      setPaymentToken(asset.paymentToken);
+    }
+
+    if (asset.pricePerMagnitude) {
+      setTokenCost(asset.pricePerMagnitude.price);
     }
 
     console.log(asset);
@@ -383,9 +388,6 @@ const ListView: React.FC = () => {
   const getPaymentTokens = async () => {
     const tokens = await fetchTokenPayments();
     setPaymentTokens(tokens);
-    if (tokens.length > 0) {
-      setPaymentToken(tokens[0]);
-    }
   };
 
   const evaluateInput = () => {
@@ -540,7 +542,11 @@ const ListView: React.FC = () => {
               <Col span={24}>
                 <Row>
                   <Col span={12} className="currency-wrapper">
-                    <CurrencyDropdown changeHandler={handleCurrencyChange} paymentTokens={paymentTokens} />
+                    <CurrencyDropdown
+                      changeHandler={handleCurrencyChange}
+                      paymentTokens={paymentTokens}
+                      value={paymentToken}
+                    />
                     <div className="price-input-wrapper">
                       <LandsEditInput
                         onInputChange={handleCostEthChange}
@@ -575,7 +581,7 @@ const ListView: React.FC = () => {
                         <Row>
                           <Col span={24}>
                             <Icon
-                              name="token-eth"
+                              name={getTokenIconName(paymentToken.symbol || 'png/eth')}
                               className="info-icon"
                               style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
                             />
