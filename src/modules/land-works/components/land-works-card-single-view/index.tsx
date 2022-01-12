@@ -18,6 +18,8 @@ import chainPng from './assets/chain.png';
 import { formatBigNumber, getNowTs } from '../../../../utils';
 import { getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
 
+import { ReactComponent as HotIcon } from '../../../../resources/svg/hot.svg';
+
 import './index.scss';
 
 type SingleLandProps = {
@@ -161,7 +163,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
 
             {asset?.isHot && (
               <span className="label card-name-hot-label">
-                <Icon name="png/hot" className="name-label" />
+                <HotIcon className="name-label" />
                 HOT
               </span>
             )}

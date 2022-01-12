@@ -15,6 +15,8 @@ import { LandsNavMobile } from 'modules/land-works/components/lands-header-nav-m
 import ConnectedWallet from 'wallets/components/connected-wallet';
 import { useWallet } from 'wallets/wallet';
 
+import { ReactComponent as ListIcon } from '../../../resources/svg/list-property.svg';
+
 import s from './s.module.scss';
 
 const modalRoot = document.getElementById('modal-root') || document.body;
@@ -54,7 +56,7 @@ const LayoutHeader: React.FC = () => {
       {wallet.isActive && wallet.connector?.id === 'metamask' && (
         <div className={s.addTokenWrapper}>
           <button type="button" onClick={() => history.push('/land-works/list-property')} className={s.addTokenButton}>
-            <Icon name="png/ListProperty" width={32} height={32} style={{ transform: 'scale(1.5)' }} />
+            <ListIcon />
           </button>
         </div>
       )}

@@ -5,10 +5,10 @@ import { Card, Col, Image, Row } from 'antd';
 import { ethers } from 'ethers';
 import { shortenAddr } from 'web3/utils';
 
-import Icon from 'components/custom/icon';
 import { getLandImageUrl, isDateBeforeNow as isTimestampBeforeNow, timestampSecondsToDate } from 'helpers/helpers';
 
 import landImage from '../land-works-card/assets/land.png';
+import { ReactComponent as HotIcon } from '../../../../resources/svg/hot.svg';
 
 import './index.scss';
 
@@ -28,7 +28,7 @@ const LandRentingCard: React.FC<ILandRentingCardProps> = ({ land, userAddress })
               <div>
                 {true && (
                   <span className="label card-name-hot-label">
-                    <Icon name="png/hot" className="name-label" />
+                    <HotIcon className="name-label" />
                     HOT
                   </span>
                 )}

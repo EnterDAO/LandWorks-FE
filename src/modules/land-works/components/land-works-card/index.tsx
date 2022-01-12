@@ -14,6 +14,9 @@ import landImage from './assets/land.png';
 
 import { formatBigNumber } from '../../../../utils';
 
+import { ReactComponent as HotIcon } from '../../../../resources/svg/hot.svg';
+import { ReactComponent as EthIcon } from '../../../../resources/svg/eth.svg';
+
 import './index.scss';
 
 interface ILandWorksCardProps {
@@ -54,7 +57,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
               <span>{land.name}</span>
               {land.isHot && (
                 <span className="label card-name-hot-label">
-                  <Icon name="png/hot" className="name-label" />
+                  <HotIcon className="name-label" />
                   HOT
                 </span>
               )}

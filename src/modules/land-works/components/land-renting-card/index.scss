@@ -91,12 +91,12 @@
 
 .card-name-hot-label {
   color: #dd3dcb;
+  font-weight: 700;
 
-  img.name-label {
-    width: 11px;
-    height: 13px;
+  svg {
     margin-right: 3px;
-    vertical-align: baseline;
+    position: relative;
+    bottom: -1px;
   }
 }
 
