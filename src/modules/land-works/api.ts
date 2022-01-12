@@ -59,7 +59,7 @@ export function fetchOverviewData(): Promise<APIOverviewData> {
 }
 
 export type PricePerMagnitude = {
-  price: string;
+  price: BigNumber;
   magnitude: string;
 };
 
@@ -837,7 +837,7 @@ function parseAsset(asset: any): AssetEntity {
   liteAsset.isAvailable = asset.status === AssetStatus.LISTED;
   liteAsset.availability = getAvailability(liteAsset);
   liteAsset.pricePerMagnitude = {
-    price: liteAsset.humanPricePerSecond.multipliedBy(DAY_IN_SECONDS).toString(10),
+    price: liteAsset.humanPricePerSecond.multipliedBy(DAY_IN_SECONDS),
     magnitude: 'day',
   };
 

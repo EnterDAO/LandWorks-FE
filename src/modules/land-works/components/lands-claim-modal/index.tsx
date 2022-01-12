@@ -12,6 +12,8 @@ import { LandClaimCheckBox } from 'modules/land-works/components/land-claim-moda
 import { AssetEntity } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
 
+import { formatBigNumber } from '../../../../utils';
+
 import './index.scss';
 
 type Props = ModalProps & {
@@ -105,10 +107,10 @@ export const ClaimModal: React.FC<Props> = (props) => {
               <p>
                 <span className="total-label">Total:</span>{' '}
                 <span className="total-price">
-                  {totalEth.toString(10)} <Icon name="png/eth" className="eth-icon" />
+                  {formatBigNumber(totalEth)} <Icon name="png/eth" className="eth-icon" />
                 </span>{' '}
                 <span className="total-price">
-                  {totalUsdc.toString(10)} <Icon name="token-usdc" className="eth-icon" />
+                  {formatBigNumber(totalUsdc)} <Icon name="token-usdc" className="eth-icon" />
                 </span>
               </p>
             </Col>

@@ -253,7 +253,7 @@ export const RentModal: React.FC<Props> = (props) => {
                   </Col>
                   <Col className="price-col" span={16}>
                     <strong>
-                      {totalPrice.toFixed()}{' '}
+                      {formatBigNumber(totalPrice)}{' '}
                       <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" />{' '}
                     </strong>
 

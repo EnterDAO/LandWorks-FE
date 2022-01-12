@@ -17,8 +17,8 @@ interface ILandTablePriceProps {
 
 const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDecimals, weiAmount, dateTimestamp }) => {
   const coingeckoApiDateFormat = 'dd-MM-yyyy';
-  const [formatedAmount, setFormattedAmount] = useState('0');
-  const [usdPrice, setUsdPrice] = useState('0');
+  const [formatedAmount, setFormattedAmount] = useState(new BigNumber(0));
+  const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
 
   useEffect(() => {
     getTokenPrice();
@@ -29,13 +29,13 @@ const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDeci
     const formatedAmount = new BigNumber(ethers.utils.formatUnits(weiAmount, tokenDecimals));
     const usdEthPrice = await getTokenPriceForDate(tokenSymbol, date);
     const usdPrice = formatedAmount.multipliedBy(usdEthPrice);
-    setUsdPrice(formatBigNumber(usdPrice));
-    setFormattedAmount(formatBigNumber(formatedAmount));
+    setUsdPrice(usdPrice);
+    setFormattedAmount(formatedAmount);
   };
 
   return (
     <span>
-      {tokenSymbol.toUpperCase()} {formatedAmount} ${usdPrice}
+      {tokenSymbol.toUpperCase()} {formatBigNumber(formatedAmount)} ${formatBigNumber(usdPrice)}
     </span>
   );
 };

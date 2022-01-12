@@ -23,7 +23,7 @@ interface ILandWorksCardProps {
 const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   const history = useHistory();
   const [showChart, setShowChart] = useState(false);
-  const [usdPrice, setUsdPrice] = useState('0');
+  const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
 
   useEffect(() => {
     flexFont();
@@ -33,7 +33,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   const getUsdPrice = () => {
     const ethPrice = new BigNumber(getTokenPrice(land.paymentToken.symbol) || '0');
     const ethToUsdPrice = ethPrice.multipliedBy(land.pricePerMagnitude.price);
-    setUsdPrice(formatBigNumber(ethToUsdPrice));
+    setUsdPrice(ethToUsdPrice);
   };
 
   const flexFont = () => {
@@ -75,11 +75,11 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
             <Row className="land-info-row" align={bottom}>
               <Col span={24} className="price-eth-container">
                 <Icon name={getTokenIconName(land.paymentToken.symbol)} className="eth-icon" />
-                <span className="price-eth">{land.pricePerMagnitude.price}</span>
+                <span className="price-eth">{formatBigNumber(land.pricePerMagnitude.price)}</span>
               </Col>
               <Col span={24}>
                 <span className="land-price-info">
-                  <span className="price">${usdPrice}</span>
+                  <span className="price">${formatBigNumber(usdPrice)}</span>
                   <span className="per-day">/ {land.pricePerMagnitude.magnitude}</span>
                   <button onClick={() => setShowChart(!showChart)}>
                     <Icon name="info-outlined" className="info-icon" />

@@ -374,7 +374,7 @@ const ListView: React.FC = () => {
     setPricePerSecond(pricePerSecond);
   };
 
-  const getUsdPrice = (symbol: string, price: string | number) => {
+  const getUsdPrice = (symbol: string, price: string | number | BigNumber) => {
     const ethPrice = new BigNumber(getTokenPrice(symbol) || '0');
     const ethToUsdPrice = ethPrice.multipliedBy(price);
     setUsdPrice(ethToUsdPrice.toFixed(2).replace(/\.00$/, ''));
@@ -611,10 +611,10 @@ const ListView: React.FC = () => {
             </Row>
           </Col>
           {errMessage && (
-              <Col span={24} className="error-wrapper">
-                {errMessage}
-              </Col>
-            )}
+            <Col span={24} className="error-wrapper">
+              {errMessage}
+            </Col>
+          )}
         </Row>
       </Col>
       <WarningModal

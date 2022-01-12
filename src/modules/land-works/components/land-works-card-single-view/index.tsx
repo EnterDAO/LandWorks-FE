@@ -212,7 +212,9 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                 <Row className="price-wrapper">
                   <Col span={24} className="eth-price-container">
                     <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" />
-                    <span className="price-eth">{asset?.pricePerMagnitude?.price}</span>
+                    <span className="price-eth">
+                      {asset?.pricePerMagnitude ? formatBigNumber(asset?.pricePerMagnitude.price) : '0'}
+                    </span>
                   </Col>
                   <Col push={2} span={22} className="usd-price-container">
                     <span className="price">${usdPrice}</span>
