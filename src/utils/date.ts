@@ -10,6 +10,7 @@ export const WEEK_IN_SECONDS = 7 * DAY_IN_SECONDS;
 export const MONTH_IN_SECONDS = 30 * DAY_IN_SECONDS;
 export const YEAR_IN_SECONDS = 12 * MONTH_IN_SECONDS;
 export const ONE_HUNDRED_YEARS_IN_SECONDS = 100 * YEAR_IN_SECONDS;
+export const THREE_WEEKS_IN_SECONDS = 3 * WEEK_IN_SECONDS;
 
 export const DURATION_1_DAY = '1 day';
 export const DURATION_30_DAYS = '30 days';
