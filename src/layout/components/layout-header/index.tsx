@@ -46,10 +46,12 @@ const LayoutHeader: React.FC = () => {
 
   return (
     <div className={`${s.component} ${navOpen ? `${s.mobileNavOpen}` : ''}`} ref={setReferenceElement}>
-      <div style={{ cursor: 'pointer' }} onClick={() => history.push('/')}>
+      <div style={{ cursor: 'pointer' }} onClick={() => history.push('/land-works')}>
         <Icon name="png/LandWorksLogo" width="auto" height="auto" className={s.logo} />
       </div>
-      <h1 className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`}>LandWorks</h1>
+      <h1 className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`} onClick={() => history.push('/land-works')}>
+        LandWorks
+      </h1>
 
       {wallet.account && <LandsNav />}
 
