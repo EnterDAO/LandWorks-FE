@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import { Power1, gsap } from 'gsap';
 
@@ -8,6 +9,7 @@ import { ReactComponent as RightBlocks } from 'resources/svg/landing/hero-right-
 import './index.scss';
 
 export const Hero: React.FC = () => {
+  const history = useHistory();
   const el = useRef() as React.MutableRefObject<HTMLDivElement>;
   const tl = useRef({});
   const q = gsap.utils.selector(el);
@@ -103,8 +105,8 @@ export const Hero: React.FC = () => {
           <Col>
             <h2>Metaverse land</h2>
             <h1>Renting marketplace</h1>
-            <button type="button" className="button-primary">
-              <span>Coming soon</span>
+            <button type="button" className="button-primary" onClick={() => history.push('/land-works')}>
+              <span>Launch App</span>
             </button>
           </Col>
         </Row>
