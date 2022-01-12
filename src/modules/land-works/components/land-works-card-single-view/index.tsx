@@ -16,7 +16,7 @@ import { useLandworks } from '../../providers/landworks-provider';
 import chainPng from './assets/chain.png';
 
 import { formatBigNumber, getNowTs } from '../../../../utils';
-import { shortenAddr } from '../../../../web3/utils';
+import { getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -181,7 +181,12 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
             <Row>
               <Col span={10}>
                 <span className="land-owner">
-                  BY <span className="land-owner-address">{shortenAddr(asset?.owner?.id.toLowerCase())}</span>
+                  BY{' '}
+                  {
+                    <ExternalLink href={getEtherscanAddressUrl(asset?.owner?.id)} className="land-owner-address">
+                      {shortenAddr(asset?.owner?.id.toLowerCase())}
+                    </ExternalLink>
+                  }
                 </span>
                 {isOwnerOrConsumer() && (
                   <span className="label card-name-you-label">
@@ -249,7 +254,9 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                     Current operator <Icon name="info-outlined" className="info-icon" />
                   </Col>
                   <Col span={24}>
-                    <p className="land-operator-address">{shortenAddr(asset?.operator)}</p>
+                    <ExternalLink href={getEtherscanAddressUrl(asset?.operator)} className="land-operator-address">
+                      {shortenAddr(asset?.operator)}
+                    </ExternalLink>
                   </Col>
                 </Row>
               </Col>
