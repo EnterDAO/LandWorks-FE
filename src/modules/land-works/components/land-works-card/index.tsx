@@ -47,7 +47,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
 
   return (
     <Col className="land-card-wrapper" xl={8} md={12} sm={24} xs={24}>
-      <Card className="land-card" onClick={() => history.push(`/land-works/land/${land.id}`)}>
+      <Card className="land-card" onClick={() => history.push(`/property/${land.id}`)}>
         <Row>
           <Col span={24}>
             <p className="land-name">

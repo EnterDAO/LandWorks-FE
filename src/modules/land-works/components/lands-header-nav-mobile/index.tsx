@@ -25,12 +25,12 @@ export const LandsNavMobile: React.FC<INavProps> = ({ setNavOpen }) => {
         </Link>
       </Col>
       <Col span={24}>
-        <Link to="/land-works/renting" className="menu-item-mobile" onClick={() => setNavOpen(false)}>
+        <Link to="/renting" className="menu-item-mobile" onClick={() => setNavOpen(false)}>
           <span>Renting</span>
         </Link>
       </Col>
       <Col span={24}>
-        <Link to="/land-works/lending" className="menu-item-mobile" onClick={() => setNavOpen(false)}>
+        <Link to="/lending" className="menu-item-mobile" onClick={() => setNavOpen(false)}>
           <span>Lending</span>
         </Link>
       </Col>
@@ -66,7 +66,8 @@ export const LandsNavMobile: React.FC<INavProps> = ({ setNavOpen }) => {
             onClick={() => {
               // setNavOpen(false);
               // wallet.showWalletsModal();
-            }}>
+            }}
+          >
             <span>Sign in</span>
           </button>
         ) : (

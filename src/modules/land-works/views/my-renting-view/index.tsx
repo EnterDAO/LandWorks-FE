@@ -9,7 +9,7 @@ import LandsRentingSorter from 'modules/land-works/components/land-renting-sorte
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { useWallet } from 'wallets/wallet';
 
-import { ReactComponent as InfographicRent } from '../../../../resources/svg/infographic-renting.svg'
+import { ReactComponent as InfographicRent } from '../../../../resources/svg/infographic-renting.svg';
 
 import './index.scss';
 
@@ -73,9 +73,11 @@ const RentingView = () => {
             ) : (
               <div className="empty-state">
                 <p>Rent history is empty, check out</p>
-                <button className="accent" onClick={() => history.push("/land-works")}>All properties</button>
+                <button className="accent" onClick={() => history.push('/all')}>
+                  All properties
+                </button>
                 <InfographicRent />
-                </div>
+              </div>
             )}
           </Row>
         </Col>

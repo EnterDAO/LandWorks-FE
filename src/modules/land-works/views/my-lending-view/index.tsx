@@ -83,7 +83,7 @@ const LendingView = () => {
             ) : (
               <div className="empty-state">
                 <p>You do not have any listed properties. Fill this page by adding one</p>
-                <button className="accent" onClick={() => history.push('/land-works/list-property')}>
+                <button className="accent" onClick={() => history.push('/list')}>
                   List property
                 </button>
               </div>

@@ -105,7 +105,7 @@ export const Hero: React.FC = () => {
           <Col>
             <h2>Metaverse land</h2>
             <h1>Renting marketplace</h1>
-            <button type="button" className="button-primary" onClick={() => history.push('/land-works')}>
+            <button type="button" className="button-primary" onClick={() => history.push('/all')}>
               <span>Launch App</span>
             </button>
           </Col>

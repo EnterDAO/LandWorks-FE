@@ -55,7 +55,7 @@ const SingleLand: React.FC = () => {
     const asset = await fetchAsset(tokenId);
     if (!asset.id) {
       //TODO: Maybe show error or special component when property can't be found
-      history.push('/land-works');
+      history.push('/all');
       return;
     }
     setAsset(asset);
@@ -155,11 +155,16 @@ const SingleLand: React.FC = () => {
       />
       <Row gutter={40} className="head-nav">
         {shouldShowEditButton() && (
-           <button style={{ fontSize: 14 }} type="button" className="button-subtle" onClick={() => history.push('/land-works/edit-property', asset)}>
+          <button
+            style={{ fontSize: 14 }}
+            type="button"
+            className="button-subtle"
+            onClick={() => history.push(`/property/${asset.id}/edit`, asset)}
+          >
             <span>EDIT</span>
           </button>
         )}
-        <div className='right-wrapper'>
+        <div className="right-wrapper">
           {shouldShowStake() && (
             <ExternalLink
               style={{ marginRight: 20, fontSize: 14 }}

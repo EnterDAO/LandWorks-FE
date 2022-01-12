@@ -35,7 +35,7 @@ const LayoutHeader: React.FC = () => {
   });
 
   const isLandingPage = useRouteMatch({
-    path: '/',
+    path: ['/home', '/'],
     strict: true,
     sensitive: true,
   });
@@ -52,10 +52,10 @@ const LayoutHeader: React.FC = () => {
 
   return (
     <div className={`${s.component} ${navOpen ? `${s.mobileNavOpen}` : ''}`} ref={setReferenceElement}>
-      <div style={{ cursor: 'pointer' }} onClick={() => history.push('/land-works')}>
+      <div style={{ cursor: 'pointer' }} onClick={() => history.push('/home')}>
         <Icon name="png/LandWorksLogo" width="auto" height="auto" className={s.logo} />
       </div>
-      <h1 className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`} onClick={() => history.push('/land-works')}>
+      <h1 className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`} onClick={() => history.push('/home')}>
         LandWorks
       </h1>
 
@@ -63,7 +63,7 @@ const LayoutHeader: React.FC = () => {
 
       {wallet.isActive && wallet.connector?.id === 'metamask' && !isLandingPage?.isExact && (
         <div className={s.addTokenWrapper}>
-          <button type="button" onClick={() => history.push('/land-works/list-property')} className={s.addTokenButton}>
+          <button type="button" onClick={() => history.push('/list')} className={s.addTokenButton}>
             <ListIcon />
           </button>
         </div>

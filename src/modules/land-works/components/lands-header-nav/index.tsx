@@ -7,9 +7,9 @@ import './index.scss';
 export const LandsNav: React.FC = () => {
   const history = useHistory();
 
-  const allPathname = '/land-works';
-  const rentingPathname = '/land-works/renting';
-  const lendingPathname = '/land-works/lending';
+  const allPathname = '/all';
+  const rentingPathname = '/renting';
+  const lendingPathname = '/lending';
 
   const getNavKey = () => {
     // eslint-disable-next-line no-restricted-globals
