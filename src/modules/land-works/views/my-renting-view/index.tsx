@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { end } from '@popperjs/core';
 import { Col, Pagination, Row } from 'antd';
 
@@ -8,10 +9,13 @@ import LandsRentingSorter from 'modules/land-works/components/land-renting-sorte
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { useWallet } from 'wallets/wallet';
 
+import { ReactComponent as InfographicRent } from '../../../../resources/svg/infographic-renting.svg'
+
 import './index.scss';
 
 const RentingView = () => {
   const wallet = useWallet();
+  const history = useHistory();
   const pageSizeOptions = ['6', '12', '24'];
 
   const [rents, setRents] = useState([] as any);
@@ -67,7 +71,11 @@ const RentingView = () => {
             {rents.length ? (
               rents.map((rent: any) => <LandRentingCard key={rent.id} land={rent} userAddress={wallet.account || ''} />)
             ) : (
-              <div>No rents found</div>
+              <div className="empty-state">
+                <p>Rent history is empty, check out</p>
+                <button className="accent" onClick={() => history.push("/land-works")}>All properties</button>
+                <InfographicRent />
+                </div>
             )}
           </Row>
         </Col>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Col, Row } from 'antd';
 
 import { AssetEntity, UserEntity, fetchUserAssets } from 'modules/land-works/api';
@@ -11,6 +12,7 @@ import { useWallet } from 'wallets/wallet';
 import './index.scss';
 
 const LendingView = () => {
+  const history = useHistory();
   const wallet = useWallet();
 
   const [assets, setAssets] = useState([] as AssetEntity[]);
@@ -62,7 +64,10 @@ const LendingView = () => {
             {assets.length ? (
               assets.map((land: any) => <LandWorksCard key={land.id} land={land} />)
             ) : (
-              <div>No lends found</div>
+              <div className="empty-state">
+                <p>You do not have any listed properties. Fill this page by adding one</p>
+                <button className="accent" onClick={() => history.push("/land-works/list-property")}>List property</button>
+                </div>
             )}
           </Row>
         </Col>
