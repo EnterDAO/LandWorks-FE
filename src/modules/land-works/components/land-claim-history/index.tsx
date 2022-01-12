@@ -9,8 +9,9 @@ import LandTableTxHash from '../land-table-tx-hash';
 import LandWorksTableDate from '../land-works-table-date';
 import LandTablePrice from '../land-works-table-price';
 
-import './index.scss';
 import { getDecentralandAssetName } from '../../../../utils';
+
+import './index.scss';
 
 interface IClaimHistoryTableProps {
   userAddress: string;
@@ -50,7 +51,7 @@ const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) =
 
   const columns = [
     {
-      title: 'Property',
+      title: 'property',
       dataIndex: 'asset',
       render: (asset: any) => {
         console.log(asset);
@@ -76,7 +77,7 @@ const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) =
       ),
     },
     {
-      title: 'Date',
+      title: 'date',
       dataIndex: 'timestamp',
       render: (timestamp: string) => <LandWorksTableDate timestamp={timestamp} dateFormat={'HH:mm:ss dd.MM.yyyy'} />,
     },

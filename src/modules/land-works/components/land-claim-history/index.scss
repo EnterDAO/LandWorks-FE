@@ -8,7 +8,7 @@
     border-radius: 10px;
 
     .history-heading {
-      color: #f8f8ff;
+      color: rgba(185, 185, 211, 1);
       display: inline-block;
       font-weight: bold;
       font-size: 18px;
@@ -42,7 +42,7 @@
         thead {
           .ant-table-cell {
             background: rgba(39, 39, 58, 1);
-            color: white;
+            color: rgba(185, 185, 211, 1);
             border: none;
           }
         }
