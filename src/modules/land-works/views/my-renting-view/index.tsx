@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { end } from '@popperjs/core';
 import { Col, Pagination, Row } from 'antd';
 
-import { UserEntity, fetchUserLastRentPerAsset } from 'modules/land-works/api';
+import { fetchUserRentPerAsset } from 'modules/land-works/api';
 import LandRentingCard from 'modules/land-works/components/land-renting-card';
 import LandsRentingSorter from 'modules/land-works/components/land-renting-sorter';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { useWallet } from 'wallets/wallet';
 
 import { ReactComponent as InfographicRent } from '../../../../resources/svg/infographic-renting.svg';
+import { LandsAvailableSorter } from '../../components/lands-available-sorter';
 
 import './index.scss';
 
@@ -18,22 +18,31 @@ const RentingView = () => {
   const history = useHistory();
   const pageSizeOptions = ['6', '12', '24'];
 
+  const [byAvailability, setByAvailability] = useState(false);
   const [rents, setRents] = useState([] as any);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(Number(pageSizeOptions[0]));
   const [totalRents, setTotalRents] = useState(0);
 
   const fetchRents = async (account: string) => {
-    const rents = await fetchUserLastRentPerAsset(account, page, pageSize);
+    const rents = await fetchUserRentPerAsset(account, byAvailability, page, pageSize);
     setRents(rents.data);
     setTotalRents(rents.meta.count);
+  };
+
+  const onSortByAvailability = (availabilityEvent: any) => {
+    const checked = availabilityEvent?.target?.checked;
+    if (checked !== undefined) {
+      setByAvailability(checked);
+    }
+    setPage(1);
   };
 
   useEffect(() => {
     if (wallet.account) {
       fetchRents(wallet.account);
     }
-  }, [pageSize, page, wallet.account]);
+  }, [byAvailability, pageSize, page, wallet.account]);
 
   const onPlaceChange = (placeChangeEvent: any) => {
     // TODO:: some filtering here
@@ -57,6 +66,9 @@ const RentingView = () => {
           <Row className="filters" gutter={20} align={'middle'}>
             <Col>
               <LandsRentingSorter onRentSortChange={onRentSortChange} />
+            </Col>
+            <Col>
+              <LandsAvailableSorter availableOnly={byAvailability} onAvailableChange={onSortByAvailability} />
             </Col>
             <Col>
               <LandsPlaceSorter onPlaceChange={onPlaceChange} />

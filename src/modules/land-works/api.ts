@@ -576,29 +576,30 @@ export function fetchUserFirstRentByTimestamp(
  * @param page Which page to load. Default 1
  * @param limit How many items per page. Default 6
  */
-export function fetchUserLastRentPerAsset(address: string, page = 1, limit = 6): Promise<any> {
+export function fetchUserRentPerAsset(address: string, availableOnly = false, page = 1, limit = 6): Promise<any> {
+  const now = getNowTs();
   return GraphClient.get({
     query: gql`
-      query GetUserRents($id: String) {
-        user(id: $id) {
-          rents(orderBy: end, orderDirection: desc) {
+      query GetUserRents($id: String, $now: BigInt) {
+        rents(orderBy: end, orderDirection: asc, where: {renter: $id, ${
+          availableOnly ? 'start_lte: $now, end_gt: $now' : ''
+        }}) {
+          id
+          operator
+          start
+          end
+          timestamp
+          asset {
             id
-            operator
-            start
-            end
-            timestamp
-            asset {
+            metaverseAssetId
+            decentralandData {
               id
-              metaverseAssetId
-              decentralandData {
+              metadata
+              isLAND
+              coordinates {
                 id
-                metadata
-                isLAND
-                coordinates {
-                  id
-                  x
-                  y
-                }
+                x
+                y
               }
             }
           }
@@ -607,20 +608,38 @@ export function fetchUserLastRentPerAsset(address: string, page = 1, limit = 6):
     `,
     variables: {
       id: address.toLowerCase(),
+      now: now,
     },
   })
     .then(async (response) => {
       // Filter out rents for the same asset
-      if (!response?.data?.user?.rents) {
+      if (!response?.data?.rents) {
         return {
           data: [],
           meta: { count: 0 },
         };
       }
-      const filteredRents = response.data.user.rents.filter(
-        (element: any, index: number, array: any) =>
-          array.findIndex((t: any) => t.asset.id === element.asset.id) === index
+      const groupedRents = response.data.rents.reduce(
+        (entryMap: Map<string, any[]>, e: any) => entryMap.set(e.asset.id, [...(entryMap.get(e.asset.id) || []), e]),
+        new Map()
       );
+      const now = getNowTs();
+      const filteredRents = [] as RentEntity[];
+      // TODO: optimise search for target rent
+      for (const [_, rents] of groupedRents) {
+        if (rents.length == 1) {
+          filteredRents.push(rents[0]);
+        } else {
+          let rent = rents.find((r: RentEntity) => Number(r.start) <= now && now < Number(r.end));
+          if (!rent) {
+            rent = rents.find((r: RentEntity) => now < Number(r.start));
+          }
+          if (!rent) {
+            rent = rents[rents.length - 1];
+          }
+          filteredRents.push(rent!);
+        }
+      }
 
       const paginatedRents = filteredRents.slice(limit * (page - 1), limit * page);
       return {

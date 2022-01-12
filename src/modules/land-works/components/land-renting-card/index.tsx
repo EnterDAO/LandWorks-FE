@@ -52,7 +52,7 @@ const LandRentingCard: React.FC<ILandRentingCardProps> = ({ land, userAddress })
       <Card className="rent-land-card">
         <Row>
           <Col span={24}>
-            <p className="rent-land-name land-name">
+            <div className="rent-land-name land-name">
               <span>{land.name}</span>
               <div>
                 {true && (
@@ -63,7 +63,7 @@ const LandRentingCard: React.FC<ILandRentingCardProps> = ({ land, userAddress })
                 )}
                 {!land.asset.decentralandData.isLAND && <span className="label card-name-estate-label">ESTATE</span>}
               </div>
-            </p>
+            </div>
           </Col>
         </Row>
         <Row className="image-list-wrapper">
