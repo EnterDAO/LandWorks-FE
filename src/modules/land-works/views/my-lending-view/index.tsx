@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { end } from '@popperjs/core';
 import { Col, Row } from 'antd';
 
 import { AssetEntity, UserEntity, fetchUserAssets } from 'modules/land-works/api';
@@ -9,12 +10,16 @@ import LandWorksCard from 'modules/land-works/components/land-works-card';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { useWallet } from 'wallets/wallet';
 
+import { LandsAction } from '../../components/lands-action';
+import { ClaimModal } from '../../components/lands-claim-modal';
+
 import './index.scss';
 
 const LendingView = () => {
   const history = useHistory();
   const wallet = useWallet();
 
+  const [showClaimModal, setShowClaimModal] = useState(false);
   const [assets, setAssets] = useState([] as AssetEntity[]);
   const [user, setUser] = useState({} as UserEntity);
 
@@ -47,6 +52,18 @@ const LendingView = () => {
     <div className="content-container">
       <Row className="lands-container">
         <Col span={24}>
+          <Row justify={end} className="actions-container">
+            {user.hasUnclaimedRent && (
+              <Col className="lands-claim-container">
+                <LandsAction
+                  onButtonClick={setShowClaimModal}
+                  buttonText={'CLAIM '}
+                  subHeading="You have"
+                  mainHeading="Unclaimed rent"
+                />
+              </Col>
+            )}
+          </Row>
           <Row className="filters" gutter={20} align={'middle'}>
             <Col>
               <LandsRentingSorter onRentSortChange={onRentSortChange} />
@@ -66,8 +83,10 @@ const LendingView = () => {
             ) : (
               <div className="empty-state">
                 <p>You do not have any listed properties. Fill this page by adding one</p>
-                <button className="accent" onClick={() => history.push("/land-works/list-property")}>List property</button>
-                </div>
+                <button className="accent" onClick={() => history.push('/land-works/list-property')}>
+                  List property
+                </button>
+              </div>
             )}
           </Row>
         </Col>
@@ -77,6 +96,12 @@ const LendingView = () => {
           <ClaimHistoryTable userAddress={wallet.account || ''} />
         </Col>
       </Row>
+
+      <ClaimModal
+        onCancel={() => setShowClaimModal(false)}
+        visible={showClaimModal}
+        rentFees={user?.unclaimedRentAssets}
+      />
     </div>
   );
 };
