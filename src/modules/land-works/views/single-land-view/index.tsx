@@ -153,11 +153,11 @@ const SingleLand: React.FC = () => {
           </>
         }
       />
-      <Row className="head-nav">
+      <Row gutter={40} className="head-nav">
         {shouldShowEditButton() && (
-          <Button type="light" className="edit-btn" onClick={() => history.push('/land-works/edit-property', asset)}>
+           <button style={{ fontSize: 14 }} type="button" className="button-subtle" onClick={() => history.push('/land-works/edit-property', asset)}>
             <span>EDIT</span>
-          </Button>
+          </button>
         )}
         <div className='right-wrapper'>
           {shouldShowStake() && (

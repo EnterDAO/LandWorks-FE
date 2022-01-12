@@ -170,7 +170,7 @@ export const RentModal: React.FC<Props> = (props) => {
 
   return (
     <Modal
-      width={680}
+      width={416}
       className="rent-modal"
       title={<p style={{ textAlign: 'center' }}>Rent details</p>}
       onCancel={onCancel}
@@ -179,13 +179,14 @@ export const RentModal: React.FC<Props> = (props) => {
       <Row gutter={[10, 10]}>
         <Col span={24}>
           <Row justify="center">
-            <Col span={16}>
+            <Col span={24}>
               <Row gutter={[16, 10]}>
-                <Col span={24}>
+                <Col span={24} className="title-period">
                   <p className="light-text">
-                    Choose end date
+                    Choose rent period
                     <Icon name="info-outlined" className="info-icon light-text" />
                   </p>
+                  <p className="light-text">{getFormattedTime(period)}</p>
                 </Col>
                 <Col span={24}>
                   <RentDatePicker
@@ -194,16 +195,6 @@ export const RentModal: React.FC<Props> = (props) => {
                     maxEndDate={maxEndDate}
                     handleRentDateChange={handleRentDateChange}
                   />
-                </Col>
-              </Row>
-            </Col>
-            <Col span={8} style={{ textAlign: 'end' }}>
-              <Row gutter={[16, 5]} style={{ paddingTop: '10px' }}>
-                <Col span={24}>
-                  <p className="light-text">{getFormattedTime(period)}</p>
-                </Col>
-                <Col span={24} className="bold-white-text">
-                  {endDate}
                 </Col>
               </Row>
             </Col>
@@ -227,15 +218,18 @@ export const RentModal: React.FC<Props> = (props) => {
               />
             </Col>
           </Row>
-          <Row className="rent-modal-footer">
-            {shouldShowApproveButton() && (
-              <Col span={6}>
-                <Button type="primary" onClick={handleApprove}>
-                  APPROVE
-                </Button>
-              </Col>
+          {shouldShowApproveButton() && (
+              <Row className="rent-modal-footer">
+                <Col span={24} className="approve-wrapper">
+                  <p>1. Approve transaction</p>
+                  <Button type="primary" onClick={handleApprove}>
+                    APPROVE
+                  </Button>
+                </Col>
+              </Row>
             )}
-            <Col span={18}>
+          <Row className="rent-modal-footer">
+            <Col span={24}>
               <Button
                 style={{ display: 'block' }}
                 className="rent-button"
