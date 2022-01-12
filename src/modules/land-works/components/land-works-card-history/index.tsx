@@ -44,7 +44,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
 
         return (
           <ExternalLink
-            href={getEtherscanAddressUrl(wallet.account)}
+            href={getEtherscanAddressUrl(text.toLowerCase())}
             className={`${isYou ? 'by-you-text' : 'by-text'}`}
           >
             {showText}
