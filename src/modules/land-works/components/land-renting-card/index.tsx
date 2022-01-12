@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { bottom } from '@popperjs/core';
 import { Card, Col, Image, Row } from 'antd';
@@ -7,8 +7,10 @@ import { shortenAddr } from 'web3/utils';
 
 import { getLandImageUrl, isDateBeforeNow as isTimestampBeforeNow, timestampSecondsToDate } from 'helpers/helpers';
 
-import landImage from '../land-works-card/assets/land.png';
 import { ReactComponent as HotIcon } from '../../../../resources/svg/hot.svg';
+import landImage from '../land-works-card/assets/land.png';
+
+import { getNowTs } from '../../../../utils';
 
 import './index.scss';
 
@@ -18,6 +20,33 @@ interface ILandRentingCardProps {
 }
 const LandRentingCard: React.FC<ILandRentingCardProps> = ({ land, userAddress }) => {
   const history = useHistory();
+
+  const getRentText = () => {
+    const now = getNowTs();
+    if (now >= Number(land.start) && now < Number(land.end)) {
+      return 'Rent active until';
+    } else {
+      if (now < Number(land.start)) {
+        return 'Rent starts on';
+      } else {
+        return 'Rent ended on';
+      }
+    }
+  };
+
+  const getRentDate = () => {
+    const now = getNowTs();
+    if (now >= Number(land.start) && now < Number(land.end)) {
+      return timestampSecondsToDate(land.end);
+    } else {
+      if (now < Number(land.start)) {
+        return timestampSecondsToDate(land.start);
+      } else {
+        return timestampSecondsToDate(land.end);
+      }
+    }
+  };
+
   return (
     <Col className="rent-land-card-wrapper" xl={8} md={8} sm={12} xs={24}>
       <Card className="rent-land-card">
@@ -63,9 +92,9 @@ const LandRentingCard: React.FC<ILandRentingCardProps> = ({ land, userAddress })
               <Col span={12}>
                 <div className="rent-date-container">
                   <Row>
-                    {isTimestampBeforeNow(land.end) ? <span>Rent active until</span> : <span>Rent ended on</span>}
+                    <span>{getRentText()}</span>
                   </Row>
-                  <Row className="rent-date">{timestampSecondsToDate(land.end)}</Row>
+                  <Row className="rent-date">{getRentDate()}</Row>
                 </div>
               </Col>
             </Row>

@@ -583,6 +583,7 @@ export function fetchUserLastRentPerAsset(address: string, page = 1, limit = 6):
           rents(orderBy: end, orderDirection: desc) {
             id
             operator
+            start
             end
             timestamp
             asset {
