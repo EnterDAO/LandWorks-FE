@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 
@@ -34,6 +34,12 @@ const LayoutHeader: React.FC = () => {
     strategy: 'absolute',
   });
 
+  const isLandingPage = useRouteMatch({
+    path: '/',
+    strict: true,
+    sensitive: true,
+  });
+
   useEffect(() => {
     forceUpdate?.();
   }, [warns.length]);
@@ -53,9 +59,9 @@ const LayoutHeader: React.FC = () => {
         LandWorks
       </h1>
 
-      {wallet.account && <LandsNav />}
+      {wallet.account && !isLandingPage?.isExact && <LandsNav />}
 
-      {wallet.isActive && wallet.connector?.id === 'metamask' && (
+      {wallet.isActive && wallet.connector?.id === 'metamask' && !isLandingPage?.isExact && (
         <div className={s.addTokenWrapper}>
           <button type="button" onClick={() => history.push('/land-works/list-property')} className={s.addTokenButton}>
             <ListIcon />
@@ -63,7 +69,7 @@ const LayoutHeader: React.FC = () => {
         </div>
       )}
 
-      <ConnectedWallet />
+      {isLandingPage?.isExact ? null : <ConnectedWallet />}
       <Button type="link" className={s.burger} onClick={() => setNavOpen((prevState) => !prevState)}>
         <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
       </Button>
