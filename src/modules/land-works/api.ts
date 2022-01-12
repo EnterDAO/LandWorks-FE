@@ -85,6 +85,7 @@ export type PaymentToken = {
 
 export type AssetEntity = {
   metaverseAssetId: string;
+  metaverseRegistry: IdEntity | null;
   id: string;
   name: string;
   minPeriod: BigNumber;

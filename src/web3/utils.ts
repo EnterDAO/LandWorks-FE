@@ -108,6 +108,21 @@ export function getEtherscanABIUrl(
   return undefined;
 }
 
+export function getDecentralandMarketplaceUrl(registry?: string, id?: string): string | undefined {
+  if (registry && id) {
+    let registryAddress = '';
+    // TODO: on mainnet, ifs should be redundant
+    if (registry.toLowerCase() === config.contracts.decentraland.landRegistry) {
+      registryAddress = '0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d';
+    } else if (registry.toLowerCase() === config.contracts.decentraland.estateRegistry) {
+      registryAddress = '0x959e104e1a4db6317fa58f8295f586e1a978c297';
+    }
+    return `https://market.decentraland.org/contracts/${registryAddress}/tokens/${id}`;
+  }
+
+  return undefined;
+}
+
 export function getExponentValue(decimals = 0): BigNumber {
   return new BigNumber(10).pow(decimals);
 }

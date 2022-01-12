@@ -9,6 +9,7 @@ import { getTokenPrice } from 'components/providers/known-tokens-provider';
 import { getLandImageUrl, getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
+import { ReactComponent as HotIcon } from '../../../../resources/svg/hot.svg';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, RentEntity, fetchAssetRentByTimestamp, fetchUserFirstRentByTimestamp } from '../../api';
 import { AssetStatus } from '../../models/AssetStatus';
@@ -16,9 +17,7 @@ import { useLandworks } from '../../providers/landworks-provider';
 import chainPng from './assets/chain.png';
 
 import { formatBigNumber, getNowTs } from '../../../../utils';
-import { getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
-
-import { ReactComponent as HotIcon } from '../../../../resources/svg/hot.svg';
+import { getDecentralandMarketplaceUrl, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -173,7 +172,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
             <ExternalLink
               className="marketplace-link"
               target={'_blank'}
-              href={`https://market.decentraland.org/contracts/0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d/tokens/${asset?.metaverseAssetId}`}
+              href={getDecentralandMarketplaceUrl(asset?.metaverseRegistry?.id, asset?.metaverseAssetId)}
             >
               <img style={{ marginRight: 5 }} src={chainPng} /> <span>Marketplace</span>
             </ExternalLink>
