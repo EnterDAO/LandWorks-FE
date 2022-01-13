@@ -21,8 +21,9 @@ export const timestampSecondsToDate = (timestamp: string, dateFormat: string = e
 };
 
 export const timestampSecondsToUTCDate = (timestamp: string, dateFormat: string = euDateFormat) => {
-  const date = new Date(Number(timestamp) * 1000);
-  return format(date, dateFormat);
+  const localDate = fromUnixTime(Number(timestamp));
+  const utcDate = new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
+  return format(utcDate, dateFormat);
 };
 
 export const getLandImageUrl = (land: AssetEntity | undefined) => {
