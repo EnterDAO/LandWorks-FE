@@ -7,13 +7,14 @@ import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { getTokenPriceForDate } from 'components/providers/known-tokens-provider';
 import { timestampSecondsToUTCDate } from 'helpers/helpers';
 
+import './index.scss';
+
 interface ILandTablePriceProps {
   tokenSymbol: string;
   tokenDecimals: number;
   weiAmount: string;
   dateTimestamp: string;
 }
-
 const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDecimals, weiAmount, dateTimestamp }) => {
   const coingeckoApiDateFormat = 'dd-MM-yyyy';
   const [formatedAmount, setFormattedAmount] = useState(new BigNumber(0));
@@ -39,10 +40,10 @@ const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDeci
   };
 
   return (
-    <span>
+    <span className="amount-container">
       <SmallAmountTooltip symbol={tokenSymbol.toUpperCase()} amount={formatedAmount} />
       {'  '}
-      <SmallAmountTooltip symbol="$" amount={usdPrice} />
+      <SmallAmountTooltip className="usd-price" symbol="$" amount={usdPrice} />
     </span>
   );
 };
