@@ -52,10 +52,10 @@ const LayoutHeader: React.FC = () => {
 
   return (
     <div className={`${s.component} ${navOpen ? `${s.mobileNavOpen}` : ''}`} ref={setReferenceElement}>
-      <div style={{ cursor: 'pointer' }} onClick={() => history.push('/home')}>
+      <div style={{ cursor: 'pointer' }} onClick={() => history.push('/all')}>
         <Icon name="png/LandWorksLogo" width="auto" height="auto" className={s.logo} />
       </div>
-      <h1 className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`} onClick={() => history.push('/home')}>
+      <h1 className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`} onClick={() => history.push('/all')}>
         LandWorks
       </h1>
 
