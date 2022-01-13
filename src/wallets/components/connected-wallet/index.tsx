@@ -216,22 +216,23 @@ const ConnectedWallet: React.FC = () => {
       placement="bottomRight"
       trigger="click"
       noPadding
-      className={s.popover}
+      className={cn(s.popover, s.txSection)}
       content={
         <div id={s.txPopoverContainer}>
           <div id={s.txInfoContainer}>
-            <div id={s.txStatus}>Transaction in progress</div>
+            <div id={s.txStatus}>Tx in progress</div>
             <div
               onClick={() => {
                 window.open(`${getEtherscanTxUrl(txHash)}`, '_blank')?.focus();
               }}
               id={s.txEtherscanLink}
             >
-              View on etherscan
+              view on etherscan
             </div>
           </div>
-          <br />
-          <div id={s.txDisconnectContainer}>Disconnect</div>
+          <div id={s.txDisconnectContainer} onClick={() => wallet.disconnect()}>
+            Disconnect
+          </div>
         </div>
       }
     >
