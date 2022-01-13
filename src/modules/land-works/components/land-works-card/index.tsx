@@ -15,6 +15,8 @@ import { AssetEntity } from '../../api';
 import { PricePerSecondInfo } from '../price-per-second-info';
 import landImage from './assets/land.png';
 
+import { ZERO_BIG_NUMBER } from '../../../../web3/utils';
+
 import './index.scss';
 
 interface ILandWorksCardProps {
@@ -24,17 +26,6 @@ interface ILandWorksCardProps {
 const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   const history = useHistory();
   const [showChart, setShowChart] = useState(false);
-  const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
-
-  useEffect(() => {
-    getUsdPrice();
-  }, [land]);
-
-  const getUsdPrice = () => {
-    const ethPrice = new BigNumber(getTokenPrice(land.paymentToken.symbol) || '0');
-    const ethToUsdPrice = ethPrice.multipliedBy(land.pricePerMagnitude.price);
-    setUsdPrice(ethToUsdPrice);
-  };
 
   const flexFont = () => {
     const divs = document.getElementsByClassName('price-eth');
@@ -79,7 +70,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
               </Col>
               <Col span={24}>
                 <span className="land-price-info">
-                  <SmallAmountTooltip className="price" amount={usdPrice} />
+                  <SmallAmountTooltip className="price" amount={land.pricePerMagnitude.usdPrice || ZERO_BIG_NUMBER} />
                   <span className="per-day">/ {land.pricePerMagnitude.magnitude}</span>
                   <button onClick={() => setShowChart(!showChart)}>
                     <Icon name="info-outlined" className="info-icon" />

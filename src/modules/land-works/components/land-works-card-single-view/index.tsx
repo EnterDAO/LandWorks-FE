@@ -18,7 +18,12 @@ import { useLandworks } from '../../providers/landworks-provider';
 import chainPng from './assets/chain.png';
 
 import { getNowTs } from '../../../../utils';
-import { getDecentralandMarketplaceUrl, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
+import {
+  ZERO_BIG_NUMBER,
+  getDecentralandMarketplaceUrl,
+  getEtherscanAddressUrl,
+  shortenAddr,
+} from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -34,7 +39,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
   const { landWorksContract } = landWorks;
 
   const [currentRent, setCurrentRent] = useState({} as RentEntity);
-  const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
   const [countDownRent, setCountDownRent] = useState({} as RentEntity);
   const [countDownTimestamp, setCountDownTimestamp] = useState('0');
 
@@ -60,14 +64,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
 
   const shouldShowRenterCountdown = () => {
     return countDownRent?.renter?.id.toLowerCase() === wallet.account?.toLowerCase();
-  };
-
-  const getUsdPrice = () => {
-    if (asset?.paymentToken) {
-      const ethPrice = new BigNumber(getTokenPrice(asset.paymentToken.symbol) || '0');
-      const ethToUsdPrice = ethPrice.multipliedBy(asset.pricePerMagnitude.price);
-      setUsdPrice(ethToUsdPrice);
-    }
   };
 
   const getCurrentAndCountdownRents = async () => {
@@ -123,7 +119,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
   };
 
   useEffect(() => {
-    getUsdPrice();
     getCurrentAndCountdownRents();
   }, [asset, wallet.account]);
 
@@ -224,7 +219,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                     />
                   </Col>
                   <Col push={2} span={22} className="usd-price-container">
-                    <SmallAmountTooltip className="price" symbol="$" amount={usdPrice} />
+                    <SmallAmountTooltip
+                      className="price"
+                      symbol="$"
+                      amount={asset?.pricePerMagnitude?.usdPrice || ZERO_BIG_NUMBER}
+                    />
                     <span className="per-day">/ {asset?.pricePerMagnitude?.magnitude}</span>
                     <Icon name="info-outlined" className="info-icon" />
                   </Col>

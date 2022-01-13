@@ -272,6 +272,11 @@ export function getTokenPriceIn(source: string, target: string): BigNumber | und
   return sourcePrice.dividedBy(targetPrice);
 }
 
+export function getUsdPrice(price: BigNumber, symbol: string): BigNumber | undefined {
+  const usdTokenPrice = getTokenPrice(symbol || 'eth');
+  return usdTokenPrice?.multipliedBy(price);
+}
+
 export function convertTokenIn(
   amount: BigNumber | number | undefined,
   source: string,
@@ -344,9 +349,9 @@ const KnownTokensProvider: FC = (props) => {
         .join(',');
 
       try {
-        const prices = await fetch(
-          `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`
-        ).then((res) => res.json());
+        const prices = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`).then(
+          (res) => res.json()
+        );
 
         KNOWN_TOKENS.forEach((token) => {
           if (token.coinGeckoId) {
@@ -360,7 +365,7 @@ const KnownTokensProvider: FC = (props) => {
           console.log(`[Token Price] ${token.symbol} = ${formatUSD(token.price)}`);
         });
       } catch {
-        console.log("error caught")
+        console.log('error caught');
       }
 
       reload();

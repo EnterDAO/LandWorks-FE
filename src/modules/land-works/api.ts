@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 import BigNumber from 'bignumber.js';
 import { constants } from 'ethers';
 
+import { getUsdPrice } from '../../components/providers/known-tokens-provider';
 import { GraphClient } from '../../web3/graph/client';
 import { AssetStatus } from './models/AssetStatus';
 
@@ -60,6 +61,7 @@ export function fetchOverviewData(): Promise<APIOverviewData> {
 
 export type PricePerMagnitude = {
   price: BigNumber;
+  usdPrice: BigNumber | undefined;
   magnitude: string;
 };
 
@@ -820,7 +822,15 @@ export function fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
   })
     .then(async (response) => {
       // Paginate the result
-      const paginatedAssets = response.data.assets.slice(limit * (page - 1), limit * page);
+      let parsedAssets = parseAssets(response.data.assets);
+      if (orderColumn === 'pricePerSecond') {
+        if (orderDirection === 'asc') {
+          parsedAssets = parsedAssets.sort(sortAssetsByAscendingUsdPrice);
+        } else {
+          parsedAssets = parsedAssets.sort(sortAssetsByDescendingUsdPrice);
+        }
+      }
+      const paginatedAssets = parsedAssets.slice(limit * (page - 1), limit * page);
 
       return {
         data: parseAssets(paginatedAssets),
@@ -858,8 +868,10 @@ function parseAsset(asset: any): AssetEntity {
 
   liteAsset.isAvailable = asset.status === AssetStatus.LISTED;
   liteAsset.availability = getAvailability(liteAsset);
+  const price = liteAsset.humanPricePerSecond.multipliedBy(DAY_IN_SECONDS);
   liteAsset.pricePerMagnitude = {
-    price: liteAsset.humanPricePerSecond.multipliedBy(DAY_IN_SECONDS),
+    price: price,
+    usdPrice: getUsdPrice(price, asset.paymentToken.symbol),
     magnitude: 'day',
   };
 
@@ -918,4 +930,24 @@ function getAvailability(asset: any): AssetAvailablity {
     maxRentDate: maxRentDate.toNumber(),
     label: result,
   };
+}
+
+function sortAssetsByAscendingUsdPrice(a: AssetEntity, b: AssetEntity): number {
+  if (a.pricePerMagnitude.usdPrice?.eq(b.pricePerMagnitude.usdPrice!)) {
+    return 0;
+  } else if (a.pricePerMagnitude.usdPrice?.gt(b.pricePerMagnitude.usdPrice!)) {
+    return 1;
+  } else {
+    return -1;
+  }
+}
+
+function sortAssetsByDescendingUsdPrice(a: AssetEntity, b: AssetEntity): number {
+  if (a.pricePerMagnitude.usdPrice?.eq(b.pricePerMagnitude.usdPrice!)) {
+    return 0;
+  } else if (a.pricePerMagnitude.usdPrice?.gt(b.pricePerMagnitude.usdPrice!)) {
+    return -1;
+  } else {
+    return 1;
+  }
 }
