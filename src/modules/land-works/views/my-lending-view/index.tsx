@@ -91,11 +91,13 @@ const LendingView = () => {
           </Row>
         </Col>
       </Row>
-      <Row gutter={40} className="claim-history-container">
-        <Col span={24} style={{ padding: '0px' }}>
-          <ClaimHistoryTable userAddress={wallet.account || ''} />
-        </Col>
-      </Row>
+      {!!assets.length && (
+        <Row gutter={40} className="claim-history-container">
+          <Col span={24} style={{ padding: '0px' }}>
+            <ClaimHistoryTable userAddress={wallet.account || ''} />
+          </Col>
+        </Row>
+      )}
 
       <ClaimModal
         onCancel={() => setShowClaimModal(false)}
