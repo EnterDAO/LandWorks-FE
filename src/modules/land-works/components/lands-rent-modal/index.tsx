@@ -171,7 +171,7 @@ export const RentModal: React.FC<Props> = (props) => {
 
   return (
     <Modal
-      width={416}
+      width={450}
       className="rent-modal"
       title={<p style={{ textAlign: 'center' }}>Rent details</p>}
       onCancel={onCancel}
