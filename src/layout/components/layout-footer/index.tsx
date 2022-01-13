@@ -77,10 +77,10 @@ const LayoutFooter: React.FC = () => {
                       NFT Drops
                     </Link>
                   </Col>
-                  <Col xs={13} sm={13} md={13} lg={24} xl={24} className={s.comingSoon}>
-                    <Link to="/" className={`${s.linkAnchor}`}>
+                  <Col xs={13} sm={13} md={13} lg={24} xl={24}>
+                    <ExternalLink href="https://sharded-minds.enterdao.xyz" className={(s.linkAnchor, s.linkLandWorks)}>
                       Sharded Minds
-                    </Link>
+                    </ExternalLink>
                   </Col>
                 </Row>
               </Col>
