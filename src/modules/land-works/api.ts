@@ -643,7 +643,9 @@ export function fetchUserRentPerAsset(address: string, availableOnly = false, pa
         }
       }
 
-      const paginatedRents = filteredRents.slice(limit * (page - 1), limit * page);
+      const paginatedRents = filteredRents
+        .sort((a, b) => Number(b.end) - Number(a.end))
+        .slice(limit * (page - 1), limit * page);
       return {
         data: paginatedRents.map((element: any) => ({
           ...element,
