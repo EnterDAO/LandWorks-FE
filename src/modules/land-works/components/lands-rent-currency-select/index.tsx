@@ -7,7 +7,7 @@ import { getTokenIconName } from 'helpers/helpers';
 const styles = {
   container: (defaultStyles: any) => ({
     ...defaultStyles,
-    width: '95px',
+    width: '100px',
     background: 'rgba(22, 22, 34, 1)',
     borderRadius: '15px',
     cursor: 'pointer',

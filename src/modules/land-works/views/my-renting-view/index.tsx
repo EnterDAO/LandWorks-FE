@@ -26,8 +26,10 @@ const RentingView = () => {
 
   const fetchRents = async (account: string) => {
     const rents = await fetchUserRentPerAsset(account, byAvailability, page, pageSize);
-    setRents(rents.data);
-    setTotalRents(rents.meta.count);
+    if (Object.keys(rents).length) {
+      setRents(rents.data || []);
+      setTotalRents(rents.meta.count);
+    }
   };
 
   const onSortByAvailability = (availabilityEvent: any) => {

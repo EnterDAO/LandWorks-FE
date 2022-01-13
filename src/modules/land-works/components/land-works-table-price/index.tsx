@@ -3,9 +3,10 @@ import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 import { StringNullableChain } from 'lodash';
 
+import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { getTokenPriceForDate } from 'components/providers/known-tokens-provider';
-import { timestampSecondsToUTCDate } from 'helpers/helpers';
+import { getTokenIconName, timestampSecondsToUTCDate } from 'helpers/helpers';
 
 import './index.scss';
 
@@ -41,7 +42,10 @@ const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDeci
 
   return (
     <span className="amount-container">
-      <SmallAmountTooltip symbol={tokenSymbol.toUpperCase()} amount={formatedAmount} />
+      <SmallAmountTooltip
+        icon={<Icon style={{ width: 16, height: 16 }} name={getTokenIconName(tokenSymbol)} />}
+        amount={formatedAmount}
+      />
       {'  '}
       <SmallAmountTooltip className="usd-price" symbol="$" amount={usdPrice} />
     </span>

@@ -8,23 +8,24 @@ interface ISmallAmountTooltip {
   amount: BigNumber;
   symbol?: string;
   className?: string;
+  icon?: any;
 }
-const SmallAmountTooltip: React.FC<ISmallAmountTooltip> = ({ amount, symbol, className }) => {
+const SmallAmountTooltip: React.FC<ISmallAmountTooltip> = ({ amount, symbol, className, icon }) => {
   const symbolNoSpace = ['$'];
   const formattedAmount = formatBigNumber(amount);
   const isExponential = amount.lt(1e-6);
 
   return isExponential ? (
-    <Tooltip color={'#5d8ff0'} className="amount-tooltip" title={amount.toFixed()}>
+    <Tooltip color={'#5d8ff0'} title={amount.toFixed()}>
       <span className={className}>
-        {symbol}
+        {icon || symbol}
         {'  '}
         {formattedAmount}
       </span>
     </Tooltip>
   ) : (
     <span className={className}>
-      {symbol}
+      {icon || symbol}
       {!symbolNoSpace.find((s) => s === symbol) ? '  ' : ''}
       {formattedAmount}
     </span>
