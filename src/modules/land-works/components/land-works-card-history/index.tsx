@@ -110,7 +110,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
         <LandTablePrice
           tokenDecimals={data.paymentToken.decimals}
           tokenSymbol={data.paymentToken.symbol}
-          weiAmount={Number(data.price)}
+          weiAmount={data.price}
           dateTimestamp={data.timestamp}
         />
       ),

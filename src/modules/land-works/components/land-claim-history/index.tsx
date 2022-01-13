@@ -71,7 +71,7 @@ const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) =
         <LandTablePrice
           tokenDecimals={data.paymentToken.decimals}
           tokenSymbol={data.paymentToken.symbol}
-          weiAmount={Number(data.amount)}
+          weiAmount={data.amount}
           dateTimestamp={data.timestamp}
         />
       ),

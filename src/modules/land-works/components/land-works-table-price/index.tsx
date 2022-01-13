@@ -10,7 +10,7 @@ import { timestampSecondsToDate } from 'helpers/helpers';
 interface ILandTablePriceProps {
   tokenSymbol: string;
   tokenDecimals: number;
-  weiAmount: number;
+  weiAmount: string;
   dateTimestamp: string;
 }
 
@@ -25,7 +25,8 @@ const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDeci
 
   const getTokenPrice = async () => {
     const date = timestampSecondsToDate(dateTimestamp, coingeckoApiDateFormat);
-    const formatedAmount = new BigNumber(ethers.utils.formatUnits(weiAmount, tokenDecimals));
+    const ethAmount = ethers.utils.formatUnits(weiAmount, tokenDecimals);
+    const formatedAmount = new BigNumber(ethAmount);
     const usdEthPrice = await getTokenPriceForDate(tokenSymbol, date);
     const usdPrice = formatedAmount.multipliedBy(usdEthPrice);
     setUsdPrice(usdPrice);
