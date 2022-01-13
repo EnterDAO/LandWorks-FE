@@ -64,14 +64,16 @@ const LendingView = () => {
               </Col>
             )}
           </Row>
-          <Row className="filters" gutter={20} align={'middle'}>
-            <Col>
-              <LandsRentingSorter onRentSortChange={onRentSortChange} />
-            </Col>
-            <Col>
-              <LandsPlaceSorter onPlaceChange={onPlaceChange} />
-            </Col>
-          </Row>
+          {!!assets.length && (
+            <Row className="filters" gutter={20} align={'middle'}>
+              <Col>
+                <LandsRentingSorter onRentSortChange={onRentSortChange} />
+              </Col>
+              <Col>
+                <LandsPlaceSorter onPlaceChange={onPlaceChange} />
+              </Col>
+            </Row>
+          )}
           <Row
             gutter={[
               { sm: 16, md: 16, lg: 32 },

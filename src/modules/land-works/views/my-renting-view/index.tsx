@@ -63,17 +63,19 @@ const RentingView = () => {
     <div className="content-container">
       <Row className="lands-container">
         <Col span={24}>
-          <Row className="filters" gutter={20} align={'middle'}>
-            <Col>
-              <LandsRentingSorter onRentSortChange={onRentSortChange} />
-            </Col>
-            <Col>
-              <LandsAvailableSorter availableOnly={byAvailability} onAvailableChange={onSortByAvailability} />
-            </Col>
-            <Col>
-              <LandsPlaceSorter onPlaceChange={onPlaceChange} />
-            </Col>
-          </Row>
+          {!!rents.length && (
+            <Row className="filters" gutter={20} align={'middle'}>
+              <Col>
+                <LandsRentingSorter onRentSortChange={onRentSortChange} />
+              </Col>
+              <Col>
+                <LandsAvailableSorter availableOnly={byAvailability} onAvailableChange={onSortByAvailability} />
+              </Col>
+              <Col>
+                <LandsPlaceSorter onPlaceChange={onPlaceChange} />
+              </Col>
+            </Row>
+          )}
           <Row
             gutter={[
               { sm: 16, md: 16, lg: 32 },
