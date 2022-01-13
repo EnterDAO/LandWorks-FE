@@ -23,12 +23,14 @@ const RentingView = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(Number(pageSizeOptions[0]));
   const [totalRents, setTotalRents] = useState(0);
+  const [hasRents, setHasRents] = useState(false);
 
   const fetchRents = async (account: string) => {
     const rents = await fetchUserRentPerAsset(account, byAvailability, page, pageSize);
     if (Object.keys(rents).length) {
       setRents(rents.data || []);
       setTotalRents(rents.meta.count);
+      setHasRents(true);
     }
   };
 
@@ -65,7 +67,7 @@ const RentingView = () => {
     <div className="content-container">
       <Row className="lands-container">
         <Col span={24}>
-          {!!rents.length && (
+          {(!!rents.length || hasRents) && (
             <Row className="filters" gutter={20} align={'middle'}>
               <Col>
                 <LandsRentingSorter onRentSortChange={onRentSortChange} />
