@@ -21,10 +21,8 @@ export const timestampSecondsToDate = (timestamp: string, dateFormat: string = e
 };
 
 export const timestampSecondsToUTCDate = (timestamp: string, dateFormat: string = euDateFormat) => {
-  // const endDate = fromUnixTime(Number(timestamp));
-  const endDate = new Date(timestamp);
-
-  return format(endDate, dateFormat);
+  const date = new Date(Number(timestamp) * 1000);
+  return format(date, dateFormat);
 };
 
 export const getLandImageUrl = (land: AssetEntity | undefined) => {
@@ -42,7 +40,6 @@ export const getLandImageUrl = (land: AssetEntity | undefined) => {
       return defaultLandImage;
     }
     const imageUrl = `${baseImageUrl}/parcels/${land.decentralandData.coordinates[0].x}/${land.decentralandData.coordinates[0].y}/map.png`;
-    console.log(imageUrl);
     return imageUrl;
   } else {
     if (!land.metaverseAssetId) {

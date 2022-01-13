@@ -27,10 +27,15 @@ const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDeci
     const date = timestampSecondsToUTCDate(dateTimestamp, coingeckoApiDateFormat);
     const ethAmount = ethers.utils.formatUnits(weiAmount, tokenDecimals);
     const formatedAmount = new BigNumber(ethAmount);
-    const usdEthPrice = await getTokenPriceForDate(tokenSymbol, date);
-    const usdPrice = formatedAmount.multipliedBy(usdEthPrice);
-    setUsdPrice(usdPrice);
     setFormattedAmount(formatedAmount);
+
+    if (tokenSymbol.toLowerCase() === 'usdc') {
+      setUsdPrice(formatedAmount);
+    } else {
+      const usdEthPrice = await getTokenPriceForDate(tokenSymbol, date);
+      const usdPrice = formatedAmount.multipliedBy(usdEthPrice);
+      setUsdPrice(usdPrice);
+    }
   };
 
   return (
