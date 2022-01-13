@@ -4,8 +4,8 @@ import { ethers } from 'ethers';
 import { StringNullableChain } from 'lodash';
 
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { convertTokenInUSD, getTokenPriceForDate } from 'components/providers/known-tokens-provider';
-import { timestampSecondsToDate } from 'helpers/helpers';
+import { getTokenPriceForDate } from 'components/providers/known-tokens-provider';
+import { timestampSecondsToUTCDate } from 'helpers/helpers';
 
 interface ILandTablePriceProps {
   tokenSymbol: string;
@@ -24,7 +24,7 @@ const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDeci
   }, []);
 
   const getTokenPrice = async () => {
-    const date = timestampSecondsToDate(dateTimestamp, coingeckoApiDateFormat);
+    const date = timestampSecondsToUTCDate(dateTimestamp, coingeckoApiDateFormat);
     const ethAmount = ethers.utils.formatUnits(weiAmount, tokenDecimals);
     const formatedAmount = new BigNumber(ethAmount);
     const usdEthPrice = await getTokenPriceForDate(tokenSymbol, date);

@@ -20,6 +20,13 @@ export const timestampSecondsToDate = (timestamp: string, dateFormat: string = e
   return format(endDate, dateFormat);
 };
 
+export const timestampSecondsToUTCDate = (timestamp: string, dateFormat: string = euDateFormat) => {
+  // const endDate = fromUnixTime(Number(timestamp));
+  const endDate = new Date(timestamp);
+
+  return format(endDate, dateFormat);
+};
+
 export const getLandImageUrl = (land: AssetEntity | undefined) => {
   if (!land?.status && !land?.id) {
     return defaultLandImage;
