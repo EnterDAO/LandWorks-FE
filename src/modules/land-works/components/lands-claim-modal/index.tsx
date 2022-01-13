@@ -27,7 +27,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
   const landWorksCtx = useLandworks();
   const { landWorksContract } = landWorksCtx;
 
-  const { rentFees, renderProgress, renderSuccess, ...modalProps } = props;
+  const { rentFees, renderProgress, renderSuccess, onCancel, ...modalProps } = props;
 
   const [assets, setAssets] = useState([] as AssetEntity[]);
   const [totalEth, setTotalEth] = useState(BigNumber.ZERO);
@@ -36,7 +36,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
   async function claim() {
     try {
       const assetIds = assets.map((a) => new BigNumber(a.id));
-      await landWorksContract?.claimMultipleRentFees(assetIds);
+      await landWorksContract?.claimMultipleRentFees(assetIds, onCancel);
       showToastNotification(ToastType.Success, 'Rent claimed successfully!');
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while claiming the rent.');
@@ -84,6 +84,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
       width={600}
       className="claim-modal"
       title={<p style={{ textAlign: 'center', fontSize: '16px' }}>Claim</p>}
+      onCancel={onCancel}
       {...modalProps}
     >
       <Text type="p1" color="secondary" align="center" className="subtitle">
@@ -110,15 +111,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
               <Icon name="token-usdc" className="eth-icon" />
             </Col>
             <Col span={5}>
-              <Button
-                className="claim-button"
-                disabled={isClaimDisabled()}
-                type="primary"
-                onClick={() => {
-                  console.log('do claiming stuff here');
-                  claim();
-                }}
-              >
+              <Button className="claim-button" disabled={isClaimDisabled()} type="primary" onClick={claim}>
                 Claim
               </Button>
             </Col>

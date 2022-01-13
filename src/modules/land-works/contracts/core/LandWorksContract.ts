@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import BigNumber from 'bignumber.js';
 import { AbiItem } from 'web3-utils';
 import Web3Contract, { Web3ContractAbiItem } from 'web3/web3Contract';
@@ -114,13 +115,18 @@ export default class LandWorksContract extends Web3Contract {
    * Claims the rent fees for the given assets.
    * @param assetIds An array of asset IDs
    */
-  claimMultipleRentFees(assetIds: BigNumber[] | string[]) {
+  claimMultipleRentFees(assetIds: BigNumber[] | string[], callback: () => void = () => {}) {
     if (!this.account) {
       return Promise.reject();
     }
-    return this.send('claimMultipleRentFees', [assetIds], {
-      from: this.account,
-    }).then();
+    return this.send(
+      'claimMultipleRentFees',
+      [assetIds],
+      {
+        from: this.account,
+      },
+      callback
+    ).then();
   }
 
   /**
@@ -134,16 +140,22 @@ export default class LandWorksContract extends Web3Contract {
     assetId: BigNumber | string,
     operator: string,
     period: BigNumber,
-    value: BigNumber
+    value: BigNumber,
+    callback: () => void = () => {}
   ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
 
-    return this.send('rentDecentraland', [assetId, period.toNumber(), operator], {
-      from: this.account,
-      value: value,
-    }).then();
+    return this.send(
+      'rentDecentraland',
+      [assetId, period.toNumber(), operator],
+      {
+        from: this.account,
+        value: value,
+      },
+      callback
+    ).then();
   }
 
   /**
@@ -152,13 +164,23 @@ export default class LandWorksContract extends Web3Contract {
    * @param operator The operator to be set.
    * @param period The period (in seconds) for the rent.
    */
-  rentDecentralandWithERC20(assetId: BigNumber | string, operator: string, period: BigNumber): Promise<void> {
+  rentDecentralandWithERC20(
+    assetId: BigNumber | string,
+    operator: string,
+    period: BigNumber,
+    callback: () => void = () => {}
+  ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
-    return this.send('rentDecentraland', [assetId, period, operator], {
-      from: this.account,
-    }).then();
+    return this.send(
+      'rentDecentraland',
+      [assetId, period, operator],
+      {
+        from: this.account,
+      },
+      callback
+    ).then();
   }
 
   /**

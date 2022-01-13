@@ -123,9 +123,9 @@ export const RentModal: React.FC<Props> = (props) => {
     try {
       const bnPeriod = new BigNumber(period);
       if (paymentToken?.symbol.toLowerCase() === 'eth') {
-        await landWorksContract?.rentDecentralandWithETH(assetId!, editedValue, bnPeriod, approveValue);
+        await landWorksContract?.rentDecentralandWithETH(assetId!, editedValue, bnPeriod, approveValue, onCancel);
       } else {
-        await landWorksContract?.rentDecentralandWithERC20(assetId!, editedValue, bnPeriod);
+        await landWorksContract?.rentDecentralandWithERC20(assetId!, editedValue, bnPeriod, onCancel);
       }
       showToastNotification(ToastType.Success, 'Property rented successfuly!');
       onCancel();
@@ -220,15 +220,15 @@ export const RentModal: React.FC<Props> = (props) => {
             </Col>
           </Row>
           {shouldShowApproveButton() && (
-              <Row className="rent-modal-footer">
-                <Col span={24} className="approve-wrapper">
-                  <p>1. Approve transaction</p>
-                  <Button type="primary" onClick={handleApprove}>
-                    APPROVE
-                  </Button>
-                </Col>
-              </Row>
-            )}
+            <Row className="rent-modal-footer">
+              <Col span={24} className="approve-wrapper">
+                <p>1. Approve transaction</p>
+                <Button type="primary" onClick={handleApprove}>
+                  APPROVE
+                </Button>
+              </Col>
+            </Row>
+          )}
           <Row className="rent-modal-footer">
             <Col span={24}>
               <Button
