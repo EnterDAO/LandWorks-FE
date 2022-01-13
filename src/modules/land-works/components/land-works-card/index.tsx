@@ -70,7 +70,11 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
               </Col>
               <Col span={24}>
                 <span className="land-price-info">
-                  <SmallAmountTooltip className="price" amount={land.pricePerMagnitude.usdPrice || ZERO_BIG_NUMBER} />
+                  <SmallAmountTooltip
+                    className="price"
+                    symbol="$"
+                    amount={land.pricePerMagnitude.usdPrice || ZERO_BIG_NUMBER}
+                  />
                   <span className="per-day">/ {land.pricePerMagnitude.magnitude}</span>
                   <button onClick={() => setShowChart(!showChart)}>
                     <Icon name="info-outlined" className="info-icon" />
