@@ -5,6 +5,7 @@ import { shortenAddr } from 'web3/utils';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ClaimHistory, fetchUserClaimHistory } from 'modules/land-works/api';
 
+import EmptyTable from '../../../../resources/svg/empty-table.svg';
 import LandTableTxHash from '../land-table-tx-hash';
 import LandWorksTableDate from '../land-works-table-date';
 import LandTablePrice from '../land-works-table-price';
@@ -89,9 +90,7 @@ const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) =
         <span className="history-heading">Claim History</span>
       </Col>
       <Col className="table-wrapper" span={24}>
-        <ConfigProvider
-          renderEmpty={() => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No claim history found" />}
-        >
+        <ConfigProvider renderEmpty={() => <Empty image={EmptyTable} description="No claim history present" />}>
           <Table
             columns={columns}
             dataSource={claimHistory}

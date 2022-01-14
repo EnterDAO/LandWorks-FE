@@ -5,6 +5,7 @@ import { uniqueId } from 'lodash';
 import ExternalLink from 'components/custom/externalLink';
 import { timestampSecondsToDate } from 'helpers/helpers';
 
+import EmptyTable from '../../../../resources/svg/empty-table.svg';
 import { useWallet } from '../../../../wallets/wallet';
 import { RentEntity, fetchAssetRents, fetchAssetUserRents } from '../../api';
 import LandTableTxHash from '../land-table-tx-hash';
@@ -175,9 +176,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
             )}
           </Col>
           <Col span={24} className="table-wrapper">
-            <ConfigProvider
-              renderEmpty={() => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No rent history found" />}
-            >
+            <ConfigProvider renderEmpty={() => <Empty image={EmptyTable} description="No rent history present" />}>
               <Table
                 columns={columns}
                 dataSource={rents}
