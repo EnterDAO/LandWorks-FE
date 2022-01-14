@@ -1,7 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import AntdSpin from 'antd/lib/spin';
 
 import ProtectedRoute from 'components/custom/protected-route';
 import { useWarning } from 'components/providers/warning-provider';
@@ -35,31 +34,29 @@ const LandworksView: React.FC = () => {
   }, [isMobile]);
 
   return (
-    <Suspense fallback={<AntdSpin />}>
-      <Switch>
-        <Route path="/property/:tokenId" exact component={SingleLand} />
-        <Route path="/all" exact component={LandsView} />
-        <Route path="/lending" exact component={LendingView} />
-        <Route path="/renting" exact component={RentingView} />
-        <ProtectedRoute
-          isAuthenticated={!!walletCtx.account}
-          authenticationPath="/"
-          path="/list"
-          exact
-          component={ListProperty}
-        />
-        <ProtectedRoute
-          isAuthenticated={!!walletCtx.account}
-          authenticationPath="/"
-          path="/property/:tokenid/edit/"
-          exact
-          component={EditProperty}
-        />
-        <Route path={['/home', '/']} component={LandingView} />
+    <Switch>
+      <Route path="/property/:tokenId" exact component={SingleLand} />
+      <Route path="/all" exact component={LandsView} />
+      <Route path="/lending" exact component={LendingView} />
+      <Route path="/renting" exact component={RentingView} />
+      <ProtectedRoute
+        isAuthenticated={!!walletCtx.account}
+        authenticationPath="/"
+        path="/list"
+        exact
+        component={ListProperty}
+      />
+      <ProtectedRoute
+        isAuthenticated={!!walletCtx.account}
+        authenticationPath="/"
+        path="/property/:tokenid/edit/"
+        exact
+        component={EditProperty}
+      />
+      <Route path={['/home', '/']} component={LandingView} />
 
-        {/*<Redirect to="/land-registry-provider-works" />*/}
-      </Switch>
-    </Suspense>
+      {/*<Redirect to="/land-registry-provider-works" />*/}
+    </Switch>
   );
 };
 
