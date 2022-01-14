@@ -27,14 +27,16 @@
   }
 
   .pooling-section {
-    border-top: 1px solid #ebeaf5;
-    margin-top: 20px;
-    padding-top: 30px;
+    .pooling-title {
+      display: flex;
+      margin: 50px 0 30px;
+    }
 
     .pooling-heading {
       font-weight: 700;
       font-weight: 16px;
       color: rgba(179, 177, 207, 1);
+      margin-right: 18px;
     }
 
     .pooling-description {

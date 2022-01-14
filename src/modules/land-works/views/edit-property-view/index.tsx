@@ -455,185 +455,187 @@ const ListView: React.FC = () => {
   }, [paymentToken, tokenCost]);
 
   return (
-    <Row gutter={[10, 10]} justify="center" className="list-view">
-      <Col sm={24} lg={16}>
-        <Row className="list-view-wrapper">
-          <Col span={24} style={{ margin: '10px 0' }}>
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
-                <Row>
-                  <Col span={24}>
-                    <p className="drop-heading">Metaverse</p>
-                  </Col>
-                  <Col span={24}>
-                    <Dropdown options={PlaceOptions} onChange={handlePlaceChange} initialValuе={PlaceOptions[0]} />
-                  </Col>
-                </Row>
-              </Col>
-              <Col span={12}>
-                <Row>
-                  <Col span={24}>
-                    <p className="drop-heading">Property</p>
-                  </Col>
-                  <Col span={24}>
-                    <EditViewLandDropdown
-                      options={properties}
-                      onChange={() => {
-                        console.log('');
-                      }}
-                      initialValuе={initialProperty}
-                      disabled={true}
-                    />
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-          <Col span={24}>
-            <Row className="rent-period">
-              <Col span={8}>Rent Period</Col>
-              <Col span={14}>
-                <Row gutter={[16, 16]}>
-                  <Col span={12} className="checkbox-wrapper">
-                    <Checkbox onChange={handleMinCheckboxChange} checked={isMinPeriodSelected} /> min
-                    <LandsEditPeriodDropdown
-                      options={MinRentPeriodOptions}
-                      onChange={handleMinSelectChange}
-                      onInputChange={handleMinInputChange}
-                      initialValuе={minPeriodSelectedOption}
-                      inputValue={minInput?.toNumber()}
-                      disabled={!isMinPeriodSelected}
-                    />
-                  </Col>
-                  <Col span={12} className="checkbox-wrapper">
-                    <Checkbox onChange={handleMaxCheckboxChange} checked={isMaxPeriodSelected} /> max
-                    <LandsEditPeriodDropdown
-                      options={MaxRentPeriodOptions}
-                      onChange={handleMaxSelectChange}
-                      onInputChange={handleMaxInputChange}
-                      initialValuе={maxPeriodSelectedOption}
-                      inputValue={maxInput?.toNumber()}
-                      disabled={!isMaxPeriodSelected}
-                    />
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-          <Col span={24} className="future-period-wrapper">
-            <span style={{ marginRight: '15px' }}>At any given time to be rented out at most</span>
-            <LandsEditPeriodDropdown
-              options={AtMostRentPeriodOptions}
-              onChange={handleAtMostSelectChange}
-              onInputChange={handleAtMostInputChange}
-              initialValuе={maxFutureSelectedOption}
-              inputValue={maxFutureTimeInput?.toNumber()}
-            />
-            <span style={{ marginLeft: '15px' }}>in the future</span>
-            <Icon
-              name="info-outlined"
-              className="info-icon"
-              style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginLeft: '5px' }}
-            />
-          </Col>
-          <Col span={24}>
-            <Row className="price-container" gutter={[16, 16]}>
-              <Col span={24}>Price</Col>
-              <Col span={24}>
-                <Row>
-                  <Col span={12} className="currency-wrapper">
-                    <CurrencyDropdown
-                      changeHandler={handleCurrencyChange}
-                      paymentTokens={paymentTokens}
-                      value={paymentToken}
-                    />
-                    <div className="price-input-wrapper">
-                      <LandsEditInput
-                        onInputChange={handleCostEthChange}
-                        value={tokenCost?.toNumber()}
-                        customClassName="price-eth-input"
+    <section className="list-view">
+      <Row>
+        <Col span={24}>
+          <Row className="list-view-wrapper">
+            <Col span={24} style={{ margin: '10px 0' }}>
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
+                  <Row>
+                    <Col span={24}>
+                      <p className="drop-heading">Metaverse</p>
+                    </Col>
+                    <Col span={24}>
+                      <Dropdown options={PlaceOptions} onChange={handlePlaceChange} initialValuе={PlaceOptions[0]} />
+                    </Col>
+                  </Row>
+                </Col>
+                <Col span={12}>
+                  <Row>
+                    <Col span={24}>
+                      <p className="drop-heading">Property</p>
+                    </Col>
+                    <Col span={24}>
+                      <EditViewLandDropdown
+                        options={properties}
+                        onChange={() => {
+                          console.log('');
+                        }}
+                        initialValuе={initialProperty}
+                        disabled={true}
                       />
-                      <span>{usdPrice}$</span>
-                    </div>
-                    <span>/ day</span>
-                  </Col>
-                  <Col span={12}>
-                    <Row justify="end">
-                      <Col>
-                        <button
-                          type="button"
-                          className="button-primary action-btn"
-                          onClick={() => setShowWarningModal(true)}
-                          disabled={saveDisabled}
-                        >
-                          <span>Save</span>
-                        </button>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </Col>
-              <Col span={24}>
-                <Row>
-                  <Col span={10} className="your-earning-container">
-                    <Row>
-                      <Col span={9}>
-                        <Row>
-                          <Col span={24}>
-                            <Icon
-                              name={getTokenIconName(paymentToken.symbol || 'png/eth')}
-                              className="info-icon"
-                              style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
-                            />
-                            <span className="earning-text">{earnings?.toString(10) || 0} </span>
-                          </Col>
-                          <Col>
-                            <p>Your Earnings</p>
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col span={2} style={{ display: 'flex', justifyContent: 'center' }}>
-                        +
-                      </Col>
-                      <Col span={13}>
-                        <Row>
-                          <Col span={24}>
-                            <Icon
-                              name={getTokenIconName(paymentToken.symbol || '')}
-                              className="info-icon"
-                              style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
-                            />
-                            <span className="earning-text">{protocolFee?.toString(10) || 0} </span>
-                          </Col>
-                          <Col>
-                            <p>{feePercentage}% Protocol fee</p>
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-          {errMessage && (
-            <Col span={24} className="error-wrapper">
-              {errMessage}
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
             </Col>
-          )}
-        </Row>
-      </Col>
-      <WarningModal
-        onCancel={() => {
-          setShowWarningModal(false);
-        }}
-        onOk={handleSave}
-        visible={showWarningModal}
-        text={
-          <>Changing the payment type will enforce the payout of any unclaimed rent accumulated for this property.</>
-        }
-      />
-    </Row>
+            <Col span={24}>
+              <Row className="rent-period">
+                <Col span={8}>Rent Period</Col>
+                <Col span={14}>
+                  <Row gutter={[16, 16]}>
+                    <Col span={12} className="checkbox-wrapper">
+                      <Checkbox onChange={handleMinCheckboxChange} checked={isMinPeriodSelected} /> min
+                      <LandsEditPeriodDropdown
+                        options={MinRentPeriodOptions}
+                        onChange={handleMinSelectChange}
+                        onInputChange={handleMinInputChange}
+                        initialValuе={minPeriodSelectedOption}
+                        inputValue={minInput?.toNumber()}
+                        disabled={!isMinPeriodSelected}
+                      />
+                    </Col>
+                    <Col span={12} className="checkbox-wrapper">
+                      <Checkbox onChange={handleMaxCheckboxChange} checked={isMaxPeriodSelected} /> max
+                      <LandsEditPeriodDropdown
+                        options={MaxRentPeriodOptions}
+                        onChange={handleMaxSelectChange}
+                        onInputChange={handleMaxInputChange}
+                        initialValuе={maxPeriodSelectedOption}
+                        inputValue={maxInput?.toNumber()}
+                        disabled={!isMaxPeriodSelected}
+                      />
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Col>
+            <Col span={24} className="future-period-wrapper">
+              <span style={{ marginRight: '15px' }}>At any given time to be rented out at most</span>
+              <LandsEditPeriodDropdown
+                options={AtMostRentPeriodOptions}
+                onChange={handleAtMostSelectChange}
+                onInputChange={handleAtMostInputChange}
+                initialValuе={maxFutureSelectedOption}
+                inputValue={maxFutureTimeInput?.toNumber()}
+              />
+              <span style={{ marginLeft: '15px' }}>in the future</span>
+              <Icon
+                name="info-outlined"
+                className="info-icon"
+                style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginLeft: '5px' }}
+              />
+            </Col>
+            <Col span={24}>
+              <Row className="price-container" gutter={[16, 16]}>
+                <Col span={24}>Price</Col>
+                <Col span={24}>
+                  <Row>
+                    <Col span={12} className="currency-wrapper">
+                      <CurrencyDropdown
+                        changeHandler={handleCurrencyChange}
+                        paymentTokens={paymentTokens}
+                        value={paymentToken}
+                      />
+                      <div className="price-input-wrapper">
+                        <LandsEditInput
+                          onInputChange={handleCostEthChange}
+                          value={tokenCost?.toNumber()}
+                          customClassName="price-eth-input"
+                        />
+                        <span>{usdPrice}$</span>
+                      </div>
+                      <span>/ day</span>
+                    </Col>
+                    <Col span={12}>
+                      <Row justify="end">
+                        <Col>
+                          <button
+                            type="button"
+                            className="button-primary action-btn"
+                            onClick={() => setShowWarningModal(true)}
+                            disabled={saveDisabled}
+                          >
+                            <span>Save</span>
+                          </button>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col span={24}>
+                  <Row>
+                    <Col span={10} className="your-earning-container">
+                      <Row>
+                        <Col span={9}>
+                          <Row>
+                            <Col span={24}>
+                              <Icon
+                                name={getTokenIconName(paymentToken.symbol || 'png/eth')}
+                                className="info-icon"
+                                style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
+                              />
+                              <span className="earning-text">{earnings?.toString(10) || 0} </span>
+                            </Col>
+                            <Col>
+                              <p>Your Earnings</p>
+                            </Col>
+                          </Row>
+                        </Col>
+                        <Col span={2} style={{ display: 'flex', justifyContent: 'center' }}>
+                          +
+                        </Col>
+                        <Col span={13}>
+                          <Row>
+                            <Col span={24}>
+                              <Icon
+                                name={getTokenIconName(paymentToken.symbol || '')}
+                                className="info-icon"
+                                style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
+                              />
+                              <span className="earning-text">{protocolFee?.toString(10) || 0} </span>
+                            </Col>
+                            <Col>
+                              <p>{feePercentage}% Protocol fee</p>
+                            </Col>
+                          </Row>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Col>
+            {errMessage && (
+              <Col span={24} className="error-wrapper">
+                {errMessage}
+              </Col>
+            )}
+          </Row>
+        </Col>
+        <WarningModal
+          onCancel={() => {
+            setShowWarningModal(false);
+          }}
+          onOk={handleSave}
+          visible={showWarningModal}
+          text={
+            <>Changing the payment type will enforce the payout of any unclaimed rent accumulated for this property.</>
+          }
+        />
+      </Row>
+    </section>
   );
 };
 

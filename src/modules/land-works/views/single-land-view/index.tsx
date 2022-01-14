@@ -190,11 +190,13 @@ const SingleLand: React.FC = () => {
       <SingleViewLandHistory assetId={tokenId} />
       {!!adjacentLands.length && (
         <Row className="pooling-section">
-          <Col className="pooling-heading">Pooling </Col>
-          <Col className="pooling-description">
-            The following properties are adjacent to this property. You can rent the adjacent properties to maximise the
-            land you want to build scenes/experiences on
-          </Col>
+          <div className="pooling-title">
+            <p className="pooling-heading">Pooling </p>
+            <p className="pooling-description">
+              The following properties are adjacent to this property. You can rent the adjacent properties to maximise the
+              land you want to build scenes/experiences on
+            </p>
+          </div>
           <Col span={24}>
             <Row gutter={[15, 15]} style={{ paddingTop: '27px' }}>
               {adjacentLands.map((land) => (

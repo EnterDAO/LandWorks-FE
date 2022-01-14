@@ -1,5 +1,10 @@
 .list-view {
-  margin-top: 40px;
+  margin: 40px auto 0;
+  width: 800px;
+
+  @media all and (max-width: 1024px) {
+    width: 100%;
+  }
 
   .list-view-wrapper {
     padding: 22px;
