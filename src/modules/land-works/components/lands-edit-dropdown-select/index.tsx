@@ -34,10 +34,15 @@ const styles = {
   menu: (defaultStyles: any) => ({
     ...defaultStyles,
     position: 'absolute',
-    right: 0,
-    top: '80%',
     background: '#161622',
     color: '#ffffff',
+    top: '79%',
+    left: '3%',
+    width: '95%',
+    borderBottomRightRadius: '10px',
+    borderBottomLeftRadius: '10px',
+    borderTopRightRadius: '0px',
+    borderTopLeftRadius: '0px',
   }),
   indicatorsContainer: () => ({
     '& > div': {
@@ -55,9 +60,9 @@ const styles = {
     cursor: 'pointer',
     color: '#ffffff',
   }),
-  singleValue: (defaultStyles: any) => ({
+  singleValue: (defaultStyles: any, state: any) => ({
     ...defaultStyles,
-    color: '#ffffff',
+    color: state.isDisabled ? '#666666' : '#ffffff',
   }),
   control: (base: any, state: any) => ({
     ...base,
@@ -105,7 +110,7 @@ const styles = {
     fontFamily: 'Poppins, sans-serif',
     fontStyle: 'normal',
     fontWeight: 'normal',
-    height: '30px',
+    // height: '30px',
     display: 'flex',
     alignItems: 'center',
     paddingLeft: '15px',

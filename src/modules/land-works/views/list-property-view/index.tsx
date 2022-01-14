@@ -480,7 +480,11 @@ const ListView: React.FC = () => {
                         <p className="drop-heading">Metaverse</p>
                       </Col>
                       <Col span={24}>
-                        <Dropdown options={PlaceOptions} onChange={handlePlaceChange} initialValuе={PlaceOptions[0]} />
+                        <EditViewLandDropdown
+                          options={PlaceOptions}
+                          onChange={handlePlaceChange}
+                          initialValuе={PlaceOptions[0]}
+                        />
                       </Col>
                     </Row>
                   </Col>
