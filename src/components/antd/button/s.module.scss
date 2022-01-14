@@ -23,8 +23,8 @@
   // primary disabled
   --btn-primary-shadow-disabled: none;
   --btn-primary-border-disabled: none;
-  --btn-primary-bg-disabled: rgba(0, 0, 0, 0.1);
-  --btn-primary-text-disabled: rgba(0, 0, 0, 0.3);
+  --btn-primary-bg-disabled: rgb(46, 43, 43);
+  --btn-primary-text-disabled: rgb(241, 233, 233);
 
   // default regular
   --btn-default-shadow: none;
@@ -101,8 +101,8 @@
   --btn-default-text-disabled: #939496;
 
   // primary disabled
-  --btn-primary-bg-disabled: rgba(255, 255, 255, 0.1);
-  --btn-primary-text-disabled: rgba(255, 255, 255, 0.3);
+  --btn-primary-bg-disabled: rgb(46, 43, 43);
+  --btn-primary-text-disabled: rgb(241, 233, 233);
 
   // ghost disabled
   --btn-ghost-border-disabled: 1px solid #43484d;

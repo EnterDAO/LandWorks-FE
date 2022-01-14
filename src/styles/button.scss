@@ -31,8 +31,8 @@
 
   &:disabled,
   &[disabled] {
-    background: rgba(0, 0, 0, 0.1);
-    color: rgba(0, 0, 0, 0.3);
+    background: rgb(46, 43, 43);
+    color:  rgb(241, 233, 233);
     box-shadow: none;
     cursor: not-allowed;
 
