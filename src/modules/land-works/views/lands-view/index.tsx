@@ -12,6 +12,9 @@ import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sort
 import { SortDirection } from 'modules/land-works/models/SortDirection';
 import { useWallet } from 'wallets/wallet';
 
+import { ReactComponent as HighIcon } from '../../../../resources/svg/order-high-first.svg';
+import { ReactComponent as HottestIcon } from '../../../../resources/svg/order-hot.svg';
+import { ReactComponent as LowIcon } from '../../../../resources/svg/order-low-first.svg';
 import {
   AssetEntity,
   UserEntity,
@@ -25,6 +28,24 @@ import './index.scss';
 
 const DECENTRALAND_METAVERSE = '1';
 const DEFAULT_LAST_RENT_END = '0';
+
+const data = [
+  {
+    label: 'Hottest first',
+    value: 1,
+    icon: <HottestIcon />,
+  },
+  {
+    label: 'Price: low first',
+    value: 2,
+    icon: <LowIcon />,
+  },
+  {
+    label: 'Price: high first',
+    value: 3,
+    icon: <HighIcon />,
+  },
+];
 
 const Lands: React.FC = () => {
   const pageSizeOptions = ['6', '12', '24'];
@@ -151,7 +172,7 @@ const Lands: React.FC = () => {
           </Row>
           <Row className="filters" gutter={20}>
             <Col>
-              <LandsPriceSorter onSortDirectionChange={onSortDirectionChange} />
+              <LandsPriceSorter onSortDirectionChange={onSortDirectionChange} data={data} />
             </Col>
             <Col>
               <LandsAvailableSorter availableOnly={byAvailability} onAvailableChange={onSortByAvailability} />
