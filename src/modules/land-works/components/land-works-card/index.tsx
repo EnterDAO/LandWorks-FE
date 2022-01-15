@@ -12,6 +12,7 @@ import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
 import { ReactComponent as EthIcon } from '../../../../resources/svg/eth.svg';
 import { ReactComponent as HotIcon } from '../../../../resources/svg/hot.svg';
 import { AssetEntity } from '../../api';
+import { LandsTooltip } from '../lands-tooltip';
 import { PricePerSecondInfo } from '../price-per-second-info';
 import landImage from './assets/land.png';
 
@@ -76,9 +77,10 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
                     amount={land.pricePerMagnitude.usdPrice || ZERO_BIG_NUMBER}
                   />
                   <span className="per-day">/ {land.pricePerMagnitude.magnitude}</span>
-                  <button onClick={() => setShowChart(!showChart)}>
+                  {/* <button onClick={() => setShowChart(!showChart)}>
                     <Icon name="info-outlined" className="info-icon" />
-                  </button>
+                  </button> */}
+                  <LandsTooltip placement="top" trigger="hover" text="some text here" />
                 </span>
               </Col>
             </Row>
