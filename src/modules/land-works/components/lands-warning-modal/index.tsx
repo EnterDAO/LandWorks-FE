@@ -11,13 +11,19 @@ type Props = ModalProps & {
   renderSuccess?: () => React.ReactNode;
   onOk: () => Promise<void>;
   text: any;
+  title?: string;
 };
 
 export const WarningModal: React.FC<Props> = (props) => {
-  const { renderProgress, renderSuccess, onOk, text, ...modalProps } = props;
+  const { renderProgress, renderSuccess, title, onOk, text, ...modalProps } = props;
 
   return (
-    <Modal width={480} className="warning-modal" title={<p style={{ textAlign: 'center' }}>Warning</p>} {...modalProps}>
+    <Modal
+      width={480}
+      className="warning-modal"
+      title={<p style={{ textAlign: 'center' }}>{title ? title : 'Warning'}</p>}
+      {...modalProps}
+    >
       <Row>
         <Col span={24}>
           <p>{text}</p>
