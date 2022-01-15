@@ -187,9 +187,13 @@ type ExtractedTime = {
 };
 
 const TIME_TYPES = {
+  MINUTE: 'min',
   MINUTES: 'mins',
+  HOUR: 'hour',
   HOURS: 'hours',
+  DAY: 'day',
   DAYS: 'days',
+  WEEK: 'week',
   WEEKS: 'weeks',
 };
 
@@ -201,25 +205,41 @@ export function getTimeType(values: ParsedDate): ExtractedTime {
 
   const lessThanHour = values.minutes < 60;
   if (lessThanHour) {
-    result.timeType = TIME_TYPES.MINUTES;
+    if (values.minutes === 1) {
+      result.timeType = TIME_TYPES.MINUTE;
+    } else {
+      result.timeType = TIME_TYPES.MINUTES;
+    }
     result.timeValue = values.minutes;
   }
 
   const moreThanHour = values.hours >= 1;
   if (moreThanHour) {
-    result.timeType = TIME_TYPES.HOURS;
+    if (values.hours === 1) {
+      result.timeType = TIME_TYPES.HOUR;
+    } else {
+      result.timeType = TIME_TYPES.HOURS;
+    }
     result.timeValue = values.hours;
   }
 
   const moreThanDay = values.days >= 1;
   if (moreThanDay) {
-    result.timeType = TIME_TYPES.DAYS;
+    if (values.days === 1) {
+      result.timeType = TIME_TYPES.DAY;
+    } else {
+      result.timeType = TIME_TYPES.DAYS;
+    }
     result.timeValue = values.days;
   }
 
   const moreThanWeek = values.weeks >= 1;
   if (moreThanWeek) {
-    result.timeType = TIME_TYPES.WEEKS;
+    if (values.weeks === 1) {
+      result.timeType = TIME_TYPES.WEEK;
+    } else {
+      result.timeType = TIME_TYPES.WEEKS;
+    }
     result.timeValue = values.weeks;
   }
 
