@@ -352,7 +352,7 @@ const ListView: React.FC = () => {
       );
       showToastNotification(
         ToastType.Success,
-        'Property listed successfully! It will take a few minutes to be listed in your Lending properties page !'
+        'Property listed successfully! It will take a few seconds to be shown in your Lending properties page.'
       );
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while listing the property.');
