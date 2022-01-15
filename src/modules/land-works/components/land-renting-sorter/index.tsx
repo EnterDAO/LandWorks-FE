@@ -15,7 +15,7 @@ interface ILandsPlaceSorterProps {
 }
 
 const LandsRentingSorter: React.FC<ILandsPlaceSorterProps> = ({ onRentSortChange }) => {
-  return <Select options={options} defaultValue={options[0].label} onChange={onRentSortChange}></Select>;
+  return <Select options={options} disabled defaultValue={options[0].label} onChange={onRentSortChange}></Select>;
 };
 
 export default LandsRentingSorter;
