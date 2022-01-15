@@ -35,7 +35,7 @@ const LayoutHeader: React.FC = () => {
   });
 
   const isLandingPage = useRouteMatch({
-    path: ['/home', '/'],
+    path: ['/', '/'],
     strict: true,
     sensitive: true,
   });
@@ -67,6 +67,17 @@ const LayoutHeader: React.FC = () => {
             <ListIcon />
           </button>
         </div>
+      )}
+
+      {isLandingPage?.isExact && (
+        <nav className={s.nav}>
+          <ExternalLink href="https://enterdao.xyz" target="_blank" className={s.navLink}>
+            <span>EnterDAO</span>
+          </ExternalLink>
+          <ExternalLink href="https://docs.landworks.xyz" target="_blank" className={s.navLink}>
+            <span>Docs</span>
+          </ExternalLink>
+        </nav>
       )}
 
       {isLandingPage?.isExact ? null : <ConnectedWallet />}
