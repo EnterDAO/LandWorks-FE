@@ -70,6 +70,12 @@ const LayoutHeader: React.FC = () => {
       )}
 
       {isLandingPage?.isExact && (
+        <Button type="link" className={s.burger} onClick={() => setNavOpen((prevState) => !prevState)}>
+          <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
+        </Button>
+      )}
+
+      {isLandingPage?.isExact && (
         <nav className={s.nav}>
           <a
             href="#about"
@@ -103,10 +109,6 @@ const LayoutHeader: React.FC = () => {
 
       {isLandingPage?.isExact ? null : <ConnectedWallet />}
 
-      <Button type="link" className={s.burger} onClick={() => setNavOpen((prevState) => !prevState)}>
-        <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
-      </Button>
-
       {navOpen &&
         ReactDOM.createPortal(
           <div
@@ -126,7 +128,7 @@ const LayoutHeader: React.FC = () => {
               <div className={s.mobileMenuInner}>
                 <Row style={{ width: '100%' }}>
                   <Col span={24}>
-                    {isLandingPage?.isExact ? (
+                    {isLandingPage?.isExact && (
                       <div className={s.mobileMenuBlock}>
                         <h3>Info</h3>
                         <a
@@ -166,8 +168,6 @@ const LayoutHeader: React.FC = () => {
                           <span>Docs</span>
                         </ExternalLink>
                       </div>
-                    ) : (
-                      <LandsNavMobile setNavOpen={setNavOpen} />
                     )}
                   </Col>
                 </Row>
