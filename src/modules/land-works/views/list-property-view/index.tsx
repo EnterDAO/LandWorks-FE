@@ -38,6 +38,7 @@ import {
 import { DEFAULT_ADDRESS, MAX_UINT_256, ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
 
 import './index.scss';
+import {LandsTooltip} from "../../components/lands-tooltip";
 
 const PlaceOptions = [
   {
@@ -536,6 +537,7 @@ const ListView: React.FC = () => {
                           inputValue={minInput?.toNumber()}
                           disabled={!isMinPeriodSelected}
                         />
+                        <LandsTooltip placement="bottom" trigger="hover" text="The minimum period for which the property will be available to be rented by a given user. If minimum period is not set (not enabled), there won't be any restriction on the renting time, e.g the property may be rented for as low as 1 second." />
                       </Col>
                       <Col xs={24} sm={12} className="checkbox-wrapper">
                         <Checkbox onChange={handleMaxCheckboxChange} checked={isMaxPeriodSelected} /> max
@@ -547,6 +549,7 @@ const ListView: React.FC = () => {
                           inputValue={maxInput?.toNumber()}
                           disabled={!isMaxPeriodSelected}
                         />
+                        <LandsTooltip placement="bottom" trigger="hover" text="The maximum period for which the property can be rented by a given user. If maximum period is not set (not enabled), the value will default to the liquidity restriction configured for the property." />
                       </Col>
                     </Row>
                   </Col>
@@ -565,11 +568,8 @@ const ListView: React.FC = () => {
                     inputValue={maxFutureTimeInput?.toNumber()}
                   />
                   <span style={{ marginLeft: '15px' }}>in the future</span>
-                  <Icon
-                    name="info-outlined"
-                    className="info-icon"
-                    style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginLeft: '5px' }}
-                  />
+                  <LandsTooltip placement="bottom" trigger="hover" text="The timestamp delta after which the protocol will not allow for the property to be rented. It is a utility to lenders so that they can enforce liquidity restrictions on the property being listed. E.g if the property is popular and rented non-stop, restrictions can be made using this configuration so that you can have your property liquid (available for withdrawal). This configuration resembles the maximum time you are willing to wait in order to withdraw your property from the protocol.
+" />
                 </div>
               </Col>
               <Col span={24}>
@@ -654,6 +654,7 @@ const ListView: React.FC = () => {
                               </Col>
                             </Row>
                           </Col>
+                          <LandsTooltip placement="bottomLeft" trigger="hover" text="Renters are charged at the time of the rent for the whole period they are renting. The earnings are to be received in the case the property is being rented. Protocol fees are charged during the rent transaction. If there are no rents, no fees will be charged." />
                         </Row>
                       </Col>
                     </Row>

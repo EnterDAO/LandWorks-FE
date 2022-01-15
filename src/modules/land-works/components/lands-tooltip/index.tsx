@@ -9,7 +9,7 @@ import './index.scss';
 type TooltipProps = {
   placement: TooltipPlacement;
   trigger: string;
-  text: string;
+  text: any;
 };
 
 export const LandsTooltip: React.FC<TooltipProps> = (props) => {

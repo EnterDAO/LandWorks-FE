@@ -206,10 +206,10 @@ const WalletProvider: React.FC = (props) => {
               Listing/Renting properties on LandWorks doesn't come without risks. Before making a deposit, it is best to
               research and understand the risks involved. LandWorks smart contracts have been
               <ExternalLink href="https://github.com/EnterDAO/LandWorks-protocol/tree/main/audits" target="_blank">
-                <span> audited </span>
-              </ExternalLink>
-              , however, security audits don't eliminate risks completely. Do not supply assets that you can't afford to
-              lose as LandWorks is still in Beta.
+                <span>audited</span>
+              </ExternalLink>, however, security audits don't eliminate risks completely.
+
+              Do not supply assets that you can't afford to lose as LandWorks is still in Beta.
             </>
           }
         />

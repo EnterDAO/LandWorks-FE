@@ -26,6 +26,7 @@ import {
 } from '../../../../web3/utils';
 
 import './index.scss';
+import {LandsTooltip} from "../lands-tooltip";
 
 type SingleLandProps = {
   setShowRentModal: (isShown: boolean) => void;
@@ -225,7 +226,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                       amount={asset?.pricePerMagnitude?.usdPrice || ZERO_BIG_NUMBER}
                     />
                     <span className="per-day">/ {asset?.pricePerMagnitude?.magnitude}</span>
-                    <Icon name="info-outlined" className="info-icon" />
+                    <LandsTooltip placement="bottomLeft" trigger="hover" text={
+                      <>
+                        The price for renting this property is {asset?.pricePerSecond} <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" /> per second.
+                      </>
+                    } />
                   </Col>
                 </Row>
                 {shouldShowClaimButton() && (
@@ -241,7 +246,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                     disabled={!isListed()}
                     onClick={handleRent}
                   >
-                    <span>RENT PROPERTY</span>
+                    <span>RENT NOW</span>
                   </button>
                 )}
               </Col>
@@ -252,7 +257,8 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
               <Col span={12}>
                 <Row>
                   <Col span={24} className="current-address">
-                    Current operator <Icon name="info-outlined" className="info-icon" />
+                    Current Operator
+                    <LandsTooltip placement="bottomLeft" trigger="hover" text="The operator currently set and authorised to deploy scenes and experiences in the metaverse." />
                   </Col>
                   <Col span={24}>
                     <ExternalLink href={getEtherscanAddressUrl(asset?.operator)} className="land-operator-address">
