@@ -99,11 +99,11 @@ export default class Erc20Contract extends Web3Contract {
       },
       {
         method: 'decimals',
-        transform: value => Number(value),
+        transform: (value) => Number(value),
       },
       {
         method: 'totalSupply',
-        transform: value => new BigNumber(value),
+        transform: (value) => new BigNumber(value),
       },
     ]).then(([name, symbol, decimals, totalSupply]) => {
       this.name = name;
@@ -121,7 +121,7 @@ export default class Erc20Contract extends Web3Contract {
       return;
     }
 
-    return this.call('balanceOf', [addr]).then(value => {
+    return this.call('balanceOf', [addr]).then((value) => {
       this.balances.set(addr, new BigNumber(value));
       this.emit(Web3Contract.UPDATE_DATA);
     });
@@ -134,7 +134,7 @@ export default class Erc20Contract extends Web3Contract {
       return;
     }
 
-    return this.call('allowance', [addr, spenderAddress]).then(value => {
+    return this.call('allowance', [addr, spenderAddress]).then((value) => {
       this.allowances.set(spenderAddress, new BigNumber(value));
       this.emit(Web3Contract.UPDATE_DATA);
     });

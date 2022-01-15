@@ -17,12 +17,12 @@ import Erc20Contract from '../../../../web3/erc20Contract';
 import { AssetAvailablity, PaymentToken } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
 import { RentDatePicker } from '../lands-rent-date-picker';
+import { LandsTooltip } from '../lands-tooltip';
 
 import { getFormattedTime, isValidAddress } from '../../../../utils';
 import { ONE_ADDRESS, getHumanValue } from '../../../../web3/utils';
 
 import './index.scss';
-import {LandsTooltip} from "../lands-tooltip";
 
 type Props = ModalProps & {
   txHash?: string;
@@ -103,7 +103,7 @@ export const RentModal: React.FC<Props> = (props) => {
   };
 
   const handleApprove = async () => {
-    if (paymentToken === undefined || paymentToken.id !== ONE_ADDRESS) {
+    if (paymentToken === undefined || paymentToken.id === ONE_ADDRESS) {
       return;
     }
 
@@ -186,7 +186,11 @@ export const RentModal: React.FC<Props> = (props) => {
                 <Col span={24} className="title-period">
                   <p className="light-text">
                     Choose rent period
-                    <LandsTooltip placement="bottomLeft" trigger="hover" text="The period for which the property will be rented. Properties have limitations such as minimum or maximum renting periods." />
+                    <LandsTooltip
+                      placement="bottomLeft"
+                      trigger="hover"
+                      text="The period for which the property will be rented. Properties have limitations such as minimum or maximum renting periods."
+                    />
                   </p>
                   <p className="light-text">{getFormattedTime(period)}</p>
                 </Col>
@@ -205,7 +209,11 @@ export const RentModal: React.FC<Props> = (props) => {
             <Col span={24} style={{ display: 'flex', justifyContent: 'space-between' }}>
               <p className="light-text oprator-text">
                 Operator
-                <LandsTooltip placement="bottomLeft" trigger="hover" text="The address that will be authorised to deploy scenes and experiences on the rented property during your renting period." />
+                <LandsTooltip
+                  placement="bottomLeft"
+                  trigger="hover"
+                  text="The address that will be authorised to deploy scenes and experiences on the rented property during your renting period."
+                />
               </p>
               <p>{errAddressMessage}</p>
               {isYou() && <p className="light-text">you</p>}
