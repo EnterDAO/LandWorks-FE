@@ -275,14 +275,29 @@ const ListView: React.FC = () => {
     const optionIndex = AtMostRentPeriodOptions.indexOf(optionByType!);
 
     setMaxFutureSelectedOption(AtMostRentPeriodOptions[optionIndex]);
-
     setMaxFutureTime(maxFutureTimeInput?.multipliedBy(value!)!);
+
+    // If maxPeriod chebkox is not selected, mirror the values to the maxPeriod input and dropdown
+    if (!isMaxPeriodSelected) {
+      setMaxPeriodType(value);
+
+      const optionByType = MaxRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
+      const optionIndex = MaxRentPeriodOptions.indexOf(optionByType!);
+      setMaxPeriodSelectedOption(MaxRentPeriodOptions[optionIndex]);
+      setMaxPeriod(maxInput?.multipliedBy(value!)!);
+    }
   };
 
   const handleAtMostInputChange = (e: any) => {
     const value = BigNumber.from(e.target.value);
     setMaxFutureTimeInput(value!);
     setMaxFutureTime(value?.multipliedBy(maxFutureTimePeriod!)!);
+
+    // If maxPeriod chebkox is not selected, mirror the values to the maxPeriod input and dropdown
+    if (!isMaxPeriodSelected) {
+      setMaxInput(value!);
+      setMaxPeriod(value?.multipliedBy(maxPeriodType!)!);
+    }
   };
 
   const handleCurrencyChange = (e: any) => {
