@@ -241,7 +241,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                     disabled={!isListed()}
                     onClick={handleRent}
                   >
-                    <span>RENT NOW</span>
+                    <span>RENT PROPERTY</span>
                   </button>
                 )}
               </Col>
