@@ -6,6 +6,7 @@ import { NoEthereumProviderError } from '@web3-react/injected-connector';
 import * as Antd from 'antd';
 
 import Spin from 'components/antd/spin';
+import ExternalLink from 'components/custom/externalLink';
 import { getNetworkName } from 'components/providers/eth-web3-provider';
 import config from 'config';
 import { WarningModal } from 'modules/land-works/components/lands-warning-modal';
@@ -204,9 +205,11 @@ const WalletProvider: React.FC = (props) => {
             <>
               Listing/Renting properties on LandWorks doesn't come without risks. Before making a deposit, it is best to
               research and understand the risks involved. LandWorks smart contracts have been
-              [audited](https://github.com/EnterDAO/LandWorks-protocol/tree/main/audits), however, security audits don't
-              eliminate risks completely. Do not supply assets that you can't afford to lose as LandWorks is still in
-              Beta.
+              <ExternalLink href="https://github.com/EnterDAO/LandWorks-protocol/tree/main/audits" target="_blank">
+                <span> audited </span>
+              </ExternalLink>
+              , however, security audits don't eliminate risks completely. Do not supply assets that you can't afford to
+              lose as LandWorks is still in Beta.
             </>
           }
         />
