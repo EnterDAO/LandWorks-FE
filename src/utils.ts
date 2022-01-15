@@ -158,19 +158,19 @@ export function secondsToDuration(value: number): ParsedDate {
     weeks: 0,
   };
   const secondsToMinutes = (value: number) => {
-    return value / 60;
+    return Number((value / 60).toFixed(2));
   };
 
   const minutesToHours = (value: number) => {
-    return value / 60;
+    return Number((value / 60).toFixed(2));
   };
 
   const hoursToDays = (value: number) => {
-    return value / 24;
+    return Number((value / 24).toFixed(2));
   };
 
   const daysToWeeks = (value: number) => {
-    return value / 7;
+    return Number((value / 7).toFixed(2));
   };
 
   result.minutes = secondsToMinutes(value);
@@ -187,7 +187,7 @@ type ExtractedTime = {
 };
 
 const TIME_TYPES = {
-  MINUTES: 'minutes',
+  MINUTES: 'mins',
   HOURS: 'hours',
   DAYS: 'days',
   WEEKS: 'weeks',

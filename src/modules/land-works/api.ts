@@ -6,7 +6,7 @@ import { getUsdPrice } from '../../components/providers/known-tokens-provider';
 import { GraphClient } from '../../web3/graph/client';
 import { AssetStatus } from './models/AssetStatus';
 
-import { getDecentralandAssetName, getFormattedTime, getNowTs } from '../../utils';
+import { getDecentralandAssetName, getFormattedTime, getNowTs, getTimeType, secondsToDuration } from '../../utils';
 import { DAY_IN_SECONDS, ONE_HUNDRED_YEARS_IN_SECONDS, ONE_SECOND } from '../../utils/date';
 import { MAX_UINT_256, getHumanValue } from '../../web3/utils';
 
@@ -889,7 +889,10 @@ function getAvailability(asset: any): AssetAvailablity {
   let hasMaxAvailablity = false;
 
   if (!new BigNumber(asset.minPeriod).eq(ONE_SECOND) && !new BigNumber(asset.minPeriod).eq(MAX_UINT_256)) {
-    minAvailability = getFormattedTime(asset.minPeriod);
+    const parsedDate = secondsToDuration(new BigNumber(asset.minPeriod).toNumber());
+    const { timeValue, timeType } = getTimeType(parsedDate);
+    const period = `${timeValue} ${timeType}`;
+    minAvailability = period;
     hasMinAvailability = true;
   }
 
@@ -903,7 +906,11 @@ function getAvailability(asset: any): AssetAvailablity {
 
   let maxRentDate = startRent.plus(maxRentPeriod);
   if (maxRentPeriod.lt(ONE_HUNDRED_YEARS_IN_SECONDS)) {
-    maxAvailability = getFormattedTime(maxRentPeriod.toNumber());
+    const parsedDate = secondsToDuration(maxRentPeriod.toNumber());
+    const { timeValue, timeType } = getTimeType(parsedDate);
+    const period = `${timeValue} ${timeType}`;
+    maxAvailability = period;
+
     hasMaxAvailablity = true;
   } else {
     maxRentDate = startRent.plus(ONE_HUNDRED_YEARS_IN_SECONDS);
@@ -926,9 +933,13 @@ function getAvailability(asset: any): AssetAvailablity {
     }
   }
 
+  const parsedDateAfter = secondsToDuration(startRent.toNumber() - now);
+  const { timeValue, timeType } = getTimeType(parsedDateAfter);
+  const period = `${timeValue} ${timeType}`;
+
   return {
     isCurrentlyAvailable: now > Number(asset.lastRentEnd),
-    availabilityAfter: getFormattedTime(startRent.toNumber() - now),
+    availabilityAfter: period,
     startRentDate: startRent.toNumber(),
     minRentDate: minRentDate.toNumber(),
     maxRentDate: maxRentDate.toNumber(),
