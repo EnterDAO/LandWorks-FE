@@ -88,7 +88,7 @@ const LayoutFooter: React.FC = () => {
           </Col>
         </Row>
         <div className={cn(s.row, s.copyrightsBlock)}>
-          <div className={s.copyrightLink}>Enterdao.xyz © {getYear()}. Open-sourced.</div>
+          <div className={s.copyrightLink}>landworks.xyz © {getYear()}. Open-sourced.</div>
           <div className={s.sLinksWrap}>
             {/* //TODO:: Update the icon with Github */}
             <ExternalLink href="https://github.com/EnterDAO" className={s.sLink}>
