@@ -107,8 +107,8 @@ export function getDecentralandAssetName(decentralandData: DecentralandData): st
   if (decentralandData.coordinates.length > 1) {
     return `Estate (${decentralandData.coordinates.length} LAND)`;
   }
-  const coordinates = decentralandData.coordinates[0].id.split('-');
-  return `LAND (${coordinates[0]}, ${coordinates[1]})`;
+  const coordinates = decentralandData.coordinates[0];
+  return `LAND (${coordinates.x}, ${coordinates.y})`;
 }
 
 export function doSequential<T, K = any>(

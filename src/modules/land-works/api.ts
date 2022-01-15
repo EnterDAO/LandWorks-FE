@@ -492,6 +492,8 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
             asset {
               metaverseAssetId
               decentralandData {
+                metadata
+                isLAND
                 coordinates {
                   id
                   x
