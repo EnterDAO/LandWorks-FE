@@ -71,9 +71,30 @@ const LayoutHeader: React.FC = () => {
 
       {isLandingPage?.isExact && (
         <nav className={s.nav}>
-          <ExternalLink href="https://enterdao.xyz" target="_blank" className={s.navLink}>
-            <span>EnterDAO</span>
-          </ExternalLink>
+          <a
+            href="#about"
+            className={s.navLink}
+            onClick={() => {
+              const aboutSection = document.querySelector('.about-wrapper') as HTMLElement;
+              if (aboutSection !== null) {
+                window.scrollTo({ top: aboutSection.offsetTop, left: 0, behavior: 'smooth' });
+              }
+            }}
+          >
+            <span>About</span>
+          </a>
+          <a
+            href="#why"
+            className={s.navLink}
+            onClick={() => {
+              const aboutSection = document.querySelector('.how-it-works-wrapper') as HTMLElement;
+              if (aboutSection !== null) {
+                window.scrollTo({ top: aboutSection.offsetTop, left: 0, behavior: 'smooth' });
+              }
+            }}
+          >
+            <span>Why Rent ?</span>
+          </a>
           <ExternalLink href="https://docs.landworks.xyz" target="_blank" className={s.navLink}>
             <span>Docs</span>
           </ExternalLink>
@@ -81,9 +102,11 @@ const LayoutHeader: React.FC = () => {
       )}
 
       {isLandingPage?.isExact ? null : <ConnectedWallet />}
+
       <Button type="link" className={s.burger} onClick={() => setNavOpen((prevState) => !prevState)}>
         <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
       </Button>
+
       {navOpen &&
         ReactDOM.createPortal(
           <div
@@ -103,7 +126,49 @@ const LayoutHeader: React.FC = () => {
               <div className={s.mobileMenuInner}>
                 <Row style={{ width: '100%' }}>
                   <Col span={24}>
-                    <LandsNavMobile setNavOpen={setNavOpen} />
+                    {isLandingPage?.isExact ? (
+                      <div className={s.mobileMenuBlock}>
+                        <h3>Info</h3>
+                        <a
+                          href="#about"
+                          className={s.dropdownLink}
+                          onClick={() => {
+                            const aboutSection = document.querySelector('.about-wrapper') as HTMLElement;
+                            if (aboutSection !== null) {
+                              window.scrollTo({ top: aboutSection.offsetTop, left: 0, behavior: 'smooth' });
+                            }
+                            setNavOpen(false);
+                          }}
+                        >
+                          <Icon name="whitepaper" width={20} height={20} className={s.dropdownIcon} />
+                          <span>About</span>
+                        </a>
+                        <a
+                          href="#why"
+                          className={s.dropdownLink}
+                          onClick={() => {
+                            const aboutSection = document.querySelector('.how-it-works-wrapper') as HTMLElement;
+                            if (aboutSection !== null) {
+                              window.scrollTo({ top: aboutSection.offsetTop, left: 0, behavior: 'smooth' });
+                            }
+                            setNavOpen(false);
+                          }}
+                        >
+                          <Icon name="team" width={20} height={20} className={s.dropdownIcon} />
+                          <span>Why Rent ?</span>
+                        </a>
+                        <ExternalLink
+                          href="https://docs.landworks.xyz"
+                          className={s.dropdownLink}
+                          onClick={() => setNavOpen(false)}
+                        >
+                          <Icon name="docs" width={20} height={20} className={s.dropdownIcon} />
+                          <span>Docs</span>
+                        </ExternalLink>
+                      </div>
+                    ) : (
+                      <LandsNavMobile setNavOpen={setNavOpen} />
+                    )}
                   </Col>
                 </Row>
               </div>
