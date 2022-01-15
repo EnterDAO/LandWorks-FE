@@ -52,7 +52,7 @@ const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) =
 
   const columns = [
     {
-      title: 'property',
+      title: 'Property',
       dataIndex: 'asset',
       render: (asset: any) => {
         console.log(asset);
@@ -78,7 +78,7 @@ const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) =
       ),
     },
     {
-      title: 'date',
+      title: 'Date',
       dataIndex: 'timestamp',
       render: (timestamp: string) => <LandWorksTableDate timestamp={timestamp} dateFormat={'HH:mm:ss dd.MM.yyyy'} />,
     },
