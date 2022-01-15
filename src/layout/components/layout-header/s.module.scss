@@ -143,14 +143,25 @@
   border-right: 1px solid var(--theme-border-color);
   margin-right: 20px;
   min-height: 28px;
+  margin-left: auto;
 
   @media (max-width: 768px) {
     display: none;
   }
 }
 
+.mobileMenuBlock {
+  padding: 10px 20px;
+}
+
 .navLink {
   margin-right: 30px;
+  color: rgba(185, 185, 211, 1);
+  font-size: 16px;
+
+  :hover {
+  color: rgb(96, 96, 114);
+  }
 
   .dropdownArrow {
     color: var(--theme-primary-color);
