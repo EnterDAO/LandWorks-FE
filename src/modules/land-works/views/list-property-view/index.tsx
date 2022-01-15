@@ -123,6 +123,7 @@ const ListView: React.FC = () => {
   const landworks = useLandworks();
   const estateRegistry = useEstateRegistry();
   const landRegistry = useLandRegistry();
+  const history = useHistory();
 
   const { landWorksContract } = landworks;
   const { landRegistryContract } = landRegistry;
@@ -315,6 +316,8 @@ const ListView: React.FC = () => {
       return;
     }
 
+    setApproveDisabled(true);
+
     try {
       let approvedAddress = DEFAULT_ADDRESS;
       if (selectedProperty.isLAND) {
@@ -325,11 +328,12 @@ const ListView: React.FC = () => {
         approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
       }
       if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
-        setApproveDisabled(true);
         setListDisabled(false);
       }
     } catch (e) {
       console.log(e);
+      // If there is an error enable the approve button
+      setApproveDisabled(false);
     }
   };
 
@@ -351,6 +355,8 @@ const ListView: React.FC = () => {
       return;
     }
 
+    setListDisabled(true);
+
     const metaverseRegistry = selectedProperty.isLAND
       ? config.contracts.decentraland.landRegistry
       : config.contracts.decentraland.estateRegistry;
@@ -370,6 +376,8 @@ const ListView: React.FC = () => {
         ToastType.Success,
         'Property listed successfully! It will take a few seconds to be shown in your Lending properties page.'
       );
+      setListDisabled(false);
+      history.push('/all');
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while listing the property.');
       console.log(e);
