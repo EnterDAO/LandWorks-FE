@@ -77,7 +77,8 @@ const Lands: React.FC = () => {
   };
 
   const onSortDirectionChange = (event: any) => {
-    const sortIndex = Number(event) - 1;
+    const { value } = event;
+    const sortIndex = Number(value) - 1;
     setSortDir(sortDirections[sortIndex]);
     setSortColumn(sortColumns[sortIndex]);
     setPage(1);
