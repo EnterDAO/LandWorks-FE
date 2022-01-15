@@ -15,6 +15,7 @@ import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, RentEntity, fetchAssetRentByTimestamp, fetchUserFirstRentByTimestamp } from '../../api';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
+import { LandsTooltip } from '../lands-tooltip';
 import chainPng from './assets/chain.png';
 
 import { getNowTs } from '../../../../utils';
@@ -26,7 +27,6 @@ import {
 } from '../../../../web3/utils';
 
 import './index.scss';
-import {LandsTooltip} from "../lands-tooltip";
 
 type SingleLandProps = {
   setShowRentModal: (isShown: boolean) => void;
@@ -203,7 +203,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                   {asset?.availability.availabilityAfter && (
                     <span className="available-heading">{`Available after ${asset.availability.availabilityAfter}`}</span>
                   )}{' '}
-                  <span className="available-period">{asset?.availability?.label}</span>
+                  <span className="available-period">
+                    <span className="label card-name-you-label">min</span>
+                    {asset?.availability?.label}
+                    <span className="label card-name-estate-label">max</span>
+                  </span>
                 </Col>
               )}
             </Row>
@@ -226,11 +230,17 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                       amount={asset?.pricePerMagnitude?.usdPrice || ZERO_BIG_NUMBER}
                     />
                     <span className="per-day">/ {asset?.pricePerMagnitude?.magnitude}</span>
-                    <LandsTooltip placement="bottomLeft" trigger="hover" text={
-                      <>
-                        The price for renting this property is {asset?.pricePerSecond} <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" /> per second.
-                      </>
-                    } />
+                    <LandsTooltip
+                      placement="bottomLeft"
+                      trigger="hover"
+                      text={
+                        <>
+                          The price for renting this property is {asset?.pricePerSecond}{' '}
+                          <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" /> per
+                          second.
+                        </>
+                      }
+                    />
                   </Col>
                 </Row>
                 {shouldShowClaimButton() && (
@@ -258,7 +268,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                 <Row>
                   <Col span={24} className="current-address">
                     Current Operator
-                    <LandsTooltip placement="bottomLeft" trigger="hover" text="The operator currently set and authorised to deploy scenes and experiences in the metaverse." />
+                    <LandsTooltip
+                      placement="bottomLeft"
+                      trigger="hover"
+                      text="The operator currently set and authorised to deploy scenes and experiences in the metaverse."
+                    />
                   </Col>
                   <Col span={24}>
                     <ExternalLink href={getEtherscanAddressUrl(asset?.operator)} className="land-operator-address">
