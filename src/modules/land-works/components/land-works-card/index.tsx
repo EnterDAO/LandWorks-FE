@@ -80,11 +80,16 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
                   {/* <button onClick={() => setShowChart(!showChart)}>
                     <Icon name="info-outlined" className="info-icon" />
                   </button> */}
-                  <LandsTooltip placement="bottomLeft" trigger="hover" text={
-                    <>
-                      The price for renting this property is {land.pricePerSecond} <Icon name={getTokenIconName(land.paymentToken.symbol)} className="eth-icon" /> per second.
-                    </>
-                  } />
+                  <LandsTooltip
+                    placement="bottomLeft"
+                    trigger="hover"
+                    text={
+                      <>
+                        The price for renting this property is {land.humanPricePerSecond.toString(10)}{' '}
+                        <Icon name={getTokenIconName(land.paymentToken.symbol)} className="eth-icon" /> per second.
+                      </>
+                    }
+                  />
                 </span>
               </Col>
             </Row>

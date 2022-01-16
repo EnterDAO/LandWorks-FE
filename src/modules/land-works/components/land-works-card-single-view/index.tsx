@@ -251,7 +251,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       trigger="hover"
                       text={
                         <>
-                          The price for renting this property is {asset?.pricePerSecond}{' '}
+                          The price for renting this property is {asset?.humanPricePerSecond?.toString(10)}{' '}
                           <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" /> per
                           second.
                         </>
