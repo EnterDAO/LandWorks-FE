@@ -117,6 +117,7 @@ const SingleLand: React.FC = () => {
         setWithdrawButtonDisabled(true);
       });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
+      history.push('/all');
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
       console.log(e);
