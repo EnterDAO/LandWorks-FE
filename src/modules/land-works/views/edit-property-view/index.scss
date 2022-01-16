@@ -131,10 +131,15 @@
     margin-right: 10px;
   }
 
-  .earning-text {
+  .earnings-num {
     font-size: 16px;
     font-weight: 700;
     color: rgba(93, 143, 240, 1);
+  }
+
+  .earnings-text {
+    font-size: 12px;
+    color: var(--theme-primary-color);
   }
 
   .your-earning-container {
