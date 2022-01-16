@@ -89,26 +89,36 @@ export default class LandWorksContract extends Web3Contract {
    * Delists the asset.
    * @param assetId The target asset.
    */
-  delist(assetId: BigNumber | string): Promise<void> {
+  delist(assetId: BigNumber | string, callback: () => void = () => {}): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
-    return this.send('delist', [assetId], {
-      from: this.account,
-    }).then();
+    return this.send(
+      'delist',
+      [assetId],
+      {
+        from: this.account,
+      },
+      callback
+    ).then();
   }
 
   /**
    * Withdraws the asset.
    * @param assetId The target asset.
    */
-  withdraw(assetId: BigNumber | string): Promise<void> {
+  withdraw(assetId: BigNumber | string, callback: () => void = () => {}): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
-    return this.send('withdraw', [assetId], {
-      from: this.account,
-    }).then();
+    return this.send(
+      'withdraw',
+      [assetId],
+      {
+        from: this.account,
+      },
+      callback
+    ).then();
   }
 
   /**

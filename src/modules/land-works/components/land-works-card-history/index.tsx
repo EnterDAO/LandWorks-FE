@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { gql, useSubscription } from '@apollo/client';
 import { Col, ConfigProvider, Empty, Row, Table } from 'antd';
 import { uniqueId } from 'lodash';
 
@@ -7,7 +8,13 @@ import { timestampSecondsToDate } from 'helpers/helpers';
 
 import EmptyTable from '../../../../resources/svg/empty-table.svg';
 import { useWallet } from '../../../../wallets/wallet';
-import { RentEntity, fetchAssetRents, fetchAssetUserRents } from '../../api';
+import {
+  ASSET_RENTS_SUBSCRIPTION,
+  RentEntity,
+  USER_ASSET_RENTS_SUBSCRIPTION,
+  parseAssetRents,
+  parseUserRents,
+} from '../../api';
 import LandTableTxHash from '../land-table-tx-hash';
 import LandWorksTableDate from '../land-works-table-date';
 import TableInput from '../land-works-table-input';
@@ -30,6 +37,36 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
   const [pageSize, setPageSize] = useState(+pageSizeOptions[0]);
   const [rents, setRents] = useState([] as RentEntity[]);
   const [totalRents, setTotalRents] = useState(rents.length);
+
+  const [subscription, setSubscription] = useState(ASSET_RENTS_SUBSCRIPTION);
+
+  useSubscription(subscription, {
+    variables: {
+      id: assetId,
+      offset: pageSize * (page - 1),
+      limit: pageSize,
+      renter: wallet.account?.toLowerCase(),
+    },
+    onSubscriptionData: ({ subscriptionData }) => {
+      if (subscriptionData.error) {
+        // TODO:
+      }
+
+      if (subscriptionData.data.asset === null) {
+        setRents([]);
+        setTotalRents(0);
+        return;
+      }
+
+      const rents = areAllSelected
+        ? parseAssetRents(subscriptionData.data?.asset)
+        : parseUserRents(subscriptionData.data?.asset, pageSize, page);
+      // setUser(parseUser(subscriptionData.data.user));
+      setRents(rents.data);
+      setTotalRents(rents.meta.count);
+    },
+  });
+
   const dateFormat = 'HH:mm dd.MM.yyyy';
   const columns = [
     {
@@ -118,26 +155,17 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
     },
   ];
 
-  const onAllSelected = () => setAreAllSelected(true);
-  const onYouSelected = () => setAreAllSelected(false);
+  const onAllSelected = () => {
+    setSubscription(ASSET_RENTS_SUBSCRIPTION);
+    setAreAllSelected(true);
+  };
+  const onYouSelected = () => {
+    setSubscription(USER_ASSET_RENTS_SUBSCRIPTION);
+    setAreAllSelected(false);
+  };
 
   const showYoursSection = () =>
     wallet.account && rents.filter((r) => r.operator.toLowerCase() === wallet.account?.toLowerCase()).length > 0;
-
-  const getRents = async (assetId: string, page: number, pageSize: number) => {
-    if (!assetId) {
-      return [];
-    }
-
-    const rents = areAllSelected
-      ? await fetchAssetRents(assetId, page, pageSize)
-      : await fetchAssetUserRents(assetId, wallet.account?.toLowerCase() || '', page, pageSize);
-
-    setRents(rents.data);
-    console.log('RENTS:');
-    console.table(rents.data);
-    setTotalRents(rents?.meta.count);
-  };
 
   const onPaginationChange = (page: number, newPageSize?: number | undefined) => {
     setPage(page);
@@ -152,8 +180,19 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
   };
 
   useEffect(() => {
-    getRents(assetId, page, pageSize);
-  }, [assetId, page, pageSize, areAllSelected, wallet.account]);
+    return () => {
+      setRents([]);
+      setTotalRents(0);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (wallet.account === undefined) {
+      setAreAllSelected(true);
+      setSubscription(ASSET_RENTS_SUBSCRIPTION);
+      setPage(1);
+    }
+  }, [wallet.account]);
 
   return (
     <Row gutter={40} className="single-land-history-container">

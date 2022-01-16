@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { useSubscription } from '@apollo/client';
 import { end } from '@popperjs/core';
 import { Col, Pagination, Row } from 'antd';
+import BigNumber from 'bignumber.js';
 
 import LandWorkCard from 'modules/land-works/components/land-works-card';
 import { LandsAction } from 'modules/land-works/components/lands-action';
@@ -17,9 +18,10 @@ import { ReactComponent as HottestIcon } from '../../../../resources/svg/order-h
 import { ReactComponent as LowIcon } from '../../../../resources/svg/order-low-first.svg';
 import {
   AssetEntity,
+  USER_SUBSCRIPTION,
   UserEntity,
   fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder,
-  fetchUserAssets,
+  parseUser,
 } from '../../api';
 
 import { getNowTs } from '../../../../utils';
@@ -64,6 +66,24 @@ const Lands: React.FC = () => {
   const [byAvailability, setByAvailability] = useState(false);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(+pageSizeOptions[0]);
+  const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
+
+  useSubscription(USER_SUBSCRIPTION, {
+    skip: wallet.account === undefined,
+    variables: { id: wallet.account?.toLowerCase() },
+    onSubscriptionData: ({ subscriptionData }) => {
+      if (subscriptionData.error) {
+        // TODO:
+      }
+      if (subscriptionData.data.user === null) {
+        setUser({} as UserEntity);
+        return;
+      }
+
+      setClaimButtonDisabled(false);
+      setUser(parseUser(subscriptionData.data.user));
+    },
+  });
 
   const onPaginationChange = (page: number, newPageSize?: number | undefined) => {
     setPage(page);
@@ -119,16 +139,7 @@ const Lands: React.FC = () => {
     setTotalLands(lands?.meta.count);
   };
 
-  const getUser = async (account: string | undefined) => {
-    let user = {} as UserEntity;
-    if (account) {
-      user = await fetchUserAssets(account);
-    }
-    setUser(user);
-  };
-
   useEffect(() => {
-    getUser(wallet.account);
     getAssets(page, pageSize, DECENTRALAND_METAVERSE, lastRentEnd, sortColumn, sortDir);
   }, [page, pageSize, sortColumn, sortDir, byAvailability, wallet.account]);
 
@@ -166,6 +177,7 @@ const Lands: React.FC = () => {
                   onButtonClick={setShowClaimModal}
                   buttonText={'CLAIM '}
                   subHeading="You have"
+                  isClaimButtonDisabled={claimButtonDisabled}
                   mainHeading="Unclaimed rent"
                 />
               </Col>
@@ -211,6 +223,10 @@ const Lands: React.FC = () => {
       </Row>
 
       <ClaimModal
+        onSubmit={() => {
+          setClaimButtonDisabled(true);
+          setShowClaimModal(false);
+        }}
         onCancel={() => setShowClaimModal(false)}
         visible={showClaimModal}
         rentFees={user?.unclaimedRentAssets}

@@ -2,16 +2,20 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { Col, Image, Row } from 'antd';
-import BigNumber from 'bignumber.js';
+import { useSubscription } from '@apollo/client';
+import { Col, Row } from 'antd';
 
-import Button from 'components/antd/button';
-import Icon from 'components/custom/icon';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import ExternalLink from '../../../../components/custom/externalLink';
 import { useWallet } from '../../../../wallets/wallet';
-import { AssetEntity, CoordinatesLAND, fetchAdjacentDecentralandAssets, fetchAsset } from '../../api';
+import {
+  ASSET_SUBSCRIPTION,
+  AssetEntity,
+  CoordinatesLAND,
+  fetchAdjacentDecentralandAssets,
+  parseAsset,
+} from '../../api';
 import LandWorkCard from '../../components/land-works-card';
 import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
@@ -35,6 +39,28 @@ const SingleLand: React.FC = () => {
   const [adjacentLands, setAdjacentLands] = useState([] as AssetEntity[]);
   const [showRentModal, setShowRentModal] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
+  const [rentButtonDisabled, setRentButtonDisabled] = useState(false);
+  const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
+  const [delistButtonDisabled, setDelistButtonDisabled] = useState(false);
+  const [withdrawButtonDisabled, setWithdrawButtonDisabled] = useState(false);
+
+  useSubscription(ASSET_SUBSCRIPTION, {
+    variables: { id: tokenId },
+    onSubscriptionData: ({ subscriptionData }) => {
+      if (subscriptionData.error) {
+        // TODO:
+      }
+      if (subscriptionData.data.asset === null) {
+        history.push('/all');
+        return;
+      }
+      setRentButtonDisabled(false);
+      setClaimButtonDisabled(false);
+      setDelistButtonDisabled(false);
+      setWithdrawButtonDisabled(false);
+      setAsset(parseAsset(subscriptionData.data.asset));
+    },
+  });
 
   const calculateNeighbours = (coordinatesList: CoordinatesLAND[]): string[] => {
     let neighbours = [] as string[];
@@ -51,24 +77,8 @@ const SingleLand: React.FC = () => {
     return [`${numX - 1}-${numY}`, `${numX}-${numY - 1}`, `${numX}-${numY + 1}`, `${numX + 1}-${numY}`];
   };
 
-  const getData = async (tokenId: string) => {
-    const asset = await fetchAsset(tokenId);
-    if (!asset.id) {
-      //TODO: Maybe show error or special component when property can't be found
-      history.push('/all');
-      return;
-    }
-    setAsset(asset);
-
-    const assetCoordinates = asset?.decentralandData?.coordinates!;
-    const neighbours = calculateNeighbours(assetCoordinates);
-
-    const adjacentLands = await fetchAdjacentDecentralandAssets(neighbours);
-    setAdjacentLands(adjacentLands);
-  };
-
   const shouldShowWithdraw = () => {
-    return isOwner() && asset?.status === AssetStatus.DELISTED;
+    return isOwner() && asset?.status === AssetStatus.DELISTED && Number(asset?.lastRentEnd) < getNowTs();
   };
 
   const shouldShowDelist = () => {
@@ -102,7 +112,9 @@ const SingleLand: React.FC = () => {
       return;
     }
     try {
-      await landWorksContract?.withdraw(asset.id);
+      await landWorksContract?.withdraw(asset.id, () => {
+        setWithdrawButtonDisabled(true);
+      });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
@@ -124,7 +136,10 @@ const SingleLand: React.FC = () => {
     }
 
     try {
-      await landWorksContract?.delist(asset.id);
+      await landWorksContract?.delist(asset.id, () => {
+        setDelistButtonDisabled(true);
+        setShowWarningModal(false);
+      });
       showToastNotification(ToastType.Success, 'Property delisted successfully!');
       setShowWarningModal(false);
     } catch (e) {
@@ -133,9 +148,20 @@ const SingleLand: React.FC = () => {
     }
   };
 
+  const updateAdjacentLands = async () => {
+    if (!asset) {
+      return;
+    }
+    const assetCoordinates = asset?.decentralandData?.coordinates;
+    const neighbours = calculateNeighbours(assetCoordinates || []);
+
+    const adjacentLands = await fetchAdjacentDecentralandAssets(neighbours);
+    setAdjacentLands(adjacentLands);
+  };
+
   useEffect(() => {
-    getData(tokenId);
-  }, [tokenId, wallet.account]);
+    updateAdjacentLands();
+  }, [asset]);
 
   return (
     <div className="content-container single-card-section">
@@ -175,26 +201,46 @@ const SingleLand: React.FC = () => {
             </ExternalLink>
           )}
           {shouldShowDelist() && (
-            <button style={{ fontSize: 14 }} type="button" className="button-subtle" onClick={handleDelistButton}>
+            <button
+              style={{ fontSize: 14 }}
+              type="button"
+              className="button-subtle"
+              onClick={handleDelistButton}
+              disabled={delistButtonDisabled}
+            >
               <span>{isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
             </button>
           )}
           {shouldShowWithdraw() && (
-            <button style={{ fontSize: 14 }} type="button" className="button-subtle" onClick={handleWithdraw}>
+            <button
+              style={{ fontSize: 14 }}
+              type="button"
+              className="button-subtle"
+              onClick={handleWithdraw}
+              disabled={withdrawButtonDisabled}
+            >
               <span>WITHDRAW</span>
             </button>
           )}
         </div>
       </Row>
-      <SingleViewLandCard setShowRentModal={setShowRentModal} asset={asset} />
+      <SingleViewLandCard
+        isClaimButtonDisabled={claimButtonDisabled}
+        isRentButtonDisabled={rentButtonDisabled}
+        setShowRentModal={setShowRentModal}
+        asset={asset}
+        onClaimSubmit={() => {
+          setClaimButtonDisabled(true);
+        }}
+      />
       <SingleViewLandHistory assetId={tokenId} />
       {!!adjacentLands.length && (
         <Row className="pooling-section">
           <div className="pooling-title">
             <p className="pooling-heading">Pooling </p>
             <p className="pooling-description">
-              The following properties are adjacent to this property. You can rent the adjacent properties to maximise the
-              land you want to build scenes/experiences on
+              The following properties are adjacent to this property. You can rent the adjacent properties to maximise
+              the land you want to build scenes/experiences on
             </p>
           </div>
           <Col span={24}>
@@ -208,7 +254,13 @@ const SingleLand: React.FC = () => {
       )}
 
       <RentModal
-        onCancel={() => setShowRentModal(false)}
+        onCancel={() => {
+          setShowRentModal(false);
+        }}
+        onSubmit={() => {
+          setRentButtonDisabled(true);
+          setShowRentModal(false);
+        }}
         visible={showRentModal}
         availability={asset.availability}
         assetId={asset.id}

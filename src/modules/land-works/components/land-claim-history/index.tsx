@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useSubscription } from '@apollo/client';
 import { Col, ConfigProvider, Empty, Row, Table } from 'antd';
-import { shortenAddr } from 'web3/utils';
 
-import { timestampSecondsToDate } from 'helpers/helpers';
-import { ClaimHistory, fetchUserClaimHistory } from 'modules/land-works/api';
+import { ClaimHistory, USER_CLAIM_HISTORY_SUBSCRIPTION } from 'modules/land-works/api';
 
 import EmptyTable from '../../../../resources/svg/empty-table.svg';
+import { useWallet } from '../../../../wallets/wallet';
 import LandTableTxHash from '../land-table-tx-hash';
 import LandWorksTableDate from '../land-works-table-date';
 import LandTablePrice from '../land-works-table-price';
@@ -14,29 +14,27 @@ import { getDecentralandAssetName } from '../../../../utils';
 
 import './index.scss';
 
-interface IClaimHistoryTableProps {
-  userAddress: string;
-}
-
-const ClaimHistoryTable: React.FC<IClaimHistoryTableProps> = ({ userAddress }) => {
+const ClaimHistoryTable: React.FC = () => {
+  const wallet = useWallet();
   const pageSizeOptions = ['5', '10', '20'];
   const [claimHistory, setClaimHistory] = useState([] as ClaimHistory[]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(Number(pageSizeOptions[0]));
   const [totalClaims, setTotalClaims] = useState(0);
 
-  const fetchClaimHistory = async () => {
-    if (userAddress) {
-      const claimHistory = await fetchUserClaimHistory(userAddress);
-      console.log('CLAIM HISTORY:');
-      console.log(claimHistory);
+  useSubscription(USER_CLAIM_HISTORY_SUBSCRIPTION, {
+    skip: wallet.account === undefined,
+    variables: { id: wallet.account?.toLowerCase() },
+    onSubscriptionData: ({ subscriptionData }) => {
+      if (subscriptionData.error) {
+        // TODO:
+      }
+
+      const claimHistory = subscriptionData.data?.user?.claimHistory;
       setClaimHistory(claimHistory);
       setTotalClaims(claimHistory?.length || 0);
-    }
-  };
-  useEffect(() => {
-    fetchClaimHistory();
-  }, [userAddress]);
+    },
+  });
 
   const onPaginationChange = (page: number, newPageSize?: number | undefined) => {
     setPage(page);

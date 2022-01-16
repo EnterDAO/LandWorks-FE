@@ -2,6 +2,7 @@ import React from 'react';
 import { Col, Row } from 'antd';
 
 import Button from 'components/antd/button';
+
 import { ReactComponent as Background } from '../../../../resources/svg/accent-background.svg';
 
 import './index.scss';
@@ -11,10 +12,11 @@ interface props {
   subHeading: string;
   mainHeading: string;
   buttonText: string;
+  isClaimButtonDisabled: boolean;
 }
 
 export const LandsAction: React.FC<props> = (props: props) => {
-  const { onButtonClick, buttonText, subHeading, mainHeading } = props;
+  const { onButtonClick, buttonText, subHeading, mainHeading, isClaimButtonDisabled } = props;
   return (
     <Row className="claim-component-container">
       <Background className="background" />
@@ -26,9 +28,11 @@ export const LandsAction: React.FC<props> = (props: props) => {
         <Button
           className="claim-button"
           type="primary"
+          disabled={isClaimButtonDisabled}
           onClick={() => {
             onButtonClick(true);
-          }}>
+          }}
+        >
           {buttonText}
         </Button>
       </Col>

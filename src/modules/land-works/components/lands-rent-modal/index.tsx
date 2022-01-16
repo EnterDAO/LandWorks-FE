@@ -32,6 +32,7 @@ type Props = ModalProps & {
   paymentToken?: PaymentToken;
   renderProgress?: () => React.ReactNode;
   renderSuccess?: () => React.ReactNode;
+  onSubmit: () => void;
 };
 
 export const RentModal: React.FC<Props> = (props) => {
@@ -44,6 +45,7 @@ export const RentModal: React.FC<Props> = (props) => {
     onCancel,
     renderProgress,
     renderSuccess,
+    onSubmit,
     ...modalProps
   } = props;
 
@@ -124,12 +126,11 @@ export const RentModal: React.FC<Props> = (props) => {
     try {
       const bnPeriod = new BigNumber(period);
       if (paymentToken?.symbol.toLowerCase() === 'eth') {
-        await landWorksContract?.rentDecentralandWithETH(assetId!, editedValue, bnPeriod, approveValue, onCancel);
+        await landWorksContract?.rentDecentralandWithETH(assetId!, editedValue, bnPeriod, approveValue, onSubmit);
       } else {
-        await landWorksContract?.rentDecentralandWithERC20(assetId!, editedValue, bnPeriod, onCancel);
+        await landWorksContract?.rentDecentralandWithERC20(assetId!, editedValue, bnPeriod, onSubmit);
       }
       showToastNotification(ToastType.Success, 'Property rented successfuly!');
-      onCancel();
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while renting the property.');
       console.log(e);

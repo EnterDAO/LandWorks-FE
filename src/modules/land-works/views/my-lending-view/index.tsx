@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useSubscription } from '@apollo/client';
 import { end } from '@popperjs/core';
 import { Col, Row } from 'antd';
 
-import { AssetEntity, UserEntity, fetchUserAssets } from 'modules/land-works/api';
+import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssets, parseUser } from 'modules/land-works/api';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
 import LandsRentingSorter from 'modules/land-works/components/land-renting-sorter';
 import LandWorksCard from 'modules/land-works/components/land-works-card';
@@ -22,21 +23,27 @@ const LendingView = () => {
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [assets, setAssets] = useState([] as AssetEntity[]);
   const [user, setUser] = useState({} as UserEntity);
+  const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
 
-  const getUser = async (account: string) => {
-    const user = await fetchUserAssets(account);
-    console.log('USER:');
-    console.log(user);
-    // Combine consumerTo + assets and remove duplicate
-    setUser(user);
-    setAssets(user?.ownerAndConsumerAssets || []);
-  };
+  useSubscription(USER_SUBSCRIPTION, {
+    skip: wallet.account === undefined,
+    variables: { id: wallet.account?.toLowerCase() },
+    onSubscriptionData: ({ subscriptionData }) => {
+      if (subscriptionData.error) {
+        // TODO:
+      }
 
-  useEffect(() => {
-    if (wallet.account) {
-      getUser(wallet.account);
-    }
-  }, []);
+      if (subscriptionData.data.user === null) {
+        setUser({} as UserEntity);
+        return;
+      }
+
+      const user = parseUser(subscriptionData.data.user);
+      setClaimButtonDisabled(false);
+      setUser(user);
+      setAssets(user?.ownerAndConsumerAssets || []);
+    },
+  });
 
   const onPlaceChange = (placeChangeEvent: any) => {
     // TODO:: some filtering here
@@ -60,6 +67,7 @@ const LendingView = () => {
                   buttonText={'CLAIM '}
                   subHeading="You have"
                   mainHeading="Unclaimed rent"
+                  isClaimButtonDisabled={claimButtonDisabled}
                 />
               </Col>
             )}
@@ -96,12 +104,16 @@ const LendingView = () => {
       {!!assets.length && (
         <Row gutter={40} className="claim-history-container">
           <Col span={24} style={{ padding: '0px' }}>
-            <ClaimHistoryTable userAddress={wallet.account || ''} />
+            <ClaimHistoryTable />
           </Col>
         </Row>
       )}
 
       <ClaimModal
+        onSubmit={() => {
+          setClaimButtonDisabled(true);
+          setShowClaimModal(false);
+        }}
         onCancel={() => setShowClaimModal(false)}
         visible={showClaimModal}
         rentFees={user?.unclaimedRentAssets}

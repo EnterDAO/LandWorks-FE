@@ -19,6 +19,7 @@ type Props = ModalProps & {
   rentFees?: AssetEntity[];
   renderProgress?: () => React.ReactNode;
   renderSuccess?: () => React.ReactNode;
+  onSubmit: () => void;
 };
 
 const MAX_CLAIM_SELECTED_ASSETS = 3; // Can be updated to 7-8
@@ -27,7 +28,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
   const landWorksCtx = useLandworks();
   const { landWorksContract } = landWorksCtx;
 
-  const { rentFees, renderProgress, renderSuccess, onCancel, ...modalProps } = props;
+  const { rentFees, renderProgress, renderSuccess, onCancel, onSubmit, ...modalProps } = props;
 
   const [assets, setAssets] = useState([] as AssetEntity[]);
   const [totalEth, setTotalEth] = useState(BigNumber.ZERO);
@@ -36,7 +37,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
   async function claim() {
     try {
       const assetIds = assets.map((a) => new BigNumber(a.id));
-      await landWorksContract?.claimMultipleRentFees(assetIds, onCancel);
+      await landWorksContract?.claimMultipleRentFees(assetIds, onSubmit);
       showToastNotification(ToastType.Success, 'Rent claimed successfully!');
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while claiming the rent.');

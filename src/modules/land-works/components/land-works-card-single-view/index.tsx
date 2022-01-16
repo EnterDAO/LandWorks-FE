@@ -6,7 +6,6 @@ import BigNumber from 'bignumber.js';
 import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { getTokenPrice } from 'components/providers/known-tokens-provider';
 import { getLandImageUrl, getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
@@ -30,10 +29,19 @@ import './index.scss';
 
 type SingleLandProps = {
   setShowRentModal: (isShown: boolean) => void;
+  isClaimButtonDisabled: boolean;
+  isRentButtonDisabled: boolean;
   asset?: AssetEntity;
+  onClaimSubmit: () => void;
 };
 
-const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset }) => {
+const SingleViewLandCard: React.FC<SingleLandProps> = ({
+  setShowRentModal,
+  isClaimButtonDisabled,
+  isRentButtonDisabled,
+  asset,
+  onClaimSubmit,
+}) => {
   const wallet = useWallet();
   const landWorks = useLandworks();
 
@@ -51,7 +59,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
     );
   };
 
-  const isListed = () => asset?.status === AssetStatus.LISTED;
+  const isNotListed = () => asset?.status !== AssetStatus.LISTED;
 
   const shouldShowClaimButton = () => isOwnerOrConsumer() && asset?.unclaimedRentFee.gt(0);
 
@@ -111,7 +119,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
     }
 
     try {
-      await landWorksContract?.claimMultipleRentFees([asset!.id]);
+      await landWorksContract?.claimMultipleRentFees([asset!.id], onClaimSubmit);
       showToastNotification(ToastType.Success, 'Rent claimed successfully!');
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while claiming the rent.');
@@ -192,16 +200,18 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                   </span>
                 )}
               </Col>
-              {!isListed() && (
+              {isNotListed() && (
                 <Col span={13} className="availability">
                   <span className="available-heading delisted-heading">Delisted</span>
                 </Col>
               )}
-              {isListed() && (
+              {!isNotListed() && (
                 <Col span={13} className="availability">
-                  {asset?.availability.isCurrentlyAvailable && <span className="available-heading">Available now</span>}
-                  {asset?.availability.availabilityAfter && (
-                    <span className="available-heading">{`Available after ${asset.availability.availabilityAfter}`}</span>
+                  {asset?.availability?.isCurrentlyAvailable && (
+                    <span className="available-heading">Available now</span>
+                  )}
+                  {asset?.availability?.availabilityAfter && (
+                    <span className="available-heading">{`Available after ${asset.availability?.availabilityAfter}`}</span>
                   )}{' '}
                   <span className="available-period">
                     <span className="label card-name-you-label">min</span>
@@ -220,7 +230,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                     <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" />
                     <SmallAmountTooltip
                       className="price-eth"
-                      amount={asset?.pricePerMagnitude ? asset?.pricePerMagnitude.price : new BigNumber('0')}
+                      amount={asset?.pricePerMagnitude ? asset?.pricePerMagnitude?.price : new BigNumber('0')}
                     />
                   </Col>
                   <Col push={2} span={22} className="usd-price-container">
@@ -244,7 +254,12 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                   </Col>
                 </Row>
                 {shouldShowClaimButton() && (
-                  <button type="button" className={`button-primary `} onClick={handleClaim}>
+                  <button
+                    type="button"
+                    className={`button-primary `}
+                    onClick={handleClaim}
+                    disabled={isClaimButtonDisabled}
+                  >
                     <span>CLAIM RENT</span>
                   </button>
                 )}
@@ -253,7 +268,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({ setShowRentModal, asset
                     style={{ fontWeight: 500 }}
                     type="button"
                     className={`button-primary `}
-                    disabled={!isListed()}
+                    disabled={isRentButtonDisabled || isNotListed()}
                     onClick={handleRent}
                   >
                     <span>RENT NOW</span>
