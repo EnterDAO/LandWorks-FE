@@ -162,6 +162,11 @@ const ListView: React.FC = () => {
   const [saveDisabled, setSaveDisabled] = useState(false);
 
   useEffect(() => {
+    if (!asset) {
+      history.push(`/all`);
+      return;
+    }
+
     // Pre-populate user properties
     const properyOption = { label: asset.name, value: JSON.stringify(asset) };
     setProperties([properyOption]);
@@ -456,17 +461,23 @@ const ListView: React.FC = () => {
   };
 
   useEffect(() => {
-    getPaymentTokens();
+    if (asset) {
+      getPaymentTokens();
+    }
   }, [walletCtx.account]);
 
   useEffect(() => {
-    evaluateInput();
+    if (asset) {
+      evaluateInput();
+    }
   }, [minPeriod, maxPeriod, maxFutureTime, paymentToken, selectedProperty, pricePerSecond]);
 
   useEffect(() => {
-    calculateTotalAndFeePrecision();
-    calculatePricePerSecond();
-    getUsdPrice(asset.paymentToken.symbol, tokenCost?.toNumber() || 0);
+    if (asset) {
+      calculateTotalAndFeePrecision();
+      calculatePricePerSecond();
+      getUsdPrice(asset.paymentToken.symbol, tokenCost?.toNumber() || 0);
+    }
   }, [paymentToken, tokenCost]);
 
   return (
