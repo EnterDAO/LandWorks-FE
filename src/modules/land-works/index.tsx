@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import { useSessionStorage } from 'react-use-storage';
 
 import ProtectedRoute from 'components/custom/protected-route';
 import { useWarning } from 'components/providers/warning-provider';
@@ -17,6 +18,8 @@ const LandingView = lazy(() => import('modules/landing'));
 const LandworksView: React.FC = () => {
   const warning = useWarning();
   const walletCtx = useWallet();
+  const [sessionProvider] = useSessionStorage<string | undefined>('wallet_provider');
+
   React.useEffect(() => {
     let warningDestructor: () => void;
 
@@ -40,14 +43,14 @@ const LandworksView: React.FC = () => {
       <Route path="/lending" exact component={LendingView} />
       <Route path="/renting" exact component={RentingView} />
       <ProtectedRoute
-        isAuthenticated={!!walletCtx.account}
+        isAuthenticated={!!sessionProvider || !!walletCtx.account}
         authenticationPath="/"
         path="/list"
         exact
         component={ListProperty}
       />
       <ProtectedRoute
-        isAuthenticated={!!walletCtx.account}
+        isAuthenticated={!!sessionProvider || !!walletCtx.account}
         authenticationPath="/"
         path="/property/:tokenid/edit/"
         exact
