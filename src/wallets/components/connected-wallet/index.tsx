@@ -213,14 +213,14 @@ const ConnectedWallet: React.FC = () => {
 
   const TxSection = (
     <Popover
-      placement="bottomRight"
+      placement="bottom"
       trigger="click"
       noPadding
       className={cn(s.popover, s.txSection)}
       content={
         <div id={s.txPopoverContainer}>
           <div id={s.txInfoContainer}>
-            <div id={s.txStatus}>Tx in progress</div>
+            <div id={s.txStatus}>Transaction in progress</div>
             <div
               onClick={() => {
                 window.open(`${getEtherscanTxUrl(txHash)}`, '_blank')?.focus();
