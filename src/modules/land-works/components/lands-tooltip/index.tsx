@@ -16,7 +16,7 @@ export const LandsTooltip: React.FC<TooltipProps> = (props) => {
   const { placement, trigger, text } = props;
 
   return (
-    <Tooltip title={text} placement={placement} trigger={trigger}>
+    <Tooltip title={text} placement={placement} trigger={trigger} overlayClassName="tooltip-wrapper">
       <Icon name="info-outlined" className="info-icon" />
     </Tooltip>
   );
