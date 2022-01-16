@@ -7,6 +7,8 @@ export enum ToastType {
   Info,
 }
 
+const TWENTY_SEC_IN_MS = 20_000;
+
 export const showToastNotification = (type: ToastType, message: string, styles?: any) => {
   let notification = null;
   switch (type) {
@@ -31,6 +33,6 @@ export const showToastNotification = (type: ToastType, message: string, styles?:
     position: toast.POSITION.TOP_RIGHT,
     className: 'toast-notification',
     style: styles || commonStyles,
-    autoClose: false,
+    autoClose: TWENTY_SEC_IN_MS,
   });
 };
