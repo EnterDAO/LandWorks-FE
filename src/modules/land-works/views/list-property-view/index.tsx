@@ -496,6 +496,9 @@ const ListView: React.FC = () => {
         <Row>
           <Col span={24}>
             <Row className="list-view-wrapper">
+              <Col span={24}>
+                <h3>List property</h3>
+              </Col>
               <Col span={24} style={{ margin: '10px 0' }}>
                 <Row gutter={[16, 16]}>
                   <Col sm={24} md={12}>

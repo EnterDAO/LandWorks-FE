@@ -2,6 +2,13 @@
   margin: 40px auto 0;
   width: 800px;
 
+  h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
   @media all and (max-width: 1024px) {
     width: 100%;
   }
@@ -11,6 +18,7 @@
     margin: 0px 0px 40px 0px;
     border-bottom: none;
     background: var(--theme-modal-color);
+    border-radius: 10px;
   }
 
   .drop-heading {
