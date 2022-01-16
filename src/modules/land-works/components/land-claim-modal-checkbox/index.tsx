@@ -4,6 +4,7 @@ import { Checkbox, Col, Row } from 'antd';
 import Icon, { TokenIconNames } from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 
+import { getTokenIconName } from '../../../../helpers/helpers';
 import { AssetEntity } from '../../api';
 
 import './index.scss';
@@ -15,7 +16,6 @@ interface props {
 
 export const LandClaimCheckBox: React.FC<props> = (props) => {
   const { name, unclaimedRentFee, paymentToken } = props.data;
-  const icon: TokenIconNames = paymentToken.symbol === 'ETH' ? 'token-eth' : 'token-usdc';
 
   const onChecked = (isChecked: boolean) => {
     setChecked(isChecked);
@@ -32,7 +32,7 @@ export const LandClaimCheckBox: React.FC<props> = (props) => {
       </Col>
       <Col span={6} className="price">
         <SmallAmountTooltip className="price-checkbox" amount={unclaimedRentFee} />
-        <Icon name={icon} className="eth-icon" />
+        <Icon name={getTokenIconName(paymentToken.symbol)} className="eth-icon" />
       </Col>
     </Row>
   );
