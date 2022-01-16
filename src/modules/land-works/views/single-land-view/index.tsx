@@ -6,6 +6,7 @@ import { useSubscription } from '@apollo/client';
 import { Col, Row } from 'antd';
 
 import Button from 'components/antd/button';
+import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import ExternalLink from '../../../../components/custom/externalLink';
@@ -181,9 +182,9 @@ const SingleLand: React.FC = () => {
         visible={showWarningModal}
         text={
           <>
-            The property is rented until <strong>{asset.lastRentEnd}</strong>. Delisting the property now will make it
-            unavailable for new renters. You will be able to withdraw your property from the Protocol once all rents
-            end.
+            The property is rented until <strong>{timestampSecondsToDate(asset.lastRentEnd || '0')}</strong>. Delisting
+            the property now will make it unavailable for new renters. You will be able to withdraw your property from
+            the Protocol once all rents end.
           </>
         }
       />
