@@ -188,7 +188,11 @@ const Lands: React.FC = () => {
               <LandsPriceSorter onSortDirectionChange={onSortDirectionChange} data={data} />
             </Col>
             <Col>
-              <LandsAvailableSorter availableOnly={byAvailability} onAvailableChange={onSortByAvailability} />
+              <LandsAvailableSorter
+                availableOnly={byAvailability}
+                onAvailableChange={onSortByAvailability}
+                text={'Available only'}
+              />
             </Col>
             <Col>
               <LandsPlaceSorter onPlaceChange={onPlaceChange} />

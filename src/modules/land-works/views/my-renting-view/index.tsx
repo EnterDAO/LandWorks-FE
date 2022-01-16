@@ -73,7 +73,11 @@ const RentingView = () => {
                 <LandsRentingSorter onRentSortChange={onRentSortChange} />
               </Col>
               <Col>
-                <LandsAvailableSorter availableOnly={byAvailability} onAvailableChange={onSortByAvailability} />
+                <LandsAvailableSorter
+                  availableOnly={byAvailability}
+                  onAvailableChange={onSortByAvailability}
+                  text="Active only"
+                />
               </Col>
               <Col>
                 <LandsPlaceSorter onPlaceChange={onPlaceChange} />
