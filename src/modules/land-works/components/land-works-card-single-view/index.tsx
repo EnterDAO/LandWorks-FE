@@ -3,6 +3,7 @@ import Countdown, { CountdownTimeDelta } from 'react-countdown';
 import { Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
+import EstateLandOverlay from 'components/custom/estateLandsOverlay';
 import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
@@ -156,6 +157,9 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
         <Row>
           <Col span={24} className="image-wrapper">
             <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)}></img>
+            {!asset?.decentralandData?.isLAND && (
+              <EstateLandOverlay coordinates={asset?.decentralandData?.coordinates} />
+            )}
           </Col>
         </Row>
       </Col>

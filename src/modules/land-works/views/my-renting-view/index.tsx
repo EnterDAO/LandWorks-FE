@@ -68,7 +68,7 @@ const RentingView = () => {
       <Row className="lands-container">
         <Col span={24}>
           {(!!rents.length || hasRents) && (
-            <Row className="filters" gutter={20} align={'middle'}>
+            <Row className="filters" gutter={20}>
               <Col>
                 <LandsRentingSorter onRentSortChange={onRentSortChange} />
               </Col>
@@ -76,7 +76,7 @@ const RentingView = () => {
                 <LandsAvailableSorter
                   availableOnly={byAvailability}
                   onAvailableChange={onSortByAvailability}
-                  text="Active only"
+                  text={'Active only'}
                 />
               </Col>
               <Col>
