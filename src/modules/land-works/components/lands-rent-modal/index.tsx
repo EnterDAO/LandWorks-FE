@@ -61,12 +61,14 @@ export const RentModal: React.FC<Props> = (props) => {
   const [editedValue, setEditedValue] = useState<string>('');
   const [period, setPeriod] = useState(0);
   const [endDate, setEndDate] = useState('');
-  const [isRentDisabled, setRentDisabled] = useState(true);
   const [totalPrice, setTotalPrice] = useState(new BigNumber(0));
   const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
   const [errAddressMessage, setErrAddressMessage] = useState<string>('');
   const [erc20Contract, setErc20Contract] = useState(new Erc20Contract([], ''));
-  const [approveValue, setApproveValue] = useState(new BigNumber(0));
+
+  const [value, setValue] = useState(new BigNumber(0));
+  const [approveDisabled, setApproveDisabled] = useState(false);
+  const [rentDisabled, setRentDisabled] = useState(false);
 
   const handleRentDateChange = (date: moment.Moment[]) => {
     // Those are the start and the end dates, upon ok press
@@ -104,14 +106,38 @@ export const RentModal: React.FC<Props> = (props) => {
     setEditedValue(e.target.value);
   };
 
+  const checkApprovedAmount = () => {
+    if (paymentToken?.id === ONE_ADDRESS) {
+      setRentDisabled(false);
+    } else {
+      const allowance = erc20Contract.getAllowanceOf(config.contracts.landworksContract);
+      if (allowance == null) {
+        setApproveDisabled(false);
+        setRentDisabled(true);
+      } else {
+        if (value.lte(allowance)) {
+          setApproveDisabled(true);
+          setRentDisabled(false);
+        } else {
+          setApproveDisabled(false);
+          setRentDisabled(true);
+        }
+      }
+    }
+  };
+
   const handleApprove = async () => {
     if (paymentToken === undefined || paymentToken.id === ONE_ADDRESS) {
       return;
     }
 
     try {
-      await erc20Contract.approve(true, config.contracts.landworksContract);
+      await erc20Contract.approve(true, config.contracts.landworksContract, () => {
+        setApproveDisabled(true);
+      });
       showToastNotification(ToastType.Success, `${paymentToken.symbol} approved successfully.`);
+      erc20Contract.loadAllowance(config.contracts.landworksContract).catch(Error);
+      checkApprovedAmount();
     } catch (e) {
       console.log(e);
       showToastNotification(ToastType.Error, 'There was an error while approviing');
@@ -126,7 +152,7 @@ export const RentModal: React.FC<Props> = (props) => {
     try {
       const bnPeriod = new BigNumber(period);
       if (paymentToken?.symbol.toLowerCase() === 'eth') {
-        await landWorksContract?.rentDecentralandWithETH(assetId!, editedValue, bnPeriod, approveValue, onSubmit);
+        await landWorksContract?.rentDecentralandWithETH(assetId!, editedValue, bnPeriod, value, onSubmit);
       } else {
         await landWorksContract?.rentDecentralandWithERC20(assetId!, editedValue, bnPeriod, onSubmit);
       }
@@ -138,26 +164,23 @@ export const RentModal: React.FC<Props> = (props) => {
   };
 
   const isValidForm = () => {
-    return isValidAddress(editedValue) && period > 0;
+    return isValidAddress(editedValue) && period > 0 && !rentDisabled;
   };
 
   useEffect(() => {
     calculatePrices();
-    setApproveValue(new BigNumber(period).multipliedBy(pricePerSecond!));
+    setValue(new BigNumber(period).multipliedBy(pricePerSecond!));
   }, [period]);
 
   useEffect(() => {
     if (wallet.account) {
       setEditedValue(wallet.account);
       erc20Contract.setAccount(wallet.account);
+      erc20Contract.loadAllowance(config.contracts.landworksContract).catch(Error);
     } else {
       onCancel();
     }
   }, [wallet.account]);
-
-  useEffect(() => {
-    setRentDisabled(!isValidForm());
-  }, [editedValue, period]);
 
   useEffect(() => {
     if (paymentToken) {
@@ -170,6 +193,10 @@ export const RentModal: React.FC<Props> = (props) => {
       setErc20Contract(contract);
     }
   }, [paymentToken]);
+
+  useEffect(() => {
+    checkApprovedAmount();
+  }, [wallet.account, value]);
 
   return (
     <Modal
@@ -233,7 +260,7 @@ export const RentModal: React.FC<Props> = (props) => {
             <Row className="rent-modal-footer">
               <Col span={24} className="approve-wrapper">
                 <p>1. Approve transaction</p>
-                <Button type="primary" onClick={handleApprove}>
+                <Button type="primary" onClick={handleApprove} disabled={approveDisabled}>
                   APPROVE
                 </Button>
               </Col>
