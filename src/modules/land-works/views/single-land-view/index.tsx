@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import { Col, Row } from 'antd';
 
+import Button from 'components/antd/button';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import ExternalLink from '../../../../components/custom/externalLink';
@@ -39,10 +40,12 @@ const SingleLand: React.FC = () => {
   const [adjacentLands, setAdjacentLands] = useState([] as AssetEntity[]);
   const [showRentModal, setShowRentModal] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
+
   const [rentButtonDisabled, setRentButtonDisabled] = useState(false);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
   const [delistButtonDisabled, setDelistButtonDisabled] = useState(false);
   const [withdrawButtonDisabled, setWithdrawButtonDisabled] = useState(false);
+  const [editButtonDisabled, setEditButtonDisabled] = useState(false);
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
@@ -54,10 +57,7 @@ const SingleLand: React.FC = () => {
         history.push('/all');
         return;
       }
-      setRentButtonDisabled(false);
-      setClaimButtonDisabled(false);
-      setDelistButtonDisabled(false);
-      setWithdrawButtonDisabled(false);
+      disableButtons(false);
       setAsset(parseAsset(subscriptionData.data.asset));
     },
   });
@@ -130,6 +130,14 @@ const SingleLand: React.FC = () => {
     }
   };
 
+  const disableButtons = (disabled: boolean) => {
+    setDelistButtonDisabled(disabled);
+    setWithdrawButtonDisabled(disabled);
+    setClaimButtonDisabled(disabled);
+    setRentButtonDisabled(disabled);
+    setEditButtonDisabled(disabled);
+  };
+
   const handleDelist = async () => {
     if (!asset.id || !wallet.account) {
       return;
@@ -137,7 +145,7 @@ const SingleLand: React.FC = () => {
 
     try {
       await landWorksContract?.delist(asset.id, () => {
-        setDelistButtonDisabled(true);
+        disableButtons(true);
         setShowWarningModal(false);
       });
       showToastNotification(ToastType.Success, 'Property delisted successfully!');
@@ -181,14 +189,15 @@ const SingleLand: React.FC = () => {
       />
       <Row gutter={40} className="head-nav">
         {shouldShowEditButton() && (
-          <button
+          <Button
             style={{ fontSize: 14 }}
-            type="button"
+            type="link"
             className="button-subtle"
+            disabled={editButtonDisabled}
             onClick={() => history.push(`/property/${asset.id}/edit`, asset)}
           >
             <span>EDIT</span>
-          </button>
+          </Button>
         )}
         <div className="right-wrapper">
           {shouldShowStake() && (
@@ -201,26 +210,26 @@ const SingleLand: React.FC = () => {
             </ExternalLink>
           )}
           {shouldShowDelist() && (
-            <button
+            <Button
+              type="link"
               style={{ fontSize: 14 }}
-              type="button"
               className="button-subtle"
               onClick={handleDelistButton}
               disabled={delistButtonDisabled}
             >
               <span>{isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
-            </button>
+            </Button>
           )}
           {shouldShowWithdraw() && (
-            <button
+            <Button
+              type="link"
               style={{ fontSize: 14 }}
-              type="button"
               className="button-subtle"
               onClick={handleWithdraw}
               disabled={withdrawButtonDisabled}
             >
               <span>WITHDRAW</span>
-            </button>
+            </Button>
           )}
         </div>
       </Row>
@@ -230,7 +239,7 @@ const SingleLand: React.FC = () => {
         setShowRentModal={setShowRentModal}
         asset={asset}
         onClaimSubmit={() => {
-          setClaimButtonDisabled(true);
+          disableButtons(true);
         }}
       />
       <SingleViewLandHistory assetId={tokenId} />
@@ -258,7 +267,7 @@ const SingleLand: React.FC = () => {
           setShowRentModal(false);
         }}
         onSubmit={() => {
-          setRentButtonDisabled(true);
+          disableButtons(true);
           setShowRentModal(false);
         }}
         visible={showRentModal}
