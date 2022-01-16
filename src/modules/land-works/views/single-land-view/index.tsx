@@ -194,7 +194,7 @@ const SingleLand: React.FC = () => {
           <Button
             style={{ fontSize: 14 }}
             type="link"
-            className="button-subtle"
+            className="button-accent"
             disabled={editButtonDisabled}
             onClick={() => history.push(`/property/${asset.id}/edit`, asset)}
           >
