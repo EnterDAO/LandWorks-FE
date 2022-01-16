@@ -19,7 +19,7 @@ import { useLandworks } from '../../providers/landworks-provider';
 import { RentDatePicker } from '../lands-rent-date-picker';
 import { LandsTooltip } from '../lands-tooltip';
 
-import { getFormattedTime, isValidAddress } from '../../../../utils';
+import { getTimeType, isValidAddress, secondsToDuration } from '../../../../utils';
 import { ONE_ADDRESS, getHumanValue } from '../../../../web3/utils';
 
 import './index.scss';
@@ -167,6 +167,12 @@ export const RentModal: React.FC<Props> = (props) => {
     return isValidAddress(editedValue) && period > 0 && !rentDisabled;
   };
 
+  const formattedTime = (period: number) => {
+    const duration = secondsToDuration(period);
+    const { timeValue, timeType } = getTimeType(duration);
+    return `${timeValue} ${timeType}`;
+  };
+
   useEffect(() => {
     calculatePrices();
     setValue(new BigNumber(period).multipliedBy(pricePerSecond!));
@@ -220,7 +226,7 @@ export const RentModal: React.FC<Props> = (props) => {
                       text="The period for which the property will be rented. Properties have limitations such as minimum or maximum renting periods."
                     />
                   </p>
-                  <p className="light-text">{getFormattedTime(period)}</p>
+                  <p className="light-text">{formattedTime(period)}</p>
                 </Col>
                 <Col span={24}>
                   <RentDatePicker
