@@ -150,8 +150,13 @@ const SingleLand: React.FC = () => {
         disableButtons(true);
         setShowWarningModal(false);
       });
-      showToastNotification(ToastType.Success, 'Property delisted successfully!');
-      setShowWarningModal(false);
+      showToastNotification(
+        ToastType.Success,
+        `Property ${isDirectWithdraw() ? 'withdrawn' : 'delisted'} successfully!`
+      );
+      if (isDirectWithdraw()) {
+        history.push('/all');
+      }
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
       console.log(e);
