@@ -272,7 +272,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                     style={{ fontWeight: 500 }}
                     type="button"
                     className={`button-primary `}
-                    disabled={isRentButtonDisabled || isNotListed()}
+                    disabled={isRentButtonDisabled || isNotListed() || !asset?.availability?.isRentable}
                     onClick={handleRent}
                   >
                     <span>RENT NOW</span>

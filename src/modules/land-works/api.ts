@@ -306,6 +306,7 @@ export type AssetEntity = {
 };
 
 export type AssetAvailablity = {
+  isRentable: boolean;
   isCurrentlyAvailable: boolean;
   availabilityAfter: string;
   label: string;
@@ -1057,6 +1058,7 @@ function getAvailability(asset: any): AssetAvailablity {
   const period = `${timeValue} ${timeType}`;
 
   return {
+    isRentable: maxRentPeriod.gte(asset.minPeriod),
     isCurrentlyAvailable: now > Number(asset.lastRentEnd),
     availabilityAfter: period,
     startRentDate: startRent.toNumber(),
