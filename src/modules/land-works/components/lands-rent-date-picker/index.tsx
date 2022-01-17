@@ -35,27 +35,43 @@ export const RentDatePicker = (props: any) => {
     const minRentMonth = current?.month() === minRentPeriod.month();
     const minRentYear = current?.year() === minRentPeriod.year();
 
-    const isMinRentDate = minRentDate && minRentMonth && minRentYear;
-
-    if (isMinRentDate) {
-      return {
-        disabledHours: () => range(0, 24).filter(h => h <= minRentPeriod.hour()),
-        disabledMinutes: () => range(0, 60).filter(m => m <= minRentPeriod.minute()),
-      };
-    }
-
     const maxDate = current?.date() === maxEndDate.date();
     const maxMonth = current?.month() === maxEndDate.month();
     const maxYear = current?.year() === maxEndDate.year();
 
     const isMaxRangeDate = maxDate && maxMonth && maxYear;
+    const isMinRentDate = minRentDate && minRentMonth && minRentYear;
+
+    let disabledHours: number[] = [];
+    let disabledMins: number[] = [];
+
+    if (isMinRentDate) {
+      const dHours = range(0, 24).filter((h) => h < minRentPeriod.hour());
+
+      // Disable the hours only if its the same hour
+      if (current?.hour() === minRentPeriod.hour()) {
+        const dMins = range(0, 60).filter((m) => m < minRentPeriod.minute());
+        disabledMins = [...disabledMins, ...dMins];
+      }
+
+      disabledHours = [...disabledHours, ...dHours];
+    }
 
     if (isMaxRangeDate) {
-      return {
-        disabledHours: () => range(0, 24).filter(h => h >= maxEndDate.hour()),
-        disabledMinutes: () => range(0, 60).filter(m => m >= maxEndDate.minute()),
-      };
+      const dHours = range(0, 24).filter((h) => h > maxEndDate.hour());
+      disabledHours = [...disabledHours, ...dHours];
+
+      // Disable the hours only if its the same hour
+      if (current?.hour() === maxEndDate.hour()) {
+        const dMins = range(0, 60).filter((m) => m > maxEndDate.minute());
+        disabledMins = [...disabledMins, ...dMins];
+      }
     }
+
+    return {
+      disabledHours: () => disabledHours,
+      disabledMinutes: () => disabledMins,
+    };
   }
 
   return (
