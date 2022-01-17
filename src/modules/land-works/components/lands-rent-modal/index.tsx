@@ -101,7 +101,11 @@ export const RentModal: React.FC<Props> = (props) => {
     if (isValidAddress(e.target.value)) {
       setErrAddressMessage('');
     } else {
-      setErrAddressMessage('Invalid address provided');
+      if (e.target.value === '') {
+        setErrAddressMessage('No operator address provided');
+      } else {
+        setErrAddressMessage('Invalid address provided');
+      }
     }
     setEditedValue(e.target.value);
   };
