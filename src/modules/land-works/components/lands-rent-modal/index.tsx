@@ -239,41 +239,43 @@ export const RentModal: React.FC<Props> = (props) => {
               </Col>
             </Row>
           )}
-          <Row className="rent-modal-footer">
-            <Col span={24}>
-              <Button
-                style={{ display: 'block' }}
-                className="rent-button"
-                type="primary"
-                disabled={isRentDisabled}
-                onClick={handleRent}
-              >
-                <Row justify="center">
-                  <Col
-                    className="rent-label-container"
-                    span={8}
-                    style={{ borderRight: '1px solid rgba(255, 255, 255, 0.22)' }}
-                  >
-                    <span className="rent-label">Rent Now </span>
-                  </Col>
-                  <Col className="price-col" span={16}>
-                    <strong>
-                      <SmallAmountTooltip amount={totalPrice} />{' '}
-                      <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" />{' '}
-                    </strong>
+          {!isRentDisabled && (
+            <Row className="rent-modal-footer">
+              <Col span={24}>
+                <Button
+                  style={{ display: 'block' }}
+                  className="rent-button"
+                  type="primary"
+                  disabled={isRentDisabled}
+                  onClick={handleRent}
+                >
+                  <Row justify="center">
+                    <Col
+                      className="rent-label-container"
+                      span={8}
+                      style={{ borderRight: '1px solid rgba(255, 255, 255, 0.22)' }}
+                    >
+                      <span className="rent-label">Rent Now </span>
+                    </Col>
+                    <Col className="price-col" span={16}>
+                      <strong>
+                        <SmallAmountTooltip amount={totalPrice} />{' '}
+                        <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" />{' '}
+                      </strong>
 
-                    <strong>
-                      <span>
-                        <SmallAmountTooltip amount={usdPrice} symbol="$" />
-                      </span>
-                    </strong>
-                  </Col>
-                  {/* <Col className="price-col" span={10}>
+                      <strong>
+                        <span>
+                          <SmallAmountTooltip amount={usdPrice} symbol="$" />
+                        </span>
+                      </strong>
+                    </Col>
+                    {/* <Col className="price-col" span={10}>
                   </Col> */}
-                </Row>
-              </Button>
-            </Col>
-          </Row>
+                  </Row>
+                </Button>
+              </Col>
+            </Row>
+          )}
         </Col>
       </Row>
     </Modal>
