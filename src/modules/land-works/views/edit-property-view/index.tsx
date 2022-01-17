@@ -622,7 +622,9 @@ const ListView: React.FC = () => {
                                 className="info-icon"
                                 style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
                               />
-                              <span className="earnings-num">{earnings?.toString(10) || 0} </span>
+                              <span className="earnings-num">
+                                <SmallAmountTooltip amount={new BigNumber(earnings || '0')} />
+                              </span>
                             </Col>
                             <Col className="earnings-text">
                               <p>Your Earnings</p>
@@ -640,7 +642,9 @@ const ListView: React.FC = () => {
                                 className="info-icon"
                                 style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
                               />
-                              <span className="earnings-num">{protocolFee?.toString(10) || 0} </span>
+                              <span className="earnings-num">
+                                <SmallAmountTooltip amount={new BigNumber(earnings || '0')} />
+                              </span>
                             </Col>
                             <Col className="earnings-text">
                               <p>{feePercentage}% Protocol fee</p>
