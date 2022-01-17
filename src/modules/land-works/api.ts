@@ -136,6 +136,7 @@ export const USER_CLAIM_HISTORY_SUBSCRIPTION = gql`
     user(id: $id) {
       id
       claimHistory(orderBy: timestamp, orderDirection: desc) {
+        id
         asset {
           metaverseAssetId
           status
@@ -342,6 +343,7 @@ export type UserEntity = {
 };
 
 export type ClaimHistory = {
+  id: string;
   asset: any;
   amount: BigNumber;
   paymentToken: PaymentToken;

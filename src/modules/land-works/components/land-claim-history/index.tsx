@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSubscription } from '@apollo/client';
 import { Col, ConfigProvider, Empty, Row, Table } from 'antd';
 
-import { ClaimHistory, USER_CLAIM_HISTORY_SUBSCRIPTION } from 'modules/land-works/api';
+import { AssetEntity, ClaimHistory, USER_CLAIM_HISTORY_SUBSCRIPTION } from 'modules/land-works/api';
 
 import EmptyTable from '../../../../resources/svg/empty-table.svg';
 import { useWallet } from '../../../../wallets/wallet';
@@ -30,7 +30,10 @@ const ClaimHistoryTable: React.FC = () => {
         // TODO:
       }
 
-      const claimHistory = subscriptionData.data?.user?.claimHistory;
+      const claimHistory = subscriptionData.data?.user?.claimHistory?.map((history: ClaimHistory) => ({
+        ...history,
+        key: history.id,
+      }));
       setClaimHistory(claimHistory);
       setTotalClaims(claimHistory?.length || 0);
     },
