@@ -44,13 +44,15 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
           <Col span={24}>
             <p className="land-name">
               <span>{land.name}</span>
-              {land.isHot && (
-                <span className="label card-name-hot-label">
-                  <HotIcon className="name-label" />
-                  HOT
-                </span>
-              )}
-              {!land.decentralandData?.isLAND && <span className="label card-name-estate-label">ESTATE</span>}
+              <span>
+                {land.isHot && (
+                  <span className="label card-name-hot-label">
+                    <HotIcon className="name-label" />
+                    HOT
+                  </span>
+                )}
+                {!land.decentralandData?.isLAND && <span className="label card-name-estate-label">ESTATE</span>}
+              </span>
             </p>
           </Col>
         </Row>
