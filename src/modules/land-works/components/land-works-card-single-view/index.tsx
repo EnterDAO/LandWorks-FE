@@ -217,11 +217,13 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                   {asset?.availability?.availabilityAfter && (
                     <span className="available-heading">{`Available after ${asset.availability?.availabilityAfter}`}</span>
                   )}{' '}
-                  <span className="available-period">
-                    <span className="label card-name-you-label">min</span>
-                    {asset?.availability?.label}
-                    <span className="label card-name-estate-label">max</span>
-                  </span>
+                  {asset?.availability?.label && (
+                    <span className="available-period">
+                      <span className="label min-label">min</span>
+                      {asset?.availability?.label}
+                      <span className="label max-label">max</span>
+                    </span>
+                  )}
                 </Col>
               )}
             </Row>

@@ -76,7 +76,7 @@
 
   .card-name-estate-label {
     margin-left: 10px;
-    color: rgba(93, 143, 240, 1);
+    color: var(--theme-accent-color);
   }
 
   .card-name-you-label {
@@ -92,6 +92,24 @@
       margin-right: 3px;
       vertical-align: baseline;
     }
+  }
+
+  .min-label {
+    margin-right: 10px;
+    color: #d92687;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3px 6px;
+  }
+
+  .max-label {
+    margin-left: 10px;
+    color: var(--theme-accent-color);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3px 6px;
   }
 
   .card-image {
