@@ -71,6 +71,7 @@ export const USER_SUBSCRIPTION = gql`
         pricePerSecond
         lastRentEnd
         status
+        totalRents
         paymentToken {
           id
           name
@@ -97,6 +98,7 @@ export const USER_SUBSCRIPTION = gql`
         pricePerSecond
         lastRentEnd
         status
+        totalRents
         paymentToken {
           id
           name
