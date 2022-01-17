@@ -160,7 +160,7 @@ const ListView: React.FC = () => {
   const [feePercentage, setFeePercentage] = useState(0);
   const [pricePerSecond, setPricePerSecond] = useState(ZERO_BIG_NUMBER);
 
-  const [approveDisabled, setApproveDisabled] = useState(true);
+  const [approveDisabled, setApproveDisabled] = useState(false);
   const [listDisabled, setListDisabled] = useState(true);
   const [usdPrice, setUsdPrice] = useState('0');
 
@@ -317,8 +317,6 @@ const ListView: React.FC = () => {
       return;
     }
 
-    setApproveDisabled(true);
-
     try {
       let approvedAddress = DEFAULT_ADDRESS;
       if (selectedProperty.isLAND) {
@@ -329,7 +327,7 @@ const ListView: React.FC = () => {
         approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
       }
       if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
-        setListDisabled(false);
+        setApproveDisabled(true);
       }
     } catch (e) {
       console.log(e);
@@ -420,7 +418,9 @@ const ListView: React.FC = () => {
   };
 
   const evaluateInput = () => {
-    let isApproveDisabled = true;
+    let isListDisabled = true;
+    console.log('trigger');
+    console.log(approveDisabled);
     if (!minPeriod && isMinPeriodSelected) {
       setErrMessage('Min Period Must be set');
     } else if (minPeriod?.gt(maxPeriod)) {
@@ -437,18 +437,20 @@ const ListView: React.FC = () => {
       setErrMessage('no property selected');
     } else if (pricePerSecond.toFixed(0) === '0') {
       setErrMessage('Price per second equals to zero');
+    } else if (!approveDisabled) {
+      setErrMessage('');
+      console.log('should trigger');
     } else {
       setErrMessage('');
-      isApproveDisabled = false;
-      evaluateSelectedProperty();
+      isListDisabled = false;
     }
 
-    setApproveDisabled(isApproveDisabled);
-    setListDisabled(isApproveDisabled);
+    setListDisabled(isListDisabled);
   };
 
   const evaluateSelectedProperty = async () => {
     if (selectedProperty) {
+      setApproveDisabled(false);
       let approvedAddress: string;
       if (selectedProperty.isLAND) {
         approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
@@ -457,10 +459,8 @@ const ListView: React.FC = () => {
       }
       if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
         setApproveDisabled(true);
-        setListDisabled(false);
       } else {
         setApproveDisabled(false);
-        setListDisabled(true);
       }
     }
   };
@@ -479,7 +479,7 @@ const ListView: React.FC = () => {
 
   useEffect(() => {
     evaluateInput();
-  }, [minPeriod, maxPeriod, maxFutureTime, paymentToken, selectedProperty, pricePerSecond]);
+  }, [approveDisabled, minPeriod, maxPeriod, maxFutureTime, paymentToken, selectedProperty, pricePerSecond]);
 
   useEffect(() => {
     calculateTotalAndFeePrecision();
