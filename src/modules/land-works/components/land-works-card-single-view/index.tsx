@@ -45,6 +45,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
 }) => {
   const wallet = useWallet();
   const landWorks = useLandworks();
+  console.log(asset);
 
   const { landWorksContract } = landWorks;
 
@@ -209,13 +210,15 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
               )}
               {!isNotListed() && (
                 <Col span={13} className="availability">
-                  {asset?.availability?.isCurrentlyAvailable && (
+                  {asset?.availability?.isCurrentlyAvailable ? (
                     <span className="available-heading">Available now</span>
-                  )}
-                  {asset?.availability?.availabilityAfter && asset?.availability?.isRentable && (
-                    <span className="available-heading">{`Available after ${asset.availability?.availabilityAfter}`}</span>
+                  ) : (
+                    asset?.availability?.availabilityAfter &&
+                    asset?.availability?.isRentable && (
+                      <span className="available-heading">{`Available after ${asset.availability?.availabilityAfter}`}</span>
+                    )
                   )}{' '}
-                  {asset?.availability?.label && asset?.availability?.isRentable ? (
+                  {asset?.availability?.isRentable ? (
                     <span className="available-period">
                       {asset?.availability?.availabilityTime?.minAvailabilityTime > 0 && (
                         <>

@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { bottom, end } from '@popperjs/core';
 import { Card, Col, Image, Row } from 'antd';
-import BigNumber from 'bignumber.js';
 
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { getTokenPrice } from 'components/providers/known-tokens-provider';
 import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
 
-import { ReactComponent as EthIcon } from '../../../../resources/svg/eth.svg';
 import { ReactComponent as HotIcon } from '../../../../resources/svg/hot.svg';
 import { AssetEntity } from '../../api';
 import { LandsTooltip } from '../lands-tooltip';
@@ -98,17 +95,19 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
           </Col>
           <Col span={14}>
             <Row className="land-available-row" justify={end}>
-              {land.isAvailable && land.availability.isCurrentlyAvailable && (
-                <Col span={24}>
-                  <p className="available-heading">Available now</p>
-                </Col>
-              )}
-              {land.isAvailable && land.availability.availabilityAfter && (
-                <Col span={24}>
-                  <p className="available-heading">{`Available after ${land.availability.availabilityAfter}`}</p>
-                </Col>
-              )}
-              {!land.isAvailable && (
+              {land.isAvailable ? (
+                land.availability.isCurrentlyAvailable ? (
+                  <Col span={24}>
+                    <p className="available-heading">Available now</p>
+                  </Col>
+                ) : (
+                  land.availability.availabilityAfter && (
+                    <Col span={24}>
+                      <p className="available-heading">{`Available after ${land.availability.availabilityAfter}`}</p>
+                    </Col>
+                  )
+                )
+              ) : (
                 <Col span={24}>
                   <p className="available-heading">Delisted</p>
                 </Col>
