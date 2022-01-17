@@ -23,7 +23,7 @@ const LayoutFooter: React.FC = () => {
             { xs: 8, sm: 16, md: 24, lg: 32 },
             { xs: 8, sm: 16, md: 24, lg: 32 },
           ]}>
-          <Col xs={24} sm={24} md={24} lg={19} xl={19} style={{ paddingTop: '30px' }}>
+          <Col xs={24} sm={24} md={24} lg={17} xl={17} style={{ paddingTop: '30px' }}>
             <Row>
               <Col xs={24} sm={24} md={24} lg={14} xl={12}>
                 <Row align={'middle'} gutter={20}>
@@ -43,15 +43,18 @@ const LayoutFooter: React.FC = () => {
                 md={{ span: 24 }}
                 lg={{ span: 10 }}
                 xl={{ span: 10 }}
-                style={{ textAlign: 'end' }}>
-                <span className={s.text}>- a project by EnterDAO </span>
-                <Icon name="png/enterdao" width="56" height="56" />
+                style={{ textAlign: 'end', display: 'flex', alignItems: 'center' }}
+              >
+                <span className={(s.text, s.subline)}>
+                  a project by <strong>EnterDAO</strong>{' '}
+                </span>
+                <Icon style={{ marginLeft: '6px' }} name="png/enterdao" width="56" height="56" />
               </Col>
             </Row>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={5} xl={5} className={s.nav}>
-            <Row justify="center">
-              <Col xs={10} sm={10} md={10} lg={12} xl={12}>
+          <Col xs={24} sm={24} md={24} lg={7} xl={7} className={s.nav}>
+            <div className={s.linksRow}>
+              <div className={s.linksWrapper}>
                 <Row justify="center">
                   <Col xs={13} sm={13} md={13} lg={24} xl={24}>
                     <Link to="/" className={s.linkTitle}>
@@ -69,8 +72,8 @@ const LayoutFooter: React.FC = () => {
                     </Link>
                   </Col>
                 </Row>
-              </Col>
-              <Col xs={14} sm={10} md={10} lg={12} xl={12}>
+              </div>
+              <div className={s.linksWrapper}>
                 <Row justify="center">
                   <Col xs={13} sm={13} md={13} lg={24} xl={24}>
                     <Link to="/" className={s.linkTitle}>
@@ -78,13 +81,13 @@ const LayoutFooter: React.FC = () => {
                     </Link>
                   </Col>
                   <Col xs={13} sm={13} md={13} lg={24} xl={24}>
-                    <ExternalLink href="https://sharded-minds.enterdao.xyz" className={(s.linkAnchor, s.linkLandWorks)}>
+                    <ExternalLink href="https://sharded-minds.enterdao.xyz" className={s.linkAnchor}>
                       Sharded Minds
                     </ExternalLink>
                   </Col>
                 </Row>
-              </Col>
-            </Row>
+              </div>
+            </div>
           </Col>
         </Row>
         <div className={cn(s.row, s.copyrightsBlock)}>
