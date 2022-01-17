@@ -316,7 +316,7 @@ export type AssetAvailablity = {
   minRentDate: number;
   startRentDate: number;
   availabilityTime: AvailabilityTime;
-  maxRentiPeriodType: string;
+  maxRentPeriodType: string;
   maxRentPeriodTime: number;
 };
 
@@ -1023,7 +1023,7 @@ function getAvailability(asset: any): AssetAvailablity {
   let hasMaxAvailablity = false;
   let maxAvailabilityType = '';
   let maxAvailabilityTime = 0;
-  let maxRentiPeriodType = '';
+  let maxRentPeriodType = '';
   let maxRentPeriodTime = 0;
 
   if (!new BigNumber(asset.minPeriod).eq(ONE_SECOND) && !new BigNumber(asset.minPeriod).eq(MAX_UINT_256)) {
@@ -1078,7 +1078,7 @@ function getAvailability(asset: any): AssetAvailablity {
     const parsedDate = secondsToDuration(maxRentPeriod.toNumber());
     const { timeValue, timeType } = getTimeType(parsedDate);
     const period = `${timeValue} ${timeType}`;
-    maxRentiPeriodType = timeType;
+    maxRentPeriodType = timeType;
     maxRentPeriodTime = timeValue;
   }
 
@@ -1100,7 +1100,7 @@ function getAvailability(asset: any): AssetAvailablity {
       maxAvailabilityType: maxAvailabilityType,
       maxAvailabilityTime: maxAvailabilityTime,
     },
-    maxRentiPeriodType,
+    maxRentPeriodType,
     maxRentPeriodTime,
   };
 }

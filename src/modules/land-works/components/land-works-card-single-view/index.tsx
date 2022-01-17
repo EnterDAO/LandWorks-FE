@@ -243,7 +243,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       {asset?.availability?.maxRentPeriodTime && asset?.availability?.maxRentPeriodTime > 0 && (
                         <span>
                           Available for rent after {asset?.availability?.maxRentPeriodTime}{' '}
-                          {asset?.availability?.maxRentiPeriodType} period
+                          {asset?.availability?.maxRentPeriodType} period
                         </span>
                       )}
                     </span>
