@@ -157,9 +157,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
         <Row>
           <Col span={24} className="image-wrapper">
             <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)}></img>
-            {!asset?.decentralandData?.isLAND && (
-              <EstateLandOverlay coordinates={asset?.decentralandData?.coordinates} />
-            )}
+            <EstateLandOverlay coordinates={asset?.decentralandData?.coordinates} />
           </Col>
         </Row>
       </Col>
