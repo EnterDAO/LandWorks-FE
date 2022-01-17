@@ -54,26 +54,48 @@
     padding: 10px 25px !important;
     border-radius: 23px;
     color: rgba(93, 143, 240, 1) !important;
-    background: #27273a;
+    background: var(--theme-modal-color);
     border-radius: 23px;
     margin-right: auto;
     font-weight: 700;
     border: none;
+    transition: all 0.2s ease-out;
+
+    &:hover {
+      background: var(--theme-line-color);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+
+      &:hover {
+        background: var(--theme-modal-color);
+      }
+    }
   }
 
   .button-accent {
     padding: 10px 25px !important;
     border-radius: 12px;
-    background: var(--theme-accent-color) !important;
+    background: var(--theme-accent-color);
     color: var(--theme-primary-color) !important;
     margin-right: auto;
     font-weight: 700;
     border: none;
-    transition: color 0.2s ease-out;
+    transition: all 0.2s ease-out;
     box-shadow: var(--theme-accent-shadow);
 
     &:hover {
-      color: var(--theme-accent-hover-color);
+      background: var(--theme-accent-hover-color);
+      box-shadow: var(--theme-accent-shadow);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+
+      &:hover {
+        background: var(--theme-accent-color);
+      }
     }
   }
 }
