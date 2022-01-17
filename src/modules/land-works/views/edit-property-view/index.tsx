@@ -11,6 +11,7 @@ import { getTokenPrice } from 'components/providers/known-tokens-provider';
 import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
+import SmallAmountTooltip from '../../../../components/custom/smallAmountTooltip';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, PaymentToken, fetchTokenPayments } from '../../api';
 import { Dropdown } from '../../components/lands-dropdown-select';

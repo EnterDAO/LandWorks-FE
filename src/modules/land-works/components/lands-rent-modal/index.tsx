@@ -272,14 +272,14 @@ export const RentModal: React.FC<Props> = (props) => {
               </Col>
             </Row>
           )}
-          {!isRentDisabled && (
+          {!rentDisabled && (
             <Row className="rent-modal-footer">
               <Col span={24}>
                 <Button
                   style={{ display: 'block' }}
                   className="rent-button"
                   type="primary"
-                  disabled={isRentDisabled}
+                  disabled={rentDisabled}
                   onClick={handleRent}
                 >
                   <Row justify="center">
