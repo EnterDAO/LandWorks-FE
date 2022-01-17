@@ -117,6 +117,7 @@ const SingleLand: React.FC = () => {
         setWithdrawButtonDisabled(true);
       });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
+      history.push('/all');
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
       console.log(e);
@@ -149,7 +150,13 @@ const SingleLand: React.FC = () => {
         disableButtons(true);
         setShowWarningModal(false);
       });
-      showToastNotification(ToastType.Success, 'Property delisted successfully!');
+      showToastNotification(
+        ToastType.Success,
+        `Property ${isDirectWithdraw() ? 'withdrawn' : 'delisted'} successfully!`
+      );
+      if (isDirectWithdraw()) {
+        history.push('/all');
+      }
       setShowWarningModal(false);
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
