@@ -435,6 +435,8 @@ const ListView: React.FC = () => {
       setErrMessage('Price cannot be zero');
     } else if (selectedProperty === null) {
       setErrMessage('no property selected');
+    } else if (pricePerSecond.toFixed(0) === '0') {
+      setErrMessage('Price per second equals to zero');
     } else {
       setErrMessage('');
       isApproveDisabled = false;
