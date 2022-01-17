@@ -42,11 +42,11 @@ const SingleLand: React.FC = () => {
   const [showRentModal, setShowRentModal] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
 
-  const [rentButtonDisabled, setRentButtonDisabled] = useState(true);
-  const [claimButtonDisabled, setClaimButtonDisabled] = useState(true);
-  const [delistButtonDisabled, setDelistButtonDisabled] = useState(true);
-  const [withdrawButtonDisabled, setWithdrawButtonDisabled] = useState(true);
-  const [editButtonDisabled, setEditButtonDisabled] = useState(true);
+  const [rentButtonDisabled, setRentButtonDisabled] = useState(false);
+  const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
+  const [delistButtonDisabled, setDelistButtonDisabled] = useState(false);
+  const [withdrawButtonDisabled, setWithdrawButtonDisabled] = useState(false);
+  const [editButtonDisabled, setEditButtonDisabled] = useState(false);
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
@@ -117,7 +117,6 @@ const SingleLand: React.FC = () => {
         setWithdrawButtonDisabled(true);
       });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
-      history.push('/all');
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
       console.log(e);
@@ -150,13 +149,8 @@ const SingleLand: React.FC = () => {
         disableButtons(true);
         setShowWarningModal(false);
       });
-      showToastNotification(
-        ToastType.Success,
-        `Property ${isDirectWithdraw() ? 'withdrawn' : 'delisted'} successfully!`
-      );
-      if (isDirectWithdraw()) {
-        history.push('/all');
-      }
+      showToastNotification(ToastType.Success, 'Property delisted successfully!');
+      setShowWarningModal(false);
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
       console.log(e);
@@ -222,7 +216,7 @@ const SingleLand: React.FC = () => {
               style={{ fontSize: 14 }}
               className="button-subtle"
               onClick={handleDelistButton}
-              disabled={true}
+              disabled={delistButtonDisabled}
             >
               <span>{isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
             </Button>
@@ -233,7 +227,7 @@ const SingleLand: React.FC = () => {
               style={{ fontSize: 14 }}
               className="button-subtle"
               onClick={handleWithdraw}
-              disabled={true}
+              disabled={withdrawButtonDisabled}
             >
               <span>WITHDRAW</span>
             </Button>
