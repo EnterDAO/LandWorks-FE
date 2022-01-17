@@ -300,6 +300,12 @@ button {
   margin: 40px 0;
 }
 
+.ant-select-disabled {
+  .ant-select-selection-item {
+    color: var(--theme-subtle-color) !important;
+  }
+}
+
 .link-gradient:hover {
   opacity: 0.7;
 }

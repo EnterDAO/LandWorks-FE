@@ -42,11 +42,11 @@ const SingleLand: React.FC = () => {
   const [showRentModal, setShowRentModal] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
 
-  const [rentButtonDisabled, setRentButtonDisabled] = useState(false);
-  const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
-  const [delistButtonDisabled, setDelistButtonDisabled] = useState(false);
-  const [withdrawButtonDisabled, setWithdrawButtonDisabled] = useState(false);
-  const [editButtonDisabled, setEditButtonDisabled] = useState(false);
+  const [rentButtonDisabled, setRentButtonDisabled] = useState(true);
+  const [claimButtonDisabled, setClaimButtonDisabled] = useState(true);
+  const [delistButtonDisabled, setDelistButtonDisabled] = useState(true);
+  const [withdrawButtonDisabled, setWithdrawButtonDisabled] = useState(true);
+  const [editButtonDisabled, setEditButtonDisabled] = useState(true);
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
@@ -216,7 +216,7 @@ const SingleLand: React.FC = () => {
               style={{ fontSize: 14 }}
               className="button-subtle"
               onClick={handleDelistButton}
-              disabled={delistButtonDisabled}
+              disabled={true}
             >
               <span>{isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
             </Button>
@@ -227,7 +227,7 @@ const SingleLand: React.FC = () => {
               style={{ fontSize: 14 }}
               className="button-subtle"
               onClick={handleWithdraw}
-              disabled={withdrawButtonDisabled}
+              disabled={true}
             >
               <span>WITHDRAW</span>
             </Button>

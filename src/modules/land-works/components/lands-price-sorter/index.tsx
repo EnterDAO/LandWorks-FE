@@ -74,6 +74,7 @@ const styles = {
     padding: '0 0 0 8px',
     display: 'grid',
     width: '140px',
+    justifyContent: 'center',
   }),
   dropdownIndicator: (base: any, state: any) => ({
     ...base,
