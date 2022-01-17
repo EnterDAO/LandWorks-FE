@@ -212,14 +212,40 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                   {asset?.availability?.isCurrentlyAvailable && (
                     <span className="available-heading">Available now</span>
                   )}
-                  {asset?.availability?.availabilityAfter && (
+                  {asset?.availability?.availabilityAfter && asset?.availability?.isRentable && (
                     <span className="available-heading">{`Available after ${asset.availability?.availabilityAfter}`}</span>
                   )}{' '}
-                  {asset?.availability?.label && (
+                  {asset?.availability?.label && asset?.availability?.isRentable ? (
                     <span className="available-period">
-                      <span className="label min-label">min</span>
-                      {asset?.availability?.label}
-                      <span className="label max-label">max</span>
+                      {asset?.availability?.availabilityTime?.minAvailabilityTime > 0 && (
+                        <>
+                          <span className="label min-label">min</span>
+                          <span>
+                            {asset?.availability?.availabilityTime?.minAvailabilityTime}{' '}
+                            {asset?.availability?.availabilityTime?.minAvailabilityType}
+                          </span>
+                        </>
+                      )}
+                      {asset?.availability?.availabilityTime?.minAvailabilityTime > 0 &&
+                        asset?.availability?.availabilityTime?.maxAvailabilityTime > 0 && <span>{' - '}</span>}
+                      {asset?.availability?.availabilityTime?.maxAvailabilityTime > 0 && (
+                        <>
+                          <span>
+                            {asset?.availability?.availabilityTime?.maxAvailabilityTime}{' '}
+                            {asset?.availability?.availabilityTime?.maxAvailabilityType}
+                          </span>
+                          <span className="label max-label">max</span>
+                        </>
+                      )}
+                    </span>
+                  ) : (
+                    <span className="available-period">
+                      {asset?.availability?.maxRentPeriodTime && asset?.availability?.maxRentPeriodTime > 0 && (
+                        <span>
+                          Available for rent after {asset?.availability?.maxRentPeriodTime}{' '}
+                          {asset?.availability?.maxRentiPeriodType} period
+                        </span>
+                      )}
                     </span>
                   )}
                 </Col>

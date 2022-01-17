@@ -315,6 +315,16 @@ export type AssetAvailablity = {
   maxRentDate: number;
   minRentDate: number;
   startRentDate: number;
+  availabilityTime: AvailabilityTime;
+  maxRentiPeriodType: string;
+  maxRentPeriodTime: number;
+};
+
+export type AvailabilityTime = {
+  minAvailabilityTime: number;
+  minAvailabilityType: string;
+  maxAvailabilityType: string;
+  maxAvailabilityTime: number;
 };
 
 export type IdEntity = {
@@ -1007,8 +1017,14 @@ export function parseAsset(asset: any): AssetEntity {
 function getAvailability(asset: any): AssetAvailablity {
   let minAvailability = '';
   let hasMinAvailability = false;
+  let minAvailabilityType = '';
+  let minAvailabilityTime = 0;
   let maxAvailability = '';
   let hasMaxAvailablity = false;
+  let maxAvailabilityType = '';
+  let maxAvailabilityTime = 0;
+  let maxRentiPeriodType = '';
+  let maxRentPeriodTime = 0;
 
   if (!new BigNumber(asset.minPeriod).eq(ONE_SECOND) && !new BigNumber(asset.minPeriod).eq(MAX_UINT_256)) {
     const parsedDate = secondsToDuration(new BigNumber(asset.minPeriod).toNumber());
@@ -1016,6 +1032,8 @@ function getAvailability(asset: any): AssetAvailablity {
     const period = `${timeValue} ${timeType}`;
     minAvailability = period;
     hasMinAvailability = true;
+    minAvailabilityType = timeType;
+    minAvailabilityTime = timeValue;
   }
 
   const now = getNowTs();
@@ -1032,8 +1050,9 @@ function getAvailability(asset: any): AssetAvailablity {
     const { timeValue, timeType } = getTimeType(parsedDate);
     const period = `${timeValue} ${timeType}`;
     maxAvailability = period;
-
     hasMaxAvailablity = true;
+    maxAvailabilityType = timeType;
+    maxAvailabilityTime = timeValue;
   } else {
     maxRentDate = startRent.plus(ONE_HUNDRED_YEARS_IN_SECONDS);
   }
@@ -1055,6 +1074,14 @@ function getAvailability(asset: any): AssetAvailablity {
     }
   }
 
+  if (maxRentPeriod) {
+    const parsedDate = secondsToDuration(maxRentPeriod.toNumber());
+    const { timeValue, timeType } = getTimeType(parsedDate);
+    const period = `${timeValue} ${timeType}`;
+    maxRentiPeriodType = timeType;
+    maxRentPeriodTime = timeValue;
+  }
+
   const parsedDateAfter = secondsToDuration(startRent.toNumber() - now);
   const { timeValue, timeType } = getTimeType(parsedDateAfter);
   const period = `${timeValue} ${timeType}`;
@@ -1067,6 +1094,14 @@ function getAvailability(asset: any): AssetAvailablity {
     minRentDate: minRentDate.toNumber(),
     maxRentDate: maxRentDate.toNumber(),
     label: result,
+    availabilityTime: {
+      minAvailabilityTime: minAvailabilityTime,
+      minAvailabilityType: minAvailabilityType,
+      maxAvailabilityType: maxAvailabilityType,
+      maxAvailabilityTime: maxAvailabilityTime,
+    },
+    maxRentiPeriodType,
+    maxRentPeriodTime,
   };
 }
 
