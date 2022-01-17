@@ -100,10 +100,18 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
                   <Col span={24}>
                     <p className="available-heading">Available now</p>
                   </Col>
+                ) : land.availability.availabilityAfter && land?.availability?.isRentable ? (
+                  <Col span={24}>
+                    <p className="available-heading">{`Available after ${land.availability.availabilityAfter}`}</p>
+                  </Col>
                 ) : (
-                  land.availability.availabilityAfter && (
+                  land?.availability?.maxRentPeriodTime &&
+                  land?.availability?.maxRentPeriodTime > 0 && (
                     <Col span={24}>
-                      <p className="available-heading">{`Available after ${land.availability.availabilityAfter}`}</p>
+                      <p className="available-heading">
+                        Available for rent after {land?.availability?.maxRentPeriodTime}{' '}
+                        {land?.availability?.maxRentPeriodType}
+                      </p>
                     </Col>
                   )
                 )
@@ -112,9 +120,11 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
                   <p className="available-heading">Delisted</p>
                 </Col>
               )}
-              <Col span={24}>
-                <p className="available-period">{land.availability?.label}</p>
-              </Col>
+              {land?.availability?.isRentable && (
+                <Col span={24}>
+                  <p className="available-period">{land.availability?.label}</p>
+                </Col>
+              )}
             </Row>
           </Col>
         </Row>

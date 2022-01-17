@@ -212,13 +212,18 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                 <Col span={13} className="availability">
                   {asset?.availability?.isCurrentlyAvailable ? (
                     <span className="available-heading">Available now</span>
+                  ) : asset?.availability?.availabilityAfter && asset?.availability?.isRentable ? (
+                    <span className="available-heading">{`Available after ${asset.availability?.availabilityAfter}`}</span>
                   ) : (
-                    asset?.availability?.availabilityAfter &&
-                    asset?.availability?.isRentable && (
-                      <span className="available-heading">{`Available after ${asset.availability?.availabilityAfter}`}</span>
+                    asset?.availability?.maxRentPeriodTime &&
+                    asset?.availability?.maxRentPeriodTime > 0 && (
+                      <span className="available-heading">
+                        Available for rent after {asset?.availability?.maxRentPeriodTime}{' '}
+                        {asset?.availability?.maxRentPeriodType}
+                      </span>
                     )
                   )}{' '}
-                  {asset?.availability?.isRentable ? (
+                  {asset?.availability?.isRentable && (
                     <span className="available-period">
                       {asset?.availability?.availabilityTime?.minAvailabilityTime > 0 && (
                         <>
@@ -239,15 +244,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                           </span>
                           <span className="label max-label">max</span>
                         </>
-                      )}
-                    </span>
-                  ) : (
-                    <span className="available-period">
-                      {asset?.availability?.maxRentPeriodTime && asset?.availability?.maxRentPeriodTime > 0 && (
-                        <span>
-                          Available for rent after {asset?.availability?.maxRentPeriodTime}{' '}
-                          {asset?.availability?.maxRentPeriodType} period
-                        </span>
                       )}
                     </span>
                   )}

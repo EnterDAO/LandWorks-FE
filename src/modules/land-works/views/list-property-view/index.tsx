@@ -419,8 +419,6 @@ const ListView: React.FC = () => {
 
   const evaluateInput = () => {
     let isListDisabled = true;
-    console.log('trigger');
-    console.log(approveDisabled);
     if (!minPeriod && isMinPeriodSelected) {
       setErrMessage('Min Period Must be set');
     } else if (minPeriod?.gt(maxPeriod)) {
@@ -439,7 +437,6 @@ const ListView: React.FC = () => {
       setErrMessage('Price per second equals to zero');
     } else if (!approveDisabled) {
       setErrMessage('');
-      console.log('should trigger');
     } else {
       setErrMessage('');
       isListDisabled = false;
