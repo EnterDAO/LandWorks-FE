@@ -5,6 +5,7 @@ const { RangePicker } = DatePicker;
 
 export const RentDatePicker = (props: any) => {
   const { minStartDate, minRentPeriod, maxEndDate, handleRentDateChange } = props;
+
   function range(start: any, end: any) {
     const result = [];
     for (let i = start; i < end; i++) {
@@ -26,7 +27,7 @@ export const RentDatePicker = (props: any) => {
     }
 
     // The date is after the allowed max period
-    const tooLate = current > maxEndDate;
+    const tooLate = current.date() > maxEndDate.date();
     return tooLate;
   };
 
