@@ -27,6 +27,7 @@ import {
 import { getNowTs } from '../../../../utils';
 
 import './index.scss';
+import { ConsoleView } from 'react-device-detect';
 
 const DECENTRALAND_METAVERSE = '1';
 const DEFAULT_LAST_RENT_END = '0';
@@ -109,7 +110,7 @@ const Lands: React.FC = () => {
     if (checked !== undefined) {
       setByAvailability(checked);
     }
-    setLastRentEnd(checked ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
+    setLastRentEnd(checked === true ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
     setPage(1);
   };
 

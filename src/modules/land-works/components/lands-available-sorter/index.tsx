@@ -11,7 +11,7 @@ interface IAvailableSorterProps {
 export const LandsAvailableSorter: React.FC<IAvailableSorterProps> = ({ onAvailableChange, availableOnly, text }) => {
   return (
     <div className="available-sort-wrapper">
-      <Radio defaultChecked={availableOnly} onChange={onAvailableChange}></Radio>
+      <Radio checked={availableOnly} onChange={onAvailableChange}></Radio>
       <span onClick={() => onAvailableChange({ target: { checked: !availableOnly } })} className="label">
         {text}
       </span>
