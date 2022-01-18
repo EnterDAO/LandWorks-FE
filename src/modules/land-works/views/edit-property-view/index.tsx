@@ -248,8 +248,6 @@ const ListView: React.FC = () => {
     if (asset.pricePerMagnitude) {
       setTokenCost(asset.pricePerMagnitude.price);
     }
-
-    console.log(asset);
   }, [asset]);
 
   const handlePlaceChange = (e: any) => {
@@ -673,7 +671,7 @@ const ListView: React.FC = () => {
                                   style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
                                 />
                                 <span className="earnings-num">
-                                  <SmallAmountTooltip amount={new BigNumber(earnings || '0')} />
+                                  <SmallAmountTooltip amount={new BigNumber(protocolFee || '0')} />
                                 </span>
                               </Col>
                               <Col className="earnings-text">
