@@ -270,20 +270,22 @@ const SingleLand: React.FC = () => {
         </Row>
       )}
 
-      <RentModal
-        onCancel={() => {
-          setShowRentModal(false);
-        }}
-        onSubmit={() => {
-          disableButtons(true);
-          setShowRentModal(false);
-        }}
-        visible={showRentModal}
-        availability={asset.availability}
-        assetId={asset.id}
-        pricePerSecond={asset.pricePerSecond}
-        paymentToken={asset.paymentToken}
-      />
+      {showRentModal && (
+        <RentModal
+          onCancel={() => {
+            setShowRentModal(false);
+          }}
+          onSubmit={() => {
+            disableButtons(true);
+            setShowRentModal(false);
+          }}
+          visible={showRentModal}
+          availability={asset.availability}
+          assetId={asset.id}
+          pricePerSecond={asset.pricePerSecond}
+          paymentToken={asset.paymentToken}
+        />
+      )}
     </div>
   );
 };
