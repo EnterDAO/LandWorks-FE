@@ -41,7 +41,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
           return;
         }
 
-        if (newOperator.toLowerCase() === operator.toLowerCase()) {
+        if (newOperator?.toLowerCase() === operator?.toLowerCase()) {
           toast.error('New operator is the same as the current one.', {
             position: toast.POSITION.TOP_RIGHT,
             className: 'error-toast',

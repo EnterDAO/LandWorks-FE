@@ -1075,7 +1075,7 @@ function getAvailability(asset: any): AssetAvailablity {
   }
 
   if (maxRentPeriod) {
-    const parsedDate = secondsToDuration(maxRentPeriod.toNumber());
+    const parsedDate = secondsToDuration(asset.minPeriod - maxRentPeriod.toNumber());
     const { timeValue, timeType } = getTimeType(parsedDate);
     const period = `${timeValue} ${timeType}`;
     maxRentPeriodType = timeType;

@@ -165,7 +165,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
   };
 
   const showYoursSection = () =>
-    wallet.account && rents.filter((r) => r.operator.toLowerCase() === wallet.account?.toLowerCase()).length > 0;
+    wallet.account && rents.filter((r) => r.operator?.toLowerCase() === wallet.account?.toLowerCase()).length > 0;
 
   const onPaginationChange = (page: number, newPageSize?: number | undefined) => {
     setPage(page);
