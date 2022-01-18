@@ -94,24 +94,6 @@
     }
   }
 
-  .min-label {
-    margin-right: 10px;
-    color: #d92687;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    padding: 3px 6px;
-  }
-
-  .max-label {
-    margin-left: 10px;
-    color: var(--theme-accent-color);
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    padding: 3px 6px;
-  }
-
   .card-image {
     max-width: 100%;
   }
@@ -296,6 +278,44 @@
     > div {
       display: flex;
       align-items: center;
+    }
+  }
+}
+
+.period-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+
+  .period-title {
+    color: var(--theme-subtle-color);
+    margin-right: 11px;
+    font-size: 14px;
+  }
+
+  .label {
+    margin-right: 11px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3px 8px;
+    color: var(--theme-primary-color);
+    font-size: 12px;
+    font-weight: 700;
+
+    .preffix {
+      color: #d92687;
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-right: 5px;
+    }
+
+    .suffix {
+      color: var(--theme-accent-color);
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-right: 5px;
     }
   }
 }

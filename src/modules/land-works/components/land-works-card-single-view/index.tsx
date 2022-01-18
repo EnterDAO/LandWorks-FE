@@ -225,30 +225,31 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       </span>
                     )
                   )}{' '}
-                  {asset?.availability?.isRentable && (
-                    <span className="available-period">
-                      {asset?.availability?.availabilityTime?.minAvailabilityTime > 0 && (
-                        <>
-                          <span className="label min-label">min</span>
-                          <span>
-                            {asset?.availability?.availabilityTime?.minAvailabilityTime}{' '}
-                            {asset?.availability?.availabilityTime?.minAvailabilityType}
-                          </span>
-                        </>
-                      )}
-                      {asset?.availability?.availabilityTime?.minAvailabilityTime > 0 &&
-                        asset?.availability?.availabilityTime?.maxAvailabilityTime > 0 && <span>{' - '}</span>}
-                      {asset?.availability?.availabilityTime?.maxAvailabilityTime > 0 && (
-                        <>
-                          <span>
-                            {asset?.availability?.availabilityTime?.maxAvailabilityTime}{' '}
-                            {asset?.availability?.availabilityTime?.maxAvailabilityType}
-                          </span>
-                          <span className="label max-label">max</span>
-                        </>
-                      )}
-                    </span>
-                  )}
+                </Col>
+              )}
+              {asset?.availability?.isRentable && (
+                <Col span={24} className="period-wrapper">
+                  <span className="period-title">Rent period</span>
+                  <span className="available-period">
+                    {asset?.availability?.availabilityTime?.minAvailabilityTime > 0 && (
+                      <>
+                        <span className="label">
+                          <span className="preffix">min</span>
+                          {asset?.availability?.availabilityTime?.minAvailabilityTime}{' '}
+                          {asset?.availability?.availabilityTime?.minAvailabilityType}
+                        </span>
+                      </>
+                    )}
+                    {asset?.availability?.availabilityTime?.maxAvailabilityTime > 0 && (
+                      <>
+                        <span className="label">
+                          <span className="suffix">max</span>
+                          {asset?.availability?.availabilityTime?.maxAvailabilityTime}{' '}
+                          {asset?.availability?.availabilityTime?.maxAvailabilityType}
+                        </span>
+                      </>
+                    )}
+                  </span>
                 </Col>
               )}
             </Row>
