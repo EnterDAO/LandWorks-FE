@@ -163,8 +163,8 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
         </Row>
       </Col>
       <Col md={12} sm={24} className="properties-container">
-        <Row>
-          <Col span={16}>
+        <Row className="head-container">
+          <Col span={16} className="title-container">
             <span className="card-name">{asset?.name}</span>
 
             {asset?.isHot && (
@@ -184,7 +184,8 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
               <img style={{ marginRight: 5 }} src={chainPng} /> <span>Marketplace</span>
             </ExternalLink>
           </Col>
-
+        </Row>
+        <Row>
           <Col span={24} className="properties-row">
             <Row>
               <Col span={10}>

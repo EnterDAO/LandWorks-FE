@@ -4,6 +4,18 @@
   margin-top: auto;
   padding-top: 70px;
 
+  @media all and (max-width: 768px) {
+    padding-top: 40px;
+  }
+
+  .info {
+    @media all and (max-width: 768px) {
+      > div > div {
+        margin-bottom: 20px;
+      }
+    }
+  }
+
   .sLinksWrap {
     margin-top: 14px;
   }
