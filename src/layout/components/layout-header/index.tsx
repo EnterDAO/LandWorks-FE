@@ -12,6 +12,7 @@ import { useGeneral } from 'components/providers/general-provider';
 import { useWarning } from 'components/providers/warning-provider';
 import LandsNav from 'modules/land-works/components/lands-header-nav';
 import { LandsNavMobile } from 'modules/land-works/components/lands-header-nav-mobile';
+import { LandsTooltip } from 'modules/land-works/components/lands-tooltip';
 import ConnectedWallet from 'wallets/components/connected-wallet';
 import { useWallet } from 'wallets/wallet';
 
@@ -63,9 +64,11 @@ const LayoutHeader: React.FC = () => {
 
       {wallet.isActive && wallet.connector?.id === 'metamask' && !isLandingPage?.isExact && (
         <div className={s.addTokenWrapper}>
-          <button type="button" onClick={() => history.push('/list')} className={s.addTokenButton}>
-            <ListIcon />
-          </button>
+          <LandsTooltip placement="bottom" trigger="hover" text="List new property">
+            <button type="button" onClick={() => history.push('/list')} className={s.addTokenButton}>
+              <ListIcon />
+            </button>
+          </LandsTooltip>
         </div>
       )}
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ReactChild, useState } from 'react';
 import { Col, Row, Tooltip } from 'antd';
 import { TooltipPlacement } from 'antd/lib/tooltip';
 
@@ -13,11 +13,11 @@ type TooltipProps = {
 };
 
 export const LandsTooltip: React.FC<TooltipProps> = (props) => {
-  const { placement, trigger, text } = props;
+  const { placement, trigger, text, children } = props;
 
   return (
     <Tooltip title={text} placement={placement} trigger={trigger} overlayClassName="tooltip-wrapper">
-      <Icon name="info-outlined" className="info-icon" />
+      {children ? children : <Icon name="info-outlined" className="info-icon" />}
     </Tooltip>
   );
 };
