@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Checkbox, Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
@@ -13,7 +13,8 @@ import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import SmallAmountTooltip from '../../../../components/custom/smallAmountTooltip';
 import { useWallet } from '../../../../wallets/wallet';
-import { AssetEntity, PaymentToken, fetchTokenPayments } from '../../api';
+import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset } from '../../api';
+import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
 import { Dropdown } from '../../components/lands-dropdown-select';
 import { EditViewLandDropdown } from '../../components/lands-edit-dropdown-select';
 import { LandsEditInput } from '../../components/lands-edit-input';
@@ -125,7 +126,10 @@ const ListView: React.FC = () => {
 
   const { landWorksContract } = landworks;
 
-  const [asset, setAsset] = useState<AssetEntity>(location.state as AssetEntity);
+  // const [asset, setAsset] = useState<AssetEntity>(location.state as AssetEntity);
+  const [asset, setAsset] = useState<AssetEntity>({} as AssetEntity);
+  const { tokenId } = useParams<{ tokenId: string }>();
+  const [loading, setLoading] = useState(false);
 
   const [minPeriod, setMinPeriod] = useState(DEFAULT_MIN_PERIOD); // Value in seconds
   const [isMinPeriodSelected, setMinPeriodSelected] = useState(false);
@@ -164,11 +168,6 @@ const ListView: React.FC = () => {
   const [saveDisabled, setSaveDisabled] = useState(false);
 
   useEffect(() => {
-    if (!asset) {
-      history.push(`/all`);
-      return;
-    }
-
     // Pre-populate user properties
     const properyOption = { label: asset.name, value: JSON.stringify(asset) };
     setProperties([properyOption]);
@@ -242,7 +241,7 @@ const ListView: React.FC = () => {
 
     // Get usd price per day for the asset
     if (asset.paymentToken) {
-      getUsdPrice(asset.paymentToken.symbol, asset.pricePerMagnitude.price);
+      getUsdPrice(asset.paymentToken?.symbol, asset.pricePerMagnitude.price);
       setPaymentToken(asset.paymentToken);
     }
 
@@ -478,221 +477,242 @@ const ListView: React.FC = () => {
     if (asset) {
       calculateTotalAndFeePrecision();
       calculatePricePerSecond();
-      getUsdPrice(asset.paymentToken.symbol, tokenCost?.toNumber() || 0);
+      getUsdPrice(asset?.paymentToken?.symbol, tokenCost?.toNumber() || 0);
     }
   }, [paymentToken, tokenCost]);
 
+  useEffect(() => {
+    getAsset();
+  }, [tokenId]);
+
+  const getAsset = async () => {
+    setLoading(true);
+    const asset = await fetchAsset(tokenId);
+    if (!asset) {
+      history.push(`/all`);
+      return;
+    }
+    setAsset(parseAsset(asset));
+    setLoading(false);
+  };
+
   return (
     <section className="list-view">
-      <Row>
-        <Col span={24}>
-          <Row className="list-view-wrapper">
-            <Col span={24}>
-              <h3>Edit property</h3>
-            </Col>
-            <Col span={24} style={{ margin: '10px 0' }}>
-              <Row gutter={[16, 16]}>
-                <Col span={12}>
-                  <Row>
-                    <Col span={24}>
-                      <p className="drop-heading">Metaverse</p>
-                    </Col>
-                    <Col span={24}>
-                      <EditViewLandDropdown
-                        options={PlaceOptions}
-                        onChange={() => {
-                          console.log('');
-                        }}
-                        initialValuе={PlaceOptions[0]}
-                        disabled={true}
-                      />
-                    </Col>
-                  </Row>
-                </Col>
-                <Col span={12}>
-                  <Row>
-                    <Col span={24}>
-                      <p className="drop-heading">Property</p>
-                    </Col>
-                    <Col span={24}>
-                      <EditViewLandDropdown
-                        options={properties}
-                        onChange={() => {
-                          console.log('');
-                        }}
-                        initialValuе={initialProperty}
-                        disabled={true}
-                      />
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Col>
-            <Col span={24}>
-              <Row className="rent-period">
-                <Col span={8}>Rent Period</Col>
-                <Col span={16}>
-                  <Row gutter={[16, 16]}>
-                    <Col span={12} className="checkbox-wrapper">
-                      <Checkbox onChange={handleMinCheckboxChange} checked={isMinPeriodSelected} /> min
-                      <LandsEditPeriodDropdown
-                        options={MinRentPeriodOptions}
-                        onChange={handleMinSelectChange}
-                        onInputChange={handleMinInputChange}
-                        initialValuе={minPeriodSelectedOption}
-                        inputValue={minInput?.toNumber()}
-                        disabled={!isMinPeriodSelected}
-                      />
-                      <LandsTooltip
-                        placement="bottom"
-                        trigger="hover"
-                        text="The minimum period for which the property will be available to be rented by a given user. If minimum period is not set (not enabled), there won't be any restriction on the renting time, e.g the property may be rented for as low as 1 second."
-                      />
-                    </Col>
-                    <Col span={12} className="checkbox-wrapper">
-                      <Checkbox onChange={handleMaxCheckboxChange} checked={isMaxPeriodSelected} /> max
-                      <LandsEditPeriodDropdown
-                        options={MaxRentPeriodOptions}
-                        onChange={handleMaxSelectChange}
-                        onInputChange={handleMaxInputChange}
-                        initialValuе={maxPeriodSelectedOption}
-                        inputValue={maxInput?.toNumber()}
-                        disabled={!isMaxPeriodSelected}
-                      />
-                      <LandsTooltip
-                        placement="bottom"
-                        trigger="hover"
-                        text="The maximum period for which the property can be rented by a given user. If maximum period is not set (not enabled), the value will default to the liquidity restriction configured for the property."
-                      />
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Col>
-            <Col span={24} className="future-period-wrapper">
-              <span style={{ marginRight: '15px' }}>At any given time to be rented out at most</span>
-              <LandsEditPeriodDropdown
-                options={AtMostRentPeriodOptions}
-                onChange={handleAtMostSelectChange}
-                onInputChange={handleAtMostInputChange}
-                initialValuе={maxFutureSelectedOption}
-                inputValue={maxFutureTimeInput?.toNumber()}
-              />
-              <span style={{ marginLeft: '15px' }}>in the future</span>
-              <LandsTooltip
-                placement="bottom"
-                trigger="hover"
-                text="The timestamp delta after which the protocol will not allow for the property to be rented. It is a utility to lenders so that they can enforce liquidity restrictions on the property being listed. E.g if the property is popular and rented non-stop, restrictions can be made using this configuration so that you can have your property liquid (available for withdrawal). This configuration resembles the maximum time you are willing to wait in order to withdraw your property from the protocol.
-"
-              />
-            </Col>
-            <Col span={24}>
-              <Row className="price-container" gutter={[16, 16]}>
-                <Col span={24}>Price</Col>
-                <Col span={24}>
-                  <Row>
-                    <Col span={12} className="currency-wrapper">
-                      <CurrencyDropdown
-                        changeHandler={handleCurrencyChange}
-                        paymentTokens={paymentTokens}
-                        value={paymentToken}
-                      />
-                      <div className="price-input-wrapper">
-                        <LandsEditInput
-                          onInputChange={handleCostEthChange}
-                          value={tokenCost?.toNumber()}
-                          customClassName="price-eth-input"
-                        />
-                        <span>{usdPrice}$</span>
-                      </div>
-                      <span>/ day</span>
-                    </Col>
-                    <Col span={12}>
-                      <Row justify="end">
-                        <Col>
-                          <button
-                            type="button"
-                            className="button-primary action-btn"
-                            onClick={() => setShowWarningModal(true)}
-                            disabled={saveDisabled}
-                          >
-                            <span>Save</span>
-                          </button>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col span={24}>
-                  <Row>
-                    <Col span={10} className="your-earning-container">
-                      <Row>
-                        <Col span={9}>
-                          <Row>
-                            <Col span={24}>
-                              <Icon
-                                name={getTokenIconName(paymentToken.symbol || 'png/eth')}
-                                className="info-icon"
-                                style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
-                              />
-                              <span className="earnings-num">
-                                <SmallAmountTooltip amount={new BigNumber(earnings || '0')} />
-                              </span>
-                            </Col>
-                            <Col className="earnings-text">
-                              <p>Your Earnings</p>
-                            </Col>
-                          </Row>
-                        </Col>
-                        <Col span={2} style={{ display: 'flex', justifyContent: 'center' }}>
-                          +
-                        </Col>
-                        <Col span={13}>
-                          <Row>
-                            <Col span={24}>
-                              <Icon
-                                name={getTokenIconName(paymentToken.symbol || '')}
-                                className="info-icon"
-                                style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
-                              />
-                              <span className="earnings-num">
-                                <SmallAmountTooltip amount={new BigNumber(earnings || '0')} />
-                              </span>
-                            </Col>
-                            <Col className="earnings-text">
-                              <p>{feePercentage}% Protocol fee</p>
-                            </Col>
-                            <LandsTooltip
-                              placement="right"
-                              trigger="hover"
-                              text="Renters are charged at the time of the rent for the whole period they are renting. The earnings are to be received in the case the property is being rented. Protocol fees are charged during the rent transaction. If there are no rents, no fees will be charged."
-                            />
-                          </Row>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Col>
-            {errMessage && (
-              <Col span={24} className="error-wrapper">
-                {errMessage}
+      {loading ? (
+        <EditFormCardSkeleton />
+      ) : (
+        <Row>
+          <Col span={24}>
+            <Row className="list-view-wrapper">
+              <Col span={24}>
+                <h3>Edit property</h3>
               </Col>
-            )}
-          </Row>
-        </Col>
-        <WarningModal
-          onCancel={() => {
-            setShowWarningModal(false);
-          }}
-          onOk={handleSave}
-          visible={showWarningModal}
-          text={
-            <>Changing the payment type will enforce the payout of any unclaimed rent accumulated for this property.</>
-          }
-        />
-      </Row>
+              <Col span={24} style={{ margin: '10px 0' }}>
+                <Row gutter={[16, 16]}>
+                  <Col span={12}>
+                    <Row>
+                      <Col span={24}>
+                        <p className="drop-heading">Metaverse</p>
+                      </Col>
+                      <Col span={24}>
+                        <EditViewLandDropdown
+                          options={PlaceOptions}
+                          onChange={() => {
+                            console.log('');
+                          }}
+                          initialValuе={PlaceOptions[0]}
+                          disabled={true}
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col span={12}>
+                    <Row>
+                      <Col span={24}>
+                        <p className="drop-heading">Property</p>
+                      </Col>
+                      <Col span={24}>
+                        <EditViewLandDropdown
+                          options={properties}
+                          onChange={() => {
+                            console.log('');
+                          }}
+                          initialValuе={initialProperty}
+                          disabled={true}
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Col>
+              <Col span={24}>
+                <Row className="rent-period">
+                  <Col span={8}>Rent Period</Col>
+                  <Col span={16}>
+                    <Row gutter={[16, 16]}>
+                      <Col span={12} className="checkbox-wrapper">
+                        <Checkbox onChange={handleMinCheckboxChange} checked={isMinPeriodSelected} /> min
+                        <LandsEditPeriodDropdown
+                          options={MinRentPeriodOptions}
+                          onChange={handleMinSelectChange}
+                          onInputChange={handleMinInputChange}
+                          initialValuе={minPeriodSelectedOption}
+                          inputValue={minInput?.toNumber()}
+                          disabled={!isMinPeriodSelected}
+                        />
+                        <LandsTooltip
+                          placement="bottom"
+                          trigger="hover"
+                          text="The minimum period for which the property will be available to be rented by a given user. If minimum period is not set (not enabled), there won't be any restriction on the renting time, e.g the property may be rented for as low as 1 second."
+                        />
+                      </Col>
+                      <Col span={12} className="checkbox-wrapper">
+                        <Checkbox onChange={handleMaxCheckboxChange} checked={isMaxPeriodSelected} /> max
+                        <LandsEditPeriodDropdown
+                          options={MaxRentPeriodOptions}
+                          onChange={handleMaxSelectChange}
+                          onInputChange={handleMaxInputChange}
+                          initialValuе={maxPeriodSelectedOption}
+                          inputValue={maxInput?.toNumber()}
+                          disabled={!isMaxPeriodSelected}
+                        />
+                        <LandsTooltip
+                          placement="bottom"
+                          trigger="hover"
+                          text="The maximum period for which the property can be rented by a given user. If maximum period is not set (not enabled), the value will default to the liquidity restriction configured for the property."
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Col>
+              <Col span={24} className="future-period-wrapper">
+                <span style={{ marginRight: '15px' }}>At any given time to be rented out at most</span>
+                <LandsEditPeriodDropdown
+                  options={AtMostRentPeriodOptions}
+                  onChange={handleAtMostSelectChange}
+                  onInputChange={handleAtMostInputChange}
+                  initialValuе={maxFutureSelectedOption}
+                  inputValue={maxFutureTimeInput?.toNumber()}
+                />
+                <span style={{ marginLeft: '15px' }}>in the future</span>
+                <LandsTooltip
+                  placement="bottom"
+                  trigger="hover"
+                  text="The timestamp delta after which the protocol will not allow for the property to be rented. It is a utility to lenders so that they can enforce liquidity restrictions on the property being listed. E.g if the property is popular and rented non-stop, restrictions can be made using this configuration so that you can have your property liquid (available for withdrawal). This configuration resembles the maximum time you are willing to wait in order to withdraw your property from the protocol.
+"
+                />
+              </Col>
+              <Col span={24}>
+                <Row className="price-container" gutter={[16, 16]}>
+                  <Col span={24}>Price</Col>
+                  <Col span={24}>
+                    <Row>
+                      <Col span={12} className="currency-wrapper">
+                        <CurrencyDropdown
+                          changeHandler={handleCurrencyChange}
+                          paymentTokens={paymentTokens}
+                          value={paymentToken}
+                        />
+                        <div className="price-input-wrapper">
+                          <LandsEditInput
+                            onInputChange={handleCostEthChange}
+                            value={tokenCost?.toNumber()}
+                            customClassName="price-eth-input"
+                          />
+                          <span>{usdPrice}$</span>
+                        </div>
+                        <span>/ day</span>
+                      </Col>
+                      <Col span={12}>
+                        <Row justify="end">
+                          <Col>
+                            <button
+                              type="button"
+                              className="button-primary action-btn"
+                              onClick={() => setShowWarningModal(true)}
+                              disabled={saveDisabled}
+                            >
+                              <span>Save</span>
+                            </button>
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col span={24}>
+                    <Row>
+                      <Col span={10} className="your-earning-container">
+                        <Row>
+                          <Col span={9}>
+                            <Row>
+                              <Col span={24}>
+                                <Icon
+                                  name={getTokenIconName(paymentToken.symbol || 'png/eth')}
+                                  className="info-icon"
+                                  style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
+                                />
+                                <span className="earnings-num">
+                                  <SmallAmountTooltip amount={new BigNumber(earnings || '0')} />
+                                </span>
+                              </Col>
+                              <Col className="earnings-text">
+                                <p>Your Earnings</p>
+                              </Col>
+                            </Row>
+                          </Col>
+                          <Col span={2} style={{ display: 'flex', justifyContent: 'center' }}>
+                            +
+                          </Col>
+                          <Col span={13}>
+                            <Row>
+                              <Col span={24}>
+                                <Icon
+                                  name={getTokenIconName(paymentToken.symbol || '')}
+                                  className="info-icon"
+                                  style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
+                                />
+                                <span className="earnings-num">
+                                  <SmallAmountTooltip amount={new BigNumber(earnings || '0')} />
+                                </span>
+                              </Col>
+                              <Col className="earnings-text">
+                                <p>{feePercentage}% Protocol fee</p>
+                              </Col>
+                              <LandsTooltip
+                                placement="right"
+                                trigger="hover"
+                                text="Renters are charged at the time of the rent for the whole period they are renting. The earnings are to be received in the case the property is being rented. Protocol fees are charged during the rent transaction. If there are no rents, no fees will be charged."
+                              />
+                            </Row>
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Col>
+              {errMessage && (
+                <Col span={24} className="error-wrapper">
+                  {errMessage}
+                </Col>
+              )}
+            </Row>
+          </Col>
+          <WarningModal
+            onCancel={() => {
+              setShowWarningModal(false);
+            }}
+            onOk={handleSave}
+            visible={showWarningModal}
+            text={
+              <>
+                Changing the payment type will enforce the payout of any unclaimed rent accumulated for this property.
+              </>
+            }
+          />
+        </Row>
+      )}
     </section>
   );
 };

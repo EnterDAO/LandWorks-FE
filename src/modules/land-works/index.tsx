@@ -52,7 +52,7 @@ const LandworksView: React.FC = () => {
       <ProtectedRoute
         isAuthenticated={!!sessionProvider || !!walletCtx.account}
         authenticationPath="/"
-        path="/property/:tokenid/edit/"
+        path="/property/:tokenId/edit/"
         exact
         component={EditProperty}
       />

@@ -506,7 +506,7 @@ export function fetchAsset(id: string): Promise<AssetEntity> {
     },
   })
     .then(async (response) => {
-      return parseAsset(response.data.asset);
+      return response.data.asset;
     })
     .catch((e) => {
       console.log(e);
