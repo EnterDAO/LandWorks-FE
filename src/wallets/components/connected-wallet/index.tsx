@@ -20,6 +20,8 @@ import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 import Notifications from 'wallets/components/notifications';
 import { useWallet } from 'wallets/wallet';
 
+import { useErc20 } from '../../../modules/land-works/providers/erc20-provider';
+
 import s from './s.module.scss';
 
 const NotificationSection: React.FC = () => {
@@ -65,28 +67,30 @@ const ConnectedWallet: React.FC = () => {
   const { landworksTxInProgress, landworksTxHash } = useLandworks();
   const { landTxInProgress, landTxHash } = useLandRegistry();
   const { estateTxInProgress, estateTxHash } = useEstateRegistry();
+  const { erc20TxInProgress, erc20TxHash } = useErc20();
 
   console.log(`landsworksTxInProgress: ${landworksTxInProgress}`);
   console.log(`landTxInProgress: ${landTxInProgress}`);
   console.log(`estateTxInProgress: ${estateTxInProgress}`);
+  console.log(`erc20TxInProgress: ${erc20TxInProgress}`);
 
   const [isTxInProgress, setIsAnyTxInProgress] = useState(
-    landworksTxInProgress || landTxInProgress || estateTxInProgress
+    landworksTxInProgress || landTxInProgress || estateTxInProgress || erc20TxInProgress
   );
 
-  const [txHash, setTxHash] = useState(landworksTxHash || landTxHash || estateTxHash);
+  const [txHash, setTxHash] = useState(landworksTxHash || landTxHash || estateTxHash || erc20TxHash);
 
   useEffect(() => {
-    if (landworksTxInProgress || landTxInProgress || estateTxInProgress) {
+    if (landworksTxInProgress || landTxInProgress || estateTxInProgress || erc20TxInProgress) {
       setIsAnyTxInProgress(true);
     } else {
       setIsAnyTxInProgress(false);
     }
-  }, [landworksTxInProgress, landTxInProgress, estateTxInProgress]);
+  }, [landworksTxInProgress, landTxInProgress, estateTxInProgress, erc20TxInProgress]);
 
   useEffect(() => {
-    setTxHash(landworksTxHash || landTxHash || estateTxHash);
-  }, [landworksTxHash, landTxHash, estateTxHash]);
+    setTxHash(landworksTxHash || landTxHash || estateTxHash || erc20TxHash);
+  }, [landworksTxHash, landTxHash, estateTxHash, erc20TxHash]);
 
   if (wallet.connecting) {
     return (

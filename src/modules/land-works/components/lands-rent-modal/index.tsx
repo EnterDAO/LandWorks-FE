@@ -15,6 +15,7 @@ import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
 import Erc20Contract from '../../../../web3/erc20Contract';
 import { AssetAvailablity, PaymentToken } from '../../api';
+import { useErc20 } from '../../providers/erc20-provider';
 import { useLandworks } from '../../providers/landworks-provider';
 import { RentDatePicker } from '../lands-rent-date-picker';
 import { LandsTooltip } from '../lands-tooltip';
@@ -55,8 +56,10 @@ export const RentModal: React.FC<Props> = (props) => {
 
   const wallet = useWallet();
   const landworks = useLandworks();
+  const erc20 = useErc20();
 
   const { landWorksContract } = landworks;
+  const { erc20Contract } = erc20;
 
   const [editedValue, setEditedValue] = useState<string>('');
   const [period, setPeriod] = useState(0);
@@ -64,7 +67,6 @@ export const RentModal: React.FC<Props> = (props) => {
   const [totalPrice, setTotalPrice] = useState(new BigNumber(0));
   const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
   const [errAddressMessage, setErrAddressMessage] = useState<string>('');
-  const [erc20Contract, setErc20Contract] = useState(new Erc20Contract([], ''));
 
   const [value, setValue] = useState(new BigNumber(0));
   const [approveDisabled, setApproveDisabled] = useState(false);
@@ -114,7 +116,7 @@ export const RentModal: React.FC<Props> = (props) => {
     if (paymentToken?.id === ONE_ADDRESS) {
       setRentDisabled(false);
     } else {
-      const allowance = erc20Contract.getAllowanceOf(config.contracts.landworksContract);
+      const allowance = erc20Contract?.getAllowanceOf(config.contracts.landworksContract);
       if (allowance == null) {
         setApproveDisabled(false);
         setRentDisabled(true);
@@ -136,11 +138,11 @@ export const RentModal: React.FC<Props> = (props) => {
     }
 
     try {
-      await erc20Contract.approve(true, config.contracts.landworksContract, () => {
+      await erc20Contract?.approve(true, config.contracts.landworksContract, () => {
         setApproveDisabled(true);
       });
       showToastNotification(ToastType.Success, `${paymentToken.symbol} approved successfully.`);
-      erc20Contract.loadAllowance(config.contracts.landworksContract).catch(Error);
+      erc20Contract?.loadAllowance(config.contracts.landworksContract).catch(Error);
       checkApprovedAmount();
     } catch (e) {
       console.log(e);
@@ -185,24 +187,10 @@ export const RentModal: React.FC<Props> = (props) => {
   useEffect(() => {
     if (wallet.account) {
       setEditedValue(wallet.account);
-      erc20Contract.setAccount(wallet.account);
-      erc20Contract.loadAllowance(config.contracts.landworksContract).catch(Error);
     } else {
       onCancel();
     }
   }, [wallet.account]);
-
-  useEffect(() => {
-    if (paymentToken) {
-      const contract = new Erc20Contract([], paymentToken.id);
-      if (wallet.account && wallet.provider) {
-        contract.setAccount(wallet.account);
-        contract.setProvider(wallet.provider);
-        contract.loadAllowance(config.contracts.landworksContract).catch(Error);
-      }
-      setErc20Contract(contract);
-    }
-  }, [paymentToken]);
 
   useEffect(() => {
     checkApprovedAmount();
@@ -276,7 +264,7 @@ export const RentModal: React.FC<Props> = (props) => {
               </Col>
             </Row>
           )}
-          {!rentDisabled && (
+          {isValidForm() && (
             <Row className="rent-modal-footer">
               <Col span={24}>
                 <Button
