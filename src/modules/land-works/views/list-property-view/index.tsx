@@ -536,7 +536,7 @@ const ListView: React.FC = () => {
                   <Col sm={24} md={8}>
                     Rent Period
                   </Col>
-                  <Col sm={24} md={14}>
+                  <Col sm={24} md={16}>
                     <Row gutter={[16, 16]}>
                       <Col xs={24} sm={12} className="checkbox-wrapper">
                         <Checkbox onChange={handleMinCheckboxChange} /> min
