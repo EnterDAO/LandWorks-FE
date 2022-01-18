@@ -229,7 +229,10 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
               )}
               {asset?.availability?.isRentable && (
                 <Col span={24} className="period-wrapper">
-                  <span className="period-title">Rent period</span>
+                  {(asset?.availability?.availabilityTime?.minAvailabilityTime > 0 ||
+                    asset?.availability?.availabilityTime?.maxAvailabilityTime > 0) && (
+                    <span className="period-title">Rent period</span>
+                  )}
                   <span className="available-period">
                     {asset?.availability?.availabilityTime?.minAvailabilityTime > 0 && (
                       <>
