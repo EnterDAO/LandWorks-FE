@@ -9,12 +9,18 @@
   background: #27273a;
   padding: 4px 20px;
 
+  label {
+    margin-right: 0 !important;
+    display: flex !important;
+    justify-content: center;
+  }
+
   .label {
     font-size: 14px;
     color: var(--theme-primary-color);
     background-color: transparent;
-    margin-left: 10px;
     font-weight: 400;
+    position: relative;
   }
 }
 

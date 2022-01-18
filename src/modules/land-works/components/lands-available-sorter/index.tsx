@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox } from 'antd';
+import { Radio } from 'antd';
 
 import './index.scss';
 
@@ -11,7 +11,7 @@ interface IAvailableSorterProps {
 export const LandsAvailableSorter: React.FC<IAvailableSorterProps> = ({ onAvailableChange, availableOnly, text }) => {
   return (
     <div className="available-sort-wrapper">
-      <Checkbox checked={availableOnly} onChange={onAvailableChange}></Checkbox>
+      <Radio defaultChecked={availableOnly} onChange={onAvailableChange}></Radio>
       <span onClick={() => onAvailableChange({ target: { checked: !availableOnly } })} className="label">
         {text}
       </span>
