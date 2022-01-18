@@ -198,17 +198,19 @@ const SingleLand: React.FC = () => {
         }
       />
       <Row gutter={40} className="head-nav">
-        {shouldShowEditButton() && (
-          <Button
-            style={{ fontSize: 14 }}
-            type="link"
-            className="button-accent"
-            disabled={editButtonDisabled}
-            onClick={() => history.push(`/property/${asset.id}/edit`, asset)}
-          >
-            <span>EDIT</span>
-          </Button>
-        )}
+        <div className="left-wrapper">
+          {shouldShowEditButton() && (
+            <Button
+              style={{ fontSize: 14 }}
+              type="link"
+              className="button-accent"
+              disabled={editButtonDisabled}
+              onClick={() => history.push(`/property/${asset.id}/edit`, asset)}
+            >
+              <span>EDIT</span>
+            </Button>
+          )}
+        </div>
         <div className="right-wrapper">
           {shouldShowStake() && (
             <ExternalLink
