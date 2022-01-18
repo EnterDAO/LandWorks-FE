@@ -15,20 +15,17 @@ export const RentDatePicker = (props: any) => {
   }
 
   const disabledDate = (current: any) => {
-    // The date is before the allowed min period
-    const tooEarlyDate = current.date() < minRentPeriod.date();
-    const tooEarlyMonth = current.month() === minRentPeriod.month();
-    const tooEarlyYear = current.year() === minRentPeriod.year();
+    const isBefore = current.isBefore(minRentPeriod, 'year');
+    const isAfter = current.isAfter(maxEndDate, 'hour');
+    const isSameEndDay = current.isSame(maxEndDate, 'day');
 
-    const isТooEarlytDate = tooEarlyDate && tooEarlyMonth && tooEarlyYear;
-
-    if (isТooEarlytDate) {
-      return tooEarlyDate;
+    if (isBefore) {
+      return isBefore;
     }
 
-    // The date is after the allowed max period
-    const tooLate = current.date() > maxEndDate.date();
-    return tooLate;
+    if (isAfter && !isSameEndDay) {
+      return isAfter;
+    }
   };
 
   function disabledRangeTime(current: Moment | null, type: string): any {
