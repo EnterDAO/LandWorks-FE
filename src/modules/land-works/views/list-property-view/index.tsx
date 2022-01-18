@@ -680,7 +680,7 @@ const ListView: React.FC = () => {
                                 <p>{feePercentage}% Protocol fee</p>
                               </Col>
                               <LandsTooltip
-                                placement="bottomLeft"
+                                placement="right"
                                 trigger="hover"
                                 text="Renters are charged at the time of the rent for the whole period they are renting. The earnings are to be received in the case the property is being rented. Protocol fees are charged during the rent transaction. If there are no rents, no fees will be charged."
                               />
