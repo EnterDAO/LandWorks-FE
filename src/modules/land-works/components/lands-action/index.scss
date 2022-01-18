@@ -30,6 +30,10 @@
   .claim-button {
     margin-top: 25px;
     background: var(--theme-primary-color) !important;
+
+    &:disabled {
+      color: var(--theme-subtle-color) !important;
+    }
   }
 
   .background {
