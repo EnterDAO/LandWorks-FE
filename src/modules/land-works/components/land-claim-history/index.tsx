@@ -56,7 +56,6 @@ const ClaimHistoryTable: React.FC = () => {
       title: 'Property',
       dataIndex: 'asset',
       render: (asset: any) => {
-        console.log(asset);
         const properyName = getDecentralandAssetName(asset.decentralandData);
         return <p>{properyName || 'Unknown property'}</p>;
       },

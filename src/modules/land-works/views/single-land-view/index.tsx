@@ -47,6 +47,7 @@ const SingleLand: React.FC = () => {
   const [delistButtonDisabled, setDelistButtonDisabled] = useState(false);
   const [withdrawButtonDisabled, setWithdrawButtonDisabled] = useState(false);
   const [editButtonDisabled, setEditButtonDisabled] = useState(false);
+  const [isUpdateOperatorDisabled, setIsUpdateOperatorDisabled] = useState(false);
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
@@ -138,6 +139,7 @@ const SingleLand: React.FC = () => {
     setClaimButtonDisabled(disabled);
     setRentButtonDisabled(disabled);
     setEditButtonDisabled(disabled);
+    setIsUpdateOperatorDisabled(disabled);
   };
 
   const handleDelist = async () => {
@@ -244,6 +246,7 @@ const SingleLand: React.FC = () => {
       <SingleViewLandCard
         isClaimButtonDisabled={claimButtonDisabled}
         isRentButtonDisabled={rentButtonDisabled}
+        isUpdateOperatorButtonDisabled={isUpdateOperatorDisabled}
         setShowRentModal={setShowRentModal}
         asset={asset}
         onClaimSubmit={() => {

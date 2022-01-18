@@ -32,6 +32,7 @@ type SingleLandProps = {
   setShowRentModal: (isShown: boolean) => void;
   isClaimButtonDisabled: boolean;
   isRentButtonDisabled: boolean;
+  isUpdateOperatorButtonDisabled: boolean;
   asset?: AssetEntity;
   onClaimSubmit: () => void;
 };
@@ -39,13 +40,13 @@ type SingleLandProps = {
 const SingleViewLandCard: React.FC<SingleLandProps> = ({
   setShowRentModal,
   isClaimButtonDisabled,
+  isUpdateOperatorButtonDisabled,
   isRentButtonDisabled,
   asset,
   onClaimSubmit,
 }) => {
   const wallet = useWallet();
   const landWorks = useLandworks();
-  console.log(asset);
 
   const { landWorksContract } = landWorks;
 
@@ -98,7 +99,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     try {
       const rentArray = currentRent.id.split('-');
       if (rentArray.length === 2) {
-        await landWorksContract?.updateState(asset!.id, rentArray[1]);
+        await landWorksContract?.updateState(asset!.id, rentArray[1], onClaimSubmit);
         showToastNotification(ToastType.Success, 'Operator updated successfully!');
       }
     } catch (e) {
@@ -354,7 +355,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                   </p>
                 </Col>
                 <Col span={9} className="update-operator-btn">
-                  <button type="button" onClick={handleUpdateOperator}>
+                  <button type="button" onClick={handleUpdateOperator} disabled={isUpdateOperatorButtonDisabled}>
                     <span>UPDATE OPERATOR</span>
                   </button>
                 </Col>
