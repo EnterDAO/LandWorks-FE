@@ -25,7 +25,7 @@ const LendingView = () => {
   const [assets, setAssets] = useState([] as AssetEntity[]);
   const [user, setUser] = useState({} as UserEntity);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(wallet.isActive);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
