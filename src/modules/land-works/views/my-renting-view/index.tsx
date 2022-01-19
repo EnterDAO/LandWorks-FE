@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Col, Pagination, Row } from 'antd';
 
 import { fetchUserRentPerAsset } from 'modules/land-works/api';
+import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandRentingCard from 'modules/land-works/components/land-renting-card';
 import LandsRentingSorter from 'modules/land-works/components/land-renting-sorter';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
@@ -24,6 +25,7 @@ const RentingView = () => {
   const [pageSize, setPageSize] = useState(Number(pageSizeOptions[0]));
   const [totalRents, setTotalRents] = useState(0);
   const [hasRents, setHasRents] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const fetchRents = async (account: string) => {
     const rents = await fetchUserRentPerAsset(account, byAvailability, page, pageSize);
@@ -32,6 +34,7 @@ const RentingView = () => {
       setTotalRents(rents.meta.count);
       setHasRents(true);
     }
+    setLoading(false);
   };
 
   const onSortByAvailability = (availabilityEvent: any) => {
@@ -44,6 +47,7 @@ const RentingView = () => {
 
   useEffect(() => {
     if (wallet.account) {
+      setLoading(true);
       fetchRents(wallet.account);
     }
   }, [byAvailability, pageSize, page, wallet.account]);
@@ -90,7 +94,9 @@ const RentingView = () => {
               { sm: 16, md: 16, lg: 32 },
             ]}
           >
-            {rents.length ? (
+            {loading ? (
+              [1, 2, 3].map((i) => <LandCardSkeleton key={i} />)
+            ) : rents.length ? (
               rents.map((rent: any) => <LandRentingCard key={rent.id} land={rent} userAddress={wallet.account || ''} />)
             ) : (
               <div className="empty-state">

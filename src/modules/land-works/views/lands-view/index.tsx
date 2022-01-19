@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { ConsoleView } from 'react-device-detect';
 import { useSubscription } from '@apollo/client';
 import { end } from '@popperjs/core';
 import { Col, Pagination, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
+import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card';
 import { LandsAction } from 'modules/land-works/components/lands-action';
 import { LandsAvailableSorter } from 'modules/land-works/components/lands-available-sorter';
@@ -27,7 +29,6 @@ import {
 import { getNowTs } from '../../../../utils';
 
 import './index.scss';
-import { ConsoleView } from 'react-device-detect';
 
 const DECENTRALAND_METAVERSE = '1';
 const DEFAULT_LAST_RENT_END = '0';
@@ -68,6 +69,7 @@ const Lands: React.FC = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(+pageSizeOptions[0]);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -138,9 +140,11 @@ const Lands: React.FC = () => {
 
     setLands(lands.data);
     setTotalLands(lands?.meta.count);
+    setLoading(false);
   };
 
   useEffect(() => {
+    setLoading(true);
     getAssets(page, pageSize, DECENTRALAND_METAVERSE, lastRentEnd, sortColumn, sortDir);
   }, [page, pageSize, sortColumn, sortDir, byAvailability, wallet.account]);
 
@@ -205,7 +209,9 @@ const Lands: React.FC = () => {
               { xs: 16, sm: 16, md: 16, lg: 32 },
             ]}
           >
-            {lands.length ? (
+            {loading ? (
+              [1, 2, 3].map((i) => <LandCardSkeleton key={i} />)
+            ) : lands.length ? (
               lands.map((land) => <LandWorkCard key={land.id} land={land} />)
             ) : (
               <div>No properties are currently listed</div>
