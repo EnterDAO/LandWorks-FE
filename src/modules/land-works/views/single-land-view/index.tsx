@@ -22,6 +22,7 @@ import LandWorkCard from '../../components/land-works-card';
 import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
 import { RentModal } from '../../components/lands-rent-modal';
+import { LandsTooltip } from '../../components/lands-tooltip';
 import { WarningModal } from '../../components/lands-warning-modal';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
@@ -80,7 +81,11 @@ const SingleLand: React.FC = () => {
   };
 
   const shouldShowWithdraw = () => {
-    return isOwner() && asset?.status === AssetStatus.DELISTED && Number(asset?.lastRentEnd) < getNowTs();
+    return isOwner() && asset?.status === AssetStatus.DELISTED;
+  };
+
+  const shouldHaveWithdrawTooltip = () => {
+    return Number(asset?.lastRentEnd) > getNowTs();
   };
 
   const shouldShowDelist = () => {
@@ -232,17 +237,36 @@ const SingleLand: React.FC = () => {
               <span>{isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
             </Button>
           )}
-          {shouldShowWithdraw() && (
-            <Button
-              type="link"
-              style={{ fontSize: 14 }}
-              className="button-subtle"
-              onClick={handleWithdraw}
-              disabled={withdrawButtonDisabled}
-            >
-              <span>WITHDRAW</span>
-            </Button>
-          )}
+          {shouldShowWithdraw() &&
+            (shouldHaveWithdrawTooltip() ? (
+              <LandsTooltip
+                placement="bottom"
+                trigger="hover"
+                text="There are still active/pending rents. You will be able to withdraw your property once all rents expire."
+              >
+                <span>
+                  <Button
+                    type="link"
+                    style={{ fontSize: 14 }}
+                    className="button-subtle"
+                    onClick={handleWithdraw}
+                    disabled={true}
+                  >
+                    <span>WITHDRAW</span>
+                  </Button>
+                </span>
+              </LandsTooltip>
+            ) : (
+              <Button
+                type="link"
+                style={{ fontSize: 14 }}
+                className="button-subtle"
+                onClick={handleWithdraw}
+                disabled={withdrawButtonDisabled}
+              >
+                <span>WITHDRAW</span>
+              </Button>
+            ))}
         </div>
       </Row>
       <SingleViewLandCard

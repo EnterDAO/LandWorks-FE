@@ -50,6 +50,10 @@
     }
   }
 
+  span .button-subtle:disabled {
+    pointer-events: none;
+  }
+
   .button-subtle {
     padding: 10px 25px !important;
     border-radius: 12px;
