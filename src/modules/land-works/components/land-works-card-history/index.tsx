@@ -142,8 +142,8 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
       render: (txHash: string) => <LandTableTxHash txHash={txHash} />, // TODO: On click should open getEtherscanTxUrl(text) in another tab
     },
     {
-      title: 'Price',
-      dataIndex: 'price',
+      title: 'Cost',
+      dataIndex: 'cost',
       render: (amount: string, data: any) => (
         <LandTablePrice
           tokenDecimals={data.paymentToken.decimals}
