@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Col, Pagination, Row } from 'antd';
 
-import { fetchUserRentPerAsset } from 'modules/land-works/api';
+import { UserEntity, fetchUserRentPerAsset } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandRentingCard from 'modules/land-works/components/land-renting-card';
 import LandsRentingSorter from 'modules/land-works/components/land-renting-sorter';
@@ -51,6 +51,14 @@ const RentingView = () => {
       fetchRents(wallet.account);
     }
   }, [byAvailability, pageSize, page, wallet.account]);
+
+  useEffect(() => {
+    if (!wallet.account) {
+      setRents([]);
+      setTotalRents(0);
+      setHasRents(false);
+    }
+  }, [wallet.account]);
 
   const onPlaceChange = (placeChangeEvent: any) => {
     // TODO:: some filtering here

@@ -11,6 +11,7 @@ import LandWorksCard from 'modules/land-works/components/land-works-card';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { useWallet } from 'wallets/wallet';
 
+import LandCardSkeleton from '../../components/land-base-loader-card';
 import { LandsAction } from '../../components/lands-action';
 import { ClaimModal } from '../../components/lands-claim-modal';
 
@@ -24,6 +25,7 @@ const LendingView = () => {
   const [assets, setAssets] = useState([] as AssetEntity[]);
   const [user, setUser] = useState({} as UserEntity);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -33,8 +35,10 @@ const LendingView = () => {
         // TODO:
       }
 
+      setLoading(subscriptionData.loading);
       if (subscriptionData.data.user === null) {
         setUser({} as UserEntity);
+        setAssets([]);
         return;
       }
 
@@ -44,6 +48,15 @@ const LendingView = () => {
       setAssets(user?.ownerAndConsumerAssets || []);
     },
   });
+
+  useEffect(() => {
+    if (wallet.account) {
+      setLoading(true);
+    } else {
+      setUser({} as UserEntity);
+      setAssets([]);
+    }
+  }, [wallet.account]);
 
   const onPlaceChange = (placeChangeEvent: any) => {
     // TODO:: some filtering here
@@ -88,7 +101,9 @@ const LendingView = () => {
               { sm: 16, md: 16, lg: 32 },
             ]}
           >
-            {assets.length ? (
+            {loading ? (
+              [1, 2, 3].map((i) => <LandCardSkeleton key={i} />)
+            ) : assets.length ? (
               assets.map((land: any) => <LandWorksCard key={land.id} land={land} />)
             ) : (
               <div className="empty-state">
