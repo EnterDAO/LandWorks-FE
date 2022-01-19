@@ -81,15 +81,23 @@ const SingleLand: React.FC = () => {
   };
 
   const shouldShowWithdraw = () => {
-    return isOwner() && asset?.status === AssetStatus.DELISTED;
+    return isOwnerOrConsumer() && asset?.status === AssetStatus.DELISTED;
   };
 
   const shouldHaveWithdrawTooltip = () => {
     return Number(asset?.lastRentEnd) > getNowTs();
   };
 
+  const isOwnerOrConsumer = () => {
+    return (
+      wallet.account &&
+      (wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase() ||
+        wallet.account.toLowerCase() === asset?.consumer?.id.toLowerCase())
+    );
+  };
+
   const shouldShowDelist = () => {
-    return isOwner() && asset?.status === AssetStatus.LISTED;
+    return isOwnerOrConsumer() && asset?.status === AssetStatus.LISTED;
   };
 
   const shouldShowStake = () => {
@@ -98,7 +106,11 @@ const SingleLand: React.FC = () => {
 
   // Case when you do 2 in 1 Delist + Withdraw
   const isDirectWithdraw = () => {
-    return isOwner() && asset?.status === AssetStatus.LISTED && getNowTs() > Number(asset.lastRentEnd);
+    return isOwner() && assetIsReadyForWithdraw();
+  };
+
+  const assetIsReadyForWithdraw = () => {
+    return asset?.status === AssetStatus.LISTED && getNowTs() > Number(asset.lastRentEnd);
   };
 
   const shouldShowEditButton = () => {
@@ -115,7 +127,7 @@ const SingleLand: React.FC = () => {
   };
 
   const handleWithdraw = async () => {
-    if (!asset.id || !wallet.account) {
+    if (!asset.id || !isOwner()) {
       return;
     }
     try {
@@ -226,46 +238,80 @@ const SingleLand: React.FC = () => {
               STAKE
             </ExternalLink>
           )}
-          {shouldShowDelist() && (
-            <Button
-              type="link"
-              style={{ fontSize: 14 }}
-              className="button-subtle"
-              onClick={handleDelistButton}
-              disabled={delistButtonDisabled}
-            >
-              <span>{isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
-            </Button>
-          )}
-          {shouldShowWithdraw() &&
-            (shouldHaveWithdrawTooltip() ? (
-              <LandsTooltip
-                placement="bottom"
-                trigger="hover"
-                text="There are still active/pending rents. You will be able to withdraw your property once all rents expire."
-              >
-                <span>
-                  <Button
-                    type="link"
-                    style={{ fontSize: 14 }}
-                    className="button-subtle"
-                    onClick={handleWithdraw}
-                    disabled={true}
-                  >
-                    <span>WITHDRAW</span>
-                  </Button>
-                </span>
-              </LandsTooltip>
-            ) : (
+          {shouldShowDelist() &&
+            (isOwner() ? (
               <Button
                 type="link"
                 style={{ fontSize: 14 }}
                 className="button-subtle"
-                onClick={handleWithdraw}
-                disabled={withdrawButtonDisabled}
+                onClick={handleDelistButton}
+                disabled={delistButtonDisabled}
               >
-                <span>WITHDRAW</span>
+                <span>{isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
               </Button>
+            ) : (
+              <LandsTooltip
+                placement="bottom"
+                trigger="hover"
+                text={
+                  <>
+                    You are configured as consumer of the property. If you have staked the property in{' '}
+                    <ExternalLink href="https://dao.enterdao.xyz/yield-farming">LandWorks Yield Farming</ExternalLink>,
+                    make sure to unstake it in order to {assetIsReadyForWithdraw() ? 'withdraw' : 'delist'} it from the
+                    marketplace.
+                  </>
+                }
+              >
+                <span>
+                  <Button type="link" style={{ fontSize: 14 }} className="button-subtle" disabled={true}>
+                    <span>{assetIsReadyForWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
+                  </Button>
+                </span>
+              </LandsTooltip>
+            ))}
+          {shouldShowWithdraw() &&
+            (isOwner() ? (
+              shouldHaveWithdrawTooltip() ? (
+                <LandsTooltip
+                  placement="bottom"
+                  trigger="hover"
+                  text="There are still active/pending rents. You will be able to withdraw your property once all rents"
+                >
+                  <span>
+                    <Button type="link" style={{ fontSize: 14 }} className="button-subtle" disabled={true}>
+                      <span>WITHDRAW</span>
+                    </Button>
+                  </span>
+                </LandsTooltip>
+              ) : (
+                <Button
+                  type="link"
+                  style={{ fontSize: 14 }}
+                  className="button-subtle"
+                  onClick={handleWithdraw}
+                  disabled={withdrawButtonDisabled}
+                >
+                  <span>WITHDRAW</span>
+                </Button>
+              )
+            ) : (
+              <LandsTooltip
+                placement="bottom"
+                trigger="hover"
+                text={
+                  <>
+                    You are configured as consumer of the property. If you have staked the property in{' '}
+                    <ExternalLink href="https://dao.enterdao.xyz/yield-farming">LandWorks Yield Farming</ExternalLink>,
+                    make sure to unstake it in order to withdraw it from the marketplace.
+                  </>
+                }
+              >
+                <span>
+                  <Button type="link" style={{ fontSize: 14 }} className="button-subtle" disabled={true}>
+                    <span>WITHDRAW</span>
+                  </Button>
+                </span>
+              </LandsTooltip>
             ))}
         </div>
       </Row>

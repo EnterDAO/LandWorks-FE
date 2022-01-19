@@ -54,6 +54,10 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const [countDownRent, setCountDownRent] = useState({} as RentEntity);
   const [countDownTimestamp, setCountDownTimestamp] = useState('0');
 
+  const isOwner = () => {
+    return wallet.account && wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase();
+  };
+
   const isOwnerOrConsumer = () => {
     return (
       wallet.account &&
@@ -198,7 +202,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                     </ExternalLink>
                   }
                 </span>
-                {isOwnerOrConsumer() && (
+                {isOwner() && (
                   <span className="label card-name-you-label">
                     <Icon name="png/you" className="name-label" />
                     YOU
