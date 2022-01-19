@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import Select, { components } from 'react-select';
 
 const styles = {
@@ -128,6 +128,12 @@ interface ILandsSorterProps {
 
 export const LandsPriceSorter: React.FC<ILandsSorterProps> = (props) => {
   const { onSortDirectionChange, value, data } = props;
+  const ref = useRef(null);
+  const [isOpen, toggleIsOpen] = useState(false);
+
+  const handleToggle = (e: any) => {
+    toggleIsOpen(!isOpen);
+  };
 
   const Option = (props: any) => {
     const { data } = props;
@@ -166,17 +172,20 @@ export const LandsPriceSorter: React.FC<ILandsSorterProps> = (props) => {
   };
 
   return (
-    <Select
-      options={data}
-      styles={styles}
-      onChange={onSortDirectionChange}
-      value={value}
-      components={{
-        Option,
-        ValueContainer,
-        IndicatorSeparator: () => null,
-      }}
-    />
+    <div className="react-select-wrapper" ref={ref} aria-hidden role="button" onClick={handleToggle}>
+      <Select
+        options={data}
+        styles={styles}
+        onChange={onSortDirectionChange}
+        value={value}
+        menuIsOpen={isOpen}
+        components={{
+          Option,
+          ValueContainer,
+          IndicatorSeparator: () => null,
+        }}
+      />
+    </div>
   );
 };
 
