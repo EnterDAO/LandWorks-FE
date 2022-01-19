@@ -269,6 +269,12 @@
   @media (max-width: 768px) {
     display: none;
   }
+
+  svg {
+    width: 36px;
+    height: 36px;
+    transform: scale(2);
+  }
 }
 
 .mobileNavOpen {
