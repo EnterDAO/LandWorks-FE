@@ -847,7 +847,8 @@ export function fetchAssetRentByTimestamp(assetId: string, timestamp: number): P
 }
 
 /**
- * Gets Listed Assets by metaverse id, and gte (greater or equal) than the last rent end,
+ * Gets Listed Assets by metaverse id, and lt (less than) than the last rent end (if provided)
+ * excluding those with status WITHDRAWN,
  * ordered by a given column in ascending/descending order
  * @param page Which page to load. Default 1
  * @param limit How many items per page. Default 6
@@ -872,10 +873,12 @@ export function fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
         $lastRentEnd: String
         $orderColumn: String
         $orderDirection: String
-        $status: String
+        $statusNot: String
       ) {
         assets(
-          where: { metaverse: $metaverse, ${lastRentEnd != '0' ? 'lastRentEnd_lt: $lastRentEnd' : ''}, status: $status }
+          where: { metaverse: $metaverse, ${
+            lastRentEnd != '0' ? 'lastRentEnd_lt: $lastRentEnd' : ''
+          }, status_not: $statusNot }
           orderBy: $orderColumn
           orderDirection: $orderDirection
         ) {
@@ -910,7 +913,7 @@ export function fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
       metaverse: metaverse,
       orderColumn: orderColumn,
       orderDirection: orderDirection,
-      status: AssetStatus.LISTED,
+      statusNot: AssetStatus.WITHDRAWN,
     },
   })
     .then(async (response) => {
