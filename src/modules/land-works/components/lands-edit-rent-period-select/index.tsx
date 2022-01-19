@@ -47,9 +47,9 @@ const styles = {
     cursor: 'pointer',
     color: '#ffffff',
   }),
-  singleValue: (defaultStyles: any) => ({
+  singleValue: (defaultStyles: any, state: any) => ({
     ...defaultStyles,
-    color: '#ffffff',
+    color: state.isDisabled ? '#666666' : '#ffffff',
   }),
   control: (base: any, state: any) => ({
     ...base,
