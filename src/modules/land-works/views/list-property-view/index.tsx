@@ -376,7 +376,7 @@ const ListView: React.FC = () => {
         'Property listed successfully! It will take a few seconds to be shown in your Lending properties page.'
       );
       setListDisabled(false);
-      history.push('/all');
+      history.push('/lending');
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while listing the property.');
       console.log(e);
