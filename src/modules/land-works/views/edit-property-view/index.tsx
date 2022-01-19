@@ -246,7 +246,7 @@ const ListView: React.FC = () => {
     }
 
     if (asset.pricePerMagnitude) {
-      setTokenCost(asset.pricePerMagnitude.price);
+      setTokenCost(new BigNumber(asset.pricePerMagnitude.price || 0));
     }
   }, [asset]);
 
@@ -494,6 +494,18 @@ const ListView: React.FC = () => {
     setLoading(false);
   };
 
+  const hasChangesToSave = () => {
+    const changedMin = !new BigNumber(asset.minPeriod).isEqualTo(minPeriod);
+    const changedMax = !new BigNumber(asset.maxPeriod).isEqualTo(maxPeriod);
+    const changedMaxFuture = !new BigNumber(asset.maxFutureTime).isEqualTo(maxFutureTime);
+    const changedToken = asset?.paymentToken?.symbol !== paymentToken?.symbol;
+    const changedPrice = !new BigNumber(asset?.pricePerMagnitude?.price || 0).isEqualTo(tokenCost);
+
+    return changedMin || changedMax || changedMaxFuture || changedToken || changedPrice;
+  };
+
+  const canSave = hasChangesToSave();
+
   return (
     <section className="list-view">
       {loading ? (
@@ -629,7 +641,7 @@ const ListView: React.FC = () => {
                               type="button"
                               className="button-primary action-btn"
                               onClick={() => setShowWarningModal(true)}
-                              disabled={saveDisabled}
+                              disabled={saveDisabled || !canSave}
                             >
                               <span>Save</span>
                             </button>
