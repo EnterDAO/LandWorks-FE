@@ -5,7 +5,7 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 import { isAddress } from 'web3-utils';
 import { DEFAULT_ADDRESS } from 'web3/utils';
 
-import { DecentralandData } from './modules/land-works/api';
+import { Data, DecentralandData } from './modules/land-works/api';
 
 export function getNowTs(): number {
   return Math.floor(Date.now() / 1_000);
@@ -101,6 +101,12 @@ export function getDecentralandAssetName(decentralandData: DecentralandData): st
   if (decentralandData === null) {
     return '';
   }
+
+  const data = buildData(decentralandData.metadata);
+  if (data != null && data.name != '') {
+    return data.name;
+  }
+
   if (decentralandData.metadata !== '') {
     return decentralandData.metadata;
   }
@@ -109,6 +115,79 @@ export function getDecentralandAssetName(decentralandData: DecentralandData): st
   }
   const coordinates = decentralandData.coordinates[0];
   return `LAND (${coordinates.x}, ${coordinates.y})`;
+}
+
+export function buildData(csv: string): Data | null {
+  const dataEntity: Data = {} as Data;
+
+  if (csv.charAt(0) != '0') {
+    return null;
+  }
+
+  const data = parseCSV(csv);
+  if (data.length === 0 || data[0] != '0') {
+    return null;
+  }
+
+  dataEntity.version = data[0];
+
+  if (data.length > 1) {
+    dataEntity.name = data[1];
+  }
+  if (data.length > 2) {
+    dataEntity.description = data[2];
+  }
+  if (data.length > 3) {
+    dataEntity.ipns = data[3];
+  }
+
+  return dataEntity;
+}
+
+/**
+ * Used for parseCSV() below
+ */
+enum CSVState {
+  BETWEEN = 0,
+  UNQUOTED_VALUE = 1,
+  QUOTED_VALUE = 2,
+}
+
+/**
+ * Parses a CSV string into an array of strings.
+ * @param csv CSV string.
+ * @returns Array of strings.
+ */
+export function parseCSV(csv: string): Array<string> {
+  const values = new Array<string>();
+  let valueStart = 0;
+  let state = CSVState.BETWEEN;
+
+  for (let i = 0; i < csv.length; i++) {
+    if (state == CSVState.BETWEEN) {
+      if (csv.charAt(i) != ',') {
+        if (csv.charAt(i) == '"') {
+          state = CSVState.QUOTED_VALUE;
+          valueStart = i + 1;
+        } else {
+          state = CSVState.UNQUOTED_VALUE;
+          valueStart = i;
+        }
+      }
+    } else if (state == CSVState.UNQUOTED_VALUE) {
+      if (csv.charAt(i) == ',') {
+        values.push(csv.substr(valueStart, i - valueStart));
+        state = CSVState.BETWEEN;
+      }
+    } else if (state == CSVState.QUOTED_VALUE) {
+      if (csv.charAt(i) == '"') {
+        values.push(csv.substr(valueStart, i - valueStart));
+        state = CSVState.BETWEEN;
+      }
+    }
+  }
+
+  return values;
 }
 
 export function doSequential<T, K = any>(

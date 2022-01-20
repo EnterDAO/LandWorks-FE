@@ -268,6 +268,13 @@ export type DecentralandData = {
   coordinates: any[];
 };
 
+export type Data = {
+  name: string;
+  description: string;
+  ipns: string;
+  version: string;
+};
+
 export type CoordinatesLAND = {
   id: string;
   x: string;
