@@ -13,7 +13,7 @@ const EstateLandOverlay: React.FC<IEstateLandOverlay> = ({ coordinates }) => {
       {coordinates.length > maxShown ? (
         <>
           {(coordinates || []).slice(0, maxShown).map((estateCoord: any) => (
-            <div className="estate-land">
+            <div key={estateCoord.id} className="estate-land">
               <span>
                 {estateCoord.x}, {estateCoord.y}
               </span>
@@ -21,7 +21,7 @@ const EstateLandOverlay: React.FC<IEstateLandOverlay> = ({ coordinates }) => {
           ))}
           <Popover
             content={coordinates.slice(maxShown, coordinates.length).map((coord: any) => (
-              <div className="estate-land">
+              <div key={coord.id} className="estate-land">
                 <span>
                   {coord.x}, {coord.y}
                 </span>
@@ -34,7 +34,7 @@ const EstateLandOverlay: React.FC<IEstateLandOverlay> = ({ coordinates }) => {
         </>
       ) : (
         coordinates.map((estateLand: any) => (
-          <div className="estate-land">
+          <div key={estateLand.id} className="estate-land">
             <span>
               {estateLand.x}, {estateLand.y}
             </span>

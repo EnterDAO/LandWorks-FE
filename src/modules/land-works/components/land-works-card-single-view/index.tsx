@@ -138,6 +138,14 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     getCurrentAndCountdownRents();
   }, [asset, wallet.account]);
 
+  useEffect(() => {
+    return () => {
+      setCurrentRent({} as RentEntity);
+      setCountDownRent({} as RentEntity);
+      setCountDownTimestamp('0');
+    };
+  }, []);
+
   const flexFont = () => {
     const divs = document.getElementsByClassName('price-eth');
     for (let i = 0; i < divs.length; i++) {

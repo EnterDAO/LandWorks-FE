@@ -69,11 +69,6 @@ const ConnectedWallet: React.FC = () => {
   const { estateTxInProgress, estateTxHash } = useEstateRegistry();
   const { erc20TxInProgress, erc20TxHash } = useErc20();
 
-  console.log(`landsworksTxInProgress: ${landworksTxInProgress}`);
-  console.log(`landTxInProgress: ${landTxInProgress}`);
-  console.log(`estateTxInProgress: ${estateTxInProgress}`);
-  console.log(`erc20TxInProgress: ${erc20TxInProgress}`);
-
   const [isTxInProgress, setIsAnyTxInProgress] = useState(
     landworksTxInProgress || landTxInProgress || estateTxInProgress || erc20TxInProgress
   );

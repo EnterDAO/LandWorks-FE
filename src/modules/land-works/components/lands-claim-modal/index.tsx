@@ -93,7 +93,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
       </Text>
       <Row gutter={[10, 10]}>
         {rentFees?.map((data) => (
-          <Col span={24}>
+          <Col key={data.id} span={24}>
             <LandClaimCheckBox key={data.id} onSelected={updateAssets} data={data} />
           </Col>
         ))}
