@@ -25,7 +25,7 @@ const InitialState: ConnectWalletModalState = {
   showLedgerModal: false,
 };
 
-const ConnectWalletModal: React.FC<ConnectWalletModalProps> = props => {
+const ConnectWalletModal: React.FC<ConnectWalletModalProps> = (props) => {
   const { ...modalProps } = props;
 
   const { isDarkTheme } = useGeneral();
@@ -64,8 +64,8 @@ const ConnectWalletModal: React.FC<ConnectWalletModalProps> = props => {
           </Text>
         </Grid>
 
-        {WalletConnectors.map(connector => (
-          <Row>
+        {WalletConnectors.map((connector) => (
+          <Row key={connector.id}>
             <Col span={24}>
               <button key={connector.id} className={s.button} onClick={() => handleConnectorSelect(connector)}>
                 <IconWallet wallet={connector.id} style={{ maxHeight: 28 }} className={s.walletIcon} />
