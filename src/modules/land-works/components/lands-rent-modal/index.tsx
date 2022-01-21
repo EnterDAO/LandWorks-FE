@@ -281,7 +281,7 @@ export const RentModal: React.FC<Props> = (props) => {
               </Col>
             </Row>
           )}
-          {!isValidForm() && errMessage && <div>{errMessage}</div>}
+          {!isValidForm() && errMessage && <div className="error-wrapper">{errMessage}</div>}
           {isValidForm() && (
             <Row className="rent-modal-footer">
               <Col span={24}>
