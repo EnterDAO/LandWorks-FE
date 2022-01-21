@@ -66,7 +66,7 @@ export const RentModal: React.FC<Props> = (props) => {
   const [endDate, setEndDate] = useState('');
   const [totalPrice, setTotalPrice] = useState(new BigNumber(0));
   const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
-  const [errAddressMessage, setErrAddressMessage] = useState<string>('');
+  const [errMessage, setErrMessage] = useState<string>('');
 
   const [value, setValue] = useState(new BigNumber(0));
   const [approveDisabled, setApproveDisabled] = useState(false);
@@ -100,22 +100,25 @@ export const RentModal: React.FC<Props> = (props) => {
   };
 
   const handleChange = (e: any) => {
-    if (isValidAddress(e.target.value)) {
-      setErrAddressMessage('');
-    } else {
-      if (e.target.value === '') {
-        setErrAddressMessage('No operator address provided');
-      } else {
-        setErrAddressMessage('Invalid address provided');
-      }
-    }
     setEditedValue(e.target.value);
   };
 
-  const checkApprovedAmount = () => {
+  const checkApprovedAmount = async () => {
     if (paymentToken?.id === ONE_ADDRESS) {
       setRentDisabled(false);
     } else {
+      const balance = erc20Contract?.balance;
+      if (balance == null) {
+        setApproveDisabled(true);
+        setRentDisabled(true);
+        return;
+      }
+      if (balance.lt(value)) {
+        setApproveDisabled(true);
+        setRentDisabled(true);
+        return;
+      }
+
       const allowance = erc20Contract?.getAllowanceOf(config.contracts.landworksContract);
       if (allowance == null) {
         setApproveDisabled(false);
@@ -196,6 +199,21 @@ export const RentModal: React.FC<Props> = (props) => {
     checkApprovedAmount();
   }, [wallet.account, value]);
 
+  useEffect(() => {
+    const balance = erc20Contract?.balance;
+    if (balance?.lt(value)) {
+      setErrMessage('Insufficient balance');
+    } else if (!isValidAddress(editedValue)) {
+      if (editedValue === '') {
+        setErrMessage('No operator address provided');
+      } else {
+        setErrMessage('Invalid address provided');
+      }
+    } else {
+      setErrMessage('');
+    }
+  }, [editedValue, value]);
+
   return (
     <Modal
       width={450}
@@ -241,7 +259,6 @@ export const RentModal: React.FC<Props> = (props) => {
                   text="The address that will be authorised to deploy scenes and experiences on the rented property during your renting period."
                 />
               </p>
-              <p>{errAddressMessage}</p>
               {isYou() && <p className="light-text">you</p>}
             </Col>
             <Col span={24}>
@@ -264,6 +281,7 @@ export const RentModal: React.FC<Props> = (props) => {
               </Col>
             </Row>
           )}
+          {!isValidForm() && errMessage && <div>{errMessage}</div>}
           {isValidForm() && (
             <Row className="rent-modal-footer">
               <Col span={24}>

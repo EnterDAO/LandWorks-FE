@@ -50,6 +50,7 @@ const ERC20Provider: FC = (props) => {
 
   useEffect(() => {
     erc20Contract.setAccount(walletCtx.account);
+    erc20Contract.loadBalance();
     erc20Contract.loadAllowance(config.contracts.landworksContract);
   }, [walletCtx.account]);
 
