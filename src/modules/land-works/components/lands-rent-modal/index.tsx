@@ -13,7 +13,6 @@ import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { getTokenPrice } from '../../../../components/providers/known-tokens-provider';
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
-import Erc20Contract from '../../../../web3/erc20Contract';
 import { AssetAvailablity, PaymentToken } from '../../api';
 import { useErc20 } from '../../providers/erc20-provider';
 import { useLandworks } from '../../providers/landworks-provider';
@@ -61,7 +60,7 @@ export const RentModal: React.FC<Props> = (props) => {
   const { landWorksContract } = landworks;
   const { erc20Contract } = erc20;
 
-  const [editedValue, setEditedValue] = useState<string>('');
+  const [editedValue, setEditedValue] = useState<string>(wallet.account || '');
   const [period, setPeriod] = useState(0);
   const [endDate, setEndDate] = useState('');
   const [totalPrice, setTotalPrice] = useState(new BigNumber(0));
@@ -200,14 +199,16 @@ export const RentModal: React.FC<Props> = (props) => {
   }, [wallet.account, value]);
 
   useEffect(() => {
-    const balance = erc20Contract?.balance;
-    if (balance?.lt(value)) {
-      setErrMessage('Insufficient balance');
-    } else if (!isValidAddress(editedValue)) {
+    if (!isValidAddress(editedValue)) {
       if (editedValue === '') {
         setErrMessage('No operator address provided');
       } else {
         setErrMessage('Invalid address provided');
+      }
+    } else if (paymentToken?.id !== ONE_ADDRESS) {
+      const balance = erc20Contract?.balance;
+      if (balance?.lt(value)) {
+        setErrMessage('Insufficient balance');
       }
     } else {
       setErrMessage('');
