@@ -389,10 +389,8 @@ const ListView: React.FC = () => {
     }
 
     try {
-      const [estates, lands] = await Promise.all([
-        landRegistry.landRegistryContract?.getUserData(walletCtx.account),
-        estateRegistry.estateRegistryContract?.getUserData(walletCtx.account),
-      ]);
+      const estates = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
+      const lands = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
       const mergedProperties = [...estates, ...lands].map((e) => ({ label: e.name, value: JSON.stringify(e) }));
       setProperties(mergedProperties);
       if (mergedProperties.length > 0) {

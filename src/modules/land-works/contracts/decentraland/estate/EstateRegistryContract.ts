@@ -31,18 +31,18 @@ export default class EstateRegistryContract extends ERC721Contract {
    */
   async getTokenData(user: string, index: number): Promise<any> {
     const tokenId = await this.call('tokenOfOwnerByIndex', [user, index]); // Get the token ID
-    const promises = [this.call('getMetadata', [tokenId]), this.getEstateData(tokenId)];
+    const metaData = await this.call('getMetadata', [tokenId]);
+    const estateData = await this.getEstateData(tokenId);
 
-    const result = await Promise.all(promises);
-    let name = result[0];
+    let name = metaData;
     if (name === '') {
-      name = `ESTATE (${result[1].estateSize} LAND)`;
+      name = `ESTATE (${estateData?.estateSize} LAND)`;
     }
 
     return {
       id: tokenId,
       name: name,
-      landIds: result[1],
+      landIds: estateData,
       isLAND: false,
     };
   }
@@ -61,8 +61,11 @@ export default class EstateRegistryContract extends ERC721Contract {
         methodArgs: [tokenId, i],
       });
     }
-    const landIds = await this.batch(batch);
 
+    let landIds = [];
+    if (batch.length) {
+      landIds = await this.batch(batch);
+    }
     return {
       estateSize,
       landIds,
