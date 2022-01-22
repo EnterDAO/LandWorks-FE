@@ -5,6 +5,8 @@ import { BatchContractMethod, Web3ContractAbiItem } from 'web3/web3Contract';
 import ERC721Contract from '../../erc721/ERC721Contract';
 import EstateRegistryABI from './abi.json';
 
+import { buildData } from '../../../../../utils';
+
 export default class EstateRegistryContract extends ERC721Contract {
   constructor(abi: AbiItem[], address: string) {
     super([...(EstateRegistryABI as Web3ContractAbiItem[]), ...abi], address);
@@ -34,9 +36,10 @@ export default class EstateRegistryContract extends ERC721Contract {
     const metaData = await this.call('getMetadata', [tokenId]);
     const estateData = await this.getEstateData(tokenId);
 
-    let name = metaData;
-    if (name === '') {
-      name = `ESTATE (${estateData?.estateSize} LAND)`;
+    const data = buildData(metaData);
+    let name = `ESTATE ${tokenId} (${estateData?.estateSize} LAND)`;
+    if (data !== null && data.name !== '') {
+      name = `${data.name} - ${name}`;
     }
 
     return {

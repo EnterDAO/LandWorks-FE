@@ -5,6 +5,8 @@ import { Web3ContractAbiItem } from 'web3/web3Contract';
 import ERC721Contract from '../../erc721/ERC721Contract';
 import LANDRegistryABI from './abi.json';
 
+import { buildData } from '../../../../../utils';
+
 export default class LANDRegistryContract extends ERC721Contract {
   constructor(abi: AbiItem[], address: string) {
     super([...(LANDRegistryABI as Web3ContractAbiItem[]), ...abi], address);
@@ -40,9 +42,10 @@ export default class LANDRegistryContract extends ERC721Contract {
       },
     ]);
 
-    let name = data[0];
-    if (name === '') {
-      name = `LAND (${data[1][0]}, ${data[1][1]})`;
+    const metadata = buildData(data[0]);
+    let name = `LAND (${data[1][0]}, ${data[1][1]})`;
+    if (metadata !== null && metadata.name !== '') {
+      name = `${metadata.name} - ${name}`;
     }
 
     return {
