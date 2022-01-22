@@ -389,9 +389,14 @@ const ListView: React.FC = () => {
     }
 
     try {
-      const estates = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
-      const lands = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
-      const mergedProperties = [...estates, ...lands].map((e) => ({ label: e.name, value: JSON.stringify(e) }));
+      const lands = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
+      const estates = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
+      const estatesWithLand = estates.filter((e: any) => e.landIds.estateSize > 0);
+
+      const mergedProperties = [...lands, ...estatesWithLand].map((e) => ({
+        label: e.name,
+        value: JSON.stringify(e),
+      }));
       setProperties(mergedProperties);
       if (mergedProperties.length > 0) {
         setInitialProperty(mergedProperties[0]);
