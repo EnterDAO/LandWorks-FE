@@ -1,7 +1,12 @@
 node_modules
 .env
+.DS_Store
+
+# build folder
+build
 
 # JetBrains IDEA
 .idea
 /build
 .firebase
+.history

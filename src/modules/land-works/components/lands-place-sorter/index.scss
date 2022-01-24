@@ -1,4 +1,4 @@
-@import "../../../../styles/variables.scss";
+@import '../../../../styles/variables.scss';
 
 .place-sort-wrapper {
   border-radius: 5px;
@@ -13,8 +13,8 @@
   padding: 5px 20px;
 
   .label {
+    color: var(--theme-subtle-color);
     font-size: 14px;
-    color: $black;
     margin-left: 10px;
   }
 }

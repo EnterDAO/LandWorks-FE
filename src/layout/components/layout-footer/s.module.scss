@@ -1,11 +1,31 @@
 .footer {
-  background: #27273A;
+  background: #27273a;
   grid-area: footer;
   margin-top: auto;
   padding-top: 70px;
 
+  @media all and (max-width: 768px) {
+    padding-top: 40px;
+  }
+
+  .info {
+    @media all and (max-width: 768px) {
+      > div > div {
+        margin-bottom: 20px;
+      }
+    }
+  }
+
   .sLinksWrap {
     margin-top: 14px;
+  }
+
+  .linksWrapper {
+    margin: 0 20px;
+  }
+
+  .linksRow {
+    display: flex;
   }
 
   .sLink {
@@ -43,16 +63,15 @@
     display: inline-block;
     font-weight: 700;
     font-size: 16px;
-    color: #9898B1;
+    color: #9898b1;
     margin-bottom: 20px;
   }
-
 
   .comingSoon:hover {
     // pointer-events: none;
 
     &::before {
-      content: "Coming Soon";
+      content: 'Coming Soon';
       position: absolute;
       left: 0;
       transform: translate(-15%, -100%);
@@ -66,17 +85,43 @@
   .linkAnchor {
     font-weight: 400;
     font-size: 14px;
-    color: #FFFFFF;
+    color: var(--theme-primary-color);
+    display: inline-block;
+    margin-bottom: 5px;
+    transition: all 0.2s ease-out;
+
+    &:hover {
+      color: var(--theme-subtle-color);
+    }
   }
 
   .linkLandWorks {
     font-weight: 700;
-    color: #d92687;
+    color: #de44c7;
+    display: inline-block;
+    margin-bottom: 5px;
   }
 
   .text {
-    color: #FFFFFF;
+    color: #ffffff;
     font-size: 16px;
+  }
+
+  .subline {
+    position: relative;
+    padding-left: 31px;
+    color: #ffffff;
+    font-size: 16px;
+
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 20px;
+      height: 1px;
+      background: var(--theme-line-color);
+    }
   }
 
   .copyrightsBlock {
@@ -84,7 +129,6 @@
     justify-content: space-between;
     align-items: center;
     padding: 30px 0;
-
 
     .copyrightLinks {
       margin-left: auto;
@@ -120,13 +164,11 @@
       }
     }
 
-
-    @media (min-width: 991px) { 
+    @media (min-width: 991px) {
       border-top: 1px solid #414163;
       padding: 10px 0 20px 0;
       margin-top: 30px;
     }
-
   }
 
   .nav {

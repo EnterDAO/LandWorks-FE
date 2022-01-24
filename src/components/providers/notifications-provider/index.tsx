@@ -204,7 +204,7 @@ export function fetchNotifications({
   timestamp?: number | null;
 }): Promise<NotificationType[]> {
   // TODO Notifications not supported
-  return new Promise<NotificationType[]>(resolve => {});
+  return new Promise<NotificationType[]>(resolve => {console.log("resolved")});
 }
 
 const notificationsNode = document.querySelector('#notifications-root');

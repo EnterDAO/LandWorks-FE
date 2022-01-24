@@ -9,11 +9,12 @@ const config = {
   isTestnet: String(process.env.REACT_APP_ENV) === 'testnet',
   graph: {
     primaryUrl: String(process.env.REACT_APP_PRIMARY_GRAPH_URL),
-    fallbackUrl: String(process.env.REACT_APP_FALLBACK_GRAPH_URL)
+    wsPrimaryUrl: String(process.env.REACT_APP_PRIMARY_GRAPH_WS_URL),
+    fallbackUrl: String(process.env.REACT_APP_FALLBACK_GRAPH_URL),
   },
   zapper: {
     baseUrl: String(process.env.REACT_APP_ZAPPER_URL),
-    apiKey: String(process.env.REACT_APP_ZAPPER_API_KEY)
+    apiKey: String(process.env.REACT_APP_ZAPPER_API_KEY),
   },
   tokens: {
     usdc: toLowerCase(process.env.REACT_APP_TOKEN_USDC_ADDR),
@@ -45,7 +46,11 @@ const config = {
       reward: toLowerCase(process.env.REACT_APP_CONTRACT_DAO_REWARD_ADDR),
     },
     merkleDistributor: toLowerCase(process.env.REACT_APP_CONTRACT_MERKLE_DISTRIBUTOR_ADDR),
-    metapassContract: toLowerCase(process.env.REACT_APP_METAPASS_ADDR),
+    landworksContract: toLowerCase(process.env.REACT_APP_CONTRACT_LANDWORKS_ADDR),
+    decentraland: {
+      estateRegistry: toLowerCase(process.env.REACT_APP_CONTRACT_DECENTRALAND_ESTATE_REGISTRY_ADDR),
+      landRegistry: toLowerCase(process.env.REACT_APP_CONTRACT_DECENTRALAND_LAND_REGISTRY_ADDR),
+    },
   },
   web3: {
     chainId: Number(process.env.REACT_APP_WEB3_CHAIN_ID),

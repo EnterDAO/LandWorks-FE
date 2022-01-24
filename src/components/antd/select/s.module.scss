@@ -1,23 +1,19 @@
 @import 'src/styles/text';
 
 .component:global(.ant-select.ant-select-single) {
-  min-height: 48px;
   position: relative;
   padding: 1px;
   border-radius: 23px;
-  color: white !important;
+  color: var(--theme-primary-color);
+  font-size: 14px;
+  font-weight: 400;
   min-width: 170px;
-  background: #27273A;
+  border-color: transparent;
 
   &:global(.ant-select-focused) {
     :global(.ant-select-selector) {
       box-shadow: none !important;
-      border-color: #FFFFFF !important;
     }
-  }
-
-  &:hover {
-    background: #27273A;
   }
 
   &:global(.ant-select-sm) {
@@ -40,31 +36,34 @@
 
   &:global(.ant-select-open) {
     // background: linear-gradient(135deg, #DD3DCB 15.57%, #EF9C92 84.88%);
-    background: #27273A;
 
     :global(.ant-select-arrow) svg {
       transform: rotate(-180deg);
     }
 
     :global(.ant-select-selector) {
-      background: #27273A;
       box-shadow: none;
-      border-color:white !important;
+      border-color: transparent;
       border-radius: 23px;
     }
   }
 
   :global(.ant-select-selector) {
-    background: #27273A;
-    border: 1px solid var(--theme-border-color);
-    height: 48px;
-    padding: 12px 32px 12px 16px;
+    background: #27273a;
+    height: 40px;
+    padding: 6px 32px 6px 16px;
     border-radius: 23px;
+    font-size: 14px;
+    font-weight: 400;
+    border-color: transparent;
 
     :global(.ant-select-selection-item),
     :global(.ant-select-selection-placeholder) {
       @include font-p1-semi-bold;
       color: white;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 24px;
     }
   }
 
@@ -72,7 +71,7 @@
     height: 24px;
     margin: 0;
     right: 16px;
-    top: 50%;
+    top: 20px;
     transform: translateY(-50%);
     width: 24px;
     color: white;
@@ -84,7 +83,7 @@
 }
 
 .dropdown:global(.ant-select-dropdown) {
-  background: #27273A;
+  background: #27273a;
   border: 1px solid var(--theme-tooltip-bg);
   border-radius: 23px;
   padding: 4px;
@@ -97,17 +96,17 @@
     border-radius: 23px;
 
     &:global(.ant-select-item-option-selected) {
-      background: #27273A;
+      background: #27273a;
     }
 
     :global(.ant-select-item-option-content) {
       @include font-p2-semi-bold;
       color: white;
-      background: #27273A;
+      background: #27273a;
     }
 
     &:global(.ant-select-item-option-active) {
-      background: #27273A;
+      background: #27273a;
 
       :global(.ant-select-item-option-content) {
         color: rgba(93, 143, 240, 1);

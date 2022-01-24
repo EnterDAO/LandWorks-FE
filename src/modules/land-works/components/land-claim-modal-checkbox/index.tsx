@@ -2,30 +2,37 @@ import React, { useState } from 'react';
 import { Checkbox, Col, Row } from 'antd';
 
 import Icon, { TokenIconNames } from 'components/custom/icon';
+import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+
+import { getTokenIconName } from '../../../../helpers/helpers';
+import { AssetEntity } from '../../api';
 
 import './index.scss';
 
 interface props {
-  data: {
-    name: string;
-    price: number;
-    icon: TokenIconNames;
-  };
+  data: AssetEntity;
+  onSelected: (isRemoved: boolean, asset: AssetEntity) => void;
 }
 
-export const LandClaimCheckBox: React.FC<props> = props => {
-  const { name, price, icon } = props.data;
+export const LandClaimCheckBox: React.FC<props> = (props) => {
+  const { name, unclaimedRentFee, paymentToken } = props.data;
+
+  const onChecked = (isChecked: boolean) => {
+    setChecked(isChecked);
+    props.onSelected(isChecked, props.data);
+  };
+
   const [checked, setChecked] = useState(false);
   return (
     <Row className={`claim-input-container ${checked ? 'checked' : ''}`} align={'middle'}>
-      <Col span={20}>
-        <Checkbox className="land-name-checkbox" onChange={e => setChecked(e.target.checked)}>
+      <Col span={18}>
+        <Checkbox className="land-name-checkbox" onChange={(e) => onChecked(e.target.checked)}>
           {name}
         </Checkbox>
       </Col>
-      <Col span={4}>
-        <span className="price-checkbox">{price}</span>
-        <Icon name={icon} className="eth-icon" />
+      <Col span={6} className="price">
+        <SmallAmountTooltip className="price-checkbox" amount={unclaimedRentFee} />
+        <Icon name={getTokenIconName(paymentToken.symbol)} className="eth-icon" />
       </Col>
     </Row>
   );

@@ -1,0 +1,11 @@
+.tooltip-wrapper > div {
+  > div:first-of-type {
+    display: none;
+  }
+
+  > div:last-of-type {
+    padding: 8px 15px;
+    border-radius: 6px;
+    background: linear-gradient(98.73deg, #dd3dcb 0%, #ef9c92 100%);
+  }
+}

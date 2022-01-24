@@ -1,0 +1,43 @@
+.period-select-component {
+  display: flex;
+  align-items: center;
+  background: var(--theme-body-color);
+  border-radius: 12px;
+  margin-left: 12px;
+  display: flex;
+  align-items: center;
+  height: 36px;
+
+  .ant-select.ant-select-single.lands-period-drop {
+    background-color: transparent;
+    min-height: auto;
+    min-width: auto;
+    height: 100%;
+    border-left: 1px solid var(--theme-modal-color);
+    border-radius: 0;
+
+    .ant-select-selector {
+      padding: 6px 16px 0px 8px;
+      height: 100%;
+      background-color: transparent;
+      border-radius: 0;
+      border: none;
+    }
+
+    .ant-select-arrow {
+      top: 18px;
+      right: 9px;
+    }
+  }
+
+  .ant-input {
+    border-radius: 0;
+    border: none;
+    border-right: 1px solid var(--theme-modal-color);
+
+    &::placeholder {
+      /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: white;
+    }
+  }
+}

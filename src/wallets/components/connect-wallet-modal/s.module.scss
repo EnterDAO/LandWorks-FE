@@ -1,13 +1,30 @@
+.sign-in-modal {
+  .ant-modal-body {
+    background-color: var(--theme-modal-color);
+  }
+
+  .and-modal-close {
+    top: 22px;
+  }
+}
+
 .button {
-  min-height: 96px;
-  max-height: 96px;
+  height: 70px;
+  background: var(--theme-card-color);
+  border: 2px solid transparent;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  transition: all 0.4s ease-out;
 
   &:hover {
-    background-color: #1F1B59 !important;
+    border: 2px solid var(--theme-primary-color);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
   }
 
   .walletIcon {
-    filter: grayscale(100%) opacity(60%);
     transition: filter 0.2s ease-out !important;
     color: var(--theme-primary-color);
     width: 100%;

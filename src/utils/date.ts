@@ -2,7 +2,15 @@ import addDays from 'date-fns/addDays';
 import addMonths from 'date-fns/addMonths';
 import addWeeks from 'date-fns/addWeeks';
 
-export const DAY_IN_SECONDS = 24 * 60 * 60;
+export const ONE_SECOND = 1;
+export const MINUTE_IN_SECONDS = 60;
+export const HOUR_IN_SECONDS = 60 * MINUTE_IN_SECONDS;
+export const DAY_IN_SECONDS = 24 * HOUR_IN_SECONDS;
+export const WEEK_IN_SECONDS = 7 * DAY_IN_SECONDS;
+export const MONTH_IN_SECONDS = 30 * DAY_IN_SECONDS;
+export const YEAR_IN_SECONDS = 12 * MONTH_IN_SECONDS;
+export const ONE_HUNDRED_YEARS_IN_SECONDS = 100 * YEAR_IN_SECONDS;
+export const THREE_WEEKS_IN_SECONDS = 3 * WEEK_IN_SECONDS;
 
 export const DURATION_1_DAY = '1 day';
 export const DURATION_30_DAYS = '30 days';

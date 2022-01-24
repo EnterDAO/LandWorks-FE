@@ -12,7 +12,9 @@ export function getSessionContractByAddress(address: string): SessionContractTyp
     const parsedContracts = JSON.parse(contracts);
 
     return parsedContracts?.[address];
-  } catch {}
+  } catch {
+    console.log("object")
+  }
 }
 
 export function setSessionContractByAddress(address: string, data: Partial<SessionContractType>): void {
@@ -27,5 +29,7 @@ export function setSessionContractByAddress(address: string, data: Partial<Sessi
     };
 
     window.sessionStorage.setItem('contracts', JSON.stringify(contracts));
-  } catch {}
+  } catch {
+    console.log("Error caught in setSessionContractByAddress")
+  }
 }

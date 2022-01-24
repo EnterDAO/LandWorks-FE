@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { isDesktop, isMobile } from 'react-device-detect';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 
 import Button from 'components/antd/button';
-import Divider from 'components/antd/divider';
 import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import { useGeneral } from 'components/providers/general-provider';
-import { EnterToken } from 'components/providers/known-tokens-provider';
 import { useWarning } from 'components/providers/warning-provider';
-import { LandsNav } from 'modules/land-works/components/lands-header-nav';
+import LandsNav from 'modules/land-works/components/lands-header-nav';
 import { LandsNavMobile } from 'modules/land-works/components/lands-header-nav-mobile';
+import { LandsTooltip } from 'modules/land-works/components/lands-tooltip';
 import ConnectedWallet from 'wallets/components/connected-wallet';
-import { MetamaskConnector } from 'wallets/connectors/metamask';
 import { useWallet } from 'wallets/wallet';
+
+import { ReactComponent as ListIcon } from '../../../resources/svg/list-property.svg';
 
 import s from './s.module.scss';
 
 const modalRoot = document.getElementById('modal-root') || document.body;
 
 const LayoutHeader: React.FC = () => {
+  const history = useHistory();
   const { navOpen, setNavOpen } = useGeneral();
   const [referenceElement, setReferenceElement] = useState<any>();
   const [popperElement, setPopperElement] = useState<any>();
@@ -33,6 +33,12 @@ const LayoutHeader: React.FC = () => {
   const { styles, attributes, forceUpdate, state } = usePopper(referenceElement, popperElement, {
     placement: 'bottom',
     strategy: 'absolute',
+  });
+
+  const isLandingPage = useRouteMatch({
+    path: ['/', '/'],
+    strict: true,
+    sensitive: true,
   });
 
   useEffect(() => {
@@ -45,46 +51,67 @@ const LayoutHeader: React.FC = () => {
     }
   }, [window.innerWidth]);
 
-  async function handleAddProjectToken() {
-    if (wallet.connector?.id === 'metamask') {
-      try {
-        const connector = new MetamaskConnector({ supportedChainIds: [] });
-        await connector.addToken({
-          type: 'ERC20',
-          options: {
-            address: EnterToken.address,
-            symbol: EnterToken.symbol,
-            decimals: EnterToken.decimals,
-            image: `${window.location.origin}/enterdao.png`,
-          },
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }
-
   return (
     <div className={`${s.component} ${navOpen ? `${s.mobileNavOpen}` : ''}`} ref={setReferenceElement}>
-      <ExternalLink href="/" target="_self">
+      <div style={{ cursor: 'pointer' }} onClick={() => history.push('/all')}>
         <Icon name="png/LandWorksLogo" width="auto" height="auto" className={s.logo} />
-      </ExternalLink>
-      <h1 className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`}>LandWorks</h1>
+      </div>
+      <h1 className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`} onClick={() => history.push('/all')}>
+        LandWorks
+      </h1>
 
-      {wallet.account && <LandsNav />}
+      {wallet.account && !isLandingPage?.isExact && <LandsNav />}
 
-      {wallet.isActive && wallet.connector?.id === 'metamask' && (
+      {wallet.isActive && wallet.connector?.id === 'metamask' && !isLandingPage?.isExact && (
         <div className={s.addTokenWrapper}>
-          <button type="button" onClick={handleAddProjectToken} className={s.addTokenButton}>
-            <Icon name="png/ListProperty" width={32} height={32} style={{ transform: 'scale(1.5)' }} />
-          </button>
+          <LandsTooltip placement="bottom" trigger="hover" text="List new property">
+            <button type="button" onClick={() => history.push('/list')} className={s.addTokenButton}>
+              <ListIcon />
+            </button>
+          </LandsTooltip>
         </div>
       )}
 
-      <ConnectedWallet />
-      <Button type="link" className={s.burger} onClick={() => setNavOpen(prevState => !prevState)}>
-        <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
-      </Button>
+      {isLandingPage?.isExact && (
+        <Button type="link" className={s.burger} onClick={() => setNavOpen((prevState) => !prevState)}>
+          <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
+        </Button>
+      )}
+
+      {isLandingPage?.isExact && (
+        <nav className={s.nav}>
+          <a
+            href="#about"
+            className={s.navLink}
+            onClick={() => {
+              const aboutSection = document.querySelector('.about-wrapper') as HTMLElement;
+              if (aboutSection !== null) {
+                window.scrollTo({ top: aboutSection.offsetTop, left: 0, behavior: 'smooth' });
+              }
+            }}
+          >
+            <span>About</span>
+          </a>
+          <a
+            href="#why"
+            className={s.navLink}
+            onClick={() => {
+              const aboutSection = document.querySelector('.how-it-works-wrapper') as HTMLElement;
+              if (aboutSection !== null) {
+                window.scrollTo({ top: aboutSection.offsetTop, left: 0, behavior: 'smooth' });
+              }
+            }}
+          >
+            <span>Why Rent ?</span>
+          </a>
+          <ExternalLink href="https://docs.landworks.xyz" target="_blank" className={s.navLink}>
+            <span>Docs</span>
+          </ExternalLink>
+        </nav>
+      )}
+
+      {isLandingPage?.isExact ? null : <ConnectedWallet />}
+
       {navOpen &&
         ReactDOM.createPortal(
           <div
@@ -98,18 +125,59 @@ const LayoutHeader: React.FC = () => {
                 '--top': `${state?.modifiersData?.popperOffsets?.y || 0}px`,
               } as React.CSSProperties
             }
-            {...attributes.popper}>
+            {...attributes.popper}
+          >
             <div className={s.mobileInner}>
               <div className={s.mobileMenuInner}>
                 <Row style={{ width: '100%' }}>
                   <Col span={24}>
-                    <LandsNavMobile setNavOpen={setNavOpen} />
+                    {isLandingPage?.isExact && (
+                      <div className={s.mobileMenuBlock}>
+                        <h3>Info</h3>
+                        <a
+                          href="#about"
+                          className={s.dropdownLink}
+                          onClick={() => {
+                            const aboutSection = document.querySelector('.about-wrapper') as HTMLElement;
+                            if (aboutSection !== null) {
+                              window.scrollTo({ top: aboutSection.offsetTop, left: 0, behavior: 'smooth' });
+                            }
+                            setNavOpen(false);
+                          }}
+                        >
+                          <Icon name="whitepaper" width={20} height={20} className={s.dropdownIcon} />
+                          <span>About</span>
+                        </a>
+                        <a
+                          href="#why"
+                          className={s.dropdownLink}
+                          onClick={() => {
+                            const aboutSection = document.querySelector('.how-it-works-wrapper') as HTMLElement;
+                            if (aboutSection !== null) {
+                              window.scrollTo({ top: aboutSection.offsetTop, left: 0, behavior: 'smooth' });
+                            }
+                            setNavOpen(false);
+                          }}
+                        >
+                          <Icon name="team" width={20} height={20} className={s.dropdownIcon} />
+                          <span>Why Rent ?</span>
+                        </a>
+                        <ExternalLink
+                          href="https://docs.landworks.xyz"
+                          className={s.dropdownLink}
+                          onClick={() => setNavOpen(false)}
+                        >
+                          <Icon name="docs" width={20} height={20} className={s.dropdownIcon} />
+                          <span>Docs</span>
+                        </ExternalLink>
+                      </div>
+                    )}
                   </Col>
                 </Row>
               </div>
             </div>
           </div>,
-          modalRoot,
+          modalRoot
         )}
     </div>
   );

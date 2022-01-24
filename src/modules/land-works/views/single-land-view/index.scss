@@ -1,35 +1,46 @@
-@import "../../../../styles/variables.scss";
-@import "../../../../styles/text.scss";
-
+@import '../../../../styles/variables.scss';
+@import '../../../../styles/text.scss';
 
 .single-card-section {
   margin-bottom: 20px;
 
   .head-nav {
-    button {
-      border: 1px solid rgba(241, 215, 239, 1) !important;
-      padding: 10px 25px 10px 20px !important;
-      box-shadow: 0px 4px 7px rgba(241, 219, 238, 0.3);
-      border-radius: 23px;
-      color: rgba(217, 38, 135, 1) !important;
+    display: flex;
+    justify-content: space-between;
 
-      svg {
-        color: rgba(217, 38, 135, 1);
-        height: 15px;
-        vertical-align: text-bottom;
+    .right-wrapper {
+      display: flex;
+      align-items: flex-start;
+
+      .button-primary:hover {
+        color: var(--theme-primary-color);
+      }
+    }
+
+    button {
+      margin-bottom: 20px;
+
+      .edit-btn {
+        padding: 10px 20px 10px 20px !important;
+        border-radius: 12px;
+        background: #177ddc;
+        color: var(--theme-primary-color) !important;
+        margin-right: auto;
       }
     }
   }
 
   .pooling-section {
-    border-top: 1px solid #ebeaf5;
-    margin-top: 20px;
-    padding-top: 30px;
+    .pooling-title {
+      display: flex;
+      margin: 50px 0 30px;
+    }
 
     .pooling-heading {
       font-weight: 700;
       font-weight: 16px;
       color: rgba(179, 177, 207, 1);
+      margin-right: 18px;
     }
 
     .pooling-description {
@@ -38,5 +49,56 @@
       margin-left: 10px;
     }
   }
-}
 
+  span .button-subtle:disabled {
+    pointer-events: none;
+  }
+
+  .button-subtle {
+    padding: 10px 25px !important;
+    border-radius: 12px;
+    color: rgba(93, 143, 240, 1) !important;
+    background: var(--theme-modal-color);
+    margin-right: auto;
+    font-weight: 700;
+    border: none;
+    transition: all 0.2s ease-out;
+
+    &:hover {
+      background: var(--theme-line-color);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+
+      &:hover {
+        background: var(--theme-modal-color);
+      }
+    }
+  }
+
+  .button-accent {
+    padding: 10px 25px !important;
+    border-radius: 12px;
+    background: var(--theme-accent-color);
+    color: var(--theme-primary-color) !important;
+    margin-right: auto;
+    font-weight: 700;
+    border: none;
+    transition: all 0.2s ease-out;
+    box-shadow: var(--theme-accent-shadow);
+
+    &:hover {
+      background: var(--theme-accent-hover-color);
+      box-shadow: var(--theme-accent-shadow);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+
+      &:hover {
+        background: var(--theme-accent-color);
+      }
+    }
+  }
+}

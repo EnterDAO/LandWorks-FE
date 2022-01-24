@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import * as Antd from 'antd';
 import debounce from 'lodash/debounce';
 import Web3 from 'web3';
@@ -17,8 +18,8 @@ export function createAbiItem(name: string, inputs: string[] = [], outputs: stri
     name,
     type: 'function',
     stateMutability: 'view',
-    inputs: inputs.map(type => ({ name: '', type })),
-    outputs: outputs.map(type => ({ name: '', type })),
+    inputs: inputs.map((type) => ({ name: '', type })),
+    outputs: outputs.map((type) => ({ name: '', type })),
   };
 }
 
@@ -27,8 +28,8 @@ export function createAbiEvent(name: string, inputs: string[] = [], outputs: str
     name: name,
     type: 'event',
     anonymous: false,
-    inputs: inputs.map(type => ({ indexed: true, name: '', type })),
-    outputs: outputs.map(type => ({ name: '', type })),
+    inputs: inputs.map((type) => ({ indexed: true, name: '', type })),
+    outputs: outputs.map((type) => ({ name: '', type })),
   };
 }
 
@@ -60,7 +61,7 @@ class Web3Contract extends EventEmitter {
   static UPDATE_ACCOUNT = 'update:account';
   static UPDATE_DATA = 'update:data';
 
-  static sendIncNumber: number = 0;
+  static sendIncNumber = 0;
   static requestsPool: Map<any, Method[]> = new Map();
 
   static addRequest(source: Web3Contract, request: Method) {
@@ -76,7 +77,7 @@ class Web3Contract extends EventEmitter {
       const web3 = new Web3(provider);
       const batch = new web3.BatchRequest();
 
-      requests.forEach(request => batch.add(request));
+      requests.forEach((request) => batch.add(request));
       batch.execute();
 
       Web3Contract.requestsPool.delete(provider);
@@ -110,12 +111,12 @@ class Web3Contract extends EventEmitter {
     this.address = address;
     this.name = name;
 
-    this._callContract = (new DEFAULT_WEB3.eth.Contract(abi, address) as any) as EthContract;
-    this._sendContract = (new DEFAULT_WEB3.eth.Contract(abi, address) as any) as EthContract;
+    this._callContract = new DEFAULT_WEB3.eth.Contract(abi, address) as any as EthContract;
+    this._sendContract = new DEFAULT_WEB3.eth.Contract(abi, address) as any as EthContract;
   }
 
   get writeFunctions(): AbiItem[] {
-    return this._abi.filter(r => r.type === 'function' && !r.constant);
+    return this._abi.filter((r) => r.type === 'function' && !r.constant);
   }
 
   setCallProvider(provider: any = DEFAULT_WEB3_PROVIDER): void {
@@ -143,10 +144,10 @@ class Web3Contract extends EventEmitter {
     }
 
     const promises = methods.map((batchMethod: BatchContractMethod) => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         this.call(batchMethod.method, batchMethod.methodArgs ?? [], batchMethod.callArgs ?? {})
-          .then(value => resolve((batchMethod.transform ?? (x => x))(value)))
-          .catch(err => resolve(batchMethod.onError?.(err) ?? undefined));
+          .then((value) => resolve((batchMethod.transform ?? ((x) => x))(value)))
+          .catch((err) => resolve(batchMethod.onError?.(err) ?? undefined));
       });
     });
 
@@ -177,7 +178,13 @@ class Web3Contract extends EventEmitter {
     });
   }
 
-  send(method: string, methodArgs: any[] = [], sendArgs: Record<string, any> = {}, gasPrice?: number): Promise<any> {
+  send(
+    method: string,
+    methodArgs: any[] = [],
+    sendArgs: Record<string, any> = {},
+    callback: () => void = () => {},
+    gasPrice?: number
+  ): Promise<any> {
     this.assertAccount();
 
     const contractMethod = this._sendContract.methods[method];
@@ -213,6 +220,7 @@ class Web3Contract extends EventEmitter {
           state: 'progress',
           txHash,
         });
+        callback();
       })
       .then((result: any) => {
         this.emit('tx:success', result, {

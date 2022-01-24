@@ -1,0 +1,195 @@
+.rent-modal {
+  .ant-modal-content {
+    border-radius: 10px;
+    box-shadow: none;
+  }
+
+  .ant-modal-header {
+    background: var(--theme-modal-color);
+    padding: 22px;
+    border-bottom: none;
+  }
+
+  .ant-modal-close {
+    top: 22px;
+  }
+
+  .light-text {
+    color: rgba(185, 185, 211, 1);
+  }
+
+  .title-period {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .approve-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    p {
+      margin-right: 20px;
+    }
+
+    button {
+      padding: 7px 20px;
+      color: var(--theme-primary-color) !important;
+    }
+  }
+
+  .ant-picker.ant-picker-borderless.button-primary {
+    padding: 6px 16px;
+    cursor: pointer;
+
+    .ant-picker-input {
+      display: flex;
+      flex-direction: row-reverse;
+    }
+
+    svg {
+      fill: var(--theme-primary-color);
+      margin-right: 12px;
+    }
+
+    input {
+      cursor: pointer;
+      color: var(--theme-primary-color);
+      font-size: var(--font-size-p1);
+
+      &::placeholder {
+        color: var(--theme-primary-color);
+        opacity: 1;
+      }
+
+      &:-ms-input-placeholder {
+        color: var(--theme-primary-color);
+      }
+
+      &::-ms-input-placeholder {
+        color: var(--theme-primary-color);
+      }
+    }
+  }
+
+  .bold-white-text {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .info-icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-left: 5px;
+  }
+
+  .oprator-container {
+    margin-top: 20px;
+
+    .operator-address {
+      margin-top: 5px;
+      padding: 10px;
+      background: #161622;
+      border-radius: 12px;
+      color: rgba(185, 185, 211, 1);
+    }
+    input {
+      padding: 10px;
+      background: #161622;
+      border-radius: 12px;
+      margin: 15px 0px;
+    }
+  }
+
+  .rent-modal-footer {
+    background: #161622;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 10px;
+
+    .rent-button {
+      color: var(--theme-primary-color);
+      width: 100%;
+      padding: 0 16px;
+      // display: flex;
+      // align-items: center;
+      height: 44px;
+
+      > div {
+        height: 100%;
+
+        .ant-col {
+          display: flex;
+          align-items: center;
+        }
+      }
+      .rent-label-container {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+      }
+      .rent-label {
+        font-weight: 500;
+        padding-right: 14px;
+        margin-right: 12px;
+        height: 100%;
+        line-height: 44px;
+      }
+
+      .price-col {
+        text-align: center;
+        display: flex;
+        justify-content: space-around;
+      }
+
+      strong {
+        display: flex;
+        align-items: center;
+
+        span {
+          margin-left: 14px;
+        }
+      }
+
+      &:hover {
+        color: var(--theme-primary-color);
+      }
+
+      .eth-icon {
+        width: 17px;
+        height: 17px;
+        margin-left: 7px;
+      }
+    }
+    .total-label {
+      font-size: 16px;
+      font-weight: 500;
+      color: white !important;
+    }
+    .total-price {
+      display: inline-block;
+      background: #eaeaf4;
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(85, 44, 73, 1);
+      padding: 3px 12px;
+    }
+  }
+
+  .ant-picker-panel-container {
+    background: var(--theme-card-color);
+  }
+}
+
+.error-wrapper {
+  background: var(--theme-warning-background);
+  border: 1px solid var(--theme-warning-border);
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 8px 14px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--theme-warning-color);
+  margin-top: 20px;
+}

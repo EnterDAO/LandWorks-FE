@@ -6,8 +6,10 @@ import { NoEthereumProviderError } from '@web3-react/injected-connector';
 import * as Antd from 'antd';
 
 import Spin from 'components/antd/spin';
+import ExternalLink from 'components/custom/externalLink';
 import { getNetworkName } from 'components/providers/eth-web3-provider';
 import config from 'config';
+import { WarningModal } from 'modules/land-works/components/lands-warning-modal';
 import ConnectWalletModal from 'wallets/components/connect-wallet-modal';
 import InstallMetaMaskModal from 'wallets/components/install-metamask-modal';
 import UnsupportedChainModal from 'wallets/components/unsupported-chain-modal';
@@ -64,11 +66,11 @@ export function useWallet(): Wallet {
   return React.useContext(WalletContext);
 }
 
-const WalletProvider: React.FC = props => {
+const WalletProvider: React.FC = (props) => {
   const web3React = useWeb3React();
 
   const [sessionProvider, setSessionProvider, removeSessionProvider] = useSessionStorage<string | undefined>(
-    'wallet_provider',
+    'wallet_provider'
   );
 
   const [initialized, setInitialized] = React.useState<boolean>(false);
@@ -81,6 +83,7 @@ const WalletProvider: React.FC = props => {
   const [walletsModal, setWalletsModal] = React.useState<boolean>(false);
   const [unsupportedChainModal, setUnsupportedChainModal] = React.useState<boolean>(false);
   const [installMetaMaskModal, setInstallMetaMaskModal] = React.useState<boolean>(false);
+  const [showDisclaimerModal, setShowDisclaimerModal] = React.useState<boolean>(false);
 
   const disconnect = React.useCallback(() => {
     web3React.deactivate();
@@ -89,6 +92,7 @@ const WalletProvider: React.FC = props => {
     setActiveConnector(undefined);
     setActiveProvider(undefined);
     removeSessionProvider();
+    localStorage.removeItem('disclaimerShown');
   }, [web3React, activeConnector, removeSessionProvider, setConnecting]);
 
   const connect = React.useCallback(
@@ -132,19 +136,25 @@ const WalletProvider: React.FC = props => {
         connector.getProvider().then(setActiveProvider);
         setActiveConnector(walletConnector);
         setSessionProvider(walletConnector.id);
+
+        const shownDisclaimer = localStorage.getItem('disclaimerShown');
+
+        if (!shownDisclaimer) {
+          setShowDisclaimerModal(true);
+        }
       }
 
       await web3React.activate(connector, undefined, true).then(onSuccess).catch(onError);
 
       setConnecting(undefined);
     },
-    [web3React, connectingRef, setConnecting, setSessionProvider, disconnect],
+    [web3React, connectingRef, setConnecting, setSessionProvider, disconnect]
   );
 
   React.useEffect(() => {
     (async () => {
       if (sessionProvider) {
-        const walletConnector = WalletConnectors.find(c => c.id === sessionProvider);
+        const walletConnector = WalletConnectors.find((c) => c.id === sessionProvider);
 
         if (walletConnector) {
           connect(walletConnector).catch(Error);
@@ -171,7 +181,7 @@ const WalletProvider: React.FC = props => {
       connect,
       disconnect,
     }),
-    [web3React, initialized, connecting, activeConnector, activeProvider, disconnect, connect],
+    [web3React, initialized, connecting, activeConnector, activeProvider, disconnect, connect]
   );
 
   return (
@@ -180,6 +190,30 @@ const WalletProvider: React.FC = props => {
       {installMetaMaskModal && <InstallMetaMaskModal onCancel={() => setInstallMetaMaskModal(false)} />}
       {unsupportedChainModal && <UnsupportedChainModal onCancel={() => setUnsupportedChainModal(false)} />}
       {initialized ? props.children : <Spin spinning className="absolute-center" />}
+      {showDisclaimerModal && (
+        <WarningModal
+          onCancel={() => {
+            setShowDisclaimerModal(false);
+            localStorage.setItem('disclaimerShown', 'true');
+          }}
+          onOk={async () => {
+            setShowDisclaimerModal(false);
+            localStorage.setItem('disclaimerShown', 'true');
+          }}
+          title="Beta Software Disclaimer"
+          text={
+            <>
+              Listing/Renting properties on LandWorks doesn't come without risks. Before making a deposit, it is best to
+              research and understand the risks involved. LandWorks smart contracts have been{' '}
+              <ExternalLink href="https://github.com/EnterDAO/LandWorks-protocol/tree/main/audits" target="_blank">
+                <span>audited</span>
+              </ExternalLink>
+              , however, security audits don't eliminate risks completely. Do not supply assets that you can't afford to
+              lose as LandWorks is still in Beta.
+            </>
+          }
+        />
+      )}
     </WalletContext.Provider>
   );
 };
@@ -190,7 +224,7 @@ function getLibrary(provider: any) {
   return library;
 }
 
-const Web3WalletProvider: React.FC = props => {
+const Web3WalletProvider: React.FC = (props) => {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <WalletProvider>{props.children}</WalletProvider>

@@ -5,11 +5,12 @@ import Modal, { ModalProps } from 'components/antd/modal';
 import Grid from 'components/custom/grid';
 import { Text } from 'components/custom/typography';
 import { useEthWeb3 } from 'components/providers/eth-web3-provider';
+import { networks } from 'helpers/chain-configurations';
 import { useWallet } from 'wallets/wallet';
 
 export type UnsupportedChainModalProps = ModalProps;
 
-const UnsupportedChainModal: React.FC<UnsupportedChainModalProps> = props => {
+const UnsupportedChainModal: React.FC<UnsupportedChainModalProps> = (props) => {
   const { ...modalProps } = props;
 
   const ethWeb3 = useEthWeb3();
@@ -32,11 +33,23 @@ const UnsupportedChainModal: React.FC<UnsupportedChainModalProps> = props => {
 
         <Button
           type="primary"
-          onClick={() => {
-            props.onCancel?.();
-            wallet.showWalletsModal();
-          }}>
-          Switch wallet
+          onClick={async () => {
+            if (!(window as any).ethereum) {
+              console.log("Couldn't find wallet");
+            }
+            try {
+              await (window as any).ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: networks[ethWeb3.networkName.toLowerCase() as keyof typeof networks].chainId }],
+              });
+              props.onCancel?.();
+              wallet.showWalletsModal();
+            } catch (err) {
+              console.error('error while switching networks');
+            }
+          }}
+        >
+          Switch network
         </Button>
       </Grid>
     </Modal>

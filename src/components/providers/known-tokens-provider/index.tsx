@@ -188,11 +188,11 @@ export function useKnownTokens(): ContextType {
 }
 
 export function getTokenBySymbol(symbol: string): TokenMeta | undefined {
-  return KNOWN_TOKENS.find(token => token.symbol === symbol);
+  return KNOWN_TOKENS.find((token) => token.symbol === symbol);
 }
 
 export function getTokenByAddress(address: string): TokenMeta | undefined {
-  return KNOWN_TOKENS.find(token => token.address.toLowerCase() === address.toLowerCase());
+  return KNOWN_TOKENS.find((token) => token.address.toLowerCase() === address.toLowerCase());
 }
 
 const LP_PRICE_FEED_ABI: AbiItem[] = [
@@ -235,7 +235,7 @@ async function getUsdcEntrSLPPrice(): Promise<BigNumber> {
 
   const [decimals, totalSupply, token0, { 0: reserve0, 1: reserve1 }] = await priceFeedContract.batch([
     { method: 'decimals', transform: Number },
-    { method: 'totalSupply', transform: value => new BigNumber(value) },
+    { method: 'totalSupply', transform: (value) => new BigNumber(value) },
     { method: 'token0' },
     { method: 'getReserves' },
   ]);
@@ -272,10 +272,15 @@ export function getTokenPriceIn(source: string, target: string): BigNumber | und
   return sourcePrice.dividedBy(targetPrice);
 }
 
+export function getUsdPrice(price: BigNumber, symbol: string): BigNumber | undefined {
+  const usdTokenPrice = getTokenPrice(symbol || 'eth');
+  return usdTokenPrice?.multipliedBy(price);
+}
+
 export function convertTokenIn(
   amount: BigNumber | number | undefined,
   source: string,
-  target: string,
+  target: string
 ): BigNumber | undefined {
   if (amount === undefined || amount === null) {
     return undefined;
@@ -308,7 +313,25 @@ export function convertTokenInUSD(amount: BigNumber | number | undefined, source
   return convertTokenIn(amount, source, KnownTokens.USDC);
 }
 
-const KnownTokensProvider: FC = props => {
+export async function getTokenPriceForDate(tokenSymbol: string, date: string) {
+  try {
+    const token = getTokenBySymbol(tokenSymbol);
+    if (!token?.coinGeckoId) {
+      return 0;
+    }
+
+    const priceData = await fetch(
+      `https://api.coingecko.com/api/v3/coins/${token.coinGeckoId}/history?date=${date}&localized=false`
+    ).then((res) => res.json());
+    const usdPrice = priceData.market_data.current_price.usd;
+    console.log(`ETH PRICE AT ${date}: ${usdPrice}`);
+    return usdPrice;
+  } catch {
+    return 0;
+  }
+}
+
+const KnownTokensProvider: FC = (props) => {
   const { children } = props;
 
   const wallet = useWallet();
@@ -321,16 +344,16 @@ const KnownTokensProvider: FC = props => {
       EnterToken.price = await getEntrPrice().catch(() => undefined);
       UsdcEntrSLPToken.price = await getUsdcEntrSLPPrice().catch(() => undefined);
 
-      const ids = KNOWN_TOKENS.map(tk => tk.coinGeckoId)
+      const ids = KNOWN_TOKENS.map((tk) => tk.coinGeckoId)
         .filter(Boolean)
         .join(',');
 
       try {
-        const prices = await fetch(
-          `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`,
-        ).then(res => res.json());
+        const prices = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`).then(
+          (res) => res.json()
+        );
 
-        KNOWN_TOKENS.forEach(token => {
+        KNOWN_TOKENS.forEach((token) => {
           if (token.coinGeckoId) {
             const price = prices[token.coinGeckoId]?.usd;
 
@@ -341,20 +364,22 @@ const KnownTokensProvider: FC = props => {
 
           console.log(`[Token Price] ${token.symbol} = ${formatUSD(token.price)}`);
         });
-      } catch {}
+      } catch {
+        console.log('error caught');
+      }
 
       reload();
     })();
   }, []);
 
   useEffect(() => {
-    KNOWN_TOKENS.forEach(token => {
+    KNOWN_TOKENS.forEach((token) => {
       token.contract?.setProvider(wallet.provider);
     });
   }, [wallet.provider]);
 
   useEffect(() => {
-    KNOWN_TOKENS.forEach(token => {
+    KNOWN_TOKENS.forEach((token) => {
       token.contract?.setAccount(wallet.account);
     });
 

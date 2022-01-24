@@ -3,10 +3,11 @@ import cn from 'classnames';
 
 import addEnterSrc from 'resources/png/add-enter.png';
 import axsSrc from 'resources/png/axie.png';
+import calendar from 'resources/png/calendar.png';
 import enterStarSrc from 'resources/png/enter-star.png';
 import enterdaoSrc from 'resources/png/enterdao.png';
-import eth from 'resources/png/eth.png';
 import Github from 'resources/png/github.png';
+import hot from 'resources/png/hot.png';
 import LandWorksLogo from 'resources/png/landWorks.png';
 import ListProperty from 'resources/png/listProperty.png';
 import manaSrc from 'resources/png/mana.png';
@@ -19,7 +20,10 @@ import linkSrc from 'resources/png/token-link.png';
 import sushiSrc from 'resources/png/token-sushi.png';
 import uslpSrc from 'resources/png/token-uslp.png';
 import universeSrc from 'resources/png/universe.png';
+import you from 'resources/png/you.png';
+import eth from 'resources/svg/eth.svg';
 import Sprite from 'resources/svg/icons-sprite.svg';
+import usdcSrc from 'resources/svg/usdc.svg';
 
 import s from './s.module.scss';
 
@@ -172,8 +176,10 @@ export type IconNames =
   | 'png/LandWorksLogo'
   | 'png/eth'
   | 'png/Github'
+  | 'png/hot'
+  | 'png/you'
+  | 'png/calendar'
   | 'png/ListProperty';
-
 export type IconProps = {
   name: IconNames;
   width?: number | string;
@@ -185,11 +191,11 @@ export type IconProps = {
   src?: string;
 };
 
-const Icon: React.FC<IconProps> = props => {
+const Icon: React.FC<IconProps> = (props) => {
   const { name, width = 24, height = 24, rotate, color, className, style, src, ...rest } = props;
 
   const isStatic = (name ?? '').indexOf('static/') === 0;
-  const isPng = (name ?? '').indexOf('png/') === 0;
+  const isPng = (name ?? '').indexOf('png/') === 0 || name === 'png/eth' || name === 'token-usdc';
 
   if (isPng) {
     const getSrc = () => {
@@ -230,6 +236,14 @@ const Icon: React.FC<IconProps> = props => {
           return eth;
         case 'png/Github':
           return Github;
+        case 'png/hot':
+          return hot;
+        case 'png/you':
+          return you;
+        case 'png/calendar':
+          return calendar;
+        case 'token-usdc':
+          return usdcSrc;
         default:
           return '';
       }
@@ -253,7 +267,8 @@ const Icon: React.FC<IconProps> = props => {
       width={width}
       height={height ?? width}
       style={style}
-      {...rest}>
+      {...rest}
+    >
       {!isStatic ? <use xlinkHref={`${Sprite}#icon__${name}`} /> : <use xlinkHref={`#icon__${name}`} />}
     </svg>
   );

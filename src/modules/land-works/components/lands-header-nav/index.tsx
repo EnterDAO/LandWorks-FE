@@ -1,19 +1,46 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useHistory, withRouter } from 'react-router-dom';
 import { Menu } from 'antd';
 
 import './index.scss';
 
-export const LandsNav: React.FC = () => {
-  const [current, setCurrent] = useState<string>('1');
-  const handleClick = (e: any) => {
-    setCurrent(e.key);
-    // TODO:: use Router here
+const LandsNav: React.FC = () => {
+  const history = useHistory();
+
+  const allPathname = '/all';
+  const rentingPathname = '/renting';
+  const lendingPathname = '/lending';
+
+  const getMenuKey = () => {
+    if (
+      location.pathname === allPathname ||
+      location.pathname === rentingPathname ||
+      location.pathname === lendingPathname
+    ) {
+      return location.pathname;
+    }
+    return '';
   };
+
+  useEffect(() => {
+    setSelectedKey(getMenuKey());
+  }, [location.pathname]);
+
+  const [selectedKey, setSelectedKey] = useState(getMenuKey());
+
   return (
-    <Menu className="lands-nav-container" selectedKeys={[current]} onClick={handleClick} mode="horizontal">
-      <Menu.Item key={1}>All</Menu.Item>
-      <Menu.Item key={2}>Renting</Menu.Item>
-      <Menu.Item key={3}>Lending</Menu.Item>
+    <Menu className="lands-nav-container" selectedKeys={[selectedKey]} mode="horizontal">
+      <Menu.Item key={allPathname}>
+        <NavLink to={allPathname}>All</NavLink>
+      </Menu.Item>
+      <Menu.Item key={rentingPathname}>
+        <NavLink to={rentingPathname}>Renting</NavLink>
+      </Menu.Item>
+      <Menu.Item key={lendingPathname}>
+        <NavLink to={lendingPathname}>Lending</NavLink>
+      </Menu.Item>
     </Menu>
   );
 };
+
+export default withRouter(LandsNav);

@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 export type IconBubbleProps = {
   bubble: boolean;
   className?: string;
-  style?: Object;
+  style?: Record<string, unknown>;
   width: number;
   height: number;
   notificationSize?: number;
@@ -14,7 +14,7 @@ export type IconBubbleProps = {
 const IconNotification: React.FunctionComponent<IconBubbleProps> = props => {
   const {
     bubble,
-    style = {},
+    style,
     width = 24,
     height = 24,
     notificationSize = 10,

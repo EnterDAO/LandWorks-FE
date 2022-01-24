@@ -18,19 +18,19 @@ export const LandsNavMobile: React.FC<INavProps> = ({ setNavOpen }) => {
   const wallet = useWallet();
 
   return (
-    <Row className="lands-nav-container-mobile" justify="end" gutter={[16, 16]}>
-      {/* <Col span={24}>
+    <Row className="lands-nav-container-mobile" gutter={[16, 16]}>
+      <Col span={24}>
         <Link to="/#" className="menu-item-mobile active" onClick={() => setNavOpen(false)}>
           <span>All</span>
         </Link>
       </Col>
       <Col span={24}>
-        <Link to="/#" className="menu-item-mobile" onClick={() => setNavOpen(false)}>
+        <Link to="/renting" className="menu-item-mobile" onClick={() => setNavOpen(false)}>
           <span>Renting</span>
         </Link>
       </Col>
       <Col span={24}>
-        <Link to="/#" className="menu-item-mobile" onClick={() => setNavOpen(false)}>
+        <Link to="/lending" className="menu-item-mobile" onClick={() => setNavOpen(false)}>
           <span>Lending</span>
         </Link>
       </Col>
@@ -56,7 +56,7 @@ export const LandsNavMobile: React.FC<INavProps> = ({ setNavOpen }) => {
             </ExternalLink>
           </>
         )}
-      </Col>*/}
+      </Col>
       <Col>
         {!wallet.isActive ? (
           <button
@@ -66,7 +66,8 @@ export const LandsNavMobile: React.FC<INavProps> = ({ setNavOpen }) => {
             onClick={() => {
               // setNavOpen(false);
               // wallet.showWalletsModal();
-            }}>
+            }}
+          >
             <span>Sign in</span>
           </button>
         ) : (

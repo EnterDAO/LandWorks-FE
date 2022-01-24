@@ -38,7 +38,7 @@ BigNumber.from = (value?: BigNumber.Value): BigNumber | undefined => {
 BigNumber.sumEach = <T = any>(items: T[], predicate: (item: T) => BigNumber | undefined): BigNumber | undefined => {
   let sum = BigNumber.ZERO;
 
-  for (let item of items) {
+  for (const item of items) {
     const val = predicate?.(item);
 
     if (!val || val.isNaN()) {
@@ -54,6 +54,7 @@ BigNumber.sumEach = <T = any>(items: T[], predicate: (item: T) => BigNumber | un
 export const MAX_UINT_256 = new BigNumber(2).pow(256).minus(1);
 export const ZERO_BIG_NUMBER = new BigNumber(0);
 export const DEFAULT_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const ONE_ADDRESS = '0x0000000000000000000000000000000000000001'; // In LandWorks, ETH is set as this address for payments.
 
 export function getEtherscanTxUrl(txHash?: string, chainId = config.web3.chainId): string | undefined {
   if (txHash) {
@@ -90,7 +91,7 @@ export function getEtherscanAddressUrl(address?: string, chainId = config.web3.c
 export function getEtherscanABIUrl(
   address?: string,
   apiKey?: string,
-  chainId = config.web3.chainId,
+  chainId = config.web3.chainId
 ): string | undefined {
   if (address) {
     switch (chainId) {
@@ -102,6 +103,21 @@ export function getEtherscanABIUrl(
         return `https://api-kovan.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${apiKey}`;
       default:
     }
+  }
+
+  return undefined;
+}
+
+export function getDecentralandMarketplaceUrl(registry?: string, id?: string): string | undefined {
+  if (registry && id) {
+    let registryAddress = '';
+    // TODO: on mainnet, ifs should be redundant
+    if (registry.toLowerCase() === config.contracts.decentraland.landRegistry) {
+      registryAddress = '0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d';
+    } else if (registry.toLowerCase() === config.contracts.decentraland.estateRegistry) {
+      registryAddress = '0x959e104e1a4db6317fa58f8295f586e1a978c297';
+    }
+    return `https://market.decentraland.org/contracts/${registryAddress}/tokens/${id}`;
   }
 
   return undefined;
@@ -127,7 +143,7 @@ export function formatBigValue(
   value?: BigNumber | number,
   decimals = 4,
   defaultValue = '-',
-  minDecimals: number | undefined = undefined,
+  minDecimals: number | undefined = undefined
 ): string {
   if (value === undefined) {
     return defaultValue;
@@ -160,7 +176,7 @@ export function formatNumber(value: number | BigNumber | undefined, options?: Fo
   }).format(val);
 }
 
-export function formatPercent(value: number | BigNumber | undefined, decimals: number = 2): string | undefined {
+export function formatPercent(value: number | BigNumber | undefined, decimals = 2): string | undefined {
   if (value === undefined || Number.isNaN(value)) {
     return undefined;
   }
@@ -195,6 +211,7 @@ export function formatToken(value: number | BigNumber | undefined, options?: For
   }
 
   if (options) {
+    // eslint-disable-next-line no-prototype-builtins
     if (options.hasOwnProperty('scale') && options.scale === undefined) {
       return undefined;
     }
@@ -227,7 +244,7 @@ type FormatUSDOptions = {
 
 export function formatUSD(
   value: number | BigNumber | string | undefined,
-  options?: FormatUSDOptions,
+  options?: FormatUSDOptions
 ): string | undefined {
   let val = value;
 
@@ -301,7 +318,7 @@ export function fetchContractABI(address: string): any {
   }
 
   return fetch(url)
-    .then(result => result.json())
+    .then((result) => result.json())
     .then(({ status, result }: { status: string; result: string }) => {
       if (status === '1') {
         return JSON.parse(result);
@@ -320,9 +337,9 @@ type GasPriceResult = {
 
 export function fetchGasPrice(): Promise<GasPriceResult> {
   return fetch(`https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${config.web3.etherscan.apiKey}`)
-    .then(result => result.json())
-    .then(result => result.result)
-    .then(result => {
+    .then((result) => result.json())
+    .then((result) => result.result)
+    .then((result) => {
       return {
         veryFast: Number(result.FastGasPrice),
         fast: Number(result.ProposeGasPrice),

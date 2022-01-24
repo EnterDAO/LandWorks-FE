@@ -1,17 +1,24 @@
 import React, { Suspense, lazy } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import AntdSpin from 'antd/lib/spin';
+import { useSessionStorage } from 'react-use-storage';
 
+import ProtectedRoute from 'components/custom/protected-route';
 import { useWarning } from 'components/providers/warning-provider';
+import { useWallet } from 'wallets/wallet';
 
-import MetapassProvider from './providers/metapass-provider';
-
-const OwnedPasses = lazy(() => import('./views/lands-view'));
+const RentingView = lazy(() => import('./views/my-renting-view'));
+const LendingView = lazy(() => import('./views/my-lending-view'));
+const LandsView = lazy(() => import('./views/lands-view'));
 const SingleLand = lazy(() => import('./views/single-land-view'));
+const ListProperty = lazy(() => import('./views/list-property-view'));
+const EditProperty = lazy(() => import('./views/edit-property-view'));
+const LandingView = lazy(() => import('modules/landing'));
 
-const MetapassView: React.FC = () => {
+const LandworksView: React.FC = () => {
   const warning = useWarning();
+  const walletCtx = useWallet();
+  const [sessionProvider] = useSessionStorage<string | undefined>('wallet_provider');
 
   React.useEffect(() => {
     let warningDestructor: () => void;
@@ -22,12 +29,6 @@ const MetapassView: React.FC = () => {
         closable: true,
         storageIdentity: 'bb_desktop_metamask_tx_warn',
       });
-    } else {
-      warningDestructor = warning.addWarn({
-        text: 'Do not send funds directly to the contract!',
-        closable: true,
-        storageIdentity: 'bb_send_funds_warn',
-      });
     }
 
     return () => {
@@ -36,16 +37,30 @@ const MetapassView: React.FC = () => {
   }, [isMobile]);
 
   return (
-    <MetapassProvider>
-      <Suspense fallback={<AntdSpin />}>
-        <Switch>
-          <Route path="/land-works" exact component={OwnedPasses} />
-          <Route path="/land-works/land/:tokenId" exact component={SingleLand} />
-          <Redirect to="/land-works" />
-        </Switch>
-      </Suspense>
-    </MetapassProvider>
+    <Switch>
+      <Route path="/property/:tokenId" exact component={SingleLand} />
+      <Route path="/all" exact component={LandsView} />
+      <Route path="/lending" exact component={LendingView} />
+      <Route path="/renting" exact component={RentingView} />
+      <ProtectedRoute
+        isAuthenticated={!!sessionProvider || !!walletCtx.account}
+        authenticationPath="/"
+        path="/list"
+        exact
+        component={ListProperty}
+      />
+      <ProtectedRoute
+        isAuthenticated={!!sessionProvider || !!walletCtx.account}
+        authenticationPath="/"
+        path="/property/:tokenId/edit/"
+        exact
+        component={EditProperty}
+      />
+      <Route path={['/home', '/']} component={LandingView} />
+
+      {/*<Redirect to="/land-registry-provider-works" />*/}
+    </Switch>
   );
 };
 
-export default MetapassView;
+export default LandworksView;
