@@ -156,4 +156,19 @@ export default class Erc20Contract extends Web3Contract {
       callback
     ).then(() => this.loadAllowance(spenderAddress));
   }
+
+  approveAmount(amount: BigNumber | number | string, spenderAddress: string, callback: () => void): Promise<void> {
+    if (!this.account) {
+      return Promise.reject();
+    }
+
+    return this.send(
+      'approve',
+      [spenderAddress, amount],
+      {
+        from: this.account,
+      },
+      callback
+    ).then(() => this.loadAllowance(spenderAddress));
+  }
 }

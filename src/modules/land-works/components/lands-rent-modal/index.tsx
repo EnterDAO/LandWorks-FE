@@ -140,7 +140,7 @@ export const RentModal: React.FC<Props> = (props) => {
     }
 
     try {
-      await erc20Contract?.approve(true, config.contracts.landworksContract, () => {
+      await erc20Contract?.approveAmount(value, config.contracts.landworksContract, () => {
         setApproveDisabled(true);
       });
       showToastNotification(ToastType.Success, `${paymentToken.symbol} approved successfully.`);
@@ -163,6 +163,7 @@ export const RentModal: React.FC<Props> = (props) => {
         await landWorksContract?.rentDecentralandWithETH(assetId!, editedValue, bnPeriod, value, onSubmit);
       } else {
         await landWorksContract?.rentDecentralandWithERC20(assetId!, editedValue, bnPeriod, onSubmit);
+        erc20Contract?.loadAllowance(config.contracts.landworksContract);
       }
       showToastNotification(ToastType.Success, 'Property rented successfuly!');
     } catch (e) {
