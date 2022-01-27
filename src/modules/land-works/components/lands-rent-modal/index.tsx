@@ -153,16 +153,30 @@ export const RentModal: React.FC<Props> = (props) => {
   };
 
   const handleRent = async () => {
-    if (!isValidForm()) {
+    if (!isValidForm() || !assetId || !paymentToken) {
       return;
     }
 
     try {
       const bnPeriod = new BigNumber(period);
       if (paymentToken?.symbol.toLowerCase() === 'eth') {
-        await landWorksContract?.rentDecentralandWithETH(assetId!, editedValue, bnPeriod, value, onSubmit);
+        await landWorksContract?.rentDecentralandWithETH(
+          assetId,
+          editedValue,
+          bnPeriod,
+          paymentToken.id,
+          value,
+          onSubmit
+        );
       } else {
-        await landWorksContract?.rentDecentralandWithERC20(assetId!, editedValue, bnPeriod, onSubmit);
+        await landWorksContract?.rentDecentralandWithERC20(
+          assetId,
+          editedValue,
+          bnPeriod,
+          paymentToken.id,
+          value,
+          onSubmit
+        );
         erc20Contract?.loadAllowance(config.contracts.landworksContract);
       }
       showToastNotification(ToastType.Success, 'Property rented successfuly!');
