@@ -1,5 +1,5 @@
-@import "./variables.scss";
-@import "./utils.scss";
+@import './variables.scss';
+@import './utils.scss';
 
 @mixin font($size, $height, $weight: normal, $style: normal, $family: var(--font-family)) {
   font-family: $family;

@@ -19,6 +19,7 @@ import { checkFlexGapSupport } from './checkFlexGap';
 import * as sw from './serviceWorker';
 import ScrollToTop from './top-scroll';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.process = {} as any;
 const App: React.FC = () => {
   return (

@@ -33,7 +33,7 @@ const Notifications: React.FC = () => {
     <ul className={s.list}>
       {notifications
         .sort((a, b) => b.startsOn - a.startsOn)
-        .map(n => (
+        .map((n) => (
           <li key={n.id}>
             <Notification n={n} />
           </li>

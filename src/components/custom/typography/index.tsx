@@ -21,7 +21,7 @@ export type TextProps = {
   font?: 'secondary';
 };
 
-export const Text: React.FC<TextProps> = React.memo(props => {
+export const Text: React.FC<TextProps> = React.memo((props) => {
   const {
     tag = 'div',
     type,
@@ -52,12 +52,12 @@ export const Text: React.FC<TextProps> = React.memo(props => {
         wrap === true && 'text-wrap',
         wrap === false && 'text-nowrap',
         font && s[`font-${font}`],
-        className,
+        className
       ),
       style: textGradient ? { ...style, '--text-gradient': textGradient || '', '--text-color': color } : style,
       ...textProps,
     },
-    children,
+    children
   );
 });
 
@@ -66,7 +66,7 @@ export type HintProps = {
   className?: string;
 };
 
-export const Hint: React.FC<HintProps> = props => {
+export const Hint: React.FC<HintProps> = (props) => {
   const { text, className, children } = props;
 
   if (!text) {

@@ -21,7 +21,7 @@ export type MetamaskWatchAsset = {
 
 export class MetamaskConnector extends InjectedConnector {
   addToken(info: MetamaskWatchAsset): Promise<boolean> {
-    return this.getProvider().then(provider => {
+    return this.getProvider().then((provider) => {
       return provider.request({
         method: 'wallet_watchAsset',
         params: info,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
 import Countdown, { CountdownTimeDelta } from 'react-countdown';
 import { Col, Row } from 'antd';
@@ -126,6 +127,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     }
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       await landWorksContract?.claimMultipleRentFees([asset!.id], onClaimSubmit);
       showToastNotification(ToastType.Success, 'Rent claimed successfully!');
     } catch (e) {
@@ -145,15 +147,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
       setCountDownTimestamp('0');
     };
   }, []);
-
-  const flexFont = () => {
-    const divs = document.getElementsByClassName('price-eth');
-    for (let i = 0; i < divs.length; i++) {
-      const element = divs[i] as HTMLElement;
-      const relFontsize = element.offsetWidth * 0.05;
-      element.style.fontSize = relFontsize + 'px';
-    }
-  };
 
   const renderCountdown = (props: CountdownTimeDelta) => {
     const days = props.days > 0 ? `${props.days} days ` : '';

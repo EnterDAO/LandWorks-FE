@@ -52,7 +52,8 @@ export default class ErrorBoundary extends React.Component<any, State> {
               type="button"
               className="button-primary button-small"
               style={{ margin: '0 auto' }}
-              onClick={this.handleRefresh}>
+              onClick={this.handleRefresh}
+            >
               Refresh page
             </button>
           }

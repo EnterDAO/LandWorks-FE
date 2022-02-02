@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import BigNumber from 'bignumber.js';
 
 import config from 'config';
@@ -220,6 +221,7 @@ export function formatToken(value: number | BigNumber | undefined, options?: For
   const { tokenName, compact = false, decimals = 4, minDecimals, scale = 0 } = options ?? {};
 
   if (scale > 0) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     val = val.unscaleBy(scale)!;
   }
 

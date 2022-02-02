@@ -11,7 +11,7 @@ export type IconBubbleProps = {
   notificationGap?: number;
 };
 
-const IconNotification: React.FunctionComponent<IconBubbleProps> = props => {
+const IconNotification: React.FunctionComponent<IconBubbleProps> = (props) => {
   const {
     bubble,
     style,

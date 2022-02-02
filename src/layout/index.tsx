@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 import AntdSpin from 'antd/lib/spin';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import * as Antd from 'antd';
+// import * as Antd from 'antd';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 
@@ -22,7 +22,8 @@ const LayoutFooter: React.FC = () => {
           gutter={[
             { xs: 8, sm: 16, md: 24, lg: 32 },
             { xs: 8, sm: 16, md: 24, lg: 32 },
-          ]}>
+          ]}
+        >
           <Col xs={24} sm={24} md={24} lg={17} xl={17} className={s.info}>
             <Row>
               <Col xs={24} sm={24} md={24} lg={14} xl={12}>

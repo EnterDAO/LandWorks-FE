@@ -4,13 +4,24 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "prettier"],
-  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
+  "plugins": [
+    "prettier"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "prettier",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
   "rules": {
-    "prettier/prettier": "warn"
+    "linebreak-style": "off",
+    "prettier/prettier": [
+      "error"
+    ]
   },
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
+    "es6": true
   }
 }

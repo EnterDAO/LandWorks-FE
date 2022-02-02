@@ -9,7 +9,7 @@ type Props = AntdSpinProps & {
   type?: 'default' | 'circle';
 };
 
-const Spin: React.FC<Props> = props => {
+const Spin: React.FC<Props> = (props) => {
   const { type = 'default', className, ...spinProps } = props;
 
   const indicator = React.useMemo(() => {

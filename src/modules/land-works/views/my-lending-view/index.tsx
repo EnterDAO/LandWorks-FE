@@ -4,7 +4,7 @@ import { useSubscription } from '@apollo/client';
 import { end } from '@popperjs/core';
 import { Col, Row } from 'antd';
 
-import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssets, parseUser } from 'modules/land-works/api';
+import { AssetEntity, USER_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
 import LandsRentingSorter from 'modules/land-works/components/land-renting-sorter';
 import LandWorksCard from 'modules/land-works/components/land-works-card';
@@ -17,7 +17,7 @@ import { ClaimModal } from '../../components/lands-claim-modal';
 
 import './index.scss';
 
-const LendingView = () => {
+const LendingView: React.FC = () => {
   const history = useHistory();
   const wallet = useWallet();
 
@@ -58,12 +58,12 @@ const LendingView = () => {
     }
   }, [wallet.account]);
 
-  const onPlaceChange = (placeChangeEvent: any) => {
+  const onPlaceChange = (placeChangeEvent: () => void) => {
     // TODO:: some filtering here
     console.log(placeChangeEvent);
   };
 
-  const onRentSortChange = (sortEvent: any) => {
+  const onRentSortChange = (sortEvent: () => void) => {
     // TODO:: some filtering here
     console.log(sortEvent);
   };
@@ -104,6 +104,7 @@ const LendingView = () => {
             {loading ? (
               [1, 2, 3].map((i) => <LandCardSkeleton key={i} />)
             ) : assets.length ? (
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               assets.map((land: any) => <LandWorksCard key={land.id} land={land} />)
             ) : (
               <div className="empty-state">

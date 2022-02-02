@@ -7,7 +7,7 @@ import { Text } from 'components/custom/typography';
 
 const METAMASK_CHROME_EXT_URL = 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
 
-const InstallMetaMaskModal: React.FC<ModalProps> = props => {
+const InstallMetaMaskModal: React.FC<ModalProps> = (props) => {
   const { ...modalProps } = props;
 
   return (

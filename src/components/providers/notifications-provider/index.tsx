@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { useLocalStorage } from 'react-use-storage';
 
 import { Toast } from 'components/custom/notification';
-import config from 'config';
+// import config from 'config';
 import { useWallet } from 'wallets/wallet';
 
 export type NotificationsContextType = {
@@ -204,7 +204,9 @@ export function fetchNotifications({
   timestamp?: number | null;
 }): Promise<NotificationType[]> {
   // TODO Notifications not supported
-  return new Promise<NotificationType[]>(resolve => {console.log("resolved")});
+  return new Promise<NotificationType[]>((resolve) => {
+    console.log('resolved');
+  });
 }
 
 const notificationsNode = document.querySelector('#notifications-root');
@@ -214,17 +216,16 @@ const NotificationsProvider: React.FC = ({ children }) => {
 
   const [notifications, setNotifications] = React.useState<NotificationType[]>([]);
   const [toasts, setToasts] = React.useState<NotificationType[]>([]);
-  const [notificationsReadUntil, setNotificationsReadUntil] = React.useState<
-    NotificationsContextType['notificationsReadUntil']
-  >(1);
+  const [notificationsReadUntil, setNotificationsReadUntil] =
+    React.useState<NotificationsContextType['notificationsReadUntil']>(1);
   const [storedReadUntil, setStoredReadUntil, removeStoredReadUntil] = useLocalStorage('bb_notifications_read_until');
 
   const addToast = React.useCallback((notification: NotificationType) => {
-    setToasts(ns => [...ns, notification]);
+    setToasts((ns) => [...ns, notification]);
   }, []);
 
   const removeToast = React.useCallback((id: NotificationType['id']) => {
-    setToasts(prevNotifications => prevNotifications.filter(n => n.id !== id));
+    setToasts((prevNotifications) => prevNotifications.filter((n) => n.id !== id));
   }, []);
 
   React.useEffect(() => {
@@ -244,7 +245,7 @@ const NotificationsProvider: React.FC = ({ children }) => {
   }, []);
 
   const lastNotificationTimestamp: NotificationType['startsOn'] | null = notifications?.length
-    ? Math.max(...notifications.map(n => n.startsOn))
+    ? Math.max(...notifications.map((n) => n.startsOn))
     : null;
 
   const timestampRef = React.useRef(lastNotificationTimestamp);
@@ -258,10 +259,10 @@ const NotificationsProvider: React.FC = ({ children }) => {
 
       intervalId = setInterval(() => {
         fetchNotifications({ target: wallet.account, timestamp: timestampRef.current })
-          .then(ns => {
+          .then((ns) => {
             if (Array.isArray(ns)) {
-              setNotifications(prevNs => [...prevNs.filter(prevN => prevN.expiresOn * 1000 > Date.now()), ...ns]);
-              ns.forEach(n => addToast(n));
+              setNotifications((prevNs) => [...prevNs.filter((prevN) => prevN.expiresOn * 1000 > Date.now()), ...ns]);
+              ns.forEach((n) => addToast(n));
             }
           })
           .catch(console.error);
@@ -279,16 +280,17 @@ const NotificationsProvider: React.FC = ({ children }) => {
         notifications,
         notificationsReadUntil,
         setNotificationsReadUntil: setNotificationsReadUntilHandler,
-      }}>
+      }}
+    >
       {children}
       {notificationsNode &&
         ReactDOM.createPortal(
           <>
-            {toasts.map(n => (
+            {toasts.map((n) => (
               <Toast key={n.id} n={n} onClose={removeToast} timeout={10_000} />
             ))}
           </>,
-          notificationsNode,
+          notificationsNode
         )}
     </NotificationsContext.Provider>
   );

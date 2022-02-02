@@ -48,7 +48,8 @@ const GeneralContextProvider: React.FC<Props> = ({ children }) => {
         toggleDarkTheme: () => {
           setTheme(theme === 'dark' ? 'light' : 'dark');
         },
-      }}>
+      }}
+    >
       {children}
     </GeneralContext.Provider>
   );

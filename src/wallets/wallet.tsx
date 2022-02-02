@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { useSessionStorage } from 'react-use-storage';
 import { Web3Provider } from '@ethersproject/providers';

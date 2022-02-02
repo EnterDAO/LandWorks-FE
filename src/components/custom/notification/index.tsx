@@ -216,7 +216,9 @@ function getData(n: NotificationType, reload: Function): [IconNames, [string, st
         colorPairs.blue,
         <Text type="p2" weight="semibold" color="secondary">
           {getStrongText(
-            `${getHumanValue(new BigNumber(n.metadata.amount ?? 0), EnterToken.decimals)?.toFixed()} v${EnterToken.symbol}`,
+            `${getHumanValue(new BigNumber(n.metadata.amount ?? 0), EnterToken.decimals)?.toFixed()} v${
+              EnterToken.symbol
+            }`
           )}{' '}
           has been delegated to you from{' '}
           <ExternalLink href={getEtherscanAddressUrl(n.metadata.from)} className="link-blue">
@@ -248,7 +250,8 @@ function getData(n: NotificationType, reload: Function): [IconNames, [string, st
           </Text>
           <Link
             to={`/smart-yield/pool?m=${n.metadata.protocolId}&t=${n.metadata.underlyingSymbol}`}
-            className="button-primary">
+            className="button-primary"
+          >
             Stake now
           </Link>
         </>,
