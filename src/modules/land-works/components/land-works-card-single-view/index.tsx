@@ -24,6 +24,7 @@ import {
   getDecentralandMarketplaceUrl,
   getEtherscanAddressUrl,
   shortenAddr,
+  getDecentralandPlayUrl,
 } from '../../../../web3/utils';
 
 import './index.scss';
@@ -172,6 +173,17 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
           <Col span={24} className="image-wrapper">
             <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)}></img>
             <EstateLandOverlay coordinates={asset?.decentralandData?.coordinates} />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+          <ExternalLink
+              className=""
+              target={'_blank'}
+              href={getDecentralandPlayUrl(asset?.decentralandData?.coordinates)}
+            >
+              <img style={{ marginRight: 5 }} src={chainPng} /> <span>Jump In</span>
+            </ExternalLink>
           </Col>
         </Row>
       </Col>

@@ -123,6 +123,17 @@ export function getDecentralandMarketplaceUrl(registry?: string, id?: string): s
   return undefined;
 }
 
+export function getDecentralandPlayUrl(coordinates?: any[]): string | undefined {
+  if(coordinates) {
+    const firstCoordinates = coordinates[0];
+    const x = firstCoordinates.x;
+    const y = firstCoordinates.y;
+    return `https://play.decentraland.org/?position=${x},${y}`;
+  }
+
+  return undefined;
+}
+
 export function getExponentValue(decimals = 0): BigNumber {
   return new BigNumber(10).pow(decimals);
 }
