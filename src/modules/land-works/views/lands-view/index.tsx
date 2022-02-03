@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { ConsoleView } from 'react-device-detect';
+import { SingleValue } from 'react-select';
 import { useSubscription } from '@apollo/client';
 import { end } from '@popperjs/core';
-import { Col, Pagination, Row } from 'antd';
-import BigNumber from 'bignumber.js';
+import { Col, Pagination, RadioChangeEvent, Row } from 'antd';
+import { SelectValue } from 'antd/lib/select';
 
+import { Option } from 'modules/interface';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card';
 import { LandsAction } from 'modules/land-works/components/lands-action';
@@ -51,7 +52,7 @@ const data = [
   },
 ];
 
-const Lands: React.FC = () => {
+const LandsView: React.FC = () => {
   const pageSizeOptions = ['6', '12', '24'];
   const sortColumns = ['totalRents', 'pricePerSecond', 'pricePerSecond'];
   const sortDirections = [SortDirection.DESC, SortDirection.ASC, SortDirection.DESC];
@@ -99,26 +100,27 @@ const Lands: React.FC = () => {
     }
   };
 
-  const onSortDirectionChange = (event: any) => {
-    const { value } = event;
+  const onSortDirectionChange = (value: SingleValue<Option>) => {
     const sortIndex = Number(value) - 1;
     setSortDir(sortDirections[sortIndex]);
     setSortColumn(sortColumns[sortIndex]);
     setPage(1);
   };
 
-  const onSortByAvailability = (availabilityEvent: any) => {
-    const checked = availabilityEvent?.target?.checked;
+  const onSortByAvailability = (e: RadioChangeEvent) => {
+    const checked = e?.target?.checked;
+
     if (checked !== undefined) {
       setByAvailability(checked);
     }
+
     setLastRentEnd(checked === true ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
     setPage(1);
   };
 
-  const onPlaceChange = (placeChangeEvent: any) => {
+  const onPlaceChange = (value: SelectValue) => {
     // TODO:: some filtering here
-    console.log(placeChangeEvent);
+    console.log(value);
   };
 
   const getAssets = async (
@@ -246,4 +248,4 @@ const Lands: React.FC = () => {
   );
 };
 
-export default Lands;
+export default LandsView;

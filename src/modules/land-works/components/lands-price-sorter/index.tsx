@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useRef, useState } from 'react';
-import Select, { components } from 'react-select';
+import Select, { ActionMeta, GroupBase, OptionsOrGroups, PropsValue, SingleValue, components } from 'react-select';
+
+import { Option } from 'modules/interface';
 
 const styles = {
   placeholder: () => ({
@@ -47,7 +50,7 @@ const styles = {
     ...defaultStyles,
     color: '#ffffff',
   }),
-  control: (base: any, state: any) => ({
+  control: (base: any) => ({
     ...base,
     fontFamily: 'Poppins, sans-serif',
     fontStyle: 'normal',
@@ -69,7 +72,7 @@ const styles = {
     minHeight: 'initial',
     width: '100%',
   }),
-  valueContainer: (base: any, state: any) => ({
+  valueContainer: (base: any) => ({
     ...base,
     padding: '0 0 0 8px',
     display: 'grid',
@@ -121,21 +124,21 @@ const styles = {
 };
 
 interface ILandsSorterProps {
-  onSortDirectionChange: (event: any) => void;
-  value?: any;
-  data: any;
+  onSortDirectionChange: (newValue: SingleValue<Option>, actionMeta: ActionMeta<Option>) => void;
+  value?: PropsValue<Option>;
+
+  data: OptionsOrGroups<any, GroupBase<any>> | undefined;
 }
 
-export const LandsPriceSorter: React.FC<ILandsSorterProps> = (props) => {
-  const { onSortDirectionChange, value, data } = props;
+export const LandsPriceSorter: React.FC<ILandsSorterProps> = ({ onSortDirectionChange, value, data }) => {
   const ref = useRef(null);
   const [isOpen, toggleIsOpen] = useState(false);
 
-  const handleToggle = (e: any) => {
+  const handleToggle = () => {
     toggleIsOpen(!isOpen);
   };
 
-  const Option = (props: any) => {
+  const OptionComponent = (props: any) => {
     const { data } = props;
 
     return (
@@ -180,7 +183,7 @@ export const LandsPriceSorter: React.FC<ILandsSorterProps> = (props) => {
         value={value}
         menuIsOpen={isOpen}
         components={{
-          Option,
+          Option: OptionComponent,
           ValueContainer,
           IndicatorSeparator: () => null,
         }}

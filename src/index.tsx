@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import Buffer from 'buffer';
 
 import ErrorBoundary from 'components/custom/error-boundary';
 import EthWeb3Provider from 'components/providers/eth-web3-provider';
@@ -18,6 +19,8 @@ import Web3WalletProvider from 'wallets/wallet';
 import { checkFlexGapSupport } from './checkFlexGap';
 import * as sw from './serviceWorker';
 import ScrollToTop from './top-scroll';
+
+global.Buffer = global.Buffer || Buffer;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.process = {} as any;

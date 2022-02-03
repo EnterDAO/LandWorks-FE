@@ -14,7 +14,7 @@ import { LandsAvailableSorter } from '../../components/lands-available-sorter';
 
 import './index.scss';
 
-const RentingView: React.FC = () => {
+const MyRentingView: React.FC = () => {
   const wallet = useWallet();
   const history = useHistory();
   const pageSizeOptions = ['6', '12', '24'];
@@ -139,4 +139,4 @@ const RentingView: React.FC = () => {
   );
 };
 
-export default RentingView;
+export default MyRentingView;

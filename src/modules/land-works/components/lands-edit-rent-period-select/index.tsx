@@ -1,5 +1,7 @@
-import React from 'react';
-import Select from 'react-select';
+import React, { ChangeEvent } from 'react';
+import Select, { ActionMeta, SingleValue } from 'react-select';
+
+import { Option } from 'modules/interface';
 
 import { LandsEditInput } from '../lands-edit-input';
 
@@ -122,16 +124,11 @@ const styles = {
   }),
 };
 
-type Item = {
-  label: string;
-  value: number | string;
-};
-
 interface IProps {
-  onChange: (event: any) => void;
-  onInputChange: (event: any) => void;
+  onChange: (newValue: SingleValue<Option>, actionMeta: ActionMeta<Option>) => void;
+  onInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
   options: any[];
-  initialValuе?: Item;
+  initialValuе?: Option;
   inputValue?: number;
   disabled?: boolean;
 }

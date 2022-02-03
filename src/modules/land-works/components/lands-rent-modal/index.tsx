@@ -30,24 +30,11 @@ type Props = ModalProps & {
   assetId?: string;
   pricePerSecond?: BigNumber;
   paymentToken?: PaymentToken;
-  renderProgress?: () => React.ReactNode;
-  renderSuccess?: () => React.ReactNode;
   onSubmit: () => void;
 };
 
 export const RentModal: React.FC<Props> = (props) => {
-  const {
-    txHash,
-    availability,
-    assetId,
-    pricePerSecond,
-    paymentToken,
-    onCancel,
-    renderProgress,
-    renderSuccess,
-    onSubmit,
-    ...modalProps
-  } = props;
+  const { availability, assetId, pricePerSecond, paymentToken, onCancel, onSubmit, ...modalProps } = props;
 
   const minStartDate = moment.unix(availability?.startRentDate || 0);
   const minRentPeriod = moment.unix(availability?.minRentDate || 0);
@@ -62,7 +49,7 @@ export const RentModal: React.FC<Props> = (props) => {
 
   const [editedValue, setEditedValue] = useState<string>(wallet.account || '');
   const [period, setPeriod] = useState(0);
-  const [endDate, setEndDate] = useState('');
+  const [, setEndDate] = useState('');
   const [totalPrice, setTotalPrice] = useState(new BigNumber(0));
   const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
   const [errMessage, setErrMessage] = useState<string>('');
@@ -87,7 +74,7 @@ export const RentModal: React.FC<Props> = (props) => {
 
   const calculatePrices = async () => {
     const decimalPrice = getHumanValue(new BigNumber(pricePerSecond || 0), paymentToken?.decimals);
-    const totalPrice = new BigNumber(period).multipliedBy(decimalPrice!);
+    const totalPrice = new BigNumber(period).multipliedBy(decimalPrice as BigNumber);
     setTotalPrice(totalPrice);
     const usdTokenPrice = getTokenPrice(paymentToken?.symbol || 'eth');
     const usdPrice = usdTokenPrice?.multipliedBy(totalPrice || 0);
@@ -98,6 +85,7 @@ export const RentModal: React.FC<Props> = (props) => {
     return paymentToken && paymentToken.id !== ONE_ADDRESS;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (e: any) => {
     setEditedValue(e.target.value);
   };
@@ -198,7 +186,7 @@ export const RentModal: React.FC<Props> = (props) => {
 
   useEffect(() => {
     calculatePrices();
-    setValue(new BigNumber(period).multipliedBy(pricePerSecond!));
+    setValue(new BigNumber(period).multipliedBy(pricePerSecond as BigNumber));
   }, [period]);
 
   useEffect(() => {

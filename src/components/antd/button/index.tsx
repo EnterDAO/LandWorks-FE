@@ -9,7 +9,7 @@ export type ButtonProps = Omit<AntdButtonProps, 'type'> & {
 };
 
 const Button: React.FC<ButtonProps> = (props) => {
-  const { children, className, type, ...btnProps } = props;
+  const { className, type, ...btnProps } = props;
 
   let btnType: AntdButtonType;
 

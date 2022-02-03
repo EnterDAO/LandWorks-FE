@@ -1,12 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import Select from 'react-select';
+import Select, { ActionMeta, SingleValue } from 'react-select';
+
+import { Option } from 'modules/interface';
 
 import './index.scss';
-
-type Item = {
-  label: string;
-  value: any;
-};
 
 const styles = {
   placeholder: () => ({
@@ -64,7 +62,7 @@ const styles = {
     ...defaultStyles,
     color: state.isDisabled ? '#666666' : '#ffffff',
   }),
-  control: (base: any, state: any) => ({
+  control: (base: any) => ({
     ...base,
     fontFamily: 'Poppins, sans-serif',
     fontStyle: 'normal',
@@ -86,7 +84,7 @@ const styles = {
     minHeight: 'initial',
     width: '100%',
   }),
-  valueContainer: (base: any, state: any) => ({
+  valueContainer: (base: any) => ({
     ...base,
     padding: '0 0 0 8px',
     display: 'grid',
@@ -136,9 +134,9 @@ const styles = {
 };
 
 interface IProps {
-  onChange: (event: any) => void;
-  options: Item[];
-  initialValuе: Item;
+  onChange: (newValue: SingleValue<Option>, actionMeta: ActionMeta<Option>) => void;
+  options: Option[];
+  initialValuе: Option;
   disabled?: boolean;
 }
 

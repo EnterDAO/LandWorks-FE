@@ -17,7 +17,7 @@ import { ClaimModal } from '../../components/lands-claim-modal';
 
 import './index.scss';
 
-const LendingView: React.FC = () => {
+const MyLendingView: React.FC = () => {
   const history = useHistory();
   const wallet = useWallet();
 
@@ -58,9 +58,8 @@ const LendingView: React.FC = () => {
     }
   }, [wallet.account]);
 
-  const onPlaceChange = (placeChangeEvent: () => void) => {
+  const onPlaceChange = () => {
     // TODO:: some filtering here
-    console.log(placeChangeEvent);
   };
 
   const onRentSortChange = (sortEvent: () => void) => {
@@ -138,4 +137,4 @@ const LendingView: React.FC = () => {
   );
 };
 
-export default LendingView;
+export default MyLendingView;
