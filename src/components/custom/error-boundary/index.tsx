@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from 'react';
 import AntdNotification from 'antd/lib/notification';
 import AntdResult from 'antd/lib/result';

@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
-import Icon, { TokenIconNames } from 'components/custom/icon';
+import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { Text } from 'components/custom/typography';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
@@ -17,8 +17,6 @@ import './index.scss';
 
 type Props = ModalProps & {
   rentFees?: AssetEntity[];
-  renderProgress?: () => React.ReactNode;
-  renderSuccess?: () => React.ReactNode;
   onSubmit: () => void;
 };
 
@@ -28,7 +26,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
   const landWorksCtx = useLandworks();
   const { landWorksContract } = landWorksCtx;
 
-  const { rentFees, renderProgress, renderSuccess, onCancel, onSubmit, ...modalProps } = props;
+  const { rentFees, onCancel, onSubmit, ...modalProps } = props;
 
   const [assets, setAssets] = useState([] as AssetEntity[]);
   const [totalEth, setTotalEth] = useState(BigNumber.ZERO);

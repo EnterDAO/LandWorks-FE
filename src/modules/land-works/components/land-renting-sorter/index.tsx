@@ -11,6 +11,7 @@ const options = [
   },
 ];
 interface ILandsPlaceSorterProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onRentSortChange: (event: any) => void;
 }
 

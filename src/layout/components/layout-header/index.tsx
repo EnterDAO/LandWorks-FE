@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
@@ -11,7 +12,6 @@ import Icon from 'components/custom/icon';
 import { useGeneral } from 'components/providers/general-provider';
 import { useWarning } from 'components/providers/warning-provider';
 import LandsNav from 'modules/land-works/components/lands-header-nav';
-import { LandsNavMobile } from 'modules/land-works/components/lands-header-nav-mobile';
 import { LandsTooltip } from 'modules/land-works/components/lands-tooltip';
 import ConnectedWallet from 'wallets/components/connected-wallet';
 import { useWallet } from 'wallets/wallet';

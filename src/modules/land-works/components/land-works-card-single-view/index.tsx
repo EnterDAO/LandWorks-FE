@@ -127,8 +127,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     }
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      await landWorksContract?.claimMultipleRentFees([asset!.id], onClaimSubmit);
+      await landWorksContract?.claimMultipleRentFees([asset?.id || ''], onClaimSubmit);
       showToastNotification(ToastType.Success, 'Rent claimed successfully!');
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while claiming the rent.');

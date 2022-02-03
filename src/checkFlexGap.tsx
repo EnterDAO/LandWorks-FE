@@ -1,4 +1,4 @@
-function checkFlexGapSupport() {
+export const checkFlexGapSupport = (): boolean => {
   // create flex container with row-gap set
   const flex = document.createElement('div');
   flex.style.display = 'flex';
@@ -15,6 +15,4 @@ function checkFlexGapSupport() {
   document.body.removeChild(flex);
 
   return isSupported;
-}
-
-export { checkFlexGapSupport };
+};

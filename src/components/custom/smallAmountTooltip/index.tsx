@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Tooltip } from 'antd';
 import BigNumber from 'bignumber.js';
 
@@ -8,7 +8,7 @@ interface ISmallAmountTooltip {
   amount: BigNumber;
   symbol?: string;
   className?: string;
-  icon?: any;
+  icon?: ReactElement;
 }
 const SmallAmountTooltip: React.FC<ISmallAmountTooltip> = ({ amount, symbol, className, icon }) => {
   const symbolNoSpace = ['$'];

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Input, Row } from 'antd';
 import BigNumber from 'bignumber.js';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
+import { RangeValue } from 'rc-picker/lib/interface';
 
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
+import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import { getTokenPrice } from '../../../../components/providers/known-tokens-provider';
@@ -49,7 +50,7 @@ export const RentModal: React.FC<Props> = (props) => {
 
   const [editedValue, setEditedValue] = useState<string>(wallet.account || '');
   const [period, setPeriod] = useState(0);
-  const [, setEndDate] = useState('');
+  // const [, setEndDate] = useState('');
   const [totalPrice, setTotalPrice] = useState(new BigNumber(0));
   const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
   const [errMessage, setErrMessage] = useState<string>('');
@@ -58,14 +59,14 @@ export const RentModal: React.FC<Props> = (props) => {
   const [approveDisabled, setApproveDisabled] = useState(false);
   const [rentDisabled, setRentDisabled] = useState(false);
 
-  const handleRentDateChange = (date: moment.Moment[]) => {
+  const handleRentDateChange = (values: RangeValue<Moment>) => {
     // Those are the start and the end dates, upon ok press
-    const start = date[0];
-    const end = date[1];
+    const start = (values as Moment[])[0];
+    const end = (values as Moment[])[1];
 
     const period = end.unix() - start.unix();
     setPeriod(period);
-    setEndDate(timestampSecondsToDate(end.unix().toString()));
+    // setEndDate(timestampSecondsToDate(end.unix().toString()));
   };
 
   const isYou = () => {

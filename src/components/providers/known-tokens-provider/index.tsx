@@ -50,7 +50,7 @@ export const EnterToken: TokenMeta = {
   symbol: KnownTokens.ENTR,
   name: 'EnterDAO Governance Token',
   decimals: 18,
-  icon: 'png/enterdao' as any,
+  icon: 'png/enterdao' as TokenIconNames,
   contract: new Erc20Contract([], config.tokens.entr),
 };
 
@@ -157,6 +157,7 @@ const KNOWN_TOKENS: TokenMeta[] = [
   UsdcEntrSLPToken,
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (window as any).KNOWN_TOKENS = KNOWN_TOKENS;
 
 export function getKnownTokens(): TokenMeta[] {
@@ -313,7 +314,7 @@ export function convertTokenInUSD(amount: BigNumber | number | undefined, source
   return convertTokenIn(amount, source, KnownTokens.USDC);
 }
 
-export async function getTokenPriceForDate(tokenSymbol: string, date: string) {
+export async function getTokenPriceForDate(tokenSymbol: string, date: string): Promise<number> {
   try {
     const token = getTokenBySymbol(tokenSymbol);
     if (!token?.coinGeckoId) {
