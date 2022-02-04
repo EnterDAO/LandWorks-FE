@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import { useSessionStorage } from 'react-use-storage';
 
 import ProtectedRoute from 'components/custom/protected-route';
-import { useWarning } from 'components/providers/warning-provider';
+import { useWarning } from 'providers/warning-provider';
 import { useWallet } from 'wallets/wallet';
 
 const RentingView = lazy(() => import('./views/my-renting-view'));

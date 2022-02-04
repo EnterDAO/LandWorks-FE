@@ -6,7 +6,7 @@ import s from './s.module.scss';
 
 export type InputProps = AntdInputProps;
 
-const Input: React.FC<InputProps> = props => {
+const Input: React.FC<InputProps> = (props) => {
   const { className, disabled, ...inputProps } = props;
 
   return (

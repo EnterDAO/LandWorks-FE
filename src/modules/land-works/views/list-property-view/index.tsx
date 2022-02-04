@@ -20,10 +20,10 @@ import BigNumber from 'bignumber.js';
 
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { getTokenPrice } from 'components/providers/known-tokens-provider';
 import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { DecentralandNFT, Option } from 'modules/interface';
+import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';

@@ -7,12 +7,12 @@ import { ToastContainer } from 'react-toastify';
 import Buffer from 'buffer';
 
 import ErrorBoundary from 'components/custom/error-boundary';
-import EthWeb3Provider from 'components/providers/eth-web3-provider';
-import GeneralContextProvider from 'components/providers/general-provider';
-import KnownTokensProvider from 'components/providers/known-tokens-provider';
-import NotificationsProvider from 'components/providers/notifications-provider';
-import WindowStateProvider from 'components/providers/window-state';
 import LayoutView from 'layout';
+import EthWeb3Provider from 'providers/eth-web3-provider';
+import GeneralContextProvider from 'providers/general-provider';
+import KnownTokensProvider from 'providers/known-tokens-provider';
+import NotificationsProvider from 'providers/notifications-provider';
+import WindowStateProvider from 'providers/window-state';
 import { ReactComponent as StaticSprite } from 'resources/svg/static-sprite.svg';
 import Web3WalletProvider from 'wallets/wallet';
 

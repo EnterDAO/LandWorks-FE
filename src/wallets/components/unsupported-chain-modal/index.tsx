@@ -5,8 +5,8 @@ import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Grid from 'components/custom/grid';
 import { Text } from 'components/custom/typography';
-import { useEthWeb3 } from 'components/providers/eth-web3-provider';
 import { networks } from 'helpers/chain-configurations';
+import { useEthWeb3 } from 'providers/eth-web3-provider';
 import { useWallet } from 'wallets/wallet';
 
 export type UnsupportedChainModalProps = ModalProps;

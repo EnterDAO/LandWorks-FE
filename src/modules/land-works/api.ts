@@ -5,7 +5,8 @@ import { gql } from '@apollo/client';
 import BigNumber from 'bignumber.js';
 import { constants } from 'ethers';
 
-import { getUsdPrice } from '../../components/providers/known-tokens-provider';
+import { getUsdPrice } from 'providers/known-tokens-provider';
+
 import { GraphClient } from '../../web3/graph/client';
 import { AssetStatus } from './models/AssetStatus';
 

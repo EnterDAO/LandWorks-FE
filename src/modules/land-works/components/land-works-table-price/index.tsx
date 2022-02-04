@@ -4,8 +4,8 @@ import { ethers } from 'ethers';
 
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { getTokenPriceForDate } from 'components/providers/known-tokens-provider';
 import { getTokenIconName, timestampSecondsToUTCDate } from 'helpers/helpers';
+import { getTokenPriceForDate } from 'providers/known-tokens-provider';
 
 import './index.scss';
 

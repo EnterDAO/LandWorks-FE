@@ -1,7 +1,7 @@
 import React from 'react';
 import useInterval from '@rooks/use-interval';
 
-import { useWindowState } from 'components/providers/window-state';
+import { useWindowState } from 'providers/window-state';
 
 export type UseLeftTimeOptions = {
   end: number | Date;

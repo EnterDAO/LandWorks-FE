@@ -13,7 +13,7 @@ import Icon from 'components/custom/icon';
 // import IconNotification from 'components/custom/icon-notification';
 import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
-// import { useNotifications } from 'components/providers/notifications-provider';
+// import { useNotifications } from 'providers/notifications-provider';
 import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';

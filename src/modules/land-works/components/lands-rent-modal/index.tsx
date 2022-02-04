@@ -3,25 +3,25 @@ import { Col, Input, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 import moment, { Moment } from 'moment';
 import { RangeValue } from 'rc-picker/lib/interface';
+import { ONE_ADDRESS, getHumanValue } from 'web3/utils';
 
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import config from 'config';
 import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
+import { getTokenPrice } from 'providers/known-tokens-provider';
+import { useWallet } from 'wallets/wallet';
 
-import { getTokenPrice } from '../../../../components/providers/known-tokens-provider';
-import config from '../../../../config';
-import { useWallet } from '../../../../wallets/wallet';
 import { AssetAvailablity, PaymentToken } from '../../api';
 import { useErc20 } from '../../providers/erc20-provider';
 import { useLandworks } from '../../providers/landworks-provider';
 import { RentDatePicker } from '../lands-rent-date-picker';
 import { LandsTooltip } from '../lands-tooltip';
 
-import { getTimeType, isValidAddress, secondsToDuration } from '../../../../utils';
-import { ONE_ADDRESS, getHumanValue } from '../../../../web3/utils';
+import { getTimeType, isValidAddress, secondsToDuration } from 'utils';
 
 import './index.scss';
 

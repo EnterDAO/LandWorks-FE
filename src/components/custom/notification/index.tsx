@@ -15,10 +15,10 @@ import { getEtherscanAddressUrl, getHumanValue, shortenAddr } from 'web3/utils';
 import Icon, { IconNames } from 'components/custom/icon';
 import IconNotification from 'components/custom/icon-notification';
 import { Text } from 'components/custom/typography';
-import { NotificationType, useNotifications } from 'components/providers/notifications-provider';
 import { useReload } from 'hooks/useReload';
+import { EnterToken } from 'providers/known-tokens-provider';
+import { NotificationType, useNotifications } from 'providers/notifications-provider';
 
-import { EnterToken } from '../../providers/known-tokens-provider';
 import ExternalLink from '../externalLink';
 import NotificationIcon from './icon';
 

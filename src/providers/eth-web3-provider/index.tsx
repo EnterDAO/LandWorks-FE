@@ -1,8 +1,8 @@
 import React from 'react';
 import Web3 from 'web3';
 
-import { useWindowState } from 'components/providers/window-state';
 import config from 'config';
+import { useWindowState } from 'providers/window-state';
 
 export const HttpsWeb3Provider = new Web3.providers.HttpProvider(config.web3.rpc.httpsUrl);
 export const WssWeb3Provider = new Web3.providers.WebsocketProvider(config.web3.rpc.wssUrl);

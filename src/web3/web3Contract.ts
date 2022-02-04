@@ -10,7 +10,7 @@ import { AbiItem } from 'web3-utils';
 import { getGasValue } from 'web3/utils';
 import EventEmitter from 'wolfy87-eventemitter';
 
-import { DEFAULT_WEB3, DEFAULT_WEB3_PROVIDER, WEB3_ERROR_VALUE } from 'components/providers/eth-web3-provider';
+import { DEFAULT_WEB3, DEFAULT_WEB3_PROVIDER, WEB3_ERROR_VALUE } from 'providers/eth-web3-provider';
 
 export type Web3ContractAbiItem = AbiItem;
 
