@@ -4,7 +4,7 @@ import { Col, ConfigProvider, Empty, Row, Table } from 'antd';
 import { uniqueId } from 'lodash';
 
 import ExternalLink from 'components/custom/externalLink';
-import { timestampSecondsToDate } from 'helpers/helpers';
+import { getENSName, timestampSecondsToDate } from 'helpers/helpers';
 
 import EmptyTable from '../../../../resources/svg/empty-table.svg';
 import { useWallet } from '../../../../wallets/wallet';
@@ -79,13 +79,20 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
           isYou = true;
           showText += ` (you)`;
         }
+        const [ens, setEns] = useState<string>();
+        useEffect(() => {
+          if (text)
+            getENSName(text).then((ensName) => {
+              setEns(ensName);
+            });
+        }, [text]);
 
         return (
           <ExternalLink
             href={getEtherscanAddressUrl(text.toLowerCase())}
             className={`${isYou ? 'by-you-text' : 'by-text'}`}
           >
-            {showText}
+            {ens && ens !== text ? ens : showText}
           </ExternalLink>
         );
       },
@@ -124,9 +131,16 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
         const now = getNowTs();
         const isActiveRent = Number(data.start) <= now && now < Number(data.end);
         const isUpcomingRent = Number(data.start) >= now;
+        const [ens, setEns] = useState<string>();
+        useEffect(() => {
+          if (operator)
+            getENSName(operator).then((ensName) => {
+              setEns(ensName);
+            });
+        }, [operator]);
         return (
           <TableInput
-            operator={operator}
+            operator={ens && ens !== operator ? ens : operator}
             assetId={assetId}
             rentId={data.id}
             renter={data.renterAddress}

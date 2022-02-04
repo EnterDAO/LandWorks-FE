@@ -1,5 +1,7 @@
 import format from 'date-fns/format';
 import fromUnixTime from 'date-fns/fromUnixTime';
+import { ethers } from 'ethers';
+
 
 import { AssetEntity } from 'modules/land-works/api';
 
@@ -60,4 +62,10 @@ export const getTokenIconName = (tokenSymbol: string) => {
     default:
       return 'png/eth';
   }
+};
+
+export const getENSName = async (address: string) => {
+  const prov = new ethers.providers.InfuraProvider();
+  const ensName = await prov.lookupAddress(address);
+  return ensName ? ensName : address;
 };
