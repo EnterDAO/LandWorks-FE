@@ -27,8 +27,8 @@ export type GasFeeListProps = RadioGroupProps & {
   onChange?: (value: GasFeeOption) => void;
 };
 
-const GasFeeList: React.FC<GasFeeListProps> = props => {
-  const { className, value, onChange, ...groupProps } = props;
+const GasFeeList: React.FC<GasFeeListProps> = (props) => {
+  const { className, value, ...groupProps } = props;
 
   const [state, setState] = useMergeState<GasFeeListState>({
     options: [],
@@ -42,7 +42,7 @@ const GasFeeList: React.FC<GasFeeListProps> = props => {
     });
 
     fetchGasPrice()
-      .then(result => {
+      .then((result) => {
         const options = [
           {
             key: 'fastest',
@@ -100,12 +100,13 @@ const GasFeeList: React.FC<GasFeeListProps> = props => {
       style={{ width: '100%' }}
       {...groupProps}
       value={state.selected}
-      onChange={handleChange}>
+      onChange={handleChange}
+    >
       {state.loading ? (
         <AntdSpin />
       ) : (
         <div className={s.list}>
-          {state.options.map(option => (
+          {state.options.map((option) => (
             <RadioButton
               key={option.key}
               label={
