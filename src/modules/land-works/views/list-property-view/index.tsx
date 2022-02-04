@@ -244,7 +244,7 @@ const ListPropertyView: React.FC = () => {
     try {
       let approvedAddress = DEFAULT_ADDRESS;
       if (selectedProperty.isLAND) {
-        // const tx = await landRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
+        await landRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
         approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
       } else {
         await estateRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
@@ -440,7 +440,7 @@ const ListPropertyView: React.FC = () => {
                         <EditViewLandDropdown
                           options={PlaceOptions}
                           onChange={handlePlaceChange}
-                          initialValuе={PlaceOptions[0]}
+                          initialValue={PlaceOptions[0]}
                         />
                       </Col>
                     </Row>
@@ -454,7 +454,7 @@ const ListPropertyView: React.FC = () => {
                         <EditViewLandDropdown
                           options={properties}
                           onChange={handlePropertyChange}
-                          initialValuе={initialProperty}
+                          initialValue={initialProperty}
                         />
                       </Col>
                     </Row>
@@ -474,7 +474,7 @@ const ListPropertyView: React.FC = () => {
                           options={MinRentPeriodOptions}
                           onChange={handleMinSelectChange}
                           onInputChange={handleMinInputChange}
-                          initialValuе={minPeriodSelectedOption}
+                          initialValue={minPeriodSelectedOption}
                           inputValue={minInput?.toNumber()}
                           disabled={!isMinPeriodSelected}
                         />
@@ -490,7 +490,7 @@ const ListPropertyView: React.FC = () => {
                           options={MaxRentPeriodOptions}
                           onChange={handleMaxSelectChange}
                           onInputChange={handleMaxInputChange}
-                          initialValuе={maxPeriodSelectedOption}
+                          initialValue={maxPeriodSelectedOption}
                           inputValue={maxInput?.toNumber()}
                           disabled={!isMaxPeriodSelected}
                         />
@@ -513,7 +513,7 @@ const ListPropertyView: React.FC = () => {
                     options={AtMostRentPeriodOptions}
                     onChange={handleAtMostSelectChange}
                     onInputChange={handleAtMostInputChange}
-                    initialValuе={maxFutureSelectedOption}
+                    initialValue={maxFutureSelectedOption}
                     inputValue={maxFutureTimeInput?.toNumber()}
                   />
                   <span style={{ marginLeft: '15px' }}>in the future</span>
