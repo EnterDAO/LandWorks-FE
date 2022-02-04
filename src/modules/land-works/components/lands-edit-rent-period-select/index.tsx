@@ -129,7 +129,7 @@ interface IProps {
   onChange: (newValue: SingleValue<Option>, actionMeta: ActionMeta<Option>) => void;
   onInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
   options: any[];
-  initialValuе?: Option;
+  initialValue?: Option;
   inputValue?: number;
   disabled?: boolean;
 }
@@ -138,7 +138,7 @@ export const LandsEditPeriodDropdown: React.FC<IProps> = ({
   onChange,
   onInputChange,
   options,
-  initialValuе,
+  initialValue,
   inputValue,
   disabled,
 }) => {
@@ -148,7 +148,7 @@ export const LandsEditPeriodDropdown: React.FC<IProps> = ({
       <Select
         options={options}
         isDisabled={disabled}
-        value={initialValuе}
+        value={initialValue}
         onChange={onChange}
         className="lands-period-drop"
         styles={styles}

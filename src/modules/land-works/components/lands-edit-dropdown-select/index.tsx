@@ -136,16 +136,16 @@ const styles = {
 interface IProps {
   onChange: (newValue: SingleValue<Option>, actionMeta: ActionMeta<Option>) => void;
   options: Option[];
-  initialValuе: Option;
+  initialValue: Option;
   disabled?: boolean;
 }
 
-export const EditViewLandDropdown: React.FC<IProps> = ({ onChange, options, initialValuе, disabled }) => {
+export const EditViewLandDropdown: React.FC<IProps> = ({ onChange, options, initialValue, disabled }) => {
   return (
     <Select
       options={options}
       isDisabled={disabled}
-      value={initialValuе}
+      value={initialValue}
       onChange={onChange}
       className="drop-select"
       styles={styles}

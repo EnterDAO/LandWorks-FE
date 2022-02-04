@@ -448,7 +448,7 @@ const EditPropertyView: React.FC = () => {
                           onChange={() => {
                             console.log('');
                           }}
-                          initialValuе={PlaceOptions[0]}
+                          initialValue={PlaceOptions[0]}
                           disabled={true}
                         />
                       </Col>
@@ -465,7 +465,7 @@ const EditPropertyView: React.FC = () => {
                           onChange={() => {
                             console.log('');
                           }}
-                          initialValuе={initialProperty}
+                          initialValue={initialProperty}
                           disabled={true}
                         />
                       </Col>
@@ -484,7 +484,7 @@ const EditPropertyView: React.FC = () => {
                           options={MinRentPeriodOptions}
                           onChange={handleMinSelectChange}
                           onInputChange={handleMinInputChange}
-                          initialValuе={minPeriodSelectedOption}
+                          initialValue={minPeriodSelectedOption}
                           inputValue={minInput?.toNumber()}
                           disabled={!isMinPeriodSelected}
                         />
@@ -500,7 +500,7 @@ const EditPropertyView: React.FC = () => {
                           options={MaxRentPeriodOptions}
                           onChange={handleMaxSelectChange}
                           onInputChange={handleMaxInputChange}
-                          initialValuе={maxPeriodSelectedOption}
+                          initialValue={maxPeriodSelectedOption}
                           inputValue={maxInput?.toNumber()}
                           disabled={!isMaxPeriodSelected}
                         />
@@ -520,7 +520,7 @@ const EditPropertyView: React.FC = () => {
                   options={AtMostRentPeriodOptions}
                   onChange={handleAtMostSelectChange}
                   onInputChange={handleAtMostInputChange}
-                  initialValuе={maxFutureSelectedOption}
+                  initialValue={maxFutureSelectedOption}
                   inputValue={maxFutureTimeInput?.toNumber()}
                 />
                 <span style={{ marginLeft: '15px' }}>in the future</span>
