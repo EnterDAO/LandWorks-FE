@@ -1,4 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
+
+import { ReactComponent as Search } from './assets/search.svg';
+
+import './index.scss';
 
 interface SearchQuery {
   searchQuery: string;
@@ -6,15 +10,17 @@ interface SearchQuery {
 }
 
 export const SearchBar = ({ searchQuery, setSearchQuery }: SearchQuery) => (
-  <form action="/" method="get">
-    <input
-      value={searchQuery}
-      onInput={(e) => setSearchQuery((e.target as HTMLInputElement).value)}
-      type="text"
-      id="header-search"
-      placeholder="Search by name"
-      name="s"
-    />
-    <button type="submit">Search</button>
-  </form>
+  <div className="wrapper">
+    <form action="/" method="get">
+      <input
+        value={searchQuery}
+        onInput={(e) => setSearchQuery((e.target as HTMLInputElement).value)}
+        type="text"
+        id="header-search"
+        placeholder="Search by name"
+        name="s"
+      />
+    </form>
+    <Search />
+  </div>
 );

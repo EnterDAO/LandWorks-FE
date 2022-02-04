@@ -1,0 +1,21 @@
+.wrapper {
+  background: #27273a;
+  border: none;
+  border-radius: 50px;
+  padding: 9px 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 14px;
+}
+
+input {
+  background: none;
+  border: none;
+  color: white;
+}
+
+input::placeholder {
+  color: white;
+}

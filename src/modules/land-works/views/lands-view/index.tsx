@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import { end } from '@popperjs/core';
 import { Col, Pagination, Row } from 'antd';
@@ -70,9 +71,18 @@ const Lands: React.FC = () => {
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const history = useHistory();
   const { search } = window.location;
-  const query = new URLSearchParams(search).get('s');
+  const searchParams = new URLSearchParams(search);
+  const query = searchParams.get('s');
   const [searchQuery, setSearchQuery] = useState(query || '');
+
+  useEffect(() => {
+    console.log('setting searchParams');
+    searchParams.set('s', searchQuery);
+    console.log({ searchQuery, searchParams });
+    history.push({ search: searchParams.toString() });
+  }, [searchQuery]);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -136,6 +146,10 @@ const Lands: React.FC = () => {
   };
 
   const filteredLands = filterLandsByQuery(lands, searchQuery);
+
+  const paginationLength = query && query != '' ? filteredLands.length : totalLands;
+
+  console.log({ paginationLength, query, filteredLands, totalLands });
 
   const getAssets = async (
     page: number,
@@ -242,7 +256,7 @@ const Lands: React.FC = () => {
             <Pagination
               locale={{ items_per_page: '' }}
               current={page}
-              total={totalLands}
+              total={paginationLength}
               defaultPageSize={pageSize}
               showSizeChanger
               pageSizeOptions={pageSizeOptions}
