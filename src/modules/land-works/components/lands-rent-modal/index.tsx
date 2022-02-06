@@ -49,7 +49,9 @@ export const RentModal: React.FC<Props> = (props) => {
     ...modalProps
   } = props;
 
-  const minStartDate = moment.unix(availability?.startRentDate || 0);
+  // added one minute each to be able to choose if MIN & MAX
+  const fixedMinStartRentDate = availability?.startRentDate ? availability?.startRentDate + 60 : 0;
+  const minStartDate = moment.unix(fixedMinStartRentDate);
   const minRentPeriod = moment.unix(availability?.minRentDate || 0);
   const maxEndDate = moment.unix(availability?.maxRentDate || 0);
 
