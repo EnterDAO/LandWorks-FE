@@ -67,20 +67,19 @@ const Lands: React.FC = () => {
   const [sortDir, setSortDir] = useState(sortDirections[0]);
   const [byAvailability, setByAvailability] = useState(false);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(+pageSizeOptions[0]);
-  const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const history = useHistory();
   const { search } = window.location;
   const searchParams = new URLSearchParams(search);
+
   const query = searchParams.get('s');
   const [searchQuery, setSearchQuery] = useState(query || '');
+  const [pageSize, setPageSize] = useState(+pageSizeOptions[0]);
+  const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log('setting searchParams');
     searchParams.set('s', searchQuery);
-    console.log({ searchQuery, searchParams });
     history.push({ search: searchParams.toString() });
   }, [searchQuery]);
 
@@ -100,6 +99,10 @@ const Lands: React.FC = () => {
       setUser(parseUser(subscriptionData.data.user));
     },
   });
+
+  useEffect(() => {
+    searchQuery ? setPageSize(100) : setPageSize(+pageSizeOptions[0]);
+  }, [searchQuery]);
 
   const onPaginationChange = (page: number, newPageSize?: number | undefined) => {
     setPage(page);
@@ -146,10 +149,7 @@ const Lands: React.FC = () => {
   };
 
   const filteredLands = filterLandsByQuery(lands, searchQuery);
-
   const paginationLength = query && query != '' ? filteredLands.length : totalLands;
-
-  console.log({ paginationLength, query, filteredLands, totalLands });
 
   const getAssets = async (
     page: number,
@@ -253,15 +253,17 @@ const Lands: React.FC = () => {
         </Col>
         {!!lands.length && (
           <Col span={24} className="lands-pagination">
-            <Pagination
-              locale={{ items_per_page: '' }}
-              current={page}
-              total={paginationLength}
-              defaultPageSize={pageSize}
-              showSizeChanger
-              pageSizeOptions={pageSizeOptions}
-              onChange={onPaginationChange}
-            />
+            {searchQuery === '' && (
+              <Pagination
+                locale={{ items_per_page: '' }}
+                current={page}
+                total={paginationLength}
+                defaultPageSize={pageSize}
+                showSizeChanger
+                pageSizeOptions={query ? ['100'] : pageSizeOptions}
+                onChange={onPaginationChange}
+              />
+            )}
           </Col>
         )}
       </Row>
