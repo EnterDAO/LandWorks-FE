@@ -8,14 +8,20 @@
   align-items: center;
   color: white;
   font-size: 14px;
-}
 
-input {
-  background: none;
-  border: none;
-  color: white;
-}
+  input {
+    background: none;
+    border: none;
+    color: white;
+  }
 
-input::placeholder {
-  color: white;
+  input::placeholder {
+    color: white;
+  }
+
+  form:-webkit-autofill,
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 50px #27273a inset;
+    -webkit-text-fill-color: white !important;
+  }
 }
