@@ -128,6 +128,7 @@ const styles = {
 interface IProps {
   onChange: (newValue: SingleValue<Option>, actionMeta: ActionMeta<Option>) => void;
   onInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options: any[];
   initialValue?: Option;
   inputValue?: number;
