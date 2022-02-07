@@ -1,5 +1,5 @@
 .wrapper {
-  background: #27273a;
+  background: var(--theme-modal-color);
   border: none;
   border-radius: 50px;
   padding: 9px 15px;
@@ -21,7 +21,7 @@
 
   form:-webkit-autofill,
   input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 50px #27273a inset;
+    -webkit-box-shadow: 0 0 0 50px var(--theme-modal-color) inset !important;
     -webkit-text-fill-color: white !important;
   }
 }
