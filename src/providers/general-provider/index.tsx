@@ -9,6 +9,7 @@ export type GeneralContextType = {
   toggleDarkTheme: () => void;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const GeneralContext = React.createContext<GeneralContextType>({} as any);
 
 const mqlDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -48,7 +49,8 @@ const GeneralContextProvider: React.FC<Props> = ({ children }) => {
         toggleDarkTheme: () => {
           setTheme(theme === 'dark' ? 'light' : 'dark');
         },
-      }}>
+      }}
+    >
       {children}
     </GeneralContext.Provider>
   );

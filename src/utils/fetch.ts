@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import QueryString from 'query-string';
 
 export function queryfy(obj: Record<string, any>): string {

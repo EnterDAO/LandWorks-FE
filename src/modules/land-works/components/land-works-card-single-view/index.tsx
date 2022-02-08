@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
 import Countdown, { CountdownTimeDelta } from 'react-countdown';
 import { Col, Row } from 'antd';
@@ -22,9 +23,9 @@ import { getNowTs } from '../../../../utils';
 import {
   ZERO_BIG_NUMBER,
   getDecentralandMarketplaceUrl,
+  getDecentralandPlayUrl,
   getEtherscanAddressUrl,
   shortenAddr,
-  getDecentralandPlayUrl,
 } from '../../../../web3/utils';
 
 import './index.scss';
@@ -127,7 +128,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     }
 
     try {
-      await landWorksContract?.claimMultipleRentFees([asset!.id], onClaimSubmit);
+      await landWorksContract?.claimMultipleRentFees([asset?.id || ''], onClaimSubmit);
       showToastNotification(ToastType.Success, 'Rent claimed successfully!');
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while claiming the rent.');
@@ -146,15 +147,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
       setCountDownTimestamp('0');
     };
   }, []);
-
-  const flexFont = () => {
-    const divs = document.getElementsByClassName('price-eth');
-    for (let i = 0; i < divs.length; i++) {
-      const element = divs[i] as HTMLElement;
-      const relFontsize = element.offsetWidth * 0.05;
-      element.style.fontSize = relFontsize + 'px';
-    }
-  };
 
   const renderCountdown = (props: CountdownTimeDelta) => {
     const days = props.days > 0 ? `${props.days} days ` : '';
@@ -177,7 +169,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
         </Row>
         <Row>
           <Col span={24}>
-          <ExternalLink
+            <ExternalLink
               className=""
               target={'_blank'}
               href={getDecentralandPlayUrl(asset?.decentralandData?.coordinates)}

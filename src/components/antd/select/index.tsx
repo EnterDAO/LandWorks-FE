@@ -25,7 +25,7 @@ export type SelectProps<T> = AntdSelectProps<T> & {
 };
 
 const Select: React.FC<SelectProps<AntdSelectValue>> = <T extends AntdSelectValue>(
-  props: React.PropsWithChildren<SelectProps<T>>,
+  props: React.PropsWithChildren<SelectProps<T>>
 ) => {
   const { className, label, loading, options, fixScroll, ...selectProps } = props;
 
@@ -35,9 +35,10 @@ const Select: React.FC<SelectProps<AntdSelectValue>> = <T extends AntdSelectValu
       dropdownClassName={s.dropdown}
       suffixIcon={loading ? <AntdSpin size="small" /> : <Icon name="dropdown-arrow" />}
       optionLabelProp="label"
-      getPopupContainer={fixScroll ? trigger => trigger.parentNode : undefined}
-      {...selectProps}>
-      {options.map(option => (
+      getPopupContainer={fixScroll ? (trigger) => trigger.parentNode : undefined}
+      {...selectProps}
+    >
+      {options.map((option) => (
         <AntdSelect.Option
           {...option}
           className={s.option}
@@ -54,7 +55,8 @@ const Select: React.FC<SelectProps<AntdSelectValue>> = <T extends AntdSelectValu
               </Text>
             </Grid>
           }
-          value={option.value}>
+          value={option.value}
+        >
           {option.label}
         </AntdSelect.Option>
       ))}

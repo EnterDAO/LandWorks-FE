@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { gql, useSubscription } from '@apollo/client';
+import { useSubscription } from '@apollo/client';
 import { Col, ConfigProvider, Empty, Row, Table } from 'antd';
 import { uniqueId } from 'lodash';
 
@@ -98,7 +98,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
     {
       title: 'To',
       dataIndex: 'end',
-      render: (end: string, record: RentEntity, index: any) => {
+      render: (end: string, record: RentEntity) => {
         let isUpcoming = false;
         let isActive = false;
         const now = getNowTs();
@@ -120,6 +120,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
     {
       title: 'Configured operator',
       dataIndex: 'operator',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (operator: string, data: any) => {
         const now = getNowTs();
         const isActiveRent = Number(data.start) <= now && now < Number(data.end);
@@ -144,6 +145,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
     {
       title: 'Cost',
       dataIndex: 'cost',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (amount: string, data: any) => (
         <LandTablePrice
           tokenDecimals={data.paymentToken.decimals}

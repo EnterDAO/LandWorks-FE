@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink, useHistory, withRouter } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { Menu } from 'antd';
 
 import './index.scss';
 
 const LandsNav: React.FC = () => {
-  const history = useHistory();
-
   const allPathname = '/all';
   const rentingPathname = '/renting';
   const lendingPathname = '/lending';

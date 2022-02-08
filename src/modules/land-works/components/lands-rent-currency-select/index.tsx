@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import Select, { components } from 'react-select';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from 'react';
+import Select, { SingleValue, components } from 'react-select';
 
-import Icon, { TokenIconNames } from 'components/custom/icon';
+import Icon from 'components/custom/icon';
 import { getTokenIconName } from 'helpers/helpers';
+import { PaymentToken } from 'modules/land-works/api';
 
 const styles = {
   container: (defaultStyles: any) => ({
@@ -33,7 +35,7 @@ const styles = {
     caretColor: 'transparent',
     cursor: 'pointer',
   }),
-  control: (base: any, state: any) => ({
+  control: (base: any) => ({
     ...base,
     fontFamily: 'Space Grotesk, sans-serif',
     fontStyle: 'normal',
@@ -55,7 +57,7 @@ const styles = {
     minHeight: 'initial',
     width: '100%',
   }),
-  valueContainer: (base: any, state: any) => ({
+  valueContainer: (base: any) => ({
     ...base,
     padding: '0 0 0 8px',
     display: 'flex',
@@ -85,10 +87,14 @@ const styles = {
   }),
 };
 
-const CurrencyDropdown = (props: any) => {
-  const { changeHandler, paymentTokens, value } = props;
+interface IProps {
+  changeHandler: (newValue: SingleValue<PaymentToken>) => void;
+  paymentTokens: PaymentToken[];
+  value: SingleValue<PaymentToken>;
+}
 
-  const Option = (props: any) => {
+const CurrencyDropdown: React.FC<IProps> = ({ changeHandler, paymentTokens, value }) => {
+  const OptionComponent = (props: any) => {
     const { data } = props;
 
     return (
@@ -135,7 +141,7 @@ const CurrencyDropdown = (props: any) => {
       onChange={changeHandler}
       value={value}
       components={{
-        Option,
+        Option: OptionComponent,
         ValueContainer,
         IndicatorSeparator: () => null,
       }}

@@ -49,7 +49,7 @@
 
 .hamburger {
   border: 1px solid #414163;
-  background: #27273A;
+  background: #27273a;
   border-radius: 23px;
   padding: 10px 15px 10px 15px;
 
@@ -114,14 +114,13 @@
 }
 
 .loadingBackground {
-  background: linear-gradient(98.73deg, #DD3DCB 0%, #EF9C92 100%) !important;
+  background: linear-gradient(98.73deg, #dd3dcb 0%, #ef9c92 100%) !important;
   z-index: 10000;
 }
 
-
 #txPopoverContainer {
   padding: 30px 10px 10px 10px;
-  background: #27273A;
+  background: #27273a;
   border-radius: 10px;
 }
 
@@ -132,15 +131,10 @@
   margin-top: 10px;
   text-align: center;
   margin-bottom: 18px;
-
-}
-
-#txStatus {
-  
 }
 
 #txEtherscanLink {
-  color: #D92687;
+  color: #d92687;
   cursor: pointer;
 }
 

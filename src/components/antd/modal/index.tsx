@@ -15,7 +15,7 @@ export type ModalProps = AntdModalProps & {
   onCancel: (e?: React.MouseEvent<HTMLElement>) => void;
 };
 
-const Modal: React.FC<ModalProps> = props => {
+const Modal: React.FC<ModalProps> = (props) => {
   const { className, children, confirmClose = false, confirmText, onCancel, ...modalProps } = props;
 
   const [confirmVisible, showConfirm] = React.useState<boolean>(false);
@@ -37,7 +37,8 @@ const Modal: React.FC<ModalProps> = props => {
       footer={null}
       closeIcon={<Icon name="close-circle-outlined" />}
       onCancel={handleCancel}
-      {...modalProps}>
+      {...modalProps}
+    >
       {children}
 
       {confirmVisible && (
@@ -48,7 +49,8 @@ const Modal: React.FC<ModalProps> = props => {
           centered
           footer={null}
           closeIcon={<></>}
-          onCancel={() => showConfirm(false)}>
+          onCancel={() => showConfirm(false)}
+        >
           <Grid flow="row" gap={32}>
             <Text type="p2" weight="semibold" color="secondary">
               {confirmText}

@@ -13,13 +13,13 @@ export function mergeState<S>(state: Partial<S>): (prevState: S) => S {
 
 function useMergeState<S>(
   initialState: S | (() => S),
-  callback?: (state: S) => void,
+  callback?: (state: S) => void
 ): [S, React.Dispatch<MergeStateUpdate<S>>] {
   const [state, set] = React.useState<S>(initialState);
 
   const setState = React.useCallback(
     (updater: MergeStateUpdate<S>) => {
-      set(prev => {
+      set((prev) => {
         const next = {
           ...prev,
           ...(typeof updater === 'function' ? (updater as (value: S) => S)(prev) : updater),
@@ -32,7 +32,7 @@ function useMergeState<S>(
         return next;
       });
     },
-    [callback],
+    [callback]
   );
 
   return [state, setState];

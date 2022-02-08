@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { WalletLinkConnector } from '@web3-react/walletlink-connector';
 
@@ -28,7 +29,7 @@ const CoinbaseWalletConfig: WalletConnector = {
     connector?.close();
   },
   onError(error: Error): Error | undefined {
-    const { code } = (error as any) as { code: number };
+    const { code } = error as any as { code: number };
 
     if (code === 4001) {
       // USER_DENIED_REQUEST_ACCOUNTS

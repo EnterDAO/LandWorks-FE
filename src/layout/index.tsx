@@ -1,15 +1,15 @@
 import React, { Suspense, lazy } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 import AntdSpin from 'antd/lib/spin';
 
 import ErrorBoundary from 'components/custom/error-boundary';
-import WarningProvider from 'components/providers/warning-provider';
 import LayoutFooter from 'layout/components/layout-footer';
 import LayoutHeader from 'layout/components/layout-header';
 import EstateRegistryProvider from 'modules/land-works/providers/decentraland/estate-registry-provider';
 import LandRegistryProvider from 'modules/land-works/providers/decentraland/land-registry-provider';
 import LandWorksProvider from 'modules/land-works/providers/landworks-provider';
+import WarningProvider from 'providers/warning-provider';
 
 import Erc20Provider from '../modules/land-works/providers/erc20-provider';
 import { GraphClient } from '../web3/graph/client';

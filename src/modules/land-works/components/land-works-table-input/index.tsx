@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Input } from 'antd';
 import web3 from 'web3';
@@ -57,6 +57,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
 
           setDisabled(true);
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         showToastNotification(ToastType.Error, 'There was an error while updating the operator.');
         console.log(err.message);
@@ -64,7 +65,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
     }
   };
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNewOperator(e.target.value);
   };
 

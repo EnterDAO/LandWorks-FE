@@ -22,7 +22,7 @@ export type GridProps = {
   width?: string | number;
 };
 
-const Grid: React.FC<GridProps> = props => {
+const Grid: React.FC<GridProps> = (props) => {
   const {
     className,
     flow,
@@ -41,12 +41,9 @@ const Grid: React.FC<GridProps> = props => {
 
   const [rowGap = 0, columnGap = rowGap] = ([] as number[]).concat(gap ?? 0);
 
-  const [
-    paddingTop,
-    paddingRight = paddingTop,
-    paddingBottom = paddingTop,
-    paddingLeft = paddingRight,
-  ] = ([] as number[]).concat(padding ?? 0);
+  const [paddingTop, paddingRight = paddingTop, paddingBottom = paddingTop, paddingLeft = paddingRight] = (
+    [] as number[]
+  ).concat(padding ?? 0);
 
   return (
     <div
@@ -58,7 +55,7 @@ const Grid: React.FC<GridProps> = props => {
         justify && s[`justify-${justify}`],
         justifySelf && s[`justify-self-${justifySelf}`],
         wrap && 'text-wrap',
-        className,
+        className
       )}
       style={{
         gridTemplateRows: rowsTemplate,
@@ -70,7 +67,8 @@ const Grid: React.FC<GridProps> = props => {
         paddingBottom: paddingBottom > 0 ? paddingBottom : undefined,
         paddingLeft: paddingLeft > 0 ? paddingLeft : undefined,
         width,
-      }}>
+      }}
+    >
       {children}
     </div>
   );

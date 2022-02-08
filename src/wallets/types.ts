@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AbstractConnector } from '@web3-react/abstract-connector';
 
 export type WalletConnector = {

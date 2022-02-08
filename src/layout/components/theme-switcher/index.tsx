@@ -2,7 +2,7 @@ import React from 'react';
 import { isMobile } from 'react-device-detect';
 
 import Icon from 'components/custom/icon';
-import { useGeneral } from 'components/providers/general-provider';
+import { useGeneral } from 'providers/general-provider';
 
 import s from './s.module.scss';
 

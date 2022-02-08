@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Fragment, FunctionFragment, Interface, JsonFragment, Result, defaultAbiCoder } from '@ethersproject/abi';
 
 export type AbiInterfaceType = Interface;
@@ -6,7 +7,7 @@ export type AbiDecodeResult = Result;
 export type AbiFunctionFragment = FunctionFragment;
 
 function parseValues(values: Array<any>): Array<any> {
-  return values.map(item => {
+  return values.map((item) => {
     if (typeof item === 'string') {
       try {
         const value = JSON.parse(item);
@@ -15,7 +16,7 @@ function parseValues(values: Array<any>): Array<any> {
           return value;
         }
       } catch {
-        console.error("error caught in abi parseValues")
+        console.error('error caught in abi parseValues');
       }
     }
 
@@ -31,7 +32,7 @@ export class AbiInterface {
   }
 
   get writableFunctions(): AbiFragmentType[] {
-    return Object.values(this.abi.functions).filter(fn => !['view', 'pure'].includes(fn.stateMutability));
+    return Object.values(this.abi.functions).filter((fn) => !['view', 'pure'].includes(fn.stateMutability));
   }
 
   static encodeFunctionData(functionFragment: AbiFunctionFragment | string, values?: Array<any>): string | undefined {

@@ -125,10 +125,12 @@ export default class LandWorksContract extends Web3Contract {
    * Claims the rent fees for the given assets.
    * @param assetIds An array of asset IDs
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   claimMultipleRentFees(assetIds: BigNumber[] | string[], callback: () => void = () => {}) {
     if (!this.account) {
       return Promise.reject();
     }
+
     return this.send(
       'claimMultipleRentFees',
       [assetIds],

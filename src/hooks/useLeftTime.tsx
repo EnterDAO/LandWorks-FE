@@ -1,7 +1,7 @@
 import React from 'react';
 import useInterval from '@rooks/use-interval';
 
-import { useWindowState } from 'components/providers/window-state';
+import { useWindowState } from 'providers/window-state';
 
 export type UseLeftTimeOptions = {
   end: number | Date;
@@ -45,7 +45,7 @@ export function useLeftTime(options: UseLeftTimeOptions): UseLeftTimeReturn {
       }
     },
     options.delay ?? 1_000,
-    false,
+    false
   );
 
   React.useEffect(() => {
@@ -93,21 +93,21 @@ export type UseLeftTimeProps = UseLeftTimeOptions & {
   children: (leftTime: number) => React.ReactNode;
 };
 
-export const UseLeftTime: React.FC<UseLeftTimeProps> = props => {
+export const UseLeftTime: React.FC<UseLeftTimeProps> = (props) => {
   const windowState = useWindowState();
   const [leftTime, setLeftTime] = React.useState<number>(0);
 
   const { isStarted, isRunning, pause, resume } = useLeftTime({
     ...props,
-    onStart: value => {
+    onStart: (value) => {
       setLeftTime(value);
       props.onStart?.(value);
     },
-    onStop: value => {
+    onStop: (value) => {
       setLeftTime(value);
       props.onStop?.(value);
     },
-    onTick: value => {
+    onTick: (value) => {
       setLeftTime(value);
       props.onTick?.(value);
     },
