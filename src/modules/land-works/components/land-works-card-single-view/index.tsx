@@ -23,9 +23,9 @@ import { getNowTs } from '../../../../utils';
 import {
   ZERO_BIG_NUMBER,
   getDecentralandMarketplaceUrl,
+  getDecentralandPlayUrl,
   getEtherscanAddressUrl,
   shortenAddr,
-  getDecentralandPlayUrl,
 } from '../../../../web3/utils';
 
 import './index.scss';
@@ -169,7 +169,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
         </Row>
         <Row>
           <Col span={24}>
-          <ExternalLink
+            <ExternalLink
               className=""
               target={'_blank'}
               href={getDecentralandPlayUrl(asset?.decentralandData?.coordinates)}

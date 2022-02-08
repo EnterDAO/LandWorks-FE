@@ -125,7 +125,7 @@ export function getDecentralandMarketplaceUrl(registry?: string, id?: string): s
 }
 
 export function getDecentralandPlayUrl(coordinates?: any[]): string | undefined {
-  if(coordinates) {
+  if (coordinates) {
     const { x, y } = coordinates[coordinates.length - 1];
     return `https://play.decentraland.org/?position=${x},${y}`;
   }
