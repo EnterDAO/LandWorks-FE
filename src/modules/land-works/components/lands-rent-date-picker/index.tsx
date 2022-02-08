@@ -55,7 +55,8 @@ export const RentDatePicker = (props: {
 
       // Disable the hours only if its the same hour
       if (current?.hour() === minRentPeriod.hour()) {
-        const dMins = range(0, 60).filter((m) => m < minRentPeriod.minute());
+        // added one minute each to be able to choose if MIN & MAX are same
+        const dMins = range(0, 60).filter((m) => m < minRentPeriod.minute() + 1);
         disabledMins = [...disabledMins, ...dMins];
       }
 
@@ -68,7 +69,8 @@ export const RentDatePicker = (props: {
 
       // Disable the hours only if its the same hour
       if (current?.hour() === maxEndDate.hour()) {
-        const dMins = range(0, 60).filter((m) => m > maxEndDate.minute());
+        // added one minute each to be able to choose  if MIN & MAX are same
+        const dMins = range(0, 60).filter((m) => m > maxEndDate.minute() + 1);
         disabledMins = [...disabledMins, ...dMins];
       }
     }

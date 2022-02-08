@@ -18,7 +18,7 @@ export const isDateBeforeNow = (timestamp: string): boolean => {
 
 export const timestampSecondsToDate = (timestamp: string, dateFormat: string = euDateFormat) => {
   const endDate = fromUnixTime(Number(timestamp));
-  return format(endDate, dateFormat);
+  return `${format(endDate, dateFormat)} UTC +${new Date().getTimezoneOffset() / -60}`;
 };
 
 export const timestampSecondsToUTCDate = (timestamp: string, dateFormat: string = euDateFormat) => {
