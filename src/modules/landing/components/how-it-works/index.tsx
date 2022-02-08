@@ -19,11 +19,11 @@ export const HowItWorks: React.FC = () => (
             <Col sm={20} md={8} className="left-bullets">
               <div>
                 <h3>Affordability</h3>
-                <p>Rent land that will otherwise be prohibitevely expensive</p>
+                <p>Rent land that will otherwise be prohibitively expensive</p>
               </div>
               <div>
                 <h3>Accessibility</h3>
-                <p>Rent land that will otherwise be unavailble</p>
+                <p>Rent land that will otherwise be unavailable</p>
               </div>
             </Col>
             <Col sm={10} md={8} className="middle-graphics">
