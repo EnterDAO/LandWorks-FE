@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import BigNumber from 'bignumber.js';
 import add from 'date-fns/add';
 import formatDuration from 'date-fns/formatDuration';

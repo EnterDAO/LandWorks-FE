@@ -31,7 +31,7 @@ import { getNowTs } from '../../../../utils';
 
 import './index.scss';
 
-const SingleLand: React.FC = () => {
+const SingleLandView: React.FC = () => {
   const wallet = useWallet();
 
   const { landWorksContract } = useLandworks();
@@ -365,4 +365,4 @@ const SingleLand: React.FC = () => {
   );
 };
 
-export default SingleLand;
+export default SingleLandView;

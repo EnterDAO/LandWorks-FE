@@ -1,5 +1,8 @@
-import React from 'react';
-import Select from 'react-select';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { ChangeEvent } from 'react';
+import Select, { ActionMeta, SingleValue } from 'react-select';
+
+import { Option } from 'modules/interface';
 
 import { LandsEditInput } from '../lands-edit-input';
 
@@ -51,7 +54,7 @@ const styles = {
     ...defaultStyles,
     color: state.isDisabled ? '#666666' : '#ffffff',
   }),
-  control: (base: any, state: any) => ({
+  control: (base: any) => ({
     ...base,
     fontFamily: 'Poppins, sans-serif',
     fontStyle: 'normal',
@@ -73,7 +76,7 @@ const styles = {
     minHeight: 'initial',
     width: '100%',
   }),
-  valueContainer: (base: any, state: any) => ({
+  valueContainer: (base: any) => ({
     ...base,
     padding: '0 0 0 8px',
     display: 'grid',
@@ -122,16 +125,12 @@ const styles = {
   }),
 };
 
-type Item = {
-  label: string;
-  value: number | string;
-};
-
 interface IProps {
-  onChange: (event: any) => void;
-  onInputChange: (event: any) => void;
+  onChange: (newValue: SingleValue<Option>, actionMeta: ActionMeta<Option>) => void;
+  onInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options: any[];
-  initialValuе?: Item;
+  initialValue?: Option;
   inputValue?: number;
   disabled?: boolean;
 }
@@ -140,7 +139,7 @@ export const LandsEditPeriodDropdown: React.FC<IProps> = ({
   onChange,
   onInputChange,
   options,
-  initialValuе,
+  initialValue,
   inputValue,
   disabled,
 }) => {
@@ -150,7 +149,7 @@ export const LandsEditPeriodDropdown: React.FC<IProps> = ({
       <Select
         options={options}
         isDisabled={disabled}
-        value={initialValuе}
+        value={initialValue}
         onChange={onChange}
         className="lands-period-drop"
         styles={styles}

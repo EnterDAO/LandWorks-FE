@@ -1,6 +1,6 @@
-import React, { ReactChild, useState } from 'react';
-import { Col, Row, Tooltip } from 'antd';
-import { TooltipPlacement } from 'antd/lib/tooltip';
+import React from 'react';
+import { Tooltip } from 'antd';
+import { RenderFunction, TooltipPlacement } from 'antd/lib/tooltip';
 
 import Icon from 'components/custom/icon';
 
@@ -9,7 +9,7 @@ import './index.scss';
 type TooltipProps = {
   placement: TooltipPlacement;
   trigger: string;
-  text: any;
+  text: React.ReactNode | RenderFunction;
 };
 
 export const LandsTooltip: React.FC<TooltipProps> = (props) => {

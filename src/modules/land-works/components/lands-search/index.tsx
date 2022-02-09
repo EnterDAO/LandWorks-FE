@@ -9,7 +9,7 @@ interface SearchQuery {
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const SearchBar = ({ searchQuery, setSearchQuery }: SearchQuery) => (
+export const SearchBar: React.FC<SearchQuery> = ({ searchQuery, setSearchQuery }) => (
   <div className="wrapper">
     <form action="/" method="get">
       <input

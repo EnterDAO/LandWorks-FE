@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { toast } from 'react-toastify';
 
 const commonStyles = { borderRadius: '10px', fontSize: '14px', padding: '20px', marginTop: '70px' };
@@ -9,7 +11,7 @@ export enum ToastType {
 
 const TWENTY_SEC_IN_MS = 20_000;
 
-export const showToastNotification = (type: ToastType, message: string, styles?: any) => {
+export const showToastNotification = (type: ToastType, message: string, styles?: any): void => {
   let notification = null;
   switch (type) {
     case ToastType.Success:

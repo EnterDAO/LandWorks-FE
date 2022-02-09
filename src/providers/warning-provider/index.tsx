@@ -33,7 +33,7 @@ type WarnProps = WarnType & {
   onClose?: () => void;
 };
 
-const Warn: React.FC<WarnProps> = props => {
+const Warn: React.FC<WarnProps> = (props) => {
   const { storageIdentity, text, closable, onClose } = props;
 
   const [storageState, setStorageState] = useLocalStorage(storageIdentity ?? '');
@@ -54,8 +54,9 @@ const Warn: React.FC<WarnProps> = props => {
     <div
       className={cn(
         s.warning,
-        'grid flow-col col-gap-16 sm-col-gap-12 align-center justify-space-between pv-12 ph-64 sm-ph-24',
-      )}>
+        'grid flow-col col-gap-16 sm-col-gap-12 align-center justify-space-between pv-12 ph-64 sm-ph-24'
+      )}
+    >
       <Grid flow="col" gap={16} align="center">
         <Icon name="warning-outlined" color="red" />
         <Text type="p2" weight="semibold" className={s.text}>
@@ -71,15 +72,15 @@ const Warn: React.FC<WarnProps> = props => {
   );
 };
 
-const WarningProvider: React.FC = props => {
+const WarningProvider: React.FC = (props) => {
   const [warns, setWarns] = React.useState<WarnType[]>([]);
 
   function removeWarm(warn: WarnType) {
-    setWarns(prevState => prevState.filter(w => w !== warn));
+    setWarns((prevState) => prevState.filter((w) => w !== warn));
   }
 
   function addWarn(warn: WarnType) {
-    setWarns(prevState => [...prevState, warn]);
+    setWarns((prevState) => [...prevState, warn]);
 
     return () => {
       removeWarm(warn);
@@ -91,7 +92,8 @@ const WarningProvider: React.FC = props => {
       value={{
         addWarn,
         warns,
-      }}>
+      }}
+    >
       <Grid flow="row">
         {warns.map((warn, idx) => (
           <Warn key={idx} {...warn} onClose={() => removeWarm(warn)} />

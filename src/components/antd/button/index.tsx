@@ -8,8 +8,8 @@ export type ButtonProps = Omit<AntdButtonProps, 'type'> & {
   type: 'default' | 'primary' | 'ghost' | 'link' | 'light' | 'select';
 };
 
-const Button: React.FC<ButtonProps> = props => {
-  const { children, className, type, ...btnProps } = props;
+const Button: React.FC<ButtonProps> = (props) => {
+  const { className, type, ...btnProps } = props;
 
   let btnType: AntdButtonType;
 
@@ -25,7 +25,8 @@ const Button: React.FC<ButtonProps> = props => {
     <AntdButton
       className={cn(s.component, className, { [s.light]: type === 'light', [s.select]: type === 'select' })}
       type={btnType}
-      {...btnProps}>
+      {...btnProps}
+    >
       {props.children}
     </AntdButton>
   );

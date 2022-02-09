@@ -15,10 +15,10 @@ import { getEtherscanAddressUrl, getHumanValue, shortenAddr } from 'web3/utils';
 import Icon, { IconNames } from 'components/custom/icon';
 import IconNotification from 'components/custom/icon-notification';
 import { Text } from 'components/custom/typography';
-import { NotificationType, useNotifications } from 'components/providers/notifications-provider';
 import { useReload } from 'hooks/useReload';
+import { EnterToken } from 'providers/known-tokens-provider';
+import { NotificationType, useNotifications } from 'providers/notifications-provider';
 
-import { EnterToken } from '../../providers/known-tokens-provider';
 import ExternalLink from '../externalLink';
 import NotificationIcon from './icon';
 
@@ -216,7 +216,9 @@ function getData(n: NotificationType, reload: Function): [IconNames, [string, st
         colorPairs.blue,
         <Text type="p2" weight="semibold" color="secondary">
           {getStrongText(
-            `${getHumanValue(new BigNumber(n.metadata.amount ?? 0), EnterToken.decimals)?.toFixed()} v${EnterToken.symbol}`,
+            `${getHumanValue(new BigNumber(n.metadata.amount ?? 0), EnterToken.decimals)?.toFixed()} v${
+              EnterToken.symbol
+            }`
           )}{' '}
           has been delegated to you from{' '}
           <ExternalLink href={getEtherscanAddressUrl(n.metadata.from)} className="link-blue">
@@ -248,7 +250,8 @@ function getData(n: NotificationType, reload: Function): [IconNames, [string, st
           </Text>
           <Link
             to={`/smart-yield/pool?m=${n.metadata.protocolId}&t=${n.metadata.underlyingSymbol}`}
-            className="button-primary">
+            className="button-primary"
+          >
             Stake now
           </Link>
         </>,

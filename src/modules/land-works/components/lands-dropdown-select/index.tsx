@@ -13,11 +13,11 @@ type Item = {
 interface IProps {
   onChange: (event: any) => void;
   options: Item[];
-  initialValuе: Item;
+  initialValue: Item;
 }
 
-export const Dropdown: React.FC<IProps> = ({ onChange, options, initialValuе }) => {
+export const Dropdown: React.FC<IProps> = ({ onChange, options, initialValue }) => {
   return (
-    <Select options={options} defaultValue={initialValuе.value} onChange={onChange} className="drop-select"></Select>
+    <Select options={options} defaultValue={initialValue.value} onChange={onChange} className="drop-select"></Select>
   );
 };

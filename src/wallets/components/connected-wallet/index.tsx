@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import React, { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { Link } from 'react-router-dom';
 import cn from 'classnames';
 import { getEtherscanAddressUrl, getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
@@ -10,56 +10,56 @@ import Popover from 'components/antd/popover';
 import ExternalLink from 'components/custom/externalLink';
 import Grid from 'components/custom/grid';
 import Icon from 'components/custom/icon';
-import IconNotification from 'components/custom/icon-notification';
+// import IconNotification from 'components/custom/icon-notification';
 import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
-import { useNotifications } from 'components/providers/notifications-provider';
+// import { useNotifications } from 'providers/notifications-provider';
 import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
-import Notifications from 'wallets/components/notifications';
+// import Notifications from 'wallets/components/notifications';
 import { useWallet } from 'wallets/wallet';
 
 import { useErc20 } from '../../../modules/land-works/providers/erc20-provider';
 
 import s from './s.module.scss';
 
-const NotificationSection: React.FC = () => {
-  const { setNotificationsReadUntil, notifications, notificationsReadUntil } = useNotifications();
+// const NotificationSection: React.FC = () => {
+//   const { setNotificationsReadUntil, notifications, notificationsReadUntil } = useNotifications();
 
-  const markAllAsRead = () => {
-    if (notifications.length) {
-      setNotificationsReadUntil(Math.max(...notifications.map((n) => n.startsOn)));
-    }
-  };
-  const hasUnread = notificationsReadUntil ? notifications.some((n) => n.startsOn > notificationsReadUntil) : false;
-  return (
-    <Popover
-      placement="bottomRight"
-      trigger="click"
-      noPadding
-      content={
-        <div className={cn('card', s.notifications)}>
-          <div className="card-header flex">
-            <Text type="p1" weight="semibold" color="primary">
-              Notifications
-            </Text>
-            {hasUnread && (
-              <button className="link-blue ml-auto" onClick={markAllAsRead}>
-                Mark all as read
-              </button>
-            )}
-          </div>
-          <Notifications />
-        </div>
-      }
-    >
-      <IconNotification width={24} height={24} notificationSize={8} bubble={hasUnread} className={s.notificationIcon}>
-        <Icon name="notification" width={24} height={24} color="inherit" />
-      </IconNotification>
-    </Popover>
-  );
-};
+//   const markAllAsRead = () => {
+//     if (notifications.length) {
+//       setNotificationsReadUntil(Math.max(...notifications.map((n) => n.startsOn)));
+//     }
+//   };
+//   const hasUnread = notificationsReadUntil ? notifications.some((n) => n.startsOn > notificationsReadUntil) : false;
+//   return (
+//     <Popover
+//       placement="bottomRight"
+//       trigger="click"
+//       noPadding
+//       content={
+//         <div className={cn('card', s.notifications)}>
+//           <div className="card-header flex">
+//             <Text type="p1" weight="semibold" color="primary">
+//               Notifications
+//             </Text>
+//             {hasUnread && (
+//               <button className="link-blue ml-auto" onClick={markAllAsRead}>
+//                 Mark all as read
+//               </button>
+//             )}
+//           </div>
+//           <Notifications />
+//         </div>
+//       }
+//     >
+//       <IconNotification width={24} height={24} notificationSize={8} bubble={hasUnread} className={s.notificationIcon}>
+//         <Icon name="notification" width={24} height={24} color="inherit" />
+//       </IconNotification>
+//     </Popover>
+//   );
+// };
 
 const ConnectedWallet: React.FC = () => {
   const wallet = useWallet();

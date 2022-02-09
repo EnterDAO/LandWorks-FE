@@ -1,13 +1,13 @@
 import React from 'react';
 import Web3 from 'web3';
 
-import { useWindowState } from 'components/providers/window-state';
 import config from 'config';
+import { useWindowState } from 'providers/window-state';
 
 export const HttpsWeb3Provider = new Web3.providers.HttpProvider(config.web3.rpc.httpsUrl);
 export const WssWeb3Provider = new Web3.providers.WebsocketProvider(config.web3.rpc.wssUrl);
 export const MainnetHttpsWeb3Provider = new Web3.providers.HttpProvider(
-  'https://mainnet.infura.io/v3/25763b5ba15644a8b3079d3ee755bce5',
+  'https://mainnet.infura.io/v3/25763b5ba15644a8b3079d3ee755bce5'
 );
 export const DEFAULT_WEB3_PROVIDER = HttpsWeb3Provider;
 
@@ -50,7 +50,7 @@ export function useEthWeb3(): EthWeb3ContextType {
   return React.useContext(EthWeb3Context);
 }
 
-const EthWeb3Provider: React.FC = props => {
+const EthWeb3Provider: React.FC = (props) => {
   const { children } = props;
 
   const windowState = useWindowState();
@@ -63,7 +63,7 @@ const EthWeb3Provider: React.FC = props => {
 
     WssWeb3.eth
       .getBlockNumber()
-      .then(value => {
+      .then((value) => {
         if (value) {
           setBlockNumber(value);
         }
@@ -73,7 +73,7 @@ const EthWeb3Provider: React.FC = props => {
     const subscription = WssWeb3.eth.subscribe('newBlockHeaders');
 
     subscription
-      .on('data', blockHeader => {
+      .on('data', (blockHeader) => {
         if (blockHeader && blockHeader.number) {
           setBlockNumber(blockHeader.number);
         }
@@ -94,7 +94,7 @@ const EthWeb3Provider: React.FC = props => {
       ...InitialContextValue,
       blockNumber,
     }),
-    [blockNumber],
+    [blockNumber]
   );
 
   return <EthWeb3Context.Provider value={value}>{children}</EthWeb3Context.Provider>;
