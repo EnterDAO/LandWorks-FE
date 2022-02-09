@@ -65,7 +65,13 @@ export const getTokenIconName = (tokenSymbol: string) => {
 };
 
 export const getENSName = async (address: string) => {
-  const prov = new InfuraProvider();
-  const ensName = await prov.lookupAddress(address);
+  const provider = new InfuraProvider();
+  const ensName = await provider.lookupAddress(address);
   return ensName ? ensName : address;
+};
+
+export const getAddressFromENS = async (ens: string) => {
+  const provider = new InfuraProvider();
+  const address = await provider.resolveName(ens);
+  return address;
 };

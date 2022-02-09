@@ -10,6 +10,7 @@ import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 import { useWallet } from '../../../../wallets/wallet';
 
 import './index.scss';
+import { getAddressFromENS } from 'helpers/helpers';
 
 type Iprops = {
   operator: string;
@@ -33,12 +34,17 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
     if (landWorksContract) {
       try {
         if (!web3.utils.isAddress(newOperator)) {
-          toast.error('The new operator address is invalid.', {
-            position: toast.POSITION.TOP_RIGHT,
-            className: 'error-toast',
-            style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
-          });
-          return;
+          const address = await getAddressFromENS(newOperator);
+          if(!address) {
+            toast.error('The new operator address is invalid.', {
+              position: toast.POSITION.TOP_RIGHT,
+              className: 'error-toast',
+              style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
+            });
+            return;
+          }
+
+          setNewOperator(address);
         }
 
         if (newOperator?.toLowerCase() === operator?.toLowerCase()) {
