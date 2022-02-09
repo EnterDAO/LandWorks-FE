@@ -54,10 +54,11 @@ const data = [
   },
 ];
 
+export const pageSizeOptions = ['6', '12', '24'];
+export const sortColumns = ['totalRents', 'pricePerSecond', 'pricePerSecond'];
+export const sortDirections = [SortDirection.DESC, SortDirection.ASC, SortDirection.DESC];
+
 const LandsView: React.FC = () => {
-  const pageSizeOptions = ['6', '12', '24'];
-  const sortColumns = ['totalRents', 'pricePerSecond', 'pricePerSecond'];
-  const sortDirections = [SortDirection.DESC, SortDirection.ASC, SortDirection.DESC];
   const wallet = useWallet();
 
   const [lands, setLands] = useState([] as AssetEntity[]);
