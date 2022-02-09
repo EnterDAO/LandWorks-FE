@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 
@@ -55,18 +55,29 @@ const LayoutHeader: React.FC = () => {
       <div style={{ cursor: 'pointer' }} onClick={() => history.push('/all')}>
         <Icon name="png/LandWorksLogo" width="auto" height="auto" className={s.logo} />
       </div>
-      <div className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`} onClick={() => history.push('/all')}>
-        <TextLogo />
+      <h1 className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`} onClick={() => history.push('/all')}>
+        LandWorks
+      </h1>
+
+      <div>
+        <Link to="/explore">Explore</Link>
       </div>
 
-      {!isLandingPage?.isExact && <LandsNav />}
-
+      {wallet.account && !isLandingPage?.isExact && <LandsNav />}
+      {wallet.isActive && wallet.connector?.id === 'metamask' && !isLandingPage?.isExact && (
+        <div className={s.addTokenWrapper}>
+          <LandsTooltip placement="bottom" trigger="hover" text="List new property">
+            <button type="button" onClick={() => history.push('/list')} className={s.addTokenButton}>
+              <ListIcon />
+            </button>
+          </LandsTooltip>
+        </div>
+      )}
       {isLandingPage?.isExact && (
         <Button type="link" className={s.burger} onClick={() => setNavOpen((prevState) => !prevState)}>
           <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
         </Button>
       )}
-
       {isLandingPage?.isExact && (
         <nav className={s.nav}>
           <a
@@ -98,9 +109,7 @@ const LayoutHeader: React.FC = () => {
           </ExternalLink>
         </nav>
       )}
-
       {isLandingPage?.isExact ? null : <ConnectedWallet />}
-
       {navOpen &&
         ReactDOM.createPortal(
           <div
