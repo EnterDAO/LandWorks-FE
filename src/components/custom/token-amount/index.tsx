@@ -1,4 +1,3 @@
-import React from 'react';
 import BigNumber from 'bignumber.js';
 import cn from 'classnames';
 import { MAX_UINT_256, formatBigValue } from 'web3/utils';
@@ -24,7 +23,7 @@ export type TokenAmountProps = {
   onChange?: (value?: BigNumber) => void;
 };
 
-const TokenAmount: React.FC<TokenAmountProps> = props => {
+const TokenAmount: React.FC<TokenAmountProps> = (props) => {
   const {
     className,
     tokenIcon,
@@ -88,7 +87,9 @@ const TokenAmount: React.FC<TokenAmountProps> = props => {
           max={bnMaxValue.toNumber()}
           step={step}
           tooltipPlacement="bottom"
-          tipFormatter={sliderValue => (sliderValue ? formatBigValue(new BigNumber(sliderValue), displayDecimals) : 0)}
+          tipFormatter={(sliderValue) =>
+            sliderValue ? formatBigValue(new BigNumber(sliderValue), displayDecimals) : 0
+          }
           disabled={disabled}
           value={bnValue?.toNumber()}
           onChange={onSliderChange}

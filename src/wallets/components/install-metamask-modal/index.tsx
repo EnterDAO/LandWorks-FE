@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
@@ -7,7 +7,7 @@ import { Text } from 'components/custom/typography';
 
 const METAMASK_CHROME_EXT_URL = 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
 
-const InstallMetaMaskModal: React.FC<ModalProps> = (props) => {
+const InstallMetaMaskModal: FC<ModalProps> = (props) => {
   const { ...modalProps } = props;
 
   return (

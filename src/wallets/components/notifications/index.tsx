@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Grid from 'components/custom/grid';
 import { Notification } from 'components/custom/notification';
 import { Text } from 'components/custom/typography';

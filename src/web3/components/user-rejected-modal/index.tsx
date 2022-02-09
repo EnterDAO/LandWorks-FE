@@ -1,10 +1,8 @@
-import React from 'react';
-
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon from 'components/custom/icon';
 import { Text } from 'components/custom/typography';
 
-const UserRejectedModal: React.FC<ModalProps> = props => {
+const UserRejectedModal: React.FC<ModalProps> = (props) => {
   const { ...modalProps } = props;
 
   return (

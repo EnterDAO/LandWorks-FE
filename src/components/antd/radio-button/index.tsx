@@ -1,4 +1,3 @@
-import React from 'react';
 import AntdRadio, { RadioProps as AntdRadioProps } from 'antd/lib/radio';
 import cn from 'classnames';
 
@@ -11,7 +10,7 @@ export type RadioButtonProps = {
   hint?: React.ReactNode;
 };
 
-const RadioButton: React.FC<AntdRadioProps & RadioButtonProps> = props => {
+const RadioButton: React.FC<AntdRadioProps & RadioButtonProps> = (props) => {
   const { label, hint, className, ...radioProps } = props;
 
   return (

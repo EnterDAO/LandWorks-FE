@@ -27,7 +27,8 @@ export const NavTabs: FC<NavTabsProps> = ({ className, tabs, shadows = false }) 
         {
           '--tabs-bg': `var(${typeof shadows === 'string' ? shadows : '--theme-body-color'})`,
         } as CSSProperties
-      }>
+      }
+    >
       {tabs.map(({ className, children, ...restTab }, idx) => {
         // @ts-ignore
         if (restTab.to) {
@@ -67,11 +68,11 @@ type TabsProps = {
   onClick?: (id: TabProps['id']) => void;
 };
 
-export const Tabs: FC<TabsProps> = props => {
+export const Tabs: FC<TabsProps> = (props) => {
   const { variation = 'normal', tabs, activeKey, size, className, style } = props;
 
   const totalTabs = tabs.length;
-  const activeIndex = tabs.findIndex(tab => tab.id === activeKey);
+  const activeIndex = tabs.findIndex((tab) => tab.id === activeKey);
 
   return (
     <div
@@ -79,7 +80,8 @@ export const Tabs: FC<TabsProps> = props => {
         [s.tabs]: variation === 'normal',
         [s.elasticTabs]: variation === 'elastic',
       })}
-      style={style}>
+      style={style}
+    >
       {variation === 'elastic' && (
         <div
           className={s.elasticToggle}

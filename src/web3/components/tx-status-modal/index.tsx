@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import { getEtherscanTxUrl } from 'web3/utils';
 import { Web3SendState } from 'web3/web3Contract';
 
@@ -11,11 +11,11 @@ import { Text } from 'components/custom/typography';
 type Props = ModalProps & {
   state?: Web3SendState;
   txHash?: string;
-  renderProgress?: () => React.ReactNode;
-  renderSuccess?: () => React.ReactNode;
+  renderProgress?: () => ReactNode;
+  renderSuccess?: () => ReactNode;
 };
 
-const TxStatusModal: React.FC<Props> = props => {
+const TxStatusModal: FC<Props> = (props) => {
   const { state, txHash, renderProgress, renderSuccess, ...modalProps } = props;
 
   return (

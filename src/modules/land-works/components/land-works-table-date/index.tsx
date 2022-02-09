@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { timestampSecondsToDate } from 'helpers/helpers';
 
 interface ILandWorksTableDateProps {

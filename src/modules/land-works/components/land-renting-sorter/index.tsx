@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Select from 'components/antd/select';
 
 import './index.scss';

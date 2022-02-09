@@ -1,4 +1,3 @@
-import React from 'react';
 import AntdPopover, { PopoverProps as AntdPopoverProps } from 'antd/lib/popover';
 import cn from 'classnames';
 
