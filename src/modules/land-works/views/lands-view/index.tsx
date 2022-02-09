@@ -103,10 +103,6 @@ const LandsView: React.FC = () => {
     },
   });
 
-  useEffect(() => {
-    searchQuery ? setPageSize(100) : setPageSize(+pageSizeOptions[0]);
-  }, [searchQuery]);
-
   const onPaginationChange = (page: number, newPageSize?: number | undefined) => {
     setPage(page);
     if (newPageSize) {
@@ -264,7 +260,7 @@ const LandsView: React.FC = () => {
                 total={paginationLength}
                 defaultPageSize={pageSize}
                 showSizeChanger
-                pageSizeOptions={query ? ['100'] : pageSizeOptions}
+                pageSizeOptions={pageSizeOptions}
                 onChange={onPaginationChange}
               />
             )}
