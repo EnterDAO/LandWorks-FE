@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 
@@ -60,8 +60,11 @@ const LayoutHeader: React.FC = () => {
         LandWorks
       </h1>
 
-      {wallet.account && !isLandingPage?.isExact && <LandsNav />}
+      <div>
+        <Link to="/explore">Explore</Link>
+      </div>
 
+      {wallet.account && !isLandingPage?.isExact && <LandsNav />}
       {wallet.isActive && wallet.connector?.id === 'metamask' && !isLandingPage?.isExact && (
         <div className={s.addTokenWrapper}>
           <LandsTooltip placement="bottom" trigger="hover" text="List new property">
@@ -71,13 +74,11 @@ const LayoutHeader: React.FC = () => {
           </LandsTooltip>
         </div>
       )}
-
       {isLandingPage?.isExact && (
         <Button type="link" className={s.burger} onClick={() => setNavOpen((prevState) => !prevState)}>
           <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
         </Button>
       )}
-
       {isLandingPage?.isExact && (
         <nav className={s.nav}>
           <a
@@ -109,9 +110,7 @@ const LayoutHeader: React.FC = () => {
           </ExternalLink>
         </nav>
       )}
-
       {isLandingPage?.isExact ? null : <ConnectedWallet />}
-
       {navOpen &&
         ReactDOM.createPortal(
           <div
