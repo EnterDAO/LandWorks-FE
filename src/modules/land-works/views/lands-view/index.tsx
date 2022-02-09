@@ -107,7 +107,6 @@ const LandsView: React.FC = () => {
     setPage(page);
     if (newPageSize) {
       setPageSize(newPageSize);
-
       // if (pageSize === newPageSize || newPageSize < pageSize) {
       //   window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
       // }
