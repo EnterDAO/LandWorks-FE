@@ -12,7 +12,7 @@ import {
   MaxRentPeriodOptions,
   MinRentPeriodOptions,
   PlaceOptions,
-} from 'constants/view';
+} from 'constants/modules';
 import { Checkbox, Col, Row } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import BigNumber from 'bignumber.js';
