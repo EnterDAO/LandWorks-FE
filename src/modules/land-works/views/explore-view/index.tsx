@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { DECENTRALAND_METAVERSE, DEFAULT_LAST_RENT_END, sortColumns, sortDirections } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { end } from '@popperjs/core';
 import { Col, Row } from 'antd';
@@ -16,12 +17,8 @@ import {
   fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder,
   parseUser,
 } from '../../api';
-import { sortColumns, sortDirections } from '../lands-view';
 
 import './index.scss';
-
-const DECENTRALAND_METAVERSE = '1';
-const DEFAULT_LAST_RENT_END = '0';
 
 const ExploreView: React.FC = () => {
   const wallet = useWallet();
@@ -50,9 +47,9 @@ const ExploreView: React.FC = () => {
     },
   });
 
-  const getAssets = async (metaverse: string) => {
+  const getAssets = async () => {
     const lands = await fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder(
-      metaverse,
+      DECENTRALAND_METAVERSE,
       DEFAULT_LAST_RENT_END,
       sortColumns[0],
       sortDirections[0]
@@ -64,7 +61,7 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    getAssets(DECENTRALAND_METAVERSE);
+    getAssets();
   }, [wallet.account]);
 
   return (
