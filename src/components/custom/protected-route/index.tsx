@@ -1,6 +1,5 @@
 import React from 'react';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
-
 export type ProtectedRouteProps = {
   isAuthenticated: boolean;
   authenticationPath: string;

@@ -1,4 +1,3 @@
-import React from 'react';
 import cn from 'classnames';
 
 import { Text } from 'components/custom/typography';
@@ -12,7 +11,7 @@ export type StatusTagProps = {
   style?: React.CSSProperties;
 };
 
-const StatusTag: React.FC<StatusTagProps> = props => {
+const StatusTag: React.FC<StatusTagProps> = (props) => {
   const { text, color, className, style } = props;
 
   return (

@@ -1,4 +1,3 @@
-import React from 'react';
 import AntdForm, {
   FormItemProps as AntdFormItemProps,
   FormListProps as AntdFormListProps,
@@ -15,7 +14,7 @@ import s from './s.module.scss';
 
 export type FormListProps = AntdFormListProps;
 
-const FormList: React.FC<FormListProps> = props => {
+const FormList: React.FC<FormListProps> = (props) => {
   const { children, ...listProps } = props;
 
   return <AntdForm.List {...listProps}>{children}</AntdForm.List>;
@@ -25,7 +24,7 @@ export type FormItemProps = AntdFormItemProps<any> & {
   hint?: string;
 };
 
-const FormItem: React.FC<FormItemProps> = props => {
+const FormItem: React.FC<FormItemProps> = (props) => {
   const { className, label, hint, extra, children, ...itemProps } = props;
 
   return (
@@ -46,7 +45,8 @@ const FormItem: React.FC<FormItemProps> = props => {
           </Grid>
           {extra}
         </>
-      }>
+      }
+    >
       {children}
     </AntdForm.Item>
   );
@@ -54,7 +54,7 @@ const FormItem: React.FC<FormItemProps> = props => {
 
 export type FormProps = AntdFormProps;
 
-const Form: React.FC<FormProps> = props => {
+const Form: React.FC<FormProps> = (props) => {
   const { className, children, ...formProps } = props;
 
   return (
@@ -69,7 +69,7 @@ export type StaticFormProps = {
   List: React.FC<FormListProps>;
 };
 
-((Form as any) as StaticFormProps).Item = FormItem;
-((Form as any) as StaticFormProps).List = FormList;
+(Form as any as StaticFormProps).Item = FormItem;
+(Form as any as StaticFormProps).List = FormList;
 
 export default Form as React.FC<FormProps> & StaticFormProps;

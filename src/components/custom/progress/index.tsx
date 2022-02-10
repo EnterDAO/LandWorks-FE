@@ -12,7 +12,7 @@ export type ProgressProps = {
   style?: React.CSSProperties;
 };
 
-const ProgressNew: React.FC<ProgressProps> = props => {
+const ProgressNew: React.FC<ProgressProps> = (props) => {
   const { colors, percent = 0, acceptance = 0, height, className, style } = props;
 
   return (
@@ -26,7 +26,8 @@ const ProgressNew: React.FC<ProgressProps> = props => {
           '--bg-component': colors.bg,
           ...style,
         } as React.CSSProperties
-      }>
+      }
+    >
       <div className={s.progress} />
       {acceptance ? (
         <div

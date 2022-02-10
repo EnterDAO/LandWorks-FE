@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, MouseEvent, ReactNode, useState } from 'react';
 import AntdModal, { ModalProps as AntdModalProps } from 'antd/lib/modal';
 import cn from 'classnames';
 
@@ -11,14 +11,14 @@ import s from './s.module.scss';
 
 export type ModalProps = AntdModalProps & {
   confirmClose?: boolean;
-  confirmText?: React.ReactNode;
-  onCancel: (e?: React.MouseEvent<HTMLElement>) => void;
+  confirmText?: ReactNode;
+  onCancel: (e?: MouseEvent<HTMLElement>) => void;
 };
 
-const Modal: React.FC<ModalProps> = (props) => {
+const Modal: FC<ModalProps> = (props) => {
   const { className, children, confirmClose = false, confirmText, onCancel, ...modalProps } = props;
 
-  const [confirmVisible, showConfirm] = React.useState<boolean>(false);
+  const [confirmVisible, showConfirm] = useState<boolean>(false);
 
   function handleCancel() {
     if (confirmClose) {

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
+
 // import TxStatusModal from 'web3/components/tx-status-modal';
 // import UserRejectedModal from 'web3/components/user-rejected-modal';
+import React from 'react';
 import Web3Contract, { Web3SendMeta, Web3SendState } from 'web3/web3Contract';
 
 type Props = {

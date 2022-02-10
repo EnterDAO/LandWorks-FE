@@ -1,4 +1,3 @@
-import React from 'react';
 import { getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
 interface ILandTableTxHashProps {

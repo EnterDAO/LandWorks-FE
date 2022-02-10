@@ -1,4 +1,3 @@
-import React from 'react';
 import AntdTooltip, { TooltipPropsWithTitle as AntdTooltipPropsWithTitle } from 'antd/lib/tooltip';
 import cn from 'classnames';
 
@@ -8,7 +7,7 @@ export type TooltipProps = Partial<AntdTooltipPropsWithTitle> & {
   hint?: boolean;
 };
 
-const Tooltip: React.FC<TooltipProps> = props => {
+const Tooltip: React.FC<TooltipProps> = (props) => {
   const { overlayClassName, children, hint, ...tooltipProps } = props;
 
   return (
@@ -16,7 +15,8 @@ const Tooltip: React.FC<TooltipProps> = props => {
       title=""
       placement="bottom"
       overlayClassName={cn(s.overlay, overlayClassName, { [s.hint]: hint })}
-      {...tooltipProps}>
+      {...tooltipProps}
+    >
       {children}
     </AntdTooltip>
   );

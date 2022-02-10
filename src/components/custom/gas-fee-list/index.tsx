@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, useEffect } from 'react';
 import AntdRadio, { RadioChangeEvent, RadioGroupProps } from 'antd/lib/radio';
 import AntdSpin from 'antd/lib/spin';
 import { fetchGasPrice } from 'web3/utils';
@@ -27,7 +27,7 @@ export type GasFeeListProps = RadioGroupProps & {
   onChange?: (value: GasFeeOption) => void;
 };
 
-const GasFeeList: React.FC<GasFeeListProps> = (props) => {
+const GasFeeList: FC<GasFeeListProps> = (props) => {
   const { className, value, ...groupProps } = props;
 
   const [state, setState] = useMergeState<GasFeeListState>({
@@ -36,7 +36,7 @@ const GasFeeList: React.FC<GasFeeListProps> = (props) => {
     selected: undefined,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     setState({
       loading: true,
     });
@@ -78,7 +78,7 @@ const GasFeeList: React.FC<GasFeeListProps> = (props) => {
       });
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (value === undefined && state.options.length > 2) {
       props.onChange?.(state.options[2]);
     }
@@ -88,7 +88,7 @@ const GasFeeList: React.FC<GasFeeListProps> = (props) => {
     props.onChange?.(ev.target.value);
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     setState({
       selected: value,
     });

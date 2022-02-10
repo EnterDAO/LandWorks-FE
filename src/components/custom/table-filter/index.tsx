@@ -19,7 +19,7 @@ type Props = {
   onChange: (values: Record<string, any>) => void;
 };
 
-const TableFilter: React.FC<Props> = props => {
+const TableFilter: React.FC<Props> = (props) => {
   const { filters, value, onChange } = props;
 
   const [form] = AntdForm.useForm<Record<string, any>>();
@@ -33,14 +33,14 @@ const TableFilter: React.FC<Props> = props => {
           [c.name]: c.defaultValue,
         };
       }, {}),
-    [filters],
+    [filters]
   );
 
   const countApplied = React.useMemo(() => {
     let count = 0;
 
     if (value) {
-      filters.forEach(filter => {
+      filters.forEach((filter) => {
         if (value[filter.name] !== filter.defaultValue) {
           count++;
         }
@@ -63,7 +63,7 @@ const TableFilter: React.FC<Props> = props => {
 
   const Content = (
     <Form form={form} initialValues={initialValues} validateTrigger={['onSubmit']} onFinish={handleSubmit}>
-      {filters.map(filter => (
+      {filters.map((filter) => (
         <Form.Item key={filter.name} name={filter.name} label={filter.label} className="mb-32">
           {filter.itemRender()}
         </Form.Item>
@@ -86,7 +86,8 @@ const TableFilter: React.FC<Props> = props => {
       content={Content}
       visible={visible}
       onVisibleChange={setVisible}
-      placement="bottomRight">
+      placement="bottomRight"
+    >
       <button type="button" className="button-ghost-monochrome pv-16">
         <Icon name="filter" className="mr-8" color="inherit" />
         <span className="mr-8">Filters</span>

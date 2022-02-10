@@ -1,4 +1,3 @@
-import React from 'react';
 import AntdSkeleton, { SkeletonProps as AntdSkeletonProps } from 'antd/lib/skeleton';
 import cn from 'classnames';
 
@@ -9,7 +8,7 @@ export type SkeletonProps = AntdSkeletonProps & {
   height?: number;
 };
 
-const Skeleton: React.FC<SkeletonProps> = props => {
+const Skeleton: React.FC<SkeletonProps> = (props) => {
   const { className, width, height, loading, children, ...skeletonProps } = props;
 
   return (
@@ -19,7 +18,8 @@ const Skeleton: React.FC<SkeletonProps> = props => {
       active
       loading={loading !== false}
       paragraph={{ rows: 0 }}
-      {...skeletonProps}>
+      {...skeletonProps}
+    >
       {children}
     </AntdSkeleton>
   );

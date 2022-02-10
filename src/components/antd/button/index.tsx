@@ -1,4 +1,3 @@
-import React from 'react';
 import AntdButton, { ButtonProps as AntdButtonProps, ButtonType as AntdButtonType } from 'antd/lib/button';
 import cn from 'classnames';
 
