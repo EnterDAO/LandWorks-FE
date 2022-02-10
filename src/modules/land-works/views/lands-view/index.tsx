@@ -103,10 +103,6 @@ const LandsView: React.FC = () => {
     },
   });
 
-  useEffect(() => {
-    searchQuery ? setPageSize(100) : setPageSize(+pageSizeOptions[0]);
-  }, [searchQuery]);
-
   const onPaginationChange = (page: number, newPageSize?: number | undefined) => {
     setPage(page);
     if (newPageSize) {
@@ -179,8 +175,9 @@ const LandsView: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    getAssets(page, pageSize, DECENTRALAND_METAVERSE, lastRentEnd, sortColumn, sortDir);
-  }, [page, pageSize, sortColumn, sortDir, byAvailability, wallet.account]);
+    const pageSizeBasedOnQuery = searchQuery === '' ? pageSize : 100;
+    getAssets(page, pageSizeBasedOnQuery, DECENTRALAND_METAVERSE, lastRentEnd, sortColumn, sortDir);
+  }, [page, pageSize, sortColumn, sortDir, byAvailability, wallet.account, searchQuery]);
 
   // toast.success('Property listed successfully.', {
   //   position: toast.POSITION.TOP_RIGHT,
@@ -264,7 +261,7 @@ const LandsView: React.FC = () => {
                 total={paginationLength}
                 defaultPageSize={pageSize}
                 showSizeChanger
-                pageSizeOptions={query ? ['100'] : pageSizeOptions}
+                pageSizeOptions={pageSizeOptions}
                 onChange={onPaginationChange}
               />
             )}
