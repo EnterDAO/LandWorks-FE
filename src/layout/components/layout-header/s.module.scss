@@ -1,9 +1,11 @@
 .component {
   align-items: center;
-  background: var(--theme-card-color);
+  background: none;
   display: flex;
-  padding: 12px var(--horizontal-padding);
+  margin: 12px var(--horizontal-padding);
+  height: 107px;
   position: relative;
+  border-bottom: 2px solid #27273a;
 
   @media (max-width: 1024px) {
     padding: 24px 12px;

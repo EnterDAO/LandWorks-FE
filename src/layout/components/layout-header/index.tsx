@@ -16,6 +16,7 @@ import { useWarning } from 'providers/warning-provider';
 import ConnectedWallet from 'wallets/components/connected-wallet';
 import { useWallet } from 'wallets/wallet';
 
+import { ReactComponent as TextLogo } from '../../../resources/svg/landWorks-logo.svg';
 import { ReactComponent as ListIcon } from '../../../resources/svg/list-property.svg';
 
 import s from './s.module.scss';
@@ -56,11 +57,11 @@ const LayoutHeader: React.FC = () => {
       <div style={{ cursor: 'pointer' }} onClick={() => history.push('/all')}>
         <Icon name="png/LandWorksLogo" width="auto" height="auto" className={s.logo} />
       </div>
-      <h1 className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`} onClick={() => history.push('/all')}>
-        LandWorks
-      </h1>
+      <div className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`} onClick={() => history.push('/all')}>
+        <TextLogo />
+      </div>
 
-      {wallet.account && !isLandingPage?.isExact && <LandsNav />}
+      {!isLandingPage?.isExact && <LandsNav />}
 
       {wallet.isActive && wallet.connector?.id === 'metamask' && !isLandingPage?.isExact && (
         <div className={s.addTokenWrapper}>
