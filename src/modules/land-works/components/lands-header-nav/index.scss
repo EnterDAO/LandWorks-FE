@@ -19,6 +19,9 @@
     width: 2px;
     background: #27273a;
     margin: 0 31px;
+    @media (max-width: 1000px) {
+      margin: 0 20px;
+    }
   }
 
   .nav-content {

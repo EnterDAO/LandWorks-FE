@@ -63,16 +63,6 @@ const LayoutHeader: React.FC = () => {
 
       {!isLandingPage?.isExact && <LandsNav />}
 
-      {wallet.isActive && wallet.connector?.id === 'metamask' && !isLandingPage?.isExact && (
-        <div className={s.addTokenWrapper}>
-          <LandsTooltip placement="bottom" trigger="hover" text="List new property">
-            <button type="button" onClick={() => history.push('/list')} className={s.addTokenButton}>
-              <ListIcon />
-            </button>
-          </LandsTooltip>
-        </div>
-      )}
-
       {isLandingPage?.isExact && (
         <Button type="link" className={s.burger} onClick={() => setNavOpen((prevState) => !prevState)}>
           <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
