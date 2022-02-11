@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
+
 import Select, { ActionMeta, SingleValue } from 'react-select';
 
 import { Option } from 'modules/interface';

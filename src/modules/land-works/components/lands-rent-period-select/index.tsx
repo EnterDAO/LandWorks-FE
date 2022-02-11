@@ -1,4 +1,3 @@
-import React from 'react';
 import { Input } from 'antd';
 
 import Select from 'components/antd/select';

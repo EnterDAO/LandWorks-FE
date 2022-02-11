@@ -1,4 +1,3 @@
-import React from 'react';
 import AntdProgress, { ProgressProps as AntdProgressProps } from 'antd/lib/progress';
 import cn from 'classnames';
 
@@ -9,7 +8,7 @@ export type ProgressProps = AntdProgressProps & {
   acceptance?: number;
 };
 
-const Progress: React.FC<ProgressProps> = props => {
+const Progress: React.FC<ProgressProps> = (props) => {
   const { className, acceptance, ...progressProps } = props;
   const acceptanceMode = acceptance !== undefined;
   const acceptanceFulfilled = Number(acceptance) <= Number(props.percent);

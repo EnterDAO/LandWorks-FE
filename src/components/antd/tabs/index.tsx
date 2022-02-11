@@ -1,4 +1,3 @@
-import React from 'react';
 import AntdTabs, { TabPaneProps as AntdTabPaneProps, TabsProps as AntdTabsProps } from 'antd/lib/tabs';
 import cn from 'classnames';
 
@@ -6,7 +5,7 @@ import s from './s.module.scss';
 
 export type TabProps = AntdTabPaneProps;
 
-const Tab: React.FC<TabProps> = props => {
+const Tab: React.FC<TabProps> = (props) => {
   const { className, ...tabProps } = props;
 
   return <AntdTabs.TabPane className={cn(s.tab, className)} {...tabProps} />;

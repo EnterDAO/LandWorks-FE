@@ -1,10 +1,10 @@
 import 'styles/index.scss';
 
-import React from 'react';
+import { FC } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import Buffer from 'buffer';
+import { ThemeProvider } from '@mui/material';
 
 import ErrorBoundary from 'components/custom/error-boundary';
 import LayoutView from 'layout';
@@ -18,32 +18,34 @@ import Web3WalletProvider from 'wallets/wallet';
 
 import { checkFlexGapSupport } from './checkFlexGap';
 import * as sw from './serviceWorker';
+import appTheme from './themes/theme';
 import ScrollToTop from './top-scroll';
-
-global.Buffer = global.Buffer || Buffer;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.process = {} as any;
-const App: React.FC = () => {
+
+const App: FC = () => {
   return (
     <ErrorBoundary>
       <StaticSprite />
       <WindowStateProvider>
-        <GeneralContextProvider>
-          <EthWeb3Provider>
-            <Web3WalletProvider>
-              <KnownTokensProvider>
-                <Router>
-                  <ScrollToTop />
-                  <ToastContainer theme="dark" />
-                  <NotificationsProvider>
-                    <LayoutView />
-                  </NotificationsProvider>
-                </Router>
-              </KnownTokensProvider>
-            </Web3WalletProvider>
-          </EthWeb3Provider>
-        </GeneralContextProvider>
+        <ThemeProvider theme={appTheme}>
+          <GeneralContextProvider>
+            <EthWeb3Provider>
+              <Web3WalletProvider>
+                <KnownTokensProvider>
+                  <Router>
+                    <ScrollToTop />
+                    <ToastContainer theme="dark" />
+                    <NotificationsProvider>
+                      <LayoutView />
+                    </NotificationsProvider>
+                  </Router>
+                </KnownTokensProvider>
+              </Web3WalletProvider>
+            </EthWeb3Provider>
+          </GeneralContextProvider>
+        </ThemeProvider>
       </WindowStateProvider>
     </ErrorBoundary>
   );

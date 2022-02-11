@@ -8,7 +8,7 @@ export type IconsSetProps = {
   className?: string;
 };
 
-const IconsSet: React.FC<IconsSetProps> = props => {
+const IconsSet: React.FC<IconsSetProps> = (props) => {
   return <div className={cn(s.component, props.className)}>{props.icons}</div>;
 };
 

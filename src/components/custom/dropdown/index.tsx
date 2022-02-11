@@ -68,8 +68,8 @@ export const Dropdown: React.FC<DropdownProps> = ({ content, children, options }
       if (popperEl) {
         nodes.push(popperEl);
       }
-      outyInstance = outy(nodes, [('click' as unknown) as MouseEvent, ('touchstart' as unknown) as TouchEvent], () =>
-        setOpen(false),
+      outyInstance = outy(nodes, ['click' as unknown as MouseEvent, 'touchstart' as unknown as TouchEvent], () =>
+        setOpen(false)
       );
     }
 
@@ -89,10 +89,11 @@ export const Dropdown: React.FC<DropdownProps> = ({ content, children, options }
             // visibility: open ? 'visible' : 'hidden',
             display: open ? '' : 'none',
           }}
-          {...attributes.popper}>
+          {...attributes.popper}
+        >
           {content(setOpen)}
         </div>,
-        document.querySelector('#tooltip-root') || document.body,
+        document.querySelector('#tooltip-root') || document.body
       )}
     </>
   );
@@ -115,7 +116,7 @@ export type DropdownListProps = {
 export const DropdownList: React.FC<DropdownListProps> = ({ items, children, options }) => {
   return (
     <Dropdown
-      content={setOpen => (
+      content={(setOpen) => (
         <ul className={s.tokenSelectList}>
           {items.map(({ onClick, ...rest }, idx) => {
             if (rest.href) {
@@ -127,10 +128,11 @@ export const DropdownList: React.FC<DropdownListProps> = ({ items, children, opt
                     href={rest.href}
                     {...rest}
                     className={s.tokenSelectListButton}
-                    onClick={e => {
+                    onClick={(e) => {
                       // if (onClick) onClick(e);
                       setOpen(false);
-                    }}>
+                    }}
+                  >
                     {rest.children}
                   </a>
                 </li>
@@ -146,7 +148,7 @@ export const DropdownList: React.FC<DropdownListProps> = ({ items, children, opt
                   <Link
                     {...rest}
                     className={s.tokenSelectListButton}
-                    onClick={e => {
+                    onClick={(e) => {
                       // if (onClick) onClick(e);
                       setOpen(false);
                     }}
@@ -162,7 +164,7 @@ export const DropdownList: React.FC<DropdownListProps> = ({ items, children, opt
                 <button
                   {...rest}
                   className={s.tokenSelectListButton}
-                  onClick={e => {
+                  onClick={(e) => {
                     // @ts-ignore
                     if (onClick) onClick(e);
                     setOpen(false);
@@ -173,7 +175,8 @@ export const DropdownList: React.FC<DropdownListProps> = ({ items, children, opt
           })}
         </ul>
       )}
-      options={options}>
+      options={options}
+    >
       {children}
     </Dropdown>
   );

@@ -1,4 +1,3 @@
-import React from 'react';
 import AntdInput, { InputProps as AntdInputProps } from 'antd/lib/input';
 import cn from 'classnames';
 

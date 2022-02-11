@@ -1,4 +1,3 @@
-import React from 'react';
 import { Col, Row } from 'antd';
 
 import { ReactComponent as HowItWorksGraphics } from 'resources/svg/landing/how-it-works-graphics.svg';

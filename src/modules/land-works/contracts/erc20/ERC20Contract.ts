@@ -1,12 +1,12 @@
 import BigNumber from 'bignumber.js';
 import { AbiItem } from 'web3-utils';
 import Web3Contract, { Web3ContractAbiItem } from 'web3/web3Contract';
+
 import ERC20Abi from './abi.json';
 
 export default class ERC20Contract extends Web3Contract {
-
   constructor(abi: AbiItem[], address: string) {
-    super([...ERC20Abi as Web3ContractAbiItem[], ...abi], address, '');
+    super([...(ERC20Abi as Web3ContractAbiItem[]), ...abi], address, '');
 
     this.on(Web3Contract.UPDATE_ACCOUNT, () => {
       if (!this.account) {
@@ -24,14 +24,13 @@ export default class ERC20Contract extends Web3Contract {
     return this.batch([
       {
         method: 'balanceOf',
-        transform: value => new BigNumber(value),
+        transform: (value) => new BigNumber(value),
       },
       {
         method: 'allowance',
-        transform: value => new BigNumber(value),
+        transform: (value) => new BigNumber(value),
       },
-    ])
-      .then(([balance, allowance]) => ({ balance, allowance }));
+    ]).then(([balance, allowance]) => ({ balance, allowance }));
   }
 
   /**
@@ -39,19 +38,13 @@ export default class ERC20Contract extends Web3Contract {
    * @param spender The to-be-spender of the `amount`.
    * @param amount The amount to be spent.
    */
-  approve(
-    spender: string,
-    amount: BigNumber): Promise<void> {
+  approve(spender: string, amount: BigNumber): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
 
-    return this.send('approve',
-      [
-        spender,
-        amount,
-      ], {
-        from: this.account,
-      }).then();
+    return this.send('approve', [spender, amount], {
+      from: this.account,
+    }).then();
   }
 }

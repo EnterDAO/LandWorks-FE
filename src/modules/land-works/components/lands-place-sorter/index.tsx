@@ -1,4 +1,3 @@
-import React from 'react';
 import { SelectValue } from 'antd/lib/select';
 
 import Select from 'components/antd/select';

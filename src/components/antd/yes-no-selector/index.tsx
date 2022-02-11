@@ -1,4 +1,3 @@
-import React from 'react';
 import { CheckboxOptionType } from 'antd/lib/checkbox/Group';
 import AntdRadio, { RadioGroupProps as AntdRadioGroupProps } from 'antd/lib/radio';
 import cn from 'classnames';
@@ -18,7 +17,7 @@ const YesNoOptions: CheckboxOptionType[] = [
   },
 ];
 
-const YesNoSelector: React.FC<YesNoSelectorProps> = props => {
+const YesNoSelector: React.FC<YesNoSelectorProps> = (props) => {
   const { className, ...groupProps } = props;
 
   return (

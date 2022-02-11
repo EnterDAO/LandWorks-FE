@@ -1,4 +1,3 @@
-import React from 'react';
 import { Radio, RadioChangeEvent } from 'antd';
 
 import './index.scss';

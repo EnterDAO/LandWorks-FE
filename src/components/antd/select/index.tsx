@@ -1,4 +1,3 @@
-import React from 'react';
 import AntdSelect, {
   OptionProps as AntdOptionProps,
   SelectProps as AntdSelectProps,
