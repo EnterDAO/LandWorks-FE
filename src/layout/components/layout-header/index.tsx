@@ -17,6 +17,7 @@ import ConnectedWallet from 'wallets/components/connected-wallet';
 import { useWallet } from 'wallets/wallet';
 
 import { ReactComponent as ListIcon } from '../../../resources/svg/list-property.svg';
+import { ReactComponent as TextLogo } from '../../../resources/svg/landWorks-logo.svg';
 
 import s from './s.module.scss';
 
