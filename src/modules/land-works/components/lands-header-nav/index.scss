@@ -4,7 +4,7 @@
   margin-right: auto !important;
   background-color: transparent;
   border: none;
-  color: #68687b;
+  color: $grey02;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -17,7 +17,7 @@
   .divider {
     height: 20px;
     width: 2px;
-    background: #27273a;
+    background: $grey01;
     margin: 0 31px;
     @media (max-width: 1000px) {
       margin: 0 20px;
@@ -43,7 +43,7 @@
   }
 
   .tab {
-    color: #68687b;
+    color: $grey02;
     height: 107px;
     display: flex;
     align-items: center;
@@ -51,15 +51,15 @@
     display: flex;
     margin: 0 12.5px;
     .icon {
-      fill: #68687b;
+      fill: $grey02;
     }
   }
 
   .selected {
-    color: white;
+    color: $light;
     position: relative;
     .icon {
-      fill: #f8f8ff;
+      fill: $light;
     }
 
     .active-tab {
@@ -68,8 +68,8 @@
       height: 5px;
       width: 100%;
       border-radius: 2px 2px 0 0;
-      background: #5d8ff0;
-      box-shadow: 0px 0px 7px 1px #5d8ff0;
+      background: $accentBlue;
+      box-shadow: 0px 0px 7px 1px $accentBlue;
     }
   }
 }
