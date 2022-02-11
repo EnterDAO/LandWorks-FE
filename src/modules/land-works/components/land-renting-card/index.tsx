@@ -1,4 +1,3 @@
-import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { bottom } from '@popperjs/core';
 import { Card, Col, Image, Row } from 'antd';

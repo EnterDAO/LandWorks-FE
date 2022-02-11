@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
+
 import Select, { SingleValue, components } from 'react-select';
 
 import Icon from 'components/custom/icon';

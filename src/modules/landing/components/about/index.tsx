@@ -1,4 +1,3 @@
-import React from 'react';
 import { Col, Row } from 'antd';
 
 import { ReactComponent as OwnersGraphics } from 'resources/svg/landing/owners-graphics.svg';

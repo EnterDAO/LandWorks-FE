@@ -10,12 +10,12 @@ import s from './s.module.scss';
 
 export type TokenInputProps = AntdInputProps;
 
-const TokenInput: React.FC<TokenInputProps> = props => {
+const TokenInput: React.FC<TokenInputProps> = (props) => {
   const { className, value, ...inputProps } = props;
 
   const addonBefore = React.useMemo(
     () => (isAddress(String(value)) ? <Identicon address={String(value)} width={24} height={24} /> : <div />),
-    [value],
+    [value]
   );
 
   return (

@@ -1,4 +1,3 @@
-import React from 'react';
 import cn from 'classnames';
 
 import s from './s.module.scss';
@@ -8,7 +7,7 @@ export type StatusTagProps = {
   className?: string;
 };
 
-const StatusDot: React.FC<StatusTagProps> = props => {
+const StatusDot: React.FC<StatusTagProps> = (props) => {
   const { color, className } = props;
 
   return <div className={cn(s.statusDot, s[color], className)} />;

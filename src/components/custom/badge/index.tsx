@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import cn from 'classnames';
 
 import s from './s.module.scss';
@@ -8,7 +8,7 @@ type Props = {
   className?: string;
 };
 
-const Badge: React.FC<Props> = ({ children, className, ...rest }) => {
+const Badge: FC<Props> = ({ children, className, ...rest }) => {
   if (!children) return null;
 
   return (

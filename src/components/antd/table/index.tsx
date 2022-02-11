@@ -1,4 +1,3 @@
-import React from 'react';
 import AntdTable, { TableProps as AntdTableProps } from 'antd/lib/table';
 import cn from 'classnames';
 

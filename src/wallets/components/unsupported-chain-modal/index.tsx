@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
 
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';

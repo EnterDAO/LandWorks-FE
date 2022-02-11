@@ -1,4 +1,3 @@
-import React from 'react';
 import AntdDivider, { DividerProps as AntdDividerProps } from 'antd/lib/divider';
 import cn from 'classnames';
 
