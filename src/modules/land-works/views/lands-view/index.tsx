@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ConsoleView } from 'react-device-detect';
+import { useHistory } from 'react-router-dom';
+import { SingleValue } from 'react-select';
 import { useSubscription } from '@apollo/client';
 import { end } from '@popperjs/core';
-import { Col, Pagination, Row } from 'antd';
-import BigNumber from 'bignumber.js';
+import { Col, Pagination, RadioChangeEvent, Row } from 'antd';
+import { SelectValue } from 'antd/lib/select';
 
+import { Option } from 'modules/interface';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card';
 import { LandsAction } from 'modules/land-works/components/lands-action';
@@ -12,6 +14,7 @@ import { LandsAvailableSorter } from 'modules/land-works/components/lands-availa
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sorter';
+import { SearchBar } from 'modules/land-works/components/lands-search';
 import { SortDirection } from 'modules/land-works/models/SortDirection';
 import { useWallet } from 'wallets/wallet';
 
@@ -51,7 +54,7 @@ const data = [
   },
 ];
 
-const Lands: React.FC = () => {
+const LandsView: React.FC = () => {
   const pageSizeOptions = ['6', '12', '24'];
   const sortColumns = ['totalRents', 'pricePerSecond', 'pricePerSecond'];
   const sortDirections = [SortDirection.DESC, SortDirection.ASC, SortDirection.DESC];
@@ -67,9 +70,21 @@ const Lands: React.FC = () => {
   const [sortDir, setSortDir] = useState(sortDirections[0]);
   const [byAvailability, setByAvailability] = useState(false);
   const [page, setPage] = useState(1);
+
+  const history = useHistory();
+  const { search } = window.location;
+  const searchParams = new URLSearchParams(search);
+
+  const query = searchParams.get('s');
+  const [searchQuery, setSearchQuery] = useState(query || '');
   const [pageSize, setPageSize] = useState(+pageSizeOptions[0]);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    searchParams.set('s', searchQuery);
+    history.push({ search: searchParams.toString() });
+  }, [searchQuery]);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -99,27 +114,42 @@ const Lands: React.FC = () => {
     }
   };
 
-  const onSortDirectionChange = (event: any) => {
-    const { value } = event;
+  const onSortDirectionChange = (value: SingleValue<Option>) => {
     const sortIndex = Number(value) - 1;
     setSortDir(sortDirections[sortIndex]);
     setSortColumn(sortColumns[sortIndex]);
     setPage(1);
   };
 
-  const onSortByAvailability = (availabilityEvent: any) => {
-    const checked = availabilityEvent?.target?.checked;
+  const onSortByAvailability = (e: RadioChangeEvent) => {
+    const checked = e?.target?.checked;
+
     if (checked !== undefined) {
       setByAvailability(checked);
     }
+
     setLastRentEnd(checked === true ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
     setPage(1);
   };
 
-  const onPlaceChange = (placeChangeEvent: any) => {
+  const onPlaceChange = (value: SelectValue) => {
     // TODO:: some filtering here
-    console.log(placeChangeEvent);
+    console.log(value);
   };
+
+  const filterLandsByQuery = (lands: AssetEntity[], query: string) => {
+    if (!query) {
+      return lands;
+    }
+
+    return lands.filter((land) => {
+      const landName = land.name.toLowerCase();
+      return landName.includes(query);
+    });
+  };
+
+  const filteredLands = filterLandsByQuery(lands, searchQuery);
+  const paginationLength = query && query != '' ? filteredLands.length : totalLands;
 
   const getAssets = async (
     page: number,
@@ -145,8 +175,9 @@ const Lands: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    getAssets(page, pageSize, DECENTRALAND_METAVERSE, lastRentEnd, sortColumn, sortDir);
-  }, [page, pageSize, sortColumn, sortDir, byAvailability, wallet.account]);
+    const pageSizeBasedOnQuery = searchQuery === '' ? pageSize : 100;
+    getAssets(page, pageSizeBasedOnQuery, DECENTRALAND_METAVERSE, lastRentEnd, sortColumn, sortDir);
+  }, [page, pageSize, sortColumn, sortDir, byAvailability, wallet.account, searchQuery]);
 
   // toast.success('Property listed successfully.', {
   //   position: toast.POSITION.TOP_RIGHT,
@@ -202,6 +233,9 @@ const Lands: React.FC = () => {
             <Col>
               <LandsPlaceSorter onPlaceChange={onPlaceChange} />
             </Col>
+            <Col>
+              <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+            </Col>
           </Row>
           <Row
             gutter={[
@@ -212,7 +246,7 @@ const Lands: React.FC = () => {
             {loading ? (
               [1, 2, 3].map((i) => <LandCardSkeleton key={i} />)
             ) : lands.length ? (
-              lands.map((land) => <LandWorkCard key={land.id} land={land} />)
+              filteredLands.map((land) => <LandWorkCard key={land.id} land={land} />)
             ) : (
               <div>No properties are currently listed</div>
             )}
@@ -220,15 +254,17 @@ const Lands: React.FC = () => {
         </Col>
         {!!lands.length && (
           <Col span={24} className="lands-pagination">
-            <Pagination
-              locale={{ items_per_page: '' }}
-              current={page}
-              total={totalLands}
-              defaultPageSize={pageSize}
-              showSizeChanger
-              pageSizeOptions={pageSizeOptions}
-              onChange={onPaginationChange}
-            />
+            {searchQuery === '' && (
+              <Pagination
+                locale={{ items_per_page: '' }}
+                current={page}
+                total={paginationLength}
+                defaultPageSize={pageSize}
+                showSizeChanger
+                pageSizeOptions={pageSizeOptions}
+                onChange={onPaginationChange}
+              />
+            )}
           </Col>
         )}
       </Row>
@@ -246,4 +282,4 @@ const Lands: React.FC = () => {
   );
 };
 
-export default Lands;
+export default LandsView;

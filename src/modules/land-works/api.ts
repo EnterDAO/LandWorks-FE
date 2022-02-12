@@ -1,12 +1,16 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { gql } from '@apollo/client';
 import BigNumber from 'bignumber.js';
 import { constants } from 'ethers';
 
-import { getUsdPrice } from '../../components/providers/known-tokens-provider';
+import { getUsdPrice } from 'providers/known-tokens-provider';
+
 import { GraphClient } from '../../web3/graph/client';
 import { AssetStatus } from './models/AssetStatus';
 
-import { getDecentralandAssetName, getFormattedTime, getNowTs, getTimeType, secondsToDuration } from '../../utils';
+import { getDecentralandAssetName, getNowTs, getTimeType, secondsToDuration } from '../../utils';
 import { DAY_IN_SECONDS, ONE_HUNDRED_YEARS_IN_SECONDS, ONE_SECOND } from '../../utils/date';
 import { MAX_UINT_256, getHumanValue } from '../../web3/utils';
 
@@ -312,6 +316,15 @@ export type AssetEntity = {
   rents: RentEntity[];
   lastRentEnd: string;
   isAvailable: boolean;
+};
+
+export type Rent = {
+  operator: string;
+  asset: AssetEntity;
+  end: string;
+  start: string;
+  id: string | null | undefined;
+  name: string;
 };
 
 export type AssetAvailablity = {
@@ -777,7 +790,7 @@ export function fetchUserRentPerAsset(address: string, availableOnly = false, pa
       const now = getNowTs();
       const filteredRents = [] as RentEntity[];
       // TODO: optimise search for target rent
-      for (const [_, rents] of groupedRents) {
+      for (const [, rents] of groupedRents) {
         if (rents.length == 1) {
           filteredRents.push(rents[0]);
         } else {
@@ -1087,7 +1100,7 @@ function getAvailability(asset: any): AssetAvailablity {
   if (maxRentPeriod) {
     const parsedDate = secondsToDuration(asset.minPeriod - maxRentPeriod.toNumber());
     const { timeValue, timeType } = getTimeType(parsedDate);
-    const period = `${timeValue} ${timeType}`;
+    // const period = `${timeValue} ${timeType}`;
     maxRentPeriodType = timeType;
     maxRentPeriodTime = timeValue;
   }

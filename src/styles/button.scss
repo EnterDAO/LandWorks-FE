@@ -22,17 +22,19 @@
   color: white;
 
   &:hover {
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), linear-gradient(135deg, #DD3DCB 15.57%, #EF9C92 84.88%);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
+      linear-gradient(135deg, #dd3dcb 15.57%, #ef9c92 84.88%);
   }
 
   &:active {
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(135deg, #DD3DCB 15.57%, #EF9C92 84.88%);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)),
+      linear-gradient(135deg, #dd3dcb 15.57%, #ef9c92 84.88%);
   }
 
   &:disabled,
   &[disabled] {
     background: rgb(46, 43, 43);
-    color:  rgb(241, 233, 233);
+    color: rgb(241, 233, 233);
     box-shadow: none;
     cursor: not-allowed;
 

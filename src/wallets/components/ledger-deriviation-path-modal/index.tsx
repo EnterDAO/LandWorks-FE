@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React from 'react';
 
 import Button from 'components/antd/button';
@@ -18,7 +20,7 @@ const WEB3_LEDGER_DERIVATION_PATHS: SelectOption[] = [
   },
 ];
 
-const LedgerDerivationPathModal: React.FC<ModalProps> = props => {
+const LedgerDerivationPathModal: React.FC<ModalProps> = (props) => {
   const { ...modalProps } = props;
 
   const wallet = useWallet();

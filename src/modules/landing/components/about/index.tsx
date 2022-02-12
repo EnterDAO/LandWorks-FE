@@ -1,4 +1,3 @@
-import React from 'react';
 import { Col, Row } from 'antd';
 
 import { ReactComponent as OwnersGraphics } from 'resources/svg/landing/owners-graphics.svg';
@@ -21,7 +20,8 @@ export const About: React.FC = () => (
         gutter={[
           { sm: 32, md: 60, lg: 100 },
           { sm: 32, md: 60, lg: 100 },
-        ]}>
+        ]}
+      >
         <Col sm={24} md={12} lg={8} className="about-section">
           <OwnersGraphics />
           <h2>For land owners</h2>

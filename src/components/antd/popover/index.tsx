@@ -1,4 +1,3 @@
-import React from 'react';
 import AntdPopover, { PopoverProps as AntdPopoverProps } from 'antd/lib/popover';
 import cn from 'classnames';
 
@@ -8,7 +7,7 @@ export type PopoverProps = {
   noPadding?: boolean;
 };
 
-const Popover: React.FC<AntdPopoverProps & PopoverProps> = props => {
+const Popover: React.FC<AntdPopoverProps & PopoverProps> = (props) => {
   const { noPadding, children, className, ...popoverProps } = props;
 
   return (
@@ -16,7 +15,8 @@ const Popover: React.FC<AntdPopoverProps & PopoverProps> = props => {
       overlayClassName={cn(s.overlay, className, noPadding && s.noPadding)}
       trigger="click"
       placement="bottom"
-      {...popoverProps}>
+      {...popoverProps}
+    >
       {children}
     </AntdPopover>
   );

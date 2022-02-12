@@ -1,19 +1,18 @@
 .drop-select {
-    background: var(--theme-modal-color) !important;
+  background: var(--theme-modal-color) !important;
+  height: 36px !important;
+  border-radius: 12px !important;
+  width: 100%;
+
+  .ant-select-selector {
+    background: rgba(22, 22, 34, 1) !important;
+    border: none !important;
     height: 36px !important;
+    padding: 6px 17px 0px 18px !important;
     border-radius: 12px !important;
-    width: 100%;
+  }
 
-    .ant-select-selector {
-        background: rgba(22, 22, 34, 1) !important;
-        border: none !important;
-        height: 36px !important;
-        padding: 6px 17px 0px 18px !important;
-        border-radius: 12px !important;
-    }
-
-    .ant-select-arrow {
-        top: 42% !important;
-
-    }
+  .ant-select-arrow {
+    top: 42% !important;
+  }
 }

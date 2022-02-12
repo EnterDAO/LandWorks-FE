@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Input, Row } from 'antd';
 import BigNumber from 'bignumber.js';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
+import { RangeValue } from 'rc-picker/lib/interface';
+import { ONE_ADDRESS, getHumanValue } from 'web3/utils';
 
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
+import config from 'config';
+import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
+import { getTokenPrice } from 'providers/known-tokens-provider';
+import { useWallet } from 'wallets/wallet';
 
-import { getTokenPrice } from '../../../../components/providers/known-tokens-provider';
-import config from '../../../../config';
-import { useWallet } from '../../../../wallets/wallet';
 import { AssetAvailablity, PaymentToken } from '../../api';
 import { useErc20 } from '../../providers/erc20-provider';
 import { useLandworks } from '../../providers/landworks-provider';
 import { RentDatePicker } from '../lands-rent-date-picker';
 import { LandsTooltip } from '../lands-tooltip';
 
-import { getTimeType, isValidAddress, secondsToDuration } from '../../../../utils';
-import { ONE_ADDRESS, getHumanValue } from '../../../../web3/utils';
+import { getTimeType, isValidAddress, secondsToDuration } from 'utils';
 
 import './index.scss';
 
@@ -30,26 +31,15 @@ type Props = ModalProps & {
   assetId?: string;
   pricePerSecond?: BigNumber;
   paymentToken?: PaymentToken;
-  renderProgress?: () => React.ReactNode;
-  renderSuccess?: () => React.ReactNode;
   onSubmit: () => void;
 };
 
 export const RentModal: React.FC<Props> = (props) => {
-  const {
-    txHash,
-    availability,
-    assetId,
-    pricePerSecond,
-    paymentToken,
-    onCancel,
-    renderProgress,
-    renderSuccess,
-    onSubmit,
-    ...modalProps
-  } = props;
+  const { availability, assetId, pricePerSecond, paymentToken, onCancel, onSubmit, ...modalProps } = props;
 
-  const minStartDate = moment.unix(availability?.startRentDate || 0);
+  // added one minute each to be able to choose if MIN & MAX
+  const fixedMinStartRentDate = availability?.startRentDate ? availability?.startRentDate + 60 : 0;
+  const minStartDate = moment.unix(fixedMinStartRentDate);
   const minRentPeriod = moment.unix(availability?.minRentDate || 0);
   const maxEndDate = moment.unix(availability?.maxRentDate || 0);
 
@@ -62,7 +52,7 @@ export const RentModal: React.FC<Props> = (props) => {
 
   const [editedValue, setEditedValue] = useState<string>(wallet.account || '');
   const [period, setPeriod] = useState(0);
-  const [endDate, setEndDate] = useState('');
+  // const [, setEndDate] = useState('');
   const [totalPrice, setTotalPrice] = useState(new BigNumber(0));
   const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
   const [errMessage, setErrMessage] = useState<string>('');
@@ -71,14 +61,14 @@ export const RentModal: React.FC<Props> = (props) => {
   const [approveDisabled, setApproveDisabled] = useState(false);
   const [rentDisabled, setRentDisabled] = useState(false);
 
-  const handleRentDateChange = (date: moment.Moment[]) => {
+  const handleRentDateChange = (values: RangeValue<Moment>) => {
     // Those are the start and the end dates, upon ok press
-    const start = date[0];
-    const end = date[1];
+    const start = (values as Moment[])[0];
+    const end = (values as Moment[])[1];
 
     const period = end.unix() - start.unix();
     setPeriod(period);
-    setEndDate(timestampSecondsToDate(end.unix().toString()));
+    // setEndDate(timestampSecondsToDate(end.unix().toString()));
   };
 
   const isYou = () => {
@@ -87,7 +77,7 @@ export const RentModal: React.FC<Props> = (props) => {
 
   const calculatePrices = async () => {
     const decimalPrice = getHumanValue(new BigNumber(pricePerSecond || 0), paymentToken?.decimals);
-    const totalPrice = new BigNumber(period).multipliedBy(decimalPrice!);
+    const totalPrice = new BigNumber(period).multipliedBy(decimalPrice as BigNumber);
     setTotalPrice(totalPrice);
     const usdTokenPrice = getTokenPrice(paymentToken?.symbol || 'eth');
     const usdPrice = usdTokenPrice?.multipliedBy(totalPrice || 0);
@@ -98,6 +88,7 @@ export const RentModal: React.FC<Props> = (props) => {
     return paymentToken && paymentToken.id !== ONE_ADDRESS;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (e: any) => {
     setEditedValue(e.target.value);
   };
@@ -198,7 +189,7 @@ export const RentModal: React.FC<Props> = (props) => {
 
   useEffect(() => {
     calculatePrices();
-    setValue(new BigNumber(period).multipliedBy(pricePerSecond!));
+    setValue(new BigNumber(period).multipliedBy(pricePerSecond as BigNumber));
   }, [period]);
 
   useEffect(() => {

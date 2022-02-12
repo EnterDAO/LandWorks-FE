@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import BigNumber from 'bignumber.js';
 import { AbiItem } from 'web3-utils';
 import { BatchContractMethod, Web3ContractAbiItem } from 'web3/web3Contract';

@@ -1,10 +1,8 @@
-import React from 'react';
-
 import Grid from 'components/custom/grid';
 import { Notification } from 'components/custom/notification';
 import { Text } from 'components/custom/typography';
-import { useGeneral } from 'components/providers/general-provider';
-import { useNotifications } from 'components/providers/notifications-provider';
+import { useGeneral } from 'providers/general-provider';
+import { useNotifications } from 'providers/notifications-provider';
 import { ReactComponent as ZeroNotificationsDarkSvg } from 'resources/svg/zero-notifications-dark.svg';
 import { ReactComponent as ZeroNotificationsSvg } from 'resources/svg/zero-notifications.svg';
 
@@ -33,7 +31,7 @@ const Notifications: React.FC = () => {
     <ul className={s.list}>
       {notifications
         .sort((a, b) => b.startsOn - a.startsOn)
-        .map(n => (
+        .map((n) => (
           <li key={n.id}>
             <Notification n={n} />
           </li>

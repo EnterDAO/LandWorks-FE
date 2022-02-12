@@ -1,18 +1,26 @@
-import React from 'react';
-import { Popover, Tooltip } from 'antd';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { Popover } from 'antd';
 
 import './index.scss';
 
+type Coordinate = {
+  id: string;
+  x: string;
+  y: string;
+};
+
 interface IEstateLandOverlay {
-  coordinates: any;
+  coordinates?: Coordinate[];
 }
+
 const EstateLandOverlay: React.FC<IEstateLandOverlay> = ({ coordinates }) => {
   const maxShown = 4;
   return coordinates && coordinates?.length ? (
     <div className="estate-overlay-container">
       {coordinates.length > maxShown ? (
         <>
-          {(coordinates || []).slice(0, maxShown).map((estateCoord: any) => (
+          {(coordinates || []).slice(0, maxShown).map((estateCoord: Coordinate) => (
             <div key={estateCoord.id} className="estate-land">
               <span>
                 {estateCoord.x}, {estateCoord.y}

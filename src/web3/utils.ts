@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import BigNumber from 'bignumber.js';
 
 import config from 'config';
@@ -123,6 +124,15 @@ export function getDecentralandMarketplaceUrl(registry?: string, id?: string): s
   return undefined;
 }
 
+export function getDecentralandPlayUrl(coordinates?: any[]): string | undefined {
+  if (coordinates) {
+    const { x, y } = coordinates[coordinates.length - 1];
+    return `https://play.decentraland.org/?position=${x},${y}`;
+  }
+
+  return undefined;
+}
+
 export function getExponentValue(decimals = 0): BigNumber {
   return new BigNumber(10).pow(decimals);
 }
@@ -220,7 +230,7 @@ export function formatToken(value: number | BigNumber | undefined, options?: For
   const { tokenName, compact = false, decimals = 4, minDecimals, scale = 0 } = options ?? {};
 
   if (scale > 0) {
-    val = val.unscaleBy(scale)!;
+    val = val.unscaleBy(scale) as BigNumber;
   }
 
   let str = '';

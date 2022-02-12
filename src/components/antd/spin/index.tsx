@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, useMemo } from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
 import AntdSpin, { SpinProps as AntdSpinProps } from 'antd/lib/spin';
 import cn from 'classnames';
@@ -9,10 +9,10 @@ type Props = AntdSpinProps & {
   type?: 'default' | 'circle';
 };
 
-const Spin: React.FC<Props> = props => {
+const Spin: FC<Props> = (props) => {
   const { type = 'default', className, ...spinProps } = props;
 
-  const indicator = React.useMemo(() => {
+  const indicator = useMemo(() => {
     switch (type) {
       case 'circle':
         return <LoadingOutlined spin />;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import format from 'date-fns/format';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import { InfuraProvider } from '@ethersproject/providers';
@@ -9,7 +10,7 @@ import defaultLandImage from '../modules/land-works/components/land-works-card/a
 
 const euDateFormat = 'dd.MM.yyyy HH:mm';
 
-export const isDateBeforeNow = (timestamp: string) => {
+export const isDateBeforeNow = (timestamp: string): boolean => {
   const milisecTimestamp = Number(timestamp + '000');
   const timestampDate = new Date(milisecTimestamp);
   const now = new Date();
@@ -19,7 +20,7 @@ export const isDateBeforeNow = (timestamp: string) => {
 
 export const timestampSecondsToDate = (timestamp: string, dateFormat: string = euDateFormat) => {
   const endDate = fromUnixTime(Number(timestamp));
-  return format(endDate, dateFormat);
+  return `${format(endDate, dateFormat)} UTC +${new Date().getTimezoneOffset() / -60}`;
 };
 
 export const timestampSecondsToUTCDate = (timestamp: string, dateFormat: string = euDateFormat) => {

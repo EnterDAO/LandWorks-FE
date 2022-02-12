@@ -14,7 +14,7 @@ export type IconBubbleProps = {
 
 let uuid = 0;
 
-const IconBubble: React.FC<IconBubbleProps> = props => {
+const IconBubble: React.FC<IconBubbleProps> = (props) => {
   uuid += 1;
 
   const { name, bubbleName, secondBubbleName, width = 40, height, className, style } = props;

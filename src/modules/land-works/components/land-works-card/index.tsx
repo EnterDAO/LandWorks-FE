@@ -23,16 +23,7 @@ interface ILandWorksCardProps {
 
 const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   const history = useHistory();
-  const [showChart, setShowChart] = useState(false);
-
-  const flexFont = () => {
-    const divs = document.getElementsByClassName('price-eth');
-    for (let i = 0; i < divs.length; i++) {
-      const element = divs[i] as HTMLElement;
-      const relFontsize = element.offsetWidth * 0.085;
-      element.style.fontSize = relFontsize + 'px';
-    }
-  };
+  const [showChart] = useState(false);
 
   return (
     <Col className="land-card-wrapper" xl={8} md={12} sm={24} xs={24}>

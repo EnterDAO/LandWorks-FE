@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Select from 'components/antd/select';
 
 import './index.scss';
@@ -11,6 +9,7 @@ const options = [
   },
 ];
 interface ILandsPlaceSorterProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onRentSortChange: (event: any) => void;
 }
 

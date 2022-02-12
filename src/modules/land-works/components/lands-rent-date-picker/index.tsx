@@ -1,12 +1,18 @@
 import { DatePicker } from 'antd';
-import moment, { Moment } from 'moment';
+import { Moment } from 'moment';
+import { RangeValue } from 'rc-picker/lib/interface';
 
 const { RangePicker } = DatePicker;
 
-export const RentDatePicker = (props: any) => {
+export const RentDatePicker = (props: {
+  minStartDate: Moment;
+  minRentPeriod: Moment;
+  maxEndDate: Moment;
+  handleRentDateChange: (values: RangeValue<Moment>, formatString: [string, string]) => void;
+}): React.ReactElement => {
   const { minStartDate, minRentPeriod, maxEndDate, handleRentDateChange } = props;
 
-  function range(start: any, end: any) {
+  function range(start: number, end: number) {
     const result = [];
     for (let i = start; i < end; i++) {
       result.push(i);
@@ -14,6 +20,7 @@ export const RentDatePicker = (props: any) => {
     return result;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const disabledDate = (current: any) => {
     const isBefore = current.isBefore(minRentPeriod, 'year');
     const isAfter = current.isAfter(maxEndDate, 'hour');
@@ -28,7 +35,7 @@ export const RentDatePicker = (props: any) => {
     }
   };
 
-  function disabledRangeTime(current: Moment | null, type: string): any {
+  function disabledRangeTime(current: Moment | null) {
     const minRentDate = current?.date() === minRentPeriod.date();
     const minRentMonth = current?.month() === minRentPeriod.month();
     const minRentYear = current?.year() === minRentPeriod.year();
@@ -48,7 +55,8 @@ export const RentDatePicker = (props: any) => {
 
       // Disable the hours only if its the same hour
       if (current?.hour() === minRentPeriod.hour()) {
-        const dMins = range(0, 60).filter((m) => m < minRentPeriod.minute());
+        // added one minute each to be able to choose if MIN & MAX are same
+        const dMins = range(0, 60).filter((m) => m < minRentPeriod.minute() + 1);
         disabledMins = [...disabledMins, ...dMins];
       }
 
@@ -61,7 +69,8 @@ export const RentDatePicker = (props: any) => {
 
       // Disable the hours only if its the same hour
       if (current?.hour() === maxEndDate.hour()) {
-        const dMins = range(0, 60).filter((m) => m > maxEndDate.minute());
+        // added one minute each to be able to choose  if MIN & MAX are same
+        const dMins = range(0, 60).filter((m) => m > maxEndDate.minute() + 1);
         disabledMins = [...disabledMins, ...dMins];
       }
     }

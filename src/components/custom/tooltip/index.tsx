@@ -12,7 +12,7 @@ type TooltipProps = {
   className?: string;
 };
 
-export const Tooltip: FC<TooltipProps> = props => {
+export const Tooltip: FC<TooltipProps> = (props) => {
   const { children, target, title, placement = 'bottom', className } = props;
   const [showTooltip, setShowTooltip] = useState(false);
   const targetRef = useRef(null);
@@ -50,14 +50,16 @@ export const Tooltip: FC<TooltipProps> = props => {
       onFocus={handlerShow}
       onBlur={handlerHide}
       style={{ display: 'inline-flex' }}
-      tabIndex={0}>
+      tabIndex={0}
+    >
       {target}
       <div
         ref={popperRef}
         className={cn(s.popper, className, { [s.hide]: !showTooltip })}
         style={styles.popper}
         tabIndex={showTooltip ? 0 : -1}
-        {...attributes.popper}>
+        {...attributes.popper}
+      >
         <div className={s.tooltip}>
           {title && <div className={s.title}>{title}</div>}
           {children}

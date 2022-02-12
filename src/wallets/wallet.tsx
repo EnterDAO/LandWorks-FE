@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React from 'react';
 import { useSessionStorage } from 'react-use-storage';
 import { Web3Provider } from '@ethersproject/providers';
@@ -7,9 +9,9 @@ import * as Antd from 'antd';
 
 import Spin from 'components/antd/spin';
 import ExternalLink from 'components/custom/externalLink';
-import { getNetworkName } from 'components/providers/eth-web3-provider';
 import config from 'config';
 import { WarningModal } from 'modules/land-works/components/lands-warning-modal';
+import { getNetworkName } from 'providers/eth-web3-provider';
 import ConnectWalletModal from 'wallets/components/connect-wallet-modal';
 import InstallMetaMaskModal from 'wallets/components/install-metamask-modal';
 import UnsupportedChainModal from 'wallets/components/unsupported-chain-modal';

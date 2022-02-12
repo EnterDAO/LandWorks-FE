@@ -1,4 +1,13 @@
-import { ApolloClient, ApolloQueryResult, HttpLink, InMemoryCache, split } from '@apollo/client';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  ApolloClient,
+  ApolloQueryResult,
+  HttpLink,
+  InMemoryCache,
+  OperationVariables,
+  QueryOptions,
+  split,
+} from '@apollo/client';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
@@ -14,7 +23,10 @@ export class GraphClient {
    * @param options GraphQL options
    * @param primary Whether to use the primary or the fallback node. Defaults to primary
    */
-  public static async get(options: any, primary = true): Promise<ApolloQueryResult<any>> {
+  public static async get(
+    options: QueryOptions<OperationVariables, any>,
+    primary = true
+  ): Promise<ApolloQueryResult<any>> {
     const client = GraphClient._getClient(primary);
 
     try {
@@ -26,9 +38,8 @@ export class GraphClient {
       // Try getting result through the fallback provider
       if (primary) {
         return await this.get(options, false);
-      } else {
-        throw e;
       }
+      throw e;
     }
   }
 

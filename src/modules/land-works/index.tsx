@@ -1,10 +1,10 @@
-import React, { Suspense, lazy } from 'react';
+import React, { lazy } from 'react';
 import { isMobile } from 'react-device-detect';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { useSessionStorage } from 'react-use-storage';
 
 import ProtectedRoute from 'components/custom/protected-route';
-import { useWarning } from 'components/providers/warning-provider';
+import { useWarning } from 'providers/warning-provider';
 import { useWallet } from 'wallets/wallet';
 
 const RentingView = lazy(() => import('./views/my-renting-view'));
@@ -57,8 +57,6 @@ const LandworksView: React.FC = () => {
         component={EditProperty}
       />
       <Route path={['/home', '/']} component={LandingView} />
-
-      {/*<Redirect to="/land-registry-provider-works" />*/}
     </Switch>
   );
 };

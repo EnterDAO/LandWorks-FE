@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Checkbox, Col, Row } from 'antd';
 
-import Icon, { TokenIconNames } from 'components/custom/icon';
+import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 
 import { getTokenIconName } from '../../../../helpers/helpers';

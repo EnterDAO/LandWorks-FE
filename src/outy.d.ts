@@ -4,7 +4,7 @@ declare module 'outy' {
   export default function outy(
     nodes: HTMLElement[],
     types: (Event | MouseEvent | TouchEvent)[],
-    eventHandler: Function,
+    eventHandler: Function
   ): { remove: () => void };
 }
 

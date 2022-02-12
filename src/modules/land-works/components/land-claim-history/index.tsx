@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { useSubscription } from '@apollo/client';
 import { Col, ConfigProvider, Empty, Row, Table } from 'antd';
 
-import { AssetEntity, ClaimHistory, USER_CLAIM_HISTORY_SUBSCRIPTION } from 'modules/land-works/api';
+import { ClaimHistory, USER_CLAIM_HISTORY_SUBSCRIPTION } from 'modules/land-works/api';
 
 import EmptyTable from '../../../../resources/svg/empty-table.svg';
 import { useWallet } from '../../../../wallets/wallet';
