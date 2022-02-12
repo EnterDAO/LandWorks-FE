@@ -1,9 +1,11 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { fontSize } from '@mui/system';
 import { Input } from 'antd';
 import web3 from 'web3';
 
 import Icon from 'components/custom/icon';
+import { CheckIcon, CloseIcon, EditIcon } from 'design-system/icons';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 
@@ -49,6 +51,8 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
           });
           return;
         }
+        //3AEA27A5681B1E57
+        //F3F9A24F3A3B8946182A6A0B3AEA27A5681B1E57
 
         const rentArray = rentId.split('-');
         if (rentArray.length === 2) {
@@ -88,7 +92,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
         bordered={false}
         disabled={disabled}
         value={newOperator}
-        style={{ color: '#5D8FF0' }}
+        style={{ color: '#5D8FF0', fontSize: '12px' }}
         defaultValue={newOperator}
         onChange={handleChange}
       />
@@ -96,15 +100,15 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
         <></>
       ) : disabled ? (
         <button className="edit-btn" onClick={() => setDisabled(false)}>
-          <Icon name="pencil-outlined" className="pencil-icon"></Icon>
+          <EditIcon />
         </button>
       ) : (
         <>
           <button className="edit-btn" onClick={handleSave}>
-            <Icon name="check-circle-outlined" className="pencil-icon"></Icon>
+            <CheckIcon />
           </button>
           <button className="edit-btn" onClick={handleCancel}>
-            <Icon name="close-circle-outlined" className="pencil-icon"></Icon>
+            <CloseIcon />
           </button>
         </>
       )}

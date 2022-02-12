@@ -6,7 +6,7 @@ interface ILandTableTxHashProps {
 
 const LandTableTxHash: React.FC<ILandTableTxHashProps> = ({ txHash }) => {
   return (
-    <a href={getEtherscanTxUrl(txHash)} target="_blank" rel="noreferrer">
+    <a href={getEtherscanTxUrl(txHash)} style={{ paddingLeft: '8px' }} target="_blank" rel="noreferrer">
       {shortenAddr(txHash)}
     </a>
   );
