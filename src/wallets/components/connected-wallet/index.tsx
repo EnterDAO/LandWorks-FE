@@ -134,7 +134,7 @@ const ConnectedWallet: React.FC = () => {
   if (!wallet.isActive) {
     return !isMobile ? (
       <button type="button" className={`button-primary ${s.signBtnDesktop}`} onClick={() => wallet.showWalletsModal()}>
-        <span>Sign in</span>
+        <span>Connect Wallet</span>
       </button>
     ) : null;
   }
@@ -198,7 +198,7 @@ const ConnectedWallet: React.FC = () => {
           {isTxInProgress ? (
             <div className={s.loader}></div>
           ) : (
-            <Identicon address={wallet.account} width={24} height={24} className="mr-8" />
+            <Identicon address={wallet.account} width={36} height={36} className="mr-8" />
           )}
 
           <Text type="p1" style={{ color: 'white' }} className={cn(s.walletAddress, 'mr-4')}>

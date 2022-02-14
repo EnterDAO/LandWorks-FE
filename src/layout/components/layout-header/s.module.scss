@@ -1,9 +1,13 @@
+@import 'src/styles/text';
+
 .component {
   align-items: center;
-  background: var(--theme-card-color);
+  background: none;
   display: flex;
-  padding: 12px var(--horizontal-padding);
+  margin: 12px var(--horizontal-padding);
+  height: 107px;
   position: relative;
+  border-bottom: 2px solid $grey01;
 
   @media (max-width: 1024px) {
     padding: 24px 12px;
@@ -121,7 +125,6 @@
   letter-spacing: 0;
   text-align: left;
   padding: 0 16px 0 0;
-  margin-right: auto;
   cursor: pointer;
 
   @media (max-width: 1024px) {

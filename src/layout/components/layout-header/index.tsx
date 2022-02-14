@@ -10,13 +10,12 @@ import Button from 'components/antd/button';
 import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import LandsNav from 'modules/land-works/components/lands-header-nav';
-import { LandsTooltip } from 'modules/land-works/components/lands-tooltip';
 import { useGeneral } from 'providers/general-provider';
 import { useWarning } from 'providers/warning-provider';
 import ConnectedWallet from 'wallets/components/connected-wallet';
 import { useWallet } from 'wallets/wallet';
 
-import { ReactComponent as ListIcon } from '../../../resources/svg/list-property.svg';
+import { ReactComponent as TextLogo } from '../../../resources/svg/landWorks-logo.svg';
 
 import s from './s.module.scss';
 
@@ -56,21 +55,11 @@ const LayoutHeader: React.FC = () => {
       <div style={{ cursor: 'pointer' }} onClick={() => history.push('/all')}>
         <Icon name="png/LandWorksLogo" width="auto" height="auto" className={s.logo} />
       </div>
-      <h1 className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`} onClick={() => history.push('/all')}>
-        LandWorks
-      </h1>
+      <div className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`} onClick={() => history.push('/all')}>
+        <TextLogo />
+      </div>
 
-      {wallet.account && !isLandingPage?.isExact && <LandsNav />}
-
-      {wallet.isActive && wallet.connector?.id === 'metamask' && !isLandingPage?.isExact && (
-        <div className={s.addTokenWrapper}>
-          <LandsTooltip placement="bottom" trigger="hover" text="List new property">
-            <button type="button" onClick={() => history.push('/list')} className={s.addTokenButton}>
-              <ListIcon />
-            </button>
-          </LandsTooltip>
-        </div>
-      )}
+      {!isLandingPage?.isExact && <LandsNav />}
 
       {isLandingPage?.isExact && (
         <Button type="link" className={s.burger} onClick={() => setNavOpen((prevState) => !prevState)}>
