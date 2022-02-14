@@ -15,11 +15,10 @@ import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sorter';
 import { SearchBar } from 'modules/land-works/components/lands-search';
-import { LandsTooltip } from 'modules/land-works/components/lands-tooltip';
 import { SortDirection } from 'modules/land-works/models/SortDirection';
 import { useWallet } from 'wallets/wallet';
 
-import { ReactComponent as ListIcon } from '../../../../resources/svg/list-property.svg';
+import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
 import { ReactComponent as HighIcon } from '../../../../resources/svg/order-high-first.svg';
 import { ReactComponent as HottestIcon } from '../../../../resources/svg/order-hot.svg';
 import { ReactComponent as LowIcon } from '../../../../resources/svg/order-low-first.svg';
@@ -207,7 +206,8 @@ const LandsView: React.FC = () => {
                 className={`button-primary list-new-property`}
                 onClick={() => history.push('/list')}
               >
-                <span>+ List New Property</span>
+                <AddIcon className={`add-icon`} />
+                List New Property
               </button>
             </div>
           )}

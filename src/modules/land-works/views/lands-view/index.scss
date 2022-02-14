@@ -36,16 +36,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #27273a;
+  border-bottom: 2px solid $grey01;
   padding: 36px 0;
+
   h1 {
     font-size: 30px;
     font-weight: 700;
-  }
-  span {
-    font-size: 14px;
-    font-weight: 600;
-    color: #B9B9D3;
+
+    span {
+      font-size: 14px;
+      font-weight: 600;
+      color: $grey03;
+    }
   }
 }
 
@@ -53,6 +55,15 @@
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
+  box-shadow: 0px 0px 1px 1px $neonPink;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  .add-icon {
+    margin-right: 10px;
+  }
+
   @media (max-width: 768px) {
     display: none;
   }
