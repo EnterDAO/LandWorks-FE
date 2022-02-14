@@ -1,3 +1,5 @@
+@import 'src/styles/text';
+
 .notificationIcon {
   color: var(--theme-icon-color);
   cursor: pointer;
@@ -48,7 +50,7 @@
 }
 
 .hamburger {
-  background: #27273a;
+  background-color: $grey01;
   border-radius: 10px;
   padding: 10px 15px 10px 15px;
 
