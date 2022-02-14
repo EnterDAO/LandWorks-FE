@@ -1,43 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
-import { Menu } from 'antd';
+
+import { ReactComponent as Rocket } from '../../../../resources/svg/rocket-02.svg';
 
 import './index.scss';
 
 const LandsNav: React.FC = () => {
-  const allPathname = '/all';
-  const rentingPathname = '/renting';
-  const lendingPathname = '/lending';
-
-  const getMenuKey = () => {
-    if (
-      location.pathname === allPathname ||
-      location.pathname === rentingPathname ||
-      location.pathname === lendingPathname
-    ) {
-      return location.pathname;
-    }
-    return '';
-  };
-
-  useEffect(() => {
-    setSelectedKey(getMenuKey());
-  }, [location.pathname]);
-
-  const [selectedKey, setSelectedKey] = useState(getMenuKey());
+  // TODO replace path for my properties with correct path
 
   return (
-    <Menu className="lands-nav-container" selectedKeys={[selectedKey]} mode="horizontal">
-      <Menu.Item key={allPathname}>
-        <NavLink to={allPathname}>All</NavLink>
-      </Menu.Item>
-      <Menu.Item key={rentingPathname}>
-        <NavLink to={rentingPathname}>Renting</NavLink>
-      </Menu.Item>
-      <Menu.Item key={lendingPathname}>
-        <NavLink to={lendingPathname}>Lending</NavLink>
-      </Menu.Item>
-    </Menu>
+    <div className="lands-nav-container">
+      <div className="divider"></div>
+      <NavLink className="tab" exact activeClassName="selected" to="/all">
+        <div className="nav-content">
+          <Rocket className="icon" />
+          Explore
+        </div>{' '}
+        <div className="active-tab"></div>
+      </NavLink>
+
+      <NavLink className="tab" activeClassName="selected" to="/my-properties">
+        <div className="nav-content">My Properties</div>
+        <div className="active-tab"></div>
+      </NavLink>
+    </div>
   );
 };
 
