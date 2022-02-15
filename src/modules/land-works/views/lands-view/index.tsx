@@ -18,6 +18,7 @@ import { SearchBar } from 'modules/land-works/components/lands-search';
 import { SortDirection } from 'modules/land-works/models/SortDirection';
 import { useWallet } from 'wallets/wallet';
 
+import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
 import { ReactComponent as HighIcon } from '../../../../resources/svg/order-high-first.svg';
 import { ReactComponent as HottestIcon } from '../../../../resources/svg/order-hot.svg';
 import { ReactComponent as LowIcon } from '../../../../resources/svg/order-low-first.svg';
@@ -194,6 +195,23 @@ const LandsView: React.FC = () => {
   return (
     <div className="content-container">
       <Row className="lands-container">
+        <div className="lands-header">
+          <h1>
+            Explore Properties <span>Total listed {totalLands}</span>
+          </h1>
+          {wallet.isActive && wallet.connector?.id === 'metamask' && (
+            <div className="addTokenWrapper">
+              <button
+                type="button"
+                className={`button-primary list-new-property`}
+                onClick={() => history.push('/list')}
+              >
+                <AddIcon className={`add-icon`} />
+                List New Property
+              </button>
+            </div>
+          )}
+        </div>
         <Col span={24}>
           <Row justify={end} className="actions-container">
             {/* Removed for MVP version due to lack of view for adjacent lands*/}

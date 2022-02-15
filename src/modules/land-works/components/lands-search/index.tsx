@@ -8,7 +8,7 @@ interface SearchQuery {
 }
 
 export const SearchBar: React.FC<SearchQuery> = ({ searchQuery, setSearchQuery }) => (
-  <div className="wrapper">
+  <div className="wrapper lands-search">
     <form action="/" method="get">
       <input
         value={searchQuery}

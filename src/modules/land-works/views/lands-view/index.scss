@@ -31,6 +31,62 @@
     margin-bottom: 30px;
   }
 }
+.lands-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid $grey01;
+  padding: 36px 0;
+
+  h1 {
+    font-size: 30px;
+    font-weight: 700;
+
+    span {
+      font-size: 14px;
+      font-weight: 600;
+      color: $grey03;
+    }
+  }
+}
+
+.list-new-property {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  box-shadow: 0px 0px 1px 1px $neonPink;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  .add-icon {
+    margin-right: 10px;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.addTokenButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+
+  svg {
+    width: 36px;
+    height: 36px;
+    transform: scale(2);
+  }
+}
 
 .lands-pagination {
   margin-top: 60px;
