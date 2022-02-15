@@ -1,7 +1,39 @@
 @import '../../../../styles/variables.scss';
 @import '../../../../styles/text.scss';
 
+$navbar-height: 80px;
+
+.content-container {
+  z-index: 10;
+
+  &--explore-view {
+    position: relative;
+    max-width: none;
+
+    height: calc(100vh - $navbar-height);
+    overflow: hidden;
+  }
+}
+
+.map-list-container {
+  position: fixed;
+  top: 80px;
+  right: 0;
+  left: 50%;
+
+  margin-top: 36px;
+  margin-right: 36px;
+  margin-left: 36px;
+}
+
+// .cards-list-container {
+//   // height: 100%;
+//   // overflow: hidden;
+// }
+
 .lands-container {
+  height: 100%;
+
   .filters {
     margin-bottom: 40px;
     display: flex;
@@ -30,58 +62,4 @@
   .actions-container {
     margin-bottom: 30px;
   }
-}
-
-.lands-pagination {
-  margin-top: 60px;
-
-  .ant-pagination-options-size-changer {
-    position: absolute;
-    right: 0;
-    top: 0;
-    .ant-select-selector {
-      background: none;
-    }
-
-    .ant-select-arrow {
-      color: white;
-    }
-  }
-
-  .ant-pagination-item,
-  .ant-pagination-item-link,
-  .ant-select-selector {
-    color: $white;
-    border-radius: 10px;
-    a {
-      color: $white;
-    }
-    font-weight: 700;
-    background: none;
-
-    &:hover {
-      border: 1px solid #e255cf;
-    }
-  }
-
-  .ant-select-selector {
-    border: 1px solid #f2edf1 !important;
-  }
-
-  .ant-pagination-item-active {
-    background: none;
-    border: 1px solid #e255cf;
-    a {
-      color: $white !important;
-    }
-  }
-
-  .ant-pagination-options {
-    display: inline-block;
-  }
-}
-
-.lands-claim-container {
-  justify-content: flex-end;
-  display: flex;
 }

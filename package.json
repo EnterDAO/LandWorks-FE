@@ -115,6 +115,7 @@
     "react-popper": "^2.2.5",
     "react-router-dom": "5.2.0",
     "react-select": "^5.2.1",
+    "react-tile-map": "^0.3.2",
     "react-toastify": "^8.1.0",
     "react-use-storage": "0.4.3",
     "rewire": "5.0.0",
