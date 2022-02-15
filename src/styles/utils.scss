@@ -1,14 +1,12 @@
 .content-container {
   --content-container-v-padding: 40px;
 
-  padding: 0 var(--horizontal-padding) var(--content-container-v-padding);
+  padding: var(--content-container-v-padding) var(--horizontal-padding);
   width: 100%;
-  
-  //TODO apply this to children in page instead
 
-  // max-width: calc(var(--horizontal-padding) * 2 + 1100px);
-  // margin-left: auto;
-  // margin-right: auto;
+  max-width: calc(var(--horizontal-padding) * 2 + 1100px);
+  margin-left: auto;
+  margin-right: auto;
 
   @media (max-width: 768px) {
     --content-container-v-padding: 24px;
