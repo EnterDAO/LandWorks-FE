@@ -66,10 +66,10 @@ const LayoutFooter: React.FC = () => {
                       LandWorks
                     </Link>
                   </Col>
-                  <Col xs={13} sm={13} md={13} lg={24} xl={24} className={s.comingSoon}>
-                    <Link to="/" className={s.linkAnchor}>
+                  <Col xs={13} sm={13} md={13} lg={24} xl={24}>
+                    <ExternalLink href="https://metaportal.gg/" className={s.linkAnchor}>
                       MetaPortal
-                    </Link>
+                    </ExternalLink>
                   </Col>
                 </Row>
               </div>
