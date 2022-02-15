@@ -13,7 +13,8 @@ import Icon from 'components/custom/icon';
 // import IconNotification from 'components/custom/icon-notification';
 import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
-// import { useNotifications } from 'providers/notifications-provider';
+// import { useNotifications } from 'components/providers/notifications-provider';
+import { getENSName } from 'helpers/helpers';
 import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
@@ -87,6 +88,14 @@ const ConnectedWallet: React.FC = () => {
     setTxHash(landworksTxHash || landTxHash || estateTxHash || erc20TxHash);
   }, [landworksTxHash, landTxHash, estateTxHash, erc20TxHash]);
 
+  const [ens, setEns] = useState<string>();
+  useEffect(() => {
+    if (wallet.account)
+      getENSName(wallet.account).then((ensName) => {
+        setEns(ensName);
+      });
+  }, [wallet]);
+
   if (wallet.connecting) {
     return (
       <Popover
@@ -151,7 +160,7 @@ const ConnectedWallet: React.FC = () => {
             <Identicon address={wallet.account} width={40} height={40} />
             <ExternalLink href={getEtherscanAddressUrl(wallet.account!)}>
               <Text type="p1" weight="semibold" color="blue">
-                {shortenAddr(wallet.account, 8, 8)}
+                {ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 8, 8)}
               </Text>
             </ExternalLink>
           </Grid>
@@ -202,7 +211,7 @@ const ConnectedWallet: React.FC = () => {
           )}
 
           <Text type="p1" style={{ color: 'white' }} className={cn(s.walletAddress, 'mr-4')}>
-            {shortenAddr(wallet.account, 4, 3)}
+            {ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 4, 3)}
           </Text>
           <Icon name="dropdown" style={{ color: 'white' }} className={s.dropdownArrow} />
         </Grid>
@@ -239,7 +248,7 @@ const ConnectedWallet: React.FC = () => {
         <Grid flow="col" align="center">
           <div className={s.loader}></div>
           <Text type="p1" style={{ color: 'white' }} className={cn(s.walletAddress, 'mr-4')}>
-            {shortenAddr(wallet.account, 4, 3)}
+            {ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 4, 3)}
           </Text>
           <Icon name="dropdown" style={{ color: 'white' }} className={s.dropdownArrow} />
         </Grid>
