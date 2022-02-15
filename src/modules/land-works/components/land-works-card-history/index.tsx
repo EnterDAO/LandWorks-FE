@@ -158,6 +158,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
     {
       title: 'Status',
       width: '12%',
+      sorter: (a: { end: string }, b: { end: string }) => +a.end - +b.end,
       dataIndex: 'end',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (end: string, record: RentEntity) => {
