@@ -66,7 +66,6 @@ const LayoutHeader: React.FC = () => {
           <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
         </Button>
       )}
-
       {isLandingPage?.isExact && (
         <nav className={s.nav}>
           <a
@@ -98,9 +97,7 @@ const LayoutHeader: React.FC = () => {
           </ExternalLink>
         </nav>
       )}
-
       {isLandingPage?.isExact ? null : <ConnectedWallet />}
-
       {navOpen &&
         ReactDOM.createPortal(
           <div

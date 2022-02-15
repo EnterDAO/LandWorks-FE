@@ -959,6 +959,86 @@ export function fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
     });
 }
 
+/**
+ * Gets Listed Assets by metaverse id, and lt (less than) than the last rent end (if provided)
+ * excluding those with status WITHDRAWN,
+ * ordered by a given column in ascending/descending order
+ * @param page Which page to load. Default 1
+ * @param limit How many items per page. Default 6
+ * @param metaverse The target metaverse id. Default '1', which is considered Decentraland
+ * @param lastRentEnd A timestamp (in seconds), which will be used to query assets with lastRentEnd greater than the given.
+ * @param orderColumn The name of the order column
+ * @param orderDirection asc or desc
+ * Default '0'. Used to determined Availability of assets
+ */
+export function fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder(
+  metaverse = '1',
+  lastRentEnd = '0',
+  orderColumn = 'totalRents',
+  orderDirection: string
+): Promise<PaginatedResult<AssetEntity>> {
+  return GraphClient.get({
+    query: gql`
+      query GetAssets(
+        $metaverse: String
+        $lastRentEnd: String
+        $orderColumn: String
+        $orderDirection: String
+        $statusNot: String
+      ) {
+        assets(
+          where: { metaverse: $metaverse, ${
+            lastRentEnd != '0' ? 'lastRentEnd_lt: $lastRentEnd' : ''
+          }, status_not: $statusNot }
+          orderBy: $orderColumn
+          orderDirection: $orderDirection
+        ) {
+          id
+          metaverseAssetId
+          minPeriod
+          maxPeriod
+          maxFutureTime
+          pricePerSecond
+          paymentToken {
+            name
+            symbol
+            decimals
+          }
+          decentralandData {
+            metadata
+            isLAND
+            coordinates {
+              id
+              x
+              y
+            }
+          }
+          lastRentEnd
+          totalRents
+          status
+        }
+      }
+    `,
+    variables: {
+      lastRentEnd: lastRentEnd,
+      metaverse: metaverse,
+      orderColumn: orderColumn,
+      orderDirection: orderDirection,
+      statusNot: AssetStatus.WITHDRAWN,
+    },
+  })
+    .then(async (response) => {
+      return {
+        data: parseAssets(response.data.assets),
+        meta: { count: response.data.assets.length },
+      };
+    })
+    .catch((e) => {
+      console.log(e);
+      return { data: [], meta: { count: 0, block: 0 } };
+    });
+}
+
 export function parseAssetRents(asset: any): PaginatedResult<RentEntity> {
   const result: PaginatedResult<RentEntity> = {
     data: (asset.rents ?? []).map((item: any) => ({

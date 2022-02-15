@@ -21,7 +21,7 @@
 
   form:-webkit-autofill,
   input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 50px var(--theme-modal-color) inset !important;
+    box-shadow: 0 0 0 50px var(--theme-modal-color) inset !important;
     -webkit-text-fill-color: white !important;
   }
 }
