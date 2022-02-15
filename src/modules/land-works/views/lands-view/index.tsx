@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { SingleValue } from 'react-select';
+import {
+  DECENTRALAND_METAVERSE,
+  DEFAULT_LAST_RENT_END,
+  pageSizeOptions,
+  sortColumns,
+  sortDirections,
+} from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { end } from '@popperjs/core';
 import { Col, Pagination, RadioChangeEvent, Row } from 'antd';
@@ -15,7 +22,6 @@ import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sorter';
 import { SearchBar } from 'modules/land-works/components/lands-search';
-import { SortDirection } from 'modules/land-works/models/SortDirection';
 import { useWallet } from 'wallets/wallet';
 
 import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
@@ -30,12 +36,9 @@ import {
   parseUser,
 } from '../../api';
 
-import { getNowTs } from '../../../../utils';
+import { getNowTs } from 'utils';
 
 import './index.scss';
-
-const DECENTRALAND_METAVERSE = '1';
-const DEFAULT_LAST_RENT_END = '0';
 
 const data = [
   {
@@ -56,9 +59,6 @@ const data = [
 ];
 
 const LandsView: React.FC = () => {
-  const pageSizeOptions = ['6', '12', '24'];
-  const sortColumns = ['totalRents', 'pricePerSecond', 'pricePerSecond'];
-  const sortDirections = [SortDirection.DESC, SortDirection.ASC, SortDirection.DESC];
   const wallet = useWallet();
 
   const [lands, setLands] = useState([] as AssetEntity[]);

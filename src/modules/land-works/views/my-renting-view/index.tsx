@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { pageSizeOptions } from 'constants/modules';
 import { Col, Pagination, Row } from 'antd';
 
 import { Rent, fetchUserRentPerAsset } from 'modules/land-works/api';
@@ -17,7 +18,6 @@ import './index.scss';
 const MyRentingView: React.FC = () => {
   const wallet = useWallet();
   const history = useHistory();
-  const pageSizeOptions = ['6', '12', '24'];
 
   const [byAvailability, setByAvailability] = useState(false);
   const [rents, setRents] = useState([] as Rent[]);
