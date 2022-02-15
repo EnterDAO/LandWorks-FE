@@ -4,13 +4,13 @@ import { Input } from 'antd';
 import web3 from 'web3';
 
 import Icon from 'components/custom/icon';
+import { getAddressFromENS } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 
 import { useWallet } from '../../../../wallets/wallet';
 
 import './index.scss';
-import { getAddressFromENS } from 'helpers/helpers';
 
 type Iprops = {
   operator: string;
@@ -35,7 +35,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
       try {
         if (!web3.utils.isAddress(newOperator)) {
           const address = await getAddressFromENS(newOperator);
-          if(!address) {
+          if (!address) {
             toast.error('The new operator address is invalid.', {
               position: toast.POSITION.TOP_RIGHT,
               className: 'error-toast',

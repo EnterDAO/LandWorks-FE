@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
-import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 
