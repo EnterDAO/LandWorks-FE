@@ -31,10 +31,7 @@ type SingleViewRentHistoryProps = {
 
 const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }) => {
   const wallet = useWallet();
-  // const pageSizeOptions = ['5', '10', '20'];
   const [areAllSelected, setAreAllSelected] = useState(true);
-  // const [page, setPage] = useState(1);
-  // const [pageSize, setPageSize] = useState(+pageSizeOptions[0]);
   const [rents, setRents] = useState([] as RentEntity[]);
   const [totalRents, setTotalRents] = useState(rents.length);
 
@@ -75,7 +72,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
       dataIndex: 'renterAddress',
       render: (text: string) => {
         let isYou = false;
-        const showText = shortenAddr(text);
+        const shortedRenter = shortenAddr(text);
         if (wallet.account && wallet.account?.toLowerCase() === text.toLowerCase()) {
           isYou = true;
         }
@@ -90,7 +87,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
         return (
           <ExternalLink href={getEtherscanAddressUrl(text.toLowerCase())} className={'by-text'}>
             <div className="renter-row">
-              <p>{ens && ens !== text ? ens : showText}</p>
+              <p>{ens && ens !== text ? ens : shortedRenter}</p>
               {isYou && <p className="you">you</p>}
             </div>
           </ExternalLink>
@@ -149,7 +146,6 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
         const isActiveRent = Number(data.start) <= now && now < Number(data.end);
         const isUpcomingRent = Number(data.start) >= now;
         const [ens, setEns] = useState<string>();
-        const showOperator = shortenAddr(operator);
 
         useEffect(() => {
           if (operator)
@@ -159,9 +155,10 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
         }, [operator]);
         return (
           <TableInput
-            operator={ens && ens !== operator ? ens : showOperator || operator}
+            operator={operator}
             assetId={assetId}
             rentId={data.id}
+            ens={ens !== operator ? ens : null}
             renter={data.renterAddress}
             key={operator + uniqueId()}
             isEditable={isActiveRent || isUpcomingRent}
@@ -213,17 +210,6 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
   const showYoursSection = () =>
     wallet.account && rents.filter((r) => r.operator?.toLowerCase() === wallet.account?.toLowerCase()).length > 0;
 
-  // const onPaginationChange = (page: number, newPageSize?: number | undefined) => {
-  //   setPage(page);
-  //   if (newPageSize) {
-  //     // setPageSize(newPageSize);
-  //     // TODO: this will probably need to be modified to scroll you up to the beginning of the table
-  //     // if (pageSize === newPageSize || newPageSize < pageSize) {
-  //     //   window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-  //     // }
-  //   }
-  // };
-
   useEffect(() => {
     return () => {
       setRents([]);
@@ -271,12 +257,6 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
                 className="history-table"
                 pagination={false}
                 scroll={{ y: 340 }}
-                // pagination={{
-                //   current: page,
-                //   total: totalRents,
-                //   defaultPageSize: pageSize,
-                //   onChange: (page: number, pageSize?: number | undefined) => onPaginationChange(page, pageSize),
-                // }}
               />
             </ConfigProvider>
           </Col>

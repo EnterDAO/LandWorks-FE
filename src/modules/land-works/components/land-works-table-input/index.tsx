@@ -1,28 +1,28 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { fontSize } from '@mui/system';
 import { Input } from 'antd';
 import web3 from 'web3';
+import { shortenAddr } from 'web3/utils';
 
-import Icon from 'components/custom/icon';
 import { CheckIcon, CloseIcon, EditIcon } from 'design-system/icons';
+import { getAddressFromENS } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 
 import { useWallet } from '../../../../wallets/wallet';
 
 import './index.scss';
-import { getAddressFromENS } from 'helpers/helpers';
 
 type Iprops = {
   operator: string;
   assetId: string;
   rentId: string;
   renter: string;
+  ens?: string | null;
   isEditable: boolean;
 };
 
-const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEditable }) => {
+const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEditable, ens }) => {
   const wallet = useWallet();
   const landWorks = useLandworks();
 
@@ -32,12 +32,14 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
   const [newOperator, setNewOperator] = useState<string>(operator);
   const [canEditOperator, setCanEditOperator] = useState(false);
 
+  const shortedOperator = shortenAddr(newOperator);
+
   const handleSave = async () => {
     if (landWorksContract) {
       try {
         if (!web3.utils.isAddress(newOperator)) {
           const address = await getAddressFromENS(newOperator);
-          if(!address) {
+          if (!address) {
             toast.error('The new operator address is invalid.', {
               position: toast.POSITION.TOP_RIGHT,
               className: 'error-toast',
@@ -57,8 +59,6 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
           });
           return;
         }
-        //3AEA27A5681B1E57
-        //F3F9A24F3A3B8946182A6A0B3AEA27A5681B1E57
 
         const rentArray = rentId.split('-');
         if (rentArray.length === 2) {
@@ -83,7 +83,6 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
     setNewOperator(operator);
     setDisabled(true);
   };
-
   useEffect(() => {
     // Check if renter is equal to connected wallet address
     if (wallet.account && wallet.account.toLowerCase() === renter.toLowerCase() && isEditable) {
@@ -97,9 +96,9 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
         placeholder="Operator Address"
         bordered={false}
         disabled={disabled}
-        value={newOperator}
+        value={!disabled ? newOperator : ens || shortedOperator}
         style={{ color: '#5D8FF0', fontSize: '12px' }}
-        defaultValue={newOperator}
+        defaultValue={!disabled ? newOperator : ens || shortedOperator}
         onChange={handleChange}
       />
       {!canEditOperator ? (
