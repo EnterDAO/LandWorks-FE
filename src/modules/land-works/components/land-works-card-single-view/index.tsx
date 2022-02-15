@@ -8,7 +8,7 @@ import EstateLandOverlay from 'components/custom/estateLandsOverlay';
 import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { getLandImageUrl, getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
+import { getENSName, getLandImageUrl, getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import { ReactComponent as HotIcon } from '../../../../resources/svg/hot.svg';
@@ -158,6 +158,19 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     return <p className="remaining-time">{placeholder}</p>;
   };
 
+  const [ens, setEns] = useState<string>();
+  const [ensOperator, setEnsOperator] = useState<string>();
+  useEffect(() => {
+    if (asset?.owner?.id)
+      getENSName(asset?.owner?.id).then((ensName) => {
+        setEns(ensName);
+      });
+    if (asset?.operator)
+      getENSName(asset?.operator).then((ensName) => {
+        setEnsOperator(ensName);
+      });
+  }, [asset]);
+
   return (
     <Row gutter={40} className="single-land-card-container">
       <Col md={12} sm={24}>
@@ -210,7 +223,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                   BY{' '}
                   {
                     <ExternalLink href={getEtherscanAddressUrl(asset?.owner?.id)} className="land-owner-address">
-                      {shortenAddr(asset?.owner?.id.toLowerCase())}
+                      {ens && ens !== asset?.owner?.id ? ens : shortenAddr(asset?.owner?.id.toLowerCase())}
                     </ExternalLink>
                   }
                 </span>
@@ -342,7 +355,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                   </Col>
                   <Col span={24}>
                     <ExternalLink href={getEtherscanAddressUrl(asset?.operator)} className="land-operator-address">
-                      {shortenAddr(asset?.operator)}
+                      {ensOperator && ensOperator !== asset?.operator ? ensOperator : shortenAddr(asset?.operator)}
                     </ExternalLink>
                   </Col>
                 </Row>

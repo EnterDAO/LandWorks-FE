@@ -1,4 +1,16 @@
 .component {
-  border: 1px solid var(--theme-border-color);
+  padding: 2px;
   border-radius: 50% !important;
+  overflow: hidden;
+}
+
+.outerCircle {
+  border: 2px solid white;
+  box-shadow: 0 0 3px 1px rgb(117, 117, 117);
+  // filter: blur(5px);
+  border-radius: 50% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
 }

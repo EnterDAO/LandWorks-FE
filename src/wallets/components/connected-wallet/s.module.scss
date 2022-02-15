@@ -1,3 +1,5 @@
+@import 'src/styles/text';
+
 .notificationIcon {
   color: var(--theme-icon-color);
   cursor: pointer;
@@ -48,9 +50,8 @@
 }
 
 .hamburger {
-  border: 1px solid #414163;
-  background: #27273a;
-  border-radius: 23px;
+  background-color: $grey01;
+  border-radius: 10px;
   padding: 10px 15px 10px 15px;
 
   @media (max-width: 768px) {
@@ -59,6 +60,9 @@
 }
 
 .signBtnDesktop {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
   @media (max-width: 768px) {
     display: none;
   }

@@ -12,7 +12,7 @@ export const THEME_COLORS = {
   yellow: '#dfb068',
   green: '#6cd27e',
   neonPink: '#dd3dcb',
-  peachPink: '#ef9c9',
+  peachPink: '#EF9C92',
   darkBlue01: '#161622',
   darkBlue02: '#1e1e2e',
   grey01: '#27273a',

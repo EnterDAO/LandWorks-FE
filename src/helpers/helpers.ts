@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import format from 'date-fns/format';
 import fromUnixTime from 'date-fns/fromUnixTime';
+import { InfuraProvider } from '@ethersproject/providers';
+
 
 import { AssetEntity } from 'modules/land-works/api';
 
@@ -61,4 +63,16 @@ export const getTokenIconName = (tokenSymbol: string) => {
     default:
       return 'png/eth';
   }
+};
+
+export const getENSName = async (address: string) => {
+  const provider = new InfuraProvider();
+  const ensName = await provider.lookupAddress(address);
+  return ensName ? ensName : address;
+};
+
+export const getAddressFromENS = async (ens: string) => {
+  const provider = new InfuraProvider();
+  const address = await provider.resolveName(ens);
+  return address;
 };

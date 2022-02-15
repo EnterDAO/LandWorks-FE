@@ -4,7 +4,7 @@ import { Col, ConfigProvider, Empty, Row, Table } from 'antd';
 import { uniqueId } from 'lodash';
 
 import ExternalLink from 'components/custom/externalLink';
-import { timestampSecondsToDate } from 'helpers/helpers';
+import { getENSName, timestampSecondsToDate } from 'helpers/helpers';
 
 import EmptyTable from '../../../../resources/svg/empty-table.svg';
 import { useWallet } from '../../../../wallets/wallet';
@@ -79,11 +79,18 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
         if (wallet.account && wallet.account?.toLowerCase() === text.toLowerCase()) {
           isYou = true;
         }
+        const [ens, setEns] = useState<string>();
+        useEffect(() => {
+          if (text)
+            getENSName(text).then((ensName) => {
+              setEns(ensName);
+            });
+        }, [text]);
 
         return (
           <ExternalLink href={getEtherscanAddressUrl(text.toLowerCase())} className={'by-text'}>
             <div className="renter-row">
-              <p>{showText}</p>
+              <p>{ens && ens !== text ? ens : showText}</p>
               {isYou && <p className="you">you</p>}
             </div>
           </ExternalLink>
@@ -141,11 +148,18 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
         const now = getNowTs();
         const isActiveRent = Number(data.start) <= now && now < Number(data.end);
         const isUpcomingRent = Number(data.start) >= now;
+        const [ens, setEns] = useState<string>();
         const showOperator = shortenAddr(operator);
 
+        useEffect(() => {
+          if (operator)
+            getENSName(operator).then((ensName) => {
+              setEns(ensName);
+            });
+        }, [operator]);
         return (
           <TableInput
-            operator={showOperator || operator}
+            operator={ens && ens !== operator ? ens : showOperator || operator}
             assetId={assetId}
             rentId={data.id}
             renter={data.renterAddress}
