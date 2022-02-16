@@ -26,7 +26,7 @@ const UserInfo = ({ open }: Props) => {
           gm
         </Typography>
         <Typography variant="body1" sx={styles.userName} component="span">
-          {shortenAddr(wallet.account, 4, 3)}
+          {shortenAddr(wallet.account, 10, 3)}
         </Typography>
       </Box>
       <Icon iconElement={<HiIcon />} sx={styles.hiIcon} />

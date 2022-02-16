@@ -107,46 +107,52 @@ const ConnectedWallet: React.FC = () => {
 
   if (wallet.connecting) {
     return (
-      <></>
-      // <Popover
-      //   placement="bottomRight"
-      //   noPadding
-      //   content={
-      //     <div className="card">
-      //       <Grid flow="row" gap={32} padding={[32, 24]}>
-      //         <Grid flow="col" gap={16} colsTemplate="24px 1fr auto">
-      //           <Icon name="node-status" />
-      //           <Text type="p1" color="secondary">
-      //             Status
-      //           </Text>
-      //           <Text type="lb2" weight="semibold" color="green" className={s.statusTag}>
-      //             Connecting
-      //           </Text>
-      //         </Grid>
-      //         <Grid flow="col" gap={16} colsTemplate="24px 1fr auto">
-      //           <Icon name="wallet-outlined" />
-      //           <Text type="p1" color="secondary">
-      //             Wallet
-      //           </Text>
-      //           <Text type="p1" weight="semibold" color="white">
-      //             {wallet.connecting?.name}
-      //           </Text>
-      //         </Grid>
-      //       </Grid>
-      //       <Divider sx={styles.divider}  style={{ minHeight: 28 }} />
-      //       <Grid padding={24}>
-      //         <button type="button" className="button button-ghost" onClick={() => wallet.disconnect()}>
-      //           <span>Disconnect</span>
-      //         </button>
-      //       </Grid>
-      //     </div>
-      //   }
-      //   trigger="click"
-      // >
-      //   <Button type="primary" className={s.buttonConnecting}>
-      //     Connecting...
-      //   </Button>
-      // </Popover>
+      <>
+        <Popover
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={open}
+          className={s.popover}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+        >
+          <div className="card">
+            <Grid flow="row" gap={32} padding={[32, 24]}>
+              <Grid flow="col" gap={16} colsTemplate="24px 1fr auto">
+                <Icon name="node-status" />
+                <Text type="p1" color="secondary">
+                  Status
+                </Text>
+                <Text type="lb2" weight="semibold" color="green" className={s.statusTag}>
+                  Connecting
+                </Text>
+              </Grid>
+              <Grid flow="col" gap={16} colsTemplate="24px 1fr auto">
+                <Icon name="wallet-outlined" />
+                <Text type="p1" color="secondary">
+                  Wallet
+                </Text>
+                <Text type="p1" weight="semibold" color="white">
+                  {wallet.connecting?.name}
+                </Text>
+              </Grid>
+            </Grid>
+            <Divider className={s.divider} style={{ minHeight: 28 }} />
+            <Grid padding={24}>
+              <button type="button" className="button button-ghost" onClick={() => wallet.disconnect()}>
+                <span>Disconnect</span>
+              </button>
+            </Grid>
+          </div>
+        </Popover>
+        <Button className={s.buttonConnecting}>Connecting...</Button>
+      </>
     );
   }
 
@@ -163,11 +169,11 @@ const ConnectedWallet: React.FC = () => {
       <Popover
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'center',
+          horizontal: 'right',
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'center',
+          horizontal: 'right',
         }}
         open={open}
         className={s.popover}
@@ -180,20 +186,18 @@ const ConnectedWallet: React.FC = () => {
           </Grid>
           <Grid flow="col" gap={16} align="center" justify="center">
             <ExternalLink className={s.externalLink} href={getEtherscanAddressUrl(wallet.account!)}>
-              {/* <Text type="p1" weight="semibold" color="blue"> */}
-              {shortenAddr(wallet.account, 8, 8)}
+              {shortenAddr(wallet.account, 18, 3)}
               <ExternalLinkIcon className={s.link} />
-              {/* </Text> */}
             </ExternalLink>
           </Grid>
           <Grid flow="row" gap={20} padding={[23, 28]} justify="center">
             <Grid flow="col" gap={16} justify="center">
-              <Text type="lb2" weight="semibold" color="green" className={s.statusTag}>
+              <Text type="lb2" weight="semibold" className={s.statusTag}>
                 Connected
               </Text>
             </Grid>
             <Divider className={s.divider} />
-            <Grid flow="col" gap={16} colsTemplate="150px">
+            <Grid flow="col" gap={16} colsTemplate="100px">
               <Text type="p1" color="secondary">
                 Wallet
               </Text>
@@ -201,7 +205,7 @@ const ConnectedWallet: React.FC = () => {
                 {wallet.connector?.name}
               </Text>
             </Grid>
-            <Grid flow="col" gap={16} colsTemplate="150px">
+            <Grid flow="col" gap={16} colsTemplate="100px">
               <Text type="p1" color="secondary">
                 Network
               </Text>
@@ -224,41 +228,47 @@ const ConnectedWallet: React.FC = () => {
   );
 
   const TxSection = (
-    <div></div>
-    // <Popover
-    //   placement="bottom"
-    //   trigger="click"
-    //   noPadding
-    //   className={cn(s.popover, s.txSection)}
-    //   content={
-    //     <div id={s.txPopoverContainer}>
-    //       <div id={s.txInfoContainer}>
-    //         <div id={s.txStatus}>Transaction in progress</div>
-    //         <div
-    //           onClick={() => {
-    //             window.open(`${getEtherscanTxUrl(txHash)}`, '_blank')?.focus();
-    //           }}
-    //           id={s.txEtherscanLink}
-    //         >
-    //           view on etherscan
-    //         </div>
-    //       </div>
-    //       <div id={s.txDisconnectContainer} onClick={() => wallet.disconnect()}>
-    //         Disconnect
-    //       </div>
-    //     </div>
-    //   }
-    // >
-    //   <Button type="link" className={s.accountLink}>
-    //     <Grid flow="col" align="center">
-    //       <div className={s.loader}></div>
-    //       <Text type="p1" style={{ color: 'white' }} className={cn(s.walletAddress, 'mr-4')}>
-    //         {shortenAddr(wallet.account, 4, 3)}
-    //       </Text>
-    //       <Icon name="dropdown" style={{ color: 'white' }} className={s.dropdownArrow} />
-    //     </Grid>
-    //   </Button>
-    // </Popover>
+    <>
+      <Popover 
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose} 
+        className={cn(s.popover, s.txSection)}>
+        <div id={s.txPopoverContainer}>
+          <div id={s.txInfoContainer}>
+            <div id={s.txStatus}>Transaction in progress</div>
+            <div
+              onClick={() => {
+                window.open(`${getEtherscanTxUrl(txHash)}`, '_blank')?.focus();
+              }}
+              id={s.txEtherscanLink}
+            >
+              view on etherscan
+            </div>
+          </div>
+          <div id={s.txDisconnectContainer} onClick={() => wallet.disconnect()}>
+            Disconnect
+          </div>
+        </div>
+      </Popover>
+      <Button className={s.accountLink}>
+        <Grid flow="col" align="center">
+          <div className={s.loader}></div>
+          <Text type="p1" style={{ color: 'white' }} className={cn(s.walletAddress, 'mr-4')}>
+            {shortenAddr(wallet.account, 4, 3)}
+          </Text>
+          <Icon name="dropdown" style={{ color: 'white' }} className={s.dropdownArrow} />
+        </Grid>
+      </Button>
+    </>
   );
 
   return (
@@ -272,7 +282,7 @@ const ConnectedWallet: React.FC = () => {
       {/* ToDo: NotificationSection, uncomment if needed */}
       {/* <NotificationSection /> */}
       {/* <Divider type="vertical" style={{ minHeight: 28 }} /> */}
-      {isTxInProgress ? TxSection : AccountSection}
+      {!isTxInProgress ? TxSection : AccountSection}
     </Grid>
   );
 };

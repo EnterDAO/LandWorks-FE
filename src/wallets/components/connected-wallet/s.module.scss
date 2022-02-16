@@ -42,10 +42,10 @@
 }
 
 .statusTag {
-  background: rgba(0, 211, 149, 0.1);
+  background: rgba(108, 210, 126, 0.2);
   border-radius: 12px;
   padding: 7px 13px;
-  // width: auto;
+  color: $green
 }
 
 .divider {
@@ -70,7 +70,6 @@
 .hamburger {
   background-color: $darkBlue02;
   border-radius: 10px;
-  //padding: 10px 15px 10px 15px;
 
   @media (max-width: 768px) {
     display: none;
