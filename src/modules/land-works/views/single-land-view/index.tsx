@@ -214,7 +214,7 @@ const SingleLandView: React.FC = () => {
           </>
         }
       />
-      
+
       <Row gutter={40} className="head-breadcrumbs">
         <Button type="link" style={{ fontSize: 14 }} className="button-back" onClick={() => history.push('/all')}>
           <div className="button-icon">
