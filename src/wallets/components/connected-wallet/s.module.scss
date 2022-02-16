@@ -9,16 +9,28 @@
   }
 }
 
+.identicon {
+  margin: 20px 0 15px;
+}
+
+.externalLink {
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 11px 12px;
+  background: $grey01;
+  font-size: 12px;
+  font-weight: 500;
+  color: $grey03;
+
+  .link{
+    margin-left: 15px
+  }
+}
+
 .popover {
   margin-top: 10px;
-  // :global(.ant-popover-inner) {
-  //   box-shadow: none !important;
-  //   border-radius: 12px;
-  //   :global(.card) {
-  //     box-shadow: none !important;
-  //     border: none;
-  //   }
-  // }
 }
 
 .accountLink {
@@ -32,7 +44,12 @@
 .statusTag {
   background: rgba(0, 211, 149, 0.1);
   border-radius: 12px;
-  padding: 4px 12px;
+  padding: 7px 13px;
+  // width: auto;
+}
+
+.divider {
+  background: $grey04,
 }
 
 .notifications {

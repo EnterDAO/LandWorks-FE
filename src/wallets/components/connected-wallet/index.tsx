@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 // import Button from 'components/antd/button';
 import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 //import Popover from 'components/antd/popover';
 import Popover from '@mui/material/Popover';
 import cn from 'classnames';
 import { getEtherscanAddressUrl, getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
-import Divider from 'components/antd/divider';
 import ExternalLink from 'components/custom/externalLink';
 import Grid from 'components/custom/grid';
 import Icon from 'components/custom/icon';
@@ -20,6 +20,7 @@ import { Box, Dropdown, DropdownItem, DropdownMenu, IconButton } from 'design-sy
 import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
+import { ReactComponent as ExternalLinkIcon } from 'resources/svg/external-link.svg';
 // import Notifications from 'wallets/components/notifications';
 import { useWallet } from 'wallets/wallet';
 
@@ -132,7 +133,7 @@ const ConnectedWallet: React.FC = () => {
       //           </Text>
       //         </Grid>
       //       </Grid>
-      //       <Divider style={{ minHeight: 28 }} />
+      //       <Divider sx={styles.divider}  style={{ minHeight: 28 }} />
       //       <Grid padding={24}>
       //         <button type="button" className="button button-ghost" onClick={() => wallet.disconnect()}>
       //           <span>Disconnect</span>
@@ -174,46 +175,43 @@ const ConnectedWallet: React.FC = () => {
         onClose={handleClose}
       >
         <div className="card">
-          <Grid className="card-header" flow="col" gap={16} align="center" justify="start">
+          <Grid className={s.identicon} flow="col" gap={16} align="center" justify="center">
             <Identicon address={wallet.account} width={40} height={40} />
-            <ExternalLink href={getEtherscanAddressUrl(wallet.account!)}>
-              <Text type="p1" weight="semibold" color="blue">
-                {shortenAddr(wallet.account, 8, 8)}
-              </Text>
+          </Grid>
+          <Grid flow="col" gap={16} align="center" justify="center">
+            <ExternalLink className={s.externalLink} href={getEtherscanAddressUrl(wallet.account!)}>
+              {/* <Text type="p1" weight="semibold" color="blue"> */}
+              {shortenAddr(wallet.account, 8, 8)}
+              <ExternalLinkIcon className={s.link} />
+              {/* </Text> */}
             </ExternalLink>
           </Grid>
-          <Grid flow="row" gap={32} padding={[32, 24]}>
-            <Grid flow="col" gap={16} colsTemplate="24px 1fr auto">
-              <Icon name="node-status" />
-              <Text type="p1" color="secondary">
-                Status
-              </Text>
+          <Grid flow="row" gap={20} padding={[23, 28]} justify="center">
+            <Grid flow="col" gap={16} justify="center">
               <Text type="lb2" weight="semibold" color="green" className={s.statusTag}>
                 Connected
               </Text>
             </Grid>
-            <Grid flow="col" gap={16} colsTemplate="24px 1fr auto">
-              <Icon name="wallet-outlined" />
+            <Divider className={s.divider} />
+            <Grid flow="col" gap={16} colsTemplate="150px">
               <Text type="p1" color="secondary">
                 Wallet
               </Text>
-              <Text type="p1" weight="semibold" color="white">
+              <Text type="p1" weight="semibold" color="white" align="right">
                 {wallet.connector?.name}
               </Text>
             </Grid>
-            <Grid flow="col" gap={16} colsTemplate="24px 1fr auto">
-              <Icon name="network" />
+            <Grid flow="col" gap={16} colsTemplate="150px">
               <Text type="p1" color="secondary">
                 Network
               </Text>
-              <Text type="p1" weight="semibold" color="white">
+              <Text type="p1" weight="semibold" color="white" align="right">
                 {wallet.networkName}
               </Text>
             </Grid>
           </Grid>
-          <Divider />
-          <Grid padding={24}>
-            <button type="button" className="button button-ghost" onClick={() => wallet.disconnect()}>
+          <Grid padding={[0, 24, 20]}>
+            <button type="button" className="button-primary-grey" onClick={() => wallet.disconnect()}>
               <span>Disconnect</span>
             </button>
           </Grid>
