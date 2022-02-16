@@ -15,8 +15,8 @@ import Icon from 'components/custom/icon';
 // import IconNotification from 'components/custom/icon-notification';
 import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
-import { Box, Dropdown, DropdownItem, DropdownMenu, IconButton } from 'design-system';
-// import { useNotifications } from 'providers/notifications-provider';
+// import { useNotifications } from 'components/providers/notifications-provider';
+import { getENSName } from 'helpers/helpers';
 import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
@@ -105,6 +105,14 @@ const ConnectedWallet: React.FC = () => {
     setTxHash(landworksTxHash || landTxHash || estateTxHash || erc20TxHash);
   }, [landworksTxHash, landTxHash, estateTxHash, erc20TxHash]);
 
+  const [ens, setEns] = useState<string>();
+  useEffect(() => {
+    if (wallet.account)
+      getENSName(wallet.account).then((ensName) => {
+        setEns(ensName);
+      });
+  }, [wallet]);
+
   if (wallet.connecting) {
     return (
       <>
@@ -186,7 +194,7 @@ const ConnectedWallet: React.FC = () => {
           </Grid>
           <Grid flow="col" gap={16} align="center" justify="center">
             <ExternalLink className={s.externalLink} href={getEtherscanAddressUrl(wallet.account!)}>
-              {shortenAddr(wallet.account, 18, 3)}
+            {ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 18, 3)}
               <ExternalLinkIcon className={s.link} />
             </ExternalLink>
           </Grid>
@@ -222,7 +230,7 @@ const ConnectedWallet: React.FC = () => {
         </div>
       </Popover>
       <Button onClick={handleClick}>
-        <UserInfo open={open} />
+        <UserInfo open={open} address={ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 4, 3)}/>
       </Button>
     </>
   );
@@ -263,7 +271,7 @@ const ConnectedWallet: React.FC = () => {
         <Grid flow="col" align="center">
           <div className={s.loader}></div>
           <Text type="p1" style={{ color: 'white' }} className={cn(s.walletAddress, 'mr-4')}>
-            {shortenAddr(wallet.account, 4, 3)}
+            {ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 4, 3)}
           </Text>
           <Icon name="dropdown" style={{ color: 'white' }} className={s.dropdownArrow} />
         </Grid>
@@ -282,7 +290,7 @@ const ConnectedWallet: React.FC = () => {
       {/* ToDo: NotificationSection, uncomment if needed */}
       {/* <NotificationSection /> */}
       {/* <Divider type="vertical" style={{ minHeight: 28 }} /> */}
-      {!isTxInProgress ? TxSection : AccountSection}
+      {isTxInProgress ? TxSection : AccountSection}
     </Grid>
   );
 };

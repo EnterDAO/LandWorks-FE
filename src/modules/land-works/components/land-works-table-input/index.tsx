@@ -2,8 +2,10 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Input } from 'antd';
 import web3 from 'web3';
+import { shortenAddr } from 'web3/utils';
 
-import Icon from 'components/custom/icon';
+import { CheckIcon, CloseIcon, EditIcon } from 'design-system/icons';
+import { getAddressFromENS } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 
@@ -16,10 +18,11 @@ type Iprops = {
   assetId: string;
   rentId: string;
   renter: string;
+  ens?: string | null;
   isEditable: boolean;
 };
 
-const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEditable }) => {
+const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEditable, ens }) => {
   const wallet = useWallet();
   const landWorks = useLandworks();
 
@@ -29,16 +32,23 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
   const [newOperator, setNewOperator] = useState<string>(operator);
   const [canEditOperator, setCanEditOperator] = useState(false);
 
+  const shortedOperator = shortenAddr(newOperator);
+
   const handleSave = async () => {
     if (landWorksContract) {
       try {
         if (!web3.utils.isAddress(newOperator)) {
-          toast.error('The new operator address is invalid.', {
-            position: toast.POSITION.TOP_RIGHT,
-            className: 'error-toast',
-            style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
-          });
-          return;
+          const address = await getAddressFromENS(newOperator);
+          if (!address) {
+            toast.error('The new operator address is invalid.', {
+              position: toast.POSITION.TOP_RIGHT,
+              className: 'error-toast',
+              style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
+            });
+            return;
+          }
+
+          setNewOperator(address);
         }
 
         if (newOperator?.toLowerCase() === operator?.toLowerCase()) {
@@ -73,7 +83,6 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
     setNewOperator(operator);
     setDisabled(true);
   };
-
   useEffect(() => {
     // Check if renter is equal to connected wallet address
     if (wallet.account && wallet.account.toLowerCase() === renter.toLowerCase() && isEditable) {
@@ -87,24 +96,24 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
         placeholder="Operator Address"
         bordered={false}
         disabled={disabled}
-        value={newOperator}
-        style={{ color: '#5D8FF0' }}
-        defaultValue={newOperator}
+        value={!disabled ? newOperator : ens || shortedOperator}
+        style={{ color: '#5D8FF0', fontSize: '12px' }}
+        defaultValue={!disabled ? newOperator : ens || shortedOperator}
         onChange={handleChange}
       />
       {!canEditOperator ? (
         <></>
       ) : disabled ? (
         <button className="edit-btn" onClick={() => setDisabled(false)}>
-          <Icon name="pencil-outlined" className="pencil-icon"></Icon>
+          <EditIcon />
         </button>
       ) : (
         <>
           <button className="edit-btn" onClick={handleSave}>
-            <Icon name="check-circle-outlined" className="pencil-icon"></Icon>
+            <CheckIcon />
           </button>
           <button className="edit-btn" onClick={handleCancel}>
-            <Icon name="close-circle-outlined" className="pencil-icon"></Icon>
+            <CloseIcon />
           </button>
         </>
       )}

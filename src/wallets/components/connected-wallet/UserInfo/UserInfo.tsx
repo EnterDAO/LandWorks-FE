@@ -13,9 +13,10 @@ import { styles } from './userInfoStyles';
 
 interface Props {
   open: boolean;
+  address: any
 }
 
-const UserInfo = ({ open }: Props) => {
+const UserInfo = ({ open, address }: Props) => {
   const wallet = useWallet();
 
   return (
@@ -26,7 +27,8 @@ const UserInfo = ({ open }: Props) => {
           gm
         </Typography>
         <Typography variant="body1" sx={styles.userName} component="span">
-          {shortenAddr(wallet.account, 10, 3)}
+          {address}
+          {/* {shortenAddr(wallet.account, 10, 3)} */}
         </Typography>
       </Box>
       <Icon iconElement={<HiIcon />} sx={styles.hiIcon} />

@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import { Col, Row } from 'antd';
 
 import Button from 'components/antd/button';
+import { Icon } from 'design-system';
+import { ArrowRightIcon, BackIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
@@ -214,6 +214,24 @@ const SingleLandView: React.FC = () => {
           </>
         }
       />
+
+      <Row gutter={40} className="head-breadcrumbs">
+        <Button type="link" style={{ fontSize: 14 }} className="button-back" onClick={() => history.push('/all')}>
+          <div className="button-icon">
+            <Icon iconSize={'m'} iconElement={<BackIcon />} />
+          </div>
+          <span>Back to Explore</span>
+        </Button>
+
+        <p className="separator" />
+
+        <Button type="link" className="button-explore" style={{ fontSize: 14 }} onClick={() => history.push('/all')}>
+          Explore
+        </Button>
+        <Icon iconSize={'m'} iconElement={<ArrowRightIcon />} />
+        <p className="current-land">{asset.name}</p>
+      </Row>
+
       <Row gutter={40} className="head-nav">
         <div className="left-wrapper">
           {shouldShowEditButton() && (

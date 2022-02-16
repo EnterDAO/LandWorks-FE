@@ -11,11 +11,11 @@ const LandsNav: React.FC = () => {
   return (
     <div className="lands-nav-container">
       <div className="divider"></div>
-      <NavLink className="tab" exact activeClassName="selected" to="/all">
+      <NavLink className="tab" exact activeClassName="selected" to="/explore">
         <div className="nav-content">
           <Rocket className="icon" />
           Explore
-        </div>{' '}
+        </div>
         <div className="active-tab"></div>
       </NavLink>
 

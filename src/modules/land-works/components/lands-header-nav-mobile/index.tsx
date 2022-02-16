@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import { getEtherscanAddressUrl, shortenAddr } from 'web3/utils';
@@ -6,6 +6,7 @@ import { getEtherscanAddressUrl, shortenAddr } from 'web3/utils';
 import ExternalLink from 'components/custom/externalLink';
 import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
+import { getENSName } from 'helpers/helpers';
 import { useWallet } from 'wallets/wallet';
 
 import './index.scss';
@@ -16,6 +17,13 @@ interface INavProps {
 
 export const LandsNavMobile: React.FC<INavProps> = ({ setNavOpen }) => {
   const wallet = useWallet();
+  const [ens, setEns] = useState<string>();
+  useEffect(() => {
+    if (wallet.account)
+      getENSName(wallet.account).then((ensName) => {
+        setEns(ensName);
+      });
+  }, [wallet]);
 
   return (
     <Row className="lands-nav-container-mobile" gutter={[16, 16]}>
@@ -51,7 +59,7 @@ export const LandsNavMobile: React.FC<INavProps> = ({ setNavOpen }) => {
             <Identicon address={wallet.account} width={40} height={40} />
             <ExternalLink href={getEtherscanAddressUrl(wallet.account!)}>
               <Text type="h2" weight="semibold" color="white">
-                {shortenAddr(wallet.account, 4, 3)}
+                {ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 4, 3)}
               </Text>
             </ExternalLink>
           </>
