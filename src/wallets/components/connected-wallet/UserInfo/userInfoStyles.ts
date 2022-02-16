@@ -1,5 +1,4 @@
 import { BEFORE_ELEMENT_BASE, OVERLAY_MEDIUM, OVERLAY_SMALL } from '../../../../../src/themes/utility-styles';
-
 import { THEME_COLORS } from '../../../../../src/themes/theme-constants';
 
 const styles = {
@@ -10,7 +9,6 @@ const styles = {
     margin: '0 15px',
     display: 'flex',
     justifyContent: 'flex-end',
-    // background: THEME_COLORS.darkBlue02,
     borderRadius: '10px',
     alignItems: 'center',
     cursor: 'pointer',
@@ -21,7 +19,6 @@ const styles = {
       '::before': {
         ...OVERLAY_SMALL,
         borderRadius: '10px',
-        //background: THEME_COLORS.light,
         zIndex: 1,
       },
     },
@@ -93,10 +90,7 @@ const styles = {
   },
   chevronRotate: {
     position: 'absolute',
-    // top: '50%',
     transform: 'rotate(0deg)',
-
-    // padding: '10px',
   },
   divider: {
     height: '20px',

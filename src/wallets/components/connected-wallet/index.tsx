@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-// import Button from 'components/antd/button';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-//import Popover from 'components/antd/popover';
 import Popover from '@mui/material/Popover';
 import cn from 'classnames';
 import { getEtherscanAddressUrl, getEtherscanTxUrl, shortenAddr } from 'web3/utils';
@@ -12,16 +10,13 @@ import { getEtherscanAddressUrl, getEtherscanTxUrl, shortenAddr } from 'web3/uti
 import ExternalLink from 'components/custom/externalLink';
 import Grid from 'components/custom/grid';
 import Icon from 'components/custom/icon';
-// import IconNotification from 'components/custom/icon-notification';
 import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
-// import { useNotifications } from 'components/providers/notifications-provider';
 import { getENSName } from 'helpers/helpers';
 import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 import { ReactComponent as ExternalLinkIcon } from 'resources/svg/external-link.svg';
-// import Notifications from 'wallets/components/notifications';
 import { useWallet } from 'wallets/wallet';
 
 import { useErc20 } from '../../../modules/land-works/providers/erc20-provider';
@@ -230,7 +225,7 @@ const ConnectedWallet: React.FC = () => {
         </div>
       </Popover>
       <Button onClick={handleClick}>
-        <UserInfo open={open} address={ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 4, 3)}/>
+        <UserInfo open={open} address={ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 10, 3)}/>
       </Button>
     </>
   );
