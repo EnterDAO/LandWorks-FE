@@ -10,14 +10,15 @@
 }
 
 .popover {
-  :global(.ant-popover-inner) {
-    box-shadow: none !important;
-    border-radius: 12px;
-    :global(.card) {
-      box-shadow: none !important;
-      border: none;
-    }
-  }
+  margin-top: 10px;
+  // :global(.ant-popover-inner) {
+  //   box-shadow: none !important;
+  //   border-radius: 12px;
+  //   :global(.card) {
+  //     box-shadow: none !important;
+  //     border: none;
+  //   }
+  // }
 }
 
 .accountLink {
@@ -50,9 +51,9 @@
 }
 
 .hamburger {
-  background-color: $grey01;
+  background-color: $darkBlue02;
   border-radius: 10px;
-  padding: 10px 15px 10px 15px;
+  //padding: 10px 15px 10px 15px;
 
   @media (max-width: 768px) {
     display: none;

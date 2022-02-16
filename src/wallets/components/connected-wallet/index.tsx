@@ -1,18 +1,21 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
+// import Button from 'components/antd/button';
+import Button from '@mui/material/Button';
+//import Popover from 'components/antd/popover';
+import Popover from '@mui/material/Popover';
 import cn from 'classnames';
 import { getEtherscanAddressUrl, getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
-import Button from 'components/antd/button';
 import Divider from 'components/antd/divider';
-import Popover from 'components/antd/popover';
 import ExternalLink from 'components/custom/externalLink';
 import Grid from 'components/custom/grid';
 import Icon from 'components/custom/icon';
 // import IconNotification from 'components/custom/icon-notification';
 import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
+import { Box, Dropdown, DropdownItem, DropdownMenu, IconButton } from 'design-system';
 // import { useNotifications } from 'providers/notifications-provider';
 import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
@@ -21,6 +24,7 @@ import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 import { useWallet } from 'wallets/wallet';
 
 import { useErc20 } from '../../../modules/land-works/providers/erc20-provider';
+import UserInfo from './UserInfo/UserInfo';
 
 import s from './s.module.scss';
 
@@ -75,6 +79,19 @@ const ConnectedWallet: React.FC = () => {
 
   const [txHash, setTxHash] = useState(landworksTxHash || landTxHash || estateTxHash || erc20TxHash);
 
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
   useEffect(() => {
     if (landworksTxInProgress || landTxInProgress || estateTxInProgress || erc20TxInProgress) {
       setIsAnyTxInProgress(true);
@@ -89,45 +106,46 @@ const ConnectedWallet: React.FC = () => {
 
   if (wallet.connecting) {
     return (
-      <Popover
-        placement="bottomRight"
-        noPadding
-        content={
-          <div className="card">
-            <Grid flow="row" gap={32} padding={[32, 24]}>
-              <Grid flow="col" gap={16} colsTemplate="24px 1fr auto">
-                <Icon name="node-status" />
-                <Text type="p1" color="secondary">
-                  Status
-                </Text>
-                <Text type="lb2" weight="semibold" color="green" className={s.statusTag}>
-                  Connecting
-                </Text>
-              </Grid>
-              <Grid flow="col" gap={16} colsTemplate="24px 1fr auto">
-                <Icon name="wallet-outlined" />
-                <Text type="p1" color="secondary">
-                  Wallet
-                </Text>
-                <Text type="p1" weight="semibold" color="white">
-                  {wallet.connecting?.name}
-                </Text>
-              </Grid>
-            </Grid>
-            <Divider style={{ minHeight: 28 }} />
-            <Grid padding={24}>
-              <button type="button" className="button button-ghost" onClick={() => wallet.disconnect()}>
-                <span>Disconnect</span>
-              </button>
-            </Grid>
-          </div>
-        }
-        trigger="click"
-      >
-        <Button type="primary" className={s.buttonConnecting}>
-          Connecting...
-        </Button>
-      </Popover>
+      <></>
+      // <Popover
+      //   placement="bottomRight"
+      //   noPadding
+      //   content={
+      //     <div className="card">
+      //       <Grid flow="row" gap={32} padding={[32, 24]}>
+      //         <Grid flow="col" gap={16} colsTemplate="24px 1fr auto">
+      //           <Icon name="node-status" />
+      //           <Text type="p1" color="secondary">
+      //             Status
+      //           </Text>
+      //           <Text type="lb2" weight="semibold" color="green" className={s.statusTag}>
+      //             Connecting
+      //           </Text>
+      //         </Grid>
+      //         <Grid flow="col" gap={16} colsTemplate="24px 1fr auto">
+      //           <Icon name="wallet-outlined" />
+      //           <Text type="p1" color="secondary">
+      //             Wallet
+      //           </Text>
+      //           <Text type="p1" weight="semibold" color="white">
+      //             {wallet.connecting?.name}
+      //           </Text>
+      //         </Grid>
+      //       </Grid>
+      //       <Divider style={{ minHeight: 28 }} />
+      //       <Grid padding={24}>
+      //         <button type="button" className="button button-ghost" onClick={() => wallet.disconnect()}>
+      //           <span>Disconnect</span>
+      //         </button>
+      //       </Grid>
+      //     </div>
+      //   }
+      //   trigger="click"
+      // >
+      //   <Button type="primary" className={s.buttonConnecting}>
+      //     Connecting...
+      //   </Button>
+      // </Popover>
     );
   }
 
@@ -140,12 +158,21 @@ const ConnectedWallet: React.FC = () => {
   }
 
   const AccountSection = (
-    <Popover
-      placement="bottomRight"
-      trigger="click"
-      noPadding
-      className={s.popover}
-      content={
+    <>
+      <Popover
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        open={open}
+        className={s.popover}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+      >
         <div className="card">
           <Grid className="card-header" flow="col" gap={16} align="center" justify="start">
             <Identicon address={wallet.account} width={40} height={40} />
@@ -191,60 +218,49 @@ const ConnectedWallet: React.FC = () => {
             </button>
           </Grid>
         </div>
-      }
-    >
-      <Button type="link" className={s.accountLink}>
-        <Grid flow="col" align="center">
-          {isTxInProgress ? (
-            <div className={s.loader}></div>
-          ) : (
-            <Identicon address={wallet.account} width={36} height={36} className="mr-8" />
-          )}
-
-          <Text type="p1" style={{ color: 'white' }} className={cn(s.walletAddress, 'mr-4')}>
-            {shortenAddr(wallet.account, 4, 3)}
-          </Text>
-          <Icon name="dropdown" style={{ color: 'white' }} className={s.dropdownArrow} />
-        </Grid>
+      </Popover>
+      <Button onClick={handleClick}>
+        <UserInfo open={open} />
       </Button>
-    </Popover>
+    </>
   );
 
   const TxSection = (
-    <Popover
-      placement="bottom"
-      trigger="click"
-      noPadding
-      className={cn(s.popover, s.txSection)}
-      content={
-        <div id={s.txPopoverContainer}>
-          <div id={s.txInfoContainer}>
-            <div id={s.txStatus}>Transaction in progress</div>
-            <div
-              onClick={() => {
-                window.open(`${getEtherscanTxUrl(txHash)}`, '_blank')?.focus();
-              }}
-              id={s.txEtherscanLink}
-            >
-              view on etherscan
-            </div>
-          </div>
-          <div id={s.txDisconnectContainer} onClick={() => wallet.disconnect()}>
-            Disconnect
-          </div>
-        </div>
-      }
-    >
-      <Button type="link" className={s.accountLink}>
-        <Grid flow="col" align="center">
-          <div className={s.loader}></div>
-          <Text type="p1" style={{ color: 'white' }} className={cn(s.walletAddress, 'mr-4')}>
-            {shortenAddr(wallet.account, 4, 3)}
-          </Text>
-          <Icon name="dropdown" style={{ color: 'white' }} className={s.dropdownArrow} />
-        </Grid>
-      </Button>
-    </Popover>
+    <div></div>
+    // <Popover
+    //   placement="bottom"
+    //   trigger="click"
+    //   noPadding
+    //   className={cn(s.popover, s.txSection)}
+    //   content={
+    //     <div id={s.txPopoverContainer}>
+    //       <div id={s.txInfoContainer}>
+    //         <div id={s.txStatus}>Transaction in progress</div>
+    //         <div
+    //           onClick={() => {
+    //             window.open(`${getEtherscanTxUrl(txHash)}`, '_blank')?.focus();
+    //           }}
+    //           id={s.txEtherscanLink}
+    //         >
+    //           view on etherscan
+    //         </div>
+    //       </div>
+    //       <div id={s.txDisconnectContainer} onClick={() => wallet.disconnect()}>
+    //         Disconnect
+    //       </div>
+    //     </div>
+    //   }
+    // >
+    //   <Button type="link" className={s.accountLink}>
+    //     <Grid flow="col" align="center">
+    //       <div className={s.loader}></div>
+    //       <Text type="p1" style={{ color: 'white' }} className={cn(s.walletAddress, 'mr-4')}>
+    //         {shortenAddr(wallet.account, 4, 3)}
+    //       </Text>
+    //       <Icon name="dropdown" style={{ color: 'white' }} className={s.dropdownArrow} />
+    //     </Grid>
+    //   </Button>
+    // </Popover>
   );
 
   return (

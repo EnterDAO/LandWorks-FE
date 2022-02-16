@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import Popover from '@mui/material/Popover';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 
-import Button from 'components/antd/button';
+// import Button from 'components/antd/button';
 import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import LandsNav from 'modules/land-works/components/lands-header-nav';
@@ -28,6 +30,18 @@ const LayoutHeader: React.FC = () => {
   const [popperElement, setPopperElement] = useState<any>();
   const wallet = useWallet();
   const { warns } = useWarning();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   const { styles, attributes, forceUpdate, state } = usePopper(referenceElement, popperElement, {
     placement: 'bottom',
@@ -61,11 +75,11 @@ const LayoutHeader: React.FC = () => {
 
       {!isLandingPage?.isExact && <LandsNav />}
 
-      {isLandingPage?.isExact && (
+      {/* {isLandingPage?.isExact && (
         <Button type="link" className={s.burger} onClick={() => setNavOpen((prevState) => !prevState)}>
           <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
         </Button>
-      )}
+      )} */}
 
       {isLandingPage?.isExact && (
         <nav className={s.nav}>
