@@ -4,6 +4,7 @@ import { isMobile } from 'react-device-detect';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Popover from '@mui/material/Popover';
+import { styled } from '@mui/material/styles';
 import cn from 'classnames';
 import { getEtherscanAddressUrl, getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
@@ -21,6 +22,8 @@ import { useWallet } from 'wallets/wallet';
 
 import { useErc20 } from '../../../modules/land-works/providers/erc20-provider';
 import UserInfo from './UserInfo/UserInfo';
+
+import { THEME_COLORS } from 'themes/theme-constants';
 
 import s from './s.module.scss';
 
@@ -107,6 +110,14 @@ const ConnectedWallet: React.FC = () => {
       });
   }, [wallet]);
 
+  const StyledPopover = styled(Popover)({
+    '& .MuiPaper-root': {
+      borderRadius: 11,
+      backgroundColor: THEME_COLORS.darkBlue02,
+      border: 'none',
+    },
+  });
+
   if (wallet.connecting) {
     return (
       <>
@@ -168,7 +179,7 @@ const ConnectedWallet: React.FC = () => {
 
   const AccountSection = (
     <>
-      <Popover
+      <StyledPopover
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -222,7 +233,7 @@ const ConnectedWallet: React.FC = () => {
             </button>
           </Grid>
         </div>
-      </Popover>
+      </StyledPopover>
       <Button onClick={handleClick}>
         <UserInfo open={open} address={ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 10, 3)} />
       </Button>

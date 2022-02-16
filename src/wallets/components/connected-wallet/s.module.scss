@@ -24,13 +24,17 @@
   font-weight: 500;
   color: $grey03;
 
-  .link{
-    margin-left: 15px
+  .link {
+    margin-left: 15px;
   }
 }
 
 .popover {
   margin-top: 10px;
+}
+
+.card {
+  border: 1px solid red;
 }
 
 .accountLink {
@@ -45,11 +49,11 @@
   background: rgba(108, 210, 126, 0.2);
   border-radius: 12px;
   padding: 7px 13px;
-  color: $green
+  color: $green;
 }
 
 .divider {
-  background: $grey04,
+  background: $grey04;
 }
 
 .notifications {
