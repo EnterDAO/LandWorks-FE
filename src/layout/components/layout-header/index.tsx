@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import Popover from '@mui/material/Popover';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 
@@ -30,18 +28,6 @@ const LayoutHeader: React.FC = () => {
   const [popperElement, setPopperElement] = useState<any>();
   const wallet = useWallet();
   const { warns } = useWarning();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
 
   const { styles, attributes, forceUpdate, state } = usePopper(referenceElement, popperElement, {
     placement: 'bottom',

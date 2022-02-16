@@ -86,7 +86,6 @@ const ConnectedWallet: React.FC = () => {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
 
   useEffect(() => {
     if (landworksTxInProgress || landTxInProgress || estateTxInProgress || erc20TxInProgress) {
@@ -189,7 +188,7 @@ const ConnectedWallet: React.FC = () => {
           </Grid>
           <Grid flow="col" gap={16} align="center" justify="center">
             <ExternalLink className={s.externalLink} href={getEtherscanAddressUrl(wallet.account!)}>
-            {ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 18, 3)}
+              {ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 18, 3)}
               <ExternalLinkIcon className={s.link} />
             </ExternalLink>
           </Grid>
@@ -225,14 +224,14 @@ const ConnectedWallet: React.FC = () => {
         </div>
       </Popover>
       <Button onClick={handleClick}>
-        <UserInfo open={open} address={ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 10, 3)}/>
+        <UserInfo open={open} address={ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 10, 3)} />
       </Button>
     </>
   );
 
   const TxSection = (
     <>
-      <Popover 
+      <Popover
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -243,8 +242,9 @@ const ConnectedWallet: React.FC = () => {
         }}
         open={open}
         anchorEl={anchorEl}
-        onClose={handleClose} 
-        className={cn(s.popover, s.txSection)}>
+        onClose={handleClose}
+        className={cn(s.popover, s.txSection)}
+      >
         <div id={s.txPopoverContainer}>
           <div id={s.txInfoContainer}>
             <div id={s.txStatus}>Transaction in progress</div>

@@ -1,4 +1,5 @@
 import { BEFORE_ELEMENT_BASE, OVERLAY_MEDIUM, OVERLAY_SMALL } from '../../../../../src/themes/utility-styles';
+
 import { THEME_COLORS } from '../../../../../src/themes/theme-constants';
 
 const styles = {
