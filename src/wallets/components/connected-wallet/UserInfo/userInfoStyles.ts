@@ -1,5 +1,6 @@
-import { THEME_COLORS } from 'themes/theme-constants';
 import { BEFORE_ELEMENT_BASE, OVERLAY_MEDIUM, OVERLAY_SMALL } from 'themes/utility-styles';
+
+import { THEME_COLORS } from 'themes/theme-constants';
 
 const styles = {
   userDetails: {

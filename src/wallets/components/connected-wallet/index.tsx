@@ -12,6 +12,7 @@ import Grid from 'components/custom/grid';
 import Icon from 'components/custom/icon';
 import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
+import { StyledPopover } from 'design-system/Popover/Popover';
 import { getENSName } from 'helpers/helpers';
 import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
@@ -23,7 +24,6 @@ import { useErc20 } from '../../../modules/land-works/providers/erc20-provider';
 import UserInfo from './UserInfo/UserInfo';
 
 import s from './s.module.scss';
-import { StyledPopover } from 'design-system/Popover/Popover';
 
 // const NotificationSection: React.FC = () => {
 //   const { setNotificationsReadUntil, notifications, notificationsReadUntil } = useNotifications();
