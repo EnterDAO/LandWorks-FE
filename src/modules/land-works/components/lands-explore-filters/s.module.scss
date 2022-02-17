@@ -1,0 +1,26 @@
+@import '../../../../styles/variables.scss';
+@import '../../../../styles/text.scss';
+
+.filterWrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.filterButton {
+  background-color: $grey01;
+  padding: 16px 20px;
+  border: none;
+  border-radius: 10px;
+  color: $light;
+  min-width: 153px;
+}
+
+.dropDownItems {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdownButton {
+  background-color: $grey01;
+  padding: 16px 20px;
+}

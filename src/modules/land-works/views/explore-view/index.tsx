@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DECENTRALAND_METAVERSE, DEFAULT_LAST_RENT_END, sortColumns, sortDirections } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { end } from '@popperjs/core';
 import { Col, Row } from 'antd';
 
@@ -9,6 +10,8 @@ import LandCardSkeleton from 'modules/land-works/components/land-base-loader-car
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { LandsAction } from 'modules/land-works/components/lands-action';
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
+import { LandsFilter } from 'modules/land-works/components/lands-explore-filters';
+import { LandsSubheader } from 'modules/land-works/components/lands-explore-subheader';
 import { useWallet } from 'wallets/wallet';
 
 import {
@@ -76,58 +79,72 @@ const ExploreView: React.FC = () => {
     getAssets();
   }, [wallet.account]);
 
-  return (
-    <div className="content-container content-container--explore-view">
-      <Row className="lands-container">
-        <Col span={12}>
-          <Row justify={end} className="actions-container">
-            {user.hasUnclaimedRent && (
-              <Col className="lands-claim-container">
-                <LandsAction
-                  onButtonClick={setShowClaimModal}
-                  buttonText={'CLAIM '}
-                  subHeading="You have"
-                  isClaimButtonDisabled={claimButtonDisabled}
-                  mainHeading="Unclaimed rent"
-                />
-              </Col>
-            )}
-          </Row>
-          <Row
-            gutter={[
-              { xs: 16, sm: 16, md: 16, lg: 32 },
-              { xs: 16, sm: 16, md: 16, lg: 32 },
-            ]}
-            className="cards-list-container"
-          >
-            {loading ? (
-              [1, 2, 3].map((i) => <LandCardSkeleton key={i} />)
-            ) : lands.length ? (
-              lands.map((land) => <LandWorkCard onClick={onClickAtlasHandler} key={land.id} land={land} />)
-            ) : (
-              <div>No properties are currently listed</div>
-            )}
-          </Row>
-        </Col>
-        <Col span={12}>
-          <Row className="map-list-container">
-            <div style={{ minHeight: 'calc(100vh - 80px - 90px)', width: '100%' }}>
-              <Atlas x={atlasMapX} y={atlasMapY} />
-            </div>
-          </Row>
-        </Col>
-      </Row>
+  const onPlaceChange = (event: SelectChangeEvent) => {
+    // TODO:: some filtering here
+    console.log(event.target.value as string);
+  };
 
-      <ClaimModal
-        onSubmit={() => {
-          setClaimButtonDisabled(true);
-          setShowClaimModal(false);
-        }}
-        onCancel={() => setShowClaimModal(false)}
-        visible={showClaimModal}
-        rentFees={user?.unclaimedRentAssets}
+  return (
+    <>
+      <LandsSubheader
+        totalLands={lands.length}
+        hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
       />
-    </div>
+
+      <LandsFilter onPlaceChange={onPlaceChange} />
+
+      <div className="content-container content-container--explore-view">
+        <Row className="lands-container">
+          <Col span={12}>
+            <Row justify={end} className="actions-container">
+              {user.hasUnclaimedRent && (
+                <Col className="lands-claim-container">
+                  <LandsAction
+                    onButtonClick={setShowClaimModal}
+                    buttonText={'CLAIM '}
+                    subHeading="You have"
+                    isClaimButtonDisabled={claimButtonDisabled}
+                    mainHeading="Unclaimed rent"
+                  />
+                </Col>
+              )}
+            </Row>
+            <Row
+              gutter={[
+                { xs: 16, sm: 16, md: 16, lg: 32 },
+                { xs: 16, sm: 16, md: 16, lg: 32 },
+              ]}
+              className="cards-list-container"
+            >
+              {loading ? (
+                [1, 2, 3].map((i) => <LandCardSkeleton key={i} />)
+              ) : lands.length ? (
+                lands.map((land) => <LandWorkCard onClick={onClickAtlasHandler} key={land.id} land={land} />)
+              ) : (
+                <div>No properties are currently listed</div>
+              )}
+            </Row>
+          </Col>
+          <Col span={12}>
+            <Row className="map-list-container">
+              <div style={{ minHeight: 'calc(100vh - 80px - 90px)', width: '100%' }}>
+                <Atlas x={atlasMapX} y={atlasMapY} />
+              </div>
+            </Row>
+          </Col>
+        </Row>
+
+        <ClaimModal
+          onSubmit={() => {
+            setClaimButtonDisabled(true);
+            setShowClaimModal(false);
+          }}
+          onCancel={() => setShowClaimModal(false)}
+          visible={showClaimModal}
+          rentFees={user?.unclaimedRentAssets}
+        />
+      </div>
+    </>
   );
 };
 
