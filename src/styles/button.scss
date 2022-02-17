@@ -82,6 +82,28 @@
   }
 }
 
+.button-primary-grey {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 53px;
+  position: relative;
+  border: 0;
+  background-color: $grey01;
+  box-sizing: border-box;
+  border-radius: 12px;
+
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 24px;
+
+  text-align: center;
+
+  color: var(--theme-white-color);
+}
+
 .button-ghost {
   display: flex;
   flex-direction: row;
