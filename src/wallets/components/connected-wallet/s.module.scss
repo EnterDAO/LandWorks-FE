@@ -9,15 +9,32 @@
   }
 }
 
-.popover {
-  :global(.ant-popover-inner) {
-    box-shadow: none !important;
-    border-radius: 12px;
-    :global(.card) {
-      box-shadow: none !important;
-      border: none;
-    }
+.identicon {
+  margin: 20px 0 15px;
+}
+
+.externalLink {
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 11px 12px;
+  background: $grey01;
+  font-size: 12px;
+  font-weight: 500;
+  color: $grey03;
+
+  .link {
+    margin-left: 15px;
   }
+}
+
+.popover {
+  margin-top: 10px;
+}
+
+.card {
+  border: 1px solid red;
 }
 
 .accountLink {
@@ -29,9 +46,14 @@
 }
 
 .statusTag {
-  background: rgba(0, 211, 149, 0.1);
+  background: rgba(108, 210, 126, 0.2);
   border-radius: 12px;
-  padding: 4px 12px;
+  padding: 7px 13px;
+  color: $green;
+}
+
+.divider {
+  background: $grey04;
 }
 
 .notifications {
@@ -50,9 +72,8 @@
 }
 
 .hamburger {
-  background-color: $grey01;
+  background-color: $darkBlue02;
   border-radius: 10px;
-  padding: 10px 15px 10px 15px;
 
   @media (max-width: 768px) {
     display: none;
