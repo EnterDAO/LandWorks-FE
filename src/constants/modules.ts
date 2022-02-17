@@ -89,7 +89,7 @@ export const DECENTRALAND_METAVERSE = '1';
 
 export const DEFAULT_LAST_RENT_END = '0';
 
-export const pageSizeOptions = ['6', '12', '24'];
+export const pageSizeOptions = ['8', '12', '24'];
 
 export const sortColumns = ['totalRents', 'pricePerSecond', 'pricePerSecond'];
 

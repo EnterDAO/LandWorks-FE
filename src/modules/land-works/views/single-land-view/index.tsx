@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
+import usePagination from '@mui/material/usePagination/usePagination';
 import { Col, Row } from 'antd';
 
 import Button from 'components/antd/button';
 import { Icon } from 'design-system';
-import { ArrowRightIcon, BackIcon } from 'design-system/icons';
+import { ArrowLeftIcon, ArrowRightIcon, BackIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
@@ -39,7 +40,11 @@ const SingleLandView: React.FC = () => {
   const history = useHistory();
   const { tokenId } = useParams<{ tokenId: string }>();
   const [asset, setAsset] = useState({} as AssetEntity);
+
   const [adjacentLands, setAdjacentLands] = useState([] as AssetEntity[]);
+  const [paginatedNearbyLands, setPaginatedNearbyLands] = useState([] as AssetEntity[]);
+  const [itemsOnPage] = useState(4);
+
   const [showRentModal, setShowRentModal] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
 
@@ -49,6 +54,7 @@ const SingleLandView: React.FC = () => {
   const [withdrawButtonDisabled, setWithdrawButtonDisabled] = useState(false);
   const [editButtonDisabled, setEditButtonDisabled] = useState(false);
   const [isUpdateOperatorDisabled, setIsUpdateOperatorDisabled] = useState(false);
+  const [page, setPage] = useState(1);
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
@@ -191,8 +197,25 @@ const SingleLandView: React.FC = () => {
     const neighbours = calculateNeighbours(assetCoordinates || []);
 
     const adjacentLands = await fetchAdjacentDecentralandAssets(neighbours);
+
     setAdjacentLands(adjacentLands);
+    setPaginatedNearbyLands(adjacentLands.slice(0, itemsOnPage));
   };
+
+  const onPaginationChange = (pageNumber: number) => {
+    const begin = (pageNumber - 1) * itemsOnPage;
+    const end = begin + itemsOnPage;
+    setPaginatedNearbyLands(adjacentLands.slice(begin, end));
+  };
+
+  const { items } = usePagination({
+    count: adjacentLands.length / itemsOnPage,
+    page: page,
+    onChange: (event, pageNumber) => {
+      setPage(pageNumber);
+      onPaginationChange(pageNumber);
+    },
+  });
 
   useEffect(() => {
     updateAdjacentLands();
@@ -214,7 +237,7 @@ const SingleLandView: React.FC = () => {
           </>
         }
       />
-      
+
       <Row gutter={40} className="head-breadcrumbs">
         <Button type="link" style={{ fontSize: 14 }} className="button-back" onClick={() => history.push('/all')}>
           <div className="button-icon">
@@ -345,17 +368,26 @@ const SingleLandView: React.FC = () => {
       />
       <SingleViewLandHistory assetId={tokenId} />
       {!!adjacentLands.length && (
-        <Row className="pooling-section">
-          <div className="pooling-title">
-            <p className="pooling-heading">Pooling </p>
-            <p className="pooling-description">
-              The following properties are adjacent to this property. You can rent the adjacent properties to maximise
-              the land you want to build scenes/experiences on
-            </p>
+        <Row className="nearby-section">
+          <div className="nearby-title">
+            <p className="nearby-heading">Nearby Properties </p>
+            <p className="nearby-description">{adjacentLands.length} Properties</p>
           </div>
+
+          <Col span={24} className="single-lands-pagination">
+            {items.map(({ type, ...item }, index) => {
+              if (['next', 'previous'].includes(type))
+                return (
+                  <button {...item} key={index}>
+                    {type === 'previous' ? <ArrowLeftIcon /> : <ArrowRightIcon />}
+                  </button>
+                );
+            })}
+          </Col>
+
           <Col span={24}>
-            <Row gutter={[15, 15]} style={{ paddingTop: '27px' }}>
-              {adjacentLands.map((land) => (
+            <Row gutter={[15, 15]}>
+              {paginatedNearbyLands.map((land) => (
                 <LandWorkCard key={land.id} land={land} />
               ))}
             </Row>

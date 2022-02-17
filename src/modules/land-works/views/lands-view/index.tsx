@@ -168,7 +168,6 @@ const LandsView: React.FC = () => {
       orderColumn,
       sortDir
     );
-
     setLands(lands.data);
     setTotalLands(lands?.meta.count);
     setLoading(false);
@@ -257,8 +256,8 @@ const LandsView: React.FC = () => {
           </Row>
           <Row
             gutter={[
-              { xs: 16, sm: 16, md: 16, lg: 32 },
-              { xs: 16, sm: 16, md: 16, lg: 32 },
+              { xs: 8, sm: 8, md: 12, lg: 12 },
+              { xs: 8, sm: 8, md: 12, lg: 12 },
             ]}
           >
             {loading ? (

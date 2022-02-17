@@ -310,6 +310,9 @@ export type AssetEntity = {
   availability: AssetAvailablity;
   isHot: boolean;
   decentralandData?: DecentralandData;
+  metaverse: {
+    name: string;
+  };
   owner: IdEntity;
   operator: string;
   status: string;
@@ -398,6 +401,12 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
             id
             asset {
               id
+              owner {
+                id
+              }
+              metaverse {
+                name
+              }
               metaverseAssetId
               minPeriod
               maxPeriod
@@ -904,6 +913,12 @@ export function fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
         ) {
           id
           metaverseAssetId
+          metaverse {
+            name
+          }
+          owner {
+            id
+          }
           minPeriod
           maxPeriod
           maxFutureTime
