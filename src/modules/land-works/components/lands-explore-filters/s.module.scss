@@ -4,23 +4,35 @@
 .filterWrapper {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  margin: 12px var(--horizontal-padding);
 }
 
-.filterButton {
+.filterButton,
+.dropdownButton,
+.filterButtonShort {
   background-color: $grey01;
   padding: 16px 20px;
   border: none;
   border-radius: 10px;
   color: $light;
-  min-width: 153px;
 }
 
 .dropDownItems {
   display: flex;
   flex-direction: column;
 }
-
-.dropdownButton {
-  background-color: $grey01;
-  padding: 16px 20px;
+.filterButtonShort {
+  min-width: 153px;
+  margin-left: 20px;
+  @media (max-width: 1000px) {
+    min-width: 100px;
+  }
+}
+.dropdownButton,
+.filterButton {
+  min-width: 200px;
+  @media (max-width: 1000px) {
+    min-width: 150px;
+  }
 }

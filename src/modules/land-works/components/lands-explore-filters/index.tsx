@@ -1,14 +1,8 @@
 import React from 'react';
-import { ActionMeta, SingleValue } from 'react-select';
 import { SelectChangeEvent } from '@mui/material/Select';
+import Switch from '@mui/material/Switch';
 
-import Grid from 'components/custom/grid';
-import { Box, Button, DropdownMenu, Typography } from 'design-system';
-import { Option } from 'modules/interface';
-
-import { ReactComponent as HottestIcon } from '../../../../resources/svg/order-hot.svg';
-import { LandsPlaceSorter } from '../lands-place-sorter';
-import { LandsPriceSorter } from '../lands-price-sorter';
+import { Box, DropdownMenu, Typography } from 'design-system';
 
 import s from './s.module.scss';
 
@@ -20,7 +14,7 @@ interface Props {
 
 const placeData = [
   {
-    label: 'Hottest first',
+    label: 'Decentaland',
     value: 1,
   },
 ];
@@ -32,54 +26,67 @@ const currencyData = [
   },
 ];
 
+const sortData = [
+  {
+    label: 'Hottest First',
+    value: 1,
+  },
+];
+
 export const LandsFilter: React.FC<Props> = ({
   // onSortDirectionChange,
   onPlaceChange,
 }) => {
   return (
     <div className={s.filterWrapper}>
-      <DropdownMenu
-        id="login-dropdown"
-        toggleElement={
-          <button className={s.filterButton}>
-            Decentraland
-          </button>
-        }
-      >
-        <Box className={s.dropDownItems}>
-          {placeData.map((o) => (
-            <button
-              // variant="secondary"
-              // btnSize="large"
-              className={s.dropdownButton}
-              // onClick={() => history.push(APP_ROUTES.createWalletMainPageUrl)}
-            >
-              {o.label}
-            </button>
-          ))}
+      <Box style={{ display: 'flex', alignItems: 'center' }}>
+        <DropdownMenu id="login-dropdown" toggleElement={<button className={s.filterButton}>Decentraland</button>}>
+          <Box className={s.dropDownItems}>
+            {placeData.map((o) => (
+              <button
+                className={s.dropdownButton}
+                // onClick={() => history.push(APP_ROUTES.createWalletMainPageUrl)}
+              >
+                {o.label}
+              </button>
+            ))}
+          </Box>
+        </DropdownMenu>
+        <DropdownMenu id="login-dropdown" toggleElement={<button className={s.filterButtonShort}>ETH</button>}>
+          <Box className={s.dropDownItems}>
+            {currencyData.map((o) => (
+              <button
+                className={s.dropdownButton}
+                // onClick={() => history.push(APP_ROUTES.createWalletMainPageUrl)}
+              >
+                {o.label}
+              </button>
+            ))}
+          </Box>
+        </DropdownMenu>
+      </Box>
+      <Box style={{ display: 'flex', alignItems: 'center' }}>
+        <Box style={{ display: 'flex', alignItems: 'center' }}>
+          <Typography>Mine Only</Typography>
+          <Switch defaultChecked />
         </Box>
-      </DropdownMenu>
-      <DropdownMenu
-        id="login-dropdown"
-        toggleElement={
-          <button className={s.filterButton}>
-            ETH
-          </button>
-        }
-      >
-        <Box className={s.dropDownItems}>
-          {currencyData.map((o) => (
-            <button
-              // variant="secondary"
-              // btnSize="large"
-              className={s.dropdownButton}
-              // onClick={() => history.push(APP_ROUTES.createWalletMainPageUrl)}
-            >
-              {o.label}
-            </button>
-          ))}
+        <Box style={{ display: 'flex', alignItems: 'center' }}>
+          <Typography>Avalaible Only</Typography>
+          <Switch />
         </Box>
-      </DropdownMenu>
+        <DropdownMenu id="login-dropdown" toggleElement={<button className={s.filterButton}>Hottest First</button>}>
+          <Box className={s.dropDownItems}>
+            {sortData.map((o) => (
+              <button
+                className={s.dropdownButton}
+                // onClick={() => history.push(APP_ROUTES.createWalletMainPageUrl)}
+              >
+                {o.label}
+              </button>
+            ))}
+          </Box>
+        </DropdownMenu>
+      </Box>
     </div>
   );
 };
