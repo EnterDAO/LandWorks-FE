@@ -220,11 +220,14 @@
     margin-right: 7px;
    
   }
-  &-available-now {
+  &-available-dot {
     background-color: #6CD27E;
   }
-  &-rented-now {
+  &-rented-dot {
     background-color: #D7606E;
+  }
+  &-delisted-dot {
+    background-color: darkgray;
   }
   &-section {
     display: flex;
@@ -247,6 +250,10 @@
   }
   &-rented {
     border: 1px solid #D7606E !important;
+  }
+  &-delisted {
+    border: 1px solid darkgray !important;
+    background-color: rgba(169, 169, 169, 0.05) !important;
   }
 }
 

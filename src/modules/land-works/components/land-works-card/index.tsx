@@ -5,6 +5,7 @@ import { Card, Col, Image, Row } from 'antd';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
+import { AssetStatus } from 'modules/land-works/models/AssetStatus';
 
 import { ReactComponent as FireIcon } from '../../../../resources/svg/white_fire.svg';
 import { AssetEntity } from '../../api';
@@ -22,6 +23,8 @@ interface ILandWorksCardProps {
 const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
   const history = useHistory();
   const [showChart] = useState(false);
+  const isNotListed = () => land?.status !== AssetStatus.LISTED;
+  const isAvailable = land.isAvailable && land.availability.isCurrentlyAvailable;
 
   return (
     <Col className="land-card-wrapper" xl={6} md={12} sm={24} xs={24}>
@@ -45,7 +48,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
           <Col span={13}>
             <Row className="land-info-row">
               <Col span={24} className="land-name">
-                <span>{land.name.replace('metadata', '').toLowerCase()}</span>
+                <span>{land.name.toLowerCase()}</span>
               </Col>
               <Col span={24} className="land-owner-address">
                 <span>BY {shortenAddr(land.owner?.id, 6, 4)}</span>
@@ -79,21 +82,19 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
               <p className="available-period">{land.availability?.label}</p>
             </Col>
           )}
-          {land.isAvailable && land.availability.isCurrentlyAvailable ? (
-            <Col className="button-section" span={12}>
-              <button className="button-available">
-                <div className="button-label button-available-now" />
-                Available
-              </button>
-            </Col>
-          ) : (
-            <Col className="button-section" span={12}>
-              <button className="button-rented">
-                <div className="button-label button-rented-now" />
-                Rented
-              </button>
-            </Col>
-          )}
+
+          <Col className="button-section" span={12}>
+            <button
+              className={`${isNotListed() ? 'button-delisted' : isAvailable ? 'button-available' : 'button-rented'}`}
+            >
+              <div
+                className={`button-label ${
+                  isNotListed() ? 'button-delisted-dot' : isAvailable ? 'button-available-dot' : 'button-rented-dot'
+                }`}
+              />
+              {isNotListed() ? 'Delisted' : isAvailable ? 'Available' : 'Rented'}
+            </button>
+          </Col>
         </Row>
         <Row className="hashtag-row">
           <Col>{land.decentralandData?.isLAND ? <p>#LAND</p> : <p>#ESTATE</p>}</Col>
