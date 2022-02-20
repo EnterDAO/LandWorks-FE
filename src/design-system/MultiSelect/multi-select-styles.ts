@@ -7,7 +7,7 @@ export const menuPaperStyles: SystemStyleObject = {
   mt: 2,
   borderRadius: '12px',
   padding: 4,
-  bgcolor: THEME_COLORS.grey01,
+  bgcolor: THEME_COLORS.grey04,
   width: 360,
 };
 

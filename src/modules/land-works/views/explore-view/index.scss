@@ -5,6 +5,7 @@ $navbar-height: 107px;
 
 .content-container {
   z-index: 10;
+  margin-top: 200px;
 
   &--explore-view {
     position: relative;
@@ -17,7 +18,10 @@ $navbar-height: 107px;
 
 .map-list-container {
   position: fixed;
-  top: 80px;
+
+  // TODO: Change this back
+  top: 500px;
+
   right: 0;
   left: 50%;
 

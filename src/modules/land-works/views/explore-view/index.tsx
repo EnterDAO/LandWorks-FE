@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { SingleValue } from 'react-select';
 import { DECENTRALAND_METAVERSE, DEFAULT_LAST_RENT_END, sortColumns, sortDirections } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
-import { SelectChangeEvent } from '@mui/material/Select';
 import { end } from '@popperjs/core';
 import { Col, Row } from 'antd';
 
 import { Atlas } from 'components/custom/Atlas/Atlas';
+import { Box, Typography } from 'design-system';
+import { StyledSwitch } from 'design-system/Switch/Switch';
+import { Option } from 'modules/interface';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { LandsAction } from 'modules/land-works/components/lands-action';
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
-import { LandsFilter } from 'modules/land-works/components/lands-explore-filters';
+import { LandsSorter } from 'modules/land-works/components/lands-explore-filters/lands-price-sorter';
 import { LandsSubheader } from 'modules/land-works/components/lands-explore-subheader';
 import { useWallet } from 'wallets/wallet';
 
@@ -21,6 +24,7 @@ import {
   fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder,
   parseUser,
 } from '../../api';
+import { currencyData, data, landsData } from './filterData';
 
 import './index.scss';
 
@@ -30,6 +34,10 @@ const ExploreView: React.FC = () => {
   const [lands, setLands] = useState([] as AssetEntity[]);
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [user, setUser] = useState({} as UserEntity);
+
+  const [sortDir, setSortDir] = useState(sortDirections[0]);
+  const [sortColumn, setSortColumn] = useState(sortColumns[0]);
+
 
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
@@ -59,7 +67,7 @@ const ExploreView: React.FC = () => {
       DECENTRALAND_METAVERSE,
       DEFAULT_LAST_RENT_END,
       sortColumns[0],
-      sortDirections[0]
+      sortDirections[0],
     );
 
     console.log('getAssets', lands);
@@ -77,11 +85,19 @@ const ExploreView: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     getAssets();
-  }, [wallet.account]);
+  }, [wallet.account, sortColumn, sortDir]);
 
-  const onPlaceChange = (event: SelectChangeEvent) => {
+  const onPlaceChange = (value: SingleValue<Option>) => {
     // TODO:: some filtering here
-    console.log(event.target.value as string);
+    console.log({ value });
+  };
+
+  const onSortDirectionChange = (value: SingleValue<Option>) => {
+    const sortIndex = Number(value) - 1;
+    setSortDir(sortDirections[sortIndex]);
+    setSortColumn(sortColumns[sortIndex]);
+
+    console.log({ value });
   };
 
   return (
@@ -90,8 +106,27 @@ const ExploreView: React.FC = () => {
         totalLands={lands.length}
         hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
       />
-
-      <LandsFilter onPlaceChange={onPlaceChange} />
+      <Box style={{ display: 'flex', alignItems: 'center' }}>
+        <Box style={{ display: 'flex', alignItems: 'center' }}>
+          <LandsSorter onSortDirectionChange={onPlaceChange} data={landsData} />
+          <LandsSorter onSortDirectionChange={onSortDirectionChange} data={currencyData} />
+        </Box>
+        <Box style={{ display: 'flex', alignItems: 'center' }}>
+          <Box style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
+            <Typography>Mine Only</Typography>
+            <Box style={{ marginLeft: '10px' }}>
+              <StyledSwitch defaultChecked />
+            </Box>
+          </Box>
+          <Box style={{ display: 'flex', alignItems: 'center', margin: '0 20px' }}>
+            <Typography>Avalaible Only</Typography>
+            <Box style={{ marginLeft: '10px' }}>
+              <StyledSwitch />
+            </Box>
+          </Box>
+          <LandsSorter onSortDirectionChange={onSortDirectionChange} data={data} />
+        </Box>
+      </Box>
 
       <div className="content-container content-container--explore-view">
         <Row className="lands-container">

@@ -25,6 +25,10 @@
 .filterButtonShort {
   min-width: 153px;
   margin-left: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   @media (max-width: 1000px) {
     min-width: 100px;
   }
@@ -35,4 +39,31 @@
   @media (max-width: 1000px) {
     min-width: 150px;
   }
+}
+
+.dropdownRotate {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  transform: rotate(0deg);
+}
+
+.select {
+  &:before {
+    // normal
+    border-bottom: 1px solid orange
+  };
+  &:after {
+    // focused
+    border-bottom: 3px solid green
+  };
+  &:hover:not(.Mui-disabled):not(.Mui-focused):not(.Mui-error):before {
+    // hover
+    border-bottom: 2px solid purple
+  }
+}
+
+.menuItemRoot {
+  background-color: green;
 }
