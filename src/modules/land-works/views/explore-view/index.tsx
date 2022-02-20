@@ -37,13 +37,14 @@ const ExploreView: React.FC = () => {
 
   const [sortDir, setSortDir] = useState(sortDirections[0]);
   const [sortColumn, setSortColumn] = useState(sortColumns[0]);
-
-
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
 
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showOnlyOwner, setShowOnlyOwner] = useState(false);
+  const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
+  const [currency, setCurrency] = useState('');
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -62,12 +63,12 @@ const ExploreView: React.FC = () => {
     },
   });
 
-  const getAssets = async () => {
+  const getAssets = async (sortColumn: string, sortDir: string) => {
     const lands = await fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder(
       DECENTRALAND_METAVERSE,
       DEFAULT_LAST_RENT_END,
-      sortColumns[0],
-      sortDirections[0],
+      sortColumn,
+      sortDir
     );
 
     console.log('getAssets', lands);
@@ -84,7 +85,7 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    getAssets();
+    getAssets(sortColumn, sortDir);
   }, [wallet.account, sortColumn, sortDir]);
 
   const onPlaceChange = (value: SingleValue<Option>) => {
@@ -100,33 +101,51 @@ const ExploreView: React.FC = () => {
     console.log({ value });
   };
 
+  const handleOwnerToggleChange = () => {
+    setShowOnlyOwner(!showOnlyOwner);
+  };
+
+  const handleAvailableChange = () => {
+    setShowOnlyAvailable(!showOnlyAvailable);
+  };
+
+  const onCurrencyChange = () => {
+    setCurrency('');
+  };
+
   return (
     <>
       <LandsSubheader
         totalLands={lands.length}
         hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
       />
-      <Box style={{ display: 'flex', alignItems: 'center' }}>
-        <Box style={{ display: 'flex', alignItems: 'center' }}>
-          <LandsSorter onSortDirectionChange={onPlaceChange} data={landsData} />
-          <LandsSorter onSortDirectionChange={onSortDirectionChange} data={currencyData} />
-        </Box>
-        <Box style={{ display: 'flex', alignItems: 'center' }}>
-          <Box style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
-            <Typography>Mine Only</Typography>
-            <Box style={{ marginLeft: '10px' }}>
-              <StyledSwitch defaultChecked />
+      <div className="filter-wrapper">
+        <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box style={{ display: 'flex', alignItems: 'center', width: '400px' }}>
+            <Box style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
+              <LandsSorter onChange={onPlaceChange} data={landsData} />
+            </Box>
+            <Box style={{ display: 'flex', alignItems: 'center' }}>
+              <LandsSorter onChange={onCurrencyChange} data={currencyData} />
             </Box>
           </Box>
-          <Box style={{ display: 'flex', alignItems: 'center', margin: '0 20px' }}>
-            <Typography>Avalaible Only</Typography>
-            <Box style={{ marginLeft: '10px' }}>
-              <StyledSwitch />
+          <Box style={{ display: 'flex', alignItems: 'center' }}>
+            <Box style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
+              <Typography>Mine Only</Typography>
+              <Box style={{ marginLeft: '10px' }}>
+                <StyledSwitch onChange={handleOwnerToggleChange} />
+              </Box>
             </Box>
+            <Box style={{ display: 'flex', alignItems: 'center', margin: '0 20px' }}>
+              <Typography>Avalaible Only</Typography>
+              <Box style={{ marginLeft: '10px' }}>
+                <StyledSwitch onChange={handleAvailableChange} />
+              </Box>
+            </Box>
+            <LandsSorter onChange={onSortDirectionChange} data={data} />
           </Box>
-          <LandsSorter onSortDirectionChange={onSortDirectionChange} data={data} />
         </Box>
-      </Box>
+      </div>
 
       <div className="content-container content-container--explore-view">
         <Row className="lands-container">

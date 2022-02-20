@@ -16,6 +16,13 @@ $navbar-height: 107px;
   }
 }
 
+.filter-wrapper {
+  // display: flex;
+  // flex-direction: row;
+  // justify-content: space-between;
+  margin: 12px var(--horizontal-padding);
+}
+
 .map-list-container {
   position: fixed;
 

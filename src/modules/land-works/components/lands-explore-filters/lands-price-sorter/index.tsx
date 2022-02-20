@@ -27,9 +27,11 @@ const styles = {
     position: 'absolute',
     borderRadius: '10px',
     right: 0,
-    top: '80%',
+    //top: '80%',
+    marginTop: '15px',
     background: '#27273a',
     color: '#ffffff',
+    overflow: 'hidden',
   }),
   indicatorsContainer: () => ({
     '& > div': {
@@ -65,7 +67,7 @@ const styles = {
     lineHeight: '26px',
     alignItems: 'center',
     color: '#ffffff',
-    background: ' #27273a',
+    background: '#27273a',
     borderRadius: '10px',
     flexGrow: '0',
     padding: '6px 10px',
@@ -77,7 +79,7 @@ const styles = {
     ...base,
     padding: '0 0 0 8px',
     display: 'grid',
-    width: '140px',
+    width: '100%',
     justifyContent: 'center',
   }),
   dropdownIndicator: (base: any, state: any) => ({
@@ -105,9 +107,9 @@ const styles = {
     paddingLeft: '15px',
     cursor: 'pointer',
     opacity: state.isFocused ? '1' : '0.7',
-    background: state.isSelected || state.isFocused ? '#161622' : null,
+    background: state.isSelected || state.isFocused ? '#27273a' : null,
     '&:active': {
-      background: '#161622',
+      background: '#27273a',
     },
     borderBottom: 'none',
     '& label': {
@@ -125,13 +127,13 @@ const styles = {
 };
 
 interface ILandsSorterProps {
-  onSortDirectionChange: (newValue: SingleValue<Option>, actionMeta: ActionMeta<Option>) => void;
+  onChange: (newValue: SingleValue<Option>, actionMeta: ActionMeta<Option>) => void;
   value?: PropsValue<Option>;
   isDisabled?: boolean;
   data: OptionsOrGroups<any, GroupBase<any>> | undefined;
 }
 
-export const LandsSorter: React.FC<ILandsSorterProps> = ({ onSortDirectionChange, value, data, isDisabled }) => {
+export const LandsSorter: React.FC<ILandsSorterProps> = ({ onChange, value, data, isDisabled }) => {
   const ref = useRef(null);
   const [isOpen, toggleIsOpen] = useState(false);
 
@@ -181,7 +183,7 @@ export const LandsSorter: React.FC<ILandsSorterProps> = ({ onSortDirectionChange
         isDisabled={isDisabled}
         options={data}
         styles={styles}
-        onChange={onSortDirectionChange}
+        onChange={onChange}
         value={value}
         menuIsOpen={isOpen}
         components={{
