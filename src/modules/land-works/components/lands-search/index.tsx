@@ -1,4 +1,4 @@
-import { ReactComponent as Search } from './assets/search.svg';
+import { ReactComponent as Search } from '../../../../resources/svg/searchbar.svg';
 
 import './index.scss';
 
@@ -9,8 +9,12 @@ interface SearchQuery {
 
 export const SearchBar: React.FC<SearchQuery> = ({ searchQuery, setSearchQuery }) => (
   <div className="wrapper lands-search">
+    <Search className="search-icon" />
     <form action="/" method="get">
       <input
+        onKeyPress={(e) => {
+          e.key === 'Enter' && e.preventDefault();
+        }}
         value={searchQuery}
         onInput={(e) => setSearchQuery((e.target as HTMLInputElement).value)}
         type="text"
@@ -19,6 +23,5 @@ export const SearchBar: React.FC<SearchQuery> = ({ searchQuery, setSearchQuery }
         name="s"
       />
     </form>
-    <Search />
   </div>
 );

@@ -270,6 +270,7 @@ export type DecentralandData = {
   metadata: string;
   isLAND: boolean;
   coordinates: any[];
+  asset: AssetEntity;
 };
 
 export type Data = {
@@ -1005,6 +1006,14 @@ export function fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder(
             decimals
           }
           decentralandData {
+            asset {
+              consumer {
+                id
+                consumerTo {
+                  id
+                }
+              }
+            } 
             metadata
             isLAND
             coordinates {
