@@ -19,7 +19,7 @@ import LandCardSkeleton from 'modules/land-works/components/land-base-loader-car
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { LandsAction } from 'modules/land-works/components/lands-action';
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
-import { LandsSorter } from 'modules/land-works/components/lands-explore-filters/lands-price-sorter';
+import { LandsSorter } from 'modules/land-works/components/lands-explore-price-sorter';
 import { LandsSubheader } from 'modules/land-works/components/lands-explore-subheader';
 import { useWallet } from 'wallets/wallet';
 
@@ -28,7 +28,6 @@ import {
   USER_SUBSCRIPTION,
   UserEntity,
   fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder,
-  fetchUserAssets,
   parseUser,
 } from '../../api';
 import { currencyData, landsData, sortData } from './filterData';
@@ -54,7 +53,7 @@ const ExploreView: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showOnlyOwner, setShowOnlyOwner] = useState(false);
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
-  const [currency, setCurrency] = useState(tokenOptions[0]);
+  const [, setCurrency] = useState(tokenOptions[0]);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
 
@@ -136,7 +135,6 @@ const ExploreView: React.FC = () => {
   const onCurrencyChange = (value: SingleValue<Option>) => {
     const sortIndex = Number(value?.value);
     setCurrency(tokenOptions[sortIndex]);
-    console.log({ value });
   };
 
   const data = showOnlyOwner ? assets : lands;

@@ -1,7 +1,5 @@
-import React, { ReactChild, ReactNode, forwardRef, useEffect, useImperativeHandle } from 'react';
+import React, { ReactChild, ReactNode, forwardRef, useImperativeHandle } from 'react';
 import { Box } from '@mui/material';
-
-import { ReactComponent as DropdownIcon } from 'resources/svg/dropdown-icon.svg';
 
 import { StyledMenu } from './dropdownMenu-styles';
 
@@ -9,18 +7,15 @@ interface DropdownMenuProps {
   toggleElement: ReactChild;
   children: ReactNode;
   id: string;
-  setShowDropdown: React.Dispatch<React.SetStateAction<boolean>>;
-  showDropdown: boolean;
 }
 
 const DropdownMenu = forwardRef((props: DropdownMenuProps, dropdownRef) => {
-  const { toggleElement, children, id, setShowDropdown, showDropdown } = props;
+  const { toggleElement, children, id } = props;
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-    setShowDropdown(!showDropdown);
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -42,7 +37,6 @@ const DropdownMenu = forwardRef((props: DropdownMenuProps, dropdownRef) => {
         onClick={handleClick || dropdownRef}
       >
         {toggleElement}
-        {/* <DropdownIcon /> */}
       </Box>
       <StyledMenu
         id={id}
