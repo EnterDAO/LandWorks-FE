@@ -4,8 +4,8 @@
 $navbar-height: 107px;
 
 .content-container {
-  z-index: 10;
-  margin-top: 200px;
+  // do we need this to be 10 ?
+  // z-index: 10;
 
   &--explore-view {
     position: relative;
@@ -27,7 +27,7 @@ $navbar-height: 107px;
   position: fixed;
 
   // TODO: Change this back
-  top: 500px;
+  top: 250px;
 
   right: 0;
   left: 50%;

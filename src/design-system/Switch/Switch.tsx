@@ -8,7 +8,6 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
   height: 30,
   padding: 0,
   display: 'flex',
-  // alignItems: 'flex-start',
   '&:active': {
     '& .MuiSwitch-thumb': {
       width: 18,
@@ -34,7 +33,6 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
     top: '20px',
     height: 18,
     borderRadius: 15,
-    // transform: 'translateX(60px',
     transition: theme.transitions.create('60px', {
       duration: 200,
     }),

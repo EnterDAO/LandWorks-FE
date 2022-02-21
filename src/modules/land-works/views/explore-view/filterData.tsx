@@ -2,7 +2,7 @@ import { ReactComponent as HighIcon } from '../../../../resources/svg/order-high
 import { ReactComponent as HottestIcon } from '../../../../resources/svg/order-hot.svg';
 import { ReactComponent as LowIcon } from '../../../../resources/svg/order-low-first.svg';
 
-export const data = [
+export const sortData = [
   {
     label: 'Hottest first',
     value: 1,
@@ -30,10 +30,10 @@ export const landsData = [
 export const currencyData = [
   {
     label: 'ETH',
-    value: 1,
+    value: 0,
   },
   {
-    label: 'MATIC',
+    label: 'USDC',
     value: 1,
   },
 ];
