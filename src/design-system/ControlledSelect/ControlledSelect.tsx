@@ -34,7 +34,7 @@ const StyledButton = styled('button')(
   font-size: 0.875rem;
   box-sizing: border-box;
   min-height: calc(1.5em + 22px);
-  min-width: 170px;
+  min-width: 190px;
   background: ${THEME_COLORS.grey01};
   border: 1px solid ${THEME_COLORS.grey01};
   border-radius: 10px;
@@ -73,7 +73,7 @@ const StyledListbox = styled('ul')(
   box-sizing: border-box;
   padding: 5px;
   margin: 10px 0;
-  min-width: 170px;
+  min-width: 190px;
   background: ${THEME_COLORS.grey01};
   border: 1px solid ${THEME_COLORS.grey01};
   border-radius: 0.75em;
@@ -89,7 +89,10 @@ const StyledOption = styled(OptionUnstyled)(
   padding: 8px;
   border-radius: 0.45em;
   cursor: default;
-
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  
   &:last-of-type {
     border-bottom: none;
   }
@@ -156,7 +159,10 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
         }}
       >
         {options.map((o) => (
-          <StyledOption value={o.value}>{o.label}</StyledOption>
+          <StyledOption value={o.value}>
+            <span style={{ marginRight: '15px', width: '15px' }}>{o.icon}</span>
+            {o.label}
+          </StyledOption>
         ))}
       </CustomSelect>
     </div>

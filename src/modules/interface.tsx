@@ -1,6 +1,7 @@
 export interface Option {
   readonly label: string;
   readonly value: string | number;
+  icon?: React.ReactNode;
 }
 
 export type DecentralandNFT = {
