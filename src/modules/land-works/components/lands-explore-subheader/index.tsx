@@ -30,4 +30,4 @@ const LandsSubheader: React.FC<Props> = ({ totalLands, hasMetamaskConnected }) =
   );
 };
 
-export default LandsSubheader
+export default LandsSubheader;
