@@ -10,7 +10,7 @@ interface Props {
   hasMetamaskConnected: boolean;
 }
 
-export const LandsSubheader: React.FC<Props> = ({ totalLands, hasMetamaskConnected }) => {
+const LandsSubheader: React.FC<Props> = ({ totalLands, hasMetamaskConnected }) => {
   const history = useHistory();
 
   return (
@@ -29,3 +29,5 @@ export const LandsSubheader: React.FC<Props> = ({ totalLands, hasMetamaskConnect
     </div>
   );
 };
+
+export default LandsSubheader

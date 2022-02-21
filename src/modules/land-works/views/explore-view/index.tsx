@@ -17,7 +17,7 @@ import LandCardSkeleton from 'modules/land-works/components/land-base-loader-car
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { LandsAction } from 'modules/land-works/components/lands-action';
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
-import { LandsSubheader } from 'modules/land-works/components/lands-explore-subheader';
+import LandsSubheader from 'modules/land-works/components/lands-explore-subheader';
 import { useWallet } from 'wallets/wallet';
 
 import {
