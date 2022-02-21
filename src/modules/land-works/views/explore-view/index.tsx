@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { SingleValue } from 'react-select';
 import {
   DECENTRALAND_METAVERSE,
   DEFAULT_LAST_RENT_END,
+  metaverseOptions,
   sortColumns,
   sortDirections,
   tokenOptions,
@@ -12,14 +12,11 @@ import { end } from '@popperjs/core';
 import { Col, Row } from 'antd';
 
 import { Atlas } from 'components/custom/Atlas/Atlas';
-import { Box, Typography } from 'design-system';
-import { StyledSwitch } from 'design-system/Switch/Switch';
-import { Option } from 'modules/interface';
+import { Box, StyledSwitch, Typography, ControlledSelect } from 'design-system';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { LandsAction } from 'modules/land-works/components/lands-action';
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
-import { LandsSorter } from 'modules/land-works/components/lands-explore-price-sorter';
 import { LandsSubheader } from 'modules/land-works/components/lands-explore-subheader';
 import { useWallet } from 'wallets/wallet';
 
@@ -53,9 +50,14 @@ const ExploreView: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showOnlyOwner, setShowOnlyOwner] = useState(false);
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
-  const [, setCurrency] = useState(tokenOptions[0]);
+  const [currency, setCurrency] = useState(tokenOptions[0]);
+  const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
+
+  const [selectedOrder, setSelectedOrder] = useState(0);
+  const [selectedMetaverse, setSelectedMetaverse] = useState(0);
+  const [selectedCurrency, setSelectedCurrency] = useState(0);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -111,13 +113,16 @@ const ExploreView: React.FC = () => {
     setAtlasMapY(Number(y));
   };
 
-  const onPlaceChange = (value: SingleValue<Option>) => {
+  const onPlaceChange = (value: number) => {
+    setMetaverse(metaverse);
+    setSelectedMetaverse(value);
     // TODO:: some filtering here
-    console.log({ value });
   };
 
-  const onSortDirectionChange = (value: SingleValue<Option>) => {
-    const sortIndex = Number(value?.value) - 1;
+  const onSortDirectionChange = (value: number) => {
+    setSelectedOrder(value);
+    const sortIndex = Number(value);
+    console.log({ sortIndex });
     setSortDir(sortDirections[sortIndex]);
     setSortColumn(sortColumns[sortIndex]);
   };
@@ -132,10 +137,13 @@ const ExploreView: React.FC = () => {
     setLastRentEnd(showOnlyAvailable ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
   };
 
-  const onCurrencyChange = (value: SingleValue<Option>) => {
-    const sortIndex = Number(value?.value);
+  const onCurrencyChange = (value: number) => {
+    const sortIndex = Number(value);
+    setSelectedCurrency(value);
     setCurrency(tokenOptions[sortIndex]);
   };
+
+  console.log({ currency });
 
   const data = showOnlyOwner ? assets : lands;
 
@@ -145,14 +153,15 @@ const ExploreView: React.FC = () => {
         totalLands={lands.length}
         hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
       />
+
       <div className="filter-wrapper">
         <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box style={{ display: 'flex', alignItems: 'center', width: '400px' }}>
             <Box style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
-              <LandsSorter isDisabled onChange={onPlaceChange} data={landsData} />
+              <ControlledSelect value={selectedMetaverse} onChange={onPlaceChange} options={landsData} />
             </Box>
             <Box style={{ display: 'flex', alignItems: 'center' }}>
-              <LandsSorter onChange={onCurrencyChange} data={currencyData} />
+              <ControlledSelect value={selectedCurrency} onChange={onCurrencyChange} options={currencyData} />
             </Box>
           </Box>
           <Box style={{ display: 'flex', alignItems: 'center' }}>
@@ -168,7 +177,7 @@ const ExploreView: React.FC = () => {
                 <StyledSwitch onChange={handleAvailableChange} />
               </Box>
             </Box>
-            <LandsSorter onChange={onSortDirectionChange} data={sortData} />
+            <ControlledSelect value={selectedOrder} onChange={onSortDirectionChange} options={sortData} />
           </Box>
         </Box>
       </div>
