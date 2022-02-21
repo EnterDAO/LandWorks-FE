@@ -5,17 +5,17 @@ import { ReactComponent as LowIcon } from '../../../../resources/svg/order-low-f
 export const sortData = [
   {
     label: 'Hottest first',
-    value: 0,
+    value: 1,
     icon: <HottestIcon />,
   },
   {
     label: 'Price: low first',
-    value: 1,
+    value: 2,
     icon: <LowIcon />,
   },
   {
     label: 'Price: high first',
-    value: 2,
+    value: 3,
     icon: <HighIcon />,
   },
 ];
@@ -23,17 +23,17 @@ export const sortData = [
 export const landsData = [
   {
     label: 'Decentraland',
-    value: 0,
+    value: 1,
   },
 ];
 
 export const currencyData = [
   {
     label: 'ETH',
-    value: 0,
+    value: 1,
   },
   {
     label: 'USDC',
-    value: 1,
+    value: 2,
   },
 ];

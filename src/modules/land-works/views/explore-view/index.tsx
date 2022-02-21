@@ -12,7 +12,7 @@ import { end } from '@popperjs/core';
 import { Col, Row } from 'antd';
 
 import { Atlas } from 'components/custom/Atlas/Atlas';
-import { Box, StyledSwitch, Typography, ControlledSelect } from 'design-system';
+import { Box, ControlledSelect, StyledSwitch, Typography } from 'design-system';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { LandsAction } from 'modules/land-works/components/lands-action';
@@ -50,14 +50,14 @@ const ExploreView: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showOnlyOwner, setShowOnlyOwner] = useState(false);
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
-  const [currency, setCurrency] = useState(tokenOptions[0]);
+  const [, setCurrency] = useState(tokenOptions[0]);
   const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
 
-  const [selectedOrder, setSelectedOrder] = useState(0);
-  const [selectedMetaverse, setSelectedMetaverse] = useState(0);
-  const [selectedCurrency, setSelectedCurrency] = useState(0);
+  const [selectedOrder, setSelectedOrder] = useState(1);
+  const [selectedMetaverse, setSelectedMetaverse] = useState(1);
+  const [selectedCurrency, setSelectedCurrency] = useState(1);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -121,10 +121,10 @@ const ExploreView: React.FC = () => {
 
   const onSortDirectionChange = (value: number) => {
     setSelectedOrder(value);
-    const sortIndex = Number(value);
-    console.log({ sortIndex });
+    const sortIndex = Number(value) - 1;
     setSortDir(sortDirections[sortIndex]);
     setSortColumn(sortColumns[sortIndex]);
+    console.log({ sortIndex, value });
   };
 
   const handleOwnerToggleChange = () => {
@@ -138,12 +138,10 @@ const ExploreView: React.FC = () => {
   };
 
   const onCurrencyChange = (value: number) => {
-    const sortIndex = Number(value);
+    const sortIndex = Number(value) - 1;
     setSelectedCurrency(value);
     setCurrency(tokenOptions[sortIndex]);
   };
-
-  console.log({ currency });
 
   const data = showOnlyOwner ? assets : lands;
 

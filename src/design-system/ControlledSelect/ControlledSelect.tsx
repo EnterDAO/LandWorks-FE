@@ -67,7 +67,7 @@ const StyledButton = styled('button')(
 );
 
 const StyledListbox = styled('ul')(
-  ({ theme }) => `
+  () => `
   font-family: ${THEME_FONT_FAMILY};
   font-size: 0.875rem;
   box-sizing: border-box;
@@ -135,14 +135,14 @@ function CustomSelect(props: SelectUnstyledProps<number>) {
   return <SelectUnstyled {...props} components={components} />;
 }
 
-interface Props {
+interface ControlledSelectProps {
   onChange: (value: number) => void;
   value: number;
   options: Option[];
 }
 
-export default function ControlledSelect({ onChange, value, options }: Props) {
-  // const [value, setValue] = React.useState<number | null>(10);
+const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
+  const { onChange, value, options } = props;
 
   return (
     <div>
@@ -161,4 +161,6 @@ export default function ControlledSelect({ onChange, value, options }: Props) {
       </CustomSelect>
     </div>
   );
-}
+};
+
+export default ControlledSelect;
