@@ -94,3 +94,7 @@ export const pageSizeOptions = ['6', '12', '24'];
 export const sortColumns = ['totalRents', 'pricePerSecond', 'pricePerSecond'];
 
 export const sortDirections = [SortDirection.DESC, SortDirection.ASC, SortDirection.DESC];
+
+export const tokenOptions = ['ETH', 'USDC'];
+
+export const metaverseOptions = ['Decentraland'];

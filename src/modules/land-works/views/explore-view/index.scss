@@ -4,7 +4,8 @@
 $navbar-height: 107px;
 
 .content-container {
-  z-index: 10;
+  // do we need this to be 10 ?
+  // z-index: 10;
 
   &--explore-view {
     position: relative;
@@ -15,9 +16,19 @@ $navbar-height: 107px;
   }
 }
 
+.filter-wrapper {
+  // display: flex;
+  // flex-direction: row;
+  // justify-content: space-between;
+  margin: 12px var(--horizontal-padding);
+}
+
 .map-list-container {
   position: fixed;
-  top: 80px;
+
+  // TODO: Change this back
+  top: 250px;
+
   right: 0;
   left: 50%;
 

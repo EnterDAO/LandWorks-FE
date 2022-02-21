@@ -7,6 +7,7 @@ import Button from './Button/Button';
 import Card from './Card/Card';
 import Carousel from './Carousel/Carousel';
 import Checkbox from './Checkbox/Checkbox';
+import ControlledSelect from './ControlledSelect/ControlledSelect';
 import Dropdown from './Dropdown/Dropdown';
 import DropdownMenu from './Dropdown/DropdownMenu/DropdownMenu';
 import DropdownItem from './Dropdown/DropdownMenuItem/DropdownMenuItem';
@@ -22,6 +23,7 @@ import Modal from './Modal/Modal';
 import RadioButton from './RadioButton/RadioButton';
 import SearchInput from './SearchInput/SearchInput';
 import StatusBadge from './StatusBadge/StatusBadge';
+import { StyledSwitch } from './Switch/Switch';
 import TabPanel from './Tabs/TabPanel/TabPanel';
 import Tabs from './Tabs/Tabs';
 import Tab from './Tabs/TabsList/Tab/Tab';
@@ -72,4 +74,6 @@ export {
   TransactionCard,
   BackgroundContainer,
   Loader,
+  StyledSwitch,
+  ControlledSelect,
 };
