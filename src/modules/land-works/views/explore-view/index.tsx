@@ -128,8 +128,8 @@ const ExploreView: React.FC = () => {
 
     return lands.filter((land) => {
       const landName = land.name.toLowerCase();
-      // const landOwner = land.decentralandData?.asset?.consumer?.id.toLowerCase();
-      return landName.includes(query);
+      const landOwner = land.decentralandData?.asset?.consumer?.id.toLowerCase();
+      return landName.includes(query) || landOwner?.includes(query);
     });
   };
 
