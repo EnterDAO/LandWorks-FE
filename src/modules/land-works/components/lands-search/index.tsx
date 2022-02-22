@@ -1,4 +1,4 @@
-import { ReactComponent as Search } from '../../../../resources/svg/searchbar.svg';
+import { ReactComponent as Search } from 'resources/svg/searchbar.svg';
 
 import './index.scss';
 
