@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
-import Countdown, { CountdownTimeDelta } from 'react-countdown';
+import Countdown, { CountdownTimeDelta, zeroPad } from 'react-countdown';
+import Grid from '@mui/material/Grid';
 import { Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
@@ -11,7 +12,8 @@ import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { getENSName, getLandImageUrl, getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
-import { ReactComponent as HotIcon } from '../../../../resources/svg/hot.svg';
+import { ReactComponent as WarningIcon } from '../../../../resources/svg/warning.svg';
+import { ReactComponent as FireIcon } from '../../../../resources/svg/white_fire.svg';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, RentEntity, fetchAssetRentByTimestamp, fetchUserFirstRentByTimestamp } from '../../api';
 import { AssetStatus } from '../../models/AssetStatus';
@@ -19,7 +21,7 @@ import { useLandworks } from '../../providers/landworks-provider';
 import { LandsTooltip } from '../lands-tooltip';
 import chainPng from './assets/chain.png';
 
-import { getNowTs } from '../../../../utils';
+import { getNowTs, getTimeType, secondsToDuration } from '../../../../utils';
 import {
   ZERO_BIG_NUMBER,
   getDecentralandMarketplaceUrl,
@@ -69,6 +71,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   };
 
   const isNotListed = () => asset?.status !== AssetStatus.LISTED;
+  const isAvailable = asset?.isAvailable && asset?.availability.isCurrentlyAvailable;
 
   const shouldShowClaimButton = () => isOwnerOrConsumer() && asset?.unclaimedRentFee.gt(0);
 
@@ -149,18 +152,24 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   }, []);
 
   const renderCountdown = (props: CountdownTimeDelta) => {
-    const days = props.days > 0 ? `${props.days} days ` : '';
-    const hours = props.hours > 0 ? `${props.hours} hours ` : '';
-    const minutes = props.minutes > 0 ? `${props.minutes} minutes ` : '';
-    const seconds = props.seconds > 0 ? `${props.seconds} seconds` : '';
+    const days = props.days > 0 ? `${props.days} : ` : '';
+    const hours = props.hours > 0 ? `${zeroPad(props.hours)} : ` : '';
+    const minutes = props.minutes > 0 ? `${zeroPad(props.minutes)} : ` : '';
+    const seconds = props.seconds > 0 ? `${zeroPad(props.seconds)} ` : '';
     const expired = days || hours || minutes || seconds;
-    const placeholder = expired ? `${days}${hours}${minutes}${seconds} remaining` : '';
+    const placeholder = expired ? `${days}${hours}${minutes}${seconds} ` : '';
     return <p className="remaining-time">{placeholder}</p>;
   };
 
   const [ens, setEns] = useState<string>();
   const [ensOperator, setEnsOperator] = useState<string>();
   useEffect(() => {
+    if (asset) {
+      const maxPeriod = new BigNumber(asset?.maxPeriod);
+      const parsedDate = secondsToDuration(maxPeriod.toNumber());
+      const { timeValue, timeType } = getTimeType(parsedDate);
+      console.log({ timeType, timeValue });
+    }
     if (asset?.owner?.id)
       getENSName(asset?.owner?.id).then((ensName) => {
         setEns(ensName);
@@ -172,232 +181,214 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   }, [asset]);
 
   return (
-    <Row gutter={40} className="single-land-card-container">
-      <Col md={12} sm={24}>
-        <Row>
-          <Col span={24} className="image-wrapper">
-            <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)}></img>
-            <EstateLandOverlay coordinates={asset?.decentralandData?.coordinates} />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={24}>
-            <ExternalLink
-              className=""
-              target={'_blank'}
-              href={getDecentralandPlayUrl(asset?.decentralandData?.coordinates)}
-            >
-              <img style={{ marginRight: 5 }} src={chainPng} /> <span>Jump In</span>
-            </ExternalLink>
-          </Col>
-        </Row>
-      </Col>
-      <Col md={12} sm={24} className="properties-container">
-        <Row className="head-container">
-          <Col span={16} className="title-container">
-            <span className="card-name">{asset?.name}</span>
-
+    <Grid container className="single-land-card-container">
+      <Grid xs={12} md={5.7} item className="image-wrapper">
+        <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)}></img>
+        <EstateLandOverlay coordinates={asset?.decentralandData?.coordinates} />
+      </Grid>
+      <Grid xs={12} md={6} item className="properties-container">
+        <Grid container className="head-container">
+          <Grid item className="title-container">
+            <span className="card-name">{asset?.name?.replace('metadata', '').toLowerCase()}</span>
+            <Grid className="button-section">
+              <button
+                className={`${isNotListed() ? 'button-delisted' : isAvailable ? 'button-available' : 'button-rented'}`}
+              >
+                <div
+                  className={`button-label ${
+                    isNotListed() ? 'button-delisted-dot' : isAvailable ? 'button-available-dot' : 'button-rented-dot'
+                  }`}
+                />
+                {isNotListed() ? 'Delisted' : isAvailable ? 'Available' : 'Rented'}
+              </button>
+            </Grid>
+          </Grid>
+          <Grid item className="single-land-label-row">
             {asset?.isHot && (
-              <span className="label card-name-hot-label">
-                <HotIcon className="name-label" />
-                HOT
+              <span className="label card-hot-label">
+                <FireIcon className="name-label" />
               </span>
             )}
-            <span className="label card-name-estate-label">{asset?.decentralandData?.isLAND ? 'LAND' : 'ESTATE'}</span>
-          </Col>
-          <Col span={7}>
-            <ExternalLink
-              className="marketplace-link"
-              target={'_blank'}
-              href={getDecentralandMarketplaceUrl(asset?.metaverseRegistry?.id, asset?.metaverseAssetId)}
-            >
-              <img style={{ marginRight: 5 }} src={chainPng} /> <span>Marketplace</span>
-            </ExternalLink>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={24} className="properties-row">
-            <Row>
-              <Col span={10}>
-                <span className="land-owner">
-                  BY{' '}
-                  {
-                    <ExternalLink href={getEtherscanAddressUrl(asset?.owner?.id)} className="land-owner-address">
-                      {ens && ens !== asset?.owner?.id ? ens : shortenAddr(asset?.owner?.id.toLowerCase())}
-                    </ExternalLink>
-                  }
-                </span>
-                {isOwner() && (
-                  <span className="label card-name-you-label">
-                    <Icon name="png/you" className="name-label" />
-                    YOU
-                  </span>
-                )}
-              </Col>
-              {isNotListed() && (
-                <Col span={13} className="availability">
-                  <span className="available-heading delisted-heading">Delisted</span>
-                </Col>
-              )}
-              {!isNotListed() && (
-                <Col span={13} className="availability">
-                  {asset?.availability?.isCurrentlyAvailable ? (
-                    <span className="available-heading">Available now</span>
-                  ) : asset?.availability?.availabilityAfter && asset?.availability?.isRentable ? (
-                    <span className="available-heading">{`Available after ${asset.availability?.availabilityAfter}`}</span>
-                  ) : (
-                    asset?.availability?.maxRentPeriodTime &&
-                    asset?.availability?.maxRentPeriodTime > 0 && (
-                      <span className="available-heading">
-                        Available for rent after {asset?.availability?.maxRentPeriodTime}{' '}
-                        {asset?.availability?.maxRentPeriodType}
-                      </span>
-                    )
-                  )}{' '}
-                </Col>
-              )}
-              {asset?.availability?.isRentable && (
-                <Col span={24} className="period-wrapper">
-                  {(asset?.availability?.availabilityTime?.minAvailabilityTime > 0 ||
-                    asset?.availability?.availabilityTime?.maxAvailabilityTime > 0) && (
-                    <span className="period-title">Rent period</span>
-                  )}
-                  <span className="available-period">
-                    {asset?.availability?.availabilityTime?.minAvailabilityTime > 0 && (
-                      <>
-                        <span className="label">
-                          <span className="preffix">min</span>
-                          {asset?.availability?.availabilityTime?.minAvailabilityTime}{' '}
-                          {asset?.availability?.availabilityTime?.minAvailabilityType}
-                        </span>
-                      </>
+          </Grid>
+        </Grid>
+        <Grid container className="hashtag-row">
+          <Grid item>{asset?.decentralandData?.isLAND ? <p>#LAND</p> : <p>#ESTATE</p>}</Grid>
+          <Grid item>{asset?.metaverse?.name && <p>#{asset?.metaverse?.name}</p>}</Grid>
+        </Grid>
+        <Grid container>
+          <Grid item xs={24} className="properties-row">
+            <Grid container>
+              <Grid item xs={4} className="land-owner">
+                Owned by{' '}
+              </Grid>
+              <Grid item>
+                <ExternalLink href={getEtherscanAddressUrl(asset?.owner?.id)} className="land-owner-address">
+                  {ens && ens !== asset?.owner?.id ? ens : shortenAddr(asset?.owner?.id.toLowerCase(), 25, 4)}
+                </ExternalLink>
+              </Grid>
+            </Grid>
+            <Grid container className="operator-container">
+              <Grid item xs={4} className="current-address">
+                Current Operator
+                <LandsTooltip
+                  placement="bottomLeft"
+                  trigger="hover"
+                  text="The operator currently set and authorised to deploy scenes and experiences in the metaverse."
+                />
+              </Grid>
+              <Grid item>
+                <ExternalLink href={getEtherscanAddressUrl(asset?.operator)} className="land-operator-address">
+                  {ensOperator && ensOperator !== asset?.operator ? ensOperator : shortenAddr(asset?.operator, 25, 4)}
+                </ExternalLink>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid container className="rent-section">
+            <Grid container className="rent-price">
+              <Grid item xs={12} sm={7} md={12} lg={7} className="price-wrapper">
+                {asset?.availability?.isRentable && (
+                  <Grid item className="period-wrapper">
+                    {(asset?.availability?.availabilityTime?.minAvailabilityTime > 0 ||
+                      asset?.availability?.availabilityTime?.maxAvailabilityTime > 0) && (
+                      <span className="period-title">Rent period</span>
                     )}
-                    {asset?.availability?.availabilityTime?.maxAvailabilityTime > 0 && (
-                      <>
+                    <span className="available-period">
+                      {asset?.availability?.availabilityTime?.minAvailabilityTime > 0 && (
+                        <>
+                          <span className="label">
+                            {asset?.availability?.availabilityTime?.minAvailabilityTime}{' '}
+                            {asset?.availability?.availabilityTime?.minAvailabilityType}
+                          </span>
+                          <span className="period-separator">-</span>
+                        </>
+                      )}
+                      {asset?.availability?.availabilityTime?.maxAvailabilityTime > 0 && (
                         <span className="label">
-                          <span className="suffix">max</span>
                           {asset?.availability?.availabilityTime?.maxAvailabilityTime}{' '}
                           {asset?.availability?.availabilityTime?.maxAvailabilityType}
                         </span>
-                      </>
+                      )}
+                    </span>
+                    {(asset?.availability?.availabilityTime?.minAvailabilityTime > 0 ||
+                      asset?.availability?.availabilityTime?.maxAvailabilityTime > 0) && (
+                      <span className="period-title">Max Rent Queue</span>
                     )}
-                  </span>
-                </Col>
-              )}
-            </Row>
-          </Col>
-          <Col span={24} className="rent-section">
-            <Row>
-              <Col span={24} className="rent-price">
-                <Row className="price-wrapper">
-                  <Col span={24} className="eth-price-container">
+                    <span className="available-period">
+                      {asset?.availability?.availabilityTime?.maxAvailabilityTime > 0 && (
+                        <span className="label">
+                          {asset?.availability?.availabilityTime?.maxAvailabilityTime}{' '}
+                          {asset?.availability?.availabilityTime?.maxAvailabilityType}
+                        </span>
+                      )}
+                    </span>
+                  </Grid>
+                )}
+                <Grid item>
+                  <Grid item className="eth-price-container">
                     <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" />
                     <SmallAmountTooltip
                       className="price-eth"
                       amount={asset?.pricePerMagnitude ? asset?.pricePerMagnitude?.price : new BigNumber('0')}
                     />
-                  </Col>
-                  <Col push={2} span={22} className="usd-price-container">
-                    <SmallAmountTooltip
-                      className="price"
-                      symbol="$"
-                      amount={asset?.pricePerMagnitude?.usdPrice || ZERO_BIG_NUMBER}
-                    />
-                    <span className="per-day">/ {asset?.pricePerMagnitude?.magnitude}</span>
-                    <LandsTooltip
-                      placement="bottomLeft"
-                      trigger="hover"
-                      text={
-                        <>
-                          The price for renting this property is {asset?.humanPricePerSecond?.toString(10)}{' '}
-                          <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" /> per
-                          second.
-                        </>
-                      }
-                    />
-                  </Col>
-                </Row>
-                {shouldShowClaimButton() && (
-                  <button
-                    type="button"
-                    className={`button-primary `}
-                    onClick={handleClaim}
-                    disabled={isClaimButtonDisabled}
-                  >
-                    <span>CLAIM RENT</span>
-                  </button>
-                )}
-                {!isOwnerOrConsumer() && (
-                  <button
-                    style={{ fontWeight: 500 }}
-                    type="button"
-                    className={`button-primary `}
-                    disabled={isRentButtonDisabled || isNotListed() || !asset?.availability?.isRentable}
-                    onClick={handleRent}
-                  >
-                    <span>RENT NOW</span>
-                  </button>
-                )}
-              </Col>
-            </Row>
-          </Col>
-          <Col span={24} className="properties-row operator-container">
-            <Row>
-              <Col span={12}>
-                <Row>
-                  <Col span={24} className="current-address">
-                    Current Operator
-                    <LandsTooltip
-                      placement="bottomLeft"
-                      trigger="hover"
-                      text="The operator currently set and authorised to deploy scenes and experiences in the metaverse."
-                    />
-                  </Col>
-                  <Col span={24}>
-                    <ExternalLink href={getEtherscanAddressUrl(asset?.operator)} className="land-operator-address">
-                      {ensOperator && ensOperator !== asset?.operator ? ensOperator : shortenAddr(asset?.operator)}
-                    </ExternalLink>
-                  </Col>
-                </Row>
-              </Col>
-              <Col span={12} style={{ textAlign: 'end' }}>
-                <Row>
-                  {shouldShowRenterCountdown() && (
-                    <>
-                      <Col span={24}>
-                        {countDownRent.timestamp && (
-                          <p className="rented-on">Rented on {timestampSecondsToDate(countDownRent.timestamp)}</p>
-                        )}
-                      </Col>
-                      <Col span={24}>
-                        <Countdown date={Number(countDownTimestamp) * 1000} renderer={renderCountdown} />
-                      </Col>
-                    </>
+                    <p>{asset?.paymentToken?.symbol}</p>
+
+                    <div className="usd-price-container">
+                      <SmallAmountTooltip
+                        className="price"
+                        symbol="$"
+                        amount={asset?.pricePerMagnitude?.usdPrice || ZERO_BIG_NUMBER}
+                      />
+                      <span className="per-day">/ {asset?.pricePerMagnitude?.magnitude}</span>
+                      <LandsTooltip
+                        placement="bottomLeft"
+                        trigger="hover"
+                        text={
+                          <>
+                            The price for renting this property is {asset?.humanPricePerSecond?.toString(10)}{' '}
+                            <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" /> per
+                            second.
+                          </>
+                        }
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} sm={4.7} md={12} lg={4.7} className="property-button-row">
+                <Grid item className="property-button">
+                  {shouldShowClaimButton() && (
+                    <button
+                      type="button"
+                      className={'button-primary'}
+                      onClick={handleClaim}
+                      disabled={isClaimButtonDisabled || isNotListed()}
+                    >
+                      <span>CLAIM RENT</span>
+                    </button>
                   )}
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-          <Col span={24} className="operator-update-container">
-            {shouldShowUpdateOperator() && (
-              <Row>
-                <Col span={15} className="info-warning-text">
-                  <p>
-                    Update the operator to the one that you configured in order to be authorised to publish
-                    scenes/experiences on it.
-                  </p>
-                </Col>
-                <Col span={9} className="update-operator-btn">
-                  <button type="button" onClick={handleUpdateOperator} disabled={isUpdateOperatorButtonDisabled}>
-                    <span>UPDATE OPERATOR</span>
-                  </button>
-                </Col>
-              </Row>
-            )}
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+                  {!isOwnerOrConsumer() && (
+                    <button
+                      type="button"
+                      className={'button-primary '}
+                      disabled={isRentButtonDisabled || isNotListed() || !asset?.availability?.isRentable}
+                      onClick={() => (isAvailable ? handleRent() : console.log())}
+                    >
+                      <span>{isAvailable ? 'RENT NOW' : 'RENT NEXT SLOT'}</span>
+                    </button>
+                  )}
+                </Grid>
+                <Grid item className="property-button">
+                  <ExternalLink
+                    className="marketplace-link"
+                    target={'_blank'}
+                    href={getDecentralandPlayUrl(asset?.decentralandData?.coordinates)}
+                  >
+                    <span>view on metaverse</span>
+                  </ExternalLink>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+
+      {shouldShowRenterCountdown() && (
+        <Grid className="countdown">
+          <Grid item xs={10}>
+            <Countdown date={Number(countDownTimestamp) * 1000} zeroPadTime={3} renderer={renderCountdown} />
+          </Grid>
+          <Grid item>
+            <p className="rented-on">rent starts in</p>
+          </Grid>
+        </Grid>
+      )}
+
+      {shouldShowUpdateOperator() && (
+        <Grid container className="operator-update-container">
+          <Grid item className="info-warning-container">
+            <WarningIcon />
+            <div className="info-warning-text">
+              <h3>Synchronise Operator</h3>
+              <p>
+                Synchronising the configured operator in LandWorks is important in order to update with the actual
+                operator specified in the Metaverse.
+              </p>
+            </div>
+          </Grid>
+          <Grid item>
+            <button
+              className="update-operator-btn"
+              type="button"
+              onClick={handleUpdateOperator}
+              disabled={isUpdateOperatorButtonDisabled}
+            >
+              <span>SYNCHRONISE</span>
+            </button>
+          </Grid>
+        </Grid>
+      )}
+    </Grid>
   );
 };
 

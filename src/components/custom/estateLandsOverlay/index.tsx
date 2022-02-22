@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Popover } from 'antd';
+import { Grid, Typography } from '@mui/material';
 
 import './index.scss';
 
@@ -15,40 +15,20 @@ interface IEstateLandOverlay {
 }
 
 const EstateLandOverlay: React.FC<IEstateLandOverlay> = ({ coordinates }) => {
-  const maxShown = 4;
-  return coordinates && coordinates?.length ? (
+  return coordinates && coordinates?.length > 1 ? (
     <div className="estate-overlay-container">
-      {coordinates.length > maxShown ? (
-        <>
-          {(coordinates || []).slice(0, maxShown).map((estateCoord: Coordinate) => (
-            <div key={estateCoord.id} className="estate-land">
-              <span>
-                {estateCoord.x}, {estateCoord.y}
-              </span>
-            </div>
-          ))}
-          <Popover
-            content={coordinates.slice(maxShown, coordinates.length).map((coord: any) => (
-              <div key={coord.id} className="estate-land">
-                <span>
-                  {coord.x}, {coord.y}
-                </span>
-              </div>
-            ))}
-            className="estate-land"
-          >
-            <div style={{ width: 80 }}>+ {coordinates.length - maxShown} MORE...</div>
-          </Popover>
-        </>
-      ) : (
-        coordinates.map((estateLand: any) => (
-          <div key={estateLand.id} className="estate-land">
+      <Typography variant="h3" className="title">
+        Estate
+      </Typography>
+      <Grid container>
+        {(coordinates || []).map((estateCoord: Coordinate) => (
+          <Grid item xs={6} key={estateCoord.id} className="estate-land">
             <span>
-              {estateLand.x}, {estateLand.y}
+              X: {estateCoord.x}, Y: {estateCoord.y}
             </span>
-          </div>
-        ))
-      )}
+          </Grid>
+        ))}
+      </Grid>
     </div>
   ) : (
     <></>
