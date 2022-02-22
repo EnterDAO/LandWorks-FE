@@ -153,8 +153,6 @@ const ExploreView: React.FC = () => {
 
   const filteredLands = filterLandsByQuery(lands, searchQuery);
 
-  console.log({ filteredLands });
-
   const onClickAtlasHandler = (land: AssetEntity) => {
     const { x, y } = land.decentralandData?.coordinates[0];
     setAtlasMapX(Number(x));
@@ -164,7 +162,7 @@ const ExploreView: React.FC = () => {
   const onPlaceChange = (value: number) => {
     setMetaverse(metaverse);
     setSelectedMetaverse(value);
-    // TODO:: some filtering here
+    // TODO:: add some filtering here
   };
 
   const onSortDirectionChange = (value: number) => {
