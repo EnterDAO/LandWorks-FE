@@ -50,7 +50,7 @@ const ExploreView: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showOnlyOwner, setShowOnlyOwner] = useState(false);
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
-  const [, setCurrency] = useState(tokenOptions[0]);
+  const [currency, setCurrency] = useState(tokenOptions[0]);
   const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
@@ -58,6 +58,8 @@ const ExploreView: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
   const [selectedCurrency, setSelectedCurrency] = useState(1);
+
+  const [landsByCurrency, setLandsByCurrency] = useState([] as AssetEntity[]);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -116,6 +118,8 @@ const ExploreView: React.FC = () => {
   const onPlaceChange = (value: number) => {
     setMetaverse(metaverse);
     setSelectedMetaverse(value);
+    setCurrency(tokenOptions[0]);
+    setSelectedCurrency(1);
     // TODO:: some filtering here
   };
 
@@ -124,17 +128,22 @@ const ExploreView: React.FC = () => {
     const sortIndex = Number(value) - 1;
     setSortDir(sortDirections[sortIndex]);
     setSortColumn(sortColumns[sortIndex]);
-    console.log({ sortIndex, value });
+    setCurrency(tokenOptions[0]);
+    setSelectedCurrency(1);
   };
 
   const handleOwnerToggleChange = () => {
     setShowOnlyOwner(!showOnlyOwner);
     setShowOnlyAvailable(!showOnlyAvailable);
+    setCurrency(tokenOptions[0]);
+    setSelectedCurrency(1);
   };
 
   const handleAvailableChange = () => {
     setShowOnlyAvailable(!showOnlyAvailable);
     setLastRentEnd(showOnlyAvailable ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
+    setCurrency(tokenOptions[0]);
+    setSelectedCurrency(1);
   };
 
   const onCurrencyChange = (value: number) => {
@@ -143,7 +152,26 @@ const ExploreView: React.FC = () => {
     setCurrency(tokenOptions[sortIndex]);
   };
 
-  const data = showOnlyOwner ? assets : lands;
+  useEffect(() => {
+    const landsInSelectedToken = lands.filter(
+      (land) => currency !== 'All Tokens' && land.paymentToken.symbol.includes(currency)
+    );
+    setLandsByCurrency(landsInSelectedToken);
+  }, [currency]);
+
+  function landData() {
+    let result;
+    if (showOnlyOwner) {
+      result = assets;
+    } else if (currency !== 'All Tokens') {
+      result = landsByCurrency;
+    } else {
+      result = lands;
+    }
+    return result;
+  }
+
+  const data = landData();
 
   return (
     <>

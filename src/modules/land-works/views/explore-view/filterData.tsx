@@ -29,11 +29,15 @@ export const landsData = [
 
 export const currencyData = [
   {
-    label: 'ETH',
+    label: 'All Tokens',
     value: 1,
   },
   {
-    label: 'USDC',
+    label: 'ETH',
     value: 2,
+  },
+  {
+    label: 'USDC',
+    value: 3,
   },
 ];
