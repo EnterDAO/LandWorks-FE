@@ -95,6 +95,6 @@ export const sortColumns = ['totalRents', 'pricePerSecond', 'pricePerSecond'];
 
 export const sortDirections = [SortDirection.DESC, SortDirection.ASC, SortDirection.DESC];
 
-export const tokenOptions = ['ETH', 'USDC'];
+export const DEFAULT_TOKEN_ADDRESS = '0x0000000000000000000000000000000000000001';
 
 export const metaverseOptions = ['Decentraland'];

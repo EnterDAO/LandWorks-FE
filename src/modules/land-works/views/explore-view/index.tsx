@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   DECENTRALAND_METAVERSE,
   DEFAULT_LAST_RENT_END,
+  DEFAULT_TOKEN_ADDRESS,
   metaverseOptions,
   sortColumns,
   sortDirections,
-  tokenOptions,
 } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { end } from '@popperjs/core';
@@ -18,13 +19,16 @@ import LandWorkCard from 'modules/land-works/components/land-works-card-explore-
 import { LandsAction } from 'modules/land-works/components/lands-action';
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import LandsSubheader from 'modules/land-works/components/lands-explore-subheader';
+import { SearchBar } from 'modules/land-works/components/lands-search';
 import { useWallet } from 'wallets/wallet';
 
 import {
   AssetEntity,
+  PaymentToken,
   USER_SUBSCRIPTION,
   UserEntity,
   fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder,
+  fetchTokenPayments,
   parseUser,
 } from '../../api';
 import { currencyData, landsData, sortData } from './filterData';
@@ -46,11 +50,21 @@ const ExploreView: React.FC = () => {
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
 
+  const history = useHistory();
+  const { search } = window.location;
+  const searchParams = new URLSearchParams(search);
+
+  const query = searchParams.get('s');
+  const [searchQuery, setSearchQuery] = useState(query || '');
+
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showOnlyOwner, setShowOnlyOwner] = useState(false);
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
-  const [, setCurrency] = useState(tokenOptions[0]);
+
+  const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
+  const [paymentToken, setPaymentToken] = useState(DEFAULT_TOKEN_ADDRESS);
+
   const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
@@ -58,6 +72,23 @@ const ExploreView: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
   const [selectedCurrency, setSelectedCurrency] = useState(1);
+
+  const getPaymentTokens = async () => {
+    const tokens = await fetchTokenPayments();
+    setPaymentTokens(tokens);
+    if (tokens.length > 0) {
+      setPaymentToken(paymentTokens[0]?.id);
+    }
+  };
+
+  useEffect(() => {
+    getPaymentTokens();
+  }, [selectedOrder, selectedCurrency, lands, showOnlyOwner, showOnlyAvailable]);
+
+  useEffect(() => {
+    searchParams.set('s', searchQuery);
+    history.push({ search: searchParams.toString() });
+  }, [searchQuery]);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -95,7 +126,8 @@ const ExploreView: React.FC = () => {
       DECENTRALAND_METAVERSE,
       lastRentEnd,
       orderColumn,
-      sortDir
+      sortDir,
+      paymentToken
     );
 
     setLands(lands.data);
@@ -105,7 +137,21 @@ const ExploreView: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     getAssets(sortColumn, sortDir, lastRentEnd);
-  }, [wallet.account, sortColumn, sortDir, lastRentEnd, showOnlyOwner]);
+  }, [wallet.account, sortColumn, sortDir, lastRentEnd, showOnlyOwner, selectedCurrency]);
+
+  const filterLandsByQuery = (lands: AssetEntity[], query: string) => {
+    if (!query) {
+      return lands;
+    }
+
+    return lands.filter((land) => {
+      const landName = land.name.toLowerCase();
+      const landOwner = land.decentralandData?.asset?.consumer?.id.toLowerCase();
+      return landName.includes(query) || landOwner?.includes(query);
+    });
+  };
+
+  const filteredLands = filterLandsByQuery(lands, searchQuery);
 
   const onClickAtlasHandler = (land: AssetEntity) => {
     const { x, y } = land.decentralandData?.coordinates[0];
@@ -116,7 +162,7 @@ const ExploreView: React.FC = () => {
   const onPlaceChange = (value: number) => {
     setMetaverse(metaverse);
     setSelectedMetaverse(value);
-    // TODO:: some filtering here
+    // TODO:: add some filtering here
   };
 
   const onSortDirectionChange = (value: number) => {
@@ -124,7 +170,6 @@ const ExploreView: React.FC = () => {
     const sortIndex = Number(value) - 1;
     setSortDir(sortDirections[sortIndex]);
     setSortColumn(sortColumns[sortIndex]);
-    console.log({ sortIndex, value });
   };
 
   const handleOwnerToggleChange = () => {
@@ -139,11 +184,22 @@ const ExploreView: React.FC = () => {
 
   const onCurrencyChange = (value: number) => {
     const sortIndex = Number(value) - 1;
-    setSelectedCurrency(value);
-    setCurrency(tokenOptions[sortIndex]);
+    setSelectedCurrency(value); // this sets the value for the label in the dropdown
+    setPaymentToken(paymentTokens[sortIndex].id);
   };
 
-  const data = showOnlyOwner ? assets : lands;
+  function landData() {
+    let result;
+    if (showOnlyOwner) {
+      result = assets;
+    } else {
+      result = filteredLands;
+    }
+    return result;
+  }
+
+  const data = landData();
+  //const data = showOnlyOwner ? assets : filteredLands;
 
   return (
     <>
@@ -183,8 +239,8 @@ const ExploreView: React.FC = () => {
       <div className="content-container content-container--explore-view">
         <Row className="lands-container">
           <Col span={12}>
-            <Row justify={end} className="actions-container">
-              {user.hasUnclaimedRent && (
+            {user.hasUnclaimedRent && (
+              <Row justify={end} className="actions-container">
                 <Col className="lands-claim-container">
                   <LandsAction
                     onButtonClick={setShowClaimModal}
@@ -194,7 +250,10 @@ const ExploreView: React.FC = () => {
                     mainHeading="Unclaimed rent"
                   />
                 </Col>
-              )}
+              </Row>
+            )}
+            <Row>
+              <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             </Row>
             <Row
               gutter={[
