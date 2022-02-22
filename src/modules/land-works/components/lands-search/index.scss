@@ -1,22 +1,37 @@
+@import '../../../../styles/variables.scss';
+@import '../../../../styles/text.scss';
+
 .wrapper.lands-search {
   background: var(--theme-modal-color);
   border: none;
-  border-radius: 50px;
-  padding: 9px 15px;
+  border-radius: 10px;
+  padding: 15px 15px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   color: white;
   font-size: 14px;
+  width: 100%;
+  margin-bottom: 1rem;
+
+  .search-icon {
+    opacity: 0.5;
+    margin-right: 15px;
+  }
+
+  form {
+    width: 100%;
+  }
 
   input {
     background: none;
     border: none;
     color: white;
+    width: 100%;
   }
 
   input::placeholder {
-    color: white;
+    color: $grey02;
   }
 
   form:-webkit-autofill,

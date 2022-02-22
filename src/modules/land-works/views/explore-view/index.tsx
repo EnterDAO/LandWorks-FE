@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   DECENTRALAND_METAVERSE,
   DEFAULT_LAST_RENT_END,
@@ -18,6 +19,7 @@ import LandWorkCard from 'modules/land-works/components/land-works-card-explore-
 import { LandsAction } from 'modules/land-works/components/lands-action';
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import LandsSubheader from 'modules/land-works/components/lands-explore-subheader';
+import { SearchBar } from 'modules/land-works/components/lands-search';
 import { useWallet } from 'wallets/wallet';
 
 import {
@@ -46,6 +48,13 @@ const ExploreView: React.FC = () => {
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
 
+  const history = useHistory();
+  const { search } = window.location;
+  const searchParams = new URLSearchParams(search);
+
+  const query = searchParams.get('s');
+  const [searchQuery, setSearchQuery] = useState(query || '');
+
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showOnlyOwner, setShowOnlyOwner] = useState(false);
@@ -58,6 +67,11 @@ const ExploreView: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
   const [selectedCurrency, setSelectedCurrency] = useState(1);
+
+  useEffect(() => {
+    searchParams.set('s', searchQuery);
+    history.push({ search: searchParams.toString() });
+  }, [searchQuery]);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -107,6 +121,22 @@ const ExploreView: React.FC = () => {
     getAssets(sortColumn, sortDir, lastRentEnd);
   }, [wallet.account, sortColumn, sortDir, lastRentEnd, showOnlyOwner]);
 
+  const filterLandsByQuery = (lands: AssetEntity[], query: string) => {
+    if (!query) {
+      return lands;
+    }
+
+    return lands.filter((land) => {
+      const landName = land.name.toLowerCase();
+      const landOwner = land.decentralandData?.asset?.consumer?.id.toLowerCase();
+      return landName.includes(query) || landOwner?.includes(query);
+    });
+  };
+
+  const filteredLands = filterLandsByQuery(lands, searchQuery);
+
+  console.log({ filteredLands });
+
   const onClickAtlasHandler = (land: AssetEntity) => {
     const { x, y } = land.decentralandData?.coordinates[0];
     setAtlasMapX(Number(x));
@@ -143,7 +173,7 @@ const ExploreView: React.FC = () => {
     setCurrency(tokenOptions[sortIndex]);
   };
 
-  const data = showOnlyOwner ? assets : lands;
+  const data = showOnlyOwner ? assets : filteredLands;
 
   return (
     <>
@@ -183,8 +213,8 @@ const ExploreView: React.FC = () => {
       <div className="content-container content-container--explore-view">
         <Row className="lands-container">
           <Col span={12}>
-            <Row justify={end} className="actions-container">
-              {user.hasUnclaimedRent && (
+            {user.hasUnclaimedRent && (
+              <Row justify={end} className="actions-container">
                 <Col className="lands-claim-container">
                   <LandsAction
                     onButtonClick={setShowClaimModal}
@@ -194,7 +224,10 @@ const ExploreView: React.FC = () => {
                     mainHeading="Unclaimed rent"
                   />
                 </Col>
-              )}
+              </Row>
+            )}
+            <Row>
+              <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             </Row>
             <Row
               gutter={[
