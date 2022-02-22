@@ -59,8 +59,6 @@ const ExploreView: React.FC = () => {
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
   const [selectedCurrency, setSelectedCurrency] = useState(1);
 
-  const [landsByCurrency, setLandsByCurrency] = useState([] as AssetEntity[]);
-
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
     variables: { id: wallet.account?.toLowerCase() },
@@ -97,7 +95,8 @@ const ExploreView: React.FC = () => {
       DECENTRALAND_METAVERSE,
       lastRentEnd,
       orderColumn,
-      sortDir
+      sortDir,
+      currency
     );
 
     setLands(lands.data);
@@ -107,7 +106,7 @@ const ExploreView: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     getAssets(sortColumn, sortDir, lastRentEnd);
-  }, [wallet.account, sortColumn, sortDir, lastRentEnd, showOnlyOwner]);
+  }, [wallet.account, sortColumn, sortDir, lastRentEnd, showOnlyOwner, currency]);
 
   const onClickAtlasHandler = (land: AssetEntity) => {
     const { x, y } = land.decentralandData?.coordinates[0];
@@ -118,8 +117,6 @@ const ExploreView: React.FC = () => {
   const onPlaceChange = (value: number) => {
     setMetaverse(metaverse);
     setSelectedMetaverse(value);
-    setCurrency(tokenOptions[0]);
-    setSelectedCurrency(1);
     // TODO:: some filtering here
   };
 
@@ -128,22 +125,16 @@ const ExploreView: React.FC = () => {
     const sortIndex = Number(value) - 1;
     setSortDir(sortDirections[sortIndex]);
     setSortColumn(sortColumns[sortIndex]);
-    setCurrency(tokenOptions[0]);
-    setSelectedCurrency(1);
   };
 
   const handleOwnerToggleChange = () => {
     setShowOnlyOwner(!showOnlyOwner);
     setShowOnlyAvailable(!showOnlyAvailable);
-    setCurrency(tokenOptions[0]);
-    setSelectedCurrency(1);
   };
 
   const handleAvailableChange = () => {
     setShowOnlyAvailable(!showOnlyAvailable);
     setLastRentEnd(showOnlyAvailable ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
-    setCurrency(tokenOptions[0]);
-    setSelectedCurrency(1);
   };
 
   const onCurrencyChange = (value: number) => {
@@ -152,19 +143,10 @@ const ExploreView: React.FC = () => {
     setCurrency(tokenOptions[sortIndex]);
   };
 
-  useEffect(() => {
-    const landsInSelectedToken = lands.filter(
-      (land) => currency !== 'All Tokens' && land.paymentToken.symbol.includes(currency)
-    );
-    setLandsByCurrency(landsInSelectedToken);
-  }, [currency]);
-
   function landData() {
     let result;
     if (showOnlyOwner) {
       result = assets;
-    } else if (currency !== 'All Tokens') {
-      result = landsByCurrency;
     } else {
       result = lands;
     }
