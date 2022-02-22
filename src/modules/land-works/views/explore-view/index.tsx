@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import {
   DECENTRALAND_METAVERSE,
   DEFAULT_LAST_RENT_END,
+  DEFAULT_TOKEN_ADDRESS,
   metaverseOptions,
   sortColumns,
   sortDirections,
-  tokenOptions,
 } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { end } from '@popperjs/core';
@@ -22,9 +22,11 @@ import { useWallet } from 'wallets/wallet';
 
 import {
   AssetEntity,
+  PaymentToken,
   USER_SUBSCRIPTION,
   UserEntity,
   fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder,
+  fetchTokenPayments,
   parseUser,
 } from '../../api';
 import { currencyData, landsData, sortData } from './filterData';
@@ -50,7 +52,10 @@ const ExploreView: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showOnlyOwner, setShowOnlyOwner] = useState(false);
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
-  const [currency, setCurrency] = useState(tokenOptions[0]);
+
+  const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
+  const [paymentToken, setPaymentToken] = useState(DEFAULT_TOKEN_ADDRESS);
+
   const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
@@ -58,6 +63,18 @@ const ExploreView: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
   const [selectedCurrency, setSelectedCurrency] = useState(1);
+
+  const getPaymentTokens = async () => {
+    const tokens = await fetchTokenPayments();
+    setPaymentTokens(tokens);
+    if (tokens.length > 0) {
+      setPaymentToken(paymentTokens[0]?.id);
+    }
+  };
+
+  useEffect(() => {
+    getPaymentTokens();
+  }, []);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -96,7 +113,7 @@ const ExploreView: React.FC = () => {
       lastRentEnd,
       orderColumn,
       sortDir,
-      currency
+      paymentToken
     );
 
     setLands(lands.data);
@@ -106,7 +123,7 @@ const ExploreView: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     getAssets(sortColumn, sortDir, lastRentEnd);
-  }, [wallet.account, sortColumn, sortDir, lastRentEnd, showOnlyOwner, currency]);
+  }, [wallet.account, sortColumn, sortDir, lastRentEnd, showOnlyOwner, selectedCurrency]);
 
   const onClickAtlasHandler = (land: AssetEntity) => {
     const { x, y } = land.decentralandData?.coordinates[0];
@@ -139,8 +156,8 @@ const ExploreView: React.FC = () => {
 
   const onCurrencyChange = (value: number) => {
     const sortIndex = Number(value) - 1;
-    setSelectedCurrency(value);
-    setCurrency(tokenOptions[sortIndex]);
+    setSelectedCurrency(value); // this sets the value for the label in the dropdown
+    setPaymentToken(paymentTokens[sortIndex].id);
   };
 
   function landData() {
