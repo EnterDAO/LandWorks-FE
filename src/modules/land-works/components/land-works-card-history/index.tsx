@@ -256,7 +256,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
                 size="middle"
                 className="history-table"
                 pagination={false}
-                scroll={{ y: 340 }}
+                scroll={{ x: 768, y: 340 }}
               />
             </ConfigProvider>
           </Col>
