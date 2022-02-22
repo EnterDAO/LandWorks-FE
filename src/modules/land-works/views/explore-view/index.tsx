@@ -83,7 +83,8 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     getPaymentTokens();
-  }, []);
+  }, [selectedOrder, selectedCurrency, lands, showOnlyOwner, showOnlyAvailable]);
+
   useEffect(() => {
     searchParams.set('s', searchQuery);
     history.push({ search: searchParams.toString() });
