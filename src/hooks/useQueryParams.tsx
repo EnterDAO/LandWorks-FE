@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 // A custom hook that builds on useLocation to parse
 // https://v5.reactrouter.com/web/example/query-parameters
 import { useMemo } from 'react';

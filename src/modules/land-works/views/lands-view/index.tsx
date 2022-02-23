@@ -21,7 +21,7 @@ import { LandsAvailableSorter } from 'modules/land-works/components/lands-availa
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { LandsPriceSorter } from 'modules/land-works/components/lands-price-sorter';
-import { SearchBar } from 'modules/land-works/components/lands-search';
+import LandsSearchBar from 'modules/land-works/components/lands-search';
 import { useWallet } from 'wallets/wallet';
 
 import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
@@ -251,7 +251,7 @@ const LandsView: React.FC = () => {
               <LandsPlaceSorter onPlaceChange={onPlaceChange} />
             </Col>
             <Col>
-              <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+              <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             </Col>
           </Row>
           <Row

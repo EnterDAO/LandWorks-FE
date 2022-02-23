@@ -103,6 +103,8 @@ const ExploreView: React.FC = () => {
   };
 
   const getLands = async (orderColumn: string, sortDir: string, lastRentEnd: string) => {
+    setLoading(true);
+
     const lands = await fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder(
       DECENTRALAND_METAVERSE,
       lastRentEnd,
@@ -132,7 +134,12 @@ const ExploreView: React.FC = () => {
   useEffect(() => {
     queryParams.set('s', searchQuery);
     history.push({ search: queryParams.toString() });
-    setLands(filterLandsByQuery(lands, searchQuery));
+
+    if (!searchQuery.length) {
+      getLands(sortColumn, sortDir, lastRentEnd);
+    } else {
+      setLands(filterLandsByQuery(lands, searchQuery));
+    }
   }, [searchQuery]);
 
   useEffect(() => {
@@ -145,7 +152,6 @@ const ExploreView: React.FC = () => {
   }, [wallet.account]);
 
   useEffect(() => {
-    setLoading(true);
     getLands(sortColumn, sortDir, lastRentEnd);
   }, [wallet.account, sortColumn, sortDir, lastRentEnd]);
 
