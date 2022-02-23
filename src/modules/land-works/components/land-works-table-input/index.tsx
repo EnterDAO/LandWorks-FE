@@ -2,8 +2,9 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Input } from 'antd';
 import web3 from 'web3';
-import { shortenAddr } from 'web3/utils';
+import { getEtherscanAddressUrl, shortenAddr } from 'web3/utils';
 
+import ExternalLink from 'components/custom/externalLink';
 import { CheckIcon, CloseIcon, EditIcon } from 'design-system/icons';
 import { getAddressFromENS } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
@@ -92,15 +93,20 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
 
   return (
     <div className="operator">
-      <Input
-        placeholder="Operator Address"
-        bordered={false}
-        disabled={disabled}
-        value={!disabled ? newOperator : ens || shortedOperator}
-        style={{ color: '#5D8FF0', fontSize: '12px' }}
-        defaultValue={!disabled ? newOperator : ens || shortedOperator}
-        onChange={handleChange}
-      />
+      {canEditOperator && !disabled ? (
+        <Input
+          placeholder="Operator Address"
+          bordered={false}
+          disabled={disabled}
+          value={!disabled ? newOperator : ens || shortedOperator}
+          defaultValue={!disabled ? newOperator : ens || shortedOperator}
+          onChange={handleChange}
+        />
+      ) : (
+        <ExternalLink className="operator-input-link" target="_blank" href={getEtherscanAddressUrl(operator)}>
+          {!disabled ? newOperator : ens || shortedOperator}
+        </ExternalLink>
+      )}
       {!canEditOperator ? (
         <></>
       ) : disabled ? (
