@@ -2,14 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import Countdown, { CountdownTimeDelta, zeroPad } from 'react-countdown';
 import Grid from '@mui/material/Grid';
-import { Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
 import EstateLandOverlay from 'components/custom/estateLandsOverlay';
 import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { getENSName, getLandImageUrl, getTokenIconName, timestampSecondsToDate } from 'helpers/helpers';
+import { getENSName, getLandImageUrl, getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import { ReactComponent as WarningIcon } from '../../../../resources/svg/warning.svg';
@@ -19,16 +18,9 @@ import { AssetEntity, RentEntity, fetchAssetRentByTimestamp, fetchUserFirstRentB
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 import { LandsTooltip } from '../lands-tooltip';
-import chainPng from './assets/chain.png';
 
-import { getNowTs, getTimeType, secondsToDuration } from '../../../../utils';
-import {
-  ZERO_BIG_NUMBER,
-  getDecentralandMarketplaceUrl,
-  getDecentralandPlayUrl,
-  getEtherscanAddressUrl,
-  shortenAddr,
-} from '../../../../web3/utils';
+import { ParsedDate, getNowTs, secondsToDuration } from '../../../../utils';
+import { ZERO_BIG_NUMBER, getDecentralandPlayUrl, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -57,10 +49,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const [currentRent, setCurrentRent] = useState({} as RentEntity);
   const [countDownRent, setCountDownRent] = useState({} as RentEntity);
   const [countDownTimestamp, setCountDownTimestamp] = useState('0');
-
-  const isOwner = () => {
-    return wallet.account && wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase();
-  };
+  const [maxRentQueue, setMaxRentQueue] = useState<ParsedDate>();
 
   const isOwnerOrConsumer = () => {
     return (
@@ -84,7 +73,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   };
 
   const shouldShowRenterCountdown = () => {
-    return countDownRent?.renter?.id.toLowerCase() === wallet.account?.toLowerCase();
+    return countDownRent?.renter?.id && countDownRent?.renter?.id.toLowerCase() === wallet.account?.toLowerCase();
   };
 
   const getCurrentAndCountdownRents = async () => {
@@ -151,6 +140,17 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     };
   }, []);
 
+  const renderMaxRentQueue = () => {
+    if (maxRentQueue)
+      return maxRentQueue.weeks
+        ? `${maxRentQueue.weeks} weeks`
+        : maxRentQueue.days
+        ? `${maxRentQueue.days} days`
+        : maxRentQueue.hours
+        ? `${maxRentQueue.hours} hours`
+        : `${maxRentQueue.minutes} minutes`;
+  };
+
   const renderCountdown = (props: CountdownTimeDelta) => {
     const days = props.days > 0 ? `${props.days} : ` : '';
     const hours = props.hours > 0 ? `${zeroPad(props.hours)} : ` : '';
@@ -163,12 +163,10 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
 
   const [ens, setEns] = useState<string>();
   const [ensOperator, setEnsOperator] = useState<string>();
+
   useEffect(() => {
     if (asset) {
-      const maxPeriod = new BigNumber(asset?.maxPeriod);
-      const parsedDate = secondsToDuration(maxPeriod.toNumber());
-      const { timeValue, timeType } = getTimeType(parsedDate);
-      console.log({ timeType, timeValue });
+      setMaxRentQueue(secondsToDuration(Number(asset.maxFutureTime)));
     }
     if (asset?.owner?.id)
       getENSName(asset?.owner?.id).then((ensName) => {
@@ -189,7 +187,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
       <Grid xs={12} md={6} item className="properties-container">
         <Grid container className="head-container">
           <Grid item className="title-container">
-            <span className="card-name">{asset?.name?.replace('metadata', '').toLowerCase()}</span>
+            <span className="card-name">{asset?.name?.toLowerCase()}</span>
             <Grid className="button-section">
               <button
                 className={`${isNotListed() ? 'button-delisted' : isAvailable ? 'button-available' : 'button-rented'}`}
@@ -270,18 +268,14 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                         </span>
                       )}
                     </span>
-                    {(asset?.availability?.availabilityTime?.minAvailabilityTime > 0 ||
-                      asset?.availability?.availabilityTime?.maxAvailabilityTime > 0) && (
-                      <span className="period-title">Max Rent Queue</span>
-                    )}
-                    <span className="available-period">
-                      {asset?.availability?.availabilityTime?.maxAvailabilityTime > 0 && (
-                        <span className="label">
-                          {asset?.availability?.availabilityTime?.maxAvailabilityTime}{' '}
-                          {asset?.availability?.availabilityTime?.maxAvailabilityType}
+                    {maxRentQueue && (
+                      <>
+                        <span className="period-title">Max Rent Queue</span>
+                        <span className="available-period">
+                          {maxRentQueue && <span className="label">{renderMaxRentQueue()}</span>}
                         </span>
-                      )}
-                    </span>
+                      </>
+                    )}
                   </Grid>
                 )}
                 <Grid item>
