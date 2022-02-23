@@ -165,6 +165,10 @@ body.mobile-menu-open {
 
   --toastify-text-color-light: var(--theme-modal-color);
   --toastify-text-color-dark: var(--theme-primary-color);
+
+  --navbar-height: 107px;
+  --explore-subheader: 88px;
+  --explore-filters: 55px;
 }
 
 @media (max-width: 1024px) {

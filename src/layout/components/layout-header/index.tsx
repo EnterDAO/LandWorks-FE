@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 
@@ -17,7 +17,7 @@ import { useWallet } from 'wallets/wallet';
 
 import { ReactComponent as TextLogo } from '../../../resources/svg/landWorks-logo.svg';
 
-import s from './s.module.scss';
+import styles from './layout-header.module.scss';
 
 const modalRoot = document.getElementById('modal-root') || document.body;
 
@@ -29,7 +29,12 @@ const LayoutHeader: React.FC = () => {
   const wallet = useWallet();
   const { warns } = useWarning();
 
-  const { styles, attributes, forceUpdate, state } = usePopper(referenceElement, popperElement, {
+  const {
+    styles: stylePopper,
+    attributes,
+    forceUpdate,
+    state,
+  } = usePopper(referenceElement, popperElement, {
     placement: 'bottom',
     strategy: 'absolute',
   });
@@ -51,11 +56,14 @@ const LayoutHeader: React.FC = () => {
   }, [window.innerWidth]);
 
   return (
-    <div className={`${s.component} ${navOpen ? `${s.mobileNavOpen}` : ''}`} ref={setReferenceElement}>
-      <div style={{ cursor: 'pointer' }} onClick={() => history.push('/all')}>
-        <Icon name="png/LandWorksLogo" width="auto" height="auto" className={s.logo} />
-      </div>
-      <div className={`${s.title} ${wallet.account ? `${s.logged}` : ''}`} onClick={() => history.push('/all')}>
+    <div className={`${styles.root} ${navOpen ? `${styles.mobileNavOpen}` : ''}`} ref={setReferenceElement}>
+      <Link to="/all">
+        <Icon name="png/LandWorksLogo" width="auto" height="auto" className={styles.logo} />
+      </Link>
+      <div
+        className={`${styles.title} ${wallet.account ? `${styles.logged}` : ''}`}
+        onClick={() => history.push('/all')}
+      >
         <TextLogo />
       </div>
 
@@ -68,10 +76,10 @@ const LayoutHeader: React.FC = () => {
       )} */}
 
       {isLandingPage?.isExact && (
-        <nav className={s.nav}>
+        <nav className={styles.nav}>
           <a
             href="#about"
-            className={s.navLink}
+            className={styles.navLink}
             onClick={() => {
               const aboutSection = document.querySelector('.about-wrapper') as HTMLElement;
               if (aboutSection !== null) {
@@ -83,7 +91,7 @@ const LayoutHeader: React.FC = () => {
           </a>
           <a
             href="#why"
-            className={s.navLink}
+            className={styles.navLink}
             onClick={() => {
               const aboutSection = document.querySelector('.how-it-works-wrapper') as HTMLElement;
               if (aboutSection !== null) {
@@ -93,7 +101,7 @@ const LayoutHeader: React.FC = () => {
           >
             <span>Why Rent ?</span>
           </a>
-          <ExternalLink href="https://docs.landworks.xyz" target="_blank" className={s.navLink}>
+          <ExternalLink href="https://docs.landworks.xyz" target="_blank" className={styles.navLink}>
             <span>Docs</span>
           </ExternalLink>
         </nav>
@@ -103,10 +111,10 @@ const LayoutHeader: React.FC = () => {
         ReactDOM.createPortal(
           <div
             ref={setPopperElement}
-            className={cn(s.mobileMenu, { [s.open]: navOpen })}
+            className={cn(styles.mobileMenu, { [styles.open]: navOpen })}
             style={
               {
-                ...styles.popper,
+                ...stylePopper.popper,
                 bottom: 0,
                 right: 0,
                 '--top': `${state?.modifiersData?.popperOffsets?.y || 0}px`,
@@ -114,16 +122,16 @@ const LayoutHeader: React.FC = () => {
             }
             {...attributes.popper}
           >
-            <div className={s.mobileInner}>
-              <div className={s.mobileMenuInner}>
+            <div className={styles.mobileInner}>
+              <div className={styles.mobileMenuInner}>
                 <Row style={{ width: '100%' }}>
                   <Col span={24}>
                     {isLandingPage?.isExact && (
-                      <div className={s.mobileMenuBlock}>
+                      <div className={styles.mobileMenuBlock}>
                         <h3>Info</h3>
                         <a
                           href="#about"
-                          className={s.dropdownLink}
+                          className={styles.dropdownLink}
                           onClick={() => {
                             const aboutSection = document.querySelector('.about-wrapper') as HTMLElement;
                             if (aboutSection !== null) {
@@ -132,12 +140,12 @@ const LayoutHeader: React.FC = () => {
                             setNavOpen(false);
                           }}
                         >
-                          <Icon name="whitepaper" width={20} height={20} className={s.dropdownIcon} />
+                          <Icon name="whitepaper" width={20} height={20} className={styles.dropdownIcon} />
                           <span>About</span>
                         </a>
                         <a
                           href="#why"
-                          className={s.dropdownLink}
+                          className={styles.dropdownLink}
                           onClick={() => {
                             const aboutSection = document.querySelector('.how-it-works-wrapper') as HTMLElement;
                             if (aboutSection !== null) {
@@ -146,15 +154,15 @@ const LayoutHeader: React.FC = () => {
                             setNavOpen(false);
                           }}
                         >
-                          <Icon name="team" width={20} height={20} className={s.dropdownIcon} />
+                          <Icon name="team" width={20} height={20} className={styles.dropdownIcon} />
                           <span>Why Rent ?</span>
                         </a>
                         <ExternalLink
                           href="https://docs.landworks.xyz"
-                          className={s.dropdownLink}
+                          className={styles.dropdownLink}
                           onClick={() => setNavOpen(false)}
                         >
-                          <Icon name="docs" width={20} height={20} className={s.dropdownIcon} />
+                          <Icon name="docs" width={20} height={20} className={styles.dropdownIcon} />
                           <span>Docs</span>
                         </ExternalLink>
                       </div>

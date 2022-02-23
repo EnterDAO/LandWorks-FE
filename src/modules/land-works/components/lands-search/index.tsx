@@ -7,7 +7,7 @@ interface SearchQuery {
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const SearchBar: React.FC<SearchQuery> = ({ searchQuery, setSearchQuery }) => (
+const LandsSearchBar: React.FC<SearchQuery> = ({ searchQuery, setSearchQuery }) => (
   <div className="wrapper lands-search">
     <Search className="search-icon" />
     <form action="/" method="get">
@@ -25,3 +25,5 @@ export const SearchBar: React.FC<SearchQuery> = ({ searchQuery, setSearchQuery }
     </form>
   </div>
 );
+
+export default LandsSearchBar;

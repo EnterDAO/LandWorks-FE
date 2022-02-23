@@ -3,24 +3,28 @@ import { useHistory } from 'react-router-dom';
 
 import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
 
-import './index.scss';
+import styles from './lands-explore-subheader.module.scss';
 
 interface Props {
   totalLands: number;
   hasMetamaskConnected: boolean;
 }
 
-const LandsSubheader: React.FC<Props> = ({ totalLands, hasMetamaskConnected }) => {
+const LandsExploreSubheader: React.FC<Props> = ({ totalLands, hasMetamaskConnected }) => {
   const history = useHistory();
 
   return (
-    <div className="lands-header">
+    <div className={styles.root}>
       <h1>
         Explore Properties <span>Total listed {totalLands}</span>
       </h1>
       {hasMetamaskConnected && (
-        <div className="addTokenWrapper">
-          <button type="button" className={`button-primary list-new-property`} onClick={() => history.push('/list')}>
+        <div className={styles['add-token-wrapper']}>
+          <button
+            type="button"
+            className={`button-primary ${styles['list-new-property-button']}`}
+            onClick={() => history.push('/list')}
+          >
             <AddIcon className={`add-icon`} />
             List New Property
           </button>
@@ -30,4 +34,4 @@ const LandsSubheader: React.FC<Props> = ({ totalLands, hasMetamaskConnected }) =
   );
 };
 
-export default LandsSubheader;
+export default LandsExploreSubheader;

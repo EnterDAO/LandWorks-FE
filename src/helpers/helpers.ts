@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import { BASE_URL_DECENTRALEND } from 'constants/modules';
 import { InfuraProvider } from '@ethersproject/providers';
 import format from 'date-fns/format';
 import fromUnixTime from 'date-fns/fromUnixTime';
@@ -33,7 +34,6 @@ export const getLandImageUrl = (land: AssetEntity | undefined) => {
     return defaultLandImage;
   }
 
-  const baseImageUrl = 'https://api.decentraland.org/v1';
   if (!land.decentralandData) {
     return defaultLandImage;
   }
@@ -42,13 +42,13 @@ export const getLandImageUrl = (land: AssetEntity | undefined) => {
     if (!land.decentralandData.coordinates[0]?.x || !land.decentralandData.coordinates[0]?.y) {
       return defaultLandImage;
     }
-    const imageUrl = `${baseImageUrl}/parcels/${land.decentralandData.coordinates[0].x}/${land.decentralandData.coordinates[0].y}/map.png`;
+    const imageUrl = `${BASE_URL_DECENTRALEND}/parcels/${land.decentralandData.coordinates[0].x}/${land.decentralandData.coordinates[0].y}/map.png`;
     return imageUrl;
   } else {
     if (!land.metaverseAssetId) {
       return defaultLandImage;
     }
-    const imageUrl = `${baseImageUrl}/estates/${land.metaverseAssetId}/map.png`;
+    const imageUrl = `${BASE_URL_DECENTRALEND}/estates/${land.metaverseAssetId}/map.png`;
     return imageUrl;
   }
 };

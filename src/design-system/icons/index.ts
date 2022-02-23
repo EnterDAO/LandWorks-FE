@@ -29,6 +29,7 @@ import { ReactComponent as HomeIcon } from 'assets/icons/home.svg';
 // import { ReactComponent as InfoIcon} from 'assets/icons/info.svg';
 import { ReactComponent as LoginIcon } from 'assets/icons/log-in.svg';
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg';
+import { ReactComponent as MinusIcon } from 'assets/icons/minus.svg';
 import { ReactComponent as MoonIcon } from 'assets/icons/moon.svg';
 import { ReactComponent as MoreIcon } from 'assets/icons/more.svg';
 import { ReactComponent as NextIcon } from 'assets/icons/next.svg';
@@ -79,6 +80,7 @@ export {
   HomeIcon,
   // InfoIcon,
   LoginIcon,
+  MinusIcon,
   MoonIcon,
   MoreIcon,
   NextIcon,

@@ -1,6 +1,6 @@
 import 'react-loading-skeleton/dist/skeleton.css';
 
-import React, { FC } from 'react';
+import { FC } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { Col, Row } from 'antd';
 
@@ -11,7 +11,7 @@ const baseColor = '#c1c1cf';
 
 const LandCardSkeleton: FC = () => {
   return (
-    <Col span={8}>
+    <Col>
       <Row gutter={[16, 16]} className="nft--card--skeleton">
         <Col span={24}>
           <Row gutter={[16, 16]}>
