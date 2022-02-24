@@ -117,6 +117,7 @@ const ExploreView: React.FC = () => {
     setCoordinatesHighlights(highlights);
     setPointMapCentre(highlights);
     setLoading(false);
+    setSlicedLands(4);
   };
 
   const filterLandsByQuery = (lands: AssetEntity[], query: string) => {
