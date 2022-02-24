@@ -166,7 +166,6 @@ const ExploreView: React.FC = () => {
           onChangeSortDirection={onChangeFiltersSortDirection}
           onChangeOwnerToggler={onChangeFiltersOwnerToggler}
           onChangeAvailable={onChangeFiltersAvailable}
-          wallet={wallet}
         />
       </div>
 

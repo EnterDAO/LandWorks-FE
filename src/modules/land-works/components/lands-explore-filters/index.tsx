@@ -2,20 +2,20 @@ import { FC, useState } from 'react';
 import { metaverseOptions, tokenOptions } from 'constants/modules';
 
 import { Box, ControlledSelect, StyledSwitch, Typography } from 'design-system';
-import { Wallet } from 'wallets/wallet';
+import { useWallet } from 'wallets/wallet';
 
 import { currencyData, landsData, sortData } from './filters-data';
 
 import styles from './lands-explore-filters.module.scss';
 
 interface Props {
-  wallet: Wallet;
   onChangeSortDirection: (value: number) => void;
   onChangeOwnerToggler: (value: boolean) => void;
   onChangeAvailable: (value: boolean) => void;
 }
 
-const LandWorksFilters: FC<Props> = ({ wallet, onChangeSortDirection, onChangeOwnerToggler, onChangeAvailable }) => {
+const LandWorksFilters: FC<Props> = ({ onChangeSortDirection, onChangeOwnerToggler, onChangeAvailable }) => {
+  const wallet = useWallet();
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
   const [selectedCurrency, setSelectedCurrency] = useState(1);
