@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { DECENTRALAND_METAVERSE, DEFAULT_LAST_RENT_END, sortColumns, sortDirections } from 'constants/modules';
+import {
+  DECENTRALAND_METAVERSE,
+  DEFAULT_LAST_RENT_END,
+  DEFAULT_SLICED_PAGE,
+  sortColumns,
+  sortDirections,
+} from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { Grid } from '@mui/material';
 
@@ -52,7 +58,7 @@ const ExploreView: React.FC = () => {
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
 
-  const [slicedLands, setSlicedLands] = useState(8);
+  const [slicedLands, setSlicedLands] = useState(DEFAULT_SLICED_PAGE);
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
 
   useSubscription(USER_SUBSCRIPTION, {
@@ -117,7 +123,7 @@ const ExploreView: React.FC = () => {
     setCoordinatesHighlights(highlights);
     setPointMapCentre(highlights);
     setLoading(false);
-    setSlicedLands(4);
+    setSlicedLands(DEFAULT_SLICED_PAGE);
   };
 
   const filterLandsByQuery = (lands: AssetEntity[], query: string) => {
@@ -204,7 +210,13 @@ const ExploreView: React.FC = () => {
             ) : lands.length ? (
               lands.slice(0, slicedLands).map((land) => (
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={4}>
-                  <LandWorkCard key={land.id} land={land} />
+                  <LandWorkCard
+                    onClick={() => {
+                      console.log('something happens');
+                    }}
+                    key={land.id}
+                    land={land}
+                  />
                 </Grid>
               ))
             ) : (

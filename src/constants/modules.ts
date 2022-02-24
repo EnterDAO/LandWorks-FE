@@ -102,3 +102,5 @@ export const metaverseOptions = ['Decentraland'];
 export const TILES_URL_DECENTRALEND = 'https://api.decentraland.org/v1/tiles';
 
 export const BASE_URL_DECENTRALEND = 'https://api.decentraland.org/v1';
+
+export const DEFAULT_SLICED_PAGE = 4
