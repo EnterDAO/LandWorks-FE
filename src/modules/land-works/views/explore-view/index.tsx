@@ -13,8 +13,9 @@ import { end } from '@popperjs/core';
 import { Col, Row } from 'antd';
 
 import { Atlas } from 'components/custom/Atlas/Atlas';
-import { Box, ControlledSelect, StyledSwitch, Typography } from 'design-system';
+import { Box, Button, ControlledSelect, Grid, StyledSwitch, Typography } from 'design-system';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
+import { LoadMoreLands } from 'modules/land-works/components/land-explore-load-more';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { LandsAction } from 'modules/land-works/components/lands-action';
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
@@ -72,6 +73,9 @@ const ExploreView: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
   const [selectedCurrency, setSelectedCurrency] = useState(1);
+
+  const [slicedLands, setSlicedLands] = useState(8);
+  const [loadPercentageValue, setLoadPercentageValue] = useState(0);
 
   const getPaymentTokens = async () => {
     const tokens = await fetchTokenPayments();
@@ -201,6 +205,18 @@ const ExploreView: React.FC = () => {
   const data = landData();
   //const data = showOnlyOwner ? assets : filteredLands;
 
+  const handleLoadMore = () => {
+    setSlicedLands(slicedLands + 8);
+    const slicedLandsInTotal = data.slice(0, slicedLands).length;
+    setLoadPercentageValue((slicedLandsInTotal * 100) / data.length);
+  };
+
+  console.log('length', data.slice(0, slicedLands).length);
+
+  useEffect(() => {
+    setLoadPercentageValue((data.slice(0, slicedLands).length * 100) / data.length);
+  }, [data, slicedLands]);
+
   return (
     <>
       <LandsSubheader
@@ -237,11 +253,13 @@ const ExploreView: React.FC = () => {
       </div>
 
       <div className="content-container content-container--explore-view">
-        <Row className="lands-container">
-          <Col span={12}>
-            {user.hasUnclaimedRent && (
-              <Row justify={end} className="actions-container">
-                <Col className="lands-claim-container">
+        <Grid container spacing={2} className="lands-container">
+          {/* <Box className="lands-container"> */}
+          <Grid item xs={6}>
+            {/* Find out what the designs are for these */}
+            {/* {user.hasUnclaimedRent && (
+              <Box className="actions-container">
+                <Box className="lands-claim-container">
                   <LandsAction
                     onButtonClick={setShowClaimModal}
                     buttonText={'CLAIM '}
@@ -249,36 +267,45 @@ const ExploreView: React.FC = () => {
                     isClaimButtonDisabled={claimButtonDisabled}
                     mainHeading="Unclaimed rent"
                   />
-                </Col>
-              </Row>
-            )}
-            <Row>
+                </Box>
+              </Box>
+            )} */}
+
+            <Box>
               <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-            </Row>
-            <Row
-              gutter={[
-                { xs: 16, sm: 16, md: 16, lg: 32 },
-                { xs: 16, sm: 16, md: 16, lg: 32 },
-              ]}
+            </Box>
+
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="flex-start"
               className="cards-list-container"
             >
               {loading ? (
                 [1, 2, 3].map((i) => <LandCardSkeleton key={i} />)
               ) : data.length ? (
-                data.map((land) => <LandWorkCard onClick={onClickAtlasHandler} key={land.id} land={land} />)
+                data
+                  .slice(0, slicedLands)
+                  .map((land) => <LandWorkCard onClick={onClickAtlasHandler} key={land.id} land={land} />)
               ) : (
                 <div>No properties are currently listed</div>
               )}
-            </Row>
-          </Col>
-          <Col span={12}>
-            <Row className="map-list-container">
+            </Grid>
+            <LoadMoreLands
+              textToDisplay={`List ${data.slice(0, slicedLands).length} of ${lands.length}`}
+              handleLoadMore={handleLoadMore}
+              percentageValue={loadPercentageValue}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Grid className="map-list-container">
               <div style={{ minHeight: 'calc(100vh - 80px - 90px)', width: '100%' }}>
                 <Atlas x={atlasMapX} y={atlasMapY} />
               </div>
-            </Row>
-          </Col>
-        </Row>
+            </Grid>
+          </Grid>
+        </Grid>
 
         <ClaimModal
           onSubmit={() => {

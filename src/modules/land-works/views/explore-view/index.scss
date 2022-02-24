@@ -11,7 +11,7 @@ $navbar-height: 107px;
     position: relative;
     max-width: none;
 
-    height: calc(100vh - $navbar-height);
+    //height: calc(100vh - $navbar-height);
     overflow: hidden;
   }
 }
@@ -44,6 +44,9 @@ $navbar-height: 107px;
 
 .lands-container {
   height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
 
   .filters {
     margin-bottom: 40px;
