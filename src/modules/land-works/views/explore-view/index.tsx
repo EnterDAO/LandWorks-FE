@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { DECENTRALAND_METAVERSE, DEFAULT_LAST_RENT_END, sortColumns, sortDirections } from 'constants/modules';
+import {
+  DECENTRALAND_METAVERSE,
+  DEFAULT_LAST_RENT_END,
+  DEFAULT_SLICED_PAGE,
+  sortColumns,
+  sortDirections,
+} from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { Grid } from '@mui/material';
 
-import useQueryParams from 'hooks/useQueryParams';
 import LayoutFooter from 'layout/components/layout-footer';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { LandsAction } from 'modules/land-works/components/lands-action';
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
+import { LoadMoreLands } from 'modules/land-works/components/lands-explore-load-more';
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
 import LandsExploreSubheader from 'modules/land-works/components/lands-explore-subheader';
 import LandsSearchBar from 'modules/land-works/components/lands-search';
@@ -21,7 +26,7 @@ import {
   CoordinatesLAND,
   USER_SUBSCRIPTION,
   UserEntity,
-  fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder,
+  fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   parseUser,
 } from '../../api';
 
@@ -32,7 +37,6 @@ import './explore-view.scss';
 
 const ExploreView: React.FC = () => {
   const wallet = useWallet();
-  const queryParams = useQueryParams();
 
   const [lands, setLands] = useState([] as AssetEntity[]);
   const [showClaimModal, setShowClaimModal] = useState(false);
@@ -47,13 +51,15 @@ const ExploreView: React.FC = () => {
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
 
-  const history = useHistory();
-  const [searchQuery, setSearchQuery] = useState(queryParams.get('s') || '');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
+
+  const [slicedLands, setSlicedLands] = useState(DEFAULT_SLICED_PAGE);
+  const [loadPercentageValue, setLoadPercentageValue] = useState(0);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -105,7 +111,7 @@ const ExploreView: React.FC = () => {
   const getLands = async (orderColumn: string, sortDir: string, lastRentEnd: string) => {
     setLoading(true);
 
-    const lands = await fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder(
+    const lands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
       DECENTRALAND_METAVERSE,
       lastRentEnd,
       orderColumn,
@@ -117,6 +123,7 @@ const ExploreView: React.FC = () => {
     setCoordinatesHighlights(highlights);
     setPointMapCentre(highlights);
     setLoading(false);
+    setSlicedLands(DEFAULT_SLICED_PAGE);
   };
 
   const filterLandsByQuery = (lands: AssetEntity[], query: string) => {
@@ -126,15 +133,11 @@ const ExploreView: React.FC = () => {
 
     return lands.filter((land) => {
       const landName = land.name.toLowerCase();
-      const landOwner = land.decentralandData?.asset?.consumer?.id.toLowerCase();
-      return landName.includes(query) || landOwner?.includes(query);
+      return landName.includes(query);
     });
   };
 
   useEffect(() => {
-    queryParams.set('s', searchQuery);
-    history.push({ search: queryParams.toString() });
-
     if (!searchQuery.length) {
       getLands(sortColumn, sortDir, lastRentEnd);
     } else {
@@ -154,6 +157,17 @@ const ExploreView: React.FC = () => {
   useEffect(() => {
     getLands(sortColumn, sortDir, lastRentEnd);
   }, [wallet.account, sortColumn, sortDir, lastRentEnd]);
+
+  const slicedLandsInTotal = lands.slice(0, slicedLands).length;
+
+  const handleLoadMore = () => {
+    setSlicedLands(slicedLands + 8);
+    setLoadPercentageValue((slicedLandsInTotal * 100) / lands.length);
+  };
+
+  useEffect(() => {
+    setLoadPercentageValue((lands.slice(0, slicedLands).length * 100) / lands.length);
+  }, [lands, slicedLands]);
 
   return (
     <>
@@ -194,15 +208,27 @@ const ExploreView: React.FC = () => {
                 </Grid>
               ))
             ) : lands.length ? (
-              lands.map((land) => (
+              lands.slice(0, slicedLands).map((land) => (
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={4}>
-                  <LandWorkCard key={land.id} land={land} />
+                  <LandWorkCard
+                    onClick={() => {
+                      console.log('something happens');
+                    }}
+                    key={land.id}
+                    land={land}
+                  />
                 </Grid>
               ))
             ) : (
               <div>No properties are currently listed</div>
             )}
           </Grid>
+          <LoadMoreLands
+            textToDisplay={`List ${slicedLandsInTotal} of ${lands.length}`}
+            handleLoadMore={handleLoadMore}
+            percentageValue={loadPercentageValue}
+            disabled={slicedLandsInTotal === lands.length}
+          />
           <LayoutFooter isWrapped={false} />
         </div>
 
