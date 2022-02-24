@@ -5,12 +5,12 @@ import { useSubscription } from '@apollo/client';
 import { Grid } from '@mui/material';
 
 import useQueryParams from 'hooks/useQueryParams';
+import LayoutFooter from 'layout/components/layout-footer';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { LandsAction } from 'modules/land-works/components/lands-action';
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
-import LandsExploreFooter from 'modules/land-works/components/lands-explore-footer';
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
 import LandsExploreSubheader from 'modules/land-works/components/lands-explore-subheader';
 import LandsSearchBar from 'modules/land-works/components/lands-search';
@@ -203,7 +203,7 @@ const ExploreView: React.FC = () => {
               <div>No properties are currently listed</div>
             )}
           </Grid>
-          <LandsExploreFooter />
+          <LayoutFooter isWrapped={false} />
         </div>
 
         <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
