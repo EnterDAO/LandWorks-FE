@@ -993,9 +993,6 @@ export function fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder(
   orderColumn = 'totalRents',
   orderDirection: string
 ): Promise<PaginatedResult<AssetEntity>> {
-  const page = 1;
-  const limit = 4;
-
   return (
     GraphClient.get({
       query: gql`
@@ -1055,29 +1052,29 @@ export function fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder(
         statusNot: AssetStatus.WITHDRAWN,
       },
     })
-      .then(async (response) => {
-        // Paginate the result
-        let parsedAssets = parseAssets(response.data.assets);
-        if (orderColumn === 'pricePerSecond') {
-          if (orderDirection === 'asc') {
-            parsedAssets = parsedAssets.sort(sortAssetsByAscendingUsdPrice);
-          } else {
-            parsedAssets = parsedAssets.sort(sortAssetsByDescendingUsdPrice);
-          }
-        }
-        const paginatedAssets = parsedAssets.slice(limit * (page - 1), limit * page);
-
-        return {
-          data: parseAssets(paginatedAssets),
-          meta: { count: response.data.assets.length },
-        };
-      })
       // .then(async (response) => {
+      //   // Paginate the result
+      //   let parsedAssets = parseAssets(response.data.assets);
+      //   if (orderColumn === 'pricePerSecond') {
+      //     if (orderDirection === 'asc') {
+      //       parsedAssets = parsedAssets.sort(sortAssetsByAscendingUsdPrice);
+      //     } else {
+      //       parsedAssets = parsedAssets.sort(sortAssetsByDescendingUsdPrice);
+      //     }
+      //   }
+      //   const paginatedAssets = parsedAssets.slice(limit * (page - 1), limit * page);
+
       //   return {
-      //     data: parseAssets(response.data.assets),
+      //     data: parseAssets(paginatedAssets),
       //     meta: { count: response.data.assets.length },
       //   };
       // })
+      .then(async (response) => {
+        return {
+          data: parseAssets(response.data.assets),
+          meta: { count: response.data.assets.length },
+        };
+      })
       .catch((e) => {
         console.log(e);
         return { data: [], meta: { count: 0, block: 0 } };

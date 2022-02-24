@@ -169,6 +169,8 @@ const ExploreView: React.FC = () => {
     setLoadPercentageValue((lands.slice(0, slicedLands).length * 100) / lands.length);
   }, [lands, slicedLands]);
 
+  console.log({ lands });
+
   return (
     <>
       <div className="content-container--explore-view--header">
@@ -208,7 +210,7 @@ const ExploreView: React.FC = () => {
                 </Grid>
               ))
             ) : lands.length ? (
-              lands.map((land) => (
+              lands.slice(0, slicedLands).map((land) => (
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={4}>
                   <LandWorkCard
                     onClick={() => {
