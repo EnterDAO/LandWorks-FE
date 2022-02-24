@@ -1,6 +1,6 @@
 .operator {
   display: flex;
-
+  align-items: center;
   .edit-btn {
     border: none;
     background: rgba(255, 255, 255, 0.15);
@@ -12,7 +12,10 @@
     border-radius: 10px;
     margin-right: 10px;
   }
-  input {
+  .operator-input-link, input {
+    width: 100%;
+    color: #5D8FF0;
+    font-size: 12px;
     padding: 0px 10px 0px 8px !important;
   }
   svg {
