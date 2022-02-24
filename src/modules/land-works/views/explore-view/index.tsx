@@ -11,6 +11,7 @@ import LandWorkCard from 'modules/land-works/components/land-works-card-explore-
 import { LandsAction } from 'modules/land-works/components/lands-action';
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
+import { LoadMoreLands } from 'modules/land-works/components/lands-explore-load-more';
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
 import LandsExploreSubheader from 'modules/land-works/components/lands-explore-subheader';
 import LandsSearchBar from 'modules/land-works/components/lands-search';
@@ -54,6 +55,9 @@ const ExploreView: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
+
+  const [slicedLands, setSlicedLands] = useState(8);
+  const [loadPercentageValue, setLoadPercentageValue] = useState(0);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -155,6 +159,16 @@ const ExploreView: React.FC = () => {
     getLands(sortColumn, sortDir, lastRentEnd);
   }, [wallet.account, sortColumn, sortDir, lastRentEnd]);
 
+  const handleLoadMore = () => {
+    setSlicedLands(slicedLands + 8);
+    const slicedLandsInTotal = lands.slice(0, slicedLands).length;
+    setLoadPercentageValue((slicedLandsInTotal * 100) / lands.length);
+  };
+
+  useEffect(() => {
+    setLoadPercentageValue((lands.slice(0, slicedLands).length * 100) / lands.length);
+  }, [lands, slicedLands]);
+
   return (
     <>
       <div className="content-container--explore-view--header">
@@ -196,13 +210,24 @@ const ExploreView: React.FC = () => {
             ) : lands.length ? (
               lands.map((land) => (
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={4}>
-                  <LandWorkCard key={land.id} land={land} />
+                  <LandWorkCard
+                    onClick={() => {
+                      console.log('something happens');
+                    }}
+                    key={land.id}
+                    land={land}
+                  />
                 </Grid>
               ))
             ) : (
               <div>No properties are currently listed</div>
             )}
           </Grid>
+          <LoadMoreLands
+            textToDisplay={`List ${lands.slice(0, slicedLands).length} of ${lands.length}`}
+            handleLoadMore={handleLoadMore}
+            percentageValue={loadPercentageValue}
+          />
           <LayoutFooter isWrapped={false} />
         </div>
 
