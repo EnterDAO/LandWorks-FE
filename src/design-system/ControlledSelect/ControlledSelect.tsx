@@ -38,7 +38,6 @@ const StyledButton = styled('button')(
   background: ${THEME_COLORS.grey01};
   border: 1px solid ${THEME_COLORS.grey01};
   border-radius: 10px;
-  margin-top: 0.5em;
   padding: 10px;
   text-align: left;
   line-height: 1.5;

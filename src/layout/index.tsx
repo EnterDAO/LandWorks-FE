@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 import AntdSpin from 'antd/lib/spin';
 
@@ -20,6 +21,10 @@ const LandworksView = lazy(() => import('modules/land-works'));
 const client = GraphClient._getWsClient();
 
 const LayoutView: React.FC = () => {
+  const location = useLocation();
+
+  const isntExploreViewRoute = location.pathname.search('/explore') === -1;
+
   return (
     <div className={s.layout}>
       <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
@@ -39,7 +44,7 @@ const LayoutView: React.FC = () => {
                         </Suspense>
                       </ErrorBoundary>
                     </main>
-                    <LayoutFooter />
+                    {isntExploreViewRoute && <LayoutFooter />}
                   </ApolloProvider>
                 </Erc20Provider>
               </EstateRegistryProvider>

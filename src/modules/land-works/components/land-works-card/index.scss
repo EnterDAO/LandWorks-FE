@@ -78,7 +78,7 @@
   .price-eth-container {
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: flex-end;
   }
 
   .land-owner {
@@ -108,7 +108,7 @@
   }
 
   .land-price-info {
-    justify-content: end;
+    justify-content: flex-end;
     .price {
       color: rgba(177, 174, 201, 1);
       font-size: 12px;
@@ -232,7 +232,7 @@
   &-section {
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: flex-end;
     button {
       border: none;
       background: transparent;

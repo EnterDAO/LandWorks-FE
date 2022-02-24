@@ -1,7 +1,8 @@
 import 'react-tile-map/lib/styles.css';
 
-import { PureComponent } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 import { Coord, Layer, TileMap, TileMapProps } from 'react-tile-map';
+import { TILES_URL_DECENTRALEND } from 'constants/modules';
 
 import './Atlas.css';
 
@@ -19,7 +20,7 @@ export type AtlasTile = {
 
 export type { Layer, Coord };
 
-export type AtlasProps = Omit<TileMapProps, 'layers'> & {
+export type AtlasProps = Partial<TileMapProps> & {
   layers?: Layer[];
   tiles?: Record<string, AtlasTile>;
 };
@@ -28,7 +29,7 @@ export type AtlasState = {
   tiles?: Record<string, AtlasTile>;
 };
 
-const COLOR_BY_TYPE = Object.freeze({
+const COLOR_BY_TYPE: Record<number, string> = {
   0: '#ff9990', // my parcels
   1: '#ff4053', // my parcels on sale
   2: '#ff9990', // my estates
@@ -44,28 +45,18 @@ const COLOR_BY_TYPE = Object.freeze({
   12: '#18141a', // background
   13: '#110e13', // loading odd
   14: '#0d0b0e', // loading even
-});
+};
 
-export class Atlas extends PureComponent<AtlasProps, AtlasState> {
-  static defaultProps = {
-    ...TileMap.defaultProps,
-    layers: [],
-  };
+const Atlas: FC<AtlasProps> = (props) => {
+  const { tiles: propTiles, layers = [], className, ...rest } = props;
+  const [zoom, setZoom] = useState(props.zoom);
+  const [tiles, setTiles] = useState(propTiles);
 
-  state = {
-    tiles: this.props.tiles,
-  };
-
-  mounted = true;
-
-  layer: Layer = (x, y) => {
-    const { tiles } = this.state;
+  const layer: Layer = (x, y) => {
     const id = x + ',' + y;
     if (tiles && id in tiles) {
       const tile = tiles[id];
       return {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         color: COLOR_BY_TYPE[tile.type],
         top: !!tile.top,
         left: !!tile.left,
@@ -78,42 +69,38 @@ export class Atlas extends PureComponent<AtlasProps, AtlasState> {
     }
   };
 
-  static TILES_URL = 'https://api.decentraland.org/v1/tiles';
-
-  static fetchTiles = async (url: string = Atlas.TILES_URL): Promise<Record<string, AtlasTile>> => {
+  const fetchTiles = async (url: string = TILES_URL_DECENTRALEND): Promise<Record<string, AtlasTile>> => {
     if (!window.fetch) return {};
     const resp = await window.fetch(url);
     const json = await resp.json();
     return json.data as Record<string, AtlasTile>;
   };
 
-  componentDidMount(): void {
-    if (!this.state.tiles) {
-      Atlas.fetchTiles().then(this.handleUpdateTiles);
-    }
-    this.mounted = true;
-  }
-
-  componentDidUpdate(): void {
-    if (this.props.tiles && this.props.tiles !== this.state.tiles) {
-      this.setState({ tiles: this.props.tiles });
-    }
-  }
-
-  componentWillUnmount(): void {
-    this.mounted = false;
-  }
-
-  handleUpdateTiles = (tiles: Record<string, AtlasTile>): void => {
-    if (this.mounted) {
-      this.setState({ tiles });
-    }
+  const handleUpdateTiles = (tiles: Record<string, AtlasTile>): void => {
+    setTiles(tiles);
   };
 
-  render(): JSX.Element {
-    const { layers, className, ...rest } = this.props;
-    const classes = 'dcl atlas ' + className;
+  useEffect(() => {
+    if (props.tiles && props.tiles !== tiles) {
+      setTiles(tiles);
+    }
+  }, [props.tiles]);
 
-    return <TileMap {...rest} className={classes.trim()} layers={[this.layer, ...(layers as Layer[])]} />;
-  }
-}
+  useEffect(() => {
+    if (props.zoom && props.zoom !== zoom) {
+      setZoom(props.zoom);
+    }
+  }, [props.zoom]);
+
+  useEffect(() => {
+    if (!tiles) {
+      fetchTiles().then(handleUpdateTiles);
+    }
+  }, []);
+
+  return (
+    <TileMap zoom={zoom} {...rest} className={`dcl atlas ${className}`} layers={[layer, ...(layers as Layer[])]} />
+  );
+};
+
+export default memo(Atlas);

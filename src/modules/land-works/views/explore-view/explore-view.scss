@@ -1,0 +1,59 @@
+@import 'styles/variables.scss';
+@import 'styles/text.scss';
+
+.content-container--explore-view--header {
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background-color: #161621;
+  overflow: hidden;
+}
+
+.content-container.content-container--explore-view {
+  z-index: 0;
+  position: relative;
+  max-width: none;
+  overflow: hidden;
+
+  .lands-container {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-top: calc(var(--explore-subheader) + var(--explore-filters));
+
+    @media screen and (min-width: $screen-md-max) {
+      width: 50%;
+    }
+  }
+
+  .map-list-container {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 50%;
+    height: calc(
+      100vh - var(--navbar-height) - var(--explore-subheader) - var(--explore-filters) -
+        (var(--content-container-v-padding) * 2)
+    );
+
+    overflow: hidden;
+    border-radius: 20px 0px 0px 20px;
+    margin-top: var(--content-container-v-padding);
+    margin-bottom: var(--content-container-v-padding);
+    margin-left: var(--content-container-v-padding);
+    transition: left 250ms;
+    background-color: #662363;
+
+    &--expanded {
+      left: 0%;
+    }
+
+    @media screen and (min-width: $screen-md-max) {
+      display: block;
+    }
+  }
+}

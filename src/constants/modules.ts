@@ -98,3 +98,7 @@ export const sortDirections = [SortDirection.DESC, SortDirection.ASC, SortDirect
 export const tokenOptions = ['ETH', 'USDC'];
 
 export const metaverseOptions = ['Decentraland'];
+
+export const TILES_URL_DECENTRALEND = 'https://api.decentraland.org/v1/tiles';
+
+export const BASE_URL_DECENTRALEND = 'https://api.decentraland.org/v1';

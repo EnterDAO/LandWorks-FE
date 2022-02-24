@@ -1,0 +1,15 @@
+.root {
+  height: var(--explore-filters);
+  padding: 10px var(--horizontal-padding) 0;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+}

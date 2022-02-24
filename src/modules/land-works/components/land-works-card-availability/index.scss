@@ -1,0 +1,50 @@
+@import '../../../../styles/variables.scss';
+
+.land-works-card-availability {
+  display: inline-block;
+  background: $darkBlue01;
+  color: $light;
+  border: 1px solid transparent;
+  border-radius: 20px;
+
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  padding: 4px 11px;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 8px;
+    margin-right: 7px;
+  }
+
+  &--available {
+    border-color: #6cd27e;
+
+    &::before {
+      background-color: #6cd27e;
+    }
+  }
+
+  &--rented {
+    border-color: #d7606e;
+
+    &::before {
+      background-color: #d7606e;
+    }
+  }
+
+  &--delisted {
+    color: #B9B9D3;
+    border-color: #B9B9D3;
+
+    &::before {
+      background-color: #B9B9D3;
+    }
+  }
+}

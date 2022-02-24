@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-// import * as Antd from 'antd';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 

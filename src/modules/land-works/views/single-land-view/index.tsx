@@ -12,13 +12,7 @@ import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import ExternalLink from '../../../../components/custom/externalLink';
 import { useWallet } from '../../../../wallets/wallet';
-import {
-  ASSET_SUBSCRIPTION,
-  AssetEntity,
-  CoordinatesLAND,
-  fetchAdjacentDecentralandAssets,
-  parseAsset,
-} from '../../api';
+import { ASSET_SUBSCRIPTION, AssetEntity, fetchAdjacentDecentralandAssets, parseAsset } from '../../api';
 import LandWorkCard from '../../components/land-works-card';
 import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
@@ -28,6 +22,7 @@ import { WarningModal } from '../../components/lands-warning-modal';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 
+import { calculateNeighbours } from 'modules/land-works/utils';
 import { getNowTs } from '../../../../utils';
 
 import './index.scss';
@@ -70,21 +65,6 @@ const SingleLandView: React.FC = () => {
       setAsset(parseAsset(subscriptionData.data.asset));
     },
   });
-
-  const calculateNeighbours = (coordinatesList: CoordinatesLAND[]): string[] => {
-    let neighbours = [] as string[];
-    for (const coordinates of coordinatesList) {
-      neighbours = [...neighbours, ...getNeighbours(coordinates)];
-    }
-
-    return [...new Set(neighbours)].filter((item) => !coordinatesList.some((l) => l.id === item));
-  };
-
-  const getNeighbours = (coordinates: CoordinatesLAND): string[] => {
-    const numX = +coordinates.x;
-    const numY = +coordinates.y;
-    return [`${numX - 1}-${numY}`, `${numX}-${numY - 1}`, `${numX}-${numY + 1}`, `${numX + 1}-${numY}`];
-  };
 
   const shouldShowWithdraw = () => {
     return isOwnerOrConsumer() && asset?.status === AssetStatus.DELISTED;
