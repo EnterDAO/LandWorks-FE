@@ -60,7 +60,7 @@
     }
     .property-button {
       display: flex;
-      justify-content: end;
+      justify-content: flex-end;
 
       &:nth-child(1) {
         margin-bottom: 10px;
@@ -108,7 +108,7 @@
   }
 
   .land-info-row {
-    justify-content: end;
+    justify-content: flex-end;
     display: flex;
   }
   .card-hot-label{

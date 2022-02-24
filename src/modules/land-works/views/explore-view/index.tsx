@@ -204,13 +204,7 @@ const ExploreView: React.FC = () => {
             ) : lands.length ? (
               lands.slice(0, slicedLands).map((land) => (
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={4}>
-                  <LandWorkCard
-                    onClick={() => {
-                      console.log('something happens');
-                    }}
-                    key={land.id}
-                    land={land}
-                  />
+                  <LandWorkCard key={land.id} land={land} />
                 </Grid>
               ))
             ) : (
