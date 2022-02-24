@@ -32,7 +32,7 @@ import {
   AssetEntity,
   USER_SUBSCRIPTION,
   UserEntity,
-  fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder,
+  fetchListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   parseUser,
 } from '../../api';
 
@@ -160,7 +160,7 @@ const LandsView: React.FC = () => {
     orderColumn: string,
     sortDir: string
   ) => {
-    const lands = await fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
+    const lands = await fetchListedAssetsByMetaverseAndGetLastRentEndWithOrder(
       page,
       pageSize,
       metaverse,

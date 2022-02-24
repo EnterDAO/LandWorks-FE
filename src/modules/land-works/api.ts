@@ -888,7 +888,7 @@ export function fetchAssetRentByTimestamp(assetId: string, timestamp: number): P
  * @param orderDirection asc or desc
  * Default '0'. Used to determined Availability of assets
  */
-export function fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
+export function fetchListedAssetsByMetaverseAndGetLastRentEndWithOrder(
   page = 1,
   limit = 6,
   metaverse = '1',
@@ -987,15 +987,14 @@ export function fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
  * @param orderDirection asc or desc
  * Default '0'. Used to determined Availability of assets
  */
-export function fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder(
+export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
   metaverse = '1',
   lastRentEnd = '0',
   orderColumn = 'totalRents',
   orderDirection: string
 ): Promise<PaginatedResult<AssetEntity>> {
-  return (
-    GraphClient.get({
-      query: gql`
+  return GraphClient.get({
+    query: gql`
       query GetAssets(
         $metaverse: String
         $lastRentEnd: String
@@ -1044,42 +1043,24 @@ export function fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder(
         }
       }
     `,
-      variables: {
-        lastRentEnd: lastRentEnd,
-        metaverse: metaverse,
-        orderColumn: orderColumn,
-        orderDirection: orderDirection,
-        statusNot: AssetStatus.WITHDRAWN,
-      },
+    variables: {
+      lastRentEnd: lastRentEnd,
+      metaverse: metaverse,
+      orderColumn: orderColumn,
+      orderDirection: orderDirection,
+      statusNot: AssetStatus.WITHDRAWN,
+    },
+  })
+    .then(async (response) => {
+      return {
+        data: parseAssets(response.data.assets),
+        meta: { count: response.data.assets.length },
+      };
     })
-      // .then(async (response) => {
-      //   // Paginate the result
-      //   let parsedAssets = parseAssets(response.data.assets);
-      //   if (orderColumn === 'pricePerSecond') {
-      //     if (orderDirection === 'asc') {
-      //       parsedAssets = parsedAssets.sort(sortAssetsByAscendingUsdPrice);
-      //     } else {
-      //       parsedAssets = parsedAssets.sort(sortAssetsByDescendingUsdPrice);
-      //     }
-      //   }
-      //   const paginatedAssets = parsedAssets.slice(limit * (page - 1), limit * page);
-
-      //   return {
-      //     data: parseAssets(paginatedAssets),
-      //     meta: { count: response.data.assets.length },
-      //   };
-      // })
-      .then(async (response) => {
-        return {
-          data: parseAssets(response.data.assets),
-          meta: { count: response.data.assets.length },
-        };
-      })
-      .catch((e) => {
-        console.log(e);
-        return { data: [], meta: { count: 0, block: 0 } };
-      })
-  );
+    .catch((e) => {
+      console.log(e);
+      return { data: [], meta: { count: 0, block: 0 } };
+    });
 }
 
 export function parseAssetRents(asset: any): PaginatedResult<RentEntity> {
