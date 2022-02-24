@@ -1,21 +1,31 @@
 .estate-overlay-container {
   position: absolute;
-  top: 88%;
-  text-align: center;
+  bottom: 4%;
+  right: 4%;
   display: flex;
+  flex-direction: column;
   justify-content: right;
   width: 100%;
+  max-width: 217px;
+  background-color: #161622;
+  padding: 16px;
+  border-radius: 20px;
+  
+  .title {
+    font-size: 14px;
+    color: #fff;
+  }
 }
 
 .estate-land {
   background-color: #1e1e2e;
-  color: white;
+  color: var(--theme-subtle-color);
   font-size: 12px;
   border-radius: 5px;
-  width: 56px;
+  max-width: 88px;
   height: 28px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 8px;
+  margin: 2px;
 }
