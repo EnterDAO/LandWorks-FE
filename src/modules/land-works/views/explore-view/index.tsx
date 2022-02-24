@@ -22,7 +22,7 @@ import {
   CoordinatesLAND,
   USER_SUBSCRIPTION,
   UserEntity,
-  fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder,
+  fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   parseUser,
 } from '../../api';
 
@@ -109,7 +109,7 @@ const ExploreView: React.FC = () => {
   const getLands = async (orderColumn: string, sortDir: string, lastRentEnd: string) => {
     setLoading(true);
 
-    const lands = await fetchAllListedAssetsByMetaverseAndGteLastRentEndWithOrder(
+    const lands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
       DECENTRALAND_METAVERSE,
       lastRentEnd,
       orderColumn,
@@ -159,17 +159,16 @@ const ExploreView: React.FC = () => {
     getLands(sortColumn, sortDir, lastRentEnd);
   }, [wallet.account, sortColumn, sortDir, lastRentEnd]);
 
+  const slicedLandsInTotal = lands.slice(0, slicedLands).length;
+
   const handleLoadMore = () => {
     setSlicedLands(slicedLands + 8);
-    const slicedLandsInTotal = lands.slice(0, slicedLands).length;
     setLoadPercentageValue((slicedLandsInTotal * 100) / lands.length);
   };
 
   useEffect(() => {
     setLoadPercentageValue((lands.slice(0, slicedLands).length * 100) / lands.length);
   }, [lands, slicedLands]);
-
-  console.log({ lands });
 
   return (
     <>
@@ -226,9 +225,10 @@ const ExploreView: React.FC = () => {
             )}
           </Grid>
           <LoadMoreLands
-            textToDisplay={`List ${lands.slice(0, slicedLands).length} of ${lands.length}`}
+            textToDisplay={`List ${slicedLandsInTotal} of ${lands.length}`}
             handleLoadMore={handleLoadMore}
             percentageValue={loadPercentageValue}
+            disabled={slicedLandsInTotal === lands.length}
           />
           <LayoutFooter isWrapped={false} />
         </div>
