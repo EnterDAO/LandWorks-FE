@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { DECENTRALAND_METAVERSE, DEFAULT_LAST_RENT_END, sortColumns, sortDirections } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { Grid } from '@mui/material';
 
-import useQueryParams from 'hooks/useQueryParams';
 import LayoutFooter from 'layout/components/layout-footer';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
@@ -33,7 +31,6 @@ import './explore-view.scss';
 
 const ExploreView: React.FC = () => {
   const wallet = useWallet();
-  const queryParams = useQueryParams();
 
   const [lands, setLands] = useState([] as AssetEntity[]);
   const [showClaimModal, setShowClaimModal] = useState(false);
@@ -48,8 +45,7 @@ const ExploreView: React.FC = () => {
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
 
-  const history = useHistory();
-  const [searchQuery, setSearchQuery] = useState(queryParams.get('s') || '');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -130,15 +126,11 @@ const ExploreView: React.FC = () => {
 
     return lands.filter((land) => {
       const landName = land.name.toLowerCase();
-      const landOwner = land.decentralandData?.asset?.consumer?.id.toLowerCase();
-      return landName.includes(query) || landOwner?.includes(query);
+      return landName.includes(query);
     });
   };
 
   useEffect(() => {
-    queryParams.set('s', searchQuery);
-    history.push({ search: queryParams.toString() });
-
     if (!searchQuery.length) {
       getLands(sortColumn, sortDir, lastRentEnd);
     } else {
