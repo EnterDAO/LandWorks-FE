@@ -1,8 +1,23 @@
 .root {
   display: block;
   margin-top: 30px;
-  padding-top: 30px;
+
+  &--wrapped {
+    width: 100%;
+    margin: 0 auto;
+    max-width: calc((var(--horizontal-padding) * 2) + 1100px);
+    padding-left: var(--horizontal-padding);
+    padding-right: var(--horizontal-padding);
+
+    .container {
+      padding-top: 50px;
+    }
+  }
+}
+
+.container {
   border-top: 2px solid #1e1e2e;
+  padding-top: 30px;
 }
 
 .social-media-container,
