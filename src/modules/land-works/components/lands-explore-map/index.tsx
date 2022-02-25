@@ -13,28 +13,48 @@ interface Props {
   positionX: number;
   positionY: number;
   expanded: boolean;
-  onClick: () => void;
+  onClick?: () => void;
   highlights?: CoordinatesLAND[];
 }
 
 const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, highlights = [] }) => {
-  const [zoom, setZoom] = useState(1);
+  const [clickZoom, setClickZoom] = useState(0.5);
+  const [scrollZoom, setScrollZoom] = useState(0.5);
   const [highlightedTiles, setHighlightedTiles] = useState<Coord[]>([]);
 
   const onClickToggleSizeHandler = () => {
-    onClick();
+    onClick && onClick();
   };
 
   const onClickPlusHandler = () => {
+    let zoom = clickZoom;
+
+    if (scrollZoom !== clickZoom) {
+      zoom = scrollZoom;
+    }
+
     if (zoom < 3) {
-      setZoom(zoom + 1);
+      setClickZoom(zoom + 1);
+      setScrollZoom(zoom + 1);
     }
   };
 
   const onClickMinusHandler = () => {
-    if (zoom > 0) {
-      setZoom(zoom - 1);
+    let zoom = clickZoom;
+
+    if (scrollZoom !== clickZoom) {
+      zoom = scrollZoom;
     }
+
+    if (zoom < 3 && zoom > 0.5) {
+      setClickZoom(zoom - 1);
+      setScrollZoom(zoom - 1);
+    }
+  };
+
+  const onChangeAtlasHandler = (data: { zoom: number }) => {
+    setClickZoom(data.zoom);
+    setScrollZoom(data.zoom);
   };
 
   function isSelected(x: number, y: number) {
@@ -58,19 +78,27 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
     });
   }, [highlights]);
 
+  console.log('clickZoom', clickZoom, 'scrollZoom', scrollZoom);
+
   return (
     <div className={styles.root}>
-      <Atlas x={positionX} y={positionY} zoom={zoom} layers={[highlightedStrokeLayer, highlightedFillLayer]} />
+      <Atlas
+        x={positionX}
+        y={positionY}
+        zoom={clickZoom}
+        layers={[highlightedStrokeLayer, highlightedFillLayer]}
+        onChange={onChangeAtlasHandler}
+      />
       <div className={styles['expand-control']}>
         <Button variant="secondary" type="button" onClick={onClickToggleSizeHandler}>
           {expanded ? <ArrowRightIcon /> : <ArrowLeftIcon />}
         </Button>
       </div>
       <div className={styles['zoom-control']}>
-        <Button variant="secondary" type="button" onClick={onClickPlusHandler} disabled={zoom > 2}>
+        <Button variant="secondary" type="button" onClick={onClickPlusHandler} disabled={clickZoom > 2.8}>
           <PlusIcon />
         </Button>
-        <Button variant="secondary" type="button" onClick={onClickMinusHandler} disabled={zoom === 0}>
+        <Button variant="secondary" type="button" onClick={onClickMinusHandler} disabled={clickZoom <= 0.5}>
           <MinusIcon />
         </Button>
       </div>

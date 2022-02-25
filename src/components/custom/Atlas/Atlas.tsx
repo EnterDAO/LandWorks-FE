@@ -1,6 +1,6 @@
 import 'react-tile-map/lib/styles.css';
 
-import { FC, memo, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Coord, Layer, TileMap, TileMapProps } from 'react-tile-map';
 import { TILES_URL_DECENTRALEND } from 'constants/modules';
 
@@ -23,6 +23,7 @@ export type { Layer, Coord };
 export type AtlasProps = Partial<TileMapProps> & {
   layers?: Layer[];
   tiles?: Record<string, AtlasTile>;
+  onChange?: (data: { zoom: number }) => void;
 };
 
 export type AtlasState = {
@@ -48,7 +49,7 @@ const COLOR_BY_TYPE: Record<number, string> = {
 };
 
 const Atlas: FC<AtlasProps> = (props) => {
-  const { tiles: propTiles, layers = [], className, ...rest } = props;
+  const { tiles: propTiles, layers = [], onChange, ...rest } = props;
   const [zoom, setZoom] = useState(props.zoom);
   const [tiles, setTiles] = useState(propTiles);
 
@@ -99,8 +100,15 @@ const Atlas: FC<AtlasProps> = (props) => {
   }, []);
 
   return (
-    <TileMap zoom={zoom} {...rest} className={`dcl atlas ${className}`} layers={[layer, ...(layers as Layer[])]} />
+    <TileMap
+      // onPopup={(args) => console.log('onPopup', args)}
+      onChange={onChange}
+      zoom={zoom}
+      {...rest}
+      className="dcl atlas"
+      layers={[layer, ...(layers as Layer[])]}
+    />
   );
 };
 
-export default memo(Atlas);
+export default Atlas;

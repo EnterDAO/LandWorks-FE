@@ -24,7 +24,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land, onClick }) => {
         <img className="land-explore-image-img" src={getLandImageUrl(land)} alt="land-explore-image-img" />
       </div>
       {land.isHot && (
-        <span className="land-explore-card-hot label card-name-hot-label">
+        <span className="land-explore-card-hot">
           <HotIcon className="name-label" />
         </span>
       )}
