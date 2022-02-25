@@ -79,7 +79,9 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
           {land?.availability?.isRentable && (
             <Col span={12}>
               <p className="available-heading">Rent period</p>
-              <p className="available-period">{land.availability?.label}</p>
+              <p className="available-period">
+                {land.minPeriodTimedType}-{land.maxPeriodTimedType}
+              </p>
             </Col>
           )}
 

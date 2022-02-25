@@ -6,6 +6,7 @@ import { ActionMeta, SingleValue } from 'react-select';
 import {
   AtMostRentPeriodOptions,
   DEFAULT_FUTURE_PERIOD,
+  DEFAULT_LIST_MAX_PERIOD,
   DEFAULT_MAX_PERIOD,
   DEFAULT_MIN_PERIOD,
   DEFAULT_PROPERTY,
@@ -63,12 +64,12 @@ const ListPropertyView: React.FC = () => {
 
   const [maxPeriod, setMaxPeriod] = useState(DEFAULT_FUTURE_PERIOD);
   const [isMaxPeriodSelected, setMaxPeriodSelected] = useState(true);
-  const [maxInput, setMaxInput] = useState(DEFAULT_MAX_PERIOD);
+  const [maxInput, setMaxInput] = useState(DEFAULT_LIST_MAX_PERIOD);
   const [maxPeriodType, setMaxPeriodType] = useState(BigNumber.from(MaxRentPeriodOptions[3].value));
   const [maxPeriodSelectedOption, setMaxPeriodSelectedOption] = useState(MaxRentPeriodOptions[3]); // Selected Option Value for the select menu
 
   const [maxFutureTime, setMaxFutureTime] = useState(DEFAULT_FUTURE_PERIOD);
-  const [maxFutureTimeInput, setMaxFutureTimeInput] = useState(DEFAULT_MAX_PERIOD);
+  const [maxFutureTimeInput, setMaxFutureTimeInput] = useState(DEFAULT_LIST_MAX_PERIOD);
   const [maxFutureTimePeriod, setMaxFuturePeriodType] = useState(BigNumber.from(AtMostRentPeriodOptions[3].value));
   const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[3]); // Selected Option Value for the select menu
 

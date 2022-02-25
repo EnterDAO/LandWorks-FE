@@ -6,7 +6,7 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 import { isAddress } from 'web3-utils';
 import { DEFAULT_ADDRESS } from 'web3/utils';
 
-import { Data, DecentralandData } from './modules/land-works/api';
+import { Data, DecentralandData, ExtractedTime, ParsedDate } from './modules/land-works/api';
 
 export function getNowTs(): number {
   return Math.floor(Date.now() / 1_000);
@@ -223,13 +223,6 @@ export function toNumber(value: number | string | undefined): number | undefined
   return val;
 }
 
-export type ParsedDate = {
-  minutes: number;
-  hours: number;
-  days: number;
-  weeks: number;
-};
-
 export function secondsToDuration(value: number): ParsedDate {
   const result: ParsedDate = {
     minutes: 0,
@@ -260,11 +253,6 @@ export function secondsToDuration(value: number): ParsedDate {
 
   return result;
 }
-
-type ExtractedTime = {
-  timeType: string;
-  timeValue: number;
-};
 
 const TIME_TYPES = {
   MINUTE: 'min',
@@ -324,4 +312,10 @@ export function getTimeType(values: ParsedDate): ExtractedTime {
   }
 
   return result;
+}
+
+export function getTimeTypeStr(values: ParsedDate): string {
+  const { timeValue, timeType } = getTimeType(values);
+
+  return `${timeValue} ${timeType}`;
 }
