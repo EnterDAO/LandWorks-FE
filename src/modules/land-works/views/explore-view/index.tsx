@@ -67,11 +67,6 @@ const ExploreView: React.FC = () => {
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState(DEFAULT_TOKEN_ADDRESS);
 
-  const getPaymentTokens = async () => {
-    const tokens = await fetchTokenPayments();
-    setPaymentTokens(tokens);
-  };
-
   useEffect(() => {
     getPaymentTokens();
   }, [paymentToken, lastRentEnd, lands]);
@@ -127,6 +122,11 @@ const ExploreView: React.FC = () => {
     const sortIndex = Number(value) - 1;
     // setSelectedCurrency(value); // this sets the value for the label in the dropdown
     setPaymentToken(paymentTokens[sortIndex].id);
+  };
+
+  const getPaymentTokens = async () => {
+    const tokens = await fetchTokenPayments();
+    setPaymentTokens(tokens);
   };
 
   const getLands = async (orderColumn: string, sortDir: string, lastRentEnd: string, paymentToken: string) => {
