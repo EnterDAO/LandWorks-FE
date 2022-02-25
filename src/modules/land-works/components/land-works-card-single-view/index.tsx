@@ -319,7 +319,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
             <Countdown date={Number(countDownTimestamp) * 1000} zeroPadTime={3} renderer={renderCountdown} />
           </Grid>
           <Grid item>
-            <p className="rented-on">rent starts in</p>
+            <p className="rented-on">{Number(countDownTimestamp) > getNowTs() ? 'rent ends in' : 'rent starts in'}</p>
           </Grid>
         </Grid>
       )}
