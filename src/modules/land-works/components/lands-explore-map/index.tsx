@@ -78,8 +78,6 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
     });
   }, [highlights]);
 
-  console.log('clickZoom', clickZoom, 'scrollZoom', scrollZoom);
-
   return (
     <div className={styles.root}>
       <Atlas
