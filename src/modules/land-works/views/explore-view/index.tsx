@@ -123,7 +123,7 @@ const ExploreView: React.FC = () => {
     setLastRentEnd(value ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
   };
 
-  const onCurrencyChange = (value: number) => {
+  const onChangeFiltersCurrency = (value: number) => {
     const sortIndex = Number(value) - 1;
     // setSelectedCurrency(value); // this sets the value for the label in the dropdown
     setPaymentToken(paymentTokens[sortIndex].id);
@@ -183,7 +183,7 @@ const ExploreView: React.FC = () => {
   const slicedLandsInTotal = lands.slice(0, slicedLands).length;
 
   const handleLoadMore = () => {
-    setSlicedLands(slicedLands + 8);
+    setSlicedLands(slicedLands + DEFAULT_SLICED_PAGE);
     setLoadPercentageValue((slicedLandsInTotal * 100) / lands.length);
   };
 
@@ -202,7 +202,7 @@ const ExploreView: React.FC = () => {
           onChangeSortDirection={onChangeFiltersSortDirection}
           onChangeOwnerToggler={onChangeFiltersOwnerToggler}
           onChangeAvailable={onChangeFiltersAvailable}
-          onCurrencyChange={onCurrencyChange}
+          onChangeCurrency={onChangeFiltersCurrency}
         />
       </div>
 
