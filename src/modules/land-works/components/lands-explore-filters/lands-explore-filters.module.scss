@@ -1,11 +1,14 @@
 .root {
   height: var(--explore-filters);
   padding: 10px var(--horizontal-padding) 0;
+  position: relative;
 }
 
 .container {
+  // position: absolute;
   display: flex;
   align-items: center;
+  width: calc(100% - var(--horizontal-padding));
   justify-content: space-between;
 }
 

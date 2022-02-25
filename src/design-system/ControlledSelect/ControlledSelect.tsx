@@ -79,6 +79,7 @@ const StyledListbox = styled('ul')(
   color: ${THEME_COLORS.light};
   overflow: auto;
   outline: 0px;
+  box-shadow: 0px 4px 12px -3px rgba(0,0,0,0.75);
   `
 );
 
@@ -91,7 +92,7 @@ const StyledOption = styled(OptionUnstyled)(
   display: flex;
   flex-direction: row;
   align-items: center;
-  
+
   &:last-of-type {
     border-bottom: none;
   }

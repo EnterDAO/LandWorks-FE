@@ -12,9 +12,15 @@ interface Props {
   onChangeSortDirection: (value: number) => void;
   onChangeOwnerToggler: (value: boolean) => void;
   onChangeAvailable: (value: boolean) => void;
+  onCurrencyChange: (value: number) => void;
 }
 
-const LandWorksFilters: FC<Props> = ({ onChangeSortDirection, onChangeOwnerToggler, onChangeAvailable }) => {
+const LandWorksFilters: FC<Props> = ({
+  onChangeSortDirection,
+  onChangeOwnerToggler,
+  onChangeAvailable,
+  onCurrencyChange,
+}) => {
   const wallet = useWallet();
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
@@ -53,6 +59,7 @@ const LandWorksFilters: FC<Props> = ({ onChangeSortDirection, onChangeOwnerToggl
     const sortIndex = Number(value) - 1;
     setSelectedCurrency(value);
     setCurrency(tokenOptions[sortIndex]);
+    onCurrencyChange(value);
   };
 
   return (
