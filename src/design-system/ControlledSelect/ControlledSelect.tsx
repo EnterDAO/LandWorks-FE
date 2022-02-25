@@ -142,7 +142,6 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
   return (
     <div style={{ width: width }}>
       <CustomSelect
-        width={width}
         value={value}
         onChange={(e) => {
           if (e) {
