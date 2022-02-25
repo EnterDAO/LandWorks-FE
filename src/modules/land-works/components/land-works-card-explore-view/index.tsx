@@ -60,12 +60,12 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land, onClick }) => {
       <div className="land-explore-divider"></div>
 
       <div className="land-explore-row">
-        {land?.availability?.isRentable && (
-          <div>
-            <span className="land-explore-rent-label">Rent period</span>
-            <p className="land-explore-rent-value">{land.availability?.label}</p>
-          </div>
-        )}
+        <div>
+          <span className="land-explore-rent-label">Rent period</span>
+          <p className="land-explore-rent-value">
+            {land.minPeriodTimedType}-{land.maxPeriodTimedType}
+          </p>
+        </div>
         <div>
           <LandCardAvailability land={land} />
         </div>

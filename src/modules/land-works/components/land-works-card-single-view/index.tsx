@@ -19,7 +19,7 @@ import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 import { LandsTooltip } from '../lands-tooltip';
 
-import { ParsedDate, getNowTs, secondsToDuration } from '../../../../utils';
+import { getNowTs } from '../../../../utils';
 import { ZERO_BIG_NUMBER, getDecentralandPlayUrl, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
 
 import './index.scss';
@@ -49,7 +49,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const [currentRent, setCurrentRent] = useState({} as RentEntity);
   const [countDownRent, setCountDownRent] = useState({} as RentEntity);
   const [countDownTimestamp, setCountDownTimestamp] = useState('0');
-  const [maxRentQueue, setMaxRentQueue] = useState<ParsedDate>();
 
   const isOwnerOrConsumer = () => {
     return (
@@ -140,17 +139,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     };
   }, []);
 
-  const renderMaxRentQueue = () => {
-    if (maxRentQueue)
-      return maxRentQueue.weeks
-        ? `${maxRentQueue.weeks} weeks`
-        : maxRentQueue.days
-        ? `${maxRentQueue.days} days`
-        : maxRentQueue.hours
-        ? `${maxRentQueue.hours} hours`
-        : `${maxRentQueue.minutes} minutes`;
-  };
-
   const renderCountdown = (props: CountdownTimeDelta) => {
     const days = props.days > 0 ? `${props.days} : ` : '';
     const hours = props.hours > 0 ? `${zeroPad(props.hours)} : ` : '';
@@ -165,9 +153,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const [ensOperator, setEnsOperator] = useState<string>();
 
   useEffect(() => {
-    if (asset) {
-      setMaxRentQueue(secondsToDuration(Number(asset.maxFutureTime)));
-    }
     if (asset?.owner?.id)
       getENSName(asset?.owner?.id).then((ensName) => {
         setEns(ensName);
@@ -247,35 +232,16 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
               <Grid item xs={12} sm={7} md={12} lg={7} className="price-wrapper">
                 {asset?.availability?.isRentable && (
                   <Grid item className="period-wrapper">
-                    {(asset?.availability?.availabilityTime?.minAvailabilityTime > 0 ||
-                      asset?.availability?.availabilityTime?.maxAvailabilityTime > 0) && (
-                      <span className="period-title">Rent period</span>
-                    )}
+                    <span className="period-title">Rent period</span>
                     <span className="available-period">
-                      {asset?.availability?.availabilityTime?.minAvailabilityTime > 0 && (
-                        <>
-                          <span className="label">
-                            {asset?.availability?.availabilityTime?.minAvailabilityTime}{' '}
-                            {asset?.availability?.availabilityTime?.minAvailabilityType}
-                          </span>
-                          <span className="period-separator">-</span>
-                        </>
-                      )}
-                      {asset?.availability?.availabilityTime?.maxAvailabilityTime > 0 && (
-                        <span className="label">
-                          {asset?.availability?.availabilityTime?.maxAvailabilityTime}{' '}
-                          {asset?.availability?.availabilityTime?.maxAvailabilityType}
-                        </span>
-                      )}
+                      <span className="label">{asset.minPeriodTimedType}</span>
+                      <span className="period-separator">-</span>
+                      <span className="label">{asset.maxPeriodTimedType}</span>
                     </span>
-                    {maxRentQueue && (
-                      <>
-                        <span className="period-title">Max Rent Queue</span>
-                        <span className="available-period">
-                          {maxRentQueue && <span className="label">{renderMaxRentQueue()}</span>}
-                        </span>
-                      </>
-                    )}
+                    <span className="period-title">Max Rent Queue</span>
+                    <span className="available-period">
+                      <span className="label">{asset.maxFutureTimeTimedType}</span>
+                    </span>
                   </Grid>
                 )}
                 <Grid item>
