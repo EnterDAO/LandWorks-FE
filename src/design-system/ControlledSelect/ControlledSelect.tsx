@@ -126,8 +126,6 @@ function CustomSelect(props: SelectUnstyledProps<number>) {
     ...props.components,
   };
 
-  console.log({ props });
-
   return <SelectUnstyled {...props} components={components} />;
 }
 
@@ -149,7 +147,6 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
         onChange={(e) => {
           if (e) {
             onChange(e);
-            console.log('change occurred', e);
           }
         }}
       >
