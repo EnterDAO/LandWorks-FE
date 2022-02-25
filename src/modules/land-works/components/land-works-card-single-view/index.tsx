@@ -140,6 +140,10 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   }, []);
 
   const renderCountdown = (props: CountdownTimeDelta) => {
+    if (props.completed) {
+      setCountDownRent({} as RentEntity);
+      setCountDownTimestamp('0');
+    }
     const days = props.days > 0 ? `${props.days} : ` : '';
     const hours = props.hours > 0 ? `${zeroPad(props.hours)} : ` : '';
     const minutes = props.minutes > 0 ? `${zeroPad(props.minutes)} : ` : '';
@@ -292,7 +296,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       type="button"
                       className={'button-primary '}
                       disabled={isRentButtonDisabled || isNotListed() || !asset?.availability?.isRentable}
-                      onClick={() => (isAvailable ? handleRent() : console.log())}
+                      onClick={handleRent}
                     >
                       <span>{isAvailable ? 'RENT NOW' : 'RENT NEXT SLOT'}</span>
                     </button>
