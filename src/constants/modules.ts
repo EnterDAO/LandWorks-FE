@@ -104,3 +104,5 @@ export const TILES_URL_DECENTRALEND = 'https://api.decentraland.org/v1/tiles';
 export const BASE_URL_DECENTRALEND = 'https://api.decentraland.org/v1';
 
 export const DEFAULT_SLICED_PAGE = 4;
+
+export const DEFAULT_TOKEN_ADDRESS = '0x0000000000000000000000000000000000000001';

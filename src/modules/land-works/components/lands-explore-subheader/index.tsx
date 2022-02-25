@@ -22,7 +22,7 @@ const LandsExploreSubheader: React.FC<Props> = ({ totalLands, hasMetamaskConnect
         <div className={styles['add-token-wrapper']}>
           <button
             type="button"
-            className={`button-primary ${styles['list-new-property-button']}`}
+            className={`button-primary ${styles['list-new-property-button']} ${styles['button-primary']}`}
             onClick={() => history.push('/list')}
           >
             <AddIcon className={`add-icon`} />

@@ -12,9 +12,15 @@ interface Props {
   onChangeSortDirection: (value: number) => void;
   onChangeOwnerToggler: (value: boolean) => void;
   onChangeAvailable: (value: boolean) => void;
+  onChangeCurrency: (value: number) => void;
 }
 
-const LandWorksFilters: FC<Props> = ({ onChangeSortDirection, onChangeOwnerToggler, onChangeAvailable }) => {
+const LandWorksFilters: FC<Props> = ({
+  onChangeSortDirection,
+  onChangeOwnerToggler,
+  onChangeAvailable,
+  onChangeCurrency,
+}) => {
   const wallet = useWallet();
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
@@ -53,6 +59,7 @@ const LandWorksFilters: FC<Props> = ({ onChangeSortDirection, onChangeOwnerToggl
     const sortIndex = Number(value) - 1;
     setSelectedCurrency(value);
     setCurrency(tokenOptions[sortIndex]);
+    onChangeCurrency(value);
   };
 
   return (
@@ -60,10 +67,20 @@ const LandWorksFilters: FC<Props> = ({ onChangeSortDirection, onChangeOwnerToggl
       <Box className={styles.container}>
         <Box className={styles.box} style={{ width: '400px' }}>
           <Box className={styles.box} style={{ marginRight: '20px' }}>
-            <ControlledSelect value={selectedMetaverse} onChange={onChangePlaceHandler} options={landsData} />
+            <ControlledSelect
+              width={'12rem'}
+              value={selectedMetaverse}
+              onChange={onChangePlaceHandler}
+              options={landsData}
+            />
           </Box>
           <Box className={styles.box}>
-            <ControlledSelect value={selectedCurrency} onChange={onChangeCurrencyHandler} options={currencyData} />
+            <ControlledSelect
+              width={'6rem'}
+              value={selectedCurrency}
+              onChange={onChangeCurrencyHandler}
+              options={currencyData}
+            />
           </Box>
         </Box>
         <Box className={styles.box}>
@@ -81,7 +98,12 @@ const LandWorksFilters: FC<Props> = ({ onChangeSortDirection, onChangeOwnerToggl
               <StyledSwitch checked={showOnlyAvailable} onChange={onChangeAvailableHandler} />
             </Box>
           </Box>
-          <ControlledSelect value={selectedOrder} onChange={onChangeSortDirectionHandler} options={sortData} />
+          <ControlledSelect
+            width={'12rem'}
+            value={selectedOrder}
+            onChange={onChangeSortDirectionHandler}
+            options={sortData}
+          />
         </Box>
       </Box>
     </div>

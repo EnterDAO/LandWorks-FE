@@ -3,6 +3,7 @@ import {
   DECENTRALAND_METAVERSE,
   DEFAULT_LAST_RENT_END,
   DEFAULT_SLICED_PAGE,
+  DEFAULT_TOKEN_ADDRESS,
   sortColumns,
   sortDirections,
 } from 'constants/modules';
@@ -24,9 +25,11 @@ import { useWallet } from 'wallets/wallet';
 import {
   AssetEntity,
   CoordinatesLAND,
+  PaymentToken,
   USER_SUBSCRIPTION,
   UserEntity,
   fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
+  fetchTokenPayments,
   parseUser,
 } from '../../api';
 
@@ -60,6 +63,13 @@ const ExploreView: React.FC = () => {
 
   const [slicedLands, setSlicedLands] = useState(DEFAULT_SLICED_PAGE);
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
+
+  const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
+  const [paymentToken, setPaymentToken] = useState(DEFAULT_TOKEN_ADDRESS);
+
+  useEffect(() => {
+    getPaymentTokens();
+  }, [paymentToken, lastRentEnd, lands]);
 
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -100,7 +110,7 @@ const ExploreView: React.FC = () => {
     if (value) {
       setLands(user?.ownerAndConsumerAssets || []);
     } else {
-      getLands(sortColumn, sortDir, lastRentEnd);
+      getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
     }
   };
 
@@ -108,14 +118,26 @@ const ExploreView: React.FC = () => {
     setLastRentEnd(value ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
   };
 
-  const getLands = async (orderColumn: string, sortDir: string, lastRentEnd: string) => {
+  const onChangeFiltersCurrency = (value: number) => {
+    const sortIndex = Number(value) - 1;
+    // setSelectedCurrency(value); // this sets the value for the label in the dropdown
+    setPaymentToken(paymentTokens[sortIndex].id);
+  };
+
+  const getPaymentTokens = async () => {
+    const tokens = await fetchTokenPayments();
+    setPaymentTokens(tokens);
+  };
+
+  const getLands = async (orderColumn: string, sortDir: string, lastRentEnd: string, paymentToken: string) => {
     setLoading(true);
 
     const lands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
       DECENTRALAND_METAVERSE,
       lastRentEnd,
       orderColumn,
-      sortDir
+      sortDir,
+      paymentToken
     );
 
     setLands(lands.data);
@@ -139,7 +161,7 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     if (!searchQuery.length) {
-      getLands(sortColumn, sortDir, lastRentEnd);
+      getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
     } else {
       setLands(filterLandsByQuery(lands, searchQuery));
     }
@@ -155,13 +177,13 @@ const ExploreView: React.FC = () => {
   }, [wallet.account]);
 
   useEffect(() => {
-    getLands(sortColumn, sortDir, lastRentEnd);
-  }, [wallet.account, sortColumn, sortDir, lastRentEnd]);
+    getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
+  }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
 
   const slicedLandsInTotal = lands.slice(0, slicedLands).length;
 
   const handleLoadMore = () => {
-    setSlicedLands(slicedLands + 8);
+    setSlicedLands(slicedLands + DEFAULT_SLICED_PAGE);
     setLoadPercentageValue((slicedLandsInTotal * 100) / lands.length);
   };
 
@@ -180,6 +202,7 @@ const ExploreView: React.FC = () => {
           onChangeSortDirection={onChangeFiltersSortDirection}
           onChangeOwnerToggler={onChangeFiltersOwnerToggler}
           onChangeAvailable={onChangeFiltersAvailable}
+          onChangeCurrency={onChangeFiltersCurrency}
         />
       </div>
 

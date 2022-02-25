@@ -1,6 +1,6 @@
 import OptionUnstyled, { optionUnstyledClasses } from '@mui/base/OptionUnstyled';
 import PopperUnstyled from '@mui/base/PopperUnstyled';
-import SelectUnstyled, { SelectUnstyledProps, selectUnstyledClasses } from '@mui/base/SelectUnstyled';
+import SelectUnstyled, { SelectUnstyledProps } from '@mui/base/SelectUnstyled';
 import { styled } from '@mui/system';
 
 import { Option } from 'modules/interface';
@@ -29,33 +29,23 @@ const grey = {
 };
 
 const StyledButton = styled('button')(
-  ({ theme }) => `
+  () => `
   font-family: ${THEME_FONT_FAMILY};
   font-size: 0.875rem;
   box-sizing: border-box;
   min-height: calc(1.5em + 22px);
-  min-width: 190px;
   background: ${THEME_COLORS.grey01};
   border: 1px solid ${THEME_COLORS.grey01};
   border-radius: 10px;
   padding: 10px;
   text-align: left;
   line-height: 1.5;
+  width: 100%;
   color: ${THEME_COLORS.light};
 
   &:hover {
     background: ${THEME_COLORS.grey02};
     border-color: ${THEME_COLORS.grey02};
-  }
-
-  &.${selectUnstyledClasses.focusVisible} {
-    outline: 3px solid ${theme.palette.mode === 'dark' ? blue[600] : blue[100]};
-  }
-
-  &.${selectUnstyledClasses.expanded} {
-    &::after {
-      content: '▴';
-    }
   }
 
   &::after {
@@ -72,6 +62,7 @@ const StyledListbox = styled('ul')(
   box-sizing: border-box;
   padding: 5px;
   margin: 10px 0;
+  width: 100%;
   min-width: 190px;
   background: ${THEME_COLORS.grey01};
   border: 1px solid ${THEME_COLORS.grey01};
@@ -79,6 +70,7 @@ const StyledListbox = styled('ul')(
   color: ${THEME_COLORS.light};
   overflow: auto;
   outline: 0px;
+  box-shadow: 0px 4px 12px -3px rgba(0,0,0,0.75);
   `
 );
 
@@ -91,7 +83,7 @@ const StyledOption = styled(OptionUnstyled)(
   display: flex;
   flex-direction: row;
   align-items: center;
-  
+
   &:last-of-type {
     border-bottom: none;
   }
@@ -141,19 +133,19 @@ interface ControlledSelectProps {
   onChange: (value: number) => void;
   value: number;
   options: Option[];
+  width?: string;
 }
 
 const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
-  const { onChange, value, options } = props;
+  const { onChange, value, options, width } = props;
 
   return (
-    <div>
+    <div style={{ width: width }}>
       <CustomSelect
         value={value}
         onChange={(e) => {
           if (e) {
             onChange(e);
-            console.log('change occurred', e);
           }
         }}
       >

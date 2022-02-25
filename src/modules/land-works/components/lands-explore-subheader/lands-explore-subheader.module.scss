@@ -3,12 +3,11 @@
 
 .root {
   display: flex;
-  width: 100%;
+  width: auto;
   justify-content: space-between;
   align-items: center;
-  padding: 16px var(--horizontal-padding) 10px;
-  margin: 0;
-
+  margin: 10px var(--horizontal-padding);
+  border-bottom: 2px solid $grey01;
   height: var(--explore-subheader);
 
   h1 {
@@ -17,7 +16,6 @@
     font-size: 30px;
     font-weight: 700;
     padding-bottom: 12px;
-    border-bottom: 2px solid $grey01;
 
     span {
       font-size: 14px;
@@ -28,6 +26,7 @@
 }
 
 .list-new-property-button {
+  width: 200px;
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
@@ -56,10 +55,8 @@
   @media (max-width: 768px) {
     display: none;
   }
+}
 
-  svg {
-    width: 36px;
-    height: 36px;
-    transform: scale(2);
-  }
+.button-primary {
+  padding: 16px 20px;
 }
