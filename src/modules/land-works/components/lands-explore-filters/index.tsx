@@ -67,10 +67,20 @@ const LandWorksFilters: FC<Props> = ({
       <Box className={styles.container}>
         <Box className={styles.box} style={{ width: '400px' }}>
           <Box className={styles.box} style={{ marginRight: '20px' }}>
-            <ControlledSelect value={selectedMetaverse} onChange={onChangePlaceHandler} options={landsData} />
+            <ControlledSelect
+              width={'12rem'}
+              value={selectedMetaverse}
+              onChange={onChangePlaceHandler}
+              options={landsData}
+            />
           </Box>
           <Box className={styles.box}>
-            <ControlledSelect value={selectedCurrency} onChange={onChangeCurrencyHandler} options={currencyData} />
+            <ControlledSelect
+              width={'6rem'}
+              value={selectedCurrency}
+              onChange={onChangeCurrencyHandler}
+              options={currencyData}
+            />
           </Box>
         </Box>
         <Box className={styles.box}>
@@ -88,7 +98,12 @@ const LandWorksFilters: FC<Props> = ({
               <StyledSwitch checked={showOnlyAvailable} onChange={onChangeAvailableHandler} />
             </Box>
           </Box>
-          <ControlledSelect value={selectedOrder} onChange={onChangeSortDirectionHandler} options={sortData} />
+          <ControlledSelect
+            width={'12rem'}
+            value={selectedOrder}
+            onChange={onChangeSortDirectionHandler}
+            options={sortData}
+          />
         </Box>
       </Box>
     </div>
