@@ -4,18 +4,20 @@ import { FC, useEffect, useState } from 'react';
 import { Coord, Layer, TileMap, TileMapProps } from 'react-tile-map';
 import { TILES_URL_DECENTRALEND } from 'constants/modules';
 
-import './Atlas.css';
-
 export type AtlasTile = {
+  id: string;
   x: number;
   y: number;
-  type: number;
-  left?: number;
-  top?: number;
-  topLeft?: number;
-  owner: string;
+  type: 'owned' | 'unowned' | 'plaza' | 'road' | 'district';
+  top: boolean;
+  left: boolean;
+  topLeft: boolean;
+  updatedAt: number;
   name?: string;
-  estate_id?: string;
+  owner?: string;
+  estateId?: string;
+  tokenId?: string;
+  price?: number;
 };
 
 export type { Layer, Coord };
@@ -30,19 +32,19 @@ export type AtlasState = {
   tiles?: Record<string, AtlasTile>;
 };
 
-const COLOR_BY_TYPE: Record<number, string> = {
+const COLOR_BY_TYPE: Record<number | string, string> = {
   0: '#ff9990', // my parcels
   1: '#ff4053', // my parcels on sale
   2: '#ff9990', // my estates
   3: '#ff4053', // my estates on sale
   4: '#ffbd33', // parcels/estates where I have permissions
-  5: '#5054D4', // districts
+  district: '#5054D4', // districts
   6: '#563db8', // contributions
-  7: '#716C7A', // roads
-  8: '#70AC76', // plazas
-  9: '#3D3A46', // owned parcel/estate
+  road: '#716C7A', // roads
+  plaza: '#70AC76', // plazas
+  owned: '#3D3A46', // owned parcel/estate
   10: '#3D3A46', // parcels on sale (we show them as owned parcels)
-  11: '#09080A', // unowned pacel/estate
+  unowned: '#09080A', // unowned pacel/estate
   12: '#18141a', // background
   13: '#110e13', // loading odd
   14: '#0d0b0e', // loading even
@@ -105,7 +107,6 @@ const Atlas: FC<AtlasProps> = (props) => {
       onChange={onChange}
       zoom={zoom}
       {...rest}
-      className="dcl atlas"
       layers={[layer, ...(layers as Layer[])]}
     />
   );

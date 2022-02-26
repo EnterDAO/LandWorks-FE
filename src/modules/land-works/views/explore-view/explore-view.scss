@@ -2,12 +2,14 @@
 @import 'styles/text.scss';
 
 .content-container--explore-view--header {
-  position: fixed;
-  top: var(--navbar-height);
-  left: 0;
-  right: 0;
-  z-index: 1;
-  background-color: #161621;
+  @media screen and (min-width: $screen-lg-max) {
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-color: #161621;
+  }
 }
 
 .content-container.content-container--explore-view {
@@ -21,15 +23,16 @@
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
-    margin-top: calc(var(--explore-subheader) + var(--explore-filters));
-
-    @media screen and (min-width: $screen-md-max) {
+    
+    @media screen and (min-width: $screen-lg-max) {
+      margin-top: calc(var(--explore-subheader) + var(--explore-filters));
       width: 50%;
     }
   }
 
   .map-list-container {
     display: none;
+    z-index: 5;
     position: fixed;
     bottom: 0;
     right: 0;
@@ -51,7 +54,7 @@
       left: 0%;
     }
 
-    @media screen and (min-width: $screen-md-max) {
+    @media screen and (min-width: $screen-lg-max) {
       display: block;
     }
   }

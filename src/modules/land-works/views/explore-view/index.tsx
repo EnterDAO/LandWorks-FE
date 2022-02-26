@@ -67,6 +67,8 @@ const ExploreView: React.FC = () => {
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState(DEFAULT_TOKEN_ADDRESS);
 
+  const slicedLandsInTotal = lands.slice(0, slicedLands).length;
+
   useEffect(() => {
     getPaymentTokens();
   }, [paymentToken, lastRentEnd, lands]);
@@ -141,11 +143,11 @@ const ExploreView: React.FC = () => {
     );
 
     setLands(lands.data);
-    const highlights = getAllLandsCoordinates(lands.data);
-    setCoordinatesHighlights(highlights);
-    setPointMapCentre(highlights);
     setLoading(false);
     setSlicedLands(DEFAULT_SLICED_PAGE);
+    const highlights = getAllLandsCoordinates(lands.data.slice(0, slicedLands));
+    setCoordinatesHighlights(highlights);
+    setPointMapCentre(highlights);
   };
 
   const filterLandsByQuery = (lands: AssetEntity[], query: string) => {
@@ -157,6 +159,14 @@ const ExploreView: React.FC = () => {
       const landName = land.name.toLowerCase();
       return landName.includes(query);
     });
+  };
+
+  const handleLoadMore = () => {
+    const newSlicedLands = slicedLands + DEFAULT_SLICED_PAGE;
+    setSlicedLands(newSlicedLands);
+    const highlights = getAllLandsCoordinates(lands.slice(0, newSlicedLands));
+    setCoordinatesHighlights(highlights);
+    setPointMapCentre(highlights);
   };
 
   useEffect(() => {
@@ -179,13 +189,6 @@ const ExploreView: React.FC = () => {
   useEffect(() => {
     getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
   }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
-
-  const slicedLandsInTotal = lands.slice(0, slicedLands).length;
-
-  const handleLoadMore = () => {
-    setSlicedLands(slicedLands + DEFAULT_SLICED_PAGE);
-    setLoadPercentageValue((slicedLandsInTotal * 100) / lands.length);
-  };
 
   useEffect(() => {
     setLoadPercentageValue((lands.slice(0, slicedLands).length * 100) / lands.length);
