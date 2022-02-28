@@ -308,7 +308,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                     target={'_blank'}
                     href={getDecentralandPlayUrl(asset?.decentralandData?.coordinates)}
                   >
-                    <span>view on metaverse</span>
+                    <span>view in metaverse</span>
                   </ExternalLink>
                 </Grid>
               </Grid>
