@@ -1,5 +1,4 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
-// import { useHistory } from 'react-router-dom';
 import { TILES_URL_DECENTRALEND } from 'constants/modules';
 
 import { ReactComponent as ArrowLeftIcon } from 'assets/icons/arrow-left.svg';
@@ -23,7 +22,6 @@ interface Props {
 }
 
 const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, onSelectTile, highlights = [] }) => {
-  // const history = useHistory();
   const [tiles, setTiles] = useState<Record<string, AtlasTile>>();
   const [clickZoom, setClickZoom] = useState(0.5);
   const [scrollZoom, setScrollZoom] = useState(0.5);

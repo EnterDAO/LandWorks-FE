@@ -134,6 +134,7 @@
     "wolfy87-eventemitter": "5.2.9"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.16.7",
     "@types/classnames": "2.2.11",
     "@types/ethereumjs-util": "^6.1.0",
     "@types/identicon.js": "2.3.0",
