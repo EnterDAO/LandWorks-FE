@@ -12,14 +12,22 @@ import { ReactComponent as HotIcon } from './assets/hot.svg';
 
 import './index.scss';
 
-interface ILandWorksCardProps {
+interface Props {
   land: AssetEntity;
   onClick?: (e: SyntheticEvent, land: AssetEntity) => void;
+  onMouseOver?: (e: SyntheticEvent, land: AssetEntity) => void;
+  isActive?: boolean;
 }
 
-const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land, onClick }) => {
+const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, isActive }) => {
   return (
-    <a href={`/property/${land.id}`} className="land-explore-card" onClick={(e) => !!onClick && onClick(e, land)}>
+    <a
+      href={`/property/${land.id}`}
+      className={`land-explore-card${isActive ? ' active' : ''}`}
+      onClick={(e) => !!onClick && onClick(e, land)}
+      onMouseOver={(e) => !!onMouseOver && onMouseOver(e, land)}
+      id={`land-explore-card--${land.id}`}
+    >
       <div className="land-explore-image">
         <img className="land-explore-image-img" src={getLandImageUrl(land)} alt="land-explore-image-img" />
       </div>

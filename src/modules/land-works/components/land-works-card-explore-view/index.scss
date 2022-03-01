@@ -17,6 +17,7 @@
       margin-bottom: 20px;
     }
 
+    &.active,
     &:hover {
       box-shadow: 0px 5px 18px rgba(255, 255, 255, 0.3);
       border: 2px solid var(--theme-primary-color);

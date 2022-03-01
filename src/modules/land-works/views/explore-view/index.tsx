@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import {
   DECENTRALAND_METAVERSE,
   DEFAULT_LAST_RENT_END,
@@ -9,12 +9,11 @@ import {
 } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { Grid } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import LayoutFooter from 'layout/components/layout-footer';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
-import { LandsAction } from 'modules/land-works/components/lands-action';
-import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
 import { LoadMoreLands } from 'modules/land-works/components/lands-explore-load-more';
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
@@ -24,7 +23,7 @@ import { useWallet } from 'wallets/wallet';
 
 import {
   AssetEntity,
-  CoordinatesLAND,
+  CoordinatesLand,
   PaymentToken,
   USER_SUBSCRIPTION,
   UserEntity,
@@ -40,15 +39,16 @@ import './explore-view.scss';
 
 const ExploreView: React.FC = () => {
   const wallet = useWallet();
+  const isPerTwo = useMediaQuery('(max-width:1299px)');
 
   const [lands, setLands] = useState([] as AssetEntity[]);
-  const [showClaimModal, setShowClaimModal] = useState(false);
+  const [selectedLandId, setSelectedLandId] = useState<AssetEntity['id'] | undefined>();
   const [user, setUser] = useState({} as UserEntity);
 
   const [sortDir, setSortDir] = useState(sortDirections[0]);
   const [sortColumn, setSortColumn] = useState(sortColumns[0]);
 
-  const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLAND[]>([]);
+  const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
   const [mapExpanded, setMapExpanded] = useState(false);
 
   const [atlasMapX, setAtlasMapX] = useState(0);
@@ -56,12 +56,11 @@ const ExploreView: React.FC = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
 
-  const [slicedLands, setSlicedLands] = useState(DEFAULT_SLICED_PAGE);
+  const [slicedLands, setSlicedLands] = useState(isPerTwo ? DEFAULT_SLICED_PAGE : 6);
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
 
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
@@ -88,12 +87,11 @@ const ExploreView: React.FC = () => {
         return;
       }
 
-      setClaimButtonDisabled(false);
       setUser(parseUser(subscriptionData.data.user));
     },
   });
 
-  const setPointMapCentre = (lands: CoordinatesLAND[]) => {
+  const setPointMapCentre = (lands: CoordinatesLand[]) => {
     if (lands[0]) {
       const { x, y } = lands[0];
 
@@ -144,7 +142,7 @@ const ExploreView: React.FC = () => {
 
     setLands(lands.data);
     setLoading(false);
-    setSlicedLands(DEFAULT_SLICED_PAGE);
+    setSlicedLands(isPerTwo ? DEFAULT_SLICED_PAGE : 6);
     const highlights = getAllLandsCoordinates(lands.data.slice(0, slicedLands));
     setCoordinatesHighlights(highlights);
     setPointMapCentre(highlights);
@@ -162,11 +160,19 @@ const ExploreView: React.FC = () => {
   };
 
   const handleLoadMore = () => {
-    const newSlicedLands = slicedLands + DEFAULT_SLICED_PAGE;
+    const newSlicedLands = slicedLands + (isPerTwo ? DEFAULT_SLICED_PAGE : 6);
     setSlicedLands(newSlicedLands);
     const highlights = getAllLandsCoordinates(lands.slice(0, newSlicedLands));
     setCoordinatesHighlights(highlights);
     setPointMapCentre(highlights);
+  };
+
+  const onMouseOverCardHandler = (e: SyntheticEvent, land: AssetEntity) => {
+    const allCoords = getAllLandsCoordinates([land]);
+
+    if (allCoords.length && allCoords[0]) {
+      setPointMapCentre([{ id: land.id, x: allCoords[0].x, y: allCoords[0].y }]);
+    }
   };
 
   useEffect(() => {
@@ -194,6 +200,16 @@ const ExploreView: React.FC = () => {
     setLoadPercentageValue((lands.slice(0, slicedLands).length * 100) / lands.length);
   }, [lands, slicedLands]);
 
+  useEffect(() => {
+    if (!window) return;
+
+    const landExploreCard = window.document.getElementById(`land-explore-card--${selectedLandId}`);
+
+    if (landExploreCard) {
+      landExploreCard.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  }, [selectedLandId]);
+
   return (
     <>
       <div className="content-container--explore-view--header">
@@ -209,39 +225,23 @@ const ExploreView: React.FC = () => {
         />
       </div>
 
-      {user.hasUnclaimedRent && (
-        <div className="actions-container">
-          <div className="lands-claim-container">
-            <LandsAction
-              onButtonClick={setShowClaimModal}
-              buttonText={'CLAIM '}
-              subHeading="You have"
-              isClaimButtonDisabled={claimButtonDisabled}
-              mainHeading="Unclaimed rent"
-            />
-          </div>
-        </div>
-      )}
-
       <div className="content-container content-container--explore-view">
         <div className="lands-container">
           <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
             {loading ? (
               [1, 2, 3, 4].map((i) => (
-                <Grid item xs={12} sm={6} md={6} lg={6} xl={4}>
+                <Grid item xs={12} sm={6} md={6} lg={6} xl={4} key={i}>
                   <LandCardSkeleton key={i} />
                 </Grid>
               ))
             ) : lands.length ? (
               lands.slice(0, slicedLands).map((land) => (
-                <Grid item xs={12} sm={6} md={6} lg={6} xl={4}>
+                <Grid item xs={12} sm={6} md={6} lg={6} xl={4} key={land.id}>
                   <LandWorkCard
-                    onClick={() => {
-                      console.log('something happens');
-                    }}
-                    key={land.id}
+                    onMouseOver={onMouseOverCardHandler}
                     land={land}
+                    isActive={selectedLandId === land.id}
                   />
                 </Grid>
               ))
@@ -265,19 +265,10 @@ const ExploreView: React.FC = () => {
             expanded={mapExpanded}
             onClick={() => setMapExpanded(!mapExpanded)}
             highlights={coordinatesHighlights}
+            onSelectTile={setSelectedLandId}
           />
         </div>
       </div>
-
-      <ClaimModal
-        onSubmit={() => {
-          setClaimButtonDisabled(true);
-          setShowClaimModal(false);
-        }}
-        onCancel={() => setShowClaimModal(false)}
-        visible={showClaimModal}
-        rentFees={user?.unclaimedRentAssets}
-      />
     </>
   );
 };

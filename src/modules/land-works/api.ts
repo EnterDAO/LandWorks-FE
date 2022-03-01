@@ -280,10 +280,14 @@ export type Data = {
   version: string;
 };
 
-export type CoordinatesLAND = {
+export type CoordinatesLand = {
   id: string;
   x: string;
   y: string;
+};
+
+export type CoordinatesLandWithLandId = CoordinatesLand & {
+  landId: string;
 };
 
 export type PaymentToken = {

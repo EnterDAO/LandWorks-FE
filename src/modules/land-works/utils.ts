@@ -1,6 +1,6 @@
-import { AssetEntity, CoordinatesLAND } from './api';
+import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 
-export const calculateNeighbours = (coordinatesList: CoordinatesLAND[]): string[] => {
+export const calculateNeighbours = (coordinatesList: CoordinatesLand[]): string[] => {
   let neighbours = [] as string[];
 
   for (const coordinates of coordinatesList) {
@@ -10,21 +10,36 @@ export const calculateNeighbours = (coordinatesList: CoordinatesLAND[]): string[
   return [...new Set(neighbours)].filter((item) => !coordinatesList.some((l) => l.id === item));
 };
 
-export const getNeighbours = (coordinates: CoordinatesLAND): string[] => {
+export const getNeighbours = (coordinates: CoordinatesLand): string[] => {
   const numX = +coordinates.x;
   const numY = +coordinates.y;
 
   return [`${numX - 1}-${numY}`, `${numX}-${numY - 1}`, `${numX}-${numY + 1}`, `${numX + 1}-${numY}`];
 };
 
-export const getAllLandsCoordinates = (data: AssetEntity[]): CoordinatesLAND[] => {
-  let coords: CoordinatesLAND[] = [];
+export const getAllLandsCoordinates = (data: AssetEntity[]): CoordinatesLand[] => {
+  let coords: CoordinatesLandWithLandId[] = [];
 
   data.forEach((land) => {
     if (land.decentralandData?.coordinates) {
-      coords = coords.concat(land.decentralandData?.coordinates);
+      const coordinatesWithId: CoordinatesLandWithLandId[] = [];
+
+      land.decentralandData?.coordinates.forEach((coord: CoordinatesLand) => {
+        coordinatesWithId.push({
+          x: coord.x,
+          y: coord.y,
+          id: coord.id,
+          landId: land.id,
+        });
+      });
+
+      coords = coords.concat(coordinatesWithId);
     }
   });
 
   return coords;
+};
+
+export const shortenString = (str: string): string => {
+  return str.substring(0, 6) + '...' + str.substring(str.length - 4);
 };

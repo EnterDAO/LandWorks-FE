@@ -2,7 +2,6 @@ import 'react-tile-map/lib/styles.css';
 
 import { FC, useEffect, useState } from 'react';
 import { Coord, Layer, TileMap, TileMapProps } from 'react-tile-map';
-import { TILES_URL_DECENTRALEND } from 'constants/modules';
 
 export type AtlasTile = {
   id: string;
@@ -26,6 +25,8 @@ export type AtlasProps = Partial<TileMapProps> & {
   layers?: Layer[];
   tiles?: Record<string, AtlasTile>;
   onChange?: (data: { zoom: number }) => void;
+  onPopup?: (data: { x: number; y: number }) => void;
+  onClick?: (x: number, y: number) => void;
 };
 
 export type AtlasState = {
@@ -51,9 +52,8 @@ const COLOR_BY_TYPE: Record<number | string, string> = {
 };
 
 const Atlas: FC<AtlasProps> = (props) => {
-  const { tiles: propTiles, layers = [], onChange, ...rest } = props;
+  const { tiles, layers = [], onChange, onPopup, onClick, ...rest } = props;
   const [zoom, setZoom] = useState(props.zoom);
-  const [tiles, setTiles] = useState(propTiles);
 
   const layer: Layer = (x, y) => {
     const id = x + ',' + y;
@@ -72,38 +72,16 @@ const Atlas: FC<AtlasProps> = (props) => {
     }
   };
 
-  const fetchTiles = async (url: string = TILES_URL_DECENTRALEND): Promise<Record<string, AtlasTile>> => {
-    if (!window.fetch) return {};
-    const resp = await window.fetch(url);
-    const json = await resp.json();
-    return json.data as Record<string, AtlasTile>;
-  };
-
-  const handleUpdateTiles = (tiles: Record<string, AtlasTile>): void => {
-    setTiles(tiles);
-  };
-
-  useEffect(() => {
-    if (props.tiles && props.tiles !== tiles) {
-      setTiles(tiles);
-    }
-  }, [props.tiles]);
-
   useEffect(() => {
     if (props.zoom && props.zoom !== zoom) {
       setZoom(props.zoom);
     }
   }, [props.zoom]);
 
-  useEffect(() => {
-    if (!tiles) {
-      fetchTiles().then(handleUpdateTiles);
-    }
-  }, []);
-
   return (
     <TileMap
-      // onPopup={(args) => console.log('onPopup', args)}
+      onClick={onClick}
+      onPopup={onPopup}
       onChange={onChange}
       zoom={zoom}
       {...rest}
