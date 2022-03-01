@@ -19,6 +19,7 @@ import { LoadMoreLands } from 'modules/land-works/components/lands-explore-load-
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
 import LandsExploreSubheader from 'modules/land-works/components/lands-explore-subheader';
 import LandsSearchBar from 'modules/land-works/components/lands-search';
+import LandsMapActiveTileProvider from 'modules/land-works/providers/lands-map-active-tile';
 import { useWallet } from 'wallets/wallet';
 
 import {
@@ -42,7 +43,7 @@ const ExploreView: React.FC = () => {
   const isPerTwo = useMediaQuery('(max-width:1299px)');
 
   const [lands, setLands] = useState([] as AssetEntity[]);
-  const [selectedLandId, setSelectedLandId] = useState<AssetEntity['id'] | undefined>();
+  const [clickedLandId, setClickedLandId] = useState<AssetEntity['id']>('');
   const [user, setUser] = useState({} as UserEntity);
 
   const [sortDir, setSortDir] = useState(sortDirections[0]);
@@ -57,6 +58,7 @@ const ExploreView: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const [loading, setLoading] = useState(false);
+  const [blockAutoScroll, setBlockAutoScroll] = useState(false);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
 
@@ -172,6 +174,7 @@ const ExploreView: React.FC = () => {
 
     if (allCoords.length && allCoords[0]) {
       setPointMapCentre([{ id: land.id, x: allCoords[0].x, y: allCoords[0].y }]);
+      setClickedLandId && setClickedLandId(`${allCoords[0].x},${allCoords[0].y}`);
     }
   };
 
@@ -203,15 +206,15 @@ const ExploreView: React.FC = () => {
   useEffect(() => {
     if (!window) return;
 
-    const landExploreCard = window.document.getElementById(`land-explore-card--${selectedLandId}`);
+    const landExploreCard = window.document.getElementById(`land-explore-card--${clickedLandId}`);
 
-    if (landExploreCard) {
-      landExploreCard.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    if (landExploreCard && !blockAutoScroll) {
+      landExploreCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  }, [selectedLandId]);
+  }, [clickedLandId]);
 
   return (
-    <>
+    <LandsMapActiveTileProvider value={{ clickedLandId, setClickedLandId }}>
       <div className="content-container--explore-view--header">
         <LandsExploreSubheader
           totalLands={lands.length}
@@ -226,7 +229,11 @@ const ExploreView: React.FC = () => {
       </div>
 
       <div className="content-container content-container--explore-view">
-        <div className="lands-container">
+        <div
+          className="lands-container"
+          onMouseMove={() => setBlockAutoScroll(true)}
+          onMouseOut={() => setTimeout(() => setBlockAutoScroll(false), 150)}
+        >
           <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
             {loading ? (
@@ -238,11 +245,7 @@ const ExploreView: React.FC = () => {
             ) : lands.length ? (
               lands.slice(0, slicedLands).map((land) => (
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={4} key={land.id}>
-                  <LandWorkCard
-                    onMouseOver={onMouseOverCardHandler}
-                    land={land}
-                    isActive={selectedLandId === land.id}
-                  />
+                  <LandWorkCard onMouseOver={onMouseOverCardHandler} land={land} />
                 </Grid>
               ))
             ) : (
@@ -265,11 +268,10 @@ const ExploreView: React.FC = () => {
             expanded={mapExpanded}
             onClick={() => setMapExpanded(!mapExpanded)}
             highlights={coordinatesHighlights}
-            onSelectTile={setSelectedLandId}
           />
         </div>
       </div>
-    </>
+    </LandsMapActiveTileProvider>
   );
 };
 

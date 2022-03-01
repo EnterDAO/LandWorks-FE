@@ -28,7 +28,7 @@ export const getAllLandsCoordinates = (data: AssetEntity[]): CoordinatesLand[] =
         coordinatesWithId.push({
           x: coord.x,
           y: coord.y,
-          id: coord.id,
+          id: `${coord.x},${coord.y}`,
           landId: land.id,
         });
       });

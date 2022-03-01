@@ -4,6 +4,7 @@ import { ZERO_BIG_NUMBER } from 'web3/utils';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
+import { useLandsMapActiveTile } from 'modules/land-works/providers/lands-map-active-tile';
 
 import { AssetEntity } from '../../api';
 import LandCardAvailability from '../land-works-card-availability';
@@ -16,17 +17,20 @@ interface Props {
   land: AssetEntity;
   onClick?: (e: SyntheticEvent, land: AssetEntity) => void;
   onMouseOver?: (e: SyntheticEvent, land: AssetEntity) => void;
-  isActive?: boolean;
 }
 
-const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, isActive }) => {
+const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
+  const { clickedLandId } = useLandsMapActiveTile();
+  const did = `${land.decentralandData?.coordinates[0]?.x},${land.decentralandData?.coordinates[0]?.y}`;
+  const isActive = clickedLandId === did;
+
   return (
     <a
       href={`/property/${land.id}`}
       className={`land-explore-card${isActive ? ' active' : ''}`}
       onClick={(e) => !!onClick && onClick(e, land)}
       onMouseOver={(e) => !!onMouseOver && onMouseOver(e, land)}
-      id={`land-explore-card--${land.id}`}
+      id={`land-explore-card--${did}`}
     >
       <div className="land-explore-image">
         <img className="land-explore-image-img" src={getLandImageUrl(land)} alt="land-explore-image-img" />

@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { TILES_URL_DECENTRALEND } from 'constants/modules';
 
 import { ReactComponent as ArrowLeftIcon } from 'assets/icons/arrow-left.svg';
@@ -6,7 +6,8 @@ import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
 import Atlas, { AtlasTile, Coord, Layer } from 'components/custom/Atlas/Atlas';
 import { Button } from 'design-system';
 import { MinusIcon, PlusIcon } from 'design-system/icons';
-import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from 'modules/land-works/api';
+import { CoordinatesLand } from 'modules/land-works/api';
+import { useLandsMapActiveTile } from 'modules/land-works/providers/lands-map-active-tile';
 
 import LandsExploreNavigatorInfo, { SelectedTile } from '../lands-explore-navigator-info';
 
@@ -17,14 +18,14 @@ interface Props {
   positionY: number;
   expanded: boolean;
   onClick?: () => void;
-  onSelectTile?: Dispatch<SetStateAction<AssetEntity['id'] | undefined>>;
   highlights?: CoordinatesLand[];
 }
 
-const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, onSelectTile, highlights = [] }) => {
+const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, highlights = [] }) => {
   const [tiles, setTiles] = useState<Record<string, AtlasTile>>();
   const [clickZoom, setClickZoom] = useState(0.5);
   const [scrollZoom, setScrollZoom] = useState(0.5);
+  const { clickedLandId, setClickedLandId } = useLandsMapActiveTile();
   const [selectedTile, setSelectedTile] = useState<Partial<SelectedTile>>({});
   const [highlightedTiles, setHighlightedTiles] = useState<Coord[]>([]);
 
@@ -48,8 +49,8 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, o
     }
 
     if (zoom < 3) {
-      setClickZoom(zoom + 1);
-      setScrollZoom(zoom + 1);
+      setClickZoom(zoom + 0.5);
+      setScrollZoom(zoom + 0.5);
     }
   };
 
@@ -61,8 +62,8 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, o
     }
 
     if (zoom < 3 && zoom > 0.5) {
-      setClickZoom(zoom - 1);
-      setScrollZoom(zoom - 1);
+      setClickZoom(zoom - 0.5);
+      setScrollZoom(zoom - 0.5);
     }
   };
 
@@ -87,24 +88,42 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, o
     if (!tiles) return;
 
     const land = highlights.find((coord) => {
-      return coord.id === `${x}-${y}`;
+      return coord.id === `${x},${y}`;
     });
 
     if (land) {
-      onSelectTile && onSelectTile((land as CoordinatesLandWithLandId).landId);
+      setClickedLandId && setClickedLandId(`${x},${y}`);
     }
   };
 
-  const isSelected = (x: number, y: number) => {
+  const isInList = (x: number, y: number) => {
     return highlightedTiles.some((coord) => coord.x === x && coord.y === y);
   };
 
-  const highlightedStrokeLayer: Layer = (x, y) => {
-    return isSelected(x, y) ? { color: '#ff0044', scale: 1.4 } : null;
+  const isClicked = (x: number, y: number) => {
+    if (!clickedLandId) {
+      return false;
+    }
+
+    const [clickX, clickY] = clickedLandId.split(',');
+
+    return x === Number(clickX) && y === Number(clickY);
   };
 
-  const highlightedFillLayer: Layer = (x, y) => {
-    return isSelected(x, y) ? { color: '#ff9990', scale: 1.2 } : null;
+  const strokeLayer: Layer = (x, y) => {
+    return isInList(x, y) ? { color: '#ff0044', scale: 1.4 } : null;
+  };
+
+  const fillLayer: Layer = (x, y) => {
+    return isInList(x, y) ? { color: '#ff9990', scale: 1.2 } : null;
+  };
+
+  const clickedTileStrokeLayer: Layer = (x, y) => {
+    return isClicked(x, y) ? { color: '#26ff00', scale: 1.9 } : null;
+  };
+
+  const clickedTileFillLayer: Layer = (x, y) => {
+    return isClicked(x, y) ? { color: '#ff9990', scale: 1.5 } : null;
   };
 
   useEffect(() => {
@@ -129,7 +148,7 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, o
         x={positionX}
         y={positionY}
         zoom={clickZoom}
-        layers={[highlightedStrokeLayer, highlightedFillLayer]}
+        layers={[strokeLayer, fillLayer, clickedTileStrokeLayer, clickedTileFillLayer]}
         onChange={onChangeAtlasHandler}
         onPopup={onPopupAtlasHandler}
         onClick={onClickAtlasHandler}
