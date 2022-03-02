@@ -27,7 +27,7 @@ const StyledBackdrop = styled('div')({
 
 const modalStyles = {
   modalBox: {
-    width: 500,
+    minWidth: 500,
     position: 'relative',
     backgroundColor: THEME_COLORS.darkBlue02,
     borderRadius: '0px 0px 15px 15px',
