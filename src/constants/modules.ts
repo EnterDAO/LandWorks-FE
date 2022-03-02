@@ -79,11 +79,13 @@ export const DEFAULT_MIN_PERIOD = new BigNumber(1);
 
 export const DEFAULT_MAX_PERIOD = new BigNumber(ONE_HUNDRED_YEARS_IN_SECONDS);
 
+export const DEFAULT_LIST_MAX_PERIOD = new BigNumber(3);
+
 export const FEE_PRECISION = 100_000;
 
 export const DEFAULT_PROPERTY = { label: '', value: '' };
 
-export const DEFAULT_FUTURE_PERIOD = new BigNumber(THREE_WEEKS_IN_SECONDS);
+export const DEFAULT_FUTURE_PERIOD = DEFAULT_LIST_MAX_PERIOD.multipliedBy(WEEK_IN_SECONDS);
 
 export const DECENTRALAND_METAVERSE = '1';
 
@@ -99,7 +101,7 @@ export const tokenOptions = ['ETH', 'USDC'];
 
 export const metaverseOptions = ['Decentraland'];
 
-export const TILES_URL_DECENTRALEND = 'https://api.decentraland.org/v1/tiles';
+export const TILES_URL_DECENTRALEND = 'https://api.decentraland.org/v2/tiles';
 
 export const BASE_URL_DECENTRALEND = 'https://api.decentraland.org/v1';
 

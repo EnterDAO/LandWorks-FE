@@ -4,6 +4,7 @@ import { ZERO_BIG_NUMBER } from 'web3/utils';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
+import { useLandsMapActiveTile } from 'modules/land-works/providers/lands-map-active-tile';
 
 import { AssetEntity } from '../../api';
 import LandCardAvailability from '../land-works-card-availability';
@@ -12,19 +13,30 @@ import { ReactComponent as HotIcon } from './assets/hot.svg';
 
 import './index.scss';
 
-interface ILandWorksCardProps {
+interface Props {
   land: AssetEntity;
   onClick?: (e: SyntheticEvent, land: AssetEntity) => void;
+  onMouseOver?: (e: SyntheticEvent, land: AssetEntity) => void;
 }
 
-const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land, onClick }) => {
+const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
+  const { clickedLandId } = useLandsMapActiveTile();
+  const did = `${land.decentralandData?.coordinates[0]?.x},${land.decentralandData?.coordinates[0]?.y}`;
+  const isActive = clickedLandId === did;
+
   return (
-    <a href={`/property/${land.id}`} className="land-explore-card" onClick={(e) => !!onClick && onClick(e, land)}>
+    <a
+      href={`/property/${land.id}`}
+      className={`land-explore-card${isActive ? ' active' : ''}`}
+      onClick={(e) => !!onClick && onClick(e, land)}
+      onMouseOver={(e) => !!onMouseOver && onMouseOver(e, land)}
+      id={`land-explore-card--${did}`}
+    >
       <div className="land-explore-image">
         <img className="land-explore-image-img" src={getLandImageUrl(land)} alt="land-explore-image-img" />
       </div>
       {land.isHot && (
-        <span className="land-explore-card-hot label card-name-hot-label">
+        <span className="land-explore-card-hot">
           <HotIcon className="name-label" />
         </span>
       )}
@@ -60,12 +72,12 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land, onClick }) => {
       <div className="land-explore-divider"></div>
 
       <div className="land-explore-row">
-        {land?.availability?.isRentable && (
-          <div>
-            <span className="land-explore-rent-label">Rent period</span>
-            <p className="land-explore-rent-value">{land.availability?.label}</p>
-          </div>
-        )}
+        <div>
+          <span className="land-explore-rent-label">Rent period</span>
+          <p className="land-explore-rent-value">
+            {land.minPeriodTimedType}-{land.maxPeriodTimedType}
+          </p>
+        </div>
         <div>
           <LandCardAvailability land={land} />
         </div>

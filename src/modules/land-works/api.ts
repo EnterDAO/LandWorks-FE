@@ -10,7 +10,7 @@ import { getUsdPrice } from 'providers/known-tokens-provider';
 import { GraphClient } from '../../web3/graph/client';
 import { AssetStatus } from './models/AssetStatus';
 
-import { getDecentralandAssetName, getNowTs, getTimeType, secondsToDuration } from '../../utils';
+import { getDecentralandAssetName, getNowTs, getTimeType, getTimeTypeStr, secondsToDuration } from '../../utils';
 import { DAY_IN_SECONDS, ONE_HUNDRED_YEARS_IN_SECONDS, ONE_SECOND } from '../../utils/date';
 import { MAX_UINT_256, getHumanValue } from '../../web3/utils';
 
@@ -280,10 +280,14 @@ export type Data = {
   version: string;
 };
 
-export type CoordinatesLAND = {
+export type CoordinatesLand = {
   id: string;
   x: string;
   y: string;
+};
+
+export type CoordinatesLandWithLandId = CoordinatesLand & {
+  landId: string;
 };
 
 export type PaymentToken = {
@@ -300,8 +304,11 @@ export type AssetEntity = {
   id: string;
   name: string;
   minPeriod: BigNumber;
+  minPeriodTimedType: string;
   maxPeriod: BigNumber;
+  maxPeriodTimedType: string;
   maxFutureTime: BigNumber;
+  maxFutureTimeTimedType: string;
   pricePerSecond: BigNumber;
   humanPricePerSecond: BigNumber;
   pricePerMagnitude: PricePerMagnitude;
@@ -386,6 +393,18 @@ export type ClaimHistory = {
   paymentToken: PaymentToken;
   txHash: string;
   timestamp: number;
+};
+
+export type ParsedDate = {
+  minutes: number;
+  hours: number;
+  days: number;
+  weeks: number;
+};
+
+export type ExtractedTime = {
+  timeType: string;
+  timeValue: number;
 };
 
 /**
@@ -1126,6 +1145,9 @@ export function parseAsset(asset: any): AssetEntity {
   liteAsset.isHot = asset.totalRents > 0;
   liteAsset.unclaimedRentFee = getHumanValue(new BigNumber(asset.unclaimedRentFee), asset.paymentToken.decimals)!;
   liteAsset.operator = asset.operator ?? constants.AddressZero;
+  liteAsset.minPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.minPeriod));
+  liteAsset.maxPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.maxPeriod));
+  liteAsset.maxFutureTimeTimedType = getTimeTypeStr(secondsToDuration(asset.maxFutureTime));
 
   // Calculates the intervals for availability
   // const now = getNowTs();

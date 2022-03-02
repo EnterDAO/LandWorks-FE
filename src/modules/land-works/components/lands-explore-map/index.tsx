@@ -1,11 +1,15 @@
 import { FC, useEffect, useState } from 'react';
+import { TILES_URL_DECENTRALEND } from 'constants/modules';
 
 import { ReactComponent as ArrowLeftIcon } from 'assets/icons/arrow-left.svg';
 import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
-import Atlas, { Coord, Layer } from 'components/custom/Atlas/Atlas';
+import Atlas, { AtlasTile, Coord, Layer } from 'components/custom/Atlas/Atlas';
 import { Button } from 'design-system';
 import { MinusIcon, PlusIcon } from 'design-system/icons';
-import { CoordinatesLAND } from 'modules/land-works/api';
+import { CoordinatesLand } from 'modules/land-works/api';
+import { useLandsMapActiveTile } from 'modules/land-works/providers/lands-map-active-tile';
+
+import LandsExploreNavigatorInfo, { SelectedTile } from '../lands-explore-navigator-info';
 
 import styles from './lands-explore-map.module.scss';
 
@@ -13,40 +17,113 @@ interface Props {
   positionX: number;
   positionY: number;
   expanded: boolean;
-  onClick: () => void;
-  highlights?: CoordinatesLAND[];
+  onClick?: () => void;
+  highlights?: CoordinatesLand[];
 }
 
 const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, highlights = [] }) => {
-  const [zoom, setZoom] = useState(1);
+  const [tiles, setTiles] = useState<Record<string, AtlasTile>>();
+  const [clickZoom, setClickZoom] = useState(0.5);
+  const [scrollZoom, setScrollZoom] = useState(0.5);
+  const { clickedLandId, setClickedLandId } = useLandsMapActiveTile();
+  const [selectedTile, setSelectedTile] = useState<Partial<SelectedTile>>({});
   const [highlightedTiles, setHighlightedTiles] = useState<Coord[]>([]);
 
+  const fetchTiles = async (url: string = TILES_URL_DECENTRALEND) => {
+    if (!window.fetch) return {};
+    const resp = await window.fetch(url);
+    const json = await resp.json();
+
+    setTiles(json.data as Record<string, AtlasTile>);
+  };
+
   const onClickToggleSizeHandler = () => {
-    onClick();
+    onClick && onClick();
   };
 
   const onClickPlusHandler = () => {
+    let zoom = clickZoom;
+
+    if (scrollZoom !== clickZoom) {
+      zoom = scrollZoom;
+    }
+
     if (zoom < 3) {
-      setZoom(zoom + 1);
+      setClickZoom(zoom + 0.5);
+      setScrollZoom(zoom + 0.5);
     }
   };
 
   const onClickMinusHandler = () => {
-    if (zoom > 0) {
-      setZoom(zoom - 1);
+    let zoom = clickZoom;
+
+    if (scrollZoom !== clickZoom) {
+      zoom = scrollZoom;
+    }
+
+    if (zoom < 3 && zoom > 0.5) {
+      setClickZoom(zoom - 0.5);
+      setScrollZoom(zoom - 0.5);
     }
   };
 
-  function isSelected(x: number, y: number) {
-    return highlightedTiles.some((coord) => coord.x === x && coord.y === y);
-  }
-
-  const highlightedStrokeLayer: Layer = (x, y) => {
-    return isSelected(x, y) ? { color: '#ff0044', scale: 1.4 } : null;
+  const onChangeAtlasHandler = (data: { zoom: number }) => {
+    setClickZoom(data.zoom);
+    setScrollZoom(data.zoom);
   };
 
-  const highlightedFillLayer: Layer = (x, y) => {
-    return isSelected(x, y) ? { color: '#ff9990', scale: 1.2 } : null;
+  const onPopupAtlasHandler = (data: { x: number; y: number }) => {
+    if (!tiles) return;
+
+    const id = `${data.x},${data.y}`;
+
+    setSelectedTile({
+      id,
+      type: tiles[id].type || '',
+      owner: tiles[id].owner || '',
+    });
+  };
+
+  const onClickAtlasHandler = (x: number, y: number) => {
+    if (!tiles) return;
+
+    const land = highlights.find((coord) => {
+      return coord.id === `${x},${y}`;
+    });
+
+    if (land) {
+      setClickedLandId && setClickedLandId(`${x},${y}`);
+    }
+  };
+
+  const isInList = (x: number, y: number) => {
+    return highlightedTiles.some((coord) => coord.x === x && coord.y === y);
+  };
+
+  const isClicked = (x: number, y: number) => {
+    if (!clickedLandId) {
+      return false;
+    }
+
+    const [clickX, clickY] = clickedLandId.split(',');
+
+    return x === Number(clickX) && y === Number(clickY);
+  };
+
+  const strokeLayer: Layer = (x, y) => {
+    return isInList(x, y) ? { color: '#ff0044', scale: 1.4 } : null;
+  };
+
+  const fillLayer: Layer = (x, y) => {
+    return isInList(x, y) ? { color: '#ff9990', scale: 1.2 } : null;
+  };
+
+  const clickedTileStrokeLayer: Layer = (x, y) => {
+    return isClicked(x, y) ? { color: '#26ff00', scale: 1.9 } : null;
+  };
+
+  const clickedTileFillLayer: Layer = (x, y) => {
+    return isClicked(x, y) ? { color: '#ff9990', scale: 1.5 } : null;
   };
 
   useEffect(() => {
@@ -58,19 +135,38 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
     });
   }, [highlights]);
 
+  useEffect(() => {
+    if (!tiles) {
+      fetchTiles();
+    }
+  }, []);
+
   return (
     <div className={styles.root}>
-      <Atlas x={positionX} y={positionY} zoom={zoom} layers={[highlightedStrokeLayer, highlightedFillLayer]} />
+      <Atlas
+        tiles={tiles}
+        x={positionX}
+        y={positionY}
+        zoom={clickZoom}
+        layers={[strokeLayer, fillLayer, clickedTileStrokeLayer, clickedTileFillLayer]}
+        onChange={onChangeAtlasHandler}
+        onPopup={onPopupAtlasHandler}
+        onClick={onClickAtlasHandler}
+      />
+
+      <LandsExploreNavigatorInfo selected={selectedTile as SelectedTile} />
+
       <div className={styles['expand-control']}>
         <Button variant="secondary" type="button" onClick={onClickToggleSizeHandler}>
           {expanded ? <ArrowRightIcon /> : <ArrowLeftIcon />}
         </Button>
       </div>
+
       <div className={styles['zoom-control']}>
-        <Button variant="secondary" type="button" onClick={onClickPlusHandler} disabled={zoom > 2}>
+        <Button variant="secondary" type="button" onClick={onClickPlusHandler} disabled={clickZoom > 2.8}>
           <PlusIcon />
         </Button>
-        <Button variant="secondary" type="button" onClick={onClickMinusHandler} disabled={zoom === 0}>
+        <Button variant="secondary" type="button" onClick={onClickMinusHandler} disabled={clickZoom <= 0.5}>
           <MinusIcon />
         </Button>
       </div>
