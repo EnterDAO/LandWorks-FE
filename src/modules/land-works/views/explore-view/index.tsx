@@ -33,7 +33,7 @@ import {
   fetchTokenPayments,
   parseUser,
 } from '../../api';
-import ListPropertyViewNew from '../list-property-view-new';
+import ListNewProperty from '../list-new-property';
 
 import { getAllLandsCoordinates } from 'modules/land-works/utils';
 import { getNowTs } from 'utils';
@@ -273,7 +273,7 @@ const ExploreView: React.FC = () => {
         </div>
       </div>
       <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
-        <ListPropertyViewNew />
+        <ListNewProperty />
       </Modal>
 
       <ClaimModal

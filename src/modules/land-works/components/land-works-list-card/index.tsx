@@ -48,10 +48,14 @@ const LandWorksListCard: React.FC<ILandWorksCardProps> = ({ land, handleClick, c
             <span>{land.name.toLowerCase()}</span>
           </Grid>
           <Grid className={s.details}>
-            <span>X:{land.coords[0]} Y:{land.coords[1]}</span>
+            <span>
+              X:{land.coords[0]} Y:{land.coords[1]}
+            </span>
           </Grid>
           <Grid className={s.details}>
-            <span>Parcel: {land.coords[0]}:{land.coords[1]}</span>
+            <span>
+              Parcel: {land.coords[0]}:{land.coords[1]}
+            </span>
           </Grid>
         </Grid>
       </Grid>

@@ -52,7 +52,7 @@ import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../
 
 import './index.scss';
 
-const ListPropertyViewNew: React.FC = () => {
+const ListNewProperty: React.FC = () => {
   const walletCtx = useWallet();
   const landworks = useLandworks();
   const estateRegistry = useEstateRegistry();
@@ -447,46 +447,46 @@ const ListPropertyViewNew: React.FC = () => {
 
   return (
     <section className="list-view">
-      {/* {loading ? (
+      {loading ? (
         <EditFormCardSkeleton />
-      ) : ( */}
-      <Grid container xs={12} direction="column" alignItems="flex-start" margin={'32px 0 36px'}>
-        <CustomizedSteppers steps={steps} activeStep={activeStep} />
-        <Grid item margin={'40px 0 20px'}>
-          <ControlledSelect
-            width={'12rem'}
-            value={selectedMetaverse}
-            onChange={onChangePlaceHandler}
-            options={landsData}
-          />
+      ) : (
+        <Grid container xs={12} direction="column" alignItems="flex-start" margin={'32px 0 36px'}>
+          <CustomizedSteppers steps={steps} activeStep={activeStep} />
+          <Grid item margin={'40px 0 20px'}>
+            <ControlledSelect
+              width={'12rem'}
+              value={selectedMetaverse}
+              onChange={onChangePlaceHandler}
+              options={landsData}
+            />
+          </Grid>
+          <Grid container flexDirection="row" wrap="wrap" xs={12} maxHeight={400} className="properties">
+            {assetProperties.map((land) => (
+              <Grid item xs={3} margin={'10px 0'}>
+                <LandWorksListCard
+                  handleClick={() => {
+                    console.log('something happens');
+                  }}
+                  key={land.name}
+                  land={land}
+                  coords={[9, 0]}
+                />
+              </Grid>
+            ))}
+          </Grid>
+          <hr className="divider" />
+          <Grid container direction="row" alignItems="center" justifyContent="space-between">
+            <Button variant="secondary" btnSize="medium">
+              Found on wallet
+            </Button>
+            <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(1)}>
+              Next
+            </Button>
+          </Grid>
         </Grid>
-        <Grid container flexDirection="row" wrap="wrap" xs={12}>
-          {assetProperties.map((land) => (
-            <Grid item xs={3} margin={'10px 0'}>
-              <LandWorksListCard
-                handleClick={() => {
-                  console.log('something happens');
-                }}
-                key={land.name}
-                land={land}
-                coords={[9, 0]}
-              />
-            </Grid>
-          ))}
-        </Grid>
-        <hr className="divider" />
-        <Grid container direction="row" alignItems="center" justifyContent="space-between">
-          <Button variant="secondary" btnSize="medium">
-            Found on wallet
-          </Button>
-          <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(1)}>
-            Next
-          </Button>
-        </Grid>
-      </Grid>
-      {/* )} */}
+      )}
     </section>
   );
 };
 
-export default ListPropertyViewNew;
+export default ListNewProperty;

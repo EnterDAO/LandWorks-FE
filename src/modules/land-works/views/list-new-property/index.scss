@@ -1,6 +1,10 @@
 @import 'styles/variables.scss';
 @import 'styles/text.scss';
 
+.properties {
+  overflow: scroll;
+}
+
 .list-view {
   margin: 40px auto 0;
   width: 800px;
