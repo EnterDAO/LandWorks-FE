@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Card, Col, Image, Row } from 'antd';
 
-import { Box, Grid } from 'design-system';
+import { Grid } from 'design-system';
 import { getLandImageUrl } from 'helpers/helpers';
 import { AssetOption } from 'modules/interface';
 
-import { AssetEntity } from '../../api';
 import landImage from './assets/land.png';
 
 import s from './s.module.scss';
@@ -14,15 +13,15 @@ import s from './s.module.scss';
 interface ILandWorksCardProps {
   land: AssetOption;
   handleClick: () => void;
-  coords: any[];
 }
 
-const LandWorksListCard: React.FC<ILandWorksCardProps> = ({ land, handleClick, coords }) => {
-  const history = useHistory();
+const LandWorksListCard: React.FC<ILandWorksCardProps> = ({ land, handleClick }) => {
   return (
     <Grid className={s.wrapper} item>
       <Grid className={s.card} onClick={handleClick}>
         <Grid className={s.imageListWrapper}>
+          
+          {/* Replace with MUI version */}
           <Image
             placeholder={<Image className={s.image} src={landImage} preview={false} />}
             className={s.image}

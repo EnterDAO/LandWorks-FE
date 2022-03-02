@@ -328,19 +328,15 @@ const ListNewProperty: React.FC = () => {
       const lands = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
       const estates = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
 
-      // console.log({ lands, estates });
-
       // TODO: improving typing
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const estatesWithLand = estates.filter((e: any) => e.landIds.estateSize > 0);
 
-      //const mergedProperties = [...lands, ...estatesWithLand];
       const mergedProperties = [...lands, ...estatesWithLand].map((e) => ({
         label: e.name,
         value: JSON.stringify(e),
         coords: e.coords,
       }));
-      console.log({ mergedProperties });
       setProperties(mergedProperties);
       setAssetProperties(lands);
       if (mergedProperties.length > 0) {
@@ -443,8 +439,6 @@ const ListNewProperty: React.FC = () => {
   };
   const steps = ['Choose Property', 'Rent Specification'];
 
-  console.log({ activeStep });
-
   return (
     <section className="list-view">
       {loading ? (
@@ -469,7 +463,6 @@ const ListNewProperty: React.FC = () => {
                   }}
                   key={land.name}
                   land={land}
-                  coords={[9, 0]}
                 />
               </Grid>
             ))}

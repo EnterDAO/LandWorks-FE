@@ -195,8 +195,6 @@ const ExploreView: React.FC = () => {
     setLoadPercentageValue((lands.slice(0, slicedLands).length * 100) / lands.length);
   }, [lands, slicedLands]);
 
-  console.log({ showListNewModal });
-
   return (
     <>
       <div className="content-container--explore-view--header">
