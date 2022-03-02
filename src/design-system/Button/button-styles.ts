@@ -61,7 +61,7 @@ export default styled('button')({
     height: '52px',
   },
   '&.medium': {
-    width: '200px',
+    minWidth: '200px',
     height: '52px',
   },
   '&.small': {

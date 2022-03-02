@@ -441,19 +441,19 @@ const ListNewProperty: React.FC = () => {
 
   return (
     <section className="list-view">
-      {loading ? (
-        <EditFormCardSkeleton />
-      ) : (
-        <Grid container xs={12} direction="column" alignItems="flex-start" margin={'32px 0 36px'}>
-          <CustomizedSteppers steps={steps} activeStep={activeStep} />
-          <Grid item margin={'40px 0 20px'}>
-            <ControlledSelect
-              width={'12rem'}
-              value={selectedMetaverse}
-              onChange={onChangePlaceHandler}
-              options={landsData}
-            />
-          </Grid>
+      <Grid container xs={12} direction="column" alignItems="flex-start">
+        <CustomizedSteppers steps={steps} activeStep={activeStep} />
+        <Grid item margin={'40px 0 20px'}>
+          <ControlledSelect
+            width={'12rem'}
+            value={selectedMetaverse}
+            onChange={onChangePlaceHandler}
+            options={landsData}
+          />
+        </Grid>
+        {loading ? (
+          <EditFormCardSkeleton />
+        ) : (
           <Grid container flexDirection="row" wrap="wrap" xs={12} maxHeight={400} className="properties">
             {assetProperties.map((land) => (
               <Grid item xs={3} margin={'10px 0'}>
@@ -467,17 +467,17 @@ const ListNewProperty: React.FC = () => {
               </Grid>
             ))}
           </Grid>
-          <hr className="divider" />
-          <Grid container direction="row" alignItems="center" justifyContent="space-between">
-            <Button variant="secondary" btnSize="medium">
-              Found on wallet
-            </Button>
-            <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(1)}>
-              Next
-            </Button>
-          </Grid>
+        )}
+        <hr className="divider" />
+        <Grid container direction="row" alignItems="center" justifyContent="space-between">
+          <Button variant="secondary" btnSize="medium">
+            Found on wallet ({assetProperties.length})
+          </Button>
+          <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(1)}>
+            Next
+          </Button>
         </Grid>
-      )}
+      </Grid>
     </section>
   );
 };

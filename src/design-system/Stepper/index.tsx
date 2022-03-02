@@ -55,8 +55,8 @@ const ColorlibStepIconRoot = styled('div')<{
 }>(({ ownerState }) => ({
   backgroundColor: THEME_COLORS.grey04,
   zIndex: 1,
-  width: 50,
-  height: 50,
+  width: 34,
+  height: 34,
   display: 'flex',
   borderRadius: '50%',
   justifyContent: 'center',

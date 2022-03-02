@@ -8,7 +8,7 @@ const StyledModal = styled(ModalUnstyled)({
   // TODO: We need to extract z-indexes in constants
   zIndex: '1300',
   right: '0',
-  top: '0',
+  top: '20px',
   left: '0',
   display: 'flex',
   alignItems: 'center',
@@ -27,18 +27,20 @@ const StyledBackdrop = styled('div')({
 
 const modalStyles = {
   modalBox: {
+    height: '95vh',
+    width: 'auto',
     minWidth: 500,
     position: 'relative',
     backgroundColor: THEME_COLORS.darkBlue02,
-    borderRadius: '0px 0px 15px 15px',
+    borderRadius: '40px',
     boxShadow: '0px 0px 20px 10px rgba(0, 0, 0, 0.3)',
     padding: '55px 40px 40px 40px',
     textAlign: 'center',
   },
   closeIcon: {
     position: 'absolute',
-    right: '20px',
-    top: '20px',
+    right: '30px',
+    top: '30px',
   },
 } as const;
 

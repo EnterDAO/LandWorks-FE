@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Card, Col, Image, Row } from 'antd';
+import React from 'react';
+import { Image } from 'antd';
 
 import { Grid } from 'design-system';
 import { getLandImageUrl } from 'helpers/helpers';
@@ -20,7 +19,6 @@ const LandWorksListCard: React.FC<ILandWorksCardProps> = ({ land, handleClick })
     <Grid className={s.wrapper} item>
       <Grid className={s.card} onClick={handleClick}>
         <Grid className={s.imageListWrapper}>
-          
           {/* Replace with MUI version */}
           <Image
             placeholder={<Image className={s.image} src={landImage} preview={false} />}
@@ -42,16 +40,16 @@ const LandWorksListCard: React.FC<ILandWorksCardProps> = ({ land, handleClick })
             src={getLandImageUrl(land)}
           /> */}
         </Grid>
-        <Grid>
-          <Grid className={s.name}>
+        <Grid flexDirection="column" alignContent="flex-start" textAlign='left'>
+          <Grid textAlign='left' className={s.name}>
             <span>{land.name.toLowerCase()}</span>
           </Grid>
-          <Grid className={s.details}>
+          <Grid textAlign='left' className={s.details}>
             <span>
               X:{land.coords[0]} Y:{land.coords[1]}
             </span>
           </Grid>
-          <Grid className={s.details}>
+          <Grid textAlign='left' className={s.details}>
             <span>
               Parcel: {land.coords[0]}:{land.coords[1]}
             </span>
