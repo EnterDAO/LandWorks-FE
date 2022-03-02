@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { ThemeContext } from '@emotion/react';
+import { FC } from 'react';
 import Stack from '@mui/material/Stack';
 import Step from '@mui/material/Step';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
@@ -10,7 +9,7 @@ import { styled } from '@mui/material/styles';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
-const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
+const ColorlibConnector = styled(StepConnector)(() => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 15,
     left: '-15%',
@@ -82,8 +81,7 @@ interface StepperProps {
   activeStep: number;
   steps: string[];
 }
-
-export default function CustomizedSteppers({ activeStep, steps }: StepperProps) {
+const CustomizedSteppers: FC<StepperProps> = ({ activeStep, steps }: StepperProps) => {
   return (
     <Stack sx={{ width: '100%', display: 'flex', justifyContent: 'space-evenly' }} spacing={4}>
       <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
@@ -97,4 +95,6 @@ export default function CustomizedSteppers({ activeStep, steps }: StepperProps) 
       </Stepper>
     </Stack>
   );
-}
+};
+
+export default CustomizedSteppers;

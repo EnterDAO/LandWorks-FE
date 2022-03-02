@@ -1,11 +1,8 @@
 import React from 'react';
-import { Image } from 'antd';
 
 import { Box, Grid } from 'design-system';
 import { getLandImageUrl } from 'helpers/helpers';
 import { AssetOption } from 'modules/interface';
-
-import landImage from './assets/land.png';
 
 import s from './s.module.scss';
 
@@ -19,13 +16,6 @@ const LandWorksListCard: React.FC<ILandWorksCardProps> = ({ land, handleClick })
     <Grid className={s.wrapper} item>
       <Grid className={s.card} onClick={handleClick}>
         <Grid className={s.imageListWrapper}>
-          {/* Replace with MUI version */}
-          {/* <Image
-            placeholder={<Image className={s.image} src={landImage} preview={false} />}
-            className={s.image}
-            src={getLandImageUrl(land.land)}
-            preview={false}
-          /> */}
           <Box
             component="img"
             sx={{
