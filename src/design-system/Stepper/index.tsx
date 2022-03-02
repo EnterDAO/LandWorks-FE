@@ -12,19 +12,9 @@ import { THEME_COLORS } from 'themes/theme-constants';
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
-    top: 22,
-    left: '0%',
+    top: 15,
+    left: '-15%',
     right: '0%',
-  },
-  [`&.${stepConnectorClasses.active}`]: {
-    [`& .${stepConnectorClasses.line}`]: {
-      //   backgroundImage: 'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
-    },
-  },
-  [`&.${stepConnectorClasses.completed}`]: {
-    [`& .${stepConnectorClasses.line}`]: {
-      //   backgroundImage: 'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
-    },
   },
   [`& .${stepConnectorClasses.line}`]: {
     height: 3,
@@ -71,7 +61,7 @@ const ColorlibStepIconRoot = styled('div')<{
   }),
   ...(ownerState.completed && {
     backgroundColor: THEME_COLORS.grey02,
-    color: THEME_COLORS.accentBlue,
+    color: THEME_COLORS.grey01,
     '& .MuiStepLabel-active': {
       color: THEME_COLORS.accentBlue,
     },

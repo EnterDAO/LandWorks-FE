@@ -3,6 +3,7 @@
 
 .properties {
   overflow: scroll;
+  max-height: 430px;
 
   ::-webkit-scrollbar {
     width: 1em;
@@ -21,6 +22,7 @@
 .list-view {
   margin: 0 auto;
   width: 800px;
+  height: auto;
 
   .divider {
     width: 100%;

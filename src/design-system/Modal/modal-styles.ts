@@ -30,6 +30,7 @@ const modalStyles = {
     height: '95vh',
     width: 'auto',
     minWidth: 500,
+    maxHeight: 858,
     position: 'relative',
     backgroundColor: THEME_COLORS.darkBlue02,
     borderRadius: '40px',

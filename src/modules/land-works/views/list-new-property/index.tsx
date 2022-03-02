@@ -12,36 +12,22 @@ import {
   FEE_PRECISION,
   MaxRentPeriodOptions,
   MinRentPeriodOptions,
-  PlaceOptions,
   metaverseOptions,
 } from 'constants/modules';
-import { Checkbox, Col, Row } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import BigNumber from 'bignumber.js';
-import { assertEnumType } from 'graphql';
 
-import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { Button, ControlledSelect, Grid } from 'design-system';
-import SimpleStepper from 'design-system/Stepper';
 import CustomizedSteppers from 'design-system/Stepper';
-import { getTokenIconName } from 'helpers/helpers';
-import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { AssetOption, DecentralandNFT, Option } from 'modules/interface';
-import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import LandWorksListCard from 'modules/land-works/components/land-works-list-card';
 import { landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
-import { AssetEntity, PaymentToken, fetchTokenPayments } from '../../api';
+import { PaymentToken, fetchTokenPayments } from '../../api';
 import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
-import { EditViewLandDropdown } from '../../components/lands-edit-dropdown-select';
-import { LandsEditInput } from '../../components/lands-edit-input';
-import { LandsEditPeriodDropdown } from '../../components/lands-edit-rent-period-select';
-import CurrencyDropdown from '../../components/lands-rent-currency-select';
-import { LandsTooltip } from '../../components/lands-tooltip';
 import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
 import { useLandworks } from '../../providers/landworks-provider';
@@ -441,42 +427,69 @@ const ListNewProperty: React.FC = () => {
 
   return (
     <section className="list-view">
-      <Grid container xs={12} direction="column" alignItems="flex-start">
-        <CustomizedSteppers steps={steps} activeStep={activeStep} />
-        <Grid item margin={'40px 0 20px'}>
-          <ControlledSelect
-            width={'12rem'}
-            value={selectedMetaverse}
-            onChange={onChangePlaceHandler}
-            options={landsData}
-          />
+      <Grid container xs={12} direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
+        <Grid container direction="row" alignItems="center" justifyContent="center" width={400} alignSelf="center">
+          <CustomizedSteppers steps={steps} activeStep={activeStep} />
         </Grid>
-        {loading ? (
-          <EditFormCardSkeleton />
-        ) : (
-          <Grid container flexDirection="row" wrap="wrap" xs={12} maxHeight={400} className="properties">
-            {assetProperties.map((land) => (
-              <Grid item xs={3} margin={'10px 0'}>
-                <LandWorksListCard
-                  handleClick={() => {
-                    console.log('something happens');
-                  }}
-                  key={land.name}
-                  land={land}
-                />
+        {activeStep === 0 && (
+          <>
+            <Grid item margin={'40px 0 10px'}>
+              <ControlledSelect
+                width={'12rem'}
+                value={selectedMetaverse}
+                onChange={onChangePlaceHandler}
+                options={landsData}
+              />
+            </Grid>
+
+            {loading ? (
+              <Grid width={'100%'}>
+                <EditFormCardSkeleton />
               </Grid>
-            ))}
+            ) : (
+              <Grid container flexDirection="row" wrap="wrap" xs={12} className="properties">
+                {assetProperties.map((land) => (
+                  <Grid item xs={3} margin={'0 0 10px'}>
+                    <LandWorksListCard
+                      handleClick={() => {
+                        console.log('something happens');
+                      }}
+                      key={land.name}
+                      land={land}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            )}
+          </>
+        )}
+
+        <hr className="divider" />
+        {activeStep === 0 && (
+          <Grid container direction="row" alignItems="center" justifyContent="space-between">
+            <Button variant="secondary" btnSize="medium">
+              Found on wallet ({assetProperties.length})
+            </Button>
+            <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(1)}>
+              Next
+            </Button>
           </Grid>
         )}
-        <hr className="divider" />
-        <Grid container direction="row" alignItems="center" justifyContent="space-between">
-          <Button variant="secondary" btnSize="medium">
-            Found on wallet ({assetProperties.length})
-          </Button>
-          <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(1)}>
-            Next
-          </Button>
-        </Grid>
+        {activeStep === 1 && (
+          <Grid container direction="row" alignItems="center" justifyContent="space-between">
+            <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(0)}>
+              Back
+            </Button>
+            <Grid direction="row" alignItems="center" justifyContent="space-between">
+              <Button variant="gradient" btnSize="medium" onClick={() => setActiveStep(1)} style={{ marginRight: 15 }}>
+                Approve
+              </Button>
+              <Button disabled variant="secondary" btnSize="medium" onClick={() => setActiveStep(0)}>
+                Confirm Listing
+              </Button>
+            </Grid>
+          </Grid>
+        )}
       </Grid>
     </section>
   );
