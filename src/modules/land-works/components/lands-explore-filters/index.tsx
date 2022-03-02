@@ -65,7 +65,7 @@ const LandWorksFilters: FC<Props> = ({
   return (
     <div className={styles.root}>
       <Box className={styles.container}>
-        <Box className={styles.box} style={{ width: '400px' }}>
+        <Box className={styles.box}>
           <Box className={styles.box} style={{ marginRight: '20px' }}>
             <ControlledSelect
               width={'12rem'}
