@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction, createContext, useContext } from 'react';
 
-export type DecentralndMapId = string;
+export type DecentralandMapId = string;
 
 export type ContextProps = {
-  clickedLandId: DecentralndMapId;
-  setClickedLandId?: Dispatch<SetStateAction<DecentralndMapId>>;
+  clickedLandId: DecentralandMapId;
+  setClickedLandId?: Dispatch<SetStateAction<DecentralandMapId>>;
 };
 
 export const LandsMapActiveTileContext = createContext<ContextProps>({

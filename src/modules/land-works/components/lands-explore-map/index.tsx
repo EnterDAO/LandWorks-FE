@@ -8,8 +8,10 @@ import { Button } from 'design-system';
 import { MinusIcon, PlusIcon } from 'design-system/icons';
 import { CoordinatesLand } from 'modules/land-works/api';
 import { useLandsMapActiveTile } from 'modules/land-works/providers/lands-map-active-tile';
+import { useLandsMapSelectedTile } from 'modules/land-works/providers/lands-map-selected-tile';
+import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 
-import LandsExploreNavigatorInfo, { SelectedTile } from '../lands-explore-navigator-info';
+import LandsExploreNavigatorInfo from '../lands-explore-navigator-info';
 
 import styles from './lands-explore-map.module.scss';
 
@@ -22,11 +24,11 @@ interface Props {
 }
 
 const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, highlights = [] }) => {
-  const [tiles, setTiles] = useState<Record<string, AtlasTile>>();
   const [clickZoom, setClickZoom] = useState(0.5);
   const [scrollZoom, setScrollZoom] = useState(0.5);
   const { clickedLandId, setClickedLandId } = useLandsMapActiveTile();
-  const [selectedTile, setSelectedTile] = useState<Partial<SelectedTile>>({});
+  const { setSelectedTile } = useLandsMapSelectedTile();
+  const { mapTiles, setMapTiles } = useLandsMapTiles();
   const [highlightedTiles, setHighlightedTiles] = useState<Coord[]>([]);
 
   const fetchTiles = async (url: string = TILES_URL_DECENTRALEND) => {
@@ -34,7 +36,7 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
     const resp = await window.fetch(url);
     const json = await resp.json();
 
-    setTiles(json.data as Record<string, AtlasTile>);
+    setMapTiles && setMapTiles(json.data as Record<string, AtlasTile>);
   };
 
   const onClickToggleSizeHandler = () => {
@@ -73,22 +75,25 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
   };
 
   const onPopupAtlasHandler = (data: { x: number; y: number }) => {
-    if (!tiles) return;
-
     const id = `${data.x},${data.y}`;
 
-    setSelectedTile({
-      id,
-      type: tiles[id].type || '',
-      owner: tiles[id].owner || '',
-    });
+    if (!mapTiles || !mapTiles[id]) return;
+
+    setSelectedTile &&
+      setSelectedTile({
+        id,
+        type: mapTiles[id].type || '',
+        owner: mapTiles[id].owner || '',
+      });
   };
 
   const onClickAtlasHandler = (x: number, y: number) => {
-    if (!tiles) return;
+    if (!mapTiles) return;
+
+    const id = `${x},${y}`;
 
     const land = highlights.find((coord) => {
-      return coord.id === `${x},${y}`;
+      return coord.id === id;
     });
 
     if (land) {
@@ -136,15 +141,13 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
   }, [highlights]);
 
   useEffect(() => {
-    if (!tiles) {
-      fetchTiles();
-    }
+    fetchTiles();
   }, []);
 
   return (
     <div className={styles.root}>
       <Atlas
-        tiles={tiles}
+        tiles={mapTiles}
         x={positionX}
         y={positionY}
         zoom={clickZoom}
@@ -154,7 +157,7 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
         onClick={onClickAtlasHandler}
       />
 
-      <LandsExploreNavigatorInfo selected={selectedTile as SelectedTile} />
+      <LandsExploreNavigatorInfo />
 
       <div className={styles['expand-control']}>
         <Button variant="secondary" type="button" onClick={onClickToggleSizeHandler}>

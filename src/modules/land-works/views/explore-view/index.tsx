@@ -11,6 +11,7 @@ import { useSubscription } from '@apollo/client';
 import { Grid } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
+import { AtlasTile } from 'components/custom/Atlas/Atlas';
 import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
@@ -21,6 +22,8 @@ import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
 import LandsExploreSubheader from 'modules/land-works/components/lands-explore-subheader';
 import LandsSearchBar from 'modules/land-works/components/lands-search';
 import LandsMapActiveTileProvider from 'modules/land-works/providers/lands-map-active-tile';
+import LandsMapSelectedTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-selected-tile';
+import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
 import { useWallet } from 'wallets/wallet';
 
 import {
@@ -46,6 +49,12 @@ const ExploreView: React.FC = () => {
 
   const [lands, setLands] = useState([] as AssetEntity[]);
   const [clickedLandId, setClickedLandId] = useState<AssetEntity['id']>('');
+  const [mapTiles, setMapTiles] = useState<Record<string, AtlasTile>>({});
+  const [selectedTile, setSelectedTile] = useState<SelectedTile>({
+    id: '',
+    type: '',
+    owner: '',
+  });
   const [user, setUser] = useState({} as UserEntity);
 
   const [sortDir, setSortDir] = useState(sortDirections[0]);
@@ -178,6 +187,17 @@ const ExploreView: React.FC = () => {
     if (allCoords.length && allCoords[0]) {
       setPointMapCentre([{ id: land.id, x: allCoords[0].x, y: allCoords[0].y }]);
       setClickedLandId && setClickedLandId(`${allCoords[0].x},${allCoords[0].y}`);
+
+      const id = `${allCoords[0].x},${allCoords[0].y}`;
+
+      if (!mapTiles || !mapTiles[id]) return;
+
+      setSelectedTile &&
+        setSelectedTile({
+          id,
+          type: mapTiles[id].type || '',
+          owner: mapTiles[id].owner || '',
+        });
     }
   };
 
@@ -217,68 +237,72 @@ const ExploreView: React.FC = () => {
   }, [clickedLandId]);
 
   return (
-    <LandsMapActiveTileProvider value={{ clickedLandId, setClickedLandId }}>
-      <div className="content-container--explore-view--header">
-        <LandsExploreSubheader
-          totalLands={lands.length}
-          hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
-          handleListNew={() => setShowListNewModal(true)}
-        />
-        <LandsExploreFilters
-          onChangeSortDirection={onChangeFiltersSortDirection}
-          onChangeOwnerToggler={onChangeFiltersOwnerToggler}
-          onChangeAvailable={onChangeFiltersAvailable}
-          onChangeCurrency={onChangeFiltersCurrency}
-        />
-      </div>
+    <LandsMapTilesProvider value={{ mapTiles, setMapTiles }}>
+      <LandsMapActiveTileProvider value={{ clickedLandId, setClickedLandId }}>
+        <LandsMapSelectedTileProvider value={{ selectedTile, setSelectedTile }}>
+          <div className="content-container--explore-view--header">
+            <LandsExploreSubheader
+              totalLands={lands.length}
+              hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
+              handleListNew={() => setShowListNewModal(true)}
+            />
+            <LandsExploreFilters
+              onChangeSortDirection={onChangeFiltersSortDirection}
+              onChangeOwnerToggler={onChangeFiltersOwnerToggler}
+              onChangeAvailable={onChangeFiltersAvailable}
+              onChangeCurrency={onChangeFiltersCurrency}
+            />
+          </div>
 
-      <div className="content-container content-container--explore-view">
-        <div
-          className="lands-container"
-          onMouseMove={() => setBlockAutoScroll(true)}
-          onMouseOut={() => setTimeout(() => setBlockAutoScroll(false), 150)}
-        >
-          <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
-            {loading ? (
-              [1, 2, 3, 4].map((i) => (
-                <Grid item xs={12} sm={6} md={6} lg={6} xl={4} key={i}>
-                  <LandCardSkeleton key={i} />
-                </Grid>
-              ))
-            ) : lands.length ? (
-              lands.slice(0, slicedLands).map((land) => (
-                <Grid item xs={12} sm={6} md={6} lg={6} xl={4} key={land.id}>
-                  <LandWorkCard onMouseOver={onMouseOverCardHandler} land={land} />
-                </Grid>
-              ))
-            ) : (
-              <div>No properties are currently listed</div>
-            )}
-          </Grid>
-          <LoadMoreLands
-            textToDisplay={`List ${slicedLandsInTotal} of ${lands.length}`}
-            handleLoadMore={handleLoadMore}
-            percentageValue={loadPercentageValue}
-            disabled={slicedLandsInTotal === lands.length}
-          />
-          <LayoutFooter isWrapped={false} />
-        </div>
+          <div className="content-container content-container--explore-view">
+            <div
+              className="lands-container"
+              onMouseMove={() => setBlockAutoScroll(true)}
+              onMouseOut={() => setTimeout(() => setBlockAutoScroll(false), 150)}
+            >
+              <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+              <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
+                {loading ? (
+                  [1, 2, 3, 4].map((i) => (
+                    <Grid item xs={12} sm={6} md={6} lg={6} xl={4} key={i}>
+                      <LandCardSkeleton key={i} />
+                    </Grid>
+                  ))
+                ) : lands.length ? (
+                  lands.slice(0, slicedLands).map((land) => (
+                    <Grid item xs={12} sm={6} md={6} lg={6} xl={4} key={land.id}>
+                      <LandWorkCard onMouseOver={onMouseOverCardHandler} land={land} />
+                    </Grid>
+                  ))
+                ) : (
+                  <div>No properties are currently listed</div>
+                )}
+              </Grid>
+              <LoadMoreLands
+                textToDisplay={`List ${slicedLandsInTotal} of ${lands.length}`}
+                handleLoadMore={handleLoadMore}
+                percentageValue={loadPercentageValue}
+                disabled={slicedLandsInTotal === lands.length}
+              />
+              <LayoutFooter isWrapped={false} />
+            </div>
 
-        <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
-          <LandsExploreMap
-            positionX={atlasMapX}
-            positionY={atlasMapY}
-            expanded={mapExpanded}
-            onClick={() => setMapExpanded(!mapExpanded)}
-            highlights={coordinatesHighlights}
-          />
-        </div>
-      </div>
-      <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
-        <ListNewProperty />
-      </Modal>
-    </LandsMapActiveTileProvider>
+            <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
+              <LandsExploreMap
+                positionX={atlasMapX}
+                positionY={atlasMapY}
+                expanded={mapExpanded}
+                onClick={() => setMapExpanded(!mapExpanded)}
+                highlights={coordinatesHighlights}
+              />
+            </div>
+          </div>
+          <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
+            <ListNewProperty />
+          </Modal>
+        </LandsMapSelectedTileProvider>
+      </LandsMapActiveTileProvider>
+    </LandsMapTilesProvider>
   );
 };
 
