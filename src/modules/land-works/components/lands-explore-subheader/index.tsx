@@ -1,5 +1,4 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
 
@@ -8,11 +7,10 @@ import styles from './lands-explore-subheader.module.scss';
 interface Props {
   totalLands: number;
   hasMetamaskConnected: boolean;
+  handleListNew: () => void;
 }
 
-const LandsExploreSubheader: React.FC<Props> = ({ totalLands, hasMetamaskConnected }) => {
-  const history = useHistory();
-
+const LandsExploreSubheader: React.FC<Props> = ({ totalLands, hasMetamaskConnected, handleListNew }) => {
   return (
     <div className={styles.root}>
       <h1>
@@ -23,7 +21,7 @@ const LandsExploreSubheader: React.FC<Props> = ({ totalLands, hasMetamaskConnect
           <button
             type="button"
             className={`button-primary ${styles['list-new-property-button']} ${styles['button-primary']}`}
-            onClick={() => history.push('/list')}
+            onClick={handleListNew}
           >
             <AddIcon className={`add-icon`} />
             List New Property
