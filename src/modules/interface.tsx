@@ -1,7 +1,16 @@
+import { AssetEntity } from "./land-works/api";
+
 export interface Option {
   readonly label: string;
   readonly value: string | number;
   icon?: React.ReactNode;
+}
+
+export interface AssetOption {
+  land: AssetEntity;
+  name: string;
+  coords: any[];
+  parcel: any[];
 }
 
 export type DecentralandNFT = {

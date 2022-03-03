@@ -11,6 +11,7 @@ import { useSubscription } from '@apollo/client';
 import { Grid } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
+import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
@@ -32,6 +33,7 @@ import {
   fetchTokenPayments,
   parseUser,
 } from '../../api';
+import ListNewProperty from '../list-new-property';
 
 import { getAllLandsCoordinates } from 'modules/land-works/utils';
 import { getNowTs } from 'utils';
@@ -68,6 +70,7 @@ const ExploreView: React.FC = () => {
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState(DEFAULT_TOKEN_ADDRESS);
 
+  const [showListNewModal, setShowListNewModal] = useState(false);
   const slicedLandsInTotal = lands.slice(0, slicedLands).length;
 
   useEffect(() => {
@@ -219,6 +222,7 @@ const ExploreView: React.FC = () => {
         <LandsExploreSubheader
           totalLands={lands.length}
           hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
+          handleListNew={() => setShowListNewModal(true)}
         />
         <LandsExploreFilters
           onChangeSortDirection={onChangeFiltersSortDirection}
@@ -271,6 +275,9 @@ const ExploreView: React.FC = () => {
           />
         </div>
       </div>
+      <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
+        <ListNewProperty />
+      </Modal>
     </LandsMapActiveTileProvider>
   );
 };
