@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 
@@ -13,11 +13,11 @@ interface Props {
   variant: 'currency' | 'calendar';
 }
 
-export default function DropdownSection({ handleOpen, variant }: Props) {
+const DropdownSection: FC<Props> = ({ handleOpen, variant }) => {
   const [rotateChevron, setRotateChevron] = useState(false);
 
   const handleClick = () => {
-    setRotateChevron(true);
+    setRotateChevron(!rotateChevron);
     handleOpen();
   };
 
@@ -37,4 +37,6 @@ export default function DropdownSection({ handleOpen, variant }: Props) {
       <Divider orientation="horizontal" flexItem className={s.divider} />
     </Grid>
   );
-}
+};
+
+export default DropdownSection;
