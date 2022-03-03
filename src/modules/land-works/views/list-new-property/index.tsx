@@ -18,7 +18,7 @@ import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { Box, Button, ControlledSelect, DropdownMenu, Grid, StyledSwitch, Typography } from 'design-system';
+import { Button, ControlledSelect, Grid, StyledSwitch, Typography } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
 import { getTokenIconName } from 'helpers/helpers';
 import { AssetOption, DecentralandNFT, Option } from 'modules/interface';
@@ -26,35 +26,35 @@ import CustomDropdownInput from 'modules/land-works/components/land-works-input'
 import LandWorksListCard from 'modules/land-works/components/land-works-list-card';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import { landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
+import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
-// import config from '../../../../config';
+import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
 import { PaymentToken, fetchTokenPayments } from '../../api';
 import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
 import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
+import { useLandworks } from '../../providers/landworks-provider';
 
 import { getTimeType, secondsToDuration } from 'utils';
 import { DAY_IN_SECONDS, MINUTE_IN_SECONDS } from 'utils/date';
 
 import './index.scss';
 
-// import { useLandworks } from '../../providers/landworks-provider';
-
 // import { getTimeType, secondsToDuration } from '../../../../utils';
 
 const ListNewProperty: React.FC = () => {
   const walletCtx = useWallet();
-  // const landworks = useLandworks();
+  const landworks = useLandworks();
   const estateRegistry = useEstateRegistry();
   const landRegistry = useLandRegistry();
   // const history = useHistory();
 
-  // const { landWorksContract } = landworks;
-  // const { landRegistryContract } = landRegistry;
-  // const { estateRegistryContract } = estateRegistry;
+  const { landWorksContract } = landworks;
+  const { landRegistryContract } = landRegistry;
+  const { estateRegistryContract } = estateRegistry;
 
   const [minPeriod, setMinPeriod] = useState(new BigNumber(MINUTE_IN_SECONDS));
   const [isMinPeriodSelected, setMinPeriodSelected] = useState(false);
@@ -79,7 +79,7 @@ const ListNewProperty: React.FC = () => {
   const [selectedProperty, setSelectedProperty] = useState(null as DecentralandNFT | null);
 
   const [showRentPeriodInput, setShowRentPeriodInput] = useState(false);
-  const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(true);
+  const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(false);
 
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState({} as PaymentToken);
@@ -200,41 +200,41 @@ const ListNewProperty: React.FC = () => {
     }
   };
 
-  // const handleAtMostSelectChange = (newValue: SingleValue<Option>) => {
-  //   const value = BigNumber.from(newValue?.value);
-  //   setMaxFuturePeriodType(value);
+  const handleAtMostSelectChange = (value: number) => {
+    const bigValue = BigNumber.from(value);
+    setMaxFuturePeriodType(bigValue);
 
-  //   const parsedDate = secondsToDuration(value?.toNumber()!);
-  //   const { timeType } = getTimeType(parsedDate);
-  //   const typeSuffix = timeType.substr(0, 3);
-  //   const optionByType = AtMostRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
-  //   const optionIndex = AtMostRentPeriodOptions.indexOf(optionByType!);
+    const parsedDate = secondsToDuration(bigValue?.toNumber()!);
+    const { timeType } = getTimeType(parsedDate);
+    const typeSuffix = timeType.substr(0, 3);
+    const optionByType = AtMostRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
+    const optionIndex = AtMostRentPeriodOptions.indexOf(optionByType!);
 
-  //   setMaxFutureSelectedOption(AtMostRentPeriodOptions[optionIndex]);
-  //   setMaxFutureTime(maxFutureTimeInput?.multipliedBy(value!)!);
+    setMaxFutureSelectedOption(AtMostRentPeriodOptions[optionIndex]);
+    setMaxFutureTime(maxFutureTimeInput?.multipliedBy(bigValue!)!);
 
-  //   // If maxPeriod chebkox is not selected, mirror the values to the maxPeriod input and dropdown
-  //   if (!isMaxPeriodSelected) {
-  //     setMaxPeriodType(value);
+    // If maxPeriod chebkox is not selected, mirror the values to the maxPeriod input and dropdown
+    if (!isMaxPeriodSelected) {
+      setMaxPeriodType(bigValue);
 
-  //     const optionByType = MaxRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
-  //     const optionIndex = MaxRentPeriodOptions.indexOf(optionByType!);
-  //     setMaxPeriodSelectedOption(MaxRentPeriodOptions[optionIndex]);
-  //     setMaxPeriod(maxInput?.multipliedBy(value!)!);
-  //   }
-  // };
+      const optionByType = MaxRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
+      const optionIndex = MaxRentPeriodOptions.indexOf(optionByType!);
+      setMaxPeriodSelectedOption(MaxRentPeriodOptions[optionIndex]);
+      setMaxPeriod(maxInput?.multipliedBy(bigValue!)!);
+    }
+  };
 
-  // const handleAtMostInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const value = BigNumber.from(e.target.value);
-  //   setMaxFutureTimeInput(value!);
-  //   setMaxFutureTime(value?.multipliedBy(maxFutureTimePeriod!)!);
+  const handleAtMostInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = BigNumber.from(e.target.value);
+    setMaxFutureTimeInput(value!);
+    setMaxFutureTime(value?.multipliedBy(maxFutureTimePeriod!)!);
 
-  //   // If maxPeriod chebkox is not selected, mirror the values to the maxPeriod input and dropdown
-  //   if (!isMaxPeriodSelected) {
-  //     setMaxInput(value!);
-  //     setMaxPeriod(value?.multipliedBy(maxPeriodType!)!);
-  //   }
-  // };
+    // If maxPeriod chebkox is not selected, mirror the values to the maxPeriod input and dropdown
+    if (!isMaxPeriodSelected) {
+      setMaxInput(value!);
+      setMaxPeriod(value?.multipliedBy(maxPeriodType!)!);
+    }
+  };
 
   const handleCurrencyChange = (value: number) => {
     const sortIndex = Number(value) - 1;
@@ -388,22 +388,22 @@ const ListNewProperty: React.FC = () => {
     setListDisabled(isListDisabled);
   };
 
-  // const evaluateSelectedProperty = async () => {
-  //   if (selectedProperty) {
-  //     setApproveDisabled(false);
-  //     let approvedAddress: string;
-  //     if (selectedProperty.isLAND) {
-  //       approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
-  //     } else {
-  //       approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
-  //     }
-  //     if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
-  //       setApproveDisabled(true);
-  //     } else {
-  //       setApproveDisabled(false);
-  //     }
-  //   }
-  // };
+  const evaluateSelectedProperty = async () => {
+    if (selectedProperty) {
+      setApproveDisabled(false);
+      let approvedAddress: string;
+      if (selectedProperty.isLAND) {
+        approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
+      } else {
+        approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
+      }
+      if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
+        setApproveDisabled(true);
+      } else {
+        setApproveDisabled(false);
+      }
+    }
+  };
 
   const getUsdPrice = (symbol: string, price: string | number | BigNumber) => {
     const ethPrice = new BigNumber(getTokenPrice(symbol) || '0');
@@ -483,7 +483,7 @@ const ListNewProperty: React.FC = () => {
         )}
 
         {activeStep === 1 && (
-          <Grid container xs={5.5} maxWidth={'350px'} flexDirection="column">
+          <Grid container xs={6} flexDirection="column" className="inputSection">
             <DropdownSection
               variant="calendar"
               handleOpen={() => {
@@ -491,34 +491,18 @@ const ListNewProperty: React.FC = () => {
               }}
             />
             {showRentPeriodInput && (
-              <>
-                <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
-                  <span>Min Rent Period</span>
-                  <StyledSwitch className="switch" checked={isMinPeriodSelected} onChange={handleMinCheckboxChange} />
-                </Grid>
-                {isMinPeriodSelected && (
-                  <Grid mt={3}>
-                    <CustomDropdownInput
-                      handleOptionChange={handleMinSelectChange}
-                      onInput={handleMinInputChange}
-                      options="times"
-                    />
-                  </Grid>
-                )}
-                <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
-                  <span>Max Rent Period</span>
-                  <StyledSwitch className="switch" checked={isMaxPeriodSelected} onChange={handleMaxCheckboxChange} />
-                </Grid>
-                {isMaxPeriodSelected && (
-                  <Grid mt={3}>
-                    <CustomDropdownInput
-                      handleOptionChange={handleMaxSelectChange}
-                      onInput={handleMaxInputChange}
-                      options="times"
-                    />
-                  </Grid>
-                )}
-              </>
+              <RentPeriod
+                isMinPeriodSelected={isMinPeriodSelected}
+                handleMinCheckboxChange={handleMinCheckboxChange}
+                handleMinSelectChange={handleMinSelectChange}
+                handleMinInputChange={handleMinInputChange}
+                isMaxPeriodSelected={isMaxPeriodSelected}
+                handleMaxCheckboxChange={handleMaxCheckboxChange}
+                handleMaxSelectChange={handleMaxSelectChange}
+                handleMaxInputChange={handleMaxInputChange}
+                handleAtMostInputChange={handleAtMostInputChange}
+                handleAtMostSelectChange={handleAtMostSelectChange}
+              />
             )}
             <DropdownSection
               variant="currency"
@@ -537,51 +521,13 @@ const ListNewProperty: React.FC = () => {
                   protocolFee={protocolFee}
                   feePercentage={feePercentage}
                 />
-                {/* <Grid>
-                  <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
-                    <span>Amount</span>
-                  </Grid>
-                  <Grid mt={3}>
-                    <CustomDropdownInput
-                      onInput={handleCostEthChange}
-                      handleOptionChange={handleCurrencyChange}
-                      options="currencies"
-                      ethInUsd={showPriceInEth}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid className="blueBox" display="flex" flexDirection="row" justifyContent="space-between">
-                  <Grid display="flex" alignItems="flex-start" flexDirection="column">
-                    <Grid>
-                      <Icon
-                        name={getTokenIconName(paymentToken.symbol || 'png/eth')}
-                        className="info-icon"
-                        style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
-                      />
-                      <SmallAmountTooltip amount={new BigNumber(earnings || '0')} />
-                    </Grid>
-                    <Grid>Your Earnings</Grid>
-                  </Grid>
-                  <Grid display="flex" alignItems="flex-start" flexDirection="column">
-                    <Grid>
-                      <Icon
-                        name={getTokenIconName(paymentToken.symbol || 'png/eth')}
-                        className="info-icon"
-                        style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
-                      />
-                      <span className="earnings-num">
-                        <SmallAmountTooltip amount={new BigNumber(protocolFee || '0')} />
-                      </span>
-                    </Grid>
-                    <Grid>{feePercentage}% Protocol Fees</Grid>
-                  </Grid>
-                </Grid> */}
               </>
             )}
           </Grid>
         )}
 
         <hr className="divider" />
+
         {activeStep === 0 && (
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
             <Button variant="secondary" btnSize="medium">
@@ -601,7 +547,7 @@ const ListNewProperty: React.FC = () => {
               <Button variant="gradient" btnSize="medium" onClick={() => setActiveStep(1)} style={{ marginRight: 15 }}>
                 Approve
               </Button>
-              <Button disabled variant="secondary" btnSize="medium" onClick={() => setActiveStep(0)}>
+              <Button disabled={listDisabled} variant="secondary" btnSize="medium" onClick={() => setActiveStep(0)}>
                 Confirm Listing
               </Button>
             </Grid>
