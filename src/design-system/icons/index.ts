@@ -3,11 +3,13 @@ import { ReactComponent as ArrowLeftIcon } from 'assets/icons/arrow-left.svg';
 import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
 import { ReactComponent as ArrowUpIcon } from 'assets/icons/arrow-up.svg';
 import { ReactComponent as BackIcon } from 'assets/icons/back.svg';
+import { ReactComponent as Calendar02 } from 'assets/icons/calendar-02.svg';
 import { ReactComponent as CalendarIcon } from 'assets/icons/calendar.svg';
 import { ReactComponent as CheckGlowIcon } from 'assets/icons/check-glow.svg';
 import { ReactComponent as CheckIcon } from 'assets/icons/check.svg';
 import { ReactComponent as CloseIcon } from 'assets/icons/close.svg';
 import { ReactComponent as CopyIcon } from 'assets/icons/copy.svg';
+import { ReactComponent as Currency } from 'assets/icons/currency.svg';
 import { ReactComponent as EditIcon } from 'assets/icons/edit.svg';
 import { ReactComponent as ENTRIcon } from 'assets/icons/ENTR.svg';
 import { ReactComponent as ErrorIcon } from 'assets/icons/error.svg';
@@ -101,6 +103,8 @@ export {
   SettingsIcon,
   LogoutIcon,
   PlusIcon,
+  Currency,
+  Calendar02,
 };
 // Multi-color icons
 export { UploadIcon, FileUploadedIcon, UploadingIcon, UpdateIcon, NoConnectionIcon, ErrorIcon };

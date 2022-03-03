@@ -1,0 +1,27 @@
+@import '../../../../styles/variables.scss';
+@import '../../../../styles/utils.scss';
+
+.wrapper {
+  background-color: $grey01;
+  height: 52px;
+  align-items: center;
+  border-radius: 10px;
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.divider {
+  margin: 15px 0 !important;
+  background-color: $grey02;
+}
+
+.input {
+  background: none;
+  border: none;
+  padding: 16px;
+  width: 225px;
+}

@@ -1,0 +1,56 @@
+@import '../../../../styles/variables.scss';
+@import '../../../../styles/utils.scss';
+
+.wrapper {
+  background-color: none;
+  height: 52px;
+  align-items: center;
+  border-radius: 10px;
+  width: 100%;
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  p {
+    font-size: 18px;
+    font-weight: 700;
+    margin-left: 11px;
+  }
+  position: relative;
+}
+
+.content {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  position: relative;
+}
+
+.divider {
+  margin: 15px 0 0 !important;
+  background-color: $grey02;
+}
+
+.icon {
+  height: 19px;
+}
+
+.chevron {
+  width: 10px;
+  position: absolute;
+  right: 10px;
+}
+.rotate {
+  width: 10px;
+  position: absolute;
+  right: 10px;
+}
+
+.input {
+  background: none;
+  border: none;
+  padding: 16px;
+}

@@ -70,7 +70,7 @@ const ExploreView: React.FC = () => {
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState(DEFAULT_TOKEN_ADDRESS);
 
-  const [showListNewModal, setShowListNewModal] = useState(false);
+  const [showListNewModal, setShowListNewModal] = useState(true);
   const slicedLandsInTotal = lands.slice(0, slicedLands).length;
 
   useEffect(() => {
