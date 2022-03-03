@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 
+import { ReactComponent as BluePlus } from 'assets/icons/blue-plus.svg';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { Grid } from 'design-system';
@@ -32,8 +33,9 @@ export const RentPrice: React.FC<IProps> = ({
   return (
     <>
       <Grid>
-        <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
-          <span>Amount</span>
+        <Grid alignItems="center" display="flex" flexDirection="row" mt={3} justifyContent="space-between">
+          <span className="light">Amount</span>
+          <span className="grey">per day</span>
         </Grid>
         <Grid mt={3}>
           <CustomDropdownInput
@@ -44,30 +46,31 @@ export const RentPrice: React.FC<IProps> = ({
           />
         </Grid>
       </Grid>
-      <Grid className="blueBox" display="flex" flexDirection="row" justifyContent="space-between">
-        <Grid display="flex" alignItems="flex-start" flexDirection="column">
-          <Grid>
+      <Grid className="blueBox" display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
+        <Grid display="flex" justifyContent="center" alignItems="flex-start" flexDirection="column">
+          <Grid display="flex" flexDirection="row" alignItems="center">
             <Icon
               name={getTokenIconName(paymentToken.symbol || 'png/eth')}
-              className="info-icon"
+              // className="info-icon"
               style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
             />
-            <SmallAmountTooltip amount={new BigNumber(earnings || '0')} />
+            <SmallAmountTooltip className="amount" amount={new BigNumber(earnings || '0')} />
           </Grid>
-          <Grid>Your Earnings</Grid>
+          <Grid className="amount-label">Your Earnings</Grid>
         </Grid>
-        <Grid display="flex" alignItems="flex-start" flexDirection="column">
-          <Grid>
+        <BluePlus />
+        <Grid display="flex" justifyContent="center" alignItems="flex-start" flexDirection="column">
+          <Grid display="flex" flexDirection="row" alignItems="center">
             <Icon
               name={getTokenIconName(paymentToken.symbol || 'png/eth')}
-              className="info-icon"
+              // className="info-icon"
               style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
             />
             <span className="earnings-num">
-              <SmallAmountTooltip amount={new BigNumber(protocolFee || '0')} />
+              <SmallAmountTooltip className="amount" amount={new BigNumber(protocolFee || '0')} />
             </span>
           </Grid>
-          <Grid>{feePercentage}% Protocol Fees</Grid>
+          <Grid className="amount-label">{feePercentage}% Protocol Fees</Grid>
         </Grid>
       </Grid>
     </>

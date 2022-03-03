@@ -7,18 +7,20 @@
   align-items: center;
   border-radius: 10px;
   width: 100%;
+  position: relative;
 
   input[type='number']::-webkit-inner-spin-button,
   input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
+
   p {
     font-size: 18px;
     font-weight: 700;
     margin-left: 11px;
+    color: $light;
   }
-  position: relative;
 }
 
 .content {
