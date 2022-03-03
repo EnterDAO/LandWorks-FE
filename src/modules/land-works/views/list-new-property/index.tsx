@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 // import { useHistory } from 'react-router-dom';
 // import { ActionMeta, SingleValue } from 'react-select';
 import {
@@ -9,39 +9,37 @@ import {
   DEFAULT_MAX_PERIOD,
   DEFAULT_MIN_PERIOD,
   DEFAULT_PROPERTY,
+  FEE_PRECISION,
   MaxRentPeriodOptions,
   MinRentPeriodOptions,
 } from 'constants/modules';
 import BigNumber from 'bignumber.js';
+import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import { Box, Button, ControlledSelect, DropdownMenu, Grid, StyledSwitch, Typography } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
 import { AssetOption, DecentralandNFT, Option } from 'modules/interface';
-import { PaymentToken } from 'modules/land-works/api';
 import CustomDropdownInput from 'modules/land-works/components/land-works-input';
 import LandWorksListCard from 'modules/land-works/components/land-works-list-card';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import { landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
+import { getTokenPrice } from 'providers/known-tokens-provider';
 
 // import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
-// import { PaymentToken, fetchTokenPayments } from '../../api';
+import { PaymentToken, fetchTokenPayments } from '../../api';
 import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
 import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
 
 import { getTimeType, secondsToDuration } from 'utils';
-import { MINUTE_IN_SECONDS } from 'utils/date';
+import { DAY_IN_SECONDS, MINUTE_IN_SECONDS } from 'utils/date';
 
 import './index.scss';
 
 // import { useLandworks } from '../../providers/landworks-provider';
 
-// import { getTokenPrice } from 'providers/known-tokens-provider';
-
 // import { getTimeType, secondsToDuration } from '../../../../utils';
-// import { DAY_IN_SECONDS, MINUTE_IN_SECONDS } from '../../../../utils/date';
-// import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
 
 const ListNewProperty: React.FC = () => {
   const walletCtx = useWallet();
@@ -74,7 +72,7 @@ const ListNewProperty: React.FC = () => {
   const [, setProperties] = useState<Option[]>([]);
   const [assetProperties, setAssetProperties] = useState<AssetOption[]>([]);
   const [, setInitialProperty] = useState<Option>(DEFAULT_PROPERTY);
-  const [, setSelectedProperty] = useState(null as DecentralandNFT | null);
+  const [selectedProperty, setSelectedProperty] = useState(null as DecentralandNFT | null);
 
   const [showRentPeriodInput, setShowRentPeriodInput] = useState(false);
   const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(false);
@@ -82,17 +80,17 @@ const ListNewProperty: React.FC = () => {
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState({} as PaymentToken);
 
-  // const [tokenCost, setTokenCost] = useState(new BigNumber(1));
-  // const [earnings, setEarnings] = useState(ZERO_BIG_NUMBER);
-  // const [protocolFee, setProtocolFee] = useState(ZERO_BIG_NUMBER);
-  // const [feePercentage, setFeePercentage] = useState(0);
-  // const [pricePerSecond, setPricePerSecond] = useState(ZERO_BIG_NUMBER);
+  const [tokenCost, setTokenCost] = useState(new BigNumber(1));
+  const [earnings, setEarnings] = useState(ZERO_BIG_NUMBER);
+  const [protocolFee, setProtocolFee] = useState(ZERO_BIG_NUMBER);
+  const [feePercentage, setFeePercentage] = useState(0);
+  const [pricePerSecond, setPricePerSecond] = useState(ZERO_BIG_NUMBER);
 
-  // const [approveDisabled, setApproveDisabled] = useState(false);
-  // const [listDisabled, setListDisabled] = useState(true);
-  // const [usdPrice, setUsdPrice] = useState('0');
+  const [approveDisabled, setApproveDisabled] = useState(false);
+  const [listDisabled, setListDisabled] = useState(true);
+  const [usdPrice, setUsdPrice] = useState('0');
 
-  //const [errMessage, setErrMessage] = useState('');
+  const [errMessage, setErrMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
   //const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
@@ -126,30 +124,30 @@ const ListNewProperty: React.FC = () => {
     }
   };
 
-  // const handleMinSelectChange = (newValue: SingleValue<Option>) => {
-  //   const value = BigNumber.from(newValue?.value);
+  const handleMinSelectChange = (value: number) => {
+    const bigvalue = BigNumber.from(value);
 
-  //   if (isMinPeriodSelected) {
-  //     setMinPeriodType(value);
+    if (isMinPeriodSelected) {
+      setMinPeriodType(bigvalue);
 
-  //     const parsedDate = secondsToDuration(value?.toNumber()!);
-  //     const { timeType } = getTimeType(parsedDate);
-  //     const typeSuffix = timeType.substr(0, 3);
-  //     const optionByType = MinRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
-  //     const optionIndex = MinRentPeriodOptions.indexOf(optionByType!);
+      const parsedDate = secondsToDuration(bigvalue?.toNumber()!);
+      const { timeType } = getTimeType(parsedDate);
+      const typeSuffix = timeType.substr(0, 3);
+      const optionByType = MinRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
+      const optionIndex = MinRentPeriodOptions.indexOf(optionByType!);
 
-  //     setMinPeriodSelectedOption(MinRentPeriodOptions[optionIndex]);
-  //     setMinPeriod(minInput?.multipliedBy(value!));
-  //   }
-  // };
+      setMinPeriodSelectedOption(MinRentPeriodOptions[optionIndex]);
+      setMinPeriod(minInput?.multipliedBy(bigvalue!));
+    }
+  };
 
-  // const handleMinInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const value = BigNumber.from(e.target.value);
-  //   setMinInput(value!);
-  //   if (isMinPeriodSelected) {
-  //     setMinPeriod(value?.multipliedBy(minPeriodType!)!);
-  //   }
-  // };
+  const handleMinInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = BigNumber.from(e.target.value);
+    setMinInput(value!);
+    if (isMinPeriodSelected) {
+      setMinPeriod(value?.multipliedBy(minPeriodType!)!);
+    }
+  };
 
   const handleMaxCheckboxChange = (e: any) => {
     setMaxPeriodSelected(e.target.checked);
@@ -170,33 +168,33 @@ const ListNewProperty: React.FC = () => {
     }
   };
 
-  // const handleMaxSelectChange = (newValue: SingleValue<Option>) => {
-  //   const value = BigNumber.from(newValue?.value);
+  const handleMaxSelectChange = (value: number) => {
+    const bigvalue = BigNumber.from(value);
 
-  //   if (isMaxPeriodSelected) {
-  //     setMaxPeriodType(value);
+    if (isMaxPeriodSelected) {
+      setMaxPeriodType(bigvalue);
 
-  //     const parsedDate = secondsToDuration(value?.toNumber()!);
-  //     const { timeType } = getTimeType(parsedDate);
-  //     const typeSuffix = timeType.substr(0, 3);
-  //     const optionByType = MaxRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
-  //     const optionIndex = MaxRentPeriodOptions.indexOf(optionByType!);
+      const parsedDate = secondsToDuration(bigvalue?.toNumber()!);
+      const { timeType } = getTimeType(parsedDate);
+      const typeSuffix = timeType.substr(0, 3);
+      const optionByType = MaxRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
+      const optionIndex = MaxRentPeriodOptions.indexOf(optionByType!);
 
-  //     setMaxPeriodSelectedOption(MaxRentPeriodOptions[optionIndex]);
+      setMaxPeriodSelectedOption(MaxRentPeriodOptions[optionIndex]);
 
-  //     setMaxPeriod(maxInput?.multipliedBy(value!)!);
-  //   }
-  // };
+      setMaxPeriod(maxInput?.multipliedBy(bigvalue!)!);
+    }
+  };
 
-  // const handleMaxInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const value = BigNumber.from(e.target.value);
+  const handleMaxInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = BigNumber.from(e.target.value);
 
-  //   setMaxInput(value!);
+    setMaxInput(value!);
 
-  //   if (isMaxPeriodSelected) {
-  //     setMaxPeriod(value?.multipliedBy(maxPeriodType!)!);
-  //   }
-  // };
+    if (isMaxPeriodSelected) {
+      setMaxPeriod(value?.multipliedBy(maxPeriodType!)!);
+    }
+  };
 
   // const handleAtMostSelectChange = (newValue: SingleValue<Option>) => {
   //   const value = BigNumber.from(newValue?.value);
@@ -234,14 +232,16 @@ const ListNewProperty: React.FC = () => {
   //   }
   // };
 
-  // const handleCurrencyChange = (newValue: SingleValue<PaymentToken>) => {
-  //   setPaymentToken(newValue as PaymentToken);
-  // };
+  const handleCurrencyChange = (value: number) => {
+    const sortIndex = Number(value) - 1;
+    setPaymentToken(paymentTokens[sortIndex]);
+    console.log({ paymentToken });
+  };
 
-  // const handleCostEthChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const value = BigNumber.from(e.target.value || '');
-  //   setTokenCost(value!);
-  // };
+  const handleCostEthChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = BigNumber.from(e.target.value || '');
+    setTokenCost(value!);
+  };
 
   // const handleApprove = async () => {
   //   if (selectedProperty === null) {
@@ -267,18 +267,18 @@ const ListNewProperty: React.FC = () => {
   //   }
   // };
 
-  // const calculateTotalAndFeePrecision = () => {
-  //   const fee = tokenCost?.multipliedBy(paymentToken.feePercentage).dividedBy(FEE_PRECISION);
-  //   const earnings = tokenCost?.minus(fee!);
-  //   setProtocolFee(fee!);
-  //   setEarnings(earnings!);
-  //   setFeePercentage((100 * Number(paymentToken?.feePercentage)) / FEE_PRECISION);
-  // };
+  const calculateTotalAndFeePrecision = () => {
+    const fee = tokenCost?.multipliedBy(paymentToken.feePercentage).dividedBy(FEE_PRECISION);
+    const earnings = tokenCost?.minus(fee!);
+    setProtocolFee(fee!);
+    setEarnings(earnings!);
+    setFeePercentage((100 * Number(paymentToken?.feePercentage)) / FEE_PRECISION);
+  };
 
-  // const calculatePricePerSecond = () => {
-  //   const pricePerSecond = getNonHumanValue(tokenCost, paymentToken.decimals).dividedBy(DAY_IN_SECONDS);
-  //   setPricePerSecond(pricePerSecond);
-  // };
+  const calculatePricePerSecond = () => {
+    const pricePerSecond = getNonHumanValue(tokenCost, paymentToken.decimals).dividedBy(DAY_IN_SECONDS);
+    setPricePerSecond(pricePerSecond);
+  };
 
   // const handleConfirmListing = async () => {
   //   if (selectedProperty === null) {
@@ -348,41 +348,41 @@ const ListNewProperty: React.FC = () => {
     setLoading(false);
   };
 
-  // const getPaymentTokens = async () => {
-  //   const tokens = await fetchTokenPayments();
-  //   setPaymentTokens(tokens);
-  //   if (tokens.length > 0) {
-  //     setPaymentToken(tokens[0]);
-  //   }
-  // };
+  const getPaymentTokens = async () => {
+    const tokens = await fetchTokenPayments();
+    setPaymentTokens(tokens);
+    if (tokens.length > 0) {
+      setPaymentToken(tokens[0]);
+    }
+  };
 
-  // const evaluateInput = () => {
-  //   let isListDisabled = true;
-  //   if (!minPeriod && isMinPeriodSelected) {
-  //     setErrMessage('Min Period Must be set');
-  //   } else if (minPeriod?.gt(maxPeriod)) {
-  //     setErrMessage('Min Period exceeds Max Period');
-  //   } else if (!maxPeriod && isMaxPeriodSelected) {
-  //     setErrMessage('Max Period Must be set');
-  //   } else if (maxPeriod?.gt(maxFutureTime)) {
-  //     setErrMessage('Max Period exceeds Max Future Time');
-  //   } else if (!maxFutureTime) {
-  //     setErrMessage('Max Future Period Must be set');
-  //   } else if (pricePerSecond.eq(ZERO_BIG_NUMBER)) {
-  //     setErrMessage('Price cannot be zero');
-  //   } else if (selectedProperty === null) {
-  //     setErrMessage('no property selected');
-  //   } else if (pricePerSecond.toFixed(0) === '0') {
-  //     setErrMessage('Price per second equals to zero');
-  //   } else if (!approveDisabled) {
-  //     setErrMessage('');
-  //   } else {
-  //     setErrMessage('');
-  //     isListDisabled = false;
-  //   }
+  const evaluateInput = () => {
+    let isListDisabled = true;
+    if (!minPeriod && isMinPeriodSelected) {
+      setErrMessage('Min Period Must be set');
+    } else if (minPeriod?.gt(maxPeriod)) {
+      setErrMessage('Min Period exceeds Max Period');
+    } else if (!maxPeriod && isMaxPeriodSelected) {
+      setErrMessage('Max Period Must be set');
+    } else if (maxPeriod?.gt(maxFutureTime)) {
+      setErrMessage('Max Period exceeds Max Future Time');
+    } else if (!maxFutureTime) {
+      setErrMessage('Max Future Period Must be set');
+    } else if (pricePerSecond.eq(ZERO_BIG_NUMBER)) {
+      setErrMessage('Price cannot be zero');
+    } else if (selectedProperty === null) {
+      setErrMessage('no property selected');
+    } else if (pricePerSecond.toFixed(0) === '0') {
+      setErrMessage('Price per second equals to zero');
+    } else if (!approveDisabled) {
+      setErrMessage('');
+    } else {
+      setErrMessage('');
+      isListDisabled = false;
+    }
 
-  //   setListDisabled(isListDisabled);
-  // };
+    setListDisabled(isListDisabled);
+  };
 
   // const evaluateSelectedProperty = async () => {
   //   if (selectedProperty) {
@@ -401,27 +401,27 @@ const ListNewProperty: React.FC = () => {
   //   }
   // };
 
-  // const getUsdPrice = (symbol: string, price: string | number | BigNumber) => {
-  //   const ethPrice = new BigNumber(getTokenPrice(symbol) || '0');
-  //   const ethToUsdPrice = ethPrice.multipliedBy(price);
-  //   setUsdPrice(ethToUsdPrice.toFixed(2).replace(/\.00$/, ''));
-  // };
+  const getUsdPrice = (symbol: string, price: string | number | BigNumber) => {
+    const ethPrice = new BigNumber(getTokenPrice(symbol) || '0');
+    const ethToUsdPrice = ethPrice.multipliedBy(price);
+    setUsdPrice(ethToUsdPrice.toFixed(2).replace(/\.00$/, ''));
+  };
 
   useEffect(() => {
     setLoading(true);
     getUserNfts();
-    //getPaymentTokens();
+    getPaymentTokens();
   }, [walletCtx.account]);
 
-  // useEffect(() => {
-  //   evaluateInput();
-  // }, [approveDisabled, minPeriod, maxPeriod, maxFutureTime, paymentToken, selectedProperty, pricePerSecond]);
+  useEffect(() => {
+    evaluateInput();
+  }, [approveDisabled, minPeriod, maxPeriod, maxFutureTime, paymentToken, selectedProperty, pricePerSecond]);
 
-  // useEffect(() => {
-  //   calculateTotalAndFeePrecision();
-  //   calculatePricePerSecond();
-  //   getUsdPrice(paymentToken.symbol, tokenCost?.toNumber() || 0);
-  // }, [paymentToken, tokenCost]);
+  useEffect(() => {
+    calculateTotalAndFeePrecision();
+    calculatePricePerSecond();
+    getUsdPrice(paymentToken.symbol, tokenCost?.toNumber() || 0);
+  }, [paymentToken, tokenCost]);
 
   // useEffect(() => {
   //   evaluateSelectedProperty();
@@ -433,17 +433,9 @@ const ListNewProperty: React.FC = () => {
     // TODO:: some filtering here
   };
 
+  const showPriceInEth = paymentToken.symbol === 'ETH' ? `${usdPrice}$` : '';
+
   const steps = ['Choose Property', 'Rent Specification'];
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
 
   return (
     <section className="list-view">
@@ -501,11 +493,10 @@ const ListNewProperty: React.FC = () => {
                 {isMinPeriodSelected && (
                   <Grid mt={3}>
                     <CustomDropdownInput
-                      handleOptionChange={() => {
-                        console.log('option changed');
-                      }}
+                      handleOptionChange={handleMinSelectChange}
+                      onInput={handleMinInputChange}
                       options="times"
-                    />{' '}
+                    />
                   </Grid>
                 )}
                 <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
@@ -515,11 +506,10 @@ const ListNewProperty: React.FC = () => {
                 {isMaxPeriodSelected && (
                   <Grid mt={3}>
                     <CustomDropdownInput
-                      handleOptionChange={() => {
-                        console.log('option changed');
-                      }}
+                      handleOptionChange={handleMaxSelectChange}
+                      onInput={handleMaxInputChange}
                       options="times"
-                    />{' '}
+                    />
                   </Grid>
                 )}
               </>
@@ -538,10 +528,10 @@ const ListNewProperty: React.FC = () => {
                   </Grid>
                   <Grid mt={3}>
                     <CustomDropdownInput
-                      handleOptionChange={() => {
-                        console.log('option changed');
-                      }}
+                      onInput={handleCostEthChange}
+                      handleOptionChange={handleCurrencyChange}
                       options="currencies"
+                      ethInUsd={showPriceInEth}
                     />
                   </Grid>
                 </Grid>

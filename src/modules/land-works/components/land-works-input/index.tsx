@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 
@@ -36,34 +36,39 @@ const currencies = [
   },
 ];
 
-interface Props {
+interface InputProps {
   options: 'times' | 'currencies';
-  handleOptionChange: () => void;
+  handleOptionChange: (value: number) => void;
+  onInput: (e: ChangeEvent<HTMLInputElement>) => void;
+  ethInUsd?: string;
 }
 
-export default function CustomDropdownInput({ options, handleOptionChange }: Props) {
+const CustomDropdownInput: FC<InputProps> = ({ options, handleOptionChange, onInput, ethInUsd }) => {
   const [currency, setCurrency] = useState(currencies[0]);
-  const [selectedCurrency, setSelectedCurrency] = useState(0);
 
   const handleChange = (value: number) => {
     const sortIndex = Number(value) - 1;
-    setSelectedCurrency(value);
     setCurrency(currencies[sortIndex]);
-    handleOptionChange();
+    handleOptionChange(value);
   };
 
   return (
-    <Box display="flex" flexDirection="row" className={s.wrapper}>
-      <input className={s.input} type={'number'} />
-      <Divider orientation="vertical" flexItem className={s.divider} />
-      <Box>
-        <ControlledSelect
-          width={'7rem'}
-          value={currency.value}
-          onChange={handleChange}
-          options={options === 'times' ? times : currencies}
-        />
+    <Box display="flex" flexDirection="row" justifyContent="space-between" className={s.wrapper}>
+      <input className={s.input} type={'number'} onInput={onInput} />
+      <Box display="flex" flexDirection="row" className={s.dropdownBox}>
+        <span>{ethInUsd}</span>
+        <Divider orientation="vertical" flexItem className={s.divider} />
+        <Box>
+          <ControlledSelect
+            width={'7rem'}
+            value={currency.value}
+            onChange={handleChange}
+            options={options === 'times' ? times : currencies}
+          />
+        </Box>
       </Box>
     </Box>
   );
-}
+};
+
+export default CustomDropdownInput;
