@@ -54,7 +54,7 @@ const CustomDropdownInput: FC<InputProps> = ({ options, handleOptionChange, onIn
 
   return (
     <Box display="flex" flexDirection="row" justifyContent="space-between" className={s.wrapper}>
-      <input className={s.input} type={'number'} onInput={onInput} />
+      <input className={s.input} type={'number'} onInput={onInput} defaultValue={1} />
       <Box display="flex" flexDirection="row" className={s.dropdownBox}>
         <span>{ethInUsd}</span>
         <Divider orientation="vertical" flexItem className={s.divider} />

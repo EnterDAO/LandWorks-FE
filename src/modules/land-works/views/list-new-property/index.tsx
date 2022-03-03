@@ -16,13 +16,17 @@ import {
 import BigNumber from 'bignumber.js';
 import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
+import Icon from 'components/custom/icon';
+import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { Box, Button, ControlledSelect, DropdownMenu, Grid, StyledSwitch, Typography } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
+import { getTokenIconName } from 'helpers/helpers';
 import { AssetOption, DecentralandNFT, Option } from 'modules/interface';
 import CustomDropdownInput from 'modules/land-works/components/land-works-input';
 import LandWorksListCard from 'modules/land-works/components/land-works-list-card';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import { landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
+import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
 // import config from '../../../../config';
@@ -75,7 +79,7 @@ const ListNewProperty: React.FC = () => {
   const [selectedProperty, setSelectedProperty] = useState(null as DecentralandNFT | null);
 
   const [showRentPeriodInput, setShowRentPeriodInput] = useState(false);
-  const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(false);
+  const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(true);
 
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState({} as PaymentToken);
@@ -437,6 +441,8 @@ const ListNewProperty: React.FC = () => {
 
   const steps = ['Choose Property', 'Rent Specification'];
 
+  console.log(new BigNumber(earnings || '0'));
+
   return (
     <section className="list-view">
       <Grid container xs={12} direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
@@ -522,7 +528,16 @@ const ListNewProperty: React.FC = () => {
             />
             {showRentCurrencyInput && (
               <>
-                <Grid>
+                <RentPrice
+                  handleCostEthChange={handleCostEthChange}
+                  handleCurrencyChange={handleCurrencyChange}
+                  showPriceInEth={showPriceInEth}
+                  paymentToken={paymentToken}
+                  earnings={earnings}
+                  protocolFee={protocolFee}
+                  feePercentage={feePercentage}
+                />
+                {/* <Grid>
                   <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
                     <span>Amount</span>
                   </Grid>
@@ -535,6 +550,32 @@ const ListNewProperty: React.FC = () => {
                     />
                   </Grid>
                 </Grid>
+                <Grid className="blueBox" display="flex" flexDirection="row" justifyContent="space-between">
+                  <Grid display="flex" alignItems="flex-start" flexDirection="column">
+                    <Grid>
+                      <Icon
+                        name={getTokenIconName(paymentToken.symbol || 'png/eth')}
+                        className="info-icon"
+                        style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
+                      />
+                      <SmallAmountTooltip amount={new BigNumber(earnings || '0')} />
+                    </Grid>
+                    <Grid>Your Earnings</Grid>
+                  </Grid>
+                  <Grid display="flex" alignItems="flex-start" flexDirection="column">
+                    <Grid>
+                      <Icon
+                        name={getTokenIconName(paymentToken.symbol || 'png/eth')}
+                        className="info-icon"
+                        style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
+                      />
+                      <span className="earnings-num">
+                        <SmallAmountTooltip amount={new BigNumber(protocolFee || '0')} />
+                      </span>
+                    </Grid>
+                    <Grid>{feePercentage}% Protocol Fees</Grid>
+                  </Grid>
+                </Grid> */}
               </>
             )}
           </Grid>
