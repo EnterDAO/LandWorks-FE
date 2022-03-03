@@ -4,7 +4,7 @@ import { ZERO_BIG_NUMBER } from 'web3/utils';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
-import { useLandsMapActiveTile } from 'modules/land-works/providers/lands-map-active-tile';
+import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 
 import { AssetEntity } from '../../api';
 import LandCardAvailability from '../land-works-card-availability';
@@ -20,7 +20,7 @@ interface Props {
 }
 
 const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
-  const { clickedLandId } = useLandsMapActiveTile();
+  const { clickedLandId } = useLandsMapTile();
   const did = `${land.decentralandData?.coordinates[0]?.x},${land.decentralandData?.coordinates[0]?.y}`;
   const isActive = clickedLandId === did;
 

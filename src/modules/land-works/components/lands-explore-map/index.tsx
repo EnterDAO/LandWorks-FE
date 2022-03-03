@@ -7,8 +7,7 @@ import Atlas, { AtlasTile, Coord, Layer } from 'components/custom/Atlas/Atlas';
 import { Button } from 'design-system';
 import { MinusIcon, PlusIcon } from 'design-system/icons';
 import { CoordinatesLand } from 'modules/land-works/api';
-import { useLandsMapActiveTile } from 'modules/land-works/providers/lands-map-active-tile';
-import { useLandsMapSelectedTile } from 'modules/land-works/providers/lands-map-selected-tile';
+import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 
 import LandsExploreNavigatorInfo from '../lands-explore-navigator-info';
@@ -26,8 +25,7 @@ interface Props {
 const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, highlights = [] }) => {
   const [clickZoom, setClickZoom] = useState(0.5);
   const [scrollZoom, setScrollZoom] = useState(0.5);
-  const { clickedLandId, setClickedLandId } = useLandsMapActiveTile();
-  const { setSelectedTile } = useLandsMapSelectedTile();
+  const { clickedLandId, setClickedLandId, setSelectedTile } = useLandsMapTile();
   const { mapTiles, setMapTiles } = useLandsMapTiles();
   const [highlightedTiles, setHighlightedTiles] = useState<Coord[]>([]);
 

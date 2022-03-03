@@ -1,13 +1,13 @@
 import { FC, useEffect, useState } from 'react';
 
-import { useLandsMapSelectedTile } from 'modules/land-works/providers/lands-map-selected-tile';
+import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 
 import { shortenString } from 'modules/land-works/utils';
 
 import styles from './lands-explore-navigator-info.module.scss';
 
 const LandsExploreNavigatorInfo: FC = () => {
-  const { selectedTile } = useLandsMapSelectedTile();
+  const { selectedTile } = useLandsMapTile();
   const [positionId, setPositionId] = useState(selectedTile?.id || '');
   const [positionType, setPositionType] = useState(selectedTile?.type);
   const [positionOwner, setPositionOwner] = useState(selectedTile?.owner);
