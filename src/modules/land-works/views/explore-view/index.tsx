@@ -61,6 +61,7 @@ const ExploreView: React.FC = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showCardPreview, setShowCardPreview] = useState(false);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
 
@@ -178,7 +179,16 @@ const ExploreView: React.FC = () => {
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
       <LandsMapTilesProvider value={{ mapTiles, setMapTiles }}>
-        <LandsMapTileProvider value={{ clickedLandId, setClickedLandId, selectedTile, setSelectedTile }}>
+        <LandsMapTileProvider
+          value={{
+            clickedLandId,
+            setClickedLandId,
+            selectedTile,
+            setSelectedTile,
+            showCardPreview,
+            setShowCardPreview,
+          }}
+        >
           <div className="content-container--explore-view--header">
             <LandsExploreSubheader
               totalLands={filterLandsByQuery(lands, searchQuery).length}
@@ -206,6 +216,7 @@ const ExploreView: React.FC = () => {
                 expanded={mapExpanded}
                 onClick={() => setMapExpanded(!mapExpanded)}
                 highlights={coordinatesHighlights}
+                lands={lands}
               />
             </div>
             <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>

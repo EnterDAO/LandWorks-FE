@@ -13,6 +13,8 @@ export type ContextProps = {
   setClickedLandId?: (x: number | string, y: number | string) => void;
   selectedTile?: SelectedTile | undefined;
   setSelectedTile?: Dispatch<SetStateAction<SelectedTile>>;
+  showCardPreview?: boolean;
+  setShowCardPreview?: Dispatch<SetStateAction<boolean>>;
 };
 
 export const LandsMapTileContext = createContext<ContextProps>({

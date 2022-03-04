@@ -6,10 +6,11 @@ import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
 import Atlas, { AtlasTile, Coord, Layer } from 'components/custom/Atlas/Atlas';
 import { Button } from 'design-system';
 import { MinusIcon, PlusIcon } from 'design-system/icons';
-import { CoordinatesLand } from 'modules/land-works/api';
+import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 
+import LandsExploreLandPreview from '../lands-explore-land-preview';
 import LandsExploreNavigatorInfo from '../lands-explore-navigator-info';
 
 import styles from './lands-explore-map.module.scss';
@@ -20,10 +21,11 @@ interface Props {
   expanded: boolean;
   onClick?: () => void;
   highlights?: CoordinatesLand[];
+  lands: AssetEntity[];
 }
 
-const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, highlights = [] }) => {
-  const { clickedLandId, setClickedLandId, setSelectedTile } = useLandsMapTile();
+const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, highlights = [], lands }) => {
+  const { clickedLandId, setClickedLandId, setSelectedTile, showCardPreview } = useLandsMapTile();
   const { mapTiles, setMapTiles } = useLandsMapTiles();
   const [clickZoom, setClickZoom] = useState(0.5);
   const [highlightedTiles, setHighlightedTiles] = useState<Coord[]>([]);
@@ -156,6 +158,8 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
       />
 
       <LandsExploreNavigatorInfo />
+
+      {showCardPreview && <LandsExploreLandPreview lands={lands} />}
 
       <div className={styles['expand-control']}>
         <Button variant="secondary" type="button" onClick={onClickToggleSizeHandler}>

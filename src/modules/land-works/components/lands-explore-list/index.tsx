@@ -23,7 +23,7 @@ interface Props {
 
 const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
   const isGridPerTwo = useMediaQuery('(max-width:1299px)');
-  const { clickedLandId, setClickedLandId, setSelectedTile } = useLandsMapTile();
+  const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
   const { mapTiles } = useLandsMapTiles();
 
@@ -92,11 +92,16 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
   }, [lands, slicedLands]);
 
   useEffect(() => {
-    if (!window || !clickedLandId.length || blockAutoScroll) return;
+    setShowCardPreview && setShowCardPreview(false);
+    if (!window || !clickedLandId || blockAutoScroll) return;
 
     const isFound = getDomLandCardByIdAndScroll(clickedLandId);
 
     if (!isFound) {
+      if (searchQuery) {
+        return setShowCardPreview && setShowCardPreview(true);
+      }
+
       const index = getLandArrayIndexByIdCoordinate(clickedLandId);
 
       if (index !== -1) {

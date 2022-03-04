@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { ZERO_BIG_NUMBER } from 'web3/utils';
 
 import Icon from 'components/custom/icon';
@@ -23,13 +23,28 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
   const { clickedLandId } = useLandsMapTile();
   const did = `${land.decentralandData?.coordinates[0]?.x},${land.decentralandData?.coordinates[0]?.y}`;
   const isActive = clickedLandId === did;
+  const [timeoutId, setTimeouId] = useState<NodeJS.Timeout | null>(null);
+
+  const onMouseOverHandler = (e: SyntheticEvent, land: AssetEntity) => {
+    if (!timeoutId && onMouseOver) {
+      setTimeouId(setTimeout(() => onMouseOver(e, land), 250));
+    }
+  };
+
+  const onMouseOutHandler = () => {
+    if (timeoutId) {
+      setTimeouId(null);
+      clearTimeout(timeoutId);
+    }
+  };
 
   return (
     <a
       href={`/property/${land.id}`}
       className={`land-explore-card${isActive ? ' active' : ''}`}
       onClick={(e) => !!onClick && onClick(e, land)}
-      onMouseOver={(e) => !!onMouseOver && onMouseOver(e, land)}
+      onMouseOver={(e) => onMouseOverHandler(e, land)}
+      onMouseOut={() => onMouseOutHandler()}
       id={`land-explore-card--${did}`}
     >
       <div className="land-explore-image">
