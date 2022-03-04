@@ -23,17 +23,17 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
   const { clickedLandId } = useLandsMapTile();
   const did = `${land.decentralandData?.coordinates[0]?.x},${land.decentralandData?.coordinates[0]?.y}`;
   const isActive = clickedLandId === did;
-  const [timeoutId, setTimeouId] = useState<NodeJS.Timeout | null>(null);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
   const onMouseOverHandler = (e: SyntheticEvent, land: AssetEntity) => {
     if (!timeoutId && onMouseOver) {
-      setTimeouId(setTimeout(() => onMouseOver(e, land), 250));
+      setTimeoutId(setTimeout(() => onMouseOver(e, land), 250));
     }
   };
 
   const onMouseOutHandler = () => {
     if (timeoutId) {
-      setTimeouId(null);
+      setTimeoutId(null);
       clearTimeout(timeoutId);
     }
   };
