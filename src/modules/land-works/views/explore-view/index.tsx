@@ -17,6 +17,7 @@ import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
 import LandsExploreSubheader from 'modules/land-works/components/lands-explore-subheader';
 import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-tile';
 import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
+import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 import { useWallet } from 'wallets/wallet';
 
 import {
@@ -31,7 +32,7 @@ import {
 } from '../../api';
 import ListNewProperty from '../list-new-property';
 
-import { getAllLandsCoordinates } from 'modules/land-works/utils';
+import { filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
 import { getNowTs } from 'utils';
 
 import './explore-view.scss';
@@ -40,7 +41,7 @@ const ExploreView: React.FC = () => {
   const wallet = useWallet();
 
   const [lands, setLands] = useState<AssetEntity[]>([]);
-  const [clickedLandId, setClickedLandId] = useState<AssetEntity['id']>('');
+  const [clickedLandId, setStateClickedLandId] = useState<AssetEntity['id']>('');
   const [mapTiles, setMapTiles] = useState<Record<string, AtlasTile>>({});
   const [selectedTile, setSelectedTile] = useState<SelectedTile>({
     id: '',
@@ -58,6 +59,7 @@ const ExploreView: React.FC = () => {
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
@@ -67,28 +69,20 @@ const ExploreView: React.FC = () => {
 
   const [showListNewModal, setShowListNewModal] = useState(false);
 
-  useEffect(() => {
-    getPaymentTokens();
-  }, [paymentToken, lastRentEnd, lands]);
+  const setClickedLandId = (x: number | string, y: number | string) => {
+    let landId = `${x},${y}`;
 
-  useSubscription(USER_SUBSCRIPTION, {
-    skip: wallet.account === undefined,
-    variables: { id: wallet.account?.toLowerCase() },
-    onSubscriptionData: ({ subscriptionData }) => {
-      if (subscriptionData.error) {
-        // TODO:
-      }
+    // Look for the first coordinate for land estate.
+    lands.forEach((land) => {
+      land.decentralandData?.coordinates.forEach((coord, coordIndex) => {
+        if (coordIndex > 0 && coord.id === landId.replace(',', '-')) {
+          landId = `${land.decentralandData?.coordinates[0].x},${land.decentralandData?.coordinates[0].y}`;
+        }
+      });
+    });
 
-      setLoading(subscriptionData.loading);
-
-      if (subscriptionData.data.user === null) {
-        setUser({} as UserEntity);
-        return;
-      }
-
-      setUser(parseUser(subscriptionData.data.user));
-    },
-  });
+    return setStateClickedLandId(landId);
+  };
 
   const setPointMapCentre = (lands: CoordinatesLand[]) => {
     if (lands[0]) {
@@ -119,7 +113,6 @@ const ExploreView: React.FC = () => {
 
   const onChangeFiltersCurrency = (value: number) => {
     const sortIndex = Number(value) - 1;
-    // setSelectedCurrency(value); // this sets the value for the label in the dropdown
     setPaymentToken(paymentTokens[sortIndex].id);
   };
 
@@ -146,6 +139,29 @@ const ExploreView: React.FC = () => {
     setPointMapCentre(highlights);
   };
 
+  useSubscription(USER_SUBSCRIPTION, {
+    skip: wallet.account === undefined,
+    variables: { id: wallet.account?.toLowerCase() },
+    onSubscriptionData: ({ subscriptionData }) => {
+      if (subscriptionData.error) {
+        // TODO:
+      }
+
+      setLoading(subscriptionData.loading);
+
+      if (subscriptionData.data.user === null) {
+        setUser({} as UserEntity);
+        return;
+      }
+
+      setUser(parseUser(subscriptionData.data.user));
+    },
+  });
+
+  useEffect(() => {
+    getPaymentTokens();
+  }, [paymentToken, lastRentEnd, lands]);
+
   useEffect(() => {
     if (wallet.account) {
       setLoading(true);
@@ -160,43 +176,45 @@ const ExploreView: React.FC = () => {
   }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
 
   return (
-    <LandsMapTilesProvider value={{ mapTiles, setMapTiles }}>
-      <LandsMapTileProvider value={{ clickedLandId, setClickedLandId, selectedTile, setSelectedTile }}>
-        <div className="content-container--explore-view--header">
-          <LandsExploreSubheader
-            totalLands={lands.length}
-            hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
-            handleListNew={() => setShowListNewModal(true)}
-          />
-          <LandsExploreFilters
-            onChangeSortDirection={onChangeFiltersSortDirection}
-            onChangeOwnerToggler={onChangeFiltersOwnerToggler}
-            onChangeAvailable={onChangeFiltersAvailable}
-            onChangeCurrency={onChangeFiltersCurrency}
-          />
-        </div>
-
-        <div className="content-container content-container--explore-view">
-          <div className="list-lands-container">
-            <LandsExploreList loading={loading} lands={lands} setPointMapCentre={setPointMapCentre} />
-            <LayoutFooter isWrapped={false} />
-          </div>
-
-          <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
-            <LandsExploreMap
-              positionX={atlasMapX}
-              positionY={atlasMapY}
-              expanded={mapExpanded}
-              onClick={() => setMapExpanded(!mapExpanded)}
-              highlights={coordinatesHighlights}
+    <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
+      <LandsMapTilesProvider value={{ mapTiles, setMapTiles }}>
+        <LandsMapTileProvider value={{ clickedLandId, setClickedLandId, selectedTile, setSelectedTile }}>
+          <div className="content-container--explore-view--header">
+            <LandsExploreSubheader
+              totalLands={filterLandsByQuery(lands, searchQuery).length}
+              hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
+              handleListNew={() => setShowListNewModal(true)}
+            />
+            <LandsExploreFilters
+              onChangeSortDirection={onChangeFiltersSortDirection}
+              onChangeOwnerToggler={onChangeFiltersOwnerToggler}
+              onChangeAvailable={onChangeFiltersAvailable}
+              onChangeCurrency={onChangeFiltersCurrency}
             />
           </div>
-          <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
-            <ListNewProperty />
-          </Modal>
-        </div>
-      </LandsMapTileProvider>
-    </LandsMapTilesProvider>
+
+          <div className="content-container content-container--explore-view">
+            <div className="list-lands-container">
+              <LandsExploreList loading={loading} lands={lands} setPointMapCentre={setPointMapCentre} />
+              <LayoutFooter isWrapped={false} />
+            </div>
+
+            <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
+              <LandsExploreMap
+                positionX={atlasMapX}
+                positionY={atlasMapY}
+                expanded={mapExpanded}
+                onClick={() => setMapExpanded(!mapExpanded)}
+                highlights={coordinatesHighlights}
+              />
+            </div>
+            <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
+              <ListNewProperty />
+            </Modal>
+          </div>
+        </LandsMapTileProvider>
+      </LandsMapTilesProvider>
+    </LandsSearchQueryProvider>
   );
 };
 

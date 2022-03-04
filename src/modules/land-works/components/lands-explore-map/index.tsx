@@ -23,11 +23,11 @@ interface Props {
 }
 
 const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, highlights = [] }) => {
-  const [clickZoom, setClickZoom] = useState(0.5);
-  const [scrollZoom, setScrollZoom] = useState(0.5);
   const { clickedLandId, setClickedLandId, setSelectedTile } = useLandsMapTile();
   const { mapTiles, setMapTiles } = useLandsMapTiles();
+  const [clickZoom, setClickZoom] = useState(0.5);
   const [highlightedTiles, setHighlightedTiles] = useState<Coord[]>([]);
+  const [scrollZoom, setScrollZoom] = useState(0.5);
 
   const fetchTiles = async (url: string = TILES_URL_DECENTRALEND) => {
     if (!window.fetch) return {};
@@ -95,7 +95,7 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
     });
 
     if (land) {
-      setClickedLandId && setClickedLandId(`${x},${y}`);
+      setClickedLandId && setClickedLandId(x, y);
     }
   };
 

@@ -36,6 +36,7 @@ import {
   parseUser,
 } from '../../api';
 
+import { filterLandsByQuery } from 'modules/land-works/utils';
 import { getNowTs } from 'utils';
 
 import './index.scss';
@@ -136,17 +137,6 @@ const LandsView: React.FC = () => {
   const onPlaceChange = (value: SelectValue) => {
     // TODO:: some filtering here
     console.log(value);
-  };
-
-  const filterLandsByQuery = (lands: AssetEntity[], query: string) => {
-    if (!query) {
-      return lands;
-    }
-
-    return lands.filter((land) => {
-      const landName = land.name.toLowerCase();
-      return landName.includes(query);
-    });
   };
 
   const filteredLands = filterLandsByQuery(lands, searchQuery);

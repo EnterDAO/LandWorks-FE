@@ -11,8 +11,9 @@ import LoadMoreLands from 'modules/land-works/components/lands-explore-load-more
 import LandsSearchBar from 'modules/land-works/components/lands-search';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
+import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
 
-import { getAllLandsCoordinates } from 'modules/land-works/utils';
+import { filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
 
 interface Props {
   loading: boolean;
@@ -23,9 +24,9 @@ interface Props {
 const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
   const isGridPerTwo = useMediaQuery('(max-width:1299px)');
   const { clickedLandId, setClickedLandId, setSelectedTile } = useLandsMapTile();
+  const { searchQuery, setSearchQuery } = useLandsSearchQuery();
   const { mapTiles } = useLandsMapTiles();
 
-  const [searchQuery, setSearchQuery] = useState('');
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [blockAutoScroll, setBlockAutoScroll] = useState(false);
 
@@ -43,7 +44,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
 
     if (allCoords.length && allCoords[0]) {
       setPointMapCentre([{ id: land.id, x: allCoords[0].x, y: allCoords[0].y }]);
-      setClickedLandId && setClickedLandId(`${allCoords[0].x},${allCoords[0].y}`);
+      setClickedLandId && setClickedLandId(allCoords[0].x, allCoords[0].y);
 
       const id = `${allCoords[0].x},${allCoords[0].y}`;
 
@@ -86,17 +87,6 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
     return landExploreCard;
   };
 
-  const filterLandsByQuery = (lands: AssetEntity[], query: string) => {
-    if (!query || !query.length) {
-      return lands;
-    }
-
-    return lands.filter((land) => {
-      const landName = land.name.toLowerCase();
-      return landName.includes(query);
-    });
-  };
-
   useEffect(() => {
     setLoadPercentageValue(getLoadPercentageValue());
   }, [lands, slicedLands]);
@@ -104,9 +94,9 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
   useEffect(() => {
     if (!window || !clickedLandId.length || blockAutoScroll) return;
 
-    const notFound = getDomLandCardByIdAndScroll(clickedLandId);
+    const isFound = getDomLandCardByIdAndScroll(clickedLandId);
 
-    if (!notFound) {
+    if (!isFound) {
       const index = getLandArrayIndexByIdCoordinate(clickedLandId);
 
       if (index !== -1) {
