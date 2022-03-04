@@ -51,6 +51,6 @@ export const filterLandsByQuery = (lands: AssetEntity[], query: string): AssetEn
 
   return lands.filter((land) => {
     const landName = land.name.toLowerCase();
-    return landName.includes(query);
+    return landName.includes(query.toLowerCase());
   });
 };
