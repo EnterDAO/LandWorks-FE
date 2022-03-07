@@ -18,14 +18,16 @@ import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { Button, ControlledSelect, Grid, StyledSwitch, Typography } from 'design-system';
+import { Button, ControlledSelect, Grid, Modal, StyledSwitch, Typography } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
 import { getTokenIconName } from 'helpers/helpers';
 import { AssetOption, DecentralandNFT, Option } from 'modules/interface';
 import CustomDropdownInput from 'modules/land-works/components/land-works-input';
 import LandWorksListCard from 'modules/land-works/components/land-works-list-card';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
-import { landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
+import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
+import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
+import { currencyData, landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { getTokenPrice } from 'providers/known-tokens-provider';
@@ -73,10 +75,12 @@ const ListNewProperty: React.FC = () => {
   const [maxFutureTimePeriod, setMaxFuturePeriodType] = useState(BigNumber.from(AtMostRentPeriodOptions[3].value));
   const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[3]); // Selected Option Value for the select menu
 
-  const [, setProperties] = useState<Option[]>([]);
-  const [assetProperties, setAssetProperties] = useState<AssetOption[]>([]);
-  const [, setInitialProperty] = useState<Option>(DEFAULT_PROPERTY);
+  const [properties, setProperties] = useState<Option[]>([]);
+  // const [initialProperty, setInitialProperty] = useState<Option>(properties[0]);
   const [selectedProperty, setSelectedProperty] = useState(null as DecentralandNFT | null);
+
+  const [assetProperties, setAssetProperties] = useState<DecentralandNFT[]>([]);
+  // const [initialAssetProperty, setInitialAssetProperty] = useState<DecentralandNFT>(DEFAULT_ASSET_PROPERTY);
 
   const [showRentPeriodInput, setShowRentPeriodInput] = useState(false);
   const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(false);
@@ -98,8 +102,8 @@ const ListNewProperty: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
   //const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
-  const [activeStep, setActiveStep] = useState(1);
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [activeStep, setActiveStep] = useState(0);
+  const [showApproveModal, setShowApproveModal] = useState(false);
 
   // const handlePlaceChange = (newValue: SingleValue<Option>, actionMeta: ActionMeta<Option>) => {
   //   console.log(newValue, actionMeta);
@@ -109,11 +113,17 @@ const ListNewProperty: React.FC = () => {
   //   const property = newValue && JSON.parse(newValue.value as string);
   //   setSelectedProperty(property);
 
-  //   const selectedProperty = properties.find((p) => p.label === property.name);
+  //   const selectedProperty = assetProperties.find((p) => p.label === property.name);
   //   if (selectedProperty) {
   //     setInitialProperty(selectedProperty);
   //   }
   // };
+
+  const handlePropertyChange = (selectedLand: DecentralandNFT) => {
+    // console.log('handlePropertyChange')
+    // console.log({ selectedLand })
+    setSelectedProperty(selectedLand);
+  };
 
   const handleMinCheckboxChange = (e: any) => {
     setMinPeriodSelected(e.target.checked);
@@ -339,11 +349,11 @@ const ListNewProperty: React.FC = () => {
       setProperties(mergedProperties);
       setAssetProperties(lands);
       if (mergedProperties.length > 0) {
-        setInitialProperty(mergedProperties[0]);
-        setSelectedProperty(JSON.parse(mergedProperties[0].value));
+        // setInitialProperty(mergedProperties[0]);
+        // setSelectedProperty(JSON.parse(mergedProperties[0].value));
       } else {
-        setInitialProperty(DEFAULT_PROPERTY);
-        setSelectedProperty(null);
+        // setInitialProperty(DEFAULT_PROPERTY);
+        //setSelectedProperty(null);
       }
     } catch (e) {
       console.log(e);
@@ -427,9 +437,9 @@ const ListNewProperty: React.FC = () => {
     getUsdPrice(paymentToken.symbol, tokenCost?.toNumber() || 0);
   }, [paymentToken, tokenCost]);
 
-  // useEffect(() => {
-  //   evaluateSelectedProperty();
-  // }, [selectedProperty]);
+  useEffect(() => {
+    evaluateSelectedProperty();
+  }, [selectedProperty]);
 
   const onChangePlaceHandler = (value: number) => {
     // setMetaverse(metaverse);
@@ -440,8 +450,6 @@ const ListNewProperty: React.FC = () => {
   const showPriceInEth = paymentToken.symbol === 'ETH' ? `${usdPrice}$` : '';
 
   const steps = ['Choose Property', 'Rent Specification'];
-
-  console.log(new BigNumber(earnings || '0'));
 
   return (
     <section className="list-view">
@@ -468,13 +476,7 @@ const ListNewProperty: React.FC = () => {
               <Grid container flexDirection="row" wrap="wrap" xs={12} className="properties">
                 {assetProperties.map((land) => (
                   <Grid item xs={3} margin={'0 0 10px'}>
-                    <LandWorksListCard
-                      handleClick={() => {
-                        console.log('something happens');
-                      }}
-                      key={land.name}
-                      land={land}
-                    />
+                    <LandWorksListCard handleClick={handlePropertyChange} key={land.name} land={land} />
                   </Grid>
                 ))}
               </Grid>
@@ -483,46 +485,60 @@ const ListNewProperty: React.FC = () => {
         )}
 
         {activeStep === 1 && (
-          <Grid container xs={6} flexDirection="column" className="inputSection">
-            <DropdownSection
-              variant="calendar"
-              handleOpen={() => {
-                setShowRentPeriodInput(!showRentPeriodInput);
-              }}
-            />
-            {showRentPeriodInput && (
-              <RentPeriod
-                isMinPeriodSelected={isMinPeriodSelected}
-                handleMinCheckboxChange={handleMinCheckboxChange}
-                handleMinSelectChange={handleMinSelectChange}
-                handleMinInputChange={handleMinInputChange}
-                isMaxPeriodSelected={isMaxPeriodSelected}
-                handleMaxCheckboxChange={handleMaxCheckboxChange}
-                handleMaxSelectChange={handleMaxSelectChange}
-                handleMaxInputChange={handleMaxInputChange}
-                handleAtMostInputChange={handleAtMostInputChange}
-                handleAtMostSelectChange={handleAtMostSelectChange}
+          <Grid container xs={12} columnSpacing={5} justifyContent="space-between" mt={4}>
+            <Grid item xs={6} flexDirection="column" className="inputSection">
+              <DropdownSection
+                variant="calendar"
+                handleOpen={() => {
+                  setShowRentPeriodInput(!showRentPeriodInput);
+                }}
               />
-            )}
-            <DropdownSection
-              variant="currency"
-              handleOpen={() => {
-                setShowRentCurrencyInput(!showRentCurrencyInput);
-              }}
-            />
-            {showRentCurrencyInput && (
-              <>
-                <RentPrice
-                  handleCostEthChange={handleCostEthChange}
-                  handleCurrencyChange={handleCurrencyChange}
-                  showPriceInEth={showPriceInEth}
-                  paymentToken={paymentToken}
-                  earnings={earnings}
-                  protocolFee={protocolFee}
-                  feePercentage={feePercentage}
+              {showRentPeriodInput && (
+                <RentPeriod
+                  isMinPeriodSelected={isMinPeriodSelected}
+                  handleMinCheckboxChange={handleMinCheckboxChange}
+                  handleMinSelectChange={handleMinSelectChange}
+                  handleMinInputChange={handleMinInputChange}
+                  isMaxPeriodSelected={isMaxPeriodSelected}
+                  handleMaxCheckboxChange={handleMaxCheckboxChange}
+                  handleMaxSelectChange={handleMaxSelectChange}
+                  handleMaxInputChange={handleMaxInputChange}
+                  handleAtMostInputChange={handleAtMostInputChange}
+                  handleAtMostSelectChange={handleAtMostSelectChange}
+                  minOptions={MinRentPeriodOptions}
+                  maxOptions={MaxRentPeriodOptions}
+                  atMostOptions={AtMostRentPeriodOptions}
                 />
-              </>
-            )}
+              )}
+              <DropdownSection
+                variant="currency"
+                handleOpen={() => {
+                  setShowRentCurrencyInput(!showRentCurrencyInput);
+                }}
+              />
+              {showRentCurrencyInput && (
+                <>
+                  <RentPrice
+                    handleCostEthChange={handleCostEthChange}
+                    handleCurrencyChange={handleCurrencyChange}
+                    showPriceInEth={showPriceInEth}
+                    paymentToken={paymentToken}
+                    earnings={earnings}
+                    protocolFee={protocolFee}
+                    feePercentage={feePercentage}
+                    options={currencyData}
+                  />
+                </>
+              )}
+            </Grid>
+            <Grid item xs={6} rowSpacing={5}>
+              <Grid item xs={12}>
+                <SelectedListCard land={selectedProperty!} />
+              </Grid>
+              <Grid item xs={12}>
+                <ListNewSummary minRentPeriod={minPeriod} maxRentPeriod={maxPeriod} rentPrice={tokenCost} />
+              </Grid>
+            </Grid>
           </Grid>
         )}
 
@@ -533,7 +549,12 @@ const ListNewProperty: React.FC = () => {
             <Button variant="secondary" btnSize="medium">
               Found on wallet ({assetProperties.length})
             </Button>
-            <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(1)}>
+            <Button
+              disabled={selectedProperty === null}
+              variant="secondary"
+              btnSize="medium"
+              onClick={() => setActiveStep(1)}
+            >
               Next
             </Button>
           </Grid>
@@ -544,7 +565,12 @@ const ListNewProperty: React.FC = () => {
               Back
             </Button>
             <Grid direction="row" alignItems="center" justifyContent="space-between">
-              <Button variant="gradient" btnSize="medium" onClick={() => setActiveStep(1)} style={{ marginRight: 15 }}>
+              <Button
+                variant="gradient"
+                btnSize="medium"
+                onClick={() => setShowApproveModal(true)}
+                style={{ marginRight: 15 }}
+              >
                 Approve
               </Button>
               <Button disabled={listDisabled} variant="secondary" btnSize="medium" onClick={() => setActiveStep(0)}>
@@ -553,6 +579,10 @@ const ListNewProperty: React.FC = () => {
             </Grid>
           </Grid>
         )}
+        <Modal open={showApproveModal} handleClose={() => setShowApproveModal(false)}>
+          <div>Signing Transaction</div>
+          <div>Check your wallet for details</div>
+        </Modal>
       </Grid>
     </section>
   );
