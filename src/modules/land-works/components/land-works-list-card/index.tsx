@@ -9,15 +9,16 @@ import s from './s.module.scss';
 interface ILandWorksCardProps {
   land: DecentralandNFT;
   handleClick: (option: DecentralandNFT) => void;
+  isSelectedProperty: boolean;
 }
 
-const LandWorksListCard: React.FC<ILandWorksCardProps> = ({ land, handleClick }) => {
+const LandWorksListCard: React.FC<ILandWorksCardProps> = ({ land, handleClick, isSelectedProperty }) => {
   const [selected, setSelected] = useState(false);
 
   return (
     <Grid className={s.wrapper} item>
       <Grid
-        className={s.card}
+        className={`${isSelectedProperty ? s.selected : s.card}`}
         onClick={() => {
           setSelected(!selected);
           handleClick(land);

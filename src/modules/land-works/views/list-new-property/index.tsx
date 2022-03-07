@@ -467,7 +467,12 @@ const ListNewProperty: React.FC = () => {
               <Grid container flexDirection="row" wrap="wrap" xs={12} className="properties">
                 {assetProperties.map((land) => (
                   <Grid item xs={3} margin={'0 0 10px'}>
-                    <LandWorksListCard handleClick={handlePropertyChange} key={land.name} land={land} />
+                    <LandWorksListCard
+                      isSelectedProperty={land.name === selectedProperty?.name}
+                      handleClick={handlePropertyChange}
+                      key={land.name}
+                      land={land}
+                    />
                   </Grid>
                 ))}
               </Grid>
@@ -499,9 +504,9 @@ const ListNewProperty: React.FC = () => {
                   minOptions={MinRentPeriodOptions}
                   maxOptions={MaxRentPeriodOptions}
                   atMostOptions={AtMostRentPeriodOptions}
-                  minValue={minPeriod}
-                  maxValue={maxPeriod}
-                  atMostValue={maxFutureTime}
+                  minValue={minInput}
+                  maxValue={maxInput}
+                  atMostValue={maxFutureTimeInput}
                 />
               )}
               <DropdownSection
