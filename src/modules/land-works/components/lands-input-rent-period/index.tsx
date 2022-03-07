@@ -22,9 +22,9 @@ interface IProps {
   minOptions: Option[];
   maxOptions: Option[];
   atMostOptions: Option[];
-  minValue: any;
-  maxValue: any;
-  atMostValue: any;
+  minValue: number;
+  maxValue: number;
+  atMostValue: number;
 }
 
 export const RentPeriod: React.FC<IProps> = ({
