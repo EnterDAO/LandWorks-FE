@@ -9,13 +9,14 @@ type TooltipProps = {
   placement: TooltipPlacement;
   trigger: string;
   text: React.ReactNode | RenderFunction;
+  zIndex?: number
 };
 
 export const LandsTooltip: React.FC<TooltipProps> = (props) => {
-  const { placement, trigger, text, children } = props;
+  const { placement, trigger, text, children, zIndex } = props;
 
   return (
-    <Tooltip title={text} placement={placement} trigger={trigger} overlayClassName="tooltip-wrapper">
+    <Tooltip style={{zIndex: zIndex}} title={text} placement={placement} trigger={trigger} overlayClassName="tooltip-wrapper">
       {children ? children : <Icon name="about" className="info-icon" />}
     </Tooltip>
   );
