@@ -21,6 +21,9 @@ interface IProps {
   minOptions: Option[];
   maxOptions: Option[];
   atMostOptions: Option[];
+  minValue: any;
+  maxValue: any;
+  atMostValue: any;
 }
 
 export const RentPeriod: React.FC<IProps> = ({
@@ -37,7 +40,11 @@ export const RentPeriod: React.FC<IProps> = ({
   minOptions,
   maxOptions,
   atMostOptions,
+  minValue,
+  maxValue,
+  atMostValue,
 }) => {
+  console.log({ minOptions, maxOptions, atMostOptions });
   return (
     <>
       <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
@@ -47,6 +54,7 @@ export const RentPeriod: React.FC<IProps> = ({
       {isMinPeriodSelected && (
         <Grid mt={3}>
           <CustomDropdownInput
+            value={minValue}
             handleOptionChange={handleMinSelectChange}
             onInput={handleMinInputChange}
             options={minOptions}
@@ -61,6 +69,7 @@ export const RentPeriod: React.FC<IProps> = ({
         <>
           <Grid mt={3}>
             <CustomDropdownInput
+              value={maxValue}
               handleOptionChange={handleMaxSelectChange}
               onInput={handleMaxInputChange}
               options={maxOptions}
@@ -71,6 +80,7 @@ export const RentPeriod: React.FC<IProps> = ({
           </Grid>
           <Grid mt={3}>
             <CustomDropdownInput
+              value={atMostValue}
               handleOptionChange={handleAtMostSelectChange}
               onInput={handleAtMostInputChange}
               options={atMostOptions}

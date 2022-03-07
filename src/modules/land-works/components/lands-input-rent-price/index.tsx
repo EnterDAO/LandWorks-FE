@@ -21,6 +21,7 @@ interface IProps {
   protocolFee: BigNumber;
   feePercentage: number;
   options: Option[];
+  value: any;
 }
 
 export const RentPrice: React.FC<IProps> = ({
@@ -32,6 +33,7 @@ export const RentPrice: React.FC<IProps> = ({
   protocolFee,
   feePercentage,
   options,
+  value,
 }) => {
   return (
     <>
@@ -46,6 +48,7 @@ export const RentPrice: React.FC<IProps> = ({
             handleOptionChange={handleCurrencyChange}
             options={options}
             ethInUsd={showPriceInEth}
+            value={value}
           />
         </Grid>
       </Grid>
