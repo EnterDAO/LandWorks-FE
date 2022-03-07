@@ -3,6 +3,8 @@ import BigNumber from 'bignumber.js';
 
 import { Grid } from 'design-system';
 
+import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
+
 import s from './s.module.scss';
 
 interface IListNewSummary {
@@ -23,6 +25,28 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   maxPeriodSelectedOption,
   maxFutureSelectedOption,
 }) => {
+  const min = minRentPeriod?.toNumber();
+  const max = maxRentPeriod?.toNumber();
+
+  const mins = MINUTE_IN_SECONDS;
+  const hours = HOUR_IN_SECONDS;
+  const days = DAY_IN_SECONDS;
+  const weeks = WEEK_IN_SECONDS;
+
+  const getCalcByTimeSelection = (n: number, t: string) => {
+    if (n !== undefined) {
+      if (t === 'mins') {
+        return n / mins;
+      } else if (t === 'hours') {
+        return n / hours;
+      } else if (t === 'days') {
+        return n / days;
+      } else if (t === 'weeks') {
+        return n / weeks;
+      }
+    } else return 0;
+  };
+
   return (
     <Grid className={s.wrapper} mt={4} item>
       <Grid className={s.card}>
@@ -30,20 +54,21 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
           <Grid textAlign="left" className={s.name}>
             <span>Summary</span>
           </Grid>
-          {/* <Grid container flexDirection="row" justifyContent="space-between" textAlign="left" className={s.details}>
+          <Grid container flexDirection="row" justifyContent="space-between" textAlign="left" className={s.details}>
             <Grid flexDirection="column" alignItems="flex-start">
               Rent Period
               <p>
-                {minRentPeriod.toString()} {minPeriodSelectedOption} {} - {maxRentPeriod.toString()} {maxPeriodSelectedOption}
+                {getCalcByTimeSelection(min, minPeriodSelectedOption)} {minPeriodSelectedOption} - {''}
+                {getCalcByTimeSelection(max, minPeriodSelectedOption)} {maxPeriodSelectedOption}
               </p>
             </Grid>
-            <Grid flexDirection="column" alignItems="flex-start">
+            {/* <Grid flexDirection="column" alignItems="flex-start">
               Available for rent <p>{available}</p>
-            </Grid>
+            </Grid> */}
             <Grid flexDirection="column" alignItems="flex-start">
               Rent Price <p>{rentPrice.toString()}</p>
             </Grid>
-          </Grid> */}
+          </Grid>
           <Grid className={s.blueBox}>
             <div>Keep in mind</div>
             <p>There is a network fee in order to save the changes.</p>
