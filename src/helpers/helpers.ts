@@ -4,7 +4,8 @@ import { InfuraProvider } from '@ethersproject/providers';
 import format from 'date-fns/format';
 import fromUnixTime from 'date-fns/fromUnixTime';
 
-import { AssetEntity } from 'modules/land-works/api';
+import { DecentralandNFT } from 'modules/interface';
+import { AssetEntity, DecentralandData } from 'modules/land-works/api';
 
 import defaultLandImage from '../modules/land-works/components/land-works-card/assets/land.png';
 
@@ -51,6 +52,11 @@ export const getLandImageUrl = (land: AssetEntity | undefined) => {
     const imageUrl = `${BASE_URL_DECENTRALEND}/estates/${land.metaverseAssetId}/map.png`;
     return imageUrl;
   }
+};
+
+export const getDecentralandNftImageUrl = (land: DecentralandNFT) => {
+  const imageUrl = `${BASE_URL_DECENTRALEND}/parcels/${land.coords[0]}/${land.coords[1]}/map.png`;
+  return imageUrl;
 };
 
 export const getTokenIconName = (tokenSymbol: string) => {
