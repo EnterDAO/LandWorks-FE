@@ -5,7 +5,7 @@ import format from 'date-fns/format';
 import fromUnixTime from 'date-fns/fromUnixTime';
 
 import { DecentralandNFT } from 'modules/interface';
-import { AssetEntity, DecentralandData } from 'modules/land-works/api';
+import { AssetEntity } from 'modules/land-works/api';
 
 import defaultLandImage from '../modules/land-works/components/land-works-card/assets/land.png';
 

@@ -275,7 +275,7 @@ const ExploreView: React.FC = () => {
           />
         </div>
       </div>
-      <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
+      <Modal height={800} open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
         <ListNewProperty />
       </Modal>
     </LandsMapActiveTileProvider>

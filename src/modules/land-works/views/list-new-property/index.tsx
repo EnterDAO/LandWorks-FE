@@ -1,28 +1,21 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ChangeEvent, useEffect, useState } from 'react';
-// import { useHistory } from 'react-router-dom';
-// import { ActionMeta, SingleValue } from 'react-select';
 import {
   AtMostRentPeriodOptions,
   DEFAULT_FUTURE_PERIOD,
   DEFAULT_MAX_PERIOD,
   DEFAULT_MIN_PERIOD,
-  DEFAULT_PROPERTY,
   FEE_PRECISION,
   MaxRentPeriodOptions,
   MinRentPeriodOptions,
 } from 'constants/modules';
 import BigNumber from 'bignumber.js';
-import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
+import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
-import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { Button, ControlledSelect, Grid, Modal, StyledSwitch, Typography } from 'design-system';
+import { Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
-import { getTokenIconName } from 'helpers/helpers';
-import { AssetOption, DecentralandNFT, Option } from 'modules/interface';
-import CustomDropdownInput from 'modules/land-works/components/land-works-input';
+import { DecentralandNFT, Option } from 'modules/interface';
 import LandWorksListCard from 'modules/land-works/components/land-works-list-card';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
@@ -30,6 +23,7 @@ import SelectedListCard from 'modules/land-works/components/land-works-selected-
 import { currencyData, landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
+import ApproveModal from 'modules/land-works/components/lands-list-approve-modal';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import config from '../../../../config';
@@ -44,7 +38,6 @@ import { getTimeType, secondsToDuration } from 'utils';
 import { DAY_IN_SECONDS, MINUTE_IN_SECONDS } from 'utils/date';
 
 import './index.scss';
-import ApproveModal from 'modules/land-works/components/lands-list-approve-modal';
 
 // import { getTimeType, secondsToDuration } from '../../../../utils';
 
@@ -66,7 +59,7 @@ const ListNewProperty: React.FC = () => {
   const [minPeriodSelectedOption, setMinPeriodSelectedOption] = useState(MinRentPeriodOptions[0]); // Selected Option Value for the select menu
 
   const [maxPeriod, setMaxPeriod] = useState(DEFAULT_FUTURE_PERIOD);
-  const [isMaxPeriodSelected, setMaxPeriodSelected] = useState(true);
+  const [isMaxPeriodSelected, setMaxPeriodSelected] = useState(false);
   const [maxInput, setMaxInput] = useState(DEFAULT_MAX_PERIOD);
   const [maxPeriodType, setMaxPeriodType] = useState(BigNumber.from(MaxRentPeriodOptions[3].value));
   const [maxPeriodSelectedOption, setMaxPeriodSelectedOption] = useState(MaxRentPeriodOptions[3]); // Selected Option Value for the select menu
@@ -588,7 +581,7 @@ const ListNewProperty: React.FC = () => {
             </Grid>
           </Grid>
         )}
-       <ApproveModal showApproveModal={showApproveModal} setShowApproveModal={setShowApproveModal}  />
+        <ApproveModal showApproveModal={showApproveModal} setShowApproveModal={setShowApproveModal} />
       </Grid>
     </section>
   );
