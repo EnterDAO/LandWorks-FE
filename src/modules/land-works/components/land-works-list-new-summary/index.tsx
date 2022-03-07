@@ -8,25 +8,27 @@ import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, WEEK_IN_SECONDS } f
 import s from './s.module.scss';
 
 interface IListNewSummary {
-  // land: DecentralandNFT;
   minRentPeriod: BigNumber;
   maxRentPeriod: BigNumber;
   rentPrice: BigNumber;
   minPeriodSelectedOption: string;
   maxPeriodSelectedOption: string;
   maxFutureSelectedOption: string;
+  maxFuturePeriod: BigNumber;
 }
 
 const ListNewSummary: React.FC<IListNewSummary> = ({
   minRentPeriod,
   maxRentPeriod,
   rentPrice,
+  maxFuturePeriod,
   minPeriodSelectedOption,
   maxPeriodSelectedOption,
   maxFutureSelectedOption,
 }) => {
   const min = minRentPeriod?.toNumber();
   const max = maxRentPeriod?.toNumber();
+  const maxFuture = maxFuturePeriod?.toNumber();
 
   const mins = MINUTE_IN_SECONDS;
   const hours = HOUR_IN_SECONDS;
@@ -62,9 +64,12 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
                 {getCalcByTimeSelection(max, minPeriodSelectedOption)} {maxPeriodSelectedOption}
               </p>
             </Grid>
-            {/* <Grid flexDirection="column" alignItems="flex-start">
-              Available for rent <p>{available}</p>
-            </Grid> */}
+            <Grid flexDirection="column" alignItems="flex-start">
+              Available for rent{' '}
+              <p>
+                {getCalcByTimeSelection(maxFuture, maxFutureSelectedOption)} {maxFutureSelectedOption}
+              </p>
+            </Grid>
             <Grid flexDirection="column" alignItems="flex-start">
               Rent Price <p>{rentPrice.toString()}</p>
             </Grid>
