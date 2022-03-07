@@ -1,32 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Box, Grid } from 'design-system';
-import { getLandImageUrl } from 'helpers/helpers';
-import { AssetOption } from 'modules/interface';
+import { getDecentralandNftImageUrl } from 'helpers/helpers';
+import { DecentralandNFT } from 'modules/interface';
 
 import s from './s.module.scss';
 
 interface ILandWorksCardProps {
-  land: AssetOption;
-  handleClick: () => void;
+  land: DecentralandNFT;
+  handleClick: (option: DecentralandNFT) => void;
 }
 
 const LandWorksListCard: React.FC<ILandWorksCardProps> = ({ land, handleClick }) => {
+  const [selected, setSelected] = useState(false);
+
   return (
     <Grid className={s.wrapper} item>
-      <Grid className={s.card} onClick={handleClick}>
+      <Grid
+        className={s.card}
+        onClick={() => {
+          setSelected(!selected);
+          handleClick(land);
+        }}
+      >
         <Grid className={s.imageListWrapper}>
           <Box
             component="img"
             sx={{
               minHeight: 100,
               width: '100%',
-              maxHeight: { xs: 233, md: 167 },
+              maxHeight: { xs: 110, md: 90 },
               maxWidth: { xs: 350, md: 250 },
             }}
             className={s.image}
             alt="The house from the offer."
-            src={getLandImageUrl(land.land)}
+            src={getDecentralandNftImageUrl(land)}
           />
         </Grid>
         <Grid flexDirection="column" alignContent="flex-start" textAlign="left">
