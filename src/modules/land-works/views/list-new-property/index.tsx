@@ -482,7 +482,7 @@ const ListNewProperty: React.FC = () => {
 
         {activeStep === 1 && (
           <Grid container xs={12} columnSpacing={5} justifyContent="space-between" mt={4}>
-            <Grid item xs={6} flexDirection="column" className="inputSection">
+            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={450} overflow="scroll">
               <DropdownSection
                 variant="calendar"
                 handleOpen={() => {
