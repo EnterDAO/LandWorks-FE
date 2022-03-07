@@ -81,6 +81,7 @@ const ListNewProperty: React.FC = () => {
 
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState({} as PaymentToken);
+  const [selectedCurrency, setSelectedCurrency] = useState(1);
 
   const [tokenCost, setTokenCost] = useState(new BigNumber(1));
   const [earnings, setEarnings] = useState(ZERO_BIG_NUMBER);
@@ -240,12 +241,15 @@ const ListNewProperty: React.FC = () => {
 
   const handleCurrencyChange = (value: number) => {
     const sortIndex = Number(value) - 1;
+    setSelectedCurrency(value);
     setPaymentToken(paymentTokens[sortIndex]);
   };
 
   const handleCostEthChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = BigNumber.from(e.target.value || '');
-    setTokenCost(value!);
+    const zeroValue = e.target.value === '';
+    const dynamicValue = zeroValue ? BigNumber.from(0) : value!;
+    setTokenCost(dynamicValue!);
   };
 
   // const handleApprove = async () => {
@@ -504,9 +508,9 @@ const ListNewProperty: React.FC = () => {
                   minOptions={MinRentPeriodOptions}
                   maxOptions={MaxRentPeriodOptions}
                   atMostOptions={AtMostRentPeriodOptions}
-                  minValue={minInput}
-                  maxValue={maxInput}
-                  atMostValue={maxFutureTimeInput}
+                  minValue={minPeriodSelectedOption.value}
+                  maxValue={maxPeriodSelectedOption.value}
+                  atMostValue={maxFutureSelectedOption.value}
                 />
               )}
               <DropdownSection
@@ -526,7 +530,7 @@ const ListNewProperty: React.FC = () => {
                     protocolFee={protocolFee}
                     feePercentage={feePercentage}
                     options={currencyData}
-                    value={tokenCost}
+                    value={selectedCurrency}
                   />
                 </>
               )}
@@ -542,6 +546,7 @@ const ListNewProperty: React.FC = () => {
                   maxFutureSelectedOption={maxFutureSelectedOption.label}
                   minRentPeriod={minPeriod}
                   maxRentPeriod={maxPeriod}
+                  maxFuturePeriod={maxFutureTime}
                   rentPrice={tokenCost}
                 />
               </Grid>
