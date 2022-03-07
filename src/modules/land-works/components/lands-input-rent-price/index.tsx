@@ -5,6 +5,7 @@ import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { Grid } from 'design-system';
 import { getTokenIconName } from 'helpers/helpers';
+import { Option } from 'modules/interface';
 import { PaymentToken } from 'modules/land-works/api';
 
 import CustomDropdownInput from '../land-works-input';
@@ -19,6 +20,7 @@ interface IProps {
   earnings: BigNumber;
   protocolFee: BigNumber;
   feePercentage: number;
+  options: Option[];
 }
 
 export const RentPrice: React.FC<IProps> = ({
@@ -29,6 +31,7 @@ export const RentPrice: React.FC<IProps> = ({
   earnings,
   protocolFee,
   feePercentage,
+  options,
 }) => {
   return (
     <>
@@ -41,7 +44,7 @@ export const RentPrice: React.FC<IProps> = ({
           <CustomDropdownInput
             onInput={handleCostEthChange}
             handleOptionChange={handleCurrencyChange}
-            options="currencies"
+            options={options}
             ethInUsd={showPriceInEth}
           />
         </Grid>

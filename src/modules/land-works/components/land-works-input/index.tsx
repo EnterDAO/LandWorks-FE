@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 
 import { ControlledSelect } from 'design-system';
+import { Option } from 'modules/interface';
 
 import s from './s.module.scss';
 
@@ -37,7 +38,7 @@ const currencies = [
 ];
 
 interface InputProps {
-  options: 'times' | 'currencies';
+  options: Option[];
   handleOptionChange: (value: number) => void;
   onInput: (e: ChangeEvent<HTMLInputElement>) => void;
   ethInUsd?: string;
@@ -59,12 +60,7 @@ const CustomDropdownInput: FC<InputProps> = ({ options, handleOptionChange, onIn
         <span>{ethInUsd}</span>
         <Divider orientation="vertical" flexItem className={s.divider} />
         <Box>
-          <ControlledSelect
-            width={'7rem'}
-            value={currency.value}
-            onChange={handleChange}
-            options={options === 'times' ? times : currencies}
-          />
+          <ControlledSelect width={'7rem'} value={currency.value} onChange={handleChange} options={options} />
         </Box>
       </Box>
     </Box>

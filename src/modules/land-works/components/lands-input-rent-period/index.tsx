@@ -1,6 +1,7 @@
 import { ChangeEvent } from 'react';
 
 import { Grid, StyledSwitch } from 'design-system';
+import { Option } from 'modules/interface';
 
 import CustomDropdownInput from '../land-works-input';
 
@@ -17,6 +18,9 @@ interface IProps {
   handleMaxInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleAtMostInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleAtMostSelectChange: (value: number) => void;
+  minOptions: Option[];
+  maxOptions: Option[];
+  atMostOptions: Option[];
 }
 
 export const RentPeriod: React.FC<IProps> = ({
@@ -30,6 +34,9 @@ export const RentPeriod: React.FC<IProps> = ({
   handleMaxInputChange,
   handleAtMostInputChange,
   handleAtMostSelectChange,
+  minOptions,
+  maxOptions,
+  atMostOptions,
 }) => {
   return (
     <>
@@ -42,7 +49,7 @@ export const RentPeriod: React.FC<IProps> = ({
           <CustomDropdownInput
             handleOptionChange={handleMinSelectChange}
             onInput={handleMinInputChange}
-            options="times"
+            options={minOptions}
           />
         </Grid>
       )}
@@ -56,7 +63,7 @@ export const RentPeriod: React.FC<IProps> = ({
             <CustomDropdownInput
               handleOptionChange={handleMaxSelectChange}
               onInput={handleMaxInputChange}
-              options="times"
+              options={maxOptions}
             />
           </Grid>
           <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
@@ -66,7 +73,7 @@ export const RentPeriod: React.FC<IProps> = ({
             <CustomDropdownInput
               handleOptionChange={handleAtMostSelectChange}
               onInput={handleAtMostInputChange}
-              options="times"
+              options={atMostOptions}
             />
           </Grid>
         </>
