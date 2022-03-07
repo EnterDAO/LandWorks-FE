@@ -11,7 +11,7 @@ import {
   MinRentPeriodOptions,
 } from 'constants/modules';
 import BigNumber from 'bignumber.js';
-import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
+import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import { Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
@@ -99,20 +99,6 @@ const ListNewProperty: React.FC = () => {
   //const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
   const [activeStep, setActiveStep] = useState(0);
   const [showApproveModal, setShowApproveModal] = useState(false);
-
-  // const handlePlaceChange = (newValue: SingleValue<Option>, actionMeta: ActionMeta<Option>) => {
-  //   console.log(newValue, actionMeta);
-  // };
-
-  // const handlePropertyChange = (newValue: SingleValue<Option>) => {
-  //   const property = newValue && JSON.parse(newValue.value as string);
-  //   setSelectedProperty(property);
-
-  //   const selectedProperty = assetProperties.find((p) => p.label === property.name);
-  //   if (selectedProperty) {
-  //     setInitialProperty(selectedProperty);
-  //   }
-  // };
 
   const handlePropertyChange = (selectedLand: DecentralandNFT) => {
     setSelectedProperty(selectedLand);
@@ -252,29 +238,30 @@ const ListNewProperty: React.FC = () => {
     setTokenCost(dynamicValue!);
   };
 
-  // const handleApprove = async () => {
-  //   if (selectedProperty === null) {
-  //     return;
-  //   }
+  const handleApprove = async () => {
+    if (selectedProperty === null) {
+      return;
+    }
 
-  //   try {
-  //     let approvedAddress = DEFAULT_ADDRESS;
-  //     if (selectedProperty.isLAND) {
-  //       await landRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
-  //       approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
-  //     } else {
-  //       await estateRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
-  //       approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
-  //     }
-  //     if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
-  //       setApproveDisabled(true);
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //     // If there is an error enable the approve button
-  //     setApproveDisabled(false);
-  //   }
-  // };
+    try {
+      let approvedAddress = DEFAULT_ADDRESS;
+      if (selectedProperty.isLAND) {
+        await landRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
+        approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
+        setShowApproveModal(true);
+      } else {
+        await estateRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
+        approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
+        setShowApproveModal(true);
+      }
+      if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
+        setApproveDisabled(true);
+      }
+    } catch (e) {
+      console.log(e);
+      // If there is an error enable the approve button
+    }
+  };
 
   const calculateTotalAndFeePrecision = () => {
     const fee = tokenCost?.multipliedBy(paymentToken.feePercentage).dividedBy(FEE_PRECISION);
@@ -578,9 +565,10 @@ const ListNewProperty: React.FC = () => {
             </Button>
             <Grid direction="row" alignItems="center" justifyContent="space-between">
               <Button
+                disabled={approveDisabled}
                 variant="gradient"
                 btnSize="medium"
-                onClick={() => setShowApproveModal(true)}
+                onClick={handleApprove}
                 style={{ marginRight: 15 }}
               >
                 Approve
