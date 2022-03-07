@@ -13,10 +13,11 @@ interface ModalProps {
     ariaLabelledby: string;
     ariaDescribedby: string;
   };
+  height: number;
 }
 
 const Modal: FC<ModalProps> = (props: ModalProps) => {
-  const { open, handleClose, children, accessibility } = props;
+  const { open, handleClose, children, accessibility, height } = props;
 
   return (
     <StyledModal
@@ -25,6 +26,7 @@ const Modal: FC<ModalProps> = (props: ModalProps) => {
       open={open}
       onClose={handleClose}
       BackdropComponent={StyledBackdrop}
+      style={{ height: height }}
     >
       <Box sx={modalStyles.modalBox}>
         <IconButton
