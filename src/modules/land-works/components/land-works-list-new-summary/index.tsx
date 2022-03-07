@@ -1,4 +1,5 @@
 import React from 'react';
+import BigNumber from 'bignumber.js';
 
 import { Grid } from 'design-system';
 
@@ -6,12 +7,22 @@ import s from './s.module.scss';
 
 interface IListNewSummary {
   // land: DecentralandNFT;
-  minRentPeriod: any;
-  maxRentPeriod: any;
-  rentPrice: any;
+  minRentPeriod: BigNumber;
+  maxRentPeriod: BigNumber;
+  rentPrice: BigNumber;
+  minPeriodSelectedOption: string;
+  maxPeriodSelectedOption: string;
+  maxFutureSelectedOption: string;
 }
 
-const ListNewSummary: React.FC<IListNewSummary> = ({ minRentPeriod, maxRentPeriod, rentPrice }) => {
+const ListNewSummary: React.FC<IListNewSummary> = ({
+  minRentPeriod,
+  maxRentPeriod,
+  rentPrice,
+  minPeriodSelectedOption,
+  maxPeriodSelectedOption,
+  maxFutureSelectedOption,
+}) => {
   return (
     <Grid className={s.wrapper} mt={4} item>
       <Grid className={s.card}>
@@ -23,7 +34,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({ minRentPeriod, maxRentPerio
             <Grid flexDirection="column" alignItems="flex-start">
               Rent Period
               <p>
-                {minRentPeriod.toString()} - {maxRentPeriod.toString()}
+                {minRentPeriod.toString()} {minPeriodSelectedOption} {} - {maxRentPeriod.toString()} {maxPeriodSelectedOption}
               </p>
             </Grid>
             <Grid flexDirection="column" alignItems="flex-start">

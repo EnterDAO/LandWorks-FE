@@ -44,6 +44,7 @@ import { getTimeType, secondsToDuration } from 'utils';
 import { DAY_IN_SECONDS, MINUTE_IN_SECONDS } from 'utils/date';
 
 import './index.scss';
+import ApproveModal from 'modules/land-works/components/lands-list-approve-modal';
 
 // import { getTimeType, secondsToDuration } from '../../../../utils';
 
@@ -120,8 +121,6 @@ const ListNewProperty: React.FC = () => {
   // };
 
   const handlePropertyChange = (selectedLand: DecentralandNFT) => {
-    // console.log('handlePropertyChange')
-    // console.log({ selectedLand })
     setSelectedProperty(selectedLand);
   };
 
@@ -249,7 +248,6 @@ const ListNewProperty: React.FC = () => {
   const handleCurrencyChange = (value: number) => {
     const sortIndex = Number(value) - 1;
     setPaymentToken(paymentTokens[sortIndex]);
-    console.log({ paymentToken });
   };
 
   const handleCostEthChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -508,6 +506,9 @@ const ListNewProperty: React.FC = () => {
                   minOptions={MinRentPeriodOptions}
                   maxOptions={MaxRentPeriodOptions}
                   atMostOptions={AtMostRentPeriodOptions}
+                  minValue={minPeriod}
+                  maxValue={maxPeriod}
+                  atMostValue={maxFutureTime}
                 />
               )}
               <DropdownSection
@@ -527,6 +528,7 @@ const ListNewProperty: React.FC = () => {
                     protocolFee={protocolFee}
                     feePercentage={feePercentage}
                     options={currencyData}
+                    value={tokenCost}
                   />
                 </>
               )}
@@ -536,7 +538,14 @@ const ListNewProperty: React.FC = () => {
                 <SelectedListCard land={selectedProperty!} />
               </Grid>
               <Grid item xs={12}>
-                <ListNewSummary minRentPeriod={minPeriod} maxRentPeriod={maxPeriod} rentPrice={tokenCost} />
+                <ListNewSummary
+                  minPeriodSelectedOption={minPeriodSelectedOption.label}
+                  maxPeriodSelectedOption={maxPeriodSelectedOption.label}
+                  maxFutureSelectedOption={maxFutureSelectedOption.label}
+                  minRentPeriod={minPeriod}
+                  maxRentPeriod={maxPeriod}
+                  rentPrice={tokenCost}
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -579,10 +588,7 @@ const ListNewProperty: React.FC = () => {
             </Grid>
           </Grid>
         )}
-        <Modal open={showApproveModal} handleClose={() => setShowApproveModal(false)}>
-          <div>Signing Transaction</div>
-          <div>Check your wallet for details</div>
-        </Modal>
+       <ApproveModal showApproveModal={showApproveModal} setShowApproveModal={setShowApproveModal}  />
       </Grid>
     </section>
   );
