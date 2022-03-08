@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react';
 import BigNumber from 'bignumber.js';
 
 import { ReactComponent as BluePlus } from 'assets/icons/blue-plus.svg';
@@ -13,7 +14,7 @@ import CustomDropdownInput from '../land-works-input';
 import './index.scss';
 
 interface IProps {
-  handleCostEthChange: (e: any) => void;
+  handleCostEthChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleCurrencyChange: (value: number) => void;
   showPriceInEth: string;
   paymentToken: PaymentToken;
@@ -21,7 +22,7 @@ interface IProps {
   protocolFee: BigNumber;
   feePercentage: number;
   options: Option[];
-  value: any;
+  value: number;
 }
 
 export const RentPrice: React.FC<IProps> = ({

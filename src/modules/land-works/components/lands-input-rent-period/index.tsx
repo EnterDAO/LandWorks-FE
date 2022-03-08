@@ -10,11 +10,11 @@ import './index.scss';
 
 interface IProps {
   isMinPeriodSelected: boolean;
-  handleMinCheckboxChange: (e: any) => void;
+  handleMinCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleMinSelectChange: (value: number) => void;
   handleMinInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   isMaxPeriodSelected: boolean;
-  handleMaxCheckboxChange: (e: any) => void;
+  handleMaxCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleMaxSelectChange: (value: number) => void;
   handleMaxInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleAtMostInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
