@@ -414,7 +414,7 @@ const ListNewProperty: React.FC = () => {
     // TODO:: some filtering here
   };
 
-  const showPriceInEth = paymentToken.symbol === 'ETH' ? `${usdPrice}$` : '';
+  const showPriceInUsd = `${usdPrice}$`;
 
   const steps = ['Choose Property', 'Rent Specification'];
 
@@ -497,7 +497,7 @@ const ListNewProperty: React.FC = () => {
                   <RentPrice
                     handleCostEthChange={handleCostEthChange}
                     handleCurrencyChange={handleCurrencyChange}
-                    showPriceInEth={showPriceInEth}
+                    showPriceInUsd={showPriceInUsd}
                     paymentToken={paymentToken}
                     earnings={earnings}
                     protocolFee={protocolFee}

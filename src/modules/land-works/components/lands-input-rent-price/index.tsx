@@ -16,7 +16,7 @@ import './index.scss';
 interface IProps {
   handleCostEthChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleCurrencyChange: (value: number) => void;
-  showPriceInEth: string;
+  showPriceInUsd: string;
   paymentToken: PaymentToken;
   earnings: BigNumber;
   protocolFee: BigNumber;
@@ -28,7 +28,7 @@ interface IProps {
 export const RentPrice: React.FC<IProps> = ({
   handleCostEthChange,
   handleCurrencyChange,
-  showPriceInEth,
+  showPriceInUsd,
   paymentToken,
   earnings,
   protocolFee,
@@ -48,7 +48,7 @@ export const RentPrice: React.FC<IProps> = ({
             onInput={handleCostEthChange}
             handleOptionChange={handleCurrencyChange}
             options={options}
-            ethInUsd={showPriceInEth}
+            ethInUsd={showPriceInUsd}
             value={value}
           />
         </Grid>
