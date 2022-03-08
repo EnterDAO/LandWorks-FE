@@ -16,7 +16,7 @@ import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import { Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
-import { DecentralandNFT, Option } from 'modules/interface';
+import { DecentralandNFT } from 'modules/interface';
 import LandWorksListCard from 'modules/land-works/components/land-works-list-card';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
@@ -70,12 +70,9 @@ const ListNewProperty: React.FC = () => {
   const [maxFutureTimePeriod, setMaxFuturePeriodType] = useState(BigNumber.from(AtMostRentPeriodOptions[3].value));
   const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[3]); // Selected Option Value for the select menu
 
-  const [properties, setProperties] = useState<Option[]>([]);
-  // const [initialProperty, setInitialProperty] = useState<Option>(properties[0]);
   const [selectedProperty, setSelectedProperty] = useState(null as DecentralandNFT | null);
 
   const [assetProperties, setAssetProperties] = useState<DecentralandNFT[]>([]);
-  // const [initialAssetProperty, setInitialAssetProperty] = useState<DecentralandNFT>(DEFAULT_ASSET_PROPERTY);
 
   const [showRentPeriodInput, setShowRentPeriodInput] = useState(false);
   const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(false);
@@ -320,25 +317,11 @@ const ListNewProperty: React.FC = () => {
     try {
       const lands = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
       const estates = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
-
       // TODO: improving typing
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const estatesWithLand = estates.filter((e: any) => e.landIds.estateSize > 0);
-
-      const mergedProperties = [...lands, ...estatesWithLand].map((e) => ({
-        label: e.name,
-        value: JSON.stringify(e),
-        coords: e.coords,
-      }));
-      setProperties(mergedProperties);
-      setAssetProperties(lands);
-      if (mergedProperties.length > 0) {
-        // setInitialProperty(mergedProperties[0]);
-        // setSelectedProperty(JSON.parse(mergedProperties[0].value));
-      } else {
-        // setInitialProperty(DEFAULT_PROPERTY);
-        //setSelectedProperty(null);
-      }
+      const mergedProperties = [...lands, ...estatesWithLand];
+      setAssetProperties(mergedProperties);
     } catch (e) {
       console.log(e);
     }
