@@ -36,7 +36,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   const weeks = WEEK_IN_SECONDS;
 
   const getCalcByTimeSelection = (n: number, t: string) => {
-    if (n !== undefined) {
+    if (n !== undefined && n !== 1) {
       if (t === 'mins') {
         return n / mins;
       } else if (t === 'hours') {
@@ -61,7 +61,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
               Rent Period
               <p>
                 {getCalcByTimeSelection(min, minPeriodSelectedOption)} {minPeriodSelectedOption} - {''}
-                {getCalcByTimeSelection(max, minPeriodSelectedOption)} {maxPeriodSelectedOption}
+                {getCalcByTimeSelection(max, maxPeriodSelectedOption)} {maxPeriodSelectedOption}
               </p>
             </Grid>
             <Grid flexDirection="column" alignItems="flex-start">
