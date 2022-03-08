@@ -2,14 +2,15 @@
 @import '../../../../styles/utils.scss';
 
 .root {
-  z-index: 0;
+  z-index: 1;
   display: block;
   position: absolute;
-  bottom: 0;
+  top: 70px;
   left: 0;
   padding-left: 20px;
   padding-bottom: 20px;
   transition: opacity 300ms;
+  max-width: 60%;
 }
 
 .block {
@@ -18,4 +19,19 @@
   border-radius: 8px;
   box-shadow: 1px 1px 20px rgba(22, 22, 34, 0.5);
   text-transform: capitalize;
+}
+
+.blockTopBorder {
+  margin: 16px 0 0;
+  padding: 10px 0 0;
+  font-size: 11px;
+  border-top: 1px solid $grayish;
+}
+
+.link {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }

@@ -27,7 +27,8 @@ interface ILoadMore {
   textToDisplay: string;
   disabled: boolean;
 }
-export const LoadMoreLands: React.FC<ILoadMore> = ({ handleLoadMore, percentageValue, textToDisplay, disabled }) => {
+
+const LoadMoreLands: React.FC<ILoadMore> = ({ handleLoadMore, percentageValue, textToDisplay, disabled }) => {
   return (
     <Grid container direction="column" alignItems="center" margin={'32px 0 36px'}>
       <Grid container direction="row" justifyContent="center" alignItems="flex-start" item xs={6}>
@@ -46,3 +47,5 @@ export const LoadMoreLands: React.FC<ILoadMore> = ({ handleLoadMore, percentageV
     </Grid>
   );
 };
+
+export default LoadMoreLands;

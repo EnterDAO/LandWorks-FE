@@ -1,26 +1,23 @@
-import React, { SyntheticEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DECENTRALAND_METAVERSE,
   DEFAULT_LAST_RENT_END,
-  DEFAULT_SLICED_PAGE,
   DEFAULT_TOKEN_ADDRESS,
   sortColumns,
   sortDirections,
 } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
-import { Grid } from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
+import { AtlasTile } from 'components/custom/Atlas/Atlas';
 import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
-import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
-import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
-import { LoadMoreLands } from 'modules/land-works/components/lands-explore-load-more';
+import LandsExploreList from 'modules/land-works/components/lands-explore-list';
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
 import LandsExploreSubheader from 'modules/land-works/components/lands-explore-subheader';
-import LandsSearchBar from 'modules/land-works/components/lands-search';
-import LandsMapActiveTileProvider from 'modules/land-works/providers/lands-map-active-tile';
+import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-tile';
+import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
+import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 import { useWallet } from 'wallets/wallet';
 
 import {
@@ -35,17 +32,22 @@ import {
 } from '../../api';
 import ListNewProperty from '../list-new-property';
 
-import { getAllLandsCoordinates } from 'modules/land-works/utils';
+import { filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
 import { getNowTs } from 'utils';
 
 import './explore-view.scss';
 
 const ExploreView: React.FC = () => {
   const wallet = useWallet();
-  const isPerTwo = useMediaQuery('(max-width:1299px)');
 
-  const [lands, setLands] = useState([] as AssetEntity[]);
-  const [clickedLandId, setClickedLandId] = useState<AssetEntity['id']>('');
+  const [lands, setLands] = useState<AssetEntity[]>([]);
+  const [clickedLandId, setStateClickedLandId] = useState<AssetEntity['id']>('');
+  const [mapTiles, setMapTiles] = useState<Record<string, AtlasTile>>({});
+  const [selectedTile, setSelectedTile] = useState<SelectedTile>({
+    id: '',
+    type: '',
+    owner: '',
+  });
   const [user, setUser] = useState({} as UserEntity);
 
   const [sortDir, setSortDir] = useState(sortDirections[0]);
@@ -58,43 +60,30 @@ const ExploreView: React.FC = () => {
   const [atlasMapY, setAtlasMapY] = useState(0);
 
   const [searchQuery, setSearchQuery] = useState('');
-
   const [loading, setLoading] = useState(false);
-  const [blockAutoScroll, setBlockAutoScroll] = useState(false);
+  const [showCardPreview, setShowCardPreview] = useState(false);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
-
-  const [slicedLands, setSlicedLands] = useState(isPerTwo ? DEFAULT_SLICED_PAGE : 6);
-  const [loadPercentageValue, setLoadPercentageValue] = useState(0);
 
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState(DEFAULT_TOKEN_ADDRESS);
 
-  const [showListNewModal, setShowListNewModal] = useState(true);
-  const slicedLandsInTotal = lands.slice(0, slicedLands).length;
+  const [showListNewModal, setShowListNewModal] = useState(false);
 
-  useEffect(() => {
-    getPaymentTokens();
-  }, [paymentToken, lastRentEnd, lands]);
+  const setClickedLandId = (x: number | string, y: number | string) => {
+    let landId = `${x},${y}`;
 
-  useSubscription(USER_SUBSCRIPTION, {
-    skip: wallet.account === undefined,
-    variables: { id: wallet.account?.toLowerCase() },
-    onSubscriptionData: ({ subscriptionData }) => {
-      if (subscriptionData.error) {
-        // TODO:
-      }
+    // Look for the first coordinate for land estate.
+    lands.forEach((land) => {
+      land.decentralandData?.coordinates.forEach((coord, coordIndex) => {
+        if (coordIndex > 0 && coord.id === landId.replace(',', '-')) {
+          landId = `${land.decentralandData?.coordinates[0].x},${land.decentralandData?.coordinates[0].y}`;
+        }
+      });
+    });
 
-      setLoading(subscriptionData.loading);
-
-      if (subscriptionData.data.user === null) {
-        setUser({} as UserEntity);
-        return;
-      }
-
-      setUser(parseUser(subscriptionData.data.user));
-    },
-  });
+    return setStateClickedLandId(landId);
+  };
 
   const setPointMapCentre = (lands: CoordinatesLand[]) => {
     if (lands[0]) {
@@ -125,7 +114,6 @@ const ExploreView: React.FC = () => {
 
   const onChangeFiltersCurrency = (value: number) => {
     const sortIndex = Number(value) - 1;
-    // setSelectedCurrency(value); // this sets the value for the label in the dropdown
     setPaymentToken(paymentTokens[sortIndex].id);
   };
 
@@ -147,47 +135,33 @@ const ExploreView: React.FC = () => {
 
     setLands(lands.data);
     setLoading(false);
-    setSlicedLands(isPerTwo ? DEFAULT_SLICED_PAGE : 6);
-    const highlights = getAllLandsCoordinates(lands.data.slice(0, slicedLands));
+    const highlights = getAllLandsCoordinates(lands.data);
     setCoordinatesHighlights(highlights);
     setPointMapCentre(highlights);
   };
 
-  const filterLandsByQuery = (lands: AssetEntity[], query: string) => {
-    if (!query) {
-      return lands;
-    }
+  useSubscription(USER_SUBSCRIPTION, {
+    skip: wallet.account === undefined,
+    variables: { id: wallet.account?.toLowerCase() },
+    onSubscriptionData: ({ subscriptionData }) => {
+      if (subscriptionData.error) {
+        // TODO:
+      }
 
-    return lands.filter((land) => {
-      const landName = land.name.toLowerCase();
-      return landName.includes(query);
-    });
-  };
+      setLoading(subscriptionData.loading);
 
-  const handleLoadMore = () => {
-    const newSlicedLands = slicedLands + (isPerTwo ? DEFAULT_SLICED_PAGE : 6);
-    setSlicedLands(newSlicedLands);
-    const highlights = getAllLandsCoordinates(lands.slice(0, newSlicedLands));
-    setCoordinatesHighlights(highlights);
-    setPointMapCentre(highlights);
-  };
+      if (subscriptionData.data.user === null) {
+        setUser({} as UserEntity);
+        return;
+      }
 
-  const onMouseOverCardHandler = (e: SyntheticEvent, land: AssetEntity) => {
-    const allCoords = getAllLandsCoordinates([land]);
-
-    if (allCoords.length && allCoords[0]) {
-      setPointMapCentre([{ id: land.id, x: allCoords[0].x, y: allCoords[0].y }]);
-      setClickedLandId && setClickedLandId(`${allCoords[0].x},${allCoords[0].y}`);
-    }
-  };
+      setUser(parseUser(subscriptionData.data.user));
+    },
+  });
 
   useEffect(() => {
-    if (!searchQuery.length) {
-      getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
-    } else {
-      setLands(filterLandsByQuery(lands, searchQuery));
-    }
-  }, [searchQuery]);
+    getPaymentTokens();
+  }, [paymentToken, lastRentEnd, lands]);
 
   useEffect(() => {
     if (wallet.account) {
@@ -202,83 +176,56 @@ const ExploreView: React.FC = () => {
     getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
   }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
 
-  useEffect(() => {
-    setLoadPercentageValue((lands.slice(0, slicedLands).length * 100) / lands.length);
-  }, [lands, slicedLands]);
-
-  useEffect(() => {
-    if (!window) return;
-
-    const landExploreCard = window.document.getElementById(`land-explore-card--${clickedLandId}`);
-
-    if (landExploreCard && !blockAutoScroll) {
-      landExploreCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }, [clickedLandId]);
-
   return (
-    <LandsMapActiveTileProvider value={{ clickedLandId, setClickedLandId }}>
-      <div className="content-container--explore-view--header">
-        <LandsExploreSubheader
-          totalLands={lands.length}
-          hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
-          handleListNew={() => setShowListNewModal(true)}
-        />
-        <LandsExploreFilters
-          onChangeSortDirection={onChangeFiltersSortDirection}
-          onChangeOwnerToggler={onChangeFiltersOwnerToggler}
-          onChangeAvailable={onChangeFiltersAvailable}
-          onChangeCurrency={onChangeFiltersCurrency}
-        />
-      </div>
-
-      <div className="content-container content-container--explore-view">
-        <div
-          className="lands-container"
-          onMouseMove={() => setBlockAutoScroll(true)}
-          onMouseOut={() => setTimeout(() => setBlockAutoScroll(false), 150)}
+    <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
+      <LandsMapTilesProvider value={{ mapTiles, setMapTiles }}>
+        <LandsMapTileProvider
+          value={{
+            clickedLandId,
+            setClickedLandId,
+            selectedTile,
+            setSelectedTile,
+            showCardPreview,
+            setShowCardPreview,
+          }}
         >
-          <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
-            {loading ? (
-              [1, 2, 3, 4].map((i) => (
-                <Grid item xs={12} sm={6} md={6} lg={6} xl={4} key={i}>
-                  <LandCardSkeleton key={i} />
-                </Grid>
-              ))
-            ) : lands.length ? (
-              lands.slice(0, slicedLands).map((land) => (
-                <Grid item xs={12} sm={6} md={6} lg={6} xl={4} key={land.id}>
-                  <LandWorkCard onMouseOver={onMouseOverCardHandler} land={land} />
-                </Grid>
-              ))
-            ) : (
-              <div>No properties are currently listed</div>
-            )}
-          </Grid>
-          <LoadMoreLands
-            textToDisplay={`List ${slicedLandsInTotal} of ${lands.length}`}
-            handleLoadMore={handleLoadMore}
-            percentageValue={loadPercentageValue}
-            disabled={slicedLandsInTotal === lands.length}
-          />
-          <LayoutFooter isWrapped={false} />
-        </div>
+          <div className="content-container--explore-view--header">
+            <LandsExploreSubheader
+              totalLands={filterLandsByQuery(lands, searchQuery).length}
+              hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
+              handleListNew={() => setShowListNewModal(true)}
+            />
+            <LandsExploreFilters
+              onChangeSortDirection={onChangeFiltersSortDirection}
+              onChangeOwnerToggler={onChangeFiltersOwnerToggler}
+              onChangeAvailable={onChangeFiltersAvailable}
+              onChangeCurrency={onChangeFiltersCurrency}
+            />
+          </div>
 
-        <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
-          <LandsExploreMap
-            positionX={atlasMapX}
-            positionY={atlasMapY}
-            expanded={mapExpanded}
-            onClick={() => setMapExpanded(!mapExpanded)}
-            highlights={coordinatesHighlights}
-          />
-        </div>
-      </div>
-      <Modal height={800} open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
-        <ListNewProperty />
-      </Modal>
-    </LandsMapActiveTileProvider>
+          <div className="content-container content-container--explore-view">
+            <div className="list-lands-container">
+              <LandsExploreList loading={loading} lands={lands} setPointMapCentre={setPointMapCentre} />
+              <LayoutFooter isWrapped={false} />
+            </div>
+
+            <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
+              <LandsExploreMap
+                positionX={atlasMapX}
+                positionY={atlasMapY}
+                expanded={mapExpanded}
+                onClick={() => setMapExpanded(!mapExpanded)}
+                highlights={coordinatesHighlights}
+                lands={lands}
+              />
+            </div>
+            <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
+              <ListNewProperty />
+            </Modal>
+          </div>
+        </LandsMapTileProvider>
+      </LandsMapTilesProvider>
+    </LandsSearchQueryProvider>
   );
 };
 

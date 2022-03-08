@@ -43,3 +43,14 @@ export const getAllLandsCoordinates = (data: AssetEntity[]): CoordinatesLand[] =
 export const shortenString = (str: string): string => {
   return str.substring(0, 6) + '...' + str.substring(str.length - 4);
 };
+
+export const filterLandsByQuery = (lands: AssetEntity[], query: string): AssetEntity[] => {
+  if (!query || !query.length) {
+    return lands;
+  }
+
+  return lands.filter((land) => {
+    const landName = land.name.toLowerCase();
+    return landName.includes(query.toLowerCase());
+  });
+};

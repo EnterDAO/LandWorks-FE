@@ -6,10 +6,12 @@ import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
 import Atlas, { AtlasTile, Coord, Layer } from 'components/custom/Atlas/Atlas';
 import { Button } from 'design-system';
 import { MinusIcon, PlusIcon } from 'design-system/icons';
-import { CoordinatesLand } from 'modules/land-works/api';
-import { useLandsMapActiveTile } from 'modules/land-works/providers/lands-map-active-tile';
+import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
+import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
+import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 
-import LandsExploreNavigatorInfo, { SelectedTile } from '../lands-explore-navigator-info';
+import LandsExploreLandPreview from '../lands-explore-land-preview';
+import LandsExploreNavigatorInfo from '../lands-explore-navigator-info';
 
 import styles from './lands-explore-map.module.scss';
 
@@ -19,22 +21,22 @@ interface Props {
   expanded: boolean;
   onClick?: () => void;
   highlights?: CoordinatesLand[];
+  lands: AssetEntity[];
 }
 
-const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, highlights = [] }) => {
-  const [tiles, setTiles] = useState<Record<string, AtlasTile>>();
+const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, highlights = [], lands }) => {
+  const { clickedLandId, setClickedLandId, setSelectedTile, showCardPreview } = useLandsMapTile();
+  const { mapTiles, setMapTiles } = useLandsMapTiles();
   const [clickZoom, setClickZoom] = useState(0.5);
-  const [scrollZoom, setScrollZoom] = useState(0.5);
-  const { clickedLandId, setClickedLandId } = useLandsMapActiveTile();
-  const [selectedTile, setSelectedTile] = useState<Partial<SelectedTile>>({});
   const [highlightedTiles, setHighlightedTiles] = useState<Coord[]>([]);
+  const [scrollZoom, setScrollZoom] = useState(0.5);
 
   const fetchTiles = async (url: string = TILES_URL_DECENTRALEND) => {
     if (!window.fetch) return {};
     const resp = await window.fetch(url);
     const json = await resp.json();
 
-    setTiles(json.data as Record<string, AtlasTile>);
+    setMapTiles && setMapTiles(json.data as Record<string, AtlasTile>);
   };
 
   const onClickToggleSizeHandler = () => {
@@ -73,26 +75,29 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
   };
 
   const onPopupAtlasHandler = (data: { x: number; y: number }) => {
-    if (!tiles) return;
-
     const id = `${data.x},${data.y}`;
 
-    setSelectedTile({
-      id,
-      type: tiles[id].type || '',
-      owner: tiles[id].owner || '',
-    });
+    if (!mapTiles || !mapTiles[id]) return;
+
+    setSelectedTile &&
+      setSelectedTile({
+        id,
+        type: mapTiles[id].type || '',
+        owner: mapTiles[id].owner || '',
+      });
   };
 
   const onClickAtlasHandler = (x: number, y: number) => {
-    if (!tiles) return;
+    if (!mapTiles) return;
+
+    const id = `${x},${y}`;
 
     const land = highlights.find((coord) => {
-      return coord.id === `${x},${y}`;
+      return coord.id === id;
     });
 
     if (land) {
-      setClickedLandId && setClickedLandId(`${x},${y}`);
+      setClickedLandId && setClickedLandId(x, y);
     }
   };
 
@@ -136,15 +141,13 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
   }, [highlights]);
 
   useEffect(() => {
-    if (!tiles) {
-      fetchTiles();
-    }
+    fetchTiles();
   }, []);
 
   return (
     <div className={styles.root}>
       <Atlas
-        tiles={tiles}
+        tiles={mapTiles}
         x={positionX}
         y={positionY}
         zoom={clickZoom}
@@ -154,7 +157,9 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
         onClick={onClickAtlasHandler}
       />
 
-      <LandsExploreNavigatorInfo selected={selectedTile as SelectedTile} />
+      <LandsExploreNavigatorInfo />
+
+      {showCardPreview && <LandsExploreLandPreview lands={lands} />}
 
       <div className={styles['expand-control']}>
         <Button variant="secondary" type="button" onClick={onClickToggleSizeHandler}>
