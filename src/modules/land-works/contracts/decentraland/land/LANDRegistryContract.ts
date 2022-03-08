@@ -7,7 +7,7 @@ import LANDRegistryABI from './abi.json';
 
 import { buildData } from '../../../../../utils';
 
-interface Token {
+export interface Token {
   id: BigNumber;
   name: string;
   coords: string;

@@ -1,4 +1,4 @@
-import { AssetEntity } from "./land-works/api";
+import { AssetEntity } from './land-works/api';
 
 export interface Option {
   readonly label: string;
@@ -21,6 +21,19 @@ export type DecentralandNFT = {
   landIds?: any[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   coords: any[];
+};
+
+export type LandIds = {
+  estateSize: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  landIds: any[];
+};
+
+export type Estate = {
+  id: string;
+  isLAND: boolean;
+  landIds: LandIds;
+  name: string;
 };
 
 export type ParsedTime = {

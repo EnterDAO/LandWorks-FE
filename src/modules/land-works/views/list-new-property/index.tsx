@@ -16,7 +16,7 @@ import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import { Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
-import { DecentralandNFT } from 'modules/interface';
+import { DecentralandNFT, Estate } from 'modules/interface';
 import LandWorksListCard from 'modules/land-works/components/land-works-list-card';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
@@ -25,6 +25,7 @@ import { currencyData, landsData } from 'modules/land-works/components/lands-exp
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import ApproveModal from 'modules/land-works/components/lands-list-approve-modal';
+import { Token } from 'modules/land-works/contracts/decentraland/land/LANDRegistryContract';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import config from '../../../../config';
@@ -309,6 +310,35 @@ const ListNewProperty: React.FC = () => {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const retrieveLandIds = (estate: any) => estate.landIds.landIds;
+
+  const decodeXYForLand = (landId: BigNumber) => landRegistry?.landRegistryContract?.getTokenData(landId);
+
+  const getLandsForEstate = async (estate: Estate) => {
+    const landIds = retrieveLandIds(estate);
+    const landPromises: Promise<Token>[] = landIds.map((landId: BigNumber) => decodeXYForLand(landId));
+    let landsForEstate: Token[] = [];
+    const values = await Promise.allSettled(landPromises);
+    values.forEach((v) => {
+      if (v.status === 'fulfilled') {
+        landsForEstate = [...landsForEstate, v.value];
+      }
+    });
+    return landsForEstate;
+  };
+
+  const getLandsForEstates = async (estates: Estate[]) => {
+    let allLandsForEstates: Token[] = [];
+    const values = await Promise.allSettled(estates.map((e: Estate) => getLandsForEstate(e)));
+    values.forEach((v) => {
+      if (v.status === 'fulfilled') {
+        allLandsForEstates = [...allLandsForEstates, ...v.value];
+      }
+    });
+    return allLandsForEstates;
+  };
+
   const getUserNfts = async () => {
     if (!walletCtx.account) {
       return;
@@ -317,15 +347,13 @@ const ListNewProperty: React.FC = () => {
     try {
       const lands = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
       const estates = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
-      // TODO: improving typing
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const estatesWithLand = estates.filter((e: any) => e.landIds.estateSize > 0);
-      const mergedProperties = [...lands, ...estatesWithLand];
+
+      const landsForEstates = await getLandsForEstates(estates);
+      const mergedProperties = [...lands, ...landsForEstates];
       setAssetProperties(mergedProperties);
     } catch (e) {
       console.log(e);
     }
-
     setLoading(false);
   };
 
@@ -442,7 +470,7 @@ const ListNewProperty: React.FC = () => {
             ) : (
               <Grid container flexDirection="row" wrap="wrap" xs={12} className="properties">
                 {assetProperties.map((land) => (
-                  <Grid item xs={3} margin={'0 0 10px'}>
+                  <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
                     <LandWorksListCard
                       isSelectedProperty={land.name === selectedProperty?.name}
                       handleClick={handlePropertyChange}
