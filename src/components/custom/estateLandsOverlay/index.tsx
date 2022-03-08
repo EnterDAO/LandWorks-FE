@@ -11,14 +11,15 @@ type Coordinate = {
 };
 
 interface IEstateLandOverlay {
+  title: string;
   coordinates?: Coordinate[];
 }
 
-const EstateLandOverlay: React.FC<IEstateLandOverlay> = ({ coordinates }) => {
-  return coordinates && coordinates?.length > 1 ? (
+const EstateLandOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates }) => {
+  return coordinates && coordinates?.length > 0 ? (
     <div className="estate-overlay-container">
       <Typography variant="h3" className="title">
-        Estate
+        {title}
       </Typography>
       <Grid container>
         {(coordinates || []).map((estateCoord: Coordinate) => (

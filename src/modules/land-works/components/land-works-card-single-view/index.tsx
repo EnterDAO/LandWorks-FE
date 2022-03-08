@@ -170,8 +170,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   return (
     <Grid container className="single-land-card-container">
       <Grid xs={12} md={5.7} item className="image-wrapper">
-        <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)}></img>
-        <EstateLandOverlay coordinates={asset?.decentralandData?.coordinates} />
+        <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)} />
+        <EstateLandOverlay
+          title={asset?.decentralandData?.isLAND ? 'Land' : 'Estate'}
+          coordinates={asset?.decentralandData?.coordinates}
+        />
       </Grid>
       <Grid xs={12} md={6} item className="properties-container">
         <Grid container className="head-container">
