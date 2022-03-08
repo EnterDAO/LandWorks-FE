@@ -9,6 +9,7 @@ import {
   FEE_PRECISION,
   MaxRentPeriodOptions,
   MinRentPeriodOptions,
+  PlaceOptions,
 } from 'constants/modules';
 import BigNumber from 'bignumber.js';
 import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
@@ -496,9 +497,10 @@ const ListNewProperty: React.FC = () => {
                   minOptions={MinRentPeriodOptions}
                   maxOptions={MaxRentPeriodOptions}
                   atMostOptions={AtMostRentPeriodOptions}
-                  minValue={minPeriodSelectedOption.value}
-                  maxValue={maxPeriodSelectedOption.value}
+                  minValue={isMinPeriodSelected ? minPeriodSelectedOption.value : MINUTE_IN_SECONDS}
+                  maxValue={isMaxPeriodSelected ? maxPeriodSelectedOption.value : MINUTE_IN_SECONDS}
                   atMostValue={maxFutureSelectedOption.value}
+                  error={errMessage}
                 />
               )}
               <DropdownSection
