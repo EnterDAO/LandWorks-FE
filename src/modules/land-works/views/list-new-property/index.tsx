@@ -276,39 +276,40 @@ const ListNewProperty: React.FC = () => {
     setPricePerSecond(pricePerSecond);
   };
 
-  // const handleConfirmListing = async () => {
-  //   if (selectedProperty === null) {
-  //     return;
-  //   }
+  const handleConfirmListing = async () => {
+    if (selectedProperty === null) {
+      return;
+    }
 
-  //   setListDisabled(true);
+    setListDisabled(true);
 
-  //   const metaverseRegistry = selectedProperty.isLAND
-  //     ? config.contracts.decentraland.landRegistry
-  //     : config.contracts.decentraland.estateRegistry;
+    const metaverseRegistry = selectedProperty.isLAND
+      ? config.contracts.decentraland.landRegistry
+      : config.contracts.decentraland.estateRegistry;
 
-  //   try {
-  //     await landWorksContract?.list(
-  //       Number(PlaceOptions[0].value),
-  //       metaverseRegistry,
-  //       selectedProperty.id,
-  //       minPeriod,
-  //       maxPeriod,
-  //       maxFutureTime,
-  //       paymentToken.id,
-  //       pricePerSecond.toFixed(0)
-  //     );
-  //     showToastNotification(
-  //       ToastType.Success,
-  //       'Property listed successfully! It will take a few seconds to be shown in your Lending properties page.'
-  //     );
-  //     setListDisabled(false);
-  //     history.push('/lending');
-  //   } catch (e) {
-  //     showToastNotification(ToastType.Error, 'There was an error while listing the property.');
-  //     console.log(e);
-  //   }
-  // };
+    try {
+      await landWorksContract?.list(
+        Number(PlaceOptions[0].value),
+        metaverseRegistry,
+        selectedProperty.id,
+        minPeriod,
+        maxPeriod,
+        maxFutureTime,
+        paymentToken.id,
+        pricePerSecond.toFixed(0)
+      );
+      // REPLACE
+      // showToastNotification(
+      //   ToastType.Success,
+      //   'Property listed successfully! It will take a few seconds to be shown in your Lending properties page.'
+      // );
+      setListDisabled(false);
+      // history.push('/lending');
+    } catch (e) {
+      // showToastNotification(ToastType.Error, 'There was an error while listing the property.');
+      console.log(e);
+    }
+  };
 
   const getUserNfts = async () => {
     if (!walletCtx.account) {
@@ -573,7 +574,7 @@ const ListNewProperty: React.FC = () => {
               >
                 Approve
               </Button>
-              <Button disabled={listDisabled} variant="secondary" btnSize="medium" onClick={() => setActiveStep(0)}>
+              <Button disabled={listDisabled} variant="secondary" btnSize="medium" onClick={handleConfirmListing}>
                 Confirm Listing
               </Button>
             </Grid>
