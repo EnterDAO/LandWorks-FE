@@ -5,6 +5,8 @@ import Divider from '@mui/material/Divider';
 import { ControlledSelect } from 'design-system';
 import { Option } from 'modules/interface';
 
+import { THEME_COLORS } from 'themes/theme-constants';
+
 import s from './s.module.scss';
 
 interface InputProps {
@@ -13,15 +15,22 @@ interface InputProps {
   handleOptionChange: (value: number) => void;
   onInput: (e: ChangeEvent<HTMLInputElement>) => void;
   ethInUsd?: string;
+  error?: string;
 }
 
-const CustomDropdownInput: FC<InputProps> = ({ options, handleOptionChange, onInput, ethInUsd, value }) => {
+const CustomDropdownInput: FC<InputProps> = ({ options, handleOptionChange, onInput, ethInUsd, value, error }) => {
   const handleChange = (value: number) => {
     handleOptionChange(value);
   };
-
+  const borderColor = error !== '' ? `1px solid ${THEME_COLORS.red}` : '1px solid none';
   return (
-    <Box display="flex" flexDirection="row" justifyContent="space-between" className={s.wrapper}>
+    <Box
+      style={{ border: error && borderColor }}
+      display="flex"
+      flexDirection="row"
+      justifyContent="space-between"
+      className={s.wrapper}
+    >
       <input className={s.input} type={'number'} onInput={onInput} defaultValue={1} />
       <Box display="flex" flexDirection="row" className={s.dropdownBox}>
         <span>{ethInUsd}</span>

@@ -104,7 +104,7 @@ const ListNewProperty: React.FC = () => {
     setSelectedProperty(selectedLand);
   };
 
-  const handleMinCheckboxChange = (e: any) => {
+  const handleMinCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMinPeriodSelected(e.target.checked);
     if (e.target.checked) {
       setMinPeriod(minInput?.multipliedBy(minPeriodType!));
@@ -142,7 +142,7 @@ const ListNewProperty: React.FC = () => {
     }
   };
 
-  const handleMaxCheckboxChange = (e: any) => {
+  const handleMaxCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMaxPeriodSelected(e.target.checked);
     if (e.target.checked) {
       setMaxPeriod(maxInput?.multipliedBy(maxPeriodType!)!);
