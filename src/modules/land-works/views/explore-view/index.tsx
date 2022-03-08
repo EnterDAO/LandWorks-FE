@@ -219,7 +219,7 @@ const ExploreView: React.FC = () => {
                 lands={lands}
               />
             </div>
-            <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
+            <Modal height={800} open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
               <ListNewProperty />
             </Modal>
           </div>
