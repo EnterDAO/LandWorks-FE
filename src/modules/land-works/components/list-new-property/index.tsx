@@ -62,7 +62,7 @@ const ListNewProperty: React.FC = () => {
   const [minPeriodSelectedOption, setMinPeriodSelectedOption] = useState(MinRentPeriodOptions[0]); // Selected Option Value for the select menu
 
   const [maxPeriod, setMaxPeriod] = useState(DEFAULT_FUTURE_PERIOD);
-  const [isMaxPeriodSelected, setMaxPeriodSelected] = useState(false);
+  const [isMaxPeriodSelected, setMaxPeriodSelected] = useState(true);
   const [maxInput, setMaxInput] = useState(DEFAULT_MAX_PERIOD);
   const [maxPeriodType, setMaxPeriodType] = useState(BigNumber.from(MaxRentPeriodOptions[3].value));
   const [maxPeriodSelectedOption, setMaxPeriodSelectedOption] = useState(MaxRentPeriodOptions[3]); // Selected Option Value for the select menu
@@ -76,7 +76,7 @@ const ListNewProperty: React.FC = () => {
 
   const [assetProperties, setAssetProperties] = useState<DecentralandNFT[]>([]);
 
-  const [showRentPeriodInput, setShowRentPeriodInput] = useState(false);
+  const [showRentPeriodInput, setShowRentPeriodInput] = useState(true);
   const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(false);
 
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
@@ -291,7 +291,7 @@ const ListNewProperty: React.FC = () => {
       : config.contracts.decentraland.estateRegistry;
 
     try {
-      setShowSignModal(true)
+      setShowSignModal(true);
       await landWorksContract?.list(
         Number(PlaceOptions[0].value),
         metaverseRegistry,
@@ -304,7 +304,7 @@ const ListNewProperty: React.FC = () => {
       );
 
       setShowApproveModal(false);
-      setShowSignModal(false)
+      setShowSignModal(false);
       setShowSuccessModal(true);
       setListDisabled(false);
     } catch (e) {
@@ -492,6 +492,7 @@ const ListNewProperty: React.FC = () => {
           <Grid container xs={12} columnSpacing={5} justifyContent="space-between" mt={4}>
             <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={450} overflow="scroll">
               <DropdownSection
+                defaultOpen={true}
                 variant="calendar"
                 handleOpen={() => {
                   setShowRentPeriodInput(!showRentPeriodInput);
@@ -519,6 +520,7 @@ const ListNewProperty: React.FC = () => {
                 />
               )}
               <DropdownSection
+                defaultOpen={false}
                 variant="currency"
                 handleOpen={() => {
                   setShowRentCurrencyInput(!showRentCurrencyInput);
