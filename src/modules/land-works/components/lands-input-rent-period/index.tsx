@@ -64,7 +64,9 @@ export const RentPeriod: React.FC<IProps> = ({
               error={error}
             />
           </Grid>
-          <span>{error}</span>
+          <div className="error">
+            <span>{error}</span>
+          </div>
         </>
       )}
       <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
