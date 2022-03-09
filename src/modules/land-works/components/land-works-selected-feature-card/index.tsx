@@ -45,15 +45,27 @@ const SelectedListCard: React.FC<ISelectedListCard> = ({ land, landsContent }) =
               </span>
             </Grid>
           ) : (
-            <Grid>
-              {coords?.map((co) => {
-                return (
-                  <span style={{ marginRight: '10px' }}>
-                    X: {co[0]} Y: {co[1]}
-                    {''}
-                  </span>
-                );
-              })}
+            <Grid className={s.details}>
+              {landsContent && landsContent?.length > 3
+                ? coords?.slice(0, 3).map((co) => {
+                    return (
+                      <>
+                        <span style={{ marginRight: '8px' }}>
+                          X: {co[0]} Y: {co[1]}
+                          {''}
+                        </span>
+                        <span>. . .</span>
+                      </>
+                    );
+                  })
+                : coords?.map((co) => {
+                    return (
+                      <span style={{ marginRight: '8px' }}>
+                        X: {co[0]} Y: {co[1]}
+                        {''}
+                      </span>
+                    );
+                  })}
             </Grid>
           )}
         </Grid>

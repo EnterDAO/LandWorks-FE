@@ -106,7 +106,7 @@ export const EstateListingCard: React.FC<IEstateCardProps> = ({
           <Grid display="flex" flexWrap="wrap" flexDirection="row" className={s.details}>
             {coords.map((co) => {
               return (
-                <span style={{ marginRight: '10px' }}>
+                <span style={{ marginRight: '5px' }}>
                   X: {co[0]} Y: {co[1]}
                   {''}
                 </span>
