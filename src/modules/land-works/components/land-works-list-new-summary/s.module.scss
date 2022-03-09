@@ -31,16 +31,23 @@
 
     .blueBox {
       background: rgba(93, 143, 240, 0.1);
-      height: 56px;
+      // height: 56px;
       padding: 10px 16px;
       border-radius: 10px;
       margin: 20px 0 0;
       font-size: 12px;
-      font-weight: 700; 
-      
+      font-weight: 700;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
       p {
         font-weight: 400;
       }
+    }
+
+    .alert {
+      margin-right: 20px;
     }
 
     .name {

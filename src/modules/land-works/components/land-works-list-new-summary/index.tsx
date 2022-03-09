@@ -1,7 +1,8 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 
-import { Grid } from 'design-system';
+import { Grid, Icon } from 'design-system';
+import { AlertIcon } from 'design-system/icons';
 
 import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
 
@@ -75,8 +76,13 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
             </Grid>
           </Grid>
           <Grid className={s.blueBox}>
-            <div>Keep in mind</div>
-            <p>There is a network fee in order to save the changes.</p>
+            <div className={s.alert}>
+              <Icon iconElement={<AlertIcon />} iconSize="s" />
+            </div>
+            <div>
+              <div>Keep in mind</div>
+              <p>There is a network fee in order to save the changes.</p>
+            </div>
           </Grid>
         </Grid>
       </Grid>

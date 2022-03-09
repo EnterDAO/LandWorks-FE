@@ -1,3 +1,4 @@
+import { ReactComponent as AlertIcon } from 'assets/icons/alert.svg';
 import { ReactComponent as ArrowDownIcon } from 'assets/icons/arrow-down.svg';
 import { ReactComponent as ArrowLeftIcon } from 'assets/icons/arrow-left.svg';
 import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
@@ -82,6 +83,7 @@ export {
   HeartInCircleNotFilledIcon,
   HeartOutlinedIcon,
   HomeIcon,
+  AlertIcon,
   // InfoIcon,
   LoginIcon,
   MinusIcon,
