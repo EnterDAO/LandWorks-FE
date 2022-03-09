@@ -16,6 +16,7 @@ import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import { Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
+import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { DecentralandNFT, Estate } from 'modules/interface';
 import LandWorksListCard from 'modules/land-works/components/land-works-list-card';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
@@ -24,7 +25,7 @@ import SelectedListCard from 'modules/land-works/components/land-works-selected-
 import { currencyData, landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
-import ApproveModal from 'modules/land-works/components/lands-list-approve-modal';
+import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-modal';
 import { Token } from 'modules/land-works/contracts/decentraland/land/LANDRegistryContract';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
@@ -98,6 +99,8 @@ const ListNewProperty: React.FC = () => {
   //const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
   const [activeStep, setActiveStep] = useState(0);
   const [showApproveModal, setShowApproveModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showSignModal, setShowSignModal] = useState(false);
 
   const handlePropertyChange = (selectedLand: DecentralandNFT) => {
     setSelectedProperty(selectedLand);
@@ -241,20 +244,21 @@ const ListNewProperty: React.FC = () => {
     if (selectedProperty === null) {
       return;
     }
-
     try {
       let approvedAddress = DEFAULT_ADDRESS;
       if (selectedProperty.isLAND) {
-        await landRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
-        approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
         setShowApproveModal(true);
+        await landRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
+
+        approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
       } else {
         await estateRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
+
         approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
-        setShowApproveModal(true);
       }
       if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
         setApproveDisabled(true);
+        setShowApproveModal(false);
       }
     } catch (e) {
       console.log(e);
@@ -287,6 +291,7 @@ const ListNewProperty: React.FC = () => {
       : config.contracts.decentraland.estateRegistry;
 
     try {
+      setShowSignModal(true)
       await landWorksContract?.list(
         Number(PlaceOptions[0].value),
         metaverseRegistry,
@@ -297,15 +302,14 @@ const ListNewProperty: React.FC = () => {
         paymentToken.id,
         pricePerSecond.toFixed(0)
       );
-      // REPLACE
-      // showToastNotification(
-      //   ToastType.Success,
-      //   'Property listed successfully! It will take a few seconds to be shown in your Lending properties page.'
-      // );
+
+      setShowApproveModal(false);
+      setShowSignModal(false)
+      setShowSuccessModal(true);
       setListDisabled(false);
-      // history.push('/lending');
     } catch (e) {
-      // showToastNotification(ToastType.Error, 'There was an error while listing the property.');
+      // REPLACE
+      showToastNotification(ToastType.Error, 'There was an error while listing the property.');
       console.log(e);
     }
   };
@@ -593,7 +597,9 @@ const ListNewProperty: React.FC = () => {
             </Grid>
           </Grid>
         )}
-        <ApproveModal showApproveModal={showApproveModal} setShowApproveModal={setShowApproveModal} />
+        <TxModal variant="approve" showModal={showApproveModal} setShowModal={setShowApproveModal} />
+        <TxModal variant="sign" showModal={showSignModal} setShowModal={setShowSignModal} />
+        <SuccessModal showModal={showSuccessModal} setShowModal={setShowSuccessModal} />
       </Grid>
     </section>
   );

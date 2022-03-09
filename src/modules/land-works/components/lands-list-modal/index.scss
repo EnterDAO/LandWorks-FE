@@ -11,6 +11,16 @@
   justify-content: space-between;
 }
 
+.success-wrapper {
+  // width: 500px;
+  height: 244px;
+  padding: 0px 70px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .spinner {
   animation: spin 3s infinite linear;
   width: 50px;
@@ -19,7 +29,12 @@
 
 .heading {
   color: $light;
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.star-icon {
+  width: 60px;
+  height: 60px;
 }
 
 .subheading {

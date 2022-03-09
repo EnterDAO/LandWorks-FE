@@ -49,6 +49,7 @@ import { ReactComponent as SignGradientIcon } from 'assets/icons/sign-gradient.s
 import { ReactComponent as SignIcon } from 'assets/icons/sign.svg';
 import { ReactComponent as Spinner } from 'assets/icons/spinner.svg';
 import { ReactComponent as StarIcon } from 'assets/icons/star.svg';
+import { ReactComponent as SuccessStarIcon } from 'assets/icons/success-star.svg';
 import { ReactComponent as SuccessIcon } from 'assets/icons/success.svg';
 import { ReactComponent as SunIcon } from 'assets/icons/sun.svg';
 import { ReactComponent as ToTopIcon } from 'assets/icons/to-top.svg';
@@ -63,6 +64,7 @@ import { ReactComponent as WarningIcon } from 'assets/icons/warning.svg';
 
 // One-color icons
 export {
+  SuccessStarIcon,
   ArrowDownIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
