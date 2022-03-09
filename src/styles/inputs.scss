@@ -6,3 +6,7 @@ input.ant-input,
     box-shadow: 0 0 0 transparent;
   }
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
