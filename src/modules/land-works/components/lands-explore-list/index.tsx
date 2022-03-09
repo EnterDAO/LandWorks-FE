@@ -139,7 +139,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
           ))
         ) : (
           <Grid item xs={12}>
-            <p>No properties are currently listed</p>
+            <p>{filteredLands.length} properties are currently listed</p>
           </Grid>
         )}
       </Grid>
