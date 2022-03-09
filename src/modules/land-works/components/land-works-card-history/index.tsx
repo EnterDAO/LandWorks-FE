@@ -88,7 +88,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
           <ExternalLink href={getEtherscanAddressUrl(text.toLowerCase())} className={'by-text'}>
             <div className="renter-row">
               <p>{ens && ens !== text ? ens : shortedRenter}</p>
-              {!isYou && <p className="you">You</p>}
+              {isYou && <p className="you">You</p>}
             </div>
           </ExternalLink>
         );

@@ -4,7 +4,6 @@ import Countdown, { CountdownTimeDelta, zeroPad } from 'react-countdown';
 import Grid from '@mui/material/Grid';
 import BigNumber from 'bignumber.js';
 
-import EstateLandOverlay from 'components/custom/estateLandsOverlay';
 import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
@@ -17,6 +16,7 @@ import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, RentEntity, fetchAssetRentByTimestamp, fetchUserFirstRentByTimestamp } from '../../api';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
+import LandsMapOverlay from '../lands-map-overlay';
 import { LandsTooltip } from '../lands-tooltip';
 
 import { getNowTs } from '../../../../utils';
@@ -171,7 +171,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     <Grid container className="single-land-card-container">
       <Grid xs={12} md={5.7} item className="image-wrapper">
         <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)} />
-        <EstateLandOverlay
+        <LandsMapOverlay
           title={asset?.decentralandData?.isLAND ? 'Land' : 'Estate'}
           coordinates={asset?.decentralandData?.coordinates}
         />

@@ -60,6 +60,7 @@
     .property-button {
       display: flex;
       justify-content: flex-end;
+      width: 100%;
 
       &:nth-child(1) {
         margin-bottom: 15px;
@@ -376,14 +377,14 @@
 .marketplace-link {
   align-items: center;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   font-weight: bold;
   text-transform: uppercase;
   font-size: 13px;
   color: #F8F8FF;
   background-color: #3A3A4E;
   padding: 0 16px;
-  width: 180px;
+  width: 100%;
   border-radius: 14px;
   height: 52px;
 }
