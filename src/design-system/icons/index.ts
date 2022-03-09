@@ -7,6 +7,7 @@ import { ReactComponent as BackIcon } from 'assets/icons/back.svg';
 import { ReactComponent as BluePlus } from 'assets/icons/blue-plus.svg';
 import { ReactComponent as Calendar02 } from 'assets/icons/calendar-02.svg';
 import { ReactComponent as CalendarIcon } from 'assets/icons/calendar.svg';
+import { ReactComponent as BlueCheckIcon } from 'assets/icons/check-blue.svg';
 import { ReactComponent as CheckGlowIcon } from 'assets/icons/check-glow.svg';
 import { ReactComponent as CheckIcon } from 'assets/icons/check.svg';
 import { ReactComponent as CloseIcon } from 'assets/icons/close.svg';
@@ -70,6 +71,7 @@ export {
   ArrowRightIcon,
   ArrowUpIcon,
   BackIcon,
+  BlueCheckIcon,
   CalendarIcon,
   CheckIcon,
   CloseIcon,
