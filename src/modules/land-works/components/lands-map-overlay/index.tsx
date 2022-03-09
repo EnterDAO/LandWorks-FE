@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Chip, Stack, Typography } from '@mui/material';
-
-import styles from './lands-map-overlay.module.scss';
+import { ChipStyled, RootStyled, StackStyled, TypographyStyled } from './styled';
 
 type Coordinate = {
   id: string;
@@ -14,27 +11,20 @@ interface IEstateLandOverlay {
   coordinates?: Coordinate[];
 }
 
-const EstateLandOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates }) => {
+const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates }) => {
   return coordinates && coordinates?.length >= 1 ? (
-    <div className={styles.root}>
-      <Typography variant="h3" className="title">
-        {title}
-      </Typography>
+    <RootStyled>
+      <TypographyStyled variant="h3">{title}</TypographyStyled>
 
-      <Stack direction="row" spacing={1}>
-        {(coordinates || []).map((estateCoord: Coordinate) => (
-          <Chip
-            key={estateCoord.id}
-            label={`X: ${estateCoord.x}, Y: ${estateCoord.y}`}
-            variant="outlined"
-            className={styles.chip}
-          />
+      <StackStyled>
+        {coordinates.map((estateCoord: Coordinate) => (
+          <ChipStyled key={estateCoord.id} label={`X: ${estateCoord.x}, Y: ${estateCoord.y}`} variant="outlined" />
         ))}
-      </Stack>
-    </div>
+      </StackStyled>
+    </RootStyled>
   ) : (
     <></>
   );
 };
 
-export default EstateLandOverlay;
+export default LandsMapOverlay;
