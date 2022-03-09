@@ -1,5 +1,9 @@
+import { getEtherscanAddressUrl } from 'web3/utils';
+
+import ExternalLink from 'components/custom/externalLink';
 import { Button, Icon, Modal } from 'design-system';
 import { Spinner, SuccessStarIcon } from 'design-system/icons';
+import { useWallet } from 'wallets/wallet';
 
 import './index.scss';
 
@@ -11,6 +15,8 @@ interface IProps {
 
 export const TxModal: React.FC<IProps> = ({ showModal, setShowModal, variant }) => {
   const text = variant === 'approve' ? 'Approving...' : 'Signing Transaction...';
+  const wallet = useWallet();
+
   return (
     <Modal height={600} open={showModal} handleClose={() => setShowModal(false)}>
       <div className="wrapper">
@@ -18,7 +24,9 @@ export const TxModal: React.FC<IProps> = ({ showModal, setShowModal, variant }) 
         <div className="heading" style={{ fontSize: 30 }}>
           {text}
         </div>
-        <div className="subheading">Check your wallet for details</div>
+        <ExternalLink className="subheading" href={getEtherscanAddressUrl(wallet.account)}>
+          Check your wallet for details
+        </ExternalLink>
         {/* TODO: FIND OUT WHERE THIS LINK GOES */}
       </div>
     </Modal>
