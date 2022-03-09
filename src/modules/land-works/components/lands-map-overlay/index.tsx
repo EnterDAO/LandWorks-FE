@@ -1,4 +1,4 @@
-import { ChipStyled, RootStyled, StackStyled, TypographyStyled } from './styled';
+import { ChipStyled, RootStyled, TypographyStyled } from './styled';
 
 type Coordinate = {
   id: string;
@@ -16,11 +16,11 @@ const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates }) =
     <RootStyled>
       <TypographyStyled variant="h3">{title}</TypographyStyled>
 
-      <StackStyled>
+      <div>
         {coordinates.map((estateCoord: Coordinate) => (
           <ChipStyled key={estateCoord.id} label={`X: ${estateCoord.x}, Y: ${estateCoord.y}`} variant="outlined" />
         ))}
-      </StackStyled>
+      </div>
     </RootStyled>
   ) : (
     <></>

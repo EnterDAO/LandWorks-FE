@@ -2,9 +2,6 @@
 @import '../../../../styles/text.scss';
 
 .single-land-card-container {
-  align-items: center;
-  justify-content: space-between;
-
   .availability {
     display: flex;
     flex-direction: column;
@@ -18,7 +15,6 @@
     padding: 0 20px;
 
     @media all and (max-width: 400px) {
-
       button {
         margin-top: 20px;
       }
@@ -32,62 +28,36 @@
     }
 
     button {
-      padding: 0 37px;
       line-height: 0;
       font-size: 13px;
       height: 52px;
       font-weight: bold;
-      width: 180px;
+      width: 100%;
 
     }
-    .property-button-row {
-       @media all and (min-width: 900px) and (max-width: 1200px) {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      @media all and (max-width: 600px) {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      @media all and (max-width: 456px) {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-    }
+
     .property-button {
-      display: flex;
-      justify-content: flex-end;
       width: 100%;
 
       &:nth-child(1) {
         margin-bottom: 15px;
       }
-
-      @media all and (max-width: 600px) {
-        justify-content: center;
-      }
     }
   }
 
-  .image-wrapper {
-    max-height: 392px;
+  .map-image-wrapper {
+    max-height: 418px;
     border-radius: 20px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-
-    @media all and (min-width: 900px) and (max-width: 1200px) {
-      max-height: 446px;
-    }
-
-    @media all and (max-width: 769px) {
-      margin-bottom: 20px;
-      max-height: 420px;
+    margin-bottom: 20px;
+    
+    @media all and (min-width: 769px) {
+      margin-bottom: 0;
+      margin-right: 40px;
     }
   }
 
@@ -189,8 +159,11 @@
     }
 
     .available-period {
+      margin-left: 12px;
+      margin-right: 12px;
       color: #ffffff;
-      font-size: 18px;
+      font-size: 13px;
+      text-transform: uppercase;
       font-weight: 700;
     }
 
@@ -436,7 +409,7 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    padding: 3px 8px;
+    padding: 0;
     color: var(--theme-primary-color);
     text-transform: uppercase;
     font-size: 13px;

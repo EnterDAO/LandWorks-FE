@@ -17,13 +17,8 @@ export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
   color: '#fff',
 }));
 
-export const StackStyled = styled('div')(() => ({
-  display: 'block',
-}));
-
 export const ChipStyled = styled(Chip)<ChipProps>(() => ({
   display: 'inline-block',
-  // width: 'calc(50% - 0.3rem)',
   margin: '0 0.25rem 0.3rem 0',
   float: 'left',
   backgroundColor: 'var(--theme-modal-color)',
