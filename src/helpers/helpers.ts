@@ -49,6 +49,7 @@ export const getLandImageUrl = (land: AssetEntity | undefined) => {
     if (!land.metaverseAssetId) {
       return defaultLandImage;
     }
+
     const imageUrl = `${BASE_URL_DECENTRALEND}/estates/${land.metaverseAssetId}/map.png`;
     return imageUrl;
   }
@@ -56,6 +57,12 @@ export const getLandImageUrl = (land: AssetEntity | undefined) => {
 
 export const getDecentralandNftImageUrl = (land: DecentralandNFT) => {
   const imageUrl = `${BASE_URL_DECENTRALEND}/parcels/${land.coords[0]}/${land.coords[1]}/map.png`;
+  return imageUrl;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getEstateImageUrl = (land: any) => {
+  const imageUrl = `${BASE_URL_DECENTRALEND}/estates/${land.metaverseAssetId}/map.png`;
   return imageUrl;
 };
 

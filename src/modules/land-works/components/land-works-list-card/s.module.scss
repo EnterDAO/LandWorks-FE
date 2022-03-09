@@ -19,6 +19,9 @@
   box-shadow: none;
   background: $grey01;
   border: 2px solid var(--theme-primary-color);
+  height: 206px;
+  max-height: 206px;
+  overflow: hidden;
 }
 
 .card {
@@ -29,6 +32,9 @@
   padding: 10px;
   box-shadow: none;
   background: $grey01;
+  height: 206px;
+  max-height: 206px;
+  overflow: hidden;
 }
 
 .details {

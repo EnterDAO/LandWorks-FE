@@ -23,17 +23,14 @@ export type DecentralandNFT = {
   coords: any[];
 };
 
-export type LandIds = {
-  estateSize: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  landIds: any[];
-};
-
 export type Estate = {
   id: string;
-  isLAND: boolean;
-  landIds: LandIds;
   name: string;
+  isLAND: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  landIds?: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  coords: any[];
 };
 
 export type ParsedTime = {

@@ -18,7 +18,7 @@ import { Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { DecentralandNFT, Estate } from 'modules/interface';
-import LandWorksListCard from 'modules/land-works/components/land-works-list-card';
+import { EstateListingCard, LandListingCard } from 'modules/land-works/components/land-works-list-card';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
 import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
@@ -72,9 +72,11 @@ const ListNewProperty: React.FC = () => {
   const [maxFutureTimePeriod, setMaxFuturePeriodType] = useState(BigNumber.from(AtMostRentPeriodOptions[3].value));
   const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[3]); // Selected Option Value for the select menu
 
-  const [selectedProperty, setSelectedProperty] = useState(null as DecentralandNFT | null);
+  const [selectedProperty, setSelectedProperty] = useState(null as DecentralandNFT | Estate | null);
 
   const [assetProperties, setAssetProperties] = useState<DecentralandNFT[]>([]);
+  const [assetEstates, setAssetEstates] = useState<Estate[]>([]);
+  const [estateGroup, setEstateGroup] = useState<Token[]>([]);
 
   const [showRentPeriodInput, setShowRentPeriodInput] = useState(true);
   const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(false);
@@ -102,7 +104,7 @@ const ListNewProperty: React.FC = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSignModal, setShowSignModal] = useState(false);
 
-  const handlePropertyChange = (selectedLand: DecentralandNFT) => {
+  const handlePropertyChange = (selectedLand: DecentralandNFT | Estate) => {
     setSelectedProperty(selectedLand);
   };
 
@@ -353,8 +355,9 @@ const ListNewProperty: React.FC = () => {
       const estates = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
 
       const landsForEstates = await getLandsForEstates(estates);
-      const mergedProperties = [...lands, ...landsForEstates];
-      setAssetProperties(mergedProperties);
+      setEstateGroup(landsForEstates);
+      setAssetProperties(lands);
+      setAssetEstates(estates);
     } catch (e) {
       console.log(e);
     }
@@ -475,11 +478,22 @@ const ListNewProperty: React.FC = () => {
               <Grid container flexDirection="row" wrap="wrap" xs={12} className="properties">
                 {assetProperties.map((land) => (
                   <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
-                    <LandWorksListCard
+                    <LandListingCard
                       isSelectedProperty={land.name === selectedProperty?.name}
                       handleClick={handlePropertyChange}
                       key={land.name}
                       land={land}
+                    />
+                  </Grid>
+                ))}
+                {assetEstates.map((land) => (
+                  <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
+                    <EstateListingCard
+                      isSelectedProperty={land.name === selectedProperty?.name}
+                      handleClick={handlePropertyChange}
+                      key={land.name}
+                      land={land}
+                      landsContent={estateGroup}
                     />
                   </Grid>
                 ))}
@@ -544,7 +558,7 @@ const ListNewProperty: React.FC = () => {
             </Grid>
             <Grid item xs={6} rowSpacing={5}>
               <Grid item xs={12}>
-                <SelectedListCard land={selectedProperty!} />
+                <SelectedListCard landsContent={estateGroup} land={selectedProperty!} />
               </Grid>
               <Grid item xs={12}>
                 <ListNewSummary
