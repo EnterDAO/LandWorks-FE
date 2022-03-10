@@ -43,7 +43,7 @@
     }
 
     .button-icon {
-      background: #1e1e2e;
+      background: var(--theme-card-color);
       height: 48px;
       width: 48px;
       border-radius: 50%;
@@ -59,7 +59,7 @@
       height: 0px;
       border-radius: 2px;
 
-      border: 1px solid #27273a;
+      border: 1px solid var(--theme-separator-color);
       transform: rotate(90deg);
     }
 
@@ -91,7 +91,7 @@
     .nearby-heading {
       font-weight: 700;
       font-size: 30px;
-      color: #f8f8ff;
+      color: var(--theme-light-color);
       margin-right: 18px;
 
       .nearby-description {
@@ -122,14 +122,14 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background-color: #27273a;
+    background-color: var(--theme-separator-color);
     display: flex;
     align-items: center;
     margin: 5px;
 
     &:disabled {
-      color: #68687b;
-      background: #27273a;
+      color: var(--theme-grey200-color);
+      background: var(--theme-separator-color);
     }
   }
 }
