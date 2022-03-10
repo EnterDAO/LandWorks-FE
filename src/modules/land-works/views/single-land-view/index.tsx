@@ -294,8 +294,8 @@ const SingleLandView: React.FC = () => {
                   text="There are still active/pending rents. You will be able to withdraw your property once all rents"
                 >
                   <span>
-                    <Button variant="primary" style={{ fontSize: 14 }} className="button-subtle" disabled={true}>
-                      <span>WITHDRAW</span>
+                    <Button variant="primary" btnSize="xsmall" disabled={true}>
+                      WITHDRAW
                     </Button>
                   </span>
                 </LandsTooltip>
