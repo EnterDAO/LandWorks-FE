@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
 import { Col, Row } from 'antd';
 
-import Button from 'components/antd/button';
-import { Icon } from 'design-system';
+import { Button, Icon } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
@@ -218,57 +217,33 @@ const SingleLandView: React.FC = () => {
         }
       />
 
-      <Row gutter={40} className="head-breadcrumbs">
-        <Button type="link" style={{ fontSize: 14 }} className="button-back" onClick={() => history.push('/all')}>
-          <div className="button-icon">
-            <Icon iconSize={'m'} iconElement={<BackIcon />} />
-          </div>
-          <span>Back to Explore</span>
-        </Button>
-
-        <p className="separator" />
-
-        <Button type="link" className="button-explore" style={{ fontSize: 14 }} onClick={() => history.push('/all')}>
-          Explore
-        </Button>
-        <Icon iconSize={'m'} iconElement={<ArrowRightIcon />} />
-        <p className="current-land">{asset.name}</p>
-      </Row>
-
       <Row gutter={40} className="head-nav">
         <div className="left-wrapper">
-          {shouldShowEditButton() && (
-            <Button
-              style={{ fontSize: 14 }}
-              type="link"
-              className="button-accent"
-              disabled={editButtonDisabled}
-              onClick={() => history.push(`/property/${asset.id}/edit`, asset)}
-            >
-              <span>EDIT</span>
-            </Button>
-          )}
+          <div className="head-breadcrumbs">
+            <Link className="button-back" to="/explore">
+              <div className="button-icon">
+                <Icon iconSize={'m'} iconElement={<BackIcon />} />
+              </div>
+              <span>Back to Explore</span>
+            </Link>
+
+            <p className="separator" />
+
+            <Link className="button-explore" to="/explore">
+              Explore
+            </Link>
+
+            <Icon iconSize={'m'} iconElement={<ArrowRightIcon />} />
+
+            <p className="current-land">{asset.name}</p>
+          </div>
         </div>
+
         <div className="right-wrapper">
-          {shouldShowStake() && (
-            <ExternalLink
-              style={{ marginRight: 20, fontSize: 14 }}
-              href="https://dao.enterdao.xyz/yield-farming"
-              className="button-primary"
-            >
-              STAKE
-            </ExternalLink>
-          )}
           {shouldShowDelist() &&
             (isOwner() ? (
-              <Button
-                type="link"
-                style={{ fontSize: 14 }}
-                className="button-subtle"
-                onClick={handleDelistButton}
-                disabled={delistButtonDisabled}
-              >
-                <span>{isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
+              <Button variant="tertiary" btnSize="xsmall" onClick={handleDelistButton} disabled={delistButtonDisabled}>
+                {isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}
               </Button>
             ) : (
               <LandsTooltip
@@ -284,12 +259,32 @@ const SingleLandView: React.FC = () => {
                 }
               >
                 <span>
-                  <Button type="link" style={{ fontSize: 14 }} className="button-subtle" disabled={true}>
+                  <Button variant="primary" style={{ fontSize: 14 }} className="button-subtle" disabled={true}>
                     <span>{assetIsReadyForWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
                   </Button>
                 </span>
               </LandsTooltip>
             ))}
+          {shouldShowEditButton() && (
+            <Button
+              variant="accentblue"
+              btnSize="xsmall"
+              disabled={editButtonDisabled}
+              onClick={() => history.push(`/property/${asset.id}/edit`, asset)}
+            >
+              EDIT
+            </Button>
+          )}
+          {shouldShowStake() && (
+            <Button
+              variant="primary"
+              btnSize="xsmall"
+              disabled={editButtonDisabled}
+              onClick={() => window.open('https://dao.enterdao.xyz/yield-farming', '_blank')}
+            >
+              STAKE
+            </Button>
+          )}
           {shouldShowWithdraw() &&
             (isOwner() ? (
               shouldHaveWithdrawTooltip() ? (
@@ -299,20 +294,14 @@ const SingleLandView: React.FC = () => {
                   text="There are still active/pending rents. You will be able to withdraw your property once all rents"
                 >
                   <span>
-                    <Button type="link" style={{ fontSize: 14 }} className="button-subtle" disabled={true}>
+                    <Button variant="primary" style={{ fontSize: 14 }} className="button-subtle" disabled={true}>
                       <span>WITHDRAW</span>
                     </Button>
                   </span>
                 </LandsTooltip>
               ) : (
-                <Button
-                  type="link"
-                  style={{ fontSize: 14 }}
-                  className="button-subtle"
-                  onClick={handleWithdraw}
-                  disabled={withdrawButtonDisabled}
-                >
-                  <span>WITHDRAW</span>
+                <Button variant="primary" btnSize="xsmall" onClick={handleWithdraw} disabled={withdrawButtonDisabled}>
+                  WITHDRAW
                 </Button>
               )
             ) : (
@@ -328,7 +317,7 @@ const SingleLandView: React.FC = () => {
                 }
               >
                 <span>
-                  <Button type="link" style={{ fontSize: 14 }} className="button-subtle" disabled={true}>
+                  <Button variant="primary" btnSize="xsmall" disabled={true}>
                     <span>WITHDRAW</span>
                   </Button>
                 </span>
@@ -346,7 +335,9 @@ const SingleLandView: React.FC = () => {
           disableButtons(true);
         }}
       />
+
       <SingleViewLandHistory assetId={tokenId} />
+
       {!!adjacentLands.length && (
         <Row className="nearby-section">
           <div className="nearby-title">

@@ -53,7 +53,7 @@ export default styled('button')({
   textTransform: 'uppercase',
   padding: '0 24px',
   border: 'none',
-  borderRadius: '12px', // TODO: Move radiuses to constants
+  borderRadius: '10px', // TODO: Move radiuses to constants
   color: THEME_COLORS.light,
   cursor: 'pointer',
   '&.large': {

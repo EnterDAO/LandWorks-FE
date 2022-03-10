@@ -247,12 +247,13 @@
   }
 }
 
-.button-back {
+.button-back,
+.button-explore {
   font-style: normal;
-  font-weight: bold;
+  font-weight: 500;
   font-size: 12px;
   line-height: 24px;
-  color: var(--theme-secondary-color);
+  color: var(--theme-subtle-color);
   border: 0;
   background-color: transparent;
   padding: 12px 0;
