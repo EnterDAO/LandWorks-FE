@@ -259,8 +259,8 @@ const SingleLandView: React.FC = () => {
                 }
               >
                 <span>
-                  <Button variant="primary" style={{ fontSize: 14 }} className="button-subtle" disabled={true}>
-                    <span>{assetIsReadyForWithdraw() ? 'WITHDRAW' : 'DELIST'}</span>
+                  <Button variant="tertiary" btnSize="xsmall" disabled={true}>
+                    {assetIsReadyForWithdraw() ? 'WITHDRAW' : 'DELIST'}
                   </Button>
                 </span>
               </LandsTooltip>
@@ -294,13 +294,13 @@ const SingleLandView: React.FC = () => {
                   text="There are still active/pending rents. You will be able to withdraw your property once all rents"
                 >
                   <span>
-                    <Button variant="primary" btnSize="xsmall" disabled={true}>
+                    <Button variant="tertiary" btnSize="xsmall" disabled={true}>
                       WITHDRAW
                     </Button>
                   </span>
                 </LandsTooltip>
               ) : (
-                <Button variant="primary" btnSize="xsmall" onClick={handleWithdraw} disabled={withdrawButtonDisabled}>
+                <Button variant="tertiary" btnSize="xsmall" onClick={handleWithdraw} disabled={withdrawButtonDisabled}>
                   WITHDRAW
                 </Button>
               )
@@ -317,8 +317,8 @@ const SingleLandView: React.FC = () => {
                 }
               >
                 <span>
-                  <Button variant="primary" btnSize="xsmall" disabled={true}>
-                    <span>WITHDRAW</span>
+                  <Button variant="tertiary" btnSize="xsmall" disabled={true}>
+                    WITHDRAW
                   </Button>
                 </span>
               </LandsTooltip>
