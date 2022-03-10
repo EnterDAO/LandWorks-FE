@@ -28,6 +28,15 @@
         @media all and (min-width: 768px) {
           margin-bottom: 0;
         }
+
+        &.tertiary.Mui-disabled {
+          // display: none;
+          background: transparent;
+
+          &::before {
+            display: none;
+          }
+        }
       }
     }
   }
