@@ -580,7 +580,7 @@ const ListNewProperty: React.FC = () => {
         {activeStep === 0 && (
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
             <Button variant="secondary" btnSize="medium">
-              Found on wallet ({assetProperties.length})
+              Found in wallet ({assetProperties.length + assetEstates.length})
             </Button>
             <Button
               disabled={selectedProperty === null}
