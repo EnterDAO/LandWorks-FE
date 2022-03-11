@@ -229,6 +229,7 @@ export function secondsToDuration(value: number): ParsedDate {
     hours: 0,
     days: 0,
     weeks: 0,
+    months: 0,
   };
   const secondsToMinutes = (value: number) => {
     return Number((value / 60).toFixed(2));
@@ -246,10 +247,15 @@ export function secondsToDuration(value: number): ParsedDate {
     return Number((value / 7).toFixed(2));
   };
 
+  const weeksToMonths = (value: number) => {
+    return Number((value / 4).toFixed(2));
+  };
+
   result.minutes = secondsToMinutes(value);
   result.hours = minutesToHours(result.minutes);
   result.days = hoursToDays(result.hours);
   result.weeks = daysToWeeks(result.days);
+  result.months = weeksToMonths(result.weeks);
 
   return result;
 }
@@ -263,6 +269,8 @@ const TIME_TYPES = {
   DAYS: 'days',
   WEEK: 'week',
   WEEKS: 'weeks',
+  MONTH: 'month',
+  MONTHS: 'months',
 };
 
 export function getTimeType(values: ParsedDate): ExtractedTime {
@@ -309,6 +317,16 @@ export function getTimeType(values: ParsedDate): ExtractedTime {
       result.timeType = TIME_TYPES.WEEKS;
     }
     result.timeValue = values.weeks;
+  }
+
+  const moreThanMonth = values.months >= 1;
+  if (moreThanMonth) {
+    if (values.months === 1) {
+      result.timeType = TIME_TYPES.MONTH;
+    } else {
+      result.timeType = TIME_TYPES.MONTHS;
+    }
+    result.timeValue = values.months;
   }
 
   return result;

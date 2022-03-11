@@ -6,6 +6,7 @@ import {
   DAY_IN_SECONDS,
   HOUR_IN_SECONDS,
   MINUTE_IN_SECONDS,
+  MONTH_IN_SECONDS,
   ONE_HUNDRED_YEARS_IN_SECONDS,
   WEEK_IN_SECONDS,
 } from 'utils/date';
@@ -34,6 +35,10 @@ export const MinRentPeriodOptions = [
     label: 'weeks',
     value: WEEK_IN_SECONDS,
   },
+  {
+    label: 'months',
+    value: MONTH_IN_SECONDS,
+  },
 ];
 
 export const MaxRentPeriodOptions = [
@@ -53,6 +58,10 @@ export const MaxRentPeriodOptions = [
     label: 'weeks',
     value: WEEK_IN_SECONDS,
   },
+  {
+    label: 'months',
+    value: MONTH_IN_SECONDS,
+  },
 ];
 
 export const AtMostRentPeriodOptions = [
@@ -71,6 +80,10 @@ export const AtMostRentPeriodOptions = [
   {
     label: 'weeks',
     value: WEEK_IN_SECONDS,
+  },
+  {
+    label: 'months',
+    value: MONTH_IN_SECONDS,
   },
 ];
 
