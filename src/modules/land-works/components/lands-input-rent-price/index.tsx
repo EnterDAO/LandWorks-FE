@@ -23,6 +23,7 @@ interface IProps {
   feePercentage: number;
   options: Option[];
   value: number;
+  error: string;
 }
 
 export const RentPrice: React.FC<IProps> = ({
@@ -35,6 +36,7 @@ export const RentPrice: React.FC<IProps> = ({
   feePercentage,
   options,
   value,
+  error,
 }) => {
   return (
     <>
@@ -51,8 +53,12 @@ export const RentPrice: React.FC<IProps> = ({
             options={options}
             ethInUsd={showPriceInUsd}
             value={value}
+            error={error}
           />
         </Grid>
+        <div className="error">
+          <span>{error}</span>
+        </div>
       </Grid>
       <Grid className="blueBox" display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
         <Grid display="flex" justifyContent="center" alignItems="flex-start" flexDirection="column">

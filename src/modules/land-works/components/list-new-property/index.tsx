@@ -401,6 +401,8 @@ const ListNewProperty: React.FC = () => {
     setListDisabled(isListDisabled);
   };
 
+  const displayedPriceError = errMessage === 'Price cannot be zero' || errMessage === 'Price per second equals to zero';
+
   const evaluateSelectedProperty = async () => {
     if (selectedProperty) {
       setApproveDisabled(false);
@@ -531,7 +533,7 @@ const ListNewProperty: React.FC = () => {
                   minValue={isMinPeriodSelected ? minPeriodSelectedOption.value : MINUTE_IN_SECONDS}
                   maxValue={isMaxPeriodSelected ? maxPeriodSelectedOption.value : MINUTE_IN_SECONDS}
                   atMostValue={maxFutureSelectedOption.value}
-                  error={errMessage}
+                  error={displayedPriceError ? '' : errMessage}
                 />
               )}
               <DropdownSection
@@ -553,6 +555,7 @@ const ListNewProperty: React.FC = () => {
                     feePercentage={feePercentage}
                     options={currencyData}
                     value={selectedCurrency}
+                    error={displayedPriceError ? errMessage : ''}
                   />
                 </>
               )}
