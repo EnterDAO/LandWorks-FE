@@ -87,7 +87,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
                   // className="info-icon"
                   style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
                 />
-                {rentPrice.toString()}
+                {rentPrice.toString()} {paymentToken.symbol}
               </p>
             </Grid>
           </Grid>
