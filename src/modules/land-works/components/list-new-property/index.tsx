@@ -64,13 +64,13 @@ const ListNewProperty: React.FC = () => {
   const [maxPeriod, setMaxPeriod] = useState(DEFAULT_FUTURE_PERIOD);
   const [isMaxPeriodSelected, setMaxPeriodSelected] = useState(true);
   const [maxInput, setMaxInput] = useState(DEFAULT_MAX_PERIOD);
-  const [maxPeriodType, setMaxPeriodType] = useState(BigNumber.from(MaxRentPeriodOptions[3].value));
-  const [maxPeriodSelectedOption, setMaxPeriodSelectedOption] = useState(MaxRentPeriodOptions[3]); // Selected Option Value for the select menu
+  const [maxPeriodType, setMaxPeriodType] = useState(BigNumber.from(MaxRentPeriodOptions[4].value));
+  const [maxPeriodSelectedOption, setMaxPeriodSelectedOption] = useState(MaxRentPeriodOptions[4]); // Selected Option Value for the select menu
 
   const [maxFutureTime, setMaxFutureTime] = useState(DEFAULT_FUTURE_PERIOD);
   const [maxFutureTimeInput, setMaxFutureTimeInput] = useState(DEFAULT_MAX_PERIOD);
-  const [maxFutureTimePeriod, setMaxFuturePeriodType] = useState(BigNumber.from(AtMostRentPeriodOptions[3].value));
-  const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[3]); // Selected Option Value for the select menu
+  const [maxFutureTimePeriod, setMaxFuturePeriodType] = useState(BigNumber.from(AtMostRentPeriodOptions[4].value));
+  const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[4]); // Selected Option Value for the select menu
 
   const [selectedProperty, setSelectedProperty] = useState(null as DecentralandNFT | Estate | null);
 
@@ -129,7 +129,7 @@ const ListNewProperty: React.FC = () => {
 
       const parsedDate = secondsToDuration(bigvalue?.toNumber()!);
       const { timeType } = getTimeType(parsedDate);
-      const typeSuffix = timeType.substr(0, 3);
+      const typeSuffix = timeType.substr(0, 4);
       const optionByType = MinRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
       const optionIndex = MinRentPeriodOptions.indexOf(optionByType!);
 
@@ -156,7 +156,7 @@ const ListNewProperty: React.FC = () => {
       const { timeValue, timeType } = getTimeType(parsedDate);
       setMaxInput(new BigNumber(timeValue));
 
-      const typeSuffix = timeType.substr(0, 3);
+      const typeSuffix = timeType.substr(0, 4);
       const optionByType = MaxRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
       const optionIndex = MaxRentPeriodOptions.indexOf(optionByType!);
 
@@ -173,7 +173,7 @@ const ListNewProperty: React.FC = () => {
 
       const parsedDate = secondsToDuration(bigvalue?.toNumber()!);
       const { timeType } = getTimeType(parsedDate);
-      const typeSuffix = timeType.substr(0, 3);
+      const typeSuffix = timeType.substr(0, 4);
       const optionByType = MaxRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
       const optionIndex = MaxRentPeriodOptions.indexOf(optionByType!);
 

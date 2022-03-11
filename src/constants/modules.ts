@@ -97,7 +97,7 @@ export const FEE_PRECISION = 100_000;
 
 export const DEFAULT_PROPERTY = { label: '', value: '' };
 
-export const DEFAULT_FUTURE_PERIOD = DEFAULT_LIST_MAX_PERIOD.multipliedBy(WEEK_IN_SECONDS);
+export const DEFAULT_FUTURE_PERIOD = DEFAULT_LIST_MAX_PERIOD.multipliedBy(MONTH_IN_SECONDS);
 
 export const DECENTRALAND_METAVERSE = '1';
 
