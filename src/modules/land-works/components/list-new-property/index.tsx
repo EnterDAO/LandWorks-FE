@@ -56,7 +56,7 @@ const ListNewProperty: React.FC = () => {
   const { estateRegistryContract } = estateRegistry;
 
   const [minPeriod, setMinPeriod] = useState(new BigNumber(MINUTE_IN_SECONDS));
-  const [isMinPeriodSelected, setMinPeriodSelected] = useState(false);
+  const [isMinPeriodSelected, setMinPeriodSelected] = useState(true);
   const [minInput, setMinInput] = useState(DEFAULT_MIN_PERIOD);
   const [minPeriodType, setMinPeriodType] = useState(BigNumber.from(MinRentPeriodOptions[0].value));
   const [minPeriodSelectedOption, setMinPeriodSelectedOption] = useState(MinRentPeriodOptions[0]); // Selected Option Value for the select menu
@@ -85,7 +85,7 @@ const ListNewProperty: React.FC = () => {
   const [paymentToken, setPaymentToken] = useState({} as PaymentToken);
   const [selectedCurrency, setSelectedCurrency] = useState(1);
 
-  const [tokenCost, setTokenCost] = useState(new BigNumber(1));
+  const [tokenCost, setTokenCost] = useState(new BigNumber(0.05));
   const [earnings, setEarnings] = useState(ZERO_BIG_NUMBER);
   const [protocolFee, setProtocolFee] = useState(ZERO_BIG_NUMBER);
   const [feePercentage, setFeePercentage] = useState(0);
@@ -569,6 +569,7 @@ const ListNewProperty: React.FC = () => {
                   maxRentPeriod={maxPeriod}
                   maxFuturePeriod={maxFutureTime}
                   rentPrice={tokenCost}
+                  paymentToken={paymentToken}
                 />
               </Grid>
             </Grid>

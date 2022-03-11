@@ -57,6 +57,7 @@ export const RentPeriod: React.FC<IProps> = ({
         <>
           <Grid mt={3}>
             <CustomDropdownInput
+              defaultValue={1}
               value={minValue}
               handleOptionChange={handleMinSelectChange}
               onInput={handleMinInputChange}
@@ -77,6 +78,7 @@ export const RentPeriod: React.FC<IProps> = ({
         <>
           <Grid mt={3}>
             <CustomDropdownInput
+              defaultValue={1}
               value={maxValue}
               handleOptionChange={handleMaxSelectChange}
               onInput={handleMaxInputChange}
@@ -95,6 +97,7 @@ export const RentPeriod: React.FC<IProps> = ({
           </Grid>
           <Grid mt={3}>
             <CustomDropdownInput
+              defaultValue={3}
               value={atMostValue}
               handleOptionChange={handleAtMostSelectChange}
               onInput={handleAtMostInputChange}

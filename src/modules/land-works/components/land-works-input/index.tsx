@@ -16,9 +16,18 @@ interface InputProps {
   onInput: (e: ChangeEvent<HTMLInputElement>) => void;
   ethInUsd?: string;
   error?: string;
+  defaultValue: number;
 }
 
-const CustomDropdownInput: FC<InputProps> = ({ options, handleOptionChange, onInput, ethInUsd, value, error }) => {
+const CustomDropdownInput: FC<InputProps> = ({
+  options,
+  handleOptionChange,
+  onInput,
+  ethInUsd,
+  value,
+  error,
+  defaultValue,
+}) => {
   const handleChange = (value: number) => {
     handleOptionChange(value);
   };
@@ -31,7 +40,7 @@ const CustomDropdownInput: FC<InputProps> = ({ options, handleOptionChange, onIn
       justifyContent="space-between"
       className={s.wrapper}
     >
-      <input className={s.input} type={'number'} onInput={onInput} defaultValue={1} />
+      <input className={s.input} type={'number'} onInput={onInput} defaultValue={defaultValue} />
       <Box display="flex" flexDirection="row" className={s.dropdownBox}>
         <span>{ethInUsd}</span>
         <Divider orientation="vertical" flexItem className={s.divider} />

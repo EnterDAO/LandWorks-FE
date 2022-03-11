@@ -1,10 +1,13 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 
-import { Grid, Icon } from 'design-system';
-import { AlertIcon } from 'design-system/icons';
+import { ReactComponent as AlertIcon } from 'assets/icons/warning.svg';
+import Icon from 'components/custom/icon';
+import { Grid } from 'design-system';
+import { getTokenIconName } from 'helpers/helpers';
+import { PaymentToken } from 'modules/land-works/api';
 
-import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
+import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
 
 import s from './s.module.scss';
 
@@ -16,6 +19,7 @@ interface IListNewSummary {
   maxPeriodSelectedOption: string;
   maxFutureSelectedOption: string;
   maxFuturePeriod: BigNumber;
+  paymentToken: PaymentToken;
 }
 
 const ListNewSummary: React.FC<IListNewSummary> = ({
@@ -26,6 +30,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   minPeriodSelectedOption,
   maxPeriodSelectedOption,
   maxFutureSelectedOption,
+  paymentToken,
 }) => {
   const min = minRentPeriod?.toNumber();
   const max = maxRentPeriod?.toNumber();
@@ -35,6 +40,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   const hours = HOUR_IN_SECONDS;
   const days = DAY_IN_SECONDS;
   const weeks = WEEK_IN_SECONDS;
+  const months = MONTH_IN_SECONDS;
 
   const getCalcByTimeSelection = (n: number, t: string) => {
     if (n !== undefined && n !== 1) {
@@ -46,6 +52,8 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
         return n / days;
       } else if (t === 'weeks') {
         return n / weeks;
+      } else if (t === 'months') {
+        return n / months;
       }
     } else return 0;
   };
@@ -72,12 +80,20 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
               </p>
             </Grid>
             <Grid flexDirection="column" alignItems="flex-start">
-              Rent Price <p>{rentPrice.toString()}</p>
+              Rent Price
+              <p>
+                <Icon
+                  name={getTokenIconName(paymentToken.symbol || 'png/eth')}
+                  // className="info-icon"
+                  style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
+                />
+                {rentPrice.toString()}
+              </p>
             </Grid>
           </Grid>
           <Grid className={s.blueBox}>
             <div className={s.alert}>
-              <Icon iconElement={<AlertIcon />} iconSize="s" />
+              <AlertIcon style={{ width: '20px', height: '20px' }} />
             </div>
             <div>
               <div>Keep in mind</div>

@@ -45,6 +45,7 @@ export const RentPrice: React.FC<IProps> = ({
         </Grid>
         <Grid mt={3}>
           <CustomDropdownInput
+            defaultValue={0.05}
             onInput={handleCostEthChange}
             handleOptionChange={handleCurrencyChange}
             options={options}
