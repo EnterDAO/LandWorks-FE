@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { getEtherscanAddressUrl } from 'web3/utils';
 
 import ExternalLink from 'components/custom/externalLink';
@@ -27,7 +28,6 @@ export const TxModal: React.FC<IProps> = ({ showModal, setShowModal, variant }) 
         <ExternalLink className="subheading" href={getEtherscanAddressUrl(wallet.account)}>
           Check your wallet for details
         </ExternalLink>
-        {/* TODO: FIND OUT WHERE THIS LINK GOES */}
       </div>
     </Modal>
   );
@@ -43,7 +43,9 @@ export const SuccessModal: React.FC<IProps> = ({ showModal, setShowModal }) => {
         </div>
         <div>Nice! You’ve successfully listed property.</div>
         <Button variant="gradient" btnSize="medium">
-          Go to my properties
+          <Link className="link-to-properties" to="/lending">
+            Go to my properties
+          </Link>
         </Button>
       </div>
     </Modal>

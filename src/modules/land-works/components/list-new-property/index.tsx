@@ -310,7 +310,8 @@ const ListNewProperty: React.FC = () => {
       setShowSuccessModal(true);
       setListDisabled(false);
     } catch (e) {
-      // REPLACE
+      setShowSignModal(false);
+      setListDisabled(false);
       showToastNotification(ToastType.Error, 'There was an error while listing the property.');
       console.log(e);
     }
@@ -608,7 +609,7 @@ const ListNewProperty: React.FC = () => {
               >
                 Approve
               </Button>
-              <Button disabled={listDisabled} variant="secondary" btnSize="medium" onClick={handleConfirmListing}>
+              <Button disabled={listDisabled} variant="gradient" btnSize="medium" onClick={handleConfirmListing}>
                 Confirm Listing
               </Button>
             </Grid>
