@@ -8,6 +8,8 @@ import { DEFAULT_ADDRESS } from 'web3/utils';
 
 import { Data, DecentralandData, ExtractedTime, ParsedDate } from './modules/land-works/api';
 
+import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from './utils/date';
+
 export function getNowTs(): number {
   return Math.floor(Date.now() / 1_000);
 }
@@ -232,30 +234,30 @@ export function secondsToDuration(value: number): ParsedDate {
     months: 0,
   };
   const secondsToMinutes = (value: number) => {
-    return Number((value / 60).toFixed(2));
+    return Number((value / MINUTE_IN_SECONDS).toFixed(2));
   };
 
-  const minutesToHours = (value: number) => {
-    return Number((value / 60).toFixed(2));
+  const secondsToHours = (value: number) => {
+    return Number((value / HOUR_IN_SECONDS).toFixed(2));
   };
 
-  const hoursToDays = (value: number) => {
-    return Number((value / 24).toFixed(2));
+  const secondsToDays = (value: number) => {
+    return Number((value / DAY_IN_SECONDS).toFixed(2));
   };
 
-  const daysToWeeks = (value: number) => {
-    return Number((value / 7).toFixed(2));
+  const secondsToWeeks = (value: number) => {
+    return Number((value / WEEK_IN_SECONDS).toFixed(2));
   };
 
-  const weeksToMonths = (value: number) => {
-    return Number((value / 4).toFixed(2));
+  const secondsToMonths = (value: number) => {
+    return Number((value / MONTH_IN_SECONDS).toFixed(2));
   };
 
   result.minutes = secondsToMinutes(value);
-  result.hours = minutesToHours(result.minutes);
-  result.days = hoursToDays(result.hours);
-  result.weeks = daysToWeeks(result.days);
-  result.months = weeksToMonths(result.weeks);
+  result.hours = secondsToHours(value);
+  result.days = secondsToDays(value);
+  result.weeks = secondsToWeeks(value);
+  result.months = secondsToMonths(value);
 
   return result;
 }
@@ -273,60 +275,80 @@ const TIME_TYPES = {
   MONTHS: 'months',
 };
 
-export function getTimeType(values: ParsedDate): ExtractedTime {
+export function getTimeType(duration: ParsedDate): ExtractedTime {
   const result: ExtractedTime = {
     timeType: 'minutes',
     timeValue: 0,
   };
 
-  const lessThanHour = values.minutes < 60;
-  if (lessThanHour) {
-    if (values.minutes === 1) {
-      result.timeType = TIME_TYPES.MINUTE;
+  if (duration.months >= 1) {
+    if (duration.months == 1) {
+      return {
+        timeType: TIME_TYPES.MONTH,
+        timeValue: duration.months,
+      } as ExtractedTime;
     } else {
-      result.timeType = TIME_TYPES.MINUTES;
+      return {
+        timeType: TIME_TYPES.MONTHS,
+        timeValue: duration.months,
+      } as ExtractedTime;
     }
-    result.timeValue = values.minutes;
   }
 
-  const moreThanHour = values.hours >= 1;
-  if (moreThanHour) {
-    if (values.hours === 1) {
-      result.timeType = TIME_TYPES.HOUR;
+  if (duration.weeks >= 1) {
+    if (duration.weeks == 1) {
+      return {
+        timeType: TIME_TYPES.WEEK,
+        timeValue: duration.weeks,
+      } as ExtractedTime;
     } else {
-      result.timeType = TIME_TYPES.HOURS;
+      return {
+        timeType: TIME_TYPES.WEEKS,
+        timeValue: duration.weeks,
+      } as ExtractedTime;
     }
-    result.timeValue = values.hours;
   }
 
-  const moreThanDay = values.days >= 1;
-  if (moreThanDay) {
-    if (values.days === 1) {
-      result.timeType = TIME_TYPES.DAY;
+  if (duration.days >= 1) {
+    if (duration.days == 1) {
+      return {
+        timeType: TIME_TYPES.DAY,
+        timeValue: duration.days,
+      } as ExtractedTime;
     } else {
-      result.timeType = TIME_TYPES.DAYS;
+      return {
+        timeType: TIME_TYPES.DAYS,
+        timeValue: duration.days,
+      } as ExtractedTime;
     }
-    result.timeValue = values.days;
   }
 
-  const moreThanWeek = values.weeks >= 1;
-  if (moreThanWeek) {
-    if (values.weeks === 1) {
-      result.timeType = TIME_TYPES.WEEK;
+  if (duration.hours >= 1) {
+    if (duration.hours == 1) {
+      return {
+        timeType: TIME_TYPES.HOUR,
+        timeValue: duration.hours,
+      } as ExtractedTime;
     } else {
-      result.timeType = TIME_TYPES.WEEKS;
+      return {
+        timeType: TIME_TYPES.HOURS,
+        timeValue: duration.hours,
+      } as ExtractedTime;
     }
-    result.timeValue = values.weeks;
   }
 
-  const moreThanMonth = values.months >= 1;
-  if (moreThanMonth) {
-    if (values.months === 1) {
-      result.timeType = TIME_TYPES.MONTH;
+  if (duration.minutes >= 1) {
+    if (duration.minutes == 1) {
+      return {
+        timeType: TIME_TYPES.MINUTE,
+        timeValue: duration.minutes,
+      } as ExtractedTime;
     } else {
-      result.timeType = TIME_TYPES.MONTHS;
+      return {
+        timeType: TIME_TYPES.MINUTES,
+        timeValue: duration.minutes,
+      } as ExtractedTime;
     }
-    result.timeValue = values.months;
   }
 
   return result;
