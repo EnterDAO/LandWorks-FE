@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { ActionMeta, SingleValue } from 'react-select';
 import {
   AtMostRentPeriodOptions,
-  DEFAULT_FUTURE_PERIOD,
+  DEFAULT_LIST_MAX_FUTURE_PERIOD,
   DEFAULT_LIST_MAX_PERIOD,
   DEFAULT_MIN_PERIOD,
   DEFAULT_PROPERTY,
@@ -39,7 +39,7 @@ import { useLandRegistry } from '../../providers/decentraland/land-registry-prov
 import { useLandworks } from '../../providers/landworks-provider';
 
 import { getTimeType, secondsToDuration } from '../../../../utils';
-import { DAY_IN_SECONDS, MINUTE_IN_SECONDS } from '../../../../utils/date';
+import { DAY_IN_SECONDS, MINUTE_IN_SECONDS, WEEK_IN_SECONDS } from '../../../../utils/date';
 import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
 
 import './index.scss';
@@ -61,14 +61,14 @@ const ListPropertyView: React.FC = () => {
   const [minPeriodType, setMinPeriodType] = useState(BigNumber.from(MinRentPeriodOptions[0].value));
   const [minPeriodSelectedOption, setMinPeriodSelectedOption] = useState(MinRentPeriodOptions[0]); // Selected Option Value for the select menu
 
-  const [maxPeriod, setMaxPeriod] = useState(DEFAULT_FUTURE_PERIOD);
+  const [maxPeriod, setMaxPeriod] = useState(DEFAULT_LIST_MAX_PERIOD.multipliedBy(WEEK_IN_SECONDS));
   const [isMaxPeriodSelected, setMaxPeriodSelected] = useState(true);
   const [maxInput, setMaxInput] = useState(DEFAULT_LIST_MAX_PERIOD);
   const [maxPeriodType, setMaxPeriodType] = useState(BigNumber.from(MaxRentPeriodOptions[3].value));
   const [maxPeriodSelectedOption, setMaxPeriodSelectedOption] = useState(MaxRentPeriodOptions[3]); // Selected Option Value for the select menu
 
-  const [maxFutureTime, setMaxFutureTime] = useState(DEFAULT_FUTURE_PERIOD);
-  const [maxFutureTimeInput, setMaxFutureTimeInput] = useState(DEFAULT_LIST_MAX_PERIOD);
+  const [maxFutureTime, setMaxFutureTime] = useState(DEFAULT_LIST_MAX_FUTURE_PERIOD.multipliedBy(WEEK_IN_SECONDS));
+  const [maxFutureTimeInput, setMaxFutureTimeInput] = useState(DEFAULT_LIST_MAX_FUTURE_PERIOD);
   const [maxFutureTimePeriod, setMaxFuturePeriodType] = useState(BigNumber.from(AtMostRentPeriodOptions[3].value));
   const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[3]); // Selected Option Value for the select menu
 

@@ -91,13 +91,13 @@ export const DEFAULT_MIN_PERIOD = new BigNumber(1);
 
 export const DEFAULT_MAX_PERIOD = new BigNumber(ONE_HUNDRED_YEARS_IN_SECONDS);
 
-export const DEFAULT_LIST_MAX_PERIOD = new BigNumber(3);
-
 export const FEE_PRECISION = 100_000;
 
 export const DEFAULT_PROPERTY = { label: '', value: '' };
 
-export const DEFAULT_FUTURE_PERIOD = DEFAULT_LIST_MAX_PERIOD.multipliedBy(MONTH_IN_SECONDS);
+export const DEFAULT_LIST_MAX_PERIOD = new BigNumber(1);
+
+export const DEFAULT_LIST_MAX_FUTURE_PERIOD = new BigNumber(3);
 
 export const DECENTRALAND_METAVERSE = '1';
 

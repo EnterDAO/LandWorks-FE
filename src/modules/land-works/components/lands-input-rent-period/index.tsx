@@ -22,13 +22,16 @@ interface IProps {
   minOptions: Option[];
   maxOptions: Option[];
   atMostOptions: Option[];
-  minValue: number;
-  maxValue: number;
-  atMostValue: number;
+  minOptionsValue: number;
+  maxOptionsValue: number;
+  atMostOptionsValue: number;
+  minInputValue: number;
+  maxInputValue: number;
+  atMostInputValue: number;
   error?: string;
 }
 
-export const RentPeriod: React.FC<IProps> = ({
+const RentPeriod: React.FC<IProps> = ({
   isMinPeriodSelected,
   handleMinCheckboxChange,
   handleMinSelectChange,
@@ -42,9 +45,12 @@ export const RentPeriod: React.FC<IProps> = ({
   minOptions,
   maxOptions,
   atMostOptions,
-  minValue,
-  maxValue,
-  atMostValue,
+  minOptionsValue,
+  maxOptionsValue,
+  atMostOptionsValue,
+  minInputValue,
+  maxInputValue,
+  atMostInputValue,
   error,
 }) => {
   return (
@@ -57,8 +63,8 @@ export const RentPeriod: React.FC<IProps> = ({
         <>
           <Grid mt={3}>
             <CustomDropdownInput
-              defaultValue={1}
-              value={minValue}
+              defaultInputValue={minInputValue}
+              optionsValue={minOptionsValue}
               handleOptionChange={handleMinSelectChange}
               onInput={handleMinInputChange}
               options={minOptions}
@@ -78,8 +84,8 @@ export const RentPeriod: React.FC<IProps> = ({
         <>
           <Grid mt={3}>
             <CustomDropdownInput
-              defaultValue={1}
-              value={maxValue}
+              defaultInputValue={maxInputValue}
+              optionsValue={maxOptionsValue}
               handleOptionChange={handleMaxSelectChange}
               onInput={handleMaxInputChange}
               options={maxOptions}
@@ -97,8 +103,8 @@ export const RentPeriod: React.FC<IProps> = ({
           </Grid>
           <Grid mt={3}>
             <CustomDropdownInput
-              defaultValue={3}
-              value={atMostValue}
+              defaultInputValue={atMostInputValue}
+              optionsValue={atMostOptionsValue}
               handleOptionChange={handleAtMostSelectChange}
               onInput={handleAtMostInputChange}
               options={atMostOptions}

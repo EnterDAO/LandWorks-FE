@@ -22,7 +22,8 @@ interface IProps {
   protocolFee: BigNumber;
   feePercentage: number;
   options: Option[];
-  value: number;
+  optionsValue: number;
+  inputValue: number;
   error: string;
 }
 
@@ -35,7 +36,8 @@ export const RentPrice: React.FC<IProps> = ({
   protocolFee,
   feePercentage,
   options,
-  value,
+  optionsValue,
+  inputValue,
   error,
 }) => {
   return (
@@ -47,12 +49,12 @@ export const RentPrice: React.FC<IProps> = ({
         </Grid>
         <Grid mt={3}>
           <CustomDropdownInput
-            defaultValue={0.05}
+            defaultInputValue={inputValue}
             onInput={handleCostEthChange}
             handleOptionChange={handleCurrencyChange}
             options={options}
             ethInUsd={showPriceInUsd}
-            value={value}
+            optionsValue={optionsValue}
             error={error}
           />
         </Grid>

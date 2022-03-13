@@ -11,12 +11,12 @@ import s from './s.module.scss';
 
 interface InputProps {
   options: Option[];
-  value: number;
+  optionsValue: number;
   handleOptionChange: (value: number) => void;
   onInput: (e: ChangeEvent<HTMLInputElement>) => void;
   ethInUsd?: string;
   error?: string;
-  defaultValue: number;
+  defaultInputValue: number;
 }
 
 const CustomDropdownInput: FC<InputProps> = ({
@@ -24,9 +24,9 @@ const CustomDropdownInput: FC<InputProps> = ({
   handleOptionChange,
   onInput,
   ethInUsd,
-  value,
+  optionsValue,
   error,
-  defaultValue,
+  defaultInputValue,
 }) => {
   const handleChange = (value: number) => {
     handleOptionChange(value);
@@ -40,12 +40,12 @@ const CustomDropdownInput: FC<InputProps> = ({
       justifyContent="space-between"
       className={s.wrapper}
     >
-      <input className={s.input} type={'number'} onInput={onInput} defaultValue={defaultValue} />
+      <input className={s.input} type={'number'} onInput={onInput} defaultValue={defaultInputValue} />
       <Box display="flex" flexDirection="row" className={s.dropdownBox}>
         <span>{ethInUsd}</span>
         <Divider orientation="vertical" flexItem className={s.divider} />
         <Box>
-          <ControlledSelect value={value} width={'7rem'} onChange={handleChange} options={options} />
+          <ControlledSelect value={optionsValue} width={'7rem'} onChange={handleChange} options={options} />
         </Box>
       </Box>
     </Box>

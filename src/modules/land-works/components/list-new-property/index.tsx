@@ -3,8 +3,8 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import {
   AtMostRentPeriodOptions,
-  DEFAULT_FUTURE_PERIOD,
-  DEFAULT_MAX_PERIOD,
+  DEFAULT_LIST_MAX_FUTURE_PERIOD,
+  DEFAULT_LIST_MAX_PERIOD,
   DEFAULT_MIN_PERIOD,
   FEE_PRECISION,
   MaxRentPeriodOptions,
@@ -38,7 +38,7 @@ import { useLandRegistry } from '../../providers/decentraland/land-registry-prov
 import { useLandworks } from '../../providers/landworks-provider';
 
 import { getTimeType, secondsToDuration } from 'utils';
-import { DAY_IN_SECONDS, MINUTE_IN_SECONDS } from 'utils/date';
+import { DAY_IN_SECONDS, MINUTE_IN_SECONDS, MONTH_IN_SECONDS } from 'utils/date';
 
 import './index.scss';
 
@@ -55,20 +55,20 @@ const ListNewProperty: React.FC = () => {
   const { landRegistryContract } = landRegistry;
   const { estateRegistryContract } = estateRegistry;
 
-  const [minPeriod, setMinPeriod] = useState(new BigNumber(MINUTE_IN_SECONDS));
-  const [isMinPeriodSelected, setMinPeriodSelected] = useState(true);
+  const [minPeriod, setMinPeriod] = useState(new BigNumber(DAY_IN_SECONDS));
+  const [isMinPeriodSelected, setMinPeriodSelected] = useState(false);
   const [minInput, setMinInput] = useState(DEFAULT_MIN_PERIOD);
-  const [minPeriodType, setMinPeriodType] = useState(BigNumber.from(MinRentPeriodOptions[0].value));
-  const [minPeriodSelectedOption, setMinPeriodSelectedOption] = useState(MinRentPeriodOptions[0]); // Selected Option Value for the select menu
+  const [minPeriodType, setMinPeriodType] = useState(BigNumber.from(MinRentPeriodOptions[2].value));
+  const [minPeriodSelectedOption, setMinPeriodSelectedOption] = useState(MinRentPeriodOptions[2]); // Selected Option Value for the select menu
 
-  const [maxPeriod, setMaxPeriod] = useState(DEFAULT_FUTURE_PERIOD);
+  const [maxPeriod, setMaxPeriod] = useState(DEFAULT_LIST_MAX_PERIOD.multipliedBy(MONTH_IN_SECONDS));
   const [isMaxPeriodSelected, setMaxPeriodSelected] = useState(true);
-  const [maxInput, setMaxInput] = useState(DEFAULT_MAX_PERIOD);
+  const [maxInput, setMaxInput] = useState(DEFAULT_LIST_MAX_PERIOD);
   const [maxPeriodType, setMaxPeriodType] = useState(BigNumber.from(MaxRentPeriodOptions[4].value));
   const [maxPeriodSelectedOption, setMaxPeriodSelectedOption] = useState(MaxRentPeriodOptions[4]); // Selected Option Value for the select menu
 
-  const [maxFutureTime, setMaxFutureTime] = useState(DEFAULT_FUTURE_PERIOD);
-  const [maxFutureTimeInput, setMaxFutureTimeInput] = useState(DEFAULT_MAX_PERIOD);
+  const [maxFutureTime, setMaxFutureTime] = useState(DEFAULT_LIST_MAX_FUTURE_PERIOD.multipliedBy(MONTH_IN_SECONDS));
+  const [maxFutureTimeInput, setMaxFutureTimeInput] = useState(DEFAULT_LIST_MAX_FUTURE_PERIOD);
   const [maxFutureTimePeriod, setMaxFuturePeriodType] = useState(BigNumber.from(AtMostRentPeriodOptions[4].value));
   const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[4]); // Selected Option Value for the select menu
 
@@ -114,10 +114,10 @@ const ListNewProperty: React.FC = () => {
       setMinPeriod(minInput?.multipliedBy(minPeriodType!));
     } else {
       // Reset to defaults
-      setMinPeriod(DEFAULT_MIN_PERIOD);
+      setMinPeriod(new BigNumber(DAY_IN_SECONDS));
       setMinInput(DEFAULT_MIN_PERIOD);
-      setMinPeriodType(BigNumber.from(MinRentPeriodOptions[0].value));
-      setMinPeriodSelectedOption(MinRentPeriodOptions[0]);
+      setMinPeriodType(BigNumber.from(MinRentPeriodOptions[2].value));
+      setMinPeriodSelectedOption(MinRentPeriodOptions[2]);
     }
   };
 
@@ -151,17 +151,17 @@ const ListNewProperty: React.FC = () => {
     if (e.target.checked) {
       setMaxPeriod(maxInput?.multipliedBy(maxPeriodType!)!);
     } else {
-      setMaxPeriod(maxFutureTime);
-      const parsedDate = secondsToDuration(maxFutureTime?.toNumber()!);
-      const { timeValue, timeType } = getTimeType(parsedDate);
-      setMaxInput(new BigNumber(timeValue));
-
-      const typeSuffix = timeType.substr(0, 4);
-      const optionByType = MaxRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
-      const optionIndex = MaxRentPeriodOptions.indexOf(optionByType!);
-
-      setMaxPeriodSelectedOption(MaxRentPeriodOptions[optionIndex]);
-      setMaxPeriodType(BigNumber.from(optionByType?.value));
+      // Reset to defaults
+      // Max Period
+      setMaxPeriod(DEFAULT_LIST_MAX_PERIOD.multipliedBy(MONTH_IN_SECONDS));
+      setMaxInput(DEFAULT_LIST_MAX_PERIOD);
+      setMaxPeriodType(BigNumber.from(MinRentPeriodOptions[4].value));
+      setMaxPeriodSelectedOption(MinRentPeriodOptions[4]);
+      // Max Future Time | At Most
+      setMaxFutureTime(DEFAULT_LIST_MAX_FUTURE_PERIOD.multipliedBy(MONTH_IN_SECONDS));
+      setMaxFutureTimeInput(DEFAULT_LIST_MAX_FUTURE_PERIOD);
+      setMaxFuturePeriodType(BigNumber.from(MinRentPeriodOptions[4].value));
+      setMaxPeriodSelectedOption(MinRentPeriodOptions[4]);
     }
   };
 
@@ -452,7 +452,7 @@ const ListNewProperty: React.FC = () => {
     // TODO:: some filtering here
   };
 
-  const showPriceInUsd = `${usdPrice}$`;
+  const showPriceInUsd = `$${usdPrice}`;
 
   const steps = ['Choose Property', 'Rent Specification'];
 
@@ -530,9 +530,12 @@ const ListNewProperty: React.FC = () => {
                   minOptions={MinRentPeriodOptions}
                   maxOptions={MaxRentPeriodOptions}
                   atMostOptions={AtMostRentPeriodOptions}
-                  minValue={isMinPeriodSelected ? minPeriodSelectedOption.value : MINUTE_IN_SECONDS}
-                  maxValue={isMaxPeriodSelected ? maxPeriodSelectedOption.value : MINUTE_IN_SECONDS}
-                  atMostValue={maxFutureSelectedOption.value}
+                  minOptionsValue={minPeriodSelectedOption.value}
+                  maxOptionsValue={maxPeriodSelectedOption.value}
+                  atMostOptionsValue={maxFutureSelectedOption.value}
+                  minInputValue={minInput?.toNumber()}
+                  maxInputValue={maxInput?.toNumber()}
+                  atMostInputValue={maxFutureTimeInput?.toNumber()}
                   error={displayedPriceError ? '' : errMessage}
                 />
               )}
@@ -554,7 +557,8 @@ const ListNewProperty: React.FC = () => {
                     protocolFee={protocolFee}
                     feePercentage={feePercentage}
                     options={currencyData}
-                    value={selectedCurrency}
+                    optionsValue={selectedCurrency}
+                    inputValue={tokenCost.toNumber()}
                     error={displayedPriceError ? errMessage : ''}
                   />
                 </>
