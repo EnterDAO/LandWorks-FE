@@ -1,26 +1,18 @@
 .rent-modal {
-  .ant-modal-content {
-    border-radius: 10px;
-    box-shadow: none;
-  }
-
-  .ant-modal-header {
-    background: var(--theme-modal-color);
-    padding: 22px;
-    border-bottom: none;
-  }
-
-  .ant-modal-close {
-    top: 22px;
-  }
+  max-width: 730px;
+  position: relative;
+  top: -20px;
 
   .light-text {
-    color: rgba(185, 185, 211, 1);
+    display: flex;
+    align-items:center;
+    color: #F8F8FF;
+    font-size: 16px;
+    font-weight: bold;
   }
 
   .title-period {
     display: flex;
-    justify-content: space-between;
   }
 
   .approve-wrapper {
@@ -37,40 +29,6 @@
     }
   }
 
-  .ant-picker.ant-picker-borderless.button-primary {
-    padding: 6px 16px;
-    cursor: pointer;
-
-    .ant-picker-input {
-      display: flex;
-      flex-direction: row-reverse;
-    }
-
-    svg {
-      fill: var(--theme-primary-color);
-      margin-right: 12px;
-    }
-
-    input {
-      cursor: pointer;
-      color: var(--theme-primary-color);
-      font-size: var(--font-size-p1);
-
-      &::placeholder {
-        color: var(--theme-primary-color);
-        opacity: 1;
-      }
-
-      &:-ms-input-placeholder {
-        color: var(--theme-primary-color);
-      }
-
-      &::-ms-input-placeholder {
-        color: var(--theme-primary-color);
-      }
-    }
-  }
-
   .bold-white-text {
     color: #ffffff;
     font-weight: bold;
@@ -78,15 +36,38 @@
   }
 
   .info-icon {
+    color: var(--theme-subtle-color);
     width: 16px;
     height: 16px;
     vertical-align: middle;
     margin-left: 5px;
   }
 
-  .oprator-container {
-    margin-top: 20px;
+  .profile-icon, .warning-icon {
+    height: 20px;
+    width: 20px;
+    margin-right: 10px;
+    color: #5D8FF0;
+  }
 
+  .warning-icon {
+    margin: 0;
+    margin-top: 5px;
+  }
+  .operator-container {
+    margin-top: 20px !important;
+    display: flex;
+    flex-direction: column;
+
+    .operator-text {
+      color: #F8F8FF;
+      font-size: 13px;
+    }
+
+    .operator-input {
+      width: 100%;
+      margin: 8px 0;
+    }
     .operator-address {
       margin-top: 5px;
       padding: 10px;
@@ -96,89 +77,130 @@
     }
     input {
       padding: 10px;
-      background: #161622;
+      background: #27273A;
       border-radius: 12px;
-      margin: 15px 0px;
+      font-weight: 400;
     }
   }
 
   .rent-modal-footer {
-    background: #161622;
+    background: #27273A;
     border-radius: 12px;
     padding: 15px;
     margin-top: 10px;
+    width: 60%;
+    margin: auto;
+
+    .summary {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+      width: 100%;
+
+      .rent-period, .rent-price {
+        text-align: initial;
+        font-size: 12px;
+        p {
+          text-transform: uppercase;
+        }
+        span {
+          color: #F8F8FF;
+        }
+        img {
+          height: 15px;
+          width: 15px;
+        }
+        .price span {
+          color: #B9B9D3;
+        }
+      }
+    }
+  }
+  
+  .info {
+    width: 100%;
+    background: rgba(93, 142, 240, 0.2);
+    padding: 10px 16px;
+    border-radius: 10px;
+    text-align: initial;
+    font-size: 12px;
+    font-weight: normal;
+    
+    h3 {
+      font-size: 12px;
+    }
+    
+    .info-warning-text {
+      width: 100%;
+    }
+  }
+  .button-container {
+    width: 55%;
+    gap: 10px;
+    margin: auto;
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: center;
 
     .rent-button {
       color: var(--theme-primary-color);
-      width: 100%;
+      min-width: 200px;
+      max-width: 300px;
       padding: 0 16px;
-      // display: flex;
-      // align-items: center;
+      font-size: 14px;
       height: 44px;
-
-      > div {
-        height: 100%;
-
-        .ant-col {
-          display: flex;
-          align-items: center;
-        }
-      }
-      .rent-label-container {
-        text-align: center;
-        display: flex;
-        justify-content: center;
-      }
-      .rent-label {
-        font-weight: 500;
-        padding-right: 14px;
-        margin-right: 12px;
-        height: 100%;
-        line-height: 44px;
-      }
-
-      .price-col {
-        text-align: center;
-        display: flex;
-        justify-content: space-around;
-      }
-
-      strong {
-        display: flex;
-        align-items: center;
-
-        span {
-          margin-left: 14px;
-        }
-      }
-
-      &:hover {
-        color: var(--theme-primary-color);
-      }
-
-      .eth-icon {
-        width: 17px;
-        height: 17px;
-        margin-left: 7px;
-      }
-    }
-    .total-label {
-      font-size: 16px;
-      font-weight: 500;
-      color: white !important;
-    }
-    .total-price {
-      display: inline-block;
-      background: #eaeaf4;
-      font-size: 18px;
-      font-weight: 500;
-      color: rgba(85, 44, 73, 1);
-      padding: 3px 12px;
     }
   }
+  .divider {
+    width: 100%;
+    margin: 10px 0;
+    border-color: #27273A;
+    border-width: 1px;
+  }
+}
+.rent-modal-loader, .rent-modal-succes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 40px;
+  
+  p {
+    font-size: 30px;
+    font-weight: bold;
+    color: #f8f8f8;
+  }
+  span {
+    margin-bottom: 30px;
+  }
+  .success-icon {
+    height: 60px;
+    width: 60px;
+  }
+  .loader {
+    height: 50px;
+    width: 50px;
+    margin-bottom: 15px;
+    animation: loader 1.1s infinite linear,
+  }
+}
 
-  .ant-picker-panel-container {
-    background: var(--theme-card-color);
+
+
+.modal-propety {
+  height: 100%;
+  top: 0;
+
+  .css-j1papt {
+    top: 0;
+    padding-top: 40px;
+    padding-bottom: 0;
+    height: auto;
+    .circular {
+      z-index: 100;
+    }
   }
 }
 
@@ -191,5 +213,14 @@
   text-align: center;
   font-size: 12px;
   color: var(--theme-warning-color);
-  margin-top: 20px;
+  margin: 10px;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

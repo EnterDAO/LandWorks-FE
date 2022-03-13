@@ -326,28 +326,7 @@
       flex-direction: column;
     }
 
-    .info-warning-container {
-      display: flex;
-      flex-direction: row;
-      svg {
-        height: 24px;
-        width: 24px;
-      }
-    }
-
-    .info-warning-text {
-      margin-left: 17px;
-      h3 {
-        color: #F8F8FF;
-        font-size: 18px;
-        font-weight: bold;
-      }
-      p {
-        color: var(--theme-subtle-color);
-        font-weight: normal;
-        word-wrap: break-word;
-      }
-    }
+   
     .update-operator-btn {
       background: #f8f8ff;
       border-radius: 10px;
@@ -473,5 +452,27 @@
     p {
       font-size: 17px !important;
     }
+  }
+}
+.info-warning-container {
+  display: flex;
+  flex-direction: row;
+  svg {
+    height: 24px;
+    width: 24px;
+  }
+}
+
+.info-warning-text {
+  margin-left: 17px;
+  h3 {
+    color: #F8F8FF;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  p {
+    color: var(--theme-subtle-color);
+    font-weight: normal;
+    word-wrap: break-word;
   }
 }

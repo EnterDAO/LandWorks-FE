@@ -23,6 +23,8 @@ import universeSrc from 'resources/png/universe.png';
 import you from 'resources/png/you.png';
 import eth from 'resources/svg/eth.svg';
 import Sprite from 'resources/svg/icons-sprite.svg';
+import loader from 'resources/svg/loader.svg';
+import SuccesIcon from 'resources/svg/success-icon.svg';
 import usdcSrc from 'resources/svg/usdc.svg';
 
 import s from './s.module.scss';
@@ -168,8 +170,10 @@ export type IconNames =
   | 'coingecko'
   | 'youtube'
   | 'medium'
+  | 'success'
   | 'polymorphs'
   | 'core-drops'
+  | 'loader'
   | 'png/add-enter'
   | 'png/telegram'
   | 'static/add-token'
@@ -195,7 +199,12 @@ const Icon: React.FC<IconProps> = (props) => {
   const { name, width = 24, height = 24, rotate, color, className, style, src, ...rest } = props;
 
   const isStatic = (name ?? '').indexOf('static/') === 0;
-  const isPng = (name ?? '').indexOf('png/') === 0 || name === 'png/eth' || name === 'token-usdc';
+  const isPng =
+    (name ?? '').indexOf('png/') === 0 ||
+    name === 'png/eth' ||
+    name === 'token-usdc' ||
+    name === 'success' ||
+    name === 'loader';
 
   if (isPng) {
     const getSrc = () => {
@@ -242,8 +251,12 @@ const Icon: React.FC<IconProps> = (props) => {
           return you;
         case 'png/calendar':
           return calendar;
+        case 'loader':
+          return loader;
         case 'token-usdc':
           return usdcSrc;
+        case 'success':
+          return SuccesIcon;
         default:
           return '';
       }

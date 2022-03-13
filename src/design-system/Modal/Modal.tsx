@@ -7,6 +7,7 @@ import { StyledBackdrop, StyledModal, modalStyles } from './modal-styles';
 
 interface ModalProps {
   open: boolean;
+  className?: string;
   handleClose: () => void;
   children?: React.ReactNode;
   accessibility?: {
@@ -16,10 +17,11 @@ interface ModalProps {
 }
 
 const Modal: FC<ModalProps> = (props: ModalProps) => {
-  const { open, handleClose, children, accessibility } = props;
+  const { open, handleClose, children, accessibility, className = '' } = props;
 
   return (
     <StyledModal
+      className={className}
       {...(accessibility?.ariaLabelledby && { 'aria-labelledby': accessibility.ariaLabelledby })}
       {...(accessibility?.ariaDescribedby && { 'aria-labelledby': accessibility.ariaDescribedby })}
       open={open}
