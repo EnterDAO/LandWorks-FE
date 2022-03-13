@@ -60,17 +60,20 @@ const ListNewProperty: React.FC = () => {
   const [minInput, setMinInput] = useState(DEFAULT_MIN_PERIOD);
   const [minPeriodType, setMinPeriodType] = useState(BigNumber.from(MinRentPeriodOptions[2].value));
   const [minPeriodSelectedOption, setMinPeriodSelectedOption] = useState(MinRentPeriodOptions[2]); // Selected Option Value for the select menu
+  const [minError, setMinError] = useState('');
 
   const [maxPeriod, setMaxPeriod] = useState(DEFAULT_LIST_MAX_PERIOD.multipliedBy(MONTH_IN_SECONDS));
   const [isMaxPeriodSelected, setMaxPeriodSelected] = useState(true);
   const [maxInput, setMaxInput] = useState(DEFAULT_LIST_MAX_PERIOD);
   const [maxPeriodType, setMaxPeriodType] = useState(BigNumber.from(MaxRentPeriodOptions[4].value));
   const [maxPeriodSelectedOption, setMaxPeriodSelectedOption] = useState(MaxRentPeriodOptions[4]); // Selected Option Value for the select menu
+  const [maxError, setMaxError] = useState('');
 
   const [maxFutureTime, setMaxFutureTime] = useState(DEFAULT_LIST_MAX_FUTURE_PERIOD.multipliedBy(MONTH_IN_SECONDS));
   const [maxFutureTimeInput, setMaxFutureTimeInput] = useState(DEFAULT_LIST_MAX_FUTURE_PERIOD);
   const [maxFutureTimePeriod, setMaxFuturePeriodType] = useState(BigNumber.from(AtMostRentPeriodOptions[4].value));
   const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[4]); // Selected Option Value for the select menu
+  const [maxFutureError, setMaxFutureError] = useState('');
 
   const [selectedProperty, setSelectedProperty] = useState(null as DecentralandNFT | Estate | null);
 
@@ -90,12 +93,12 @@ const ListNewProperty: React.FC = () => {
   const [protocolFee, setProtocolFee] = useState(ZERO_BIG_NUMBER);
   const [feePercentage, setFeePercentage] = useState(0);
   const [pricePerSecond, setPricePerSecond] = useState(ZERO_BIG_NUMBER);
+  const [priceError, setPriceError] = useState('');
 
   const [approveDisabled, setApproveDisabled] = useState(false);
   const [listDisabled, setListDisabled] = useState(true);
   const [usdPrice, setUsdPrice] = useState('0');
 
-  const [errMessage, setErrMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
   //const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
@@ -161,7 +164,7 @@ const ListNewProperty: React.FC = () => {
       setMaxFutureTime(DEFAULT_LIST_MAX_FUTURE_PERIOD.multipliedBy(MONTH_IN_SECONDS));
       setMaxFutureTimeInput(DEFAULT_LIST_MAX_FUTURE_PERIOD);
       setMaxFuturePeriodType(BigNumber.from(MinRentPeriodOptions[4].value));
-      setMaxPeriodSelectedOption(MinRentPeriodOptions[4]);
+      setMaxFutureSelectedOption(MinRentPeriodOptions[4]);
     }
   };
 
@@ -376,32 +379,35 @@ const ListNewProperty: React.FC = () => {
   const evaluateInput = () => {
     let isListDisabled = true;
     if (!minPeriod && isMinPeriodSelected) {
-      setErrMessage('Min Period Must be set');
+      setMinError('Min Rent Period must be set');
     } else if (minPeriod?.gt(maxPeriod)) {
-      setErrMessage('Min Period exceeds Max Period');
+      setMinError('Min Rent Period exceeds Max Rent Period');
     } else if (!maxPeriod && isMaxPeriodSelected) {
-      setErrMessage('Max Period Must be set');
+      setMaxError('Max Rent Period must be set');
     } else if (maxPeriod?.gt(maxFutureTime)) {
-      setErrMessage('Max Period exceeds Max Future Time');
+      setMaxError('Max Rent Period exceeds Max Rent Queue');
     } else if (!maxFutureTime) {
-      setErrMessage('Max Future Period Must be set');
+      setMaxFutureError('Max Rent Queue must be set');
     } else if (pricePerSecond.eq(ZERO_BIG_NUMBER)) {
-      setErrMessage('Price cannot be zero');
-    } else if (selectedProperty === null) {
-      setErrMessage('no property selected');
+      setPriceError('Price cannot be zero');
     } else if (pricePerSecond.toFixed(0) === '0') {
-      setErrMessage('Price per second equals to zero');
+      setPriceError('Price per second equals to zero');
     } else if (!approveDisabled) {
-      setErrMessage('');
+      clearErrorMessages();
     } else {
-      setErrMessage('');
+      clearErrorMessages();
       isListDisabled = false;
     }
 
     setListDisabled(isListDisabled);
   };
 
-  const displayedPriceError = errMessage === 'Price cannot be zero' || errMessage === 'Price per second equals to zero';
+  const clearErrorMessages = () => {
+    setMinError('');
+    setMaxError('');
+    setMaxFutureError('');
+    setPriceError('');
+  };
 
   const evaluateSelectedProperty = async () => {
     if (selectedProperty) {
@@ -536,7 +542,9 @@ const ListNewProperty: React.FC = () => {
                   minInputValue={minInput?.toNumber()}
                   maxInputValue={maxInput?.toNumber()}
                   atMostInputValue={maxFutureTimeInput?.toNumber()}
-                  error={displayedPriceError ? '' : errMessage}
+                  minError={minError}
+                  maxError={maxError}
+                  atMostError={maxFutureError}
                 />
               )}
               <DropdownSection
@@ -559,7 +567,7 @@ const ListNewProperty: React.FC = () => {
                     options={currencyData}
                     optionsValue={selectedCurrency}
                     inputValue={tokenCost.toNumber()}
-                    error={displayedPriceError ? errMessage : ''}
+                    error={priceError}
                   />
                 </>
               )}

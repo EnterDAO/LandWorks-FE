@@ -28,7 +28,9 @@ interface IProps {
   minInputValue: number;
   maxInputValue: number;
   atMostInputValue: number;
-  error?: string;
+  minError?: string;
+  maxError?: string;
+  atMostError?: string;
 }
 
 const RentPeriod: React.FC<IProps> = ({
@@ -51,7 +53,9 @@ const RentPeriod: React.FC<IProps> = ({
   minInputValue,
   maxInputValue,
   atMostInputValue,
-  error,
+  minError,
+  maxError,
+  atMostError,
 }) => {
   return (
     <>
@@ -68,11 +72,11 @@ const RentPeriod: React.FC<IProps> = ({
               handleOptionChange={handleMinSelectChange}
               onInput={handleMinInputChange}
               options={minOptions}
-              error={error}
+              error={minError}
             />
           </Grid>
           <div className="error">
-            <span>{error}</span>
+            <span>{minError}</span>
           </div>
         </>
       )}
@@ -89,8 +93,12 @@ const RentPeriod: React.FC<IProps> = ({
               handleOptionChange={handleMaxSelectChange}
               onInput={handleMaxInputChange}
               options={maxOptions}
+              error={maxError}
             />
           </Grid>
+          <div className="error">
+            <span>{maxError}</span>
+          </div>
           <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
             <span className="label">Max Rent Queue</span>
             <span style={{ marginLeft: '15px' }}>in the future</span>
@@ -108,8 +116,12 @@ const RentPeriod: React.FC<IProps> = ({
               handleOptionChange={handleAtMostSelectChange}
               onInput={handleAtMostInputChange}
               options={atMostOptions}
+              error={atMostError}
             />
           </Grid>
+          <div className="error">
+            <span>{atMostError}</span>
+          </div>
         </>
       )}
     </>
