@@ -1,0 +1,14 @@
+@import 'styles/variables.scss';
+@import 'styles/text.scss';
+
+.label {
+  color: $light;
+  font-weight: 600;
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: $red;
+}

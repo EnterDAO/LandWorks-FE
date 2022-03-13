@@ -6,7 +6,7 @@ import { THEME_COLORS } from '../../themes/theme-constants';
 const StyledModal = styled(ModalUnstyled)({
   position: 'fixed',
   // TODO: We need to extract z-indexes in constants
-  zIndex: '1300',
+  zIndex: '1000',
   right: '0',
   top: 'calc(10% - 60px)',
   left: '0',
@@ -27,9 +27,9 @@ const StyledBackdrop = styled('div')({
 
 const modalStyles = {
   modalBox: {
-    height: '95vh',
+    //height: '95vh',
     width: 'auto',
-    minWidth: 500,
+    // minWidth: 500,
     maxHeight: 858,
     position: 'relative',
     backgroundColor: THEME_COLORS.darkBlue02,
