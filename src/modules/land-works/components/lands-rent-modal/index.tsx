@@ -75,7 +75,6 @@ export const RentModal: React.FC<Props> = (props) => {
 
     setEndDate(end.format('DD MMM YYYY, HH:mm'));
     const period = end.unix() - start.unix();
-    console.log(minRentPeriod.unix(), end.unix());
 
     setPeriod(period)
   };
@@ -109,13 +108,11 @@ export const RentModal: React.FC<Props> = (props) => {
       const balance = erc20Contract?.balance;
       if (balance == null) {
         setApproveDisabled(true);
-        console.log("balance is null")
         setRentDisabled(true);
         return;
       }
       if (balance.lt(balance)) {
         setApproveDisabled(true);
-        console.log('balance is less than value');
         setRentDisabled(true);
         return;
       }
@@ -124,7 +121,6 @@ export const RentModal: React.FC<Props> = (props) => {
 
       if (allowance == null) {
         setApproveDisabled(false);
-        console.log("allowance is null")
         setRentDisabled(true);
       } else {
         if (value.lte(allowance)) {
@@ -132,7 +128,6 @@ export const RentModal: React.FC<Props> = (props) => {
           setRentDisabled(false);
         } else {
           setApproveDisabled(false);
-          console.log("value is less or equals than allowance");
           setRentDisabled(true);
         }
       }
