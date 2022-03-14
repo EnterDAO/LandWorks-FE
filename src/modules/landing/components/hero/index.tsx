@@ -1,15 +1,15 @@
 import React, { useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import { Power1, gsap } from 'gsap';
 
+import { Button } from 'design-system';
 import { ReactComponent as LeftBlocks } from 'resources/svg/landing/hero-left-blocks.svg';
 import { ReactComponent as RightBlocks } from 'resources/svg/landing/hero-right-blocks.svg';
 
 import './index.scss';
 
 export const Hero: React.FC = () => {
-  const history = useHistory();
   const el = useRef() as React.MutableRefObject<HTMLDivElement>;
   const tl = useRef({});
   const q = gsap.utils.selector(el);
@@ -95,7 +95,7 @@ export const Hero: React.FC = () => {
   }, []);
 
   return (
-    <section className="wrapper">
+    <section className="landing-page-wrapper">
       <LeftBlocks className="left-blocks" />
       <div className="right-blocks" ref={el}>
         <RightBlocks />
@@ -105,9 +105,11 @@ export const Hero: React.FC = () => {
           <Col>
             <h2>Metaverse land</h2>
             <h1>Renting marketplace</h1>
-            <button type="button" className="button-primary" onClick={() => history.push('/all')}>
-              <span>Launch App</span>
-            </button>
+            <Link to="/explore">
+              <Button variant="gradient" btnSize="small" className="button-primary">
+                Launch App
+              </Button>
+            </Link>
           </Col>
         </Row>
       </div>
