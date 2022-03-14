@@ -37,9 +37,13 @@ export const RentDatePicker = (props: {
 
   const isMinEqualMax = () => minRentPeriod.unix() === maxEndDate.unix();
 
+  const fixedMinRentPeriodMinutes = () => {
+    return hours.split(':').map((hour, index) => index === 1 ? +hour + 1 : hour).join(':');
+  }
+
   useEffect(() => {
     if (isMinEqualMax()) {
-      handleRentDateChange([minStartDate, maxEndDate]);
+      handleRentDateChange([minStartDate, maxEndDate.add(60, 'seconds')]);
     }
   }, []);
 
@@ -60,7 +64,7 @@ export const RentDatePicker = (props: {
 
         <Input className="input" defaultValue={minStartDate.format('DD MMM YYYY')} readOnly disabled />
       </InputLabel>
-      
+
       <InputLabel>
         <p>Start Time</p>
         <Input className="input" defaultValue={minTime} readOnly disabled />
@@ -80,7 +84,7 @@ export const RentDatePicker = (props: {
           }}
         />
       </InputLabel>
-      
+
       <InputLabel>
         <p>
           End Time
@@ -98,7 +102,7 @@ export const RentDatePicker = (props: {
           type="time"
           disabled={isMinEqualMax()}
           onChange={(e) => handleHours(e.target.value)}
-          defaultValue={endDate?.slice(-5) || hours}
+          defaultValue={endDate?.slice(-5) || fixedMinRentPeriodMinutes()}
           inputProps={{ min: minRentTime }}
         />
       </InputLabel>

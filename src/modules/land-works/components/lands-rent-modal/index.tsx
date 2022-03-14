@@ -75,6 +75,7 @@ export const RentModal: React.FC<Props> = (props) => {
 
     setEndDate(end.format('DD MMM YYYY, HH:mm'));
     const period = end.unix() - start.unix();
+    console.log(minRentPeriod.unix(), end.unix());
 
     setPeriod(period)
   };
@@ -106,15 +107,13 @@ export const RentModal: React.FC<Props> = (props) => {
       setRentDisabled(false);
     } else {
       const balance = erc20Contract?.balance;
-      const formattedValue = getHumanValue(value, paymentToken?.decimals);
-
       if (balance == null) {
         setApproveDisabled(true);
         console.log("balance is null")
         setRentDisabled(true);
         return;
       }
-      if (balance.lt(formattedValue!)) {
+      if (balance.lt(balance)) {
         setApproveDisabled(true);
         console.log('balance is less than value');
         setRentDisabled(true);
@@ -167,7 +166,6 @@ export const RentModal: React.FC<Props> = (props) => {
     }
     try {
       const bnPeriod = new BigNumber(period);
-      console.log(bnPeriod.toString());
       setTransactionLoading(true);
       if (paymentToken?.symbol.toLowerCase() === 'eth') {
         await landWorksContract?.rentDecentralandWithETH(
@@ -179,7 +177,7 @@ export const RentModal: React.FC<Props> = (props) => {
           onSubmit
         );
       } else {
-        await landWorksContract?.rentDecentralandWithETH(
+        await landWorksContract?.rentDecentralandWithERC20(
           assetId,
           editedValue,
           bnPeriod,
@@ -200,7 +198,7 @@ export const RentModal: React.FC<Props> = (props) => {
   
 
   function isValidForm(): boolean {
-    return isValidAddress(editedValue) && period > 0;
+    return isValidAddress(editedValue) && period > 0 ;
   }
   const showLoader = () => transactionLoading && !successTrunsaction;
   const showSuccessModal = () => !transactionLoading && successTrunsaction;
