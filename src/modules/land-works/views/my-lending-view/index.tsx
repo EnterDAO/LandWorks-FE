@@ -8,6 +8,7 @@ import { AssetEntity, USER_SUBSCRIPTION, UserEntity, parseUser } from 'modules/l
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
 import LandsRentingSorter from 'modules/land-works/components/land-renting-sorter';
 import LandWorksCard from 'modules/land-works/components/land-works-card';
+import LandWorksLoadingCard from 'modules/land-works/components/land-works-card-loading';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
 import { useWallet } from 'wallets/wallet';
 
@@ -113,6 +114,9 @@ const MyLendingView: React.FC = () => {
                 </button>
               </div>
             )}
+
+            {/* Remove after review */}
+            <LandWorksLoadingCard />
           </Row>
         </Col>
       </Row>

@@ -4,6 +4,7 @@ import cn from 'classnames';
 import addEnterSrc from 'resources/png/add-enter.png';
 import axsSrc from 'resources/png/axie.png';
 import calendar from 'resources/png/calendar.png';
+import CardLoadingSkeleton from 'resources/png/card-loading-skeleton.png';
 import enterStarSrc from 'resources/png/enter-star.png';
 import enterdaoSrc from 'resources/png/enterdao.png';
 import Github from 'resources/png/github.png';
@@ -174,6 +175,7 @@ export type IconNames =
   | 'png/telegram'
   | 'static/add-token'
   | 'png/LandWorksLogo'
+  | 'png/CardLoadingSkeleton'
   | 'png/eth'
   | 'png/Github'
   | 'png/hot'
@@ -242,6 +244,8 @@ const Icon: React.FC<IconProps> = (props) => {
           return you;
         case 'png/calendar':
           return calendar;
+        case 'png/CardLoadingSkeleton':
+          return CardLoadingSkeleton;
         case 'token-usdc':
           return usdcSrc;
         default:
