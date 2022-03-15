@@ -114,9 +114,6 @@ const MyLendingView: React.FC = () => {
                 </button>
               </div>
             )}
-
-            {/* Remove after review */}
-            <LandWorksLoadingCard />
           </Row>
         </Col>
       </Row>
