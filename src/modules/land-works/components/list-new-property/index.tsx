@@ -38,7 +38,7 @@ import { useLandRegistry } from '../../providers/decentraland/land-registry-prov
 import { useLandworks } from '../../providers/landworks-provider';
 
 import { getTimeType, secondsToDuration } from 'utils';
-import { DAY_IN_SECONDS, MINUTE_IN_SECONDS, MONTH_IN_SECONDS } from 'utils/date';
+import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from 'utils/date';
 
 import './index.scss';
 
