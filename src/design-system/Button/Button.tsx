@@ -7,7 +7,7 @@ import buttonStyles from './button-styles';
 
 interface ButtonProps extends ButtonUnstyledProps {
   variant: 'gradient' | 'primary' | 'secondary' | 'tertiary' | 'accentblue';
-  btnSize?: 'xsmall' | 'small' | 'medium' | 'large';
+  btnSize?: 'xsmall' | 'small' | 'medium' | 'large' | 'fluid' | 'auto';
   iconLeft?: JSX.Element;
   iconRight?: JSX.Element;
   sx?: SxProps;
@@ -44,7 +44,7 @@ const Button = (props: ButtonProps, ref: Ref<ButtonRef>) => {
       disabled={disabled}
       ref={ref}
     >
-      {iconLeft && variant === 'tertiary' && <Icon iconElement={iconLeft} iconSize={iconSize} mr={children ? 2 : 0} />}
+      {iconLeft && <Icon iconElement={iconLeft} iconSize={iconSize} mr={children ? 2 : 0} />}
       <Box position="relative" zIndex={1} component="span">
         {children}
       </Box>

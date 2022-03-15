@@ -1,3 +1,5 @@
+import Icon from 'components/custom/icon';
+
 import { ReactComponent as HighIcon } from '../../../../resources/svg/order-high-first.svg';
 import { ReactComponent as HottestIcon } from '../../../../resources/svg/order-hot.svg';
 import { ReactComponent as LowIcon } from '../../../../resources/svg/order-low-first.svg';
@@ -31,9 +33,11 @@ export const currencyData = [
   {
     label: 'ETH',
     value: 1,
+    icon: <Icon name="png/eth" width="20" height="20" />,
   },
   {
     label: 'USDC',
     value: 2,
+    icon: <Icon name="token-usdc" width="20" height="20" />,
   },
 ];

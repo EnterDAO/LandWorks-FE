@@ -6,9 +6,10 @@ import './index.scss';
 interface SearchQuery {
   searchQuery: string;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  placeholder: string;
 }
 
-const LandsSearchBar: React.FC<SearchQuery> = ({ searchQuery, setSearchQuery }) => {
+const LandsSearchBar: React.FC<SearchQuery> = ({ searchQuery, setSearchQuery, placeholder }) => {
   const onClickSearchResetHandler = () => {
     setSearchQuery('');
   };
@@ -27,7 +28,7 @@ const LandsSearchBar: React.FC<SearchQuery> = ({ searchQuery, setSearchQuery }) 
           onInput={(e) => setSearchQuery((e.target as HTMLInputElement).value)}
           type="text"
           id="header-search"
-          placeholder="Search by name"
+          placeholder={placeholder}
           name="s"
         />
       </form>

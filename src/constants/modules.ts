@@ -120,3 +120,9 @@ export const BASE_URL_DECENTRALEND = 'https://api.decentraland.org/v1';
 export const DEFAULT_SLICED_PAGE = 4;
 
 export const DEFAULT_TOKEN_ADDRESS = '0x0000000000000000000000000000000000000001';
+
+export const MY_PROPERTIES_TAB_STATE_ALL = 'all';
+
+export const MY_PROPERTIES_TAB_STATE_RENTED = 'rented';
+
+export const MY_PROPERTIES_TAB_STATE_LENT = 'lent';
