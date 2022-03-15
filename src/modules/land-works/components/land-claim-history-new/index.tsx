@@ -1,7 +1,11 @@
+import {} from 'design-system';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { useSubscription } from '@apollo/client';
-import { Col, ConfigProvider, Empty, Row, Table } from 'antd';
+import TablePaginationUnstyled from '@mui/base/TablePaginationUnstyled';
+import { TableRow } from '@mui/material';
+import { styled } from '@mui/system';
 import BigNumber from 'bignumber.js';
 
 import { ClaimHistory, USER_CLAIM_HISTORY_SUBSCRIPTION } from 'modules/land-works/api';
@@ -11,35 +15,18 @@ import { useWallet } from '../../../../wallets/wallet';
 import LandTableTxHash from '../land-table-tx-hash';
 import LandWorksTableDate from '../land-works-table-date';
 import LandTablePrice from '../land-works-table-price';
+import { StyledPaper, StyledTableCell, StyledTableHead, StyledTableHeaderRow, StyledTableRow } from './styled';
 
 import { getDecentralandAssetName } from '../../../../utils';
+import { THEME_COLORS } from 'themes/theme-constants';
 
-import './index.scss';
-
-const ClaimHistoryTable: React.FC = () => {
+const ClaimHistoryTableNew: React.FC = () => {
   const wallet = useWallet();
   const pageSizeOptions = ['5', '10', '20'];
   const [claimHistory, setClaimHistory] = useState([] as ClaimHistory[]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(Number(pageSizeOptions[0]));
   const [totalClaims, setTotalClaims] = useState(0);
-
-  useSubscription(USER_CLAIM_HISTORY_SUBSCRIPTION, {
-    skip: wallet.account === undefined,
-    variables: { id: wallet.account?.toLowerCase() },
-    onSubscriptionData: ({ subscriptionData }) => {
-      if (subscriptionData.error) {
-        // TODO:
-      }
-
-      const claimHistory = subscriptionData.data?.user?.claimHistory?.map((history: ClaimHistory) => ({
-        ...history,
-        key: history.id,
-      }));
-      setClaimHistory(claimHistory);
-      setTotalClaims(claimHistory?.length || 0);
-    },
-  });
 
   const data = [
     {
@@ -83,6 +70,23 @@ const ClaimHistoryTable: React.FC = () => {
       timestamp: 2635116663737,
     },
   ];
+
+  useSubscription(USER_CLAIM_HISTORY_SUBSCRIPTION, {
+    skip: wallet.account === undefined,
+    variables: { id: wallet.account?.toLowerCase() },
+    onSubscriptionData: ({ subscriptionData }) => {
+      if (subscriptionData.error) {
+        // TODO:
+      }
+
+      const claimHistory = subscriptionData.data?.user?.claimHistory?.map((history: ClaimHistory) => ({
+        ...history,
+        key: history.id,
+      }));
+      setClaimHistory(claimHistory);
+      setTotalClaims(claimHistory?.length || 0);
+    },
+  });
 
   const onPaginationChange = (page: number, newPageSize?: number | undefined) => {
     setPage(page);
@@ -130,28 +134,29 @@ const ClaimHistoryTable: React.FC = () => {
   ];
 
   return (
-    <Row className="history">
-      <Col span={24}>
-        <span className="history-heading">Claim History</span>
-      </Col>
-      <Col className="table-wrapper" span={24}>
-        <ConfigProvider renderEmpty={() => <Empty image={EmptyTable} description="No claim history present" />}>
-          <Table
-            columns={columns}
-            dataSource={claimHistory}
-            size="small"
-            className="history-table"
-            pagination={{
-              current: page,
-              total: totalClaims,
-              defaultPageSize: pageSize,
-              onChange: (page: number, pageSize?: number | undefined) => onPaginationChange(page, pageSize),
-            }}
-          />
-        </ConfigProvider>
-      </Col>
-    </Row>
+    <StyledPaper>
+      <table style={{ width: '100%', borderRadius: 10 }} aria-label="custom pagination table">
+        <StyledTableHead>
+          <StyledTableHeaderRow style={{ borderRadius: '10px', color: 'white' }}>
+            <StyledTableCell>Property</StyledTableCell>
+            <StyledTableCell align="left">Tx Hash</StyledTableCell>
+            <StyledTableCell align="left">Claimed Amount</StyledTableCell>
+            <StyledTableCell align="left">Claimed on</StyledTableCell>
+          </StyledTableHeaderRow>
+        </StyledTableHead>
+        <tbody>
+          {data.map((data) => (
+            <StyledTableRow key={data.id}>
+              <StyledTableCell style={{color: THEME_COLORS.light}} align="left">{data.id}</StyledTableCell>
+              <StyledTableCell style={{color: THEME_COLORS.accentBlue}}  align="left">{data.txHash}</StyledTableCell>
+              <StyledTableCell style={{color: THEME_COLORS.light}}  align="left">{data.paymentToken}</StyledTableCell>
+              <StyledTableCell style={{color: THEME_COLORS.grey03}}  align="left">{data.timestamp}</StyledTableCell>
+            </StyledTableRow>
+          ))}
+        </tbody>
+      </table>
+    </StyledPaper>
   );
 };
 
-export default ClaimHistoryTable;
+export default ClaimHistoryTableNew;
