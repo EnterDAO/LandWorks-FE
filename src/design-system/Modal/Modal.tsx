@@ -13,7 +13,7 @@ interface ModalProps {
     ariaLabelledby: string;
     ariaDescribedby: string;
   };
-  height: number;
+  height: number | string;
 }
 
 const Modal: FC<ModalProps> = (props: ModalProps) => {
