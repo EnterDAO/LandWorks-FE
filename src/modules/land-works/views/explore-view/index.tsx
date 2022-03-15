@@ -15,6 +15,7 @@ import LandsExploreFilters from 'modules/land-works/components/lands-explore-fil
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
 import LandsExploreSubheader from 'modules/land-works/components/lands-explore-subheader';
+import ListNewProperty from 'modules/land-works/components/list-new-property';
 import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-tile';
 import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
@@ -30,7 +31,6 @@ import {
   fetchTokenPayments,
   parseUser,
 } from '../../api';
-import ListNewProperty from '../list-new-property';
 
 import { filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
 import { getNowTs } from 'utils';
@@ -219,7 +219,7 @@ const ExploreView: React.FC = () => {
                 lands={lands}
               />
             </div>
-            <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
+            <Modal height={800} open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
               <ListNewProperty />
             </Modal>
           </div>

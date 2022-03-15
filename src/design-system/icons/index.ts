@@ -1,13 +1,18 @@
+import { ReactComponent as AlertIcon } from 'assets/icons/alert.svg';
 import { ReactComponent as ArrowDownIcon } from 'assets/icons/arrow-down.svg';
 import { ReactComponent as ArrowLeftIcon } from 'assets/icons/arrow-left.svg';
 import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
 import { ReactComponent as ArrowUpIcon } from 'assets/icons/arrow-up.svg';
 import { ReactComponent as BackIcon } from 'assets/icons/back.svg';
+import { ReactComponent as BluePlus } from 'assets/icons/blue-plus.svg';
+import { ReactComponent as Calendar02 } from 'assets/icons/calendar-02.svg';
 import { ReactComponent as CalendarIcon } from 'assets/icons/calendar.svg';
+import { ReactComponent as BlueCheckIcon } from 'assets/icons/check-blue.svg';
 import { ReactComponent as CheckGlowIcon } from 'assets/icons/check-glow.svg';
 import { ReactComponent as CheckIcon } from 'assets/icons/check.svg';
 import { ReactComponent as CloseIcon } from 'assets/icons/close.svg';
 import { ReactComponent as CopyIcon } from 'assets/icons/copy.svg';
+import { ReactComponent as Currency } from 'assets/icons/currency.svg';
 import { ReactComponent as EditIcon } from 'assets/icons/edit.svg';
 import { ReactComponent as ENTRIcon } from 'assets/icons/ENTR.svg';
 import { ReactComponent as ErrorIcon } from 'assets/icons/error.svg';
@@ -43,7 +48,9 @@ import { ReactComponent as SearchIcon } from 'assets/icons/search.svg';
 import { ReactComponent as SettingsIcon } from 'assets/icons/settings.svg';
 import { ReactComponent as SignGradientIcon } from 'assets/icons/sign-gradient.svg';
 import { ReactComponent as SignIcon } from 'assets/icons/sign.svg';
+import { ReactComponent as Spinner } from 'assets/icons/spinner.svg';
 import { ReactComponent as StarIcon } from 'assets/icons/star.svg';
+import { ReactComponent as SuccessStarIcon } from 'assets/icons/success-star.svg';
 import { ReactComponent as SuccessIcon } from 'assets/icons/success.svg';
 import { ReactComponent as SunIcon } from 'assets/icons/sun.svg';
 import { ReactComponent as ToTopIcon } from 'assets/icons/to-top.svg';
@@ -58,11 +65,13 @@ import { ReactComponent as WarningIcon } from 'assets/icons/warning.svg';
 
 // One-color icons
 export {
+  SuccessStarIcon,
   ArrowDownIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
   ArrowUpIcon,
   BackIcon,
+  BlueCheckIcon,
   CalendarIcon,
   CheckIcon,
   CloseIcon,
@@ -78,6 +87,7 @@ export {
   HeartInCircleNotFilledIcon,
   HeartOutlinedIcon,
   HomeIcon,
+  AlertIcon,
   // InfoIcon,
   LoginIcon,
   MinusIcon,
@@ -101,6 +111,10 @@ export {
   SettingsIcon,
   LogoutIcon,
   PlusIcon,
+  Currency,
+  Calendar02,
+  BluePlus,
+  Spinner,
 };
 // Multi-color icons
 export { UploadIcon, FileUploadedIcon, UploadingIcon, UpdateIcon, NoConnectionIcon, ErrorIcon };

@@ -2,9 +2,6 @@
 @import '../../../../styles/text.scss';
 
 .single-land-card-container {
-  align-items: center;
-  justify-content: space-between;
-
   .availability {
     display: flex;
     flex-direction: column;
@@ -18,7 +15,6 @@
     padding: 0 20px;
 
     @media all and (max-width: 400px) {
-
       button {
         margin-top: 20px;
       }
@@ -32,61 +28,36 @@
     }
 
     button {
-      flex-shrink: 0;
-      padding: 0 37px;
       line-height: 0;
       font-size: 13px;
       height: 52px;
       font-weight: bold;
-      width: 180px;
+      width: 100%;
 
     }
-    .property-button-row {
-       @media all and (min-width: 900px) and (max-width: 1200px) {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      @media all and (max-width: 600px) {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      @media all and (max-width: 456px) {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-    }
+
     .property-button {
-      display: flex;
-      justify-content: flex-end;
+      width: 100%;
 
       &:nth-child(1) {
-        margin-bottom: 10px;
-      }
-      @media all and (max-width: 600px) {
-        justify-content: center;
+        margin-bottom: 15px;
       }
     }
   }
 
-  .image-wrapper {
-    max-height: 392px;
+  .map-image-wrapper {
+    max-height: 418px;
     border-radius: 20px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-
-    @media all and (min-width: 900px) and (max-width: 1200px) {
-      max-height: 446px;
-    }
-
-    @media all and (max-width: 769px) {
-      margin-bottom: 20px;
-      max-height: 420px;
+    margin-bottom: 20px;
+    
+    @media all and (min-width: 769px) {
+      margin-bottom: 0;
+      margin-right: 40px;
     }
   }
 
@@ -99,7 +70,7 @@
   }
 
  .label {
-    background: #1e1e2e;
+    background: var(--theme-card-color);
     padding: 2px 5px;
     border-radius: 5px;
     font-weight: 700;
@@ -111,9 +82,10 @@
     justify-content: flex-end;
     display: flex;
   }
+  
   .card-hot-label{
-    background: linear-gradient(83.81deg, #AC2CCB -19.8%, #DD3DCB 22%, #EF9C92 100%);
-    box-shadow: 0px 0px 20px rgba(221, 61, 203, 0.6);
+    background: var(--theme-primary-gradient);
+    box-shadow: 0px 0px 20px var(--theme-primary-box-shadow);
     border-radius: 20px;
     font-weight: 700;
     left: -10px;
@@ -129,7 +101,7 @@
 
   .card-name-you-label {
     margin-left: 10px;
-    color: #d92687;
+    color: var(--theme-warning-color);
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -148,7 +120,7 @@
 
   .properties-container {
     position: relative;
-    background: #27273a;
+    background: var(--theme-separator-color);
     padding: 30px !important;
     border-radius: 20px;
 
@@ -170,7 +142,7 @@
     }
 
     .land-owner-address {
-      color: #5D8FF0;
+      color: var(--theme-accent-color);
       font-size: 14px;
       font-weight: 500;
     }
@@ -188,13 +160,16 @@
     }
 
     .available-period {
-      color: #ffffff;
-      font-size: 18px;
+      margin-left: 12px;
+      margin-right: 12px;
+      color: var(--theme-white-color);
+      font-size: 13px;
+      text-transform: uppercase;
       font-weight: 700;
     }
 
     .rent-section {
-      background: #1e1e2e;
+      background: var(--theme-card-color);
       border-radius: 25px;
       margin-top: 20px;
       padding: 15px 0px;
@@ -283,7 +258,7 @@
   .remaining-time {
     font-size: 30px !important;
     font-weight: bold !important;
-    color: #5D8FF0 !important;
+    color: var (--theme-accent-color) !important;
     // background: -webkit-linear-gradient(rgba(221, 61, 203, 1), rgba(239, 156, 146, 1));
     // -webkit-background-clip: text;
     // -webkit-text-fill-color: transparent;
@@ -292,7 +267,7 @@
     margin-left: 62%;
     width: 253px;
     height: 91px;
-    background-color: #F8F8FF;
+    background-color: var(--theme-light-color);
   
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
@@ -325,13 +300,12 @@
     @media all and (max-width: 465px) {
       flex-direction: column;
     }
-
    
     .update-operator-btn {
-      background: #f8f8ff;
+      background: var(--theme-light-color);
       border-radius: 10px;
       padding: 10px 15px;
-      color: #161622;
+      color: var(--theme-body-color);
       font-size: 14px;
       font-weight: 600;
       border: none;
@@ -340,7 +314,7 @@
       &:disabled,
       &[disabled] {
         background: rgba(170, 175, 179, 0.08);
-        color: #aaafb3;
+        color: var(--theme-icon-color);
         cursor: not-allowed;
       }
     }
@@ -355,14 +329,14 @@
 .marketplace-link {
   align-items: center;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   font-weight: bold;
   text-transform: uppercase;
   font-size: 13px;
-  color: #F8F8FF;
-  background-color: #3A3A4E;
+  color: var(--theme-light-color);
+  background-color: var(--theme-grey400-color);
   padding: 0 16px;
-  width: 180px;
+  width: 100%;
   border-radius: 14px;
   height: 52px;
 }
@@ -377,7 +351,7 @@
   display: flex;
   justify-content: space-between;
   @media all and (max-width: 500px) {
-    background: #1e1e2e;
+    background: var(--theme-card-color);
     padding: 10px 20px;
     margin-left: -20px;
     margin-right: -20px;
@@ -399,7 +373,7 @@
   align-items: center;
   flex-direction: row;
   text-align: center;
-  border-bottom: 1px solid #33334b48;
+  border-bottom: 1px solid var(--theme-grey400-color);
   padding-bottom: 10px;
 
   .period-title {
@@ -414,14 +388,14 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    padding: 3px 8px;
+    padding: 0;
     color: var(--theme-primary-color);
     text-transform: uppercase;
     font-size: 13px;
     font-weight: 600;
 
     .preffix {
-      color: #d92687;
+      color: var(--theme-warning-color);
       font-size: 12px;
       text-transform: uppercase;
       margin-right: 5px;

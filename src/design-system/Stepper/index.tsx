@@ -7,6 +7,8 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import { styled } from '@mui/material/styles';
 
+import { BlueCheckIcon } from 'design-system/icons';
+
 import { THEME_COLORS } from 'themes/theme-constants';
 
 const ColorlibConnector = styled(StepConnector)(() => ({
@@ -14,6 +16,11 @@ const ColorlibConnector = styled(StepConnector)(() => ({
     top: 15,
     left: '-15%',
     right: '0%',
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundColor: THEME_COLORS.accentBlue,
+    },
   },
   [`& .${stepConnectorClasses.line}`]: {
     height: 3,
@@ -42,7 +49,7 @@ const StyledStepLabel = styled(StepLabel)({
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
 }>(({ ownerState }) => ({
-  backgroundColor: THEME_COLORS.grey04,
+  backgroundColor: THEME_COLORS.grey01,
   zIndex: 1,
   width: 34,
   height: 34,
@@ -59,7 +66,7 @@ const ColorlibStepIconRoot = styled('div')<{
     },
   }),
   ...(ownerState.completed && {
-    backgroundColor: THEME_COLORS.grey02,
+    backgroundColor: THEME_COLORS.grey01,
     color: THEME_COLORS.grey01,
     '& .MuiStepLabel-active': {
       color: THEME_COLORS.accentBlue,
@@ -72,7 +79,7 @@ function ColorlibStepIcon(props: StepIconProps) {
 
   return (
     <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
-      {props.icon}
+      {completed ? <BlueCheckIcon /> : props.icon}
     </ColorlibStepIconRoot>
   );
 }

@@ -6,6 +6,7 @@ import {
   DAY_IN_SECONDS,
   HOUR_IN_SECONDS,
   MINUTE_IN_SECONDS,
+  MONTH_IN_SECONDS,
   ONE_HUNDRED_YEARS_IN_SECONDS,
   WEEK_IN_SECONDS,
 } from 'utils/date';
@@ -34,6 +35,10 @@ export const MinRentPeriodOptions = [
     label: 'weeks',
     value: WEEK_IN_SECONDS,
   },
+  {
+    label: 'months',
+    value: MONTH_IN_SECONDS,
+  },
 ];
 
 export const MaxRentPeriodOptions = [
@@ -52,6 +57,10 @@ export const MaxRentPeriodOptions = [
   {
     label: 'weeks',
     value: WEEK_IN_SECONDS,
+  },
+  {
+    label: 'months',
+    value: MONTH_IN_SECONDS,
   },
 ];
 
@@ -72,19 +81,23 @@ export const AtMostRentPeriodOptions = [
     label: 'weeks',
     value: WEEK_IN_SECONDS,
   },
+  {
+    label: 'months',
+    value: MONTH_IN_SECONDS,
+  },
 ];
 
 export const DEFAULT_MIN_PERIOD = new BigNumber(1);
 
 export const DEFAULT_MAX_PERIOD = new BigNumber(ONE_HUNDRED_YEARS_IN_SECONDS);
 
-export const DEFAULT_LIST_MAX_PERIOD = new BigNumber(3);
-
 export const FEE_PRECISION = 100_000;
 
 export const DEFAULT_PROPERTY = { label: '', value: '' };
 
-export const DEFAULT_FUTURE_PERIOD = DEFAULT_LIST_MAX_PERIOD.multipliedBy(WEEK_IN_SECONDS);
+export const DEFAULT_LIST_MAX_PERIOD = new BigNumber(1);
+
+export const DEFAULT_LIST_MAX_FUTURE_PERIOD = new BigNumber(3);
 
 export const DECENTRALAND_METAVERSE = '1';
 

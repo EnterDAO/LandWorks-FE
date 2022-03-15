@@ -4,7 +4,6 @@ import Countdown, { CountdownTimeDelta, zeroPad } from 'react-countdown';
 import Grid from '@mui/material/Grid';
 import BigNumber from 'bignumber.js';
 
-import EstateLandOverlay from 'components/custom/estateLandsOverlay';
 import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
@@ -17,6 +16,7 @@ import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, RentEntity, fetchAssetRentByTimestamp, fetchUserFirstRentByTimestamp } from '../../api';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
+import LandsMapOverlay from '../lands-map-overlay';
 import { LandsTooltip } from '../lands-tooltip';
 
 import { getNowTs } from '../../../../utils';
@@ -169,9 +169,14 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
 
   return (
     <Grid container className="single-land-card-container">
-      <Grid xs={12} md={5.7} item className="image-wrapper">
-        <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)}></img>
-        <EstateLandOverlay coordinates={asset?.decentralandData?.coordinates} />
+      <Grid xs={12} md={6} item>
+        <div className="map-image-wrapper">
+          <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)} />
+          <LandsMapOverlay
+            title={asset?.decentralandData?.isLAND ? 'Land' : 'Estate'}
+            coordinates={asset?.decentralandData?.coordinates}
+          />
+        </div>
       </Grid>
       <Grid xs={12} md={6} item className="properties-container">
         <Grid container className="head-container">
@@ -233,20 +238,18 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
 
           <Grid container className="rent-section">
             <Grid container className="rent-price">
-              <Grid item xs={12} sm={7} md={12} lg={7} className="price-wrapper">
+              <Grid item xs={12} xl={6.5} className="price-wrapper">
                 {asset?.availability?.isRentable && (
-                  <Grid item className="period-wrapper">
+                  <div className="period-wrapper">
                     <span className="period-title">Rent period</span>
                     <span className="available-period">
-                      <span className="label">{asset.minPeriodTimedType}</span>
-                      <span className="period-separator">-</span>
-                      <span className="label">{asset.maxPeriodTimedType}</span>
+                      {asset.minPeriodTimedType} - {asset.maxPeriodTimedType}
                     </span>
                     <span className="period-title">Max Rent Queue</span>
                     <span className="available-period">
                       <span className="label">{asset.maxFutureTimeTimedType}</span>
                     </span>
-                  </Grid>
+                  </div>
                 )}
                 <Grid item>
                   <Grid item className="eth-price-container">
@@ -263,7 +266,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                         symbol="$"
                         amount={asset?.pricePerMagnitude?.usdPrice || ZERO_BIG_NUMBER}
                       />
-                      <span className="per-day">/ {asset?.pricePerMagnitude?.magnitude}</span>
+                      <span className="per-day">/{asset?.pricePerMagnitude?.magnitude}</span>
                       <LandsTooltip
                         placement="bottomLeft"
                         trigger="hover"
@@ -279,7 +282,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={12} sm={4.7} md={12} lg={4.7} className="property-button-row">
+              <Grid item xs={12} xl={5.5}>
                 <Grid item className="property-button">
                   {shouldShowClaimButton() && (
                     <button

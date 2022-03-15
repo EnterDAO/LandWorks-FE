@@ -400,6 +400,7 @@ export type ParsedDate = {
   hours: number;
   days: number;
   weeks: number;
+  months: number;
 };
 
 export type ExtractedTime = {

@@ -1,0 +1,30 @@
+@import 'styles/variables.scss';
+@import 'styles/text.scss';
+
+.blueBox {
+  background: rgba(93, 143, 240, 0.1);
+  height: 87px;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.light {
+  color: $light;
+  font-weight: 600;
+}
+
+.grey {
+  color: $grey02;
+  font-weight: 600;
+}
+
+.amount {
+  font-size: 18px;
+  font-weight: 600;
+  color: $light ;
+}
+
+.amount-label {
+  color: $accentBlue
+}
