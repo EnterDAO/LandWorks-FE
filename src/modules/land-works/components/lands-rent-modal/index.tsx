@@ -49,8 +49,8 @@ export const RentModal: React.FC<Props> = (props) => {
   const wallet = useWallet();
   const landworks = useLandworks();
   const erc20 = useErc20();
-  const history = useHistory()
- 
+  const history = useHistory();
+
   const { landWorksContract } = landworks;
   const { erc20Contract } = erc20;
 
@@ -76,7 +76,7 @@ export const RentModal: React.FC<Props> = (props) => {
     setEndDate(end.format('DD MMM YYYY, HH:mm'));
     const period = end.unix() - start.unix();
 
-    setPeriod(period)
+    setPeriod(period);
   };
 
   const isYou = () => {
@@ -93,9 +93,9 @@ export const RentModal: React.FC<Props> = (props) => {
   };
 
   const shouldShowApproveButton = () => {
-    return paymentToken && paymentToken.id !== ONE_ADDRESS ;
+    return paymentToken && paymentToken.id !== ONE_ADDRESS;
   };
-  
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (e: any) => {
     setEditedValue(e.target.value);
@@ -183,17 +183,16 @@ export const RentModal: React.FC<Props> = (props) => {
         erc20Contract?.loadAllowance(config.contracts.landworksContract);
       }
       setTransactionLoading(false);
-      setSuccessTrunsaction (true);
+      setSuccessTrunsaction(true);
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while renting the property.');
       setTransactionLoading(false);
       console.log(e);
     }
   };
-  
 
   function isValidForm(): boolean {
-    return isValidAddress(editedValue) && period > 0 ;
+    return isValidAddress(editedValue) && period > 0;
   }
   const showLoader = () => transactionLoading && !successTrunsaction;
   const showSuccessModal = () => !transactionLoading && successTrunsaction;
@@ -214,10 +213,10 @@ export const RentModal: React.FC<Props> = (props) => {
       setEditedValue(wallet.account);
     }
   }, [wallet.account]);
-  
+
   useEffect(() => {
-    checkApprovedAmount()
-  },[wallet.account, value])
+    checkApprovedAmount();
+  }, [wallet.account, value]);
 
   useEffect(() => {
     if (!isValidAddress(editedValue)) {
@@ -229,7 +228,7 @@ export const RentModal: React.FC<Props> = (props) => {
     } else if (paymentToken?.id !== ONE_ADDRESS) {
       const balance = erc20Contract?.balance;
 
-      if(value?.isNegative()) {
+      if (value?.isNegative()) {
         setErrMessage('Ivalid end date or time');
       } else if (balance?.lt(value)) {
         setErrMessage('Insufficient balance');

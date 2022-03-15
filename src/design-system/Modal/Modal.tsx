@@ -18,7 +18,7 @@ interface ModalProps {
 }
 
 const Modal: FC<ModalProps> = (props: ModalProps) => {
-  const { open, handleClose, children, accessibility, className = '' } = props;
+  const { open, handleClose, children, accessibility, height, className = '' } = props;
 
 
   return (

@@ -8,10 +8,10 @@ interface ModalProps {
   title: string;
   description: string;
   buttonText: string;
-  buttonEvent: () => void
+  buttonEvent: () => void;
 }
 
-export const ModalSuccess: React.FC<ModalProps> = ({title, description, buttonEvent, buttonText}) => {
+export const ModalSuccess: React.FC<ModalProps> = ({ title, description, buttonEvent, buttonText }) => {
   return (
     <Grid container className="rent-modal-succes">
       <Icon name="success" className="success-icon" />

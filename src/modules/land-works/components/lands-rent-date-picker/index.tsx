@@ -24,7 +24,7 @@ export const RentDatePicker = (props: {
   const [hours, setHours] = useState<string>(minRentTime);
 
   const handleHours = (hours: string) => {
-    setHours(hours)
+    setHours(hours);
     const newHours = moment(new Date(`${date} ${hours}`).getTime());
     handleRentDateChange([minStartDate, newHours]);
   };
@@ -38,8 +38,11 @@ export const RentDatePicker = (props: {
   const isMinEqualMax = () => minRentPeriod.unix() === maxEndDate.unix();
 
   const fixedMinRentPeriodMinutes = () => {
-    return hours.split(':').map((hour, index) => index === 1 ? +hour + 1 : hour).join(':');
-  }
+    return hours
+      .split(':')
+      .map((hour, index) => (index === 1 ? +hour + 1 : hour))
+      .join(':');
+  };
 
   useEffect(() => {
     if (isMinEqualMax()) {
