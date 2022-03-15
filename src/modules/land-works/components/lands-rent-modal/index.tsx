@@ -76,7 +76,7 @@ export const RentModal: React.FC<Props> = (props) => {
     setEndDate(end.format('DD MMM YYYY, HH:mm'));
     const period = end.unix() - start.unix();
 
-    end.unix() - minRentPeriod.unix() >= 0 ? setPeriod(period) : setPeriod(0);
+    end.unix() - minRentPeriod.unix() >= 0 ? setPeriod(period) : setPeriod(-1);
   };
 
   const isYou = () => {
@@ -225,17 +225,14 @@ export const RentModal: React.FC<Props> = (props) => {
       } else {
         setErrMessage('Invalid address provided');
       }
-    } else if (paymentToken?.id !== ONE_ADDRESS) {
+    }
+    if (paymentToken?.id !== ONE_ADDRESS) {
       const balance = erc20Contract?.balance;
-
-      if (value?.isNegative()) {
-        setErrMessage('Invalid end date or time');
-      } else if (balance?.lt(value)) {
+      if (balance?.lt(value)) {
         setErrMessage('Insufficient balance');
       }
-    } else {
-      setErrMessage('');
     }
+    if (value?.isNegative()) setErrMessage('Invalid end date or time');
   }, [editedValue, value]);
 
   return (
