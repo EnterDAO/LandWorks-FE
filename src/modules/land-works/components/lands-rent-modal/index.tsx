@@ -76,7 +76,7 @@ export const RentModal: React.FC<Props> = (props) => {
     setEndDate(end.format('DD MMM YYYY, HH:mm'));
     const period = end.unix() - start.unix();
 
-    setPeriod(period);
+    end.unix() - minRentPeriod.unix() >= 0 ? setPeriod(period) : setPeriod(0);
   };
 
   const isYou = () => {

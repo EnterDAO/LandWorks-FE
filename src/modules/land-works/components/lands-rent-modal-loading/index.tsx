@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid } from '@mui/material';
 
 import Icon from 'components/custom/icon';
-
+import './index.scss'
 interface ModalProps {
   href: string;
 }

@@ -4,6 +4,8 @@ import { Grid } from '@mui/material';
 import Icon from 'components/custom/icon';
 import { Button } from 'design-system';
 
+import './index.scss';
+
 interface ModalProps {
   title: string;
   description: string;

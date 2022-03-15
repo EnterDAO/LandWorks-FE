@@ -5,8 +5,8 @@
 
   .light-text {
     display: flex;
-    align-items:center;
-    color: #F8F8FF;
+    align-items: center;
+    color: #f8f8ff;
     font-size: 16px;
     font-weight: bold;
   }
@@ -43,11 +43,12 @@
     margin-left: 5px;
   }
 
-  .profile-icon, .warning-icon {
+  .profile-icon,
+  .warning-icon {
     height: 20px;
     width: 20px;
     margin-right: 10px;
-    color: #5D8FF0;
+    color: #5d8ff0;
   }
 
   .warning-icon {
@@ -60,7 +61,7 @@
     flex-direction: column;
 
     .operator-text {
-      color: #F8F8FF;
+      color: #f8f8ff;
       font-size: 13px;
     }
 
@@ -77,14 +78,14 @@
     }
     input {
       padding: 10px;
-      background: #27273A;
+      background: #27273a;
       border-radius: 12px;
       font-weight: 400;
     }
   }
 
   .rent-modal-footer {
-    background: #27273A;
+    background: #27273a;
     border-radius: 12px;
     padding: 15px;
     margin-top: 10px;
@@ -97,26 +98,27 @@
       margin-bottom: 20px;
       width: 100%;
 
-      .rent-period, .rent-price {
+      .rent-period,
+      .rent-price {
         text-align: initial;
         font-size: 12px;
         p {
           text-transform: uppercase;
         }
         span {
-          color: #F8F8FF;
+          color: #f8f8ff;
         }
         img {
           height: 15px;
           width: 15px;
         }
         .price span {
-          color: #B9B9D3;
+          color: #b9b9d3;
         }
       }
     }
   }
-  
+
   .info {
     width: 100%;
     background: rgba(93, 142, 240, 0.2);
@@ -125,11 +127,11 @@
     text-align: initial;
     font-size: 12px;
     font-weight: normal;
-    
+
     h3 {
       font-size: 12px;
     }
-    
+
     .info-warning-text {
       width: 100%;
     }
@@ -156,38 +158,10 @@
   .divider {
     width: 100%;
     margin: 10px 0;
-    border-color: #27273A;
+    border-color: #27273a;
     border-width: 1px;
   }
 }
-.rent-modal-loader, .rent-modal-succes {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-bottom: 40px;
-  
-  p {
-    font-size: 30px;
-    font-weight: bold;
-    color: #f8f8f8;
-  }
-  span {
-    margin-bottom: 30px;
-  }
-  .success-icon {
-    height: 60px;
-    width: 60px;
-  }
-  .loader {
-    height: 50px;
-    width: 50px;
-    margin-bottom: 15px;
-    animation: loader 1.1s infinite linear,
-  }
-}
-
-
 
 .modal-propety {
   height: 100%;
