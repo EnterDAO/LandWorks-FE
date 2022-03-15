@@ -6,8 +6,9 @@ import { useWallet } from 'wallets/wallet';
 
 import { currencyData, landsData, sortData } from './filters-data';
 
-import styles from './lands-explore-filters.module.scss';
 import { sessionStorageHandler } from 'utils';
+
+import styles from './lands-explore-filters.module.scss';
 
 interface Props {
   onChangeSortDirection: (value: number) => void;
