@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
-import { Grid, Typography } from '@mui/material';
 import usePagination from '@mui/material/usePagination/usePagination';
 import { Col, Row } from 'antd';
 
-import { Button, Icon, Modal } from 'design-system';
+import { Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
