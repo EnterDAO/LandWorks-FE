@@ -129,6 +129,7 @@ const SingleLandView: React.FC = () => {
   };
 
   const handleDelistButton = () => {
+    setOpenDelistPrompt(false);
     if (isDirectWithdraw()) {
       handleDelist();
     } else {
@@ -147,7 +148,6 @@ const SingleLandView: React.FC = () => {
 
   const handleDelist = async () => {
     if (!asset.id || !wallet.account) {
-      setOpenDelistPrompt(false);
       return;
     }
 
@@ -155,7 +155,6 @@ const SingleLandView: React.FC = () => {
       await landWorksContract?.delist(asset.id, () => {
         disableButtons(true);
         setShowWarningModal(false);
-        setOpenDelistPrompt(false);
       });
       showToastNotification(
         ToastType.Success,
@@ -165,7 +164,6 @@ const SingleLandView: React.FC = () => {
         history.push('/explore');
       }
       setShowWarningModal(false);
-      setOpenDelistPrompt(false);
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
       console.log(e);
