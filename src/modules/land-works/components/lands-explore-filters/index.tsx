@@ -7,6 +7,7 @@ import { useWallet } from 'wallets/wallet';
 import { currencyData, landsData, sortData } from './filters-data';
 
 import styles from './lands-explore-filters.module.scss';
+import { sessionStorageHandler } from 'utils';
 
 interface Props {
   onChangeSortDirection: (value: number) => void;
@@ -36,15 +37,6 @@ const LandWorksFilters: FC<Props> = ({
     setSelectedMetaverse(value);
     // TODO:: some filtering here
   };
-
-  function sessionStorageHandler(option: 'getItem' | 'setItem', name: any, value?: any): any {
-    const filters = sessionStorage.getItem('filters');
-    if (!filters && option === 'getItem') return 1;
-
-    return option === 'getItem'
-      ? JSON.parse(filters!)[name]
-      : sessionStorage.setItem('filters', JSON.stringify({ ...JSON.parse(filters!), [`${name}`]: value }));
-  }
 
   const onChangeSortDirectionHandler = (value: number) => {
     setSelectedOrder(value);
