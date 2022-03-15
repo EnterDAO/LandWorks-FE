@@ -1,9 +1,9 @@
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { DEFAULT_SLICED_PAGE } from 'constants/modules';
-import { Grid } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { AtlasTile } from 'components/custom/Atlas/Atlas';
+import { Grid } from 'design-system';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
@@ -22,7 +22,7 @@ interface Props {
 }
 
 const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
-  const isGridPerTwo = useMediaQuery('(max-width:1299px)');
+  const isGridPerTwo = useMediaQuery('(max-width: 1599px)');
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
   const { mapTiles } = useLandsMapTiles();
@@ -127,13 +127,13 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
       <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
         {loading ? (
           [1, 2, 3, 4].map((i) => (
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={4} key={i}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={6} xxl={4} key={i}>
               <LandCardSkeleton key={i} />
             </Grid>
           ))
         ) : filteredLands.length ? (
           filteredLands.slice(0, slicedLands).map((land) => (
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={4} key={land.id}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={6} xxl={4} key={land.id}>
               <LandWorkCard onMouseOver={onMouseOverCardHandler} land={land} />
             </Grid>
           ))
