@@ -57,7 +57,7 @@ const SingleLandView: React.FC = () => {
         // TODO:
       }
       if (subscriptionData.data.asset === null) {
-        history.push('/all');
+        history.push('/explore');
         return;
       }
       disableButtons(false);
@@ -120,7 +120,7 @@ const SingleLandView: React.FC = () => {
         setWithdrawButtonDisabled(true);
       });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
-      history.push('/all');
+      history.push('/explore');
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
       console.log(e);
@@ -159,7 +159,7 @@ const SingleLandView: React.FC = () => {
         `Property ${isDirectWithdraw() ? 'withdrawn' : 'delisted'} successfully!`
       );
       if (isDirectWithdraw()) {
-        history.push('/all');
+        history.push('/explore');
       }
       setShowWarningModal(false);
     } catch (e) {
