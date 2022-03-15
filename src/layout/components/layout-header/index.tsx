@@ -57,15 +57,12 @@ const LayoutHeader: React.FC = () => {
 
   return (
     <div className={`${styles.root} ${navOpen ? `${styles.mobileNavOpen}` : ''}`} ref={setReferenceElement}>
-      <Link to="/all">
+      <Link to="/explore" style={{ display: 'flex', alignItems: 'center' }}>
         <Icon name="png/LandWorksLogo" width="auto" height="auto" className={styles.logo} />
+        <div className={`${styles.title} ${wallet.account ? `${styles.logged}` : ''}`}>
+          <TextLogo />
+        </div>
       </Link>
-      <div
-        className={`${styles.title} ${wallet.account ? `${styles.logged}` : ''}`}
-        onClick={() => history.push('/all')}
-      >
-        <TextLogo />
-      </div>
 
       {!isLandingPage?.isExact && <LandsNav />}
 
