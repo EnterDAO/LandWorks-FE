@@ -38,7 +38,7 @@ export const RentDatePicker = (props: {
   const isMinEqualMax = () => minRentPeriod.unix() === maxEndDate.unix();
 
   const fixedMinRentPeriodMinutes = () => {
-    return minRentPeriod.add(60, 'seconds').format('HH:mm');
+    return moment(minRentPeriod).add(60, 'seconds').format('HH:mm');
   };
 
   useEffect(() => {
