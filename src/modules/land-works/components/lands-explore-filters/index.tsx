@@ -24,16 +24,16 @@ const LandWorksFilters: FC<Props> = ({
   onChangeCurrency,
 }) => {
   const wallet = useWallet();
-  const [selectedOrder, setSelectedOrder] = useState(sessionStorageHandler('getItem', 'order') || 1);
-  const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('getItem', 'metaverse') || 1);
-  const [selectedCurrency, setSelectedCurrency] = useState(sessionStorageHandler('getItem', 'currency') || 1);
-  const [showOnlyOwner, setShowOnlyOwner] = useState(sessionStorageHandler('getItem', 'owner') || false);
-  const [showOnlyAvailable, setShowOnlyAvailable] = useState(sessionStorageHandler('getItem', 'available') || false);
+  const [selectedOrder, setSelectedOrder] = useState(sessionStorageHandler('getItem', 'filters', 'order') || 1);
+  const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('getItem', 'filters', 'metaverse') || 1);
+  const [selectedCurrency, setSelectedCurrency] = useState(sessionStorageHandler('getItem', 'filters', 'currency') || 1);
+  const [showOnlyOwner, setShowOnlyOwner] = useState(sessionStorageHandler('getItem', 'filters', 'owner') || false);
+  const [showOnlyAvailable, setShowOnlyAvailable] = useState(sessionStorageHandler('getItem', 'filters', 'available') || false);
   const [, setCurrency] = useState(tokenOptions[0]);
   const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
 
   const onChangePlaceHandler = (value: number) => {
-    sessionStorageHandler('setItem', 'metaverse', value);
+    sessionStorageHandler('setItem', 'filters', 'metaverse', value);
     setMetaverse(metaverse);
     setSelectedMetaverse(value);
     // TODO:: some filtering here
@@ -42,7 +42,7 @@ const LandWorksFilters: FC<Props> = ({
   const onChangeSortDirectionHandler = (value: number) => {
     setSelectedOrder(value);
     onChangeSortDirection(value);
-    sessionStorageHandler('setItem', 'order', value);
+    sessionStorageHandler('setItem', 'filters', 'order', value);
   };
 
   const onChangeOwnerTogglerHandler = () => {
@@ -52,13 +52,13 @@ const LandWorksFilters: FC<Props> = ({
     onChangeOwnerToggler(showOnlyOwnerLast);
 
     setShowOnlyAvailable(false);
-    sessionStorageHandler('setItem', 'owner', showOnlyOwnerLast);
+    sessionStorageHandler('setItem', 'filters', 'owner', showOnlyOwnerLast);
   };
 
   const onChangeAvailableHandler = () => {
     setShowOnlyAvailable(!showOnlyAvailable);
     onChangeAvailable(!showOnlyAvailable);
-    sessionStorageHandler('setItem', 'available', !showOnlyAvailable);
+    sessionStorageHandler('setItem', 'filters', 'available', !showOnlyAvailable);
   };
 
   const onChangeCurrencyHandler = (value: number) => {
@@ -66,7 +66,7 @@ const LandWorksFilters: FC<Props> = ({
     setSelectedCurrency(value);
     setCurrency(tokenOptions[sortIndex]);
     onChangeCurrency(value);
-    sessionStorageHandler('setItem', 'currency', value);
+    sessionStorageHandler('setItem', 'filters', 'currency', value);
   };
 
   return (
