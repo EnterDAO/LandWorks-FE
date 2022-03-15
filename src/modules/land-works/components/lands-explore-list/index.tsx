@@ -14,6 +14,8 @@ import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
 
+import { LandsSearchBarWrapperStyled } from './styled';
+
 import { filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
 
 interface Props {
@@ -125,7 +127,10 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
       onMouseMove={() => setBlockAutoScroll(true)}
       onMouseOut={() => setTimeout(() => setBlockAutoScroll(false), 350)}
     >
-      <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <LandsSearchBarWrapperStyled>
+        <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search by name" />
+      </LandsSearchBarWrapperStyled>
+
       <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
         {loading ? (
           [1, 2, 3, 4].map((i) => (

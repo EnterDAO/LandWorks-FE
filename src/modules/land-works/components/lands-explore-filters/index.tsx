@@ -81,6 +81,7 @@ const LandWorksFilters: FC<Props> = ({
         <Box className={styles.box}>
           <Box className={styles.box} style={{ marginRight: '20px' }}>
             <ControlledSelect
+              disabled
               width={'12rem'}
               value={selectedMetaverse}
               onChange={onChangePlaceHandler}
@@ -89,7 +90,7 @@ const LandWorksFilters: FC<Props> = ({
           </Box>
           <Box className={styles.box}>
             <ControlledSelect
-              width={'6rem'}
+              width={'7rem'}
               value={selectedCurrency}
               onChange={onChangeCurrencyHandler}
               options={currencyData}

@@ -40,11 +40,11 @@
   }
 
   &--delisted {
-    color: #B9B9D3;
-    border-color: #B9B9D3;
+    color: var(--theme-subtle-color);
+    border-color: var(--theme-subtle-color);
 
     &::before {
-      background-color: #B9B9D3;
+      background-color: var(--theme-subtle-color);
     }
   }
 }

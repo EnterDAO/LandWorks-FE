@@ -54,3 +54,19 @@ export const filterLandsByQuery = (lands: AssetEntity[], query: string): AssetEn
     return landName.includes(query.toLowerCase());
   });
 };
+
+export const filterLandsByQueryAndOwner = (lands: AssetEntity[], query: string): AssetEntity[] => {
+  if (!query || !query.length) {
+    return lands;
+  }
+
+  return lands.filter((land) => {
+    const landName = land.name.toLowerCase();
+    const landOwner = land.owner ? land.owner.id.toLowerCase() : '';
+
+    const searchByName = landName.includes(query.toLowerCase());
+    const searchByOwner = landOwner.includes(query.toLowerCase());
+
+    return searchByName || searchByOwner;
+  });
+};

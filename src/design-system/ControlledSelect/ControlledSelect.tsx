@@ -52,6 +52,10 @@ const StyledButton = styled('button')(
     content: '▾';
     float: right;
   }
+
+  &.Mui-disabled {
+    cursor: not-allowed;
+  }
   `
 );
 
@@ -134,14 +138,16 @@ interface ControlledSelectProps {
   value: number;
   options: Option[];
   width?: string;
+  disabled?: boolean;
 }
 
 const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
-  const { onChange, value, options, width } = props;
+  const { disabled = false, onChange, value, options, width } = props;
 
   return (
     <div style={{ width: width }}>
       <CustomSelect
+        disabled={disabled}
         value={value}
         onChange={(e) => {
           if (e) {
