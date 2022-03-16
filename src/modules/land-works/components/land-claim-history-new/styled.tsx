@@ -1,48 +1,45 @@
-import { TableHead, TableHeadProps, Typography, TypographyProps, styled } from '@mui/material';
-import { Paper, PaperProps, Table, TableContainer, TableContainerProps } from '@mui/material';
+import { TableBody, TableHead, styled } from '@mui/material';
+import { Paper, PaperProps } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
-export const StyledTableCell = styled(TableCell)(({ theme }) => ({
+export const StyledTableCell = styled(TableCell)(() => ({
   '& .MuiTableCell-root': {
     borderBottom: 0,
   },
   [`&.${tableCellClasses.head}`]: {
-    // backgroundColor: theme.palette.common.black,
     color: THEME_COLORS.grey03,
     borderBottom: 0,
 
-    '&:first-child': {
+    '&:first-of-type': {
       borderRadius: '10px 0 0 10px',
     },
-    '&:last-child': {
+    '&:last-of-type': {
       borderRadius: '0 10px 10px 0',
     },
   },
   [`&.${tableCellClasses.root}`]: {
-    borderBottom: "none"
+    borderBottom: 'none',
+    fontSize: '14px',
+    fontWeight: '600',
+    lineHeight: '30px',
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
+    fontSize: '14px',
     color: THEME_COLORS.light,
     borderBottom: 0,
   },
 }));
 
-export const StyledTableHeaderRow = styled(TableRow)(({ theme }) => ({
+export const StyledTableHeaderRow = styled(TableRow)(() => ({
   borderRadius: 10,
   backgroundColor: '#27273a',
 }));
 
-export const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:last-child': {
-    borderRadius: 10,
-  },
-  '&:last-child th': {
-    borderRadius: 10,
-  },
+export const StyledTableRow = styled(TableRow)(() => ({
+  margin: '10px 0',
   // borderRadius: '10px',
   // backgroundColor: '#27273a',
 }));
@@ -54,17 +51,8 @@ export const StyledPaper = styled(Paper)<PaperProps>(() => ({
   fontSize: '14px',
   lineHeight: '28px',
   color: '#fff',
-}));
-
-export const RootStyled = styled('div')(() => ({
-  position: 'absolute',
-  bottom: '4%',
-  right: '4%',
-  display: 'block',
-  backgroundColor: 'var(--theme-body-color)',
-  padding: '16px',
-  borderRadius: '20px',
-  maxWidth: '17rem',
+  maxHeight: 343,
+  //   overflow: 'hidden',
 }));
 
 export const StyledTableHead = styled(TableHead)(() => ({
@@ -75,5 +63,13 @@ export const StyledTableHead = styled(TableHead)(() => ({
     lineHeight: '28px',
     color: '#fff',
     borderRadius: '10px',
+  },
+}));
+
+export const StyledTableBody = styled(TableBody)(() => ({
+  '&.MuiTableBody-root': {
+    height: '360px',
+    overflow: 'scroll',
+    width: '100%',
   },
 }));
