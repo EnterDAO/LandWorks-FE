@@ -5,12 +5,21 @@ import { ReactComponent as DollarRibbonIcon } from 'resources/svg/dollar-ribbon.
 
 import { RootStyled, SpanStyled } from './styled';
 
-const LandsBannerClaimRents: FC = () => {
+interface Props {
+  onButtonClick?: () => void;
+  isClaimButtonDisabled: boolean;
+}
+
+const LandsBannerClaimRents: FC<Props> = ({ onButtonClick, isClaimButtonDisabled }) => {
+  const onClickHandler = () => {
+    onButtonClick && onButtonClick();
+  };
+
   return (
     <RootStyled>
       <DollarRibbonIcon />
       <SpanStyled>Rents Available to Claim</SpanStyled>
-      <Button variant="accentblue" btnSize="auto">
+      <Button variant="accentblue" btnSize="auto" onClick={onClickHandler} disabled={isClaimButtonDisabled}>
         CLAIM RENTS
       </Button>
     </RootStyled>
