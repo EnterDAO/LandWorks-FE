@@ -19,9 +19,9 @@ import { useWallet } from 'wallets/wallet';
 import { AssetAvailablity, PaymentToken } from '../../api';
 import { useErc20 } from '../../providers/erc20-provider';
 import { useLandworks } from '../../providers/landworks-provider';
+import { ModalLoader } from '../lands-modal-loading';
+import { ModalSuccess } from '../lands-modal-success';
 import { RentDatePicker } from '../lands-rent-date-picker';
-import { ModalLoader } from '../lands-rent-modal-loading';
-import { ModalSuccess } from '../lands-rent-modal-success';
 
 import { getTimeType, isValidAddress, secondsToDuration } from 'utils';
 
