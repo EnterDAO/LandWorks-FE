@@ -88,7 +88,7 @@ const ListNewProperty: React.FC = () => {
   const [paymentToken, setPaymentToken] = useState({} as PaymentToken);
   const [selectedCurrency, setSelectedCurrency] = useState(1);
 
-  const [tokenCost, setTokenCost] = useState(new BigNumber(0.05));
+  const [tokenCost, setTokenCost] = useState(new BigNumber(0));
   const [earnings, setEarnings] = useState(ZERO_BIG_NUMBER);
   const [protocolFee, setProtocolFee] = useState(ZERO_BIG_NUMBER);
   const [feePercentage, setFeePercentage] = useState(0);
