@@ -28,11 +28,7 @@ const LandsMyPropertiesSubheader: FC<Props> = ({ propertiesCount = 0 }) => {
     <RootStyled>
       <Grid container spacing={2}>
         <Grid item xs={12} lg={6}>
-          <LandsSearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            placeholder="Search for land or owner..."
-          />
+          <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search for land..." />
         </Grid>
         <Grid item xs={12} lg={6} sx={{ display: 'flex', alignItems: 'center' }}>
           <Grid container spacing={2} sx={{ justifyContent: 'flex-end' }}>

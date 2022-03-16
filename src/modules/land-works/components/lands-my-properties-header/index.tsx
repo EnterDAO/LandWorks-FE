@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from 'react';
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import {
   MY_PROPERTIES_TAB_STATE_ALL,
   MY_PROPERTIES_TAB_STATE_LENT,
@@ -6,8 +6,10 @@ import {
 } from 'constants/modules';
 
 import { Box } from 'design-system';
+import { UserEntity } from 'modules/land-works/api';
 
 import LandsBannerClaimRents from '../lands-banner-claim-rents';
+import { ClaimModal } from '../lands-claim-modal';
 import { RootStyled, TabListStyled, TabStyled, TypographyStyled } from './styled';
 
 interface Props {
@@ -15,58 +17,81 @@ interface Props {
   allCount: number;
   rentedCount: number;
   lentCount: number;
+  user?: UserEntity;
 }
 
-const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, setTab }) => {
+const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, setTab, user }) => {
+  const [showClaimModal, setShowClaimModal] = useState(false);
+  const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
   };
 
+  useEffect(() => setClaimButtonDisabled(false), [user]);
+
   return (
-    <RootStyled>
-      <Box>
-        <TypographyStyled variant="h1">My Properties</TypographyStyled>
-      </Box>
+    <>
+      <RootStyled>
+        <Box>
+          <TypographyStyled variant="h1">My Properties</TypographyStyled>
+        </Box>
 
-      <Box>
-        <TabListStyled onChange={handleChange} aria-label="Lands tabs filter">
-          <TabStyled
-            label={
-              <>
-                <strong>
-                  All <span>{allCount}</span>
-                </strong>
-              </>
-            }
-            value={MY_PROPERTIES_TAB_STATE_ALL}
-          />
-          <TabStyled
-            label={
-              <>
-                <strong>
-                  Rented <span>{rentedCount}</span>
-                </strong>
-              </>
-            }
-            value={MY_PROPERTIES_TAB_STATE_RENTED}
-          />
-          <TabStyled
-            label={
-              <>
-                <strong>
-                  Lent <span>{lentCount}</span>
-                </strong>
-              </>
-            }
-            value={MY_PROPERTIES_TAB_STATE_LENT}
-          />
-        </TabListStyled>
-      </Box>
+        <Box>
+          <TabListStyled onChange={handleChange} aria-label="Lands tabs filter">
+            <TabStyled
+              label={
+                <>
+                  <strong>
+                    All <span>{allCount}</span>
+                  </strong>
+                </>
+              }
+              value={MY_PROPERTIES_TAB_STATE_ALL}
+            />
+            <TabStyled
+              label={
+                <>
+                  <strong>
+                    Rented <span>{rentedCount}</span>
+                  </strong>
+                </>
+              }
+              value={MY_PROPERTIES_TAB_STATE_RENTED}
+            />
+            <TabStyled
+              label={
+                <>
+                  <strong>
+                    Lent <span>{lentCount}</span>
+                  </strong>
+                </>
+              }
+              value={MY_PROPERTIES_TAB_STATE_LENT}
+            />
+          </TabListStyled>
+        </Box>
 
-      <Box>
-        <LandsBannerClaimRents />
-      </Box>
-    </RootStyled>
+        {user?.hasUnclaimedRent && (
+          <Box>
+            <LandsBannerClaimRents
+              onButtonClick={() => setShowClaimModal(true)}
+              isClaimButtonDisabled={claimButtonDisabled}
+            />
+          </Box>
+        )}
+      </RootStyled>
+
+      <ClaimModal
+        onSubmit={() => {
+          setClaimButtonDisabled(true);
+          setShowClaimModal(false);
+        }}
+        onCancel={() => setShowClaimModal(false)}
+        visible={showClaimModal}
+        rentFees={user?.unclaimedRentAssets}
+      />
+    </>
   );
 };
 

@@ -1,5 +1,10 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react';
-import { MY_PROPERTIES_TAB_STATE_ALL, MY_PROPERTIES_TAB_STATE_RENTED, pageSizeOptions } from 'constants/modules';
+import {
+  MY_PROPERTIES_TAB_STATE_ALL,
+  MY_PROPERTIES_TAB_STATE_LENT,
+  MY_PROPERTIES_TAB_STATE_RENTED,
+  pageSizeOptions,
+} from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import TabContext from '@mui/lab/TabContext';
 
@@ -14,7 +19,7 @@ import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-p
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 import { useWallet } from 'wallets/wallet';
 
-import { filterLandsByQueryAndOwner } from 'modules/land-works/utils';
+import { filterLandsByQuery } from 'modules/land-works/utils';
 
 const MyPropertiesView: FC = () => {
   const wallet = useWallet();
@@ -48,6 +53,10 @@ const MyPropertiesView: FC = () => {
     setPage(page);
   };
 
+  const concatOwnerAndConsumerAssetsAndRents = () => {
+    return [...rents, ...(user?.ownerAndConsumerAssets || [])];
+  };
+
   useEffect(() => {
     if (userData && userData.user) {
       setUser(parseUser(userData.user));
@@ -59,15 +68,17 @@ const MyPropertiesView: FC = () => {
   useEffect(() => {
     if (tab === MY_PROPERTIES_TAB_STATE_RENTED) {
       return setLands(rents);
+    } else if (tab === MY_PROPERTIES_TAB_STATE_LENT) {
+      return setLands(user?.ownerAndConsumerAssets || []);
     }
 
-    setLands(user?.ownerAndConsumerAssets || []);
+    setLands(concatOwnerAndConsumerAssetsAndRents());
   }, [tab]);
 
   useEffect(() => {
     // We setLands only if the tab is still MY_PROPERTIES_TAB_STATE_ALL
     if (tab === MY_PROPERTIES_TAB_STATE_ALL) {
-      setLands(user?.ownerAndConsumerAssets || []);
+      setLands(concatOwnerAndConsumerAssetsAndRents());
     }
 
     fetchRents();
@@ -79,7 +90,7 @@ const MyPropertiesView: FC = () => {
     }
   }, [lands]);
 
-  const filteredLands = filterLandsByQueryAndOwner(lands, searchQuery);
+  const filteredLands = filterLandsByQuery(lands, searchQuery);
 
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
@@ -87,9 +98,10 @@ const MyPropertiesView: FC = () => {
         <div className="content-container">
           <LandsMyPropertiesHeader
             setTab={setTab}
-            allCount={user?.ownerAndConsumerAssets?.length}
+            user={user}
+            allCount={concatOwnerAndConsumerAssetsAndRents().length}
             rentedCount={totalRents}
-            lentCount={user?.ownerAndConsumerAssets?.length}
+            lentCount={user?.ownerAndConsumerAssets?.length || 0}
           />
           <LandsMyPropertiesSubheader propertiesCount={lands.length} />
 

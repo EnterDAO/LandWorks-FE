@@ -1123,23 +1123,16 @@ export function parseUser(user: any): UserEntity {
     (a: AssetEntity, b: AssetEntity) => Number(b.id) - Number(a.id)
   );
 
-  result.ownerAndConsumerAssets = parseAssets(uniqueAssets, result.id);
-  result.unclaimedRentAssets = parseAssets(
-    uniqueAssets.filter((a: any) => BigNumber.from(a.unclaimedRentFee)?.gt(0)),
-    result.id
-  );
+  result.ownerAndConsumerAssets = parseAssets(uniqueAssets);
+  result.unclaimedRentAssets = parseAssets(uniqueAssets.filter((a: any) => BigNumber.from(a.unclaimedRentFee)?.gt(0)));
   result.hasUnclaimedRent = result.unclaimedRentAssets.length > 0;
   return result;
 }
 
-export function parseAssets(assets: any[], injectOwner?: string): AssetEntity[] {
+export function parseAssets(assets: any[]): AssetEntity[] {
   const result = [] as AssetEntity[];
 
   for (const asset of assets) {
-    if (injectOwner) {
-      asset.owner = { id: injectOwner };
-    }
-
     result.push(parseAsset(asset));
   }
   return result;

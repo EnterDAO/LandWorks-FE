@@ -15,7 +15,7 @@ const LandsSearchBar: React.FC<SearchQuery> = ({ searchQuery, setSearchQuery, pl
   };
 
   return (
-    <div className="wrapper lands-search">
+    <div className="wrapper-lands-search">
       <label htmlFor="header-search" className="search-label-icon">
         <SearchIcon className="search-icon" />
       </label>
