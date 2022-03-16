@@ -10,10 +10,13 @@ const LandWorksTableDate: React.FC<ILandWorksTableDateProps> = ({ timestamp, dat
   const fullDate = timestampSecondsToDate(timestamp, dateFormat);
   const utc = fullDate.substring(fullDate.length - 6);
   const date = fullDate.substring(0, fullDate.length - 6);
+  const slice = date.length - 6;
+
+  const slicedDate = `${date.slice(0, slice)}, ${date.slice(slice, date.length)}`;
 
   return (
     <div className="timezone">
-      {date} <span>{utc}</span>
+      {slicedDate} <span>{utc}</span>
     </div>
   );
 };
