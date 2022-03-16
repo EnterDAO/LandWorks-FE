@@ -1,4 +1,5 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   MY_PROPERTIES_TAB_STATE_ALL,
   MY_PROPERTIES_TAB_STATE_LENT,
@@ -10,7 +11,7 @@ import TabContext from '@mui/lab/TabContext';
 
 import PaginationStyled from 'components/styled/pagination';
 import { Grid } from 'design-system';
-import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserRentPerAsset, parseUser } from 'modules/land-works/api';
+import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssetsByRents, parseUser } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import LandsWorksGridEmptyState from 'modules/land-works/components/land-works-grid-empty-state';
@@ -22,6 +23,7 @@ import { useWallet } from 'wallets/wallet';
 import { filterLandsByQuery } from 'modules/land-works/utils';
 
 const MyPropertiesView: FC = () => {
+  const history = useHistory();
   const wallet = useWallet();
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState(MY_PROPERTIES_TAB_STATE_ALL);
@@ -41,11 +43,18 @@ const MyPropertiesView: FC = () => {
   const fetchRents = async () => {
     if (!wallet.account) return;
 
-    const rents = await fetchUserRentPerAsset(wallet.account, false, page, pageSize);
+    const rents = await fetchUserAssetsByRents(wallet.account);
 
-    if (Object.keys(rents).length) {
-      setRents(rents.data || []);
-      setTotalRents(rents.meta.count);
+    setRents(rents.data || []);
+    setTotalRents(rents.meta.count);
+  };
+
+  const updateUser = async () => {
+    await fetchRents();
+    if (userData && userData.user) {
+      setUser(parseUser(userData.user));
+    } else {
+      setUser({} as UserEntity);
     }
   };
 
@@ -58,11 +67,7 @@ const MyPropertiesView: FC = () => {
   };
 
   useEffect(() => {
-    if (userData && userData.user) {
-      setUser(parseUser(userData.user));
-    } else {
-      setUser({} as UserEntity);
-    }
+    updateUser();
   }, [userData]);
 
   useEffect(() => {
@@ -76,13 +81,21 @@ const MyPropertiesView: FC = () => {
   }, [tab]);
 
   useEffect(() => {
-    // We setLands only if the tab is still MY_PROPERTIES_TAB_STATE_ALL
-    if (tab === MY_PROPERTIES_TAB_STATE_ALL) {
-      setLands(concatOwnerAndConsumerAssetsAndRents());
+    if (Object.keys(user)) {
+      // We setLands only if the tab is still MY_PROPERTIES_TAB_STATE_ALL
+      if (tab === MY_PROPERTIES_TAB_STATE_ALL) {
+        setLands(concatOwnerAndConsumerAssetsAndRents());
+      }
     }
-
-    fetchRents();
   }, [user]);
+
+  useEffect(() => {
+    if (!wallet.account) {
+      setLands([]);
+      setRents([]);
+      setTotalRents(0);
+    }
+  }, [wallet.account]);
 
   useEffect(() => {
     if (!wallet.account || lands.length) {
@@ -115,7 +128,7 @@ const MyPropertiesView: FC = () => {
             ) : filteredLands.length ? (
               filteredLands.map((land) => (
                 <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={land.id}>
-                  <LandWorkCard land={land} />
+                  <LandWorkCard land={land} onClick={() => history.push(`/property/${land.id}`)} />
                 </Grid>
               ))
             ) : (
@@ -129,7 +142,7 @@ const MyPropertiesView: FC = () => {
             <PaginationStyled
               onChange={onPaginationChange}
               page={page}
-              count={tab === 'rent' ? totalRents : lands.length}
+              count={Math.ceil((tab === 'rent' ? totalRents : lands.length) / pageSize)}
               variant="outlined"
               color="secondary"
             />
