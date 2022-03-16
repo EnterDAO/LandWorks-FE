@@ -3,12 +3,12 @@ import { Paper, PaperProps } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 
-import { THEME_COLORS } from 'themes/theme-constants';
-
 export const RootStyled = styled('div')(() => ({
-  backgroundColor: '#1e1e2e',
+  backgroundColor: 'var(--theme-card-color)',
   padding: '30px',
+  margin: '120px 20px',
   borderRadius: '10px',
+  maxWidth: 'calc(var(--horizontal-padding) * 2 + 1100px)',
 }));
 
 export const StyledTableCell = styled(TableCell)(() => ({
@@ -16,7 +16,7 @@ export const StyledTableCell = styled(TableCell)(() => ({
     borderBottom: 0,
   },
   [`&.${tableCellClasses.head}`]: {
-    color: THEME_COLORS.grey03,
+    color: 'var(--theme-subtle-color)',
     borderBottom: 0,
 
     '&:first-of-type': {
@@ -34,14 +34,14 @@ export const StyledTableCell = styled(TableCell)(() => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: '14px',
-    color: THEME_COLORS.light,
+    color: 'var(--theme-light-color)',
     borderBottom: 0,
   },
 }));
 
 export const StyledTableHeaderRow = styled(TableRow)(() => ({
   borderRadius: 10,
-  backgroundColor: '#27273a',
+  backgroundColor: 'var(--theme-modal-color)',
 }));
 
 export const StyledTableRow = styled(TableRow)(() => ({
@@ -49,10 +49,9 @@ export const StyledTableRow = styled(TableRow)(() => ({
 }));
 
 export const StyledPaper = styled(Paper)<PaperProps>(() => ({
-  backgroundColor: '#1e1e2e',
+  backgroundColor: 'var(--theme-card-color)',
   fontSize: '14px',
   lineHeight: '28px',
-  color: '#fff',
   maxHeight: 280,
   overflow: 'auto',
   boxShadow: 'none',
@@ -62,11 +61,11 @@ export const StyledTableHead = styled(TableHead)(() => ({
   position: 'sticky',
   top: 0,
   '& .MuiTableRow': {
-    background: '#27273a',
+    background: 'var(--theme-modal-color)',
     fontSize: '14px',
     fontWeight: '600',
     lineHeight: '28px',
-    color: '#fff',
+    color: 'var(--theme-light-color)',
   },
 }));
 
