@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
-import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 
@@ -22,7 +22,6 @@ import styles from './layout-header.module.scss';
 const modalRoot = document.getElementById('modal-root') || document.body;
 
 const LayoutHeader: React.FC = () => {
-  const history = useHistory();
   const { navOpen, setNavOpen } = useGeneral();
   const [referenceElement, setReferenceElement] = useState<any>();
   const [popperElement, setPopperElement] = useState<any>();
