@@ -14,6 +14,7 @@ import { ReactComponent as CloseIcon } from 'assets/icons/close.svg';
 import { ReactComponent as CopyIcon } from 'assets/icons/copy.svg';
 import { ReactComponent as Currency } from 'assets/icons/currency.svg';
 import { ReactComponent as EditIcon } from 'assets/icons/edit.svg';
+import { ReactComponent as EmptyIcon } from 'assets/icons/empty.svg';
 import { ReactComponent as ENTRIcon } from 'assets/icons/ENTR.svg';
 import { ReactComponent as ErrorIcon } from 'assets/icons/error.svg';
 import { ReactComponent as ETHIcon } from 'assets/icons/ETH.svg';
@@ -66,6 +67,7 @@ import { ReactComponent as WarningIcon } from 'assets/icons/warning.svg';
 
 // One-color icons
 export {
+  EmptyIcon,
   SuccessStarIcon,
   ArrowDownIcon,
   ArrowLeftIcon,
