@@ -289,7 +289,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       type="button"
                       className={'button-primary'}
                       onClick={handleClaim}
-                      disabled={isClaimButtonDisabled || isNotListed()}
+                      disabled={isClaimButtonDisabled}
                     >
                       <span>CLAIM RENT</span>
                     </button>

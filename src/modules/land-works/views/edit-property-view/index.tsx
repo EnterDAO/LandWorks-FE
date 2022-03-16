@@ -393,7 +393,7 @@ const EditPropertyView: React.FC = () => {
     if (asset) {
       calculateTotalAndFeePrecision(asset?.paymentToken?.feePercentage);
       calculatePricePerSecond();
-      getUsdPrice(asset?.paymentToken?.symbol, tokenCost?.toNumber() || 0);
+      getUsdPrice(paymentToken.symbol, tokenCost?.toNumber() || 0);
     }
   }, [paymentToken, tokenCost]);
 
