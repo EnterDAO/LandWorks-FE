@@ -350,15 +350,15 @@ const ListPropertyView: React.FC = () => {
   const evaluateInput = () => {
     let isListDisabled = true;
     if (!minPeriod && isMinPeriodSelected) {
-      setErrMessage('Min Period Must be set');
+      setErrMessage('Min period must be set');
     } else if (minPeriod?.gt(maxPeriod)) {
-      setErrMessage('Min Period exceeds Max Period');
+      setErrMessage('Min period should be equal or smaller than Max period');
     } else if (!maxPeriod && isMaxPeriodSelected) {
-      setErrMessage('Max Period Must be set');
+      setErrMessage('Max period must be set');
     } else if (maxPeriod?.gt(maxFutureTime)) {
-      setErrMessage('Max Period exceeds Max Future Time');
+      setErrMessage('Max period should be equal or smaller than Max rent queue');
     } else if (!maxFutureTime) {
-      setErrMessage('Max Future Period Must be set');
+      setErrMessage('Max rent queue must be set');
     } else if (pricePerSecond.eq(ZERO_BIG_NUMBER)) {
       setErrMessage('Price cannot be zero');
     } else if (selectedProperty === null) {

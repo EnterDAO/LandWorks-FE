@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Input, Row } from 'antd';
+import { useHistory } from 'react-router-dom';
+import { Divider, Grid, ModalProps } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import moment, { Moment } from 'moment';
 import { RangeValue } from 'rc-picker/lib/interface';
-import { ONE_ADDRESS, getHumanValue } from 'web3/utils';
+import { ONE_ADDRESS, getEtherscanAddressUrl, getHumanValue } from 'web3/utils';
 
-import Button from 'components/antd/button';
-import Modal, { ModalProps } from 'components/antd/modal';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import config from 'config';
+import { Button, Input, Modal, Tooltip } from 'design-system';
+import { CalendarIcon, ProfileIcon, WarningIcon } from 'design-system/icons';
 import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { getTokenPrice } from 'providers/known-tokens-provider';
@@ -19,7 +20,8 @@ import { AssetAvailablity, PaymentToken } from '../../api';
 import { useErc20 } from '../../providers/erc20-provider';
 import { useLandworks } from '../../providers/landworks-provider';
 import { RentDatePicker } from '../lands-rent-date-picker';
-import { LandsTooltip } from '../lands-tooltip';
+import { ModalLoader } from '../lands-rent-modal-loading';
+import { ModalSuccess } from '../lands-rent-modal-success';
 
 import { getTimeType, isValidAddress, secondsToDuration } from 'utils';
 
@@ -32,13 +34,14 @@ type Props = ModalProps & {
   pricePerSecond?: BigNumber;
   paymentToken?: PaymentToken;
   onSubmit: () => void;
+  onCancel: () => void;
 };
 
 export const RentModal: React.FC<Props> = (props) => {
   const { availability, assetId, pricePerSecond, paymentToken, onCancel, onSubmit, ...modalProps } = props;
 
   // added one minute each to be able to choose if MIN & MAX
-  const fixedMinStartRentDate = availability?.startRentDate ? availability?.startRentDate + 60 : 0;
+  const fixedMinStartRentDate = availability?.startRentDate || 0;
   const minStartDate = moment.unix(fixedMinStartRentDate);
   const minRentPeriod = moment.unix(availability?.minRentDate || 0);
   const maxEndDate = moment.unix(availability?.maxRentDate || 0);
@@ -46,16 +49,20 @@ export const RentModal: React.FC<Props> = (props) => {
   const wallet = useWallet();
   const landworks = useLandworks();
   const erc20 = useErc20();
+  const history = useHistory();
 
   const { landWorksContract } = landworks;
   const { erc20Contract } = erc20;
 
   const [editedValue, setEditedValue] = useState<string>(wallet.account || '');
   const [period, setPeriod] = useState(0);
-  // const [, setEndDate] = useState('');
+  const [endDate, setEndDate] = useState<string>();
   const [totalPrice, setTotalPrice] = useState(new BigNumber(0));
   const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
   const [errMessage, setErrMessage] = useState<string>('');
+  const [isActiveOperatorInput, setIsActiveOperatorInput] = useState<boolean>(false);
+  const [transactionLoading, setTransactionLoading] = useState<boolean>(false);
+  const [successTrunsaction, setSuccessTrunsaction] = useState<boolean>(false);
 
   const [value, setValue] = useState(new BigNumber(0));
   const [approveDisabled, setApproveDisabled] = useState(false);
@@ -66,9 +73,10 @@ export const RentModal: React.FC<Props> = (props) => {
     const start = (values as Moment[])[0];
     const end = (values as Moment[])[1];
 
+    setEndDate(end.format('DD MMM YYYY, HH:mm'));
     const period = end.unix() - start.unix();
-    setPeriod(period);
-    // setEndDate(timestampSecondsToDate(end.unix().toString()));
+
+    end.unix() - minRentPeriod.unix() >= 0 ? setPeriod(period) : setPeriod(-1);
   };
 
   const isYou = () => {
@@ -103,13 +111,14 @@ export const RentModal: React.FC<Props> = (props) => {
         setRentDisabled(true);
         return;
       }
-      if (balance.lt(value)) {
+      if (balance.lt(balance)) {
         setApproveDisabled(true);
         setRentDisabled(true);
         return;
       }
 
       const allowance = erc20Contract?.getAllowanceOf(config.contracts.landworksContract);
+
       if (allowance == null) {
         setApproveDisabled(false);
         setRentDisabled(true);
@@ -129,16 +138,19 @@ export const RentModal: React.FC<Props> = (props) => {
     if (paymentToken === undefined || paymentToken.id === ONE_ADDRESS) {
       return;
     }
-
     try {
+      setTransactionLoading(true);
       await erc20Contract?.approveAmount(value, config.contracts.landworksContract, () => {
         setApproveDisabled(true);
       });
+      setTransactionLoading(false);
       showToastNotification(ToastType.Success, `${paymentToken.symbol} approved successfully.`);
+
       erc20Contract?.loadAllowance(config.contracts.landworksContract).catch(Error);
       checkApprovedAmount();
     } catch (e) {
       console.log(e);
+      setTransactionLoading(false);
       showToastNotification(ToastType.Error, 'There was an error while approviing');
     }
   };
@@ -147,9 +159,9 @@ export const RentModal: React.FC<Props> = (props) => {
     if (!isValidForm() || !assetId || !paymentToken) {
       return;
     }
-
     try {
       const bnPeriod = new BigNumber(period);
+      setTransactionLoading(true);
       if (paymentToken?.symbol.toLowerCase() === 'eth') {
         await landWorksContract?.rentDecentralandWithETH(
           assetId,
@@ -170,16 +182,20 @@ export const RentModal: React.FC<Props> = (props) => {
         );
         erc20Contract?.loadAllowance(config.contracts.landworksContract);
       }
-      showToastNotification(ToastType.Success, 'Property rented successfuly!');
+      setTransactionLoading(false);
+      setSuccessTrunsaction(true);
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while renting the property.');
+      setTransactionLoading(false);
       console.log(e);
     }
   };
 
-  const isValidForm = () => {
-    return isValidAddress(editedValue) && period > 0 && !rentDisabled;
-  };
+  function isValidForm(): boolean {
+    return isValidAddress(editedValue) && period > 0;
+  }
+  const showLoader = () => transactionLoading && !successTrunsaction;
+  const showSuccessModal = () => !transactionLoading && successTrunsaction;
 
   const formattedTime = (period: number) => {
     const duration = secondsToDuration(period);
@@ -195,8 +211,6 @@ export const RentModal: React.FC<Props> = (props) => {
   useEffect(() => {
     if (wallet.account) {
       setEditedValue(wallet.account);
-    } else {
-      onCancel();
     }
   }, [wallet.account]);
 
@@ -211,123 +225,159 @@ export const RentModal: React.FC<Props> = (props) => {
       } else {
         setErrMessage('Invalid address provided');
       }
-    } else if (paymentToken?.id !== ONE_ADDRESS) {
+    }
+    if (paymentToken?.id !== ONE_ADDRESS) {
       const balance = erc20Contract?.balance;
       if (balance?.lt(value)) {
         setErrMessage('Insufficient balance');
       }
-    } else {
-      setErrMessage('');
     }
+    if (value?.isNegative()) setErrMessage('Invalid end date or time');
   }, [editedValue, value]);
 
   return (
-    <Modal
-      width={450}
-      className="rent-modal"
-      title={<p style={{ textAlign: 'center' }}>Rent details</p>}
-      onCancel={onCancel}
-      {...modalProps}
-    >
-      <Row gutter={[10, 10]}>
-        <Col span={24}>
-          <Row justify="center">
-            <Col span={24}>
-              <Row gutter={[16, 10]}>
-                <Col span={24} className="title-period">
-                  <p className="light-text">
-                    Choose rent period
-                    <LandsTooltip
-                      placement="bottomLeft"
-                      trigger="hover"
-                      text="The period for which the property will be rented. Properties have limitations such as minimum or maximum renting periods."
-                    />
-                  </p>
-                  <p className="light-text">{formattedTime(period)}</p>
-                </Col>
-                <Col span={24}>
+    <Modal className="modal-propety" handleClose={onCancel} {...modalProps}>
+      {!transactionLoading && !successTrunsaction && (
+        <Grid container className="rent-modal">
+          <Grid item>
+            <Grid item>
+              <h1 style={{ textAlign: 'center' }}>Rent Property details</h1>
+              <Grid container direction="column">
+                <Grid item className="title-period">
+                  <CalendarIcon className="profile-icon" />
+                  <span className="light-text">Choose rent period</span>
+                </Grid>
+                <Grid item>
+                  <Divider className="divider" />
+                </Grid>
+                <Grid item>
                   <RentDatePicker
+                    endDate={endDate}
                     minStartDate={minStartDate}
                     minRentPeriod={minRentPeriod}
                     maxEndDate={maxEndDate}
                     handleRentDateChange={handleRentDateChange}
                   />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-          <Row className="oprator-container">
-            <Col span={24} style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <p className="light-text oprator-text">
-                Operator
-                <LandsTooltip
-                  placement="bottomLeft"
-                  trigger="hover"
-                  text="The address that will be authorised to deploy scenes and experiences on the rented property during your renting period."
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container className="operator-container">
+              <Grid item style={{ display: 'flex' }}>
+                <p className="light-text">
+                  <ProfileIcon className="profile-icon" />
+                  Configured Operator
+                  <Tooltip
+                    placement="bottom-end"
+                    title="The address that will be authorised to deploy scenes and experiences on the rented property during your renting period."
+                  >
+                    <span>
+                      <Icon name="about" className="info-icon" />
+                    </span>
+                  </Tooltip>
+                </p>
+              </Grid>
+              <Divider className="divider" />
+              <Grid item style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <p className="operator-text">Operator address</p>
+              </Grid>
+              <Grid item>
+                <Input
+                  className="operator-input"
+                  placeholder="Operator Address"
+                  onFocus={() => setIsActiveOperatorInput(true)}
+                  onBlur={() => setIsActiveOperatorInput(false)}
+                  value={editedValue + `${isYou() && !isActiveOperatorInput ? ' (You)' : ''}`}
+                  onChange={handleChange}
                 />
-              </p>
-              {isYou() && <p className="light-text">you</p>}
-            </Col>
-            <Col span={24}>
-              <Input
-                placeholder="Operator Address"
-                bordered={false}
-                defaultValue={editedValue}
-                onChange={handleChange}
-                value={editedValue}
-              />
-            </Col>
-          </Row>
-          {shouldShowApproveButton() && (
-            <Row className="rent-modal-footer">
-              <Col span={24} className="approve-wrapper">
-                <p>1. Approve transaction</p>
-                <Button type="primary" onClick={handleApprove} disabled={approveDisabled}>
-                  APPROVE
-                </Button>
-              </Col>
-            </Row>
-          )}
-          {!isValidForm() && errMessage && <div className="error-wrapper">{errMessage}</div>}
-          {isValidForm() && (
-            <Row className="rent-modal-footer">
-              <Col span={24}>
-                <Button
-                  style={{ display: 'block' }}
-                  className="rent-button"
-                  type="primary"
-                  disabled={rentDisabled}
-                  onClick={handleRent}
-                >
-                  <Row justify="center">
-                    <Col
-                      className="rent-label-container"
-                      span={8}
-                      style={{ borderRight: '1px solid rgba(255, 255, 255, 0.22)' }}
-                    >
-                      <span className="rent-label">Rent Now </span>
-                    </Col>
-                    <Col className="price-col" span={16}>
-                      <strong>
-                        <SmallAmountTooltip amount={totalPrice} />{' '}
-                        <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" />{' '}
-                      </strong>
+              </Grid>
+              {!isValidForm() && errMessage && <div className="error-wrapper">{errMessage}</div>}
 
-                      <strong>
+              <Grid item className="info-warning-container info">
+                <WarningIcon className="warning-icon" />
+                <div className="info-warning-text">
+                  <h3>Important info</h3>
+                  <p>
+                    In order to change the operator after you`ve already rented, you`ll need to pay a network fee.Also
+                    you will need to Synchronise the configured operator with the Metaverse once your rent becomes
+                    active. This is required so that the operator you've defined is updated in the metaverse as well.
+                  </p>
+                </div>
+              </Grid>
+            </Grid>
+            <Divider className="divider" />
+            {isValidForm() && (
+              <>
+                <Grid container className="rent-modal-footer">
+                  <Grid item className="summary">
+                    <p className="light-text">Summary</p>
+                    <Grid container style={{ justifyContent: 'space-between' }}>
+                      <Grid item className="rent-period">
+                        <p>Rent period</p>
                         <span>
-                          <SmallAmountTooltip amount={usdPrice} symbol="$" />
+                          {minStartDate.format('DD MMM YYYY, HH:mm')} - {endDate}
                         </span>
-                      </strong>
-                    </Col>
-                    {/* <Col className="price-col" span={10}>
-                  </Col> */}
-                  </Row>
-                </Button>
-              </Col>
-            </Row>
-          )}
-        </Col>
-      </Row>
+                      </Grid>
+                      <Grid item className="rent-price">
+                        <p>Rent price</p>
+                        <span>
+                          <>
+                            <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" />{' '}
+                            <SmallAmountTooltip amount={totalPrice} /> {paymentToken?.symbol || ''}{' '}
+                          </>
+                          <>
+                            <span className="price">
+                              <SmallAmountTooltip amount={usdPrice} symbol="$" />
+                            </span>
+                          </>
+                        </span>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item className="info-warning-container info">
+                    <WarningIcon className="warning-icon" />
+                    <div className="info-warning-text">
+                      <h3>Keep in mind</h3>
+                      <p>There is a network fee in order to rent this property.</p>
+                    </div>
+                  </Grid>
+                </Grid>
+                <Grid container className="button-container">
+                  {shouldShowApproveButton() && rentDisabled && (
+                    <Button
+                      variant="gradient"
+                      className="rent-button"
+                      onClick={handleApprove}
+                      disabled={approveDisabled}
+                    >
+                      APPROVE
+                    </Button>
+                  )}
+                  <Button
+                    style={{ display: 'block' }}
+                    className="rent-button"
+                    variant="gradient"
+                    disabled={rentDisabled}
+                    onClick={handleRent}
+                  >
+                    <div className="rent-label-container">
+                      <span className="rent-label">Rent Now </span>
+                    </div>
+                  </Button>
+                </Grid>
+              </>
+            )}
+          </Grid>
+        </Grid>
+      )}
+      {showSuccessModal() && (
+        <ModalSuccess
+          title="Successfully Rented!"
+          buttonText="go to my properties"
+          description="Nice! You’ve successfully rented this property."
+          buttonEvent={() => history.push('/my-properties')}
+        />
+      )}
+      {showLoader() && <ModalLoader href={getEtherscanAddressUrl(wallet.account)!} />}
     </Modal>
   );
 };
