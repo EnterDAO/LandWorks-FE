@@ -25,10 +25,16 @@ const LandWorksFilters: FC<Props> = ({
 }) => {
   const wallet = useWallet();
   const [selectedOrder, setSelectedOrder] = useState(sessionStorageHandler('getItem', 'filters', 'order') || 1);
-  const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('getItem', 'filters', 'metaverse') || 1);
-  const [selectedCurrency, setSelectedCurrency] = useState(sessionStorageHandler('getItem', 'filters', 'currency') || 1);
+  const [selectedMetaverse, setSelectedMetaverse] = useState(
+    sessionStorageHandler('getItem', 'filters', 'metaverse') || 1
+  );
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    sessionStorageHandler('getItem', 'filters', 'currency') || 1
+  );
   const [showOnlyOwner, setShowOnlyOwner] = useState(sessionStorageHandler('getItem', 'filters', 'owner') || false);
-  const [showOnlyAvailable, setShowOnlyAvailable] = useState(sessionStorageHandler('getItem', 'filters', 'available') || false);
+  const [showOnlyAvailable, setShowOnlyAvailable] = useState(
+    sessionStorageHandler('getItem', 'filters', 'available') || false
+  );
   const [, setCurrency] = useState(tokenOptions[0]);
   const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
 
