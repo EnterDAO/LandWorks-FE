@@ -1,97 +1,111 @@
-import { DatePicker } from 'antd';
-import { Moment } from 'moment';
+import { useEffect, useState } from 'react';
+import { Grid, TextField } from '@mui/material';
+import moment, { Moment } from 'moment';
 import { RangeValue } from 'rc-picker/lib/interface';
 
-const { RangePicker } = DatePicker;
+import Icon from 'components/custom/icon';
+import { Input, InputLabel, Tooltip } from 'design-system';
+
+import './index.scss';
 
 export const RentDatePicker = (props: {
+  endDate: string | undefined;
   minStartDate: Moment;
   minRentPeriod: Moment;
   maxEndDate: Moment;
-  handleRentDateChange: (values: RangeValue<Moment>, formatString: [string, string]) => void;
+  handleRentDateChange: (values: RangeValue<Moment>, formatString?: [string, string]) => void;
 }): React.ReactElement => {
-  const { minStartDate, minRentPeriod, maxEndDate, handleRentDateChange } = props;
+  const { minStartDate, minRentPeriod, maxEndDate, handleRentDateChange, endDate } = props;
 
-  function range(start: number, end: number) {
-    const result = [];
-    for (let i = start; i < end; i++) {
-      result.push(i);
-    }
-    return result;
-  }
+  const minRentTime = minRentPeriod.format('HH:mm');
+  const minTime = minStartDate.format('HH:mm');
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const disabledDate = (current: any) => {
-    const isBefore = current.isBefore(minRentPeriod, 'year');
-    const isAfter = current.isAfter(maxEndDate, 'hour');
-    const isSameEndDay = current.isSame(maxEndDate, 'day');
+  const [date, setDate] = useState<string>(minRentPeriod.format().split('T')[0]);
+  const [hours, setHours] = useState<string>(minRentTime);
 
-    if (isBefore) {
-      return isBefore;
-    }
+  const handleHours = (hours: string) => {
+    setHours(hours);
+    const newHours = moment(new Date(`${date} ${hours}`).getTime());
+    handleRentDateChange([minStartDate, newHours]);
+  };
+  const handleDate = (date: string) => {
+    setDate(date);
+    const newDate = moment(new Date(`${date} ${hours}`).getTime());
 
-    if (isAfter && !isSameEndDay) {
-      return isAfter;
-    }
+    handleRentDateChange([minStartDate, newDate]);
   };
 
-  function disabledRangeTime(current: Moment | null) {
-    const minRentDate = current?.date() === minRentPeriod.date();
-    const minRentMonth = current?.month() === minRentPeriod.month();
-    const minRentYear = current?.year() === minRentPeriod.year();
+  const isMinEqualMax = () => minRentPeriod.unix() === maxEndDate.unix();
 
-    const maxDate = current?.date() === maxEndDate.date();
-    const maxMonth = current?.month() === maxEndDate.month();
-    const maxYear = current?.year() === maxEndDate.year();
+  const fixedMinRentPeriodMinutes = () => {
+    return moment(minRentPeriod).format('HH:mm');
+  };
 
-    const isMaxRangeDate = maxDate && maxMonth && maxYear;
-    const isMinRentDate = minRentDate && minRentMonth && minRentYear;
-
-    let disabledHours: number[] = [];
-    let disabledMins: number[] = [];
-
-    if (isMinRentDate) {
-      const dHours = range(0, 24).filter((h) => h < minRentPeriod.hour());
-
-      // Disable the hours only if its the same hour
-      if (current?.hour() === minRentPeriod.hour()) {
-        // added one minute each to be able to choose if MIN & MAX are same
-        const dMins = range(0, 60).filter((m) => m < minRentPeriod.minute() + 1);
-        disabledMins = [...disabledMins, ...dMins];
-      }
-
-      disabledHours = [...disabledHours, ...dHours];
+  useEffect(() => {
+    if (isMinEqualMax()) {
+      handleRentDateChange([minStartDate, maxEndDate]);
     }
-
-    if (isMaxRangeDate) {
-      const dHours = range(0, 24).filter((h) => h > maxEndDate.hour());
-      disabledHours = [...disabledHours, ...dHours];
-
-      // Disable the hours only if its the same hour
-      if (current?.hour() === maxEndDate.hour()) {
-        // added one minute each to be able to choose  if MIN & MAX are same
-        const dMins = range(0, 60).filter((m) => m > maxEndDate.minute() + 1);
-        disabledMins = [...disabledMins, ...dMins];
-      }
-    }
-
-    return {
-      disabledHours: () => disabledHours,
-      disabledMinutes: () => disabledMins,
-    };
-  }
+  }, []);
 
   return (
-    <RangePicker
-      disabledDate={disabledDate}
-      disabledTime={disabledRangeTime}
-      onChange={handleRentDateChange}
-      defaultValue={[minStartDate, minRentPeriod]}
-      showTime={{ format: 'HH:mm' }}
-      disabled={[true, false]}
-      className="button-primary"
-      bordered={false}
-      allowClear={false}
-    />
+    <Grid container spacing={1} className="dateRange">
+      <InputLabel>
+        <p>
+          Start Date
+          <Tooltip
+            placement="bottom-end"
+            title="The address that will be authorised to deploy scenes and experiences on the rented property during your renting period."
+          >
+            <span>
+              <Icon name="about" className="info-icon" />
+            </span>
+          </Tooltip>
+        </p>
+
+        <Input className="input" defaultValue={minStartDate.format('DD MMM YYYY')} readOnly disabled />
+      </InputLabel>
+
+      <InputLabel>
+        <p>Start Time</p>
+        <Input className="input" defaultValue={minTime} readOnly disabled />
+      </InputLabel>
+      <div className="rangeDivider" />
+
+      <InputLabel>
+        <p>End Date</p>
+        <TextField
+          className="input date-input"
+          type="date"
+          disabled={isMinEqualMax()}
+          onChange={(e) => handleDate(e.target.value)}
+          defaultValue={minRentPeriod.format().split('T')[0]}
+          InputProps={{
+            inputProps: { min: minRentPeriod.format().split('T')[0], max: maxEndDate.format().split('T')[0] },
+          }}
+        />
+      </InputLabel>
+
+      <InputLabel>
+        <p>
+          End Time
+          <Tooltip
+            placement="bottom-end"
+            title="The address that will be authorised to deploy scenes and experiences on the rented property during your renting period."
+          >
+            <span>
+              <Icon name="about" className="info-icon" />
+            </span>
+          </Tooltip>
+        </p>
+        <TextField
+          className="input time-input"
+          type="time"
+          disabled={isMinEqualMax()}
+          onChange={(e) => handleHours(e.target.value)}
+          defaultValue={endDate?.slice(-5) || fixedMinRentPeriodMinutes()}
+          inputProps={{ min: minRentTime }}
+        />
+      </InputLabel>
+    </Grid>
   );
 };

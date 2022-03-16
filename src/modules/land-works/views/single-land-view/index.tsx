@@ -400,11 +400,12 @@ const SingleLandView: React.FC = () => {
           }}
           onSubmit={() => {
             disableButtons(true);
-            setShowRentModal(false);
+            // setShowRentModal(false);
           }}
-          visible={showRentModal}
+          open={showRentModal}
           availability={asset.availability}
           assetId={asset.id}
+          children={<></>}
           pricePerSecond={asset.pricePerSecond}
           paymentToken={asset.paymentToken}
         />
