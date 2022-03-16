@@ -1,4 +1,4 @@
-import { Box, FormControl, FormControlLabel, FormGroup, Grid, RadioGroup, Stack, Typography } from '@mui/material';
+import { Box, FormControl, FormControlLabel, FormGroup, RadioGroup, Stack, Typography } from '@mui/material';
 
 import BackgroundContainer from './BackgroundContainer/BackgroundContainer';
 import BoxWithCopyText from './BoxWithCopyText/BoxWithCopyText';
@@ -12,6 +12,7 @@ import Dropdown from './Dropdown/Dropdown';
 import DropdownMenu from './Dropdown/DropdownMenu/DropdownMenu';
 import DropdownItem from './Dropdown/DropdownMenuItem/DropdownMenuItem';
 import FormHelperText from './FormHelperText/FormHelperText';
+import Grid from './Grid/Grid';
 import HeroCarousel from './HeroCarousel/HeroCarousel';
 import IconButton from './IconButton/IconButton';
 import Icon from './icons/Icon';
