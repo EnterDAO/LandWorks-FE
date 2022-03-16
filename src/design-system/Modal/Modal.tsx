@@ -14,8 +14,8 @@ interface ModalProps {
     ariaLabelledby: string;
     ariaDescribedby: string;
   };
-  height?: number;
-
+  height?: number | string;
+}
 
 const Modal: FC<ModalProps> = (props: ModalProps) => {
   const { open, handleClose, children, accessibility, height, className = '' } = props;
