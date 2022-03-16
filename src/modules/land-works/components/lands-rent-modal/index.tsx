@@ -19,9 +19,9 @@ import { useWallet } from 'wallets/wallet';
 import { AssetAvailablity, PaymentToken } from '../../api';
 import { useErc20 } from '../../providers/erc20-provider';
 import { useLandworks } from '../../providers/landworks-provider';
+import { ModalLoader } from '../lands-modal-loading';
+import { ModalSuccess } from '../lands-modal-success';
 import { RentDatePicker } from '../lands-rent-date-picker';
-import { ModalLoader } from '../lands-rent-modal-loading';
-import { ModalSuccess } from '../lands-rent-modal-success';
 
 import { getTimeType, isValidAddress, secondsToDuration } from 'utils';
 
@@ -197,12 +197,6 @@ export const RentModal: React.FC<Props> = (props) => {
   const showLoader = () => transactionLoading && !successTrunsaction;
   const showSuccessModal = () => !transactionLoading && successTrunsaction;
 
-  const formattedTime = (period: number) => {
-    const duration = secondsToDuration(period);
-    const { timeValue, timeType } = getTimeType(duration);
-    return `${timeValue} ${timeType}`;
-  };
-
   useEffect(() => {
     calculatePrices();
     setValue(new BigNumber(period).multipliedBy(pricePerSecond as BigNumber));
@@ -377,7 +371,7 @@ export const RentModal: React.FC<Props> = (props) => {
           buttonEvent={() => history.push('/my-properties')}
         />
       )}
-      {showLoader() && <ModalLoader href={getEtherscanAddressUrl(wallet.account)!} />}
+      {showLoader() && <ModalLoader href={getEtherscanAddressUrl(wallet.account) || ''} />}
     </Modal>
   );
 };

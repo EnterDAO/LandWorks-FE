@@ -1,16 +1,19 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Input } from 'antd';
 import web3 from 'web3';
 import { getEtherscanAddressUrl, shortenAddr } from 'web3/utils';
 
 import ExternalLink from 'components/custom/externalLink';
-import { CheckIcon, CloseIcon, EditIcon } from 'design-system/icons';
+import { Button, Input, InputLabel, Modal, Typography } from 'design-system';
+import { EditIcon } from 'design-system/icons';
 import { getAddressFromENS } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 
 import { useWallet } from '../../../../wallets/wallet';
+import { ModalLoader } from '../lands-modal-loading';
+import { ModalSuccess } from '../lands-modal-success';
+import { StyledGrid } from './styled';
 
 import './index.scss';
 
@@ -22,6 +25,7 @@ type Iprops = {
   ens?: string | null;
   isEditable: boolean;
 };
+type transactionStatus = 'loading' | 'success' | 'pending';
 
 const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEditable, ens }) => {
   const wallet = useWallet();
@@ -30,13 +34,15 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
   const { landWorksContract } = landWorks;
 
   const [disabled, setDisabled] = useState<boolean>(true);
-  const [newOperator, setNewOperator] = useState<string>(operator);
+  const [newOperator, setNewOperator] = useState<string>('');
+  const [transactionStatus, setTransactionStatus] = useState<transactionStatus>('pending');
   const [canEditOperator, setCanEditOperator] = useState(false);
 
-  const shortedOperator = shortenAddr(newOperator);
+  const shortedOperator = shortenAddr(newOperator || operator);
 
   const handleSave = async () => {
     if (landWorksContract) {
+      setTransactionStatus('loading');
       try {
         if (!web3.utils.isAddress(newOperator)) {
           const address = await getAddressFromENS(newOperator);
@@ -46,9 +52,9 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
               className: 'error-toast',
               style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
             });
+            setTransactionStatus('pending');
             return;
           }
-
           setNewOperator(address);
         }
 
@@ -58,6 +64,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
             className: 'error-toast',
             style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
           });
+          setTransactionStatus('pending');
           return;
         }
 
@@ -65,13 +72,15 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
         if (rentArray.length === 2) {
           await landWorksContract.updateOperator(assetId, rentArray[1], newOperator);
           showToastNotification(ToastType.Success, 'Operator updated successfully!');
-
-          setDisabled(true);
+          setTransactionStatus('success');
+          setNewOperator('');
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
+        setTransactionStatus('pending');
         showToastNotification(ToastType.Error, 'There was an error while updating the operator.');
         console.log(err.message);
+        setNewOperator('');
       }
     }
   };
@@ -82,8 +91,15 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
 
   const handleCancel = () => {
     setNewOperator(operator);
+    setTransactionStatus('pending');
     setDisabled(true);
   };
+
+  const successfully = () => {
+    setTransactionStatus('pending');
+    setDisabled(true);
+  };
+
   useEffect(() => {
     // Check if renter is equal to connected wallet address
     if (wallet.account && wallet.account.toLowerCase() === renter.toLowerCase() && isEditable) {
@@ -93,20 +109,9 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
 
   return (
     <div className="operator">
-      {canEditOperator && !disabled ? (
-        <Input
-          placeholder="Operator Address"
-          bordered={false}
-          disabled={disabled}
-          value={!disabled ? newOperator : ens || shortedOperator}
-          defaultValue={!disabled ? newOperator : ens || shortedOperator}
-          onChange={handleChange}
-        />
-      ) : (
-        <ExternalLink className="operator-input-link" target="_blank" href={getEtherscanAddressUrl(operator)}>
-          {!disabled ? newOperator : ens || shortedOperator}
-        </ExternalLink>
-      )}
+      <ExternalLink className="operator-input-link" target="_blank" href={getEtherscanAddressUrl(operator)}>
+        {shortedOperator || ens}
+      </ExternalLink>
       {!canEditOperator ? (
         <></>
       ) : disabled ? (
@@ -114,14 +119,33 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
           <EditIcon />
         </button>
       ) : (
-        <>
-          <button className="edit-btn" onClick={handleSave}>
-            <CheckIcon />
-          </button>
-          <button className="edit-btn" onClick={handleCancel}>
-            <CloseIcon />
-          </button>
-        </>
+        <Modal open={!disabled} height={'100%'} handleClose={handleCancel}>
+          {transactionStatus === 'pending' && (
+            <StyledGrid container>
+              <Typography variant="h2">Change Operator</Typography>
+              <Typography variant="subtitle2">
+                Change current operator address. This action requires a network fee to be paid
+              </Typography>
+
+              <InputLabel>
+                <p>Operator Address (or ENS)</p>
+                <Input placeholder="e.g 0xabe26494hr74hrtjc0b...cBaC or vitalik.eth" onChange={handleChange} />
+              </InputLabel>
+              <Button variant="gradient" disabled={!newOperator.length} onClick={handleSave}>
+                Change
+              </Button>
+            </StyledGrid>
+          )}
+          {transactionStatus === 'loading' && <ModalLoader href={getEtherscanAddressUrl(wallet.account)!} />}
+          {transactionStatus === 'success' && (
+            <ModalSuccess
+              buttonText="close"
+              title="Successfully Changed!"
+              description="Nice! You’ve successfully changed operator."
+              buttonEvent={successfully}
+            />
+          )}
+        </Modal>
       )}
     </div>
   );
