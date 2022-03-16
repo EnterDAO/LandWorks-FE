@@ -329,19 +329,19 @@ const EditPropertyView: React.FC = () => {
 
   const evaluateInput = () => {
     if (!minPeriod && isMinPeriodSelected) {
-      setErrMessage('Min Period Must be set');
+      setErrMessage('Min period must be set');
       setSaveDisabled(true);
     } else if (minPeriod?.gt(maxPeriod)) {
-      setErrMessage('Min Period exceeds Max Period');
+      setErrMessage('Min period should be equal or smaller than Max period');
       setSaveDisabled(true);
     } else if (!maxPeriod && isMaxPeriodSelected) {
-      setErrMessage('Max Period Must be set');
+      setErrMessage('Max period must be set');
       setSaveDisabled(true);
     } else if (maxPeriod?.gt(maxFutureTime)) {
-      setErrMessage('Max Period exceeds Max Future Time');
+      setErrMessage('Max period should be equal or smaller than Max rent queue');
       setSaveDisabled(true);
     } else if (!maxFutureTime) {
-      setErrMessage('Max Future Period Must be set');
+      setErrMessage('Max rent queue must be set');
       setSaveDisabled(true);
     } else if (pricePerSecond.eq(ZERO_BIG_NUMBER)) {
       setErrMessage('Price cannot be zero');
@@ -393,7 +393,7 @@ const EditPropertyView: React.FC = () => {
     if (asset) {
       calculateTotalAndFeePrecision(asset?.paymentToken?.feePercentage);
       calculatePricePerSecond();
-      getUsdPrice(asset?.paymentToken?.symbol, tokenCost?.toNumber() || 0);
+      getUsdPrice(paymentToken.symbol, tokenCost?.toNumber() || 0);
     }
   }, [paymentToken, tokenCost]);
 

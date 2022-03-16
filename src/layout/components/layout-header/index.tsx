@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
-import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import cn from 'classnames';
 
@@ -22,7 +22,6 @@ import styles from './layout-header.module.scss';
 const modalRoot = document.getElementById('modal-root') || document.body;
 
 const LayoutHeader: React.FC = () => {
-  const history = useHistory();
   const { navOpen, setNavOpen } = useGeneral();
   const [referenceElement, setReferenceElement] = useState<any>();
   const [popperElement, setPopperElement] = useState<any>();
@@ -57,15 +56,12 @@ const LayoutHeader: React.FC = () => {
 
   return (
     <div className={`${styles.root} ${navOpen ? `${styles.mobileNavOpen}` : ''}`} ref={setReferenceElement}>
-      <Link to="/all">
+      <Link to="/explore" style={{ display: 'flex', alignItems: 'center' }}>
         <Icon name="png/LandWorksLogo" width="auto" height="auto" className={styles.logo} />
+        <div className={`${styles.title} ${wallet.account ? `${styles.logged}` : ''}`}>
+          <TextLogo />
+        </div>
       </Link>
-      <div
-        className={`${styles.title} ${wallet.account ? `${styles.logged}` : ''}`}
-        onClick={() => history.push('/all')}
-      >
-        <TextLogo />
-      </div>
 
       {!isLandingPage?.isExact && <LandsNav />}
 

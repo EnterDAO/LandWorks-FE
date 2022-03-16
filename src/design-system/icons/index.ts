@@ -49,6 +49,7 @@ import { ReactComponent as SearchIcon } from 'assets/icons/search.svg';
 import { ReactComponent as SettingsIcon } from 'assets/icons/settings.svg';
 import { ReactComponent as SignGradientIcon } from 'assets/icons/sign-gradient.svg';
 import { ReactComponent as SignIcon } from 'assets/icons/sign.svg';
+import { ReactComponent as SpinnerSecondary } from 'assets/icons/spinner_2.svg';
 import { ReactComponent as Spinner } from 'assets/icons/spinner.svg';
 import { ReactComponent as StarIcon } from 'assets/icons/star.svg';
 import { ReactComponent as SuccessStarIcon } from 'assets/icons/success-star.svg';
@@ -117,6 +118,7 @@ export {
   Calendar02,
   BluePlus,
   Spinner,
+  SpinnerSecondary,
 };
 // Multi-color icons
 export { UploadIcon, FileUploadedIcon, UploadingIcon, UpdateIcon, NoConnectionIcon, ErrorIcon };

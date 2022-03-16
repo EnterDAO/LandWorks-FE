@@ -4,7 +4,7 @@ import { useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
 import { Col, Row } from 'antd';
 
-import { Button, Icon } from 'design-system';
+import { Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
@@ -41,6 +41,7 @@ const SingleLandView: React.FC = () => {
 
   const [showRentModal, setShowRentModal] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
+  const [openDelistPrompt, setOpenDelistPrompt] = useState(false);
 
   const [rentButtonDisabled, setRentButtonDisabled] = useState(false);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
@@ -128,6 +129,7 @@ const SingleLandView: React.FC = () => {
   };
 
   const handleDelistButton = () => {
+    setOpenDelistPrompt(false);
     if (isDirectWithdraw()) {
       handleDelist();
     } else {
@@ -206,6 +208,7 @@ const SingleLandView: React.FC = () => {
         onCancel={() => {
           setShowWarningModal(false);
         }}
+        style={{ zIndex: '1005' }}
         onOk={handleDelist}
         visible={showWarningModal}
         text={
@@ -216,6 +219,25 @@ const SingleLandView: React.FC = () => {
           </>
         }
       />
+
+      <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
+        <Grid container width="410px" direction="column">
+          <Typography fontSize={25} variant="h2">
+            Do you want to delist?
+          </Typography>
+          <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 40px 0' }} variant="subtitle1">
+            Are you sure you want to delist this property? This action cannot be reversed.
+          </Typography>
+          <Grid container direction="row" justifyContent="space-between">
+            <Button variant="secondary" btnSize="medium" onClick={() => setOpenDelistPrompt(false)}>
+              No, go back
+            </Button>
+            <Button variant="gradient" btnSize="medium" onClick={handleDelistButton}>
+              Yes, delist
+            </Button>
+          </Grid>
+        </Grid>
+      </Modal>
 
       <Row gutter={40} className="head-nav">
         <div className="left-wrapper">
@@ -242,7 +264,12 @@ const SingleLandView: React.FC = () => {
         <div className="right-wrapper">
           {shouldShowDelist() &&
             (isOwner() ? (
-              <Button variant="tertiary" btnSize="xsmall" onClick={handleDelistButton} disabled={delistButtonDisabled}>
+              <Button
+                variant="tertiary"
+                btnSize="xsmall"
+                onClick={() => setOpenDelistPrompt(true)}
+                disabled={delistButtonDisabled}
+              >
                 {isDirectWithdraw() ? 'WITHDRAW' : 'DELIST'}
               </Button>
             ) : (
@@ -373,11 +400,12 @@ const SingleLandView: React.FC = () => {
           }}
           onSubmit={() => {
             disableButtons(true);
-            setShowRentModal(false);
+            // setShowRentModal(false);
           }}
-          visible={showRentModal}
+          open={showRentModal}
           availability={asset.availability}
           assetId={asset.id}
+          children={<></>}
           pricePerSecond={asset.pricePerSecond}
           paymentToken={asset.paymentToken}
         />
