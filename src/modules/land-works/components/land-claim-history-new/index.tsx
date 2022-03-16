@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { useSubscription } from '@apollo/client';
 import { Box } from '@mui/material';
@@ -12,6 +11,7 @@ import { useWallet } from '../../../../wallets/wallet';
 import LandWorksTableDate from '../land-works-table-date';
 import LandTablePrice from '../land-works-table-price';
 import {
+  RootStyled,
   StyledPaper,
   StyledTableBody,
   StyledTableCell,
@@ -47,11 +47,13 @@ const ClaimHistoryTableNew: React.FC = () => {
   });
 
   return (
-    <Box>
+    <RootStyled>
+      {' '}
+      {/* This wraps the table in a container that allows a better scroll  */}
       <StyledPaper>
-        <table style={{ width: '100%', borderRadius: 10 }} aria-label="custom pagination table">
+        <table style={{ width: '100%' }} aria-label="table">
           <StyledTableHead>
-            <StyledTableHeaderRow style={{ borderRadius: '10px', color: 'white' }}>
+            <StyledTableHeaderRow>
               <StyledTableCell>Property</StyledTableCell>
               <StyledTableCell align="left">Tx Hash</StyledTableCell>
               <StyledTableCell align="left">Claimed Amount</StyledTableCell>
@@ -81,7 +83,7 @@ const ClaimHistoryTableNew: React.FC = () => {
               </Box>
             </tbody>
           ) : (
-            <StyledTableBody style={{ maxHeight: '260px', overflow: 'scroll' }}>
+            <StyledTableBody style={{ maxHeight: 260, overflowY: 'scroll' }}>
               {claimHistory.map((data) => (
                 <StyledTableRow style={{ padding: '10px 0' }} key={data.id}>
                   <StyledTableCell style={{ color: THEME_COLORS.light }} align="left">
@@ -107,7 +109,7 @@ const ClaimHistoryTableNew: React.FC = () => {
           )}
         </table>
       </StyledPaper>
-    </Box>
+    </RootStyled>
   );
 };
 

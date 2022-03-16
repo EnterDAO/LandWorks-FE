@@ -5,6 +5,12 @@ import TableRow from '@mui/material/TableRow';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
+export const RootStyled = styled('div')(() => ({
+  backgroundColor: '#1e1e2e',
+  padding: '30px',
+  borderRadius: '10px',
+}));
+
 export const StyledTableCell = styled(TableCell)(() => ({
   '& .MuiTableCell-root': {
     borderBottom: 0,
@@ -40,36 +46,34 @@ export const StyledTableHeaderRow = styled(TableRow)(() => ({
 
 export const StyledTableRow = styled(TableRow)(() => ({
   margin: '10px 0',
-  // borderRadius: '10px',
-  // backgroundColor: '#27273a',
 }));
 
 export const StyledPaper = styled(Paper)<PaperProps>(() => ({
-  padding: '30px',
   backgroundColor: '#1e1e2e',
-  borderRadius: '30px',
   fontSize: '14px',
   lineHeight: '28px',
   color: '#fff',
-  maxHeight: 343,
-  //   overflow: 'hidden',
+  maxHeight: 280,
+  overflow: 'auto',
+  boxShadow: 'none',
 }));
 
 export const StyledTableHead = styled(TableHead)(() => ({
+  position: 'sticky',
+  top: 0,
   '& .MuiTableRow': {
     background: '#27273a',
     fontSize: '14px',
     fontWeight: '600',
     lineHeight: '28px',
     color: '#fff',
-    borderRadius: '10px',
   },
 }));
 
 export const StyledTableBody = styled(TableBody)(() => ({
   '&.MuiTableBody-root': {
-    height: '360px',
-    overflow: 'scroll',
+    maxHeight: '280px',
+    overflowY: 'scroll',
     width: '100%',
   },
 }));
