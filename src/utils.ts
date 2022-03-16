@@ -360,11 +360,17 @@ export function getTimeTypeStr(values: ParsedDate): string {
   return `${timeValue} ${timeType}`;
 }
 
-export const sessionStorageHandler = (option: 'getItem' | 'setItem', key: string, name: any, value?: any): any => {
+export const sessionStorageHandler = (
+  option: 'getItem' | 'setItem',
+  key: string,
+  name: string,
+  value?: string | number | boolean
+): any => {
   const filters = sessionStorage.getItem('filters');
   if (!filters && option === 'getItem') return;
 
+  if (!filters) return;
   return option === 'getItem'
-    ? JSON.parse(filters!)[name]
-    : sessionStorage.setItem(key, JSON.stringify({ ...JSON.parse(filters!), [`${name}`]: value }));
+    ? JSON.parse(filters)[name]
+    : sessionStorage.setItem(key, JSON.stringify({ ...JSON.parse(filters), [`${name}`]: value }));
 };

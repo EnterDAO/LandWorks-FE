@@ -82,7 +82,7 @@ const ListNewProperty: React.FC = () => {
   const [estateGroup, setEstateGroup] = useState<Token[]>([]);
 
   const [showRentPeriodInput, setShowRentPeriodInput] = useState(true);
-  const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(false);
+  const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(true);
 
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState({} as PaymentToken);
@@ -548,7 +548,7 @@ const ListNewProperty: React.FC = () => {
                 />
               )}
               <DropdownSection
-                defaultOpen={false}
+                defaultOpen={true}
                 variant="currency"
                 handleOpen={() => {
                   setShowRentCurrencyInput(!showRentCurrencyInput);
