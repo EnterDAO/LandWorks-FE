@@ -1,4 +1,5 @@
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { DEFAULT_SLICED_PAGE } from 'constants/modules';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -22,6 +23,7 @@ interface Props {
 }
 
 const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
+  const history = useHistory();
   const isGridPerTwo = useMediaQuery('(max-width: 1599px)');
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
@@ -134,7 +136,11 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
         ) : filteredLands.length ? (
           filteredLands.slice(0, slicedLands).map((land) => (
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6} xxl={4} key={land.id}>
-              <LandWorkCard onMouseOver={onMouseOverCardHandler} land={land} />
+              <LandWorkCard
+                onMouseOver={onMouseOverCardHandler}
+                onClick={() => history.push(`/property/${land.id}`)}
+                land={land}
+              />
             </Grid>
           ))
         ) : (

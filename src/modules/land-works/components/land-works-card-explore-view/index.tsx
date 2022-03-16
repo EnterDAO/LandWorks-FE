@@ -39,8 +39,7 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
   };
 
   return (
-    <a
-      href={`/property/${land.id}`}
+    <div
       className={`land-explore-card${isActive ? ' active' : ''}`}
       onClick={(e) => !!onClick && onClick(e, land)}
       onMouseOver={(e) => onMouseOverHandler(e, land)}
@@ -101,7 +100,7 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
       <div className="land-explore-row start">
         <div className="land-explore-hashtags">{land.decentralandData?.isLAND ? '#LAND' : '#ESTATE'} #DECENTRALAND</div>
       </div>
-    </a>
+    </div>
   );
 };
 
