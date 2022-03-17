@@ -54,3 +54,9 @@ export const filterLandsByQuery = (lands: AssetEntity[], query: string): AssetEn
     return landName.includes(query.toLowerCase());
   });
 };
+
+export const filterLandsByAvailability = (lands: AssetEntity[]): AssetEntity[] => {
+  return lands.filter((land) => {
+    return land.isAvailable === true;
+  });
+};

@@ -16,15 +16,16 @@ import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-q
 
 import { LandsSearchBarWrapperStyled } from './styled';
 
-import { filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
+import { filterLandsByAvailability, filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
 
 interface Props {
+  lastRentEnd: string;
   loading: boolean;
   lands: AssetEntity[];
   setPointMapCentre: (lands: CoordinatesLand[]) => void;
 }
 
-const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
+const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRentEnd }) => {
   const history = useHistory();
   const isGridPerTwo = useMediaQuery('(max-width: 1599px)');
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
@@ -119,7 +120,12 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
     setSlicedLands(isGridPerTwo ? DEFAULT_SLICED_PAGE : 6);
   }, []);
 
-  const filteredLands = filterLandsByQuery(lands, searchQuery);
+  let filteredLands = filterLandsByQuery(lands, searchQuery);
+
+  if (lastRentEnd !== '0') {
+    filteredLands = filterLandsByAvailability(filteredLands);
+  }
+
   const slicedLandsInTotal = filteredLands.slice(0, slicedLands).length;
 
   return (

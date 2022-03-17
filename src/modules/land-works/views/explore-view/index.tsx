@@ -34,7 +34,7 @@ import {
 } from '../../api';
 
 import { filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
-import { getNowTs } from 'utils';
+import { getNowTs, sessionStorageHandler } from 'utils';
 
 import './explore-view.scss';
 
@@ -71,6 +71,11 @@ const ExploreView: React.FC = () => {
 
   const [showListNewModal, setShowListNewModal] = useState(false);
 
+  const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
+    skip: wallet.account === undefined,
+    variables: { id: wallet.account?.toLowerCase() },
+  });
+
   const setClickedLandId = (x: number | string, y: number | string) => {
     let landId = `${x},${y}`;
 
@@ -105,7 +110,7 @@ const ExploreView: React.FC = () => {
     if (value) {
       setLands(user?.ownerAndConsumerAssets || []);
     } else {
-      if (paymentToken) {
+      if (!isNull(paymentToken)) {
         getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
       }
     }
@@ -153,24 +158,13 @@ const ExploreView: React.FC = () => {
     setPointMapCentre(highlights);
   };
 
-  useSubscription(USER_SUBSCRIPTION, {
-    skip: wallet.account === undefined,
-    variables: { id: wallet.account?.toLowerCase() },
-    onSubscriptionData: ({ subscriptionData }) => {
-      if (subscriptionData.error) {
-        // TODO:
-      }
-
-      setLoading(subscriptionData.loading);
-
-      if (subscriptionData.data.user === null) {
-        setUser({} as UserEntity);
-        return;
-      }
-
-      setUser(parseUser(subscriptionData.data.user));
-    },
-  });
+  const updateUser = async () => {
+    if (userData && userData.user) {
+      setUser(parseUser(userData.user));
+    } else {
+      setUser({} as UserEntity);
+    }
+  };
 
   useEffect(() => {
     if (wallet.account) {
@@ -182,14 +176,26 @@ const ExploreView: React.FC = () => {
   }, [wallet.account]);
 
   useEffect(() => {
-    if (!isNull(paymentToken)) {
+    if (!isNull(paymentToken) && !sessionStorageHandler('filters', 'owner')) {
       getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
     }
   }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
 
   useEffect(() => {
+    updateUser();
+  }, [userData]);
+
+  useEffect(() => {
+    onChangeFiltersOwnerToggler(sessionStorageHandler('filters', 'owner') || false);
+  }, [user]);
+
+  useEffect(() => {
     getPaymentTokens();
   }, []);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [lands]);
 
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
@@ -220,7 +226,12 @@ const ExploreView: React.FC = () => {
 
           <div className="content-container content-container--explore-view">
             <div className="list-lands-container">
-              <LandsExploreList loading={loading} lands={lands} setPointMapCentre={setPointMapCentre} />
+              <LandsExploreList
+                lastRentEnd={lastRentEnd}
+                loading={loading}
+                lands={lands}
+                setPointMapCentre={setPointMapCentre}
+              />
               <LayoutFooter isWrapped={false} />
             </div>
 
