@@ -2,6 +2,7 @@ import OptionUnstyled, { optionUnstyledClasses } from '@mui/base/OptionUnstyled'
 import PopperUnstyled from '@mui/base/PopperUnstyled';
 import SelectUnstyled, { SelectUnstyledProps } from '@mui/base/SelectUnstyled';
 import { styled } from '@mui/system';
+import { isNull } from 'lodash';
 
 import { Option } from 'modules/interface';
 
@@ -150,7 +151,7 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
         disabled={disabled}
         value={value}
         onChange={(e) => {
-          if (e) {
+          if (!isNull(e)) {
             onChange(e);
           }
         }}
