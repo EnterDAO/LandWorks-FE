@@ -59,6 +59,7 @@ const LandWorksFilters: FC<Props> = ({
 
     setShowOnlyAvailable(false);
     sessionStorageHandler('setItem', 'filters', 'owner', showOnlyOwnerLast);
+    sessionStorageHandler('setItem', 'filters', 'available', false);
   };
 
   const onChangeAvailableHandler = () => {
