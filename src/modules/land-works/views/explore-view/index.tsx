@@ -164,7 +164,7 @@ const ExploreView: React.FC = () => {
         // TODO:
       }
 
-      setLoading(subscriptionData.loading);
+      // setLoading(subscriptionData.loading);
 
       if (subscriptionData.data.user === null) {
         setUser({} as UserEntity);
