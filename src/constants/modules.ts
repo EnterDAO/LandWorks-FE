@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import BigNumber from 'bignumber.js';
 
+import { AssetEntity } from 'modules/land-works/api';
 import { SortDirection } from 'modules/land-works/models/SortDirection';
 
 import {
@@ -125,3 +127,77 @@ export const MY_PROPERTIES_TAB_STATE_ALL = 'all';
 export const MY_PROPERTIES_TAB_STATE_RENTED = 'rented';
 
 export const MY_PROPERTIES_TAB_STATE_LENT = 'lent';
+
+const row: AssetEntity = {
+  id: '48',
+  metaverseAssetId: '46618684268168569494482321218152244969611',
+  minPeriod: new BigNumber('604800'),
+  maxPeriod: new BigNumber('1814400'),
+  maxFutureTime: new BigNumber('1814400'),
+  unclaimedRentFee: new BigNumber('0'),
+  pricePerSecond: new BigNumber('11574074074074'),
+  lastRentEnd: '0',
+  status: 'LISTED',
+  totalRents: '0',
+  paymentToken: {
+    id: '0x0000000000000000000000000000000000000001',
+    name: 'Ether',
+    symbol: 'ETH',
+    decimals: 18,
+    // @ts-ignore
+    __typename: 'PaymentToken',
+  },
+  decentralandData: {
+    metadata: '',
+    isLAND: true,
+    coordinates: [
+      {
+        id: '137-139',
+        x: '137',
+        y: '139',
+        __typename: 'CoordinatesLAND',
+      },
+    ],
+    // @ts-ignore
+    __typename: 'DecentralandData',
+  },
+  __typename: 'Asset',
+  humanPricePerSecond: new BigNumber('0.000011574074074074'),
+  name: 'LAND (137, 139)',
+  isHot: false,
+  operator: '0x0000000000000000000000000000000000000000',
+  minPeriodTimedType: '1 week',
+  maxPeriodTimedType: '3 weeks',
+  maxFutureTimeTimedType: '3 weeks',
+  isAvailable: true,
+  availability: {
+    isRentable: true,
+    isCurrentlyAvailable: true,
+    availabilityAfter: '0 minutes',
+    startRentDate: 1647531534,
+    minRentDate: 1648136334,
+    maxRentDate: 1649345934,
+    label: '1 week-3 weeks',
+    availabilityTime: {
+      minAvailabilityTime: 1,
+      minAvailabilityType: 'week',
+      maxAvailabilityType: 'weeks',
+      maxAvailabilityTime: 3,
+    },
+    maxRentPeriodType: 'minutes',
+    maxRentPeriodTime: 0,
+  },
+  pricePerMagnitude: {
+    price: new BigNumber('0.9999999999999936'),
+    usdPrice: new BigNumber('2814.769999999981985472'),
+    magnitude: 'day',
+  },
+};
+
+const assetEntityFake: AssetEntity[] = [];
+
+for (let ix = 0; ix < 45; ix++) {
+  assetEntityFake.push(row);
+}
+
+export const fakeData = assetEntityFake;

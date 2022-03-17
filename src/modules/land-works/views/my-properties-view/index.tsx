@@ -1,20 +1,20 @@
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   MY_PROPERTIES_TAB_STATE_ALL,
   MY_PROPERTIES_TAB_STATE_LENT,
   MY_PROPERTIES_TAB_STATE_RENTED,
-  pageSizeOptions,
 } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import TabContext from '@mui/lab/TabContext';
+import { useMediaQuery } from '@mui/material';
 
-import PaginationStyled from 'components/styled/pagination';
 import { Grid } from 'design-system';
 import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssetsByRents, parseUser } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import LandsWorksGridEmptyState from 'modules/land-works/components/land-works-grid-empty-state';
+import LoadMoreLands from 'modules/land-works/components/lands-explore-load-more';
 import LandsMyPropertiesHeader from 'modules/land-works/components/lands-my-properties-header';
 import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-properties-subheader';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
@@ -24,21 +24,35 @@ import { filterLandsByQuery } from 'modules/land-works/utils';
 
 const MyPropertiesView: FC = () => {
   const history = useHistory();
+  const isGridPerTwo = useMediaQuery('(max-width: 1599px)');
   const wallet = useWallet();
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState(MY_PROPERTIES_TAB_STATE_ALL);
   const [searchQuery, setSearchQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const [pageSize] = useState(Number(pageSizeOptions[0]));
+  const [pageSize] = useState(getPageSize());
   const [user, setUser] = useState({} as UserEntity);
   const [lands, setLands] = useState<AssetEntity[]>([]);
   const [rents, setRents] = useState<AssetEntity[]>([]);
   const [totalRents, setTotalRents] = useState(0);
+  const [loadPercentageValue, setLoadPercentageValue] = useState(0);
+  const [slicedLands, setSlicedLands] = useState(pageSize);
 
   const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
     variables: { id: wallet.account?.toLowerCase() },
   });
+
+  function getPageSize() {
+    return isGridPerTwo ? 4 : 8;
+  }
+
+  const handleLoadMore = () => {
+    setSlicedLands(slicedLands + getPageSize());
+  };
+
+  const getLoadPercentageValue = () => {
+    return (lands.slice(0, slicedLands).length * 100) / lands.length;
+  };
 
   const fetchRents = async () => {
     if (!wallet.account) return;
@@ -58,13 +72,13 @@ const MyPropertiesView: FC = () => {
     }
   };
 
-  const onPaginationChange = (event: ChangeEvent<unknown>, page: number) => {
-    setPage(page);
-  };
-
   const concatOwnerAndConsumerAssetsAndRents = () => {
     return [...rents, ...(user?.ownerAndConsumerAssets || [])];
   };
+
+  // const concatOwnerAndConsumerAssetsAndRents = () => {
+  //   return fakeData;
+  // };
 
   useEffect(() => {
     updateUser();
@@ -103,7 +117,12 @@ const MyPropertiesView: FC = () => {
     }
   }, [lands]);
 
+  useEffect(() => {
+    setLoadPercentageValue(getLoadPercentageValue());
+  }, [lands, slicedLands]);
+
   const filteredLands = filterLandsByQuery(lands, searchQuery);
+  const slicedLandsInTotal = filteredLands.slice(0, slicedLands).length;
 
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
@@ -126,7 +145,7 @@ const MyPropertiesView: FC = () => {
                 </Grid>
               ))
             ) : filteredLands.length ? (
-              filteredLands.map((land) => (
+              filteredLands.slice(0, slicedLands).map((land) => (
                 <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={land.id}>
                   <LandWorkCard land={land} onClick={() => history.push(`/property/${land.id}`)} />
                 </Grid>
@@ -139,12 +158,11 @@ const MyPropertiesView: FC = () => {
           </Grid>
 
           {lands.length > pageSize && (
-            <PaginationStyled
-              onChange={onPaginationChange}
-              page={page}
-              count={Math.ceil((tab === 'rent' ? totalRents : lands.length) / pageSize)}
-              variant="outlined"
-              color="secondary"
+            <LoadMoreLands
+              textToDisplay={`List ${slicedLandsInTotal} of ${filteredLands.length}`}
+              handleLoadMore={handleLoadMore}
+              percentageValue={loadPercentageValue}
+              disabled={slicedLandsInTotal === filteredLands.length}
             />
           )}
         </div>
