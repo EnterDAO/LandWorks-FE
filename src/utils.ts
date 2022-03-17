@@ -361,7 +361,14 @@ export function getTimeTypeStr(values: ParsedDate): string {
   return `${timeValue} ${timeType}`;
 }
 
-export const sessionStorageHandler = (option: 'getItem' | 'setItem', key: string, name: any, value?: any): any => {
+//eslint-disable-next-line
+//@ts-ignore
+export const sessionStorageHandler = (
+  option: 'getItem' | 'setItem',
+  key: string,
+  name: string,
+  value?: string | number | boolean
+): any => {
   const filters = sessionStorage.getItem('filters');
   if (!filters && option === 'getItem') return;
 
