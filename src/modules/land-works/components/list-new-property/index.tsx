@@ -14,7 +14,7 @@ import {
 import BigNumber from 'bignumber.js';
 import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
-import { Button, ControlledSelect, Grid } from 'design-system';
+import { Box, Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { DecentralandNFT, Estate } from 'modules/interface';
@@ -465,6 +465,9 @@ const ListNewProperty: React.FC = () => {
   return (
     <section className="list-view">
       <Grid container xs={12} direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
+        <Box fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
+          List Property
+        </Box>
         <Grid container direction="row" alignItems="center" justifyContent="center" width={400} alignSelf="center">
           <CustomizedSteppers steps={steps} activeStep={activeStep} />
         </Grid>
