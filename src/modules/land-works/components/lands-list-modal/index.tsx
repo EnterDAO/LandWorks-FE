@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { getEtherscanAddressUrl } from 'web3/utils';
 
 import ExternalLink from 'components/custom/externalLink';
@@ -34,8 +34,16 @@ export const TxModal: React.FC<IProps> = ({ showModal, setShowModal, variant }) 
 };
 
 export const SuccessModal: React.FC<IProps> = ({ showModal, setShowModal }) => {
+  const history = useHistory();
   return (
-    <Modal height={600} open={showModal} handleClose={() => setShowModal(false)}>
+    <Modal
+      height={600}
+      open={showModal}
+      handleClose={() => {
+        history.push('/my-properties');
+        setShowModal(false);
+      }}
+    >
       <div className="success-wrapper">
         <Icon className="star-icon" iconElement={<SuccessStarIcon />} iconSize="s" />
         <div className="heading" style={{ fontSize: 25 }}>
