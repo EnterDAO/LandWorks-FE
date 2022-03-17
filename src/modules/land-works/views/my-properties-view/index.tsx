@@ -76,10 +76,6 @@ const MyPropertiesView: FC = () => {
     return [...rents, ...(user?.ownerAndConsumerAssets || [])];
   };
 
-  // const concatOwnerAndConsumerAssetsAndRents = () => {
-  //   return fakeData;
-  // };
-
   useEffect(() => {
     updateUser();
   }, [userData]);
