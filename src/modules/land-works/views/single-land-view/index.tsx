@@ -8,6 +8,7 @@ import { Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
+import EditPropertyViewNew from 'modules/land-works/components/edit-property';
 
 import ExternalLink from '../../../../components/custom/externalLink';
 import { useWallet } from '../../../../wallets/wallet';
@@ -50,6 +51,8 @@ const SingleLandView: React.FC = () => {
   const [editButtonDisabled, setEditButtonDisabled] = useState(false);
   const [isUpdateOperatorDisabled, setIsUpdateOperatorDisabled] = useState(false);
   const [page, setPage] = useState(1);
+
+  const [showEditModal, setShowEditModal] = useState(true);
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
@@ -202,6 +205,11 @@ const SingleLandView: React.FC = () => {
     updateAdjacentLands();
   }, [asset]);
 
+  const showPrompt = () => {
+    setShowEditModal(false);
+    setOpenDelistPrompt(true);
+  };
+
   return (
     <div className="content-container single-card-section">
       <WarningModal
@@ -297,7 +305,7 @@ const SingleLandView: React.FC = () => {
               variant="accentblue"
               btnSize="xsmall"
               disabled={editButtonDisabled}
-              onClick={() => history.push(`/property/${asset.id}/edit`, asset)}
+              onClick={() => setShowEditModal(true)}
             >
               EDIT
             </Button>
@@ -391,6 +399,12 @@ const SingleLandView: React.FC = () => {
             </Row>
           </Col>
         </Row>
+      )}
+
+      {showEditModal && (
+        <Modal height={'90vh'} open={showEditModal} handleClose={() => setShowEditModal(false)}>
+          <EditPropertyViewNew openDelistPrompt={showPrompt} />
+        </Modal>
       )}
 
       {showRentModal && (
