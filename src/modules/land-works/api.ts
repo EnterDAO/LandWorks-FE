@@ -1119,7 +1119,7 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
         assets(
           where: { metaverse: $metaverse, ${
             lastRentEnd != '0' ? 'lastRentEnd_lt: $lastRentEnd' : ''
-          }, status_not: $statusNot, paymentToken: $paymentTokenId  }
+          }, status_not: $statusNot, ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
           orderBy: $orderColumn
           orderDirection: $orderDirection
         ) {
@@ -1142,7 +1142,7 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
                   id
                 }
               }
-            } 
+            }
             metadata
             isLAND
             coordinates {

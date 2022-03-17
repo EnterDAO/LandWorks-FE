@@ -7,6 +7,7 @@ import {
   sortDirections,
 } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
+import { isNull } from 'lodash';
 
 import { AtlasTile } from 'components/custom/Atlas/Atlas';
 import { Modal } from 'design-system';
@@ -60,13 +61,13 @@ const ExploreView: React.FC = () => {
   const [atlasMapY, setAtlasMapY] = useState(0);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showCardPreview, setShowCardPreview] = useState(false);
 
   const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
 
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
-  const [paymentToken, setPaymentToken] = useState(DEFAULT_TOKEN_ADDRESS);
+  const [paymentToken, setPaymentToken] = useState<string | null>(null);
 
   const [showListNewModal, setShowListNewModal] = useState(false);
 
@@ -104,7 +105,9 @@ const ExploreView: React.FC = () => {
     if (value) {
       setLands(user?.ownerAndConsumerAssets || []);
     } else {
-      getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
+      if (paymentToken) {
+        getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
+      }
     }
   };
 
@@ -112,9 +115,19 @@ const ExploreView: React.FC = () => {
     setLastRentEnd(value ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
   };
 
-  const onChangeFiltersCurrency = (value: number) => {
-    const sortIndex = Number(value) - 1;
-    setPaymentToken(paymentTokens[sortIndex].id);
+  const onChangeFiltersCurrency = async (index: number) => {
+    let tokens: PaymentToken[] = paymentTokens;
+
+    if (index === 0) {
+      return setPaymentToken(DEFAULT_TOKEN_ADDRESS);
+    }
+
+    if (!paymentTokens.length) {
+      tokens = await fetchTokenPayments();
+      setPaymentTokens(tokens);
+    }
+
+    setPaymentToken(tokens[index - 1].id);
   };
 
   const getPaymentTokens = async () => {
@@ -160,10 +173,6 @@ const ExploreView: React.FC = () => {
   });
 
   useEffect(() => {
-    getPaymentTokens();
-  }, [paymentToken, lastRentEnd, lands]);
-
-  useEffect(() => {
     if (wallet.account) {
       setLoading(true);
     } else {
@@ -173,8 +182,14 @@ const ExploreView: React.FC = () => {
   }, [wallet.account]);
 
   useEffect(() => {
-    getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
+    if (!isNull(paymentToken)) {
+      getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
+    }
   }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
+
+  useEffect(() => {
+    getPaymentTokens();
+  }, []);
 
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>

@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { tokenOptions } from 'constants/modules';
 
 import { ControlledSelect, Grid } from 'design-system';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
@@ -15,13 +14,10 @@ interface Props {
 const LandsMyPropertiesSubheader: FC<Props> = ({ propertiesCount = 0 }) => {
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
   const [selectedMetaverse] = useState(1);
-  const [selectedCurrency, setSelectedCurrency] = useState(1);
-  const [, setCurrency] = useState(tokenOptions[0]);
+  const [selectedCurrency, setSelectedCurrency] = useState(0);
 
   const onChangeCurrencyHandler = (value: number) => {
-    const sortIndex = value - 1;
     setSelectedCurrency(value);
-    setCurrency(tokenOptions[sortIndex]);
   };
 
   return (

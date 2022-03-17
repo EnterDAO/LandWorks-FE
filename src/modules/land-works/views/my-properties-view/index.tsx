@@ -81,7 +81,7 @@ const MyPropertiesView: FC = () => {
   }, [tab]);
 
   useEffect(() => {
-    if (Object.keys(user)) {
+    if (Object.keys(user).length) {
       // We setLands only if the tab is still MY_PROPERTIES_TAB_STATE_ALL
       if (tab === MY_PROPERTIES_TAB_STATE_ALL) {
         setLands(concatOwnerAndConsumerAssetsAndRents());

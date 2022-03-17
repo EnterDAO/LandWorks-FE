@@ -31,6 +31,11 @@ export const landsData = [
 
 export const currencyData = [
   {
+    label: 'ALL',
+    value: 0,
+    icon: <Icon name="png/you" width="20" height="20" />,
+  },
+  {
     label: 'ETH',
     value: 1,
     icon: <Icon name="png/eth" width="20" height="20" />,
