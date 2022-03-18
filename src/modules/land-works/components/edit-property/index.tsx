@@ -16,19 +16,18 @@ import BigNumber from 'bignumber.js';
 
 import { Box, Button, Grid, Modal, Typography } from 'design-system';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import { Estate } from 'modules/interface';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
 import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
 import { currencyData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
-import { Token } from 'modules/land-works/contracts/decentraland/land/LANDRegistryContract';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
+import EditFormCardSkeleton from '../land-edit-form-loader-card';
 
 import { getTimeType, secondsToDuration } from '../../../../utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from '../../../../utils/date';
@@ -73,11 +72,7 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
   const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[4]); // Selected Option Value for the select menu
   const [maxFutureError, setMaxFutureError] = useState('');
 
-  // const [properties, setProperties] = useState<Option[]>([]);
-  const [initialProperty, setInitialProperty] = useState<AssetEntity>({} as AssetEntity);
   const [selectedProperty, setSelectedProperty] = useState(null as AssetEntity | null);
-
-  const [estateGroup, setEstateGroup] = useState<Token[]>([]);
 
   const [showRentPeriodInput, setShowRentPeriodInput] = useState(true);
   const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(true);
@@ -100,10 +95,6 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
 
   useEffect(() => {
     // Pre-populate user properties
-    const properyOption = asset;
-    console.log({ asset });
-    // setProperties([properyOption]);
-    setInitialProperty(properyOption);
     setSelectedProperty(asset);
 
     // Pre-populate minPeriod values
@@ -451,133 +442,144 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
 
   return (
     <section className="list-view">
-      <Grid container xs={12} direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
-        <Box fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
-          Update Rent Conditions
-        </Box>
-        <Grid container xs={12} columnSpacing={5} justifyContent="space-between" mt={4}>
-          <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={470} overflow="scroll">
-            <DropdownSection
-              defaultOpen={true}
-              variant="calendar"
-              handleOpen={() => {
-                setShowRentPeriodInput(!showRentPeriodInput);
-              }}
-            />
-            {showRentPeriodInput && (
-              <RentPeriod
-                isMinPeriodSelected={isMinPeriodSelected}
-                handleMinCheckboxChange={handleMinCheckboxChange}
-                handleMinSelectChange={handleMinSelectChange}
-                handleMinInputChange={handleMinInputChange}
-                isMaxPeriodSelected={isMaxPeriodSelected}
-                handleMaxCheckboxChange={handleMaxCheckboxChange}
-                handleMaxSelectChange={handleMaxSelectChange}
-                handleMaxInputChange={handleMaxInputChange}
-                handleAtMostInputChange={handleAtMostInputChange}
-                handleAtMostSelectChange={handleAtMostSelectChange}
-                minOptions={MinRentPeriodOptions}
-                maxOptions={MaxRentPeriodOptions}
-                atMostOptions={AtMostRentPeriodOptions}
-                minOptionsValue={minPeriodSelectedOption.value}
-                maxOptionsValue={maxPeriodSelectedOption.value}
-                atMostOptionsValue={maxFutureSelectedOption.value}
-                minInputValue={minInput?.toNumber()}
-                maxInputValue={maxInput?.toNumber()}
-                atMostInputValue={maxFutureTimeInput?.toNumber()}
-                minError={minError}
-                maxError={maxError}
-                atMostError={maxFutureError}
+      {loading ? (
+        <EditFormCardSkeleton />
+      ) : (
+        <Grid
+          container
+          xs={12}
+          direction="column"
+          alignItems="flex-start"
+          justifyContent="space-between"
+          height={'100%'}
+        >
+          <Box fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
+            Update Rent Conditions
+          </Box>
+          <Grid container xs={12} columnSpacing={5} justifyContent="space-between" mt={4}>
+            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={470} overflow="scroll">
+              <DropdownSection
+                defaultOpen={true}
+                variant="calendar"
+                handleOpen={() => {
+                  setShowRentPeriodInput(!showRentPeriodInput);
+                }}
               />
-            )}
-            <DropdownSection
-              defaultOpen={true}
-              variant="currency"
-              handleOpen={() => {
-                setShowRentCurrencyInput(!showRentCurrencyInput);
-              }}
-            />
-            {showRentCurrencyInput && (
-              <>
-                <RentPrice
-                  handleCostEthChange={handleCostEthChange}
-                  handleCurrencyChange={handleCurrencyChange}
-                  showPriceInUsd={showPriceInUsd}
-                  paymentToken={paymentToken}
-                  earnings={earnings}
-                  protocolFee={protocolFee}
-                  feePercentage={feePercentage}
-                  options={currencyData}
-                  optionsValue={selectedCurrency}
-                  inputValue={tokenCost.toNumber()}
-                  error={priceError}
+              {showRentPeriodInput && (
+                <RentPeriod
+                  isMinPeriodSelected={isMinPeriodSelected}
+                  handleMinCheckboxChange={handleMinCheckboxChange}
+                  handleMinSelectChange={handleMinSelectChange}
+                  handleMinInputChange={handleMinInputChange}
+                  isMaxPeriodSelected={isMaxPeriodSelected}
+                  handleMaxCheckboxChange={handleMaxCheckboxChange}
+                  handleMaxSelectChange={handleMaxSelectChange}
+                  handleMaxInputChange={handleMaxInputChange}
+                  handleAtMostInputChange={handleAtMostInputChange}
+                  handleAtMostSelectChange={handleAtMostSelectChange}
+                  minOptions={MinRentPeriodOptions}
+                  maxOptions={MaxRentPeriodOptions}
+                  atMostOptions={AtMostRentPeriodOptions}
+                  minOptionsValue={minPeriodSelectedOption.value}
+                  maxOptionsValue={maxPeriodSelectedOption.value}
+                  atMostOptionsValue={maxFutureSelectedOption.value}
+                  minInputValue={minInput?.toNumber()}
+                  maxInputValue={maxInput?.toNumber()}
+                  atMostInputValue={maxFutureTimeInput?.toNumber()}
+                  minError={minError}
+                  maxError={maxError}
+                  atMostError={maxFutureError}
                 />
-              </>
-            )}
-          </Grid>
-          <Grid item xs={6} rowSpacing={5}>
-            <Grid item xs={12}>
-              <SelectedListCard landsContent={estateGroup} asset={selectedProperty!} />
-            </Grid>
-            <Grid item xs={12}>
-              <ListNewSummary
-                minPeriodSelectedOption={minPeriodSelectedOption.label}
-                maxPeriodSelectedOption={maxPeriodSelectedOption.label}
-                maxFutureSelectedOption={maxFutureSelectedOption.label}
-                minRentPeriod={minPeriod}
-                maxRentPeriod={maxPeriod}
-                maxFuturePeriod={maxFutureTime}
-                rentPrice={tokenCost}
-                paymentToken={paymentToken}
-                asset={asset}
+              )}
+              <DropdownSection
+                defaultOpen={true}
+                variant="currency"
+                handleOpen={() => {
+                  setShowRentCurrencyInput(!showRentCurrencyInput);
+                }}
               />
+              {showRentCurrencyInput && (
+                <>
+                  <RentPrice
+                    handleCostEthChange={handleCostEthChange}
+                    handleCurrencyChange={handleCurrencyChange}
+                    showPriceInUsd={showPriceInUsd}
+                    paymentToken={paymentToken}
+                    earnings={earnings}
+                    protocolFee={protocolFee}
+                    feePercentage={feePercentage}
+                    options={currencyData}
+                    optionsValue={selectedCurrency}
+                    inputValue={tokenCost.toNumber()}
+                    error={priceError}
+                  />
+                </>
+              )}
+            </Grid>
+            <Grid item xs={6} rowSpacing={5}>
+              <Grid item xs={12}>
+                <SelectedListCard asset={selectedProperty!} />
+              </Grid>
+              <Grid item xs={12}>
+                <ListNewSummary
+                  minPeriodSelectedOption={minPeriodSelectedOption.label}
+                  maxPeriodSelectedOption={maxPeriodSelectedOption.label}
+                  maxFutureSelectedOption={maxFutureSelectedOption.label}
+                  minRentPeriod={minPeriod}
+                  maxRentPeriod={maxPeriod}
+                  maxFuturePeriod={maxFutureTime}
+                  rentPrice={tokenCost}
+                  paymentToken={paymentToken}
+                  asset={asset}
+                />
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
 
-        <hr className="divider" />
+          <hr className="divider" />
 
-        <Grid container direction="row" alignItems="center" justifyContent="space-between">
-          <Button variant="secondary" btnSize="medium" onClick={() => console.log('back')}>
-            Back
-          </Button>
-          <Grid direction="row" alignItems="center" justifyContent="space-between">
-            <Button
-              disabled={false}
-              variant="tertiary"
-              btnSize="medium"
-              onClick={openDelistPrompt}
-              style={{ marginRight: 25 }}
-            >
-              Delist Property
+          <Grid container direction="row" alignItems="center" justifyContent="space-between">
+            <Button variant="secondary" btnSize="medium" onClick={() => console.log('back')}>
+              Back
             </Button>
-            <Button
-              disabled={saveDisabled || !canSave}
-              variant="gradient"
-              btnSize="medium"
-              onClick={() => setShowWarningModal(true)}
-            >
-              Save Changes
-            </Button>
-          </Grid>
-        </Grid>
-
-        <Modal height={'100%'} handleClose={() => setShowWarningModal(false)} open={showWarningModal}>
-          <Grid container width="410px" direction="column">
-            <Typography fontSize={25} variant="h2">
-              Warning
-            </Typography>
-            <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 40px 0' }} variant="subtitle1">
-              Changing the payment type will enforce the payout of any unclaimed rent accumulated for this property.
-            </Typography>
-            <Grid container direction="row" justifyContent="center">
-              <Button variant="gradient" btnSize="small" onClick={handleSave}>
-                OK
+            <Grid direction="row" alignItems="center" justifyContent="space-between">
+              <Button
+                disabled={false}
+                variant="tertiary"
+                btnSize="medium"
+                onClick={openDelistPrompt}
+                style={{ marginRight: 25 }}
+              >
+                Delist Property
+              </Button>
+              <Button
+                disabled={saveDisabled || !canSave}
+                variant="gradient"
+                btnSize="medium"
+                onClick={() => setShowWarningModal(true)}
+              >
+                Save Changes
               </Button>
             </Grid>
           </Grid>
-        </Modal>
-      </Grid>
+
+          <Modal height={'100%'} handleClose={() => setShowWarningModal(false)} open={showWarningModal}>
+            <Grid container width="410px" direction="column">
+              <Typography fontSize={25} variant="h2">
+                Warning
+              </Typography>
+              <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 40px 0' }} variant="subtitle1">
+                Changing the payment type will enforce the payout of any unclaimed rent accumulated for this property.
+              </Typography>
+              <Grid container direction="row" justifyContent="center">
+                <Button variant="gradient" btnSize="small" onClick={handleSave}>
+                  OK
+                </Button>
+              </Grid>
+            </Grid>
+          </Modal>
+        </Grid>
+      )}
     </section>
   );
 };

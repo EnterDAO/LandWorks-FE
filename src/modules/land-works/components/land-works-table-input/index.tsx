@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import web3 from 'web3';
