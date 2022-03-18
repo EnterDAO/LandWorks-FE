@@ -44,6 +44,9 @@ const MyPropetiesHistoryTable: React.FC = () => {
   useEffect(() => {
     if (wallet.account) {
       fetchRents(wallet.account);
+    } else {
+      setRents([]);
+      setTotalRents(0);
     }
   }, [wallet.account]);
 

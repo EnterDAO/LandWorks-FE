@@ -857,7 +857,7 @@ export function fetchUserRents(address: string, availableOnly = false, page = 1,
   return GraphClient.get({
     query: gql`
       query GetUserRents($id: String, $now: BigInt) {
-        rents(orderBy: end, orderDirection: asc, where: {renter: $id, ${
+        rents(orderBy: end, orderDirection: desc, where: {renter: $id, ${
           availableOnly ? 'start_lte: $now, end_gt: $now' : ''
         }}) {
           id
