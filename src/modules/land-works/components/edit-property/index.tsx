@@ -37,10 +37,11 @@ import './index.scss';
 
 interface Props {
   openDelistPrompt: () => void;
+  closeModal: () => void;
 }
 
 const EditPropertyViewNew: React.FC<Props> = (props) => {
-  const { openDelistPrompt } = props;
+  const { openDelistPrompt, closeModal } = props;
 
   const walletCtx = useWallet();
   const landworks = useLandworks();
@@ -170,7 +171,6 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
 
     if (asset.pricePerMagnitude) {
       setTokenCost(new BigNumber(asset.pricePerMagnitude.price || 0));
-      console.log(tokenCost.toNumber());
     }
   }, [asset]);
 
@@ -539,7 +539,7 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
           <hr className="divider" />
 
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
-            <Button variant="secondary" btnSize="medium" onClick={() => console.log('back')}>
+            <Button variant="secondary" btnSize="medium" onClick={closeModal}>
               Back
             </Button>
             <Grid direction="row" alignItems="center" justifyContent="space-between">
