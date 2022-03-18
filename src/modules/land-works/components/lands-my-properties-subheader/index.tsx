@@ -7,17 +7,24 @@ import { currencyData, landsData } from '../lands-explore-filters/filters-data';
 import LandsSearchBar from '../lands-search';
 import { BottomBoxStyled, RootStyled } from './styled';
 
+import { sessionStorageHandler } from 'utils';
+
 interface Props {
   propertiesCount?: number;
+  onChangeCurrencyCallback?: (value: number) => void;
 }
 
-const LandsMyPropertiesSubheader: FC<Props> = ({ propertiesCount = 0 }) => {
+const LandsMyPropertiesSubheader: FC<Props> = ({ propertiesCount = 0, onChangeCurrencyCallback }) => {
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
   const [selectedMetaverse] = useState(1);
-  const [selectedCurrency, setSelectedCurrency] = useState(0);
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    sessionStorageHandler('my-properties-filters', 'currency') || 0
+  );
 
   const onChangeCurrencyHandler = (value: number) => {
     setSelectedCurrency(value);
+    sessionStorageHandler('my-properties-filters', 'currency', value);
+    onChangeCurrencyCallback && onChangeCurrencyCallback(value);
   };
 
   return (

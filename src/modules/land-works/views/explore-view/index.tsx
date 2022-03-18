@@ -64,7 +64,9 @@ const ExploreView: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showCardPreview, setShowCardPreview] = useState(false);
 
-  const [lastRentEnd, setLastRentEnd] = useState(DEFAULT_LAST_RENT_END);
+  const [lastRentEnd, setLastRentEnd] = useState(
+    sessionStorageHandler('explore-filters', 'lastRentEnd') || DEFAULT_LAST_RENT_END
+  );
 
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState<string | null>(null);
@@ -117,7 +119,9 @@ const ExploreView: React.FC = () => {
   };
 
   const onChangeFiltersAvailable = (value: boolean) => {
-    setLastRentEnd(value ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
+    const newValue = value ? getNowTs().toString() : DEFAULT_LAST_RENT_END;
+    setLastRentEnd(newValue);
+    sessionStorageHandler('explore-filters', 'lastRentEnd', newValue);
   };
 
   const onChangeFiltersCurrency = async (index: number) => {
@@ -176,7 +180,7 @@ const ExploreView: React.FC = () => {
   }, [wallet.account]);
 
   useEffect(() => {
-    if (!isNull(paymentToken) && !sessionStorageHandler('filters', 'owner')) {
+    if (!isNull(paymentToken) && !sessionStorageHandler('explore-filters', 'owner')) {
       getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
     }
   }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
@@ -186,7 +190,7 @@ const ExploreView: React.FC = () => {
   }, [userData]);
 
   useEffect(() => {
-    onChangeFiltersOwnerToggler(sessionStorageHandler('filters', 'owner') || false);
+    onChangeFiltersOwnerToggler(sessionStorageHandler('explore-filters', 'owner') || false);
   }, [user]);
 
   useEffect(() => {

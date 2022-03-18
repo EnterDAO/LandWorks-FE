@@ -20,11 +20,12 @@ import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-p
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 import { useWallet } from 'wallets/wallet';
 
-import { filterLandsByQuery } from 'modules/land-works/utils';
+import { filterLandsByCurrencyId, filterLandsByQuery } from 'modules/land-works/utils';
+import { sessionStorageHandler } from 'utils';
 
 const MyPropertiesView: FC = () => {
   const history = useHistory();
-  const isGridPerTwo = useMediaQuery('(max-width: 1599px)');
+  const isGridPerFour = useMediaQuery('(max-width: 1599px)');
   const wallet = useWallet();
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState(MY_PROPERTIES_TAB_STATE_ALL);
@@ -36,6 +37,7 @@ const MyPropertiesView: FC = () => {
   const [totalRents, setTotalRents] = useState(0);
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [slicedLands, setSlicedLands] = useState(pageSize);
+  const [currencyId, setCurrencyId] = useState(sessionStorageHandler('my-properties-filters', 'currency') || 0);
 
   const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -43,7 +45,7 @@ const MyPropertiesView: FC = () => {
   });
 
   function getPageSize() {
-    return isGridPerTwo ? 4 : 8;
+    return isGridPerFour ? 4 : 8;
   }
 
   const handleLoadMore = () => {
@@ -74,6 +76,10 @@ const MyPropertiesView: FC = () => {
 
   const concatOwnerAndConsumerAssetsAndRents = () => {
     return [...rents, ...(user?.ownerAndConsumerAssets || [])];
+  };
+
+  const onChangeCurrencyHandler = (value: number) => {
+    setCurrencyId(value);
   };
 
   useEffect(() => {
@@ -117,7 +123,12 @@ const MyPropertiesView: FC = () => {
     setLoadPercentageValue(getLoadPercentageValue());
   }, [lands, slicedLands]);
 
-  const filteredLands = filterLandsByQuery(lands, searchQuery);
+  let filteredLands = filterLandsByQuery(lands, searchQuery);
+
+  if (currencyId > 0) {
+    filteredLands = filterLandsByCurrencyId(lands, currencyId);
+  }
+
   const slicedLandsInTotal = filteredLands.slice(0, slicedLands).length;
 
   return (
@@ -131,7 +142,10 @@ const MyPropertiesView: FC = () => {
             rentedCount={totalRents}
             lentCount={user?.ownerAndConsumerAssets?.length || 0}
           />
-          <LandsMyPropertiesSubheader propertiesCount={lands.length} />
+          <LandsMyPropertiesSubheader
+            propertiesCount={lands.length}
+            onChangeCurrencyCallback={onChangeCurrencyHandler}
+          />
 
           <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
             {loading ? (
