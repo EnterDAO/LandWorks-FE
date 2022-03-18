@@ -58,6 +58,12 @@ const MyPropetiesHistoryTable: React.FC = () => {
     return ens;
   };
 
+  const isEditableRow = (start: string, end: string) => {
+    const isActiveRent = Number(start) <= now && now < Number(end);
+    const isUpcomingRent = Number(start) >= now;
+    return isActiveRent || isUpcomingRent;
+  };
+
   return (
     <>
       <Title>Rent History</Title>
@@ -134,17 +140,15 @@ const MyPropetiesHistoryTable: React.FC = () => {
                     </StyledTableCell>
 
                     <StyledTableCell align="left">
-                      {
-                        <TableInput
-                          operator={data.operator}
-                          assetId={data.id}
-                          rentId={data.id}
-                          ens={getEns(data.operator)}
-                          renter={data.renter.id}
-                          key={uniqueId()}
-                          isEditable={now < Number(data.start) || (Number(data.start) < now && now < Number(data.end))}
-                        />
-                      }
+                      <TableInput
+                        operator={data.operator}
+                        assetId={data.id}
+                        rentId={data.id}
+                        ens={getEns(data.operator)}
+                        renter={data.renter.id}
+                        key={uniqueId()}
+                        isEditable={isEditableRow(data.start, data.end)}
+                      />
                     </StyledTableCell>
                     <StyledTableCell align="left">
                       {now < Number(data.start) && <UpcomingButton>Upcoming</UpcomingButton>}
