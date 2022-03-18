@@ -126,7 +126,7 @@ const MyPropertiesView: FC = () => {
   let filteredLands = filterLandsByQuery(lands, searchQuery);
 
   if (currencyId > 0) {
-    filteredLands = filterLandsByCurrencyId(lands, currencyId);
+    filteredLands = filterLandsByCurrencyId(filteredLands, currencyId);
   }
 
   const slicedLandsInTotal = filteredLands.slice(0, slicedLands).length;
