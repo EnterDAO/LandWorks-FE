@@ -3,9 +3,10 @@ import BigNumber from 'bignumber.js';
 
 import { ReactComponent as AlertIcon } from 'assets/icons/warning.svg';
 import Icon from 'components/custom/icon';
+import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { Grid } from 'design-system';
 import { getTokenIconName } from 'helpers/helpers';
-import { PaymentToken } from 'modules/land-works/api';
+import { AssetEntity, PaymentToken } from 'modules/land-works/api';
 
 import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
 
@@ -20,6 +21,7 @@ interface IListNewSummary {
   maxFutureSelectedOption: string;
   maxFuturePeriod: BigNumber;
   paymentToken: PaymentToken;
+  asset?: AssetEntity;
 }
 
 const ListNewSummary: React.FC<IListNewSummary> = ({
@@ -31,6 +33,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   maxPeriodSelectedOption,
   maxFutureSelectedOption,
   paymentToken,
+  asset,
 }) => {
   const min = minRentPeriod?.toNumber();
   const max = maxRentPeriod?.toNumber();
@@ -84,10 +87,18 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
               <p>
                 <Icon
                   name={getTokenIconName(paymentToken.symbol || 'png/eth')}
-                  // className="info-icon"
                   style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
                 />
-                {rentPrice.toString()} {paymentToken.symbol}
+                {asset ? (
+                  <SmallAmountTooltip
+                    className="price-eth"
+                    amount={asset?.pricePerMagnitude ? asset?.pricePerMagnitude?.price : new BigNumber('0')}
+                  />
+                ) : (
+                  <>
+                    {rentPrice.toNumber()} {paymentToken.symbol}
+                  </>
+                )}
               </p>
             </Grid>
           </Grid>
