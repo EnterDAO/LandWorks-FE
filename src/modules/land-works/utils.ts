@@ -1,4 +1,7 @@
+import { find } from 'lodash';
+
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
+import { currencyData } from './components/lands-explore-filters/filters-data';
 
 export const calculateNeighbours = (coordinatesList: CoordinatesLand[]): string[] => {
   let neighbours = [] as string[];
@@ -50,13 +53,20 @@ export const filterLandsByQuery = (lands: AssetEntity[], query: string): AssetEn
   }
 
   return lands.filter((land) => {
-    const landName = land.name.toLowerCase();
-    return landName.includes(query.toLowerCase());
+    return land.name.toLowerCase().search(query.toLowerCase()) !== -1;
   });
 };
 
 export const filterLandsByAvailability = (lands: AssetEntity[]): AssetEntity[] => {
   return lands.filter((land) => {
     return land.isAvailable === true;
+  });
+};
+
+export const filterLandsByCurrencyId = (lands: AssetEntity[], currencyId: number): AssetEntity[] => {
+  return lands.filter((land) => {
+    const symbolFromCurrencyValue = find(currencyData, { value: currencyId })?.label;
+
+    return land.paymentToken.symbol === symbolFromCurrencyValue;
   });
 };
