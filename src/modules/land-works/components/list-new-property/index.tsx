@@ -379,15 +379,15 @@ const ListNewProperty: React.FC = () => {
   const evaluateInput = () => {
     let isListDisabled = true;
     if (!minPeriod && isMinPeriodSelected) {
-      setMinError('Min Rent Period must be set');
+      setMinError('Min period must be set');
     } else if (minPeriod?.gt(maxPeriod)) {
-      setMinError('Min Rent Period exceeds Max Rent Period');
+      setMinError('Min period should be equal or smaller than Max period');
     } else if (!maxPeriod && isMaxPeriodSelected) {
-      setMaxError('Max Rent Period must be set');
+      setMaxError('Max period must be set');
     } else if (maxPeriod?.gt(maxFutureTime)) {
-      setMaxError('Max Rent Period exceeds Max Rent Queue');
+      setMaxError('Max period should be equal or smaller than Max rent queue');
     } else if (!maxFutureTime) {
-      setMaxFutureError('Max Rent Queue must be set');
+      setMaxFutureError('Max rent queue must be set');
     } else if (pricePerSecond.eq(ZERO_BIG_NUMBER)) {
       setPriceError('Price cannot be zero');
     } else if (pricePerSecond.toFixed(0) === '0') {
