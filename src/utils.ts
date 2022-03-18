@@ -361,8 +361,6 @@ export function getTimeTypeStr(values: ParsedDate): string {
   return `${timeValue} ${timeType}`;
 }
 
-//eslint-disable-next-line
-//@ts-ignore
 export const sessionStorageHandler = (
   option: 'getItem' | 'setItem',
   key: string,
@@ -370,15 +368,17 @@ export const sessionStorageHandler = (
   value?: string | number | boolean
 ): any => {
   const filters = sessionStorage.getItem('filters');
-  if (!filters && option === 'getItem') return;
+  if (filters == null) {
+    if (option == 'getItem') {
+      return;
+    } else {
+      return sessionStorage.setItem(key, JSON.stringify({ [`${name}`]: value }));
+    }
+  }
 
   return option === 'getItem'
-    ? //eslint-disable-next-line
-      //@ts-ignore
-      JSON.parse(filters)[name]
-    : //eslint-disable-next-line
-      //@ts-ignore
-      sessionStorage.setItem(key, JSON.stringify({ ...JSON.parse(filters), [`${name}`]: value }));
+    ? JSON.parse(filters)[name]
+    : sessionStorage.setItem(key, JSON.stringify({ ...JSON.parse(filters), [`${name}`]: value }));
 };
 
 export function useDebounce(callback: (...args: any[]) => void, delay: number) {
