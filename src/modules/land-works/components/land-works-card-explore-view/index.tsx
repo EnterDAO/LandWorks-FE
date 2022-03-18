@@ -39,12 +39,16 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
   };
 
   return (
-    <div
+    <a
       className={`land-explore-card${isActive ? ' active' : ''}`}
-      onClick={(e) => !!onClick && onClick(e, land)}
+      onClick={(e) => {
+        e.preventDefault();
+        !!onClick && onClick(e, land);
+      }}
       onMouseOver={(e) => onMouseOverHandler(e, land)}
       onMouseOut={() => onMouseOutHandler()}
       id={`land-explore-card--${did}`}
+      href={`/property/${land.id}`}
     >
       <div className="land-explore-image">
         <img className="land-explore-image-img" src={getLandImageUrl(land)} alt="land-explore-image-img" />
@@ -100,7 +104,7 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
       <div className="land-explore-row start">
         <div className="land-explore-hashtags">{land.decentralandData?.isLAND ? '#LAND' : '#ESTATE'} #DECENTRALAND</div>
       </div>
-    </div>
+    </a>
   );
 };
 
