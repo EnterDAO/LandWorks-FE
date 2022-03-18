@@ -52,7 +52,7 @@ const SingleLandView: React.FC = () => {
   const [isUpdateOperatorDisabled, setIsUpdateOperatorDisabled] = useState(false);
   const [page, setPage] = useState(1);
 
-  const [showEditModal, setShowEditModal] = useState(true);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
