@@ -18,12 +18,12 @@ const LandsMyPropertiesSubheader: FC<Props> = ({ propertiesCount = 0, onChangeCu
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
   const [selectedMetaverse] = useState(1);
   const [selectedCurrency, setSelectedCurrency] = useState(
-    sessionStorageHandler('my-properties-filters', 'currency') || 0
+    sessionStorageHandler('get', 'my-properties-filters', 'currency') || 0
   );
 
   const onChangeCurrencyHandler = (value: number) => {
     setSelectedCurrency(value);
-    sessionStorageHandler('my-properties-filters', 'currency', value);
+    sessionStorageHandler('set', 'my-properties-filters', 'currency', value);
     onChangeCurrencyCallback && onChangeCurrencyCallback(value);
   };
 

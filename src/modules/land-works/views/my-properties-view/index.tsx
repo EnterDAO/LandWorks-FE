@@ -37,7 +37,7 @@ const MyPropertiesView: FC = () => {
   const [totalRents, setTotalRents] = useState(0);
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [slicedLands, setSlicedLands] = useState(pageSize);
-  const [currencyId, setCurrencyId] = useState(sessionStorageHandler('my-properties-filters', 'currency') || 0);
+  const [currencyId, setCurrencyId] = useState(sessionStorageHandler('get', 'my-properties-filters', 'currency') || 0);
 
   const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
