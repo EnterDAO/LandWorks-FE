@@ -374,6 +374,7 @@ export type RentEntity = {
   renter: IdEntity;
   renterAddress: string;
   price: string;
+  asset?: AssetEntity;
 };
 
 export type UserEntity = {
@@ -995,6 +996,97 @@ export function fetchListedAssetsByMetaverseAndGetLastRentEndWithOrder(
     });
 }
 
+export function fetchUserAssetsByRents(address: string): Promise<PaginatedResult<AssetEntity>> {
+  return GraphClient.get({
+    query: gql`
+      query GetUserRents($id: String, $now: BigInt) {
+        rents(orderBy: end, orderDirection: asc, where: { renter: $id }) {
+          id
+          operator
+          start
+          end
+          timestamp
+          asset {
+            id
+            metaverseAssetId
+            minPeriod
+            maxPeriod
+            maxFutureTime
+            unclaimedRentFee
+            pricePerSecond
+            lastRentEnd
+            status
+            paymentToken {
+              id
+              name
+              symbol
+              decimals
+            }
+            decentralandData {
+              metadata
+              isLAND
+              coordinates {
+                id
+                x
+                y
+              }
+            }
+          }
+        }
+      }
+    `,
+    variables: {
+      id: address.toLowerCase(),
+    },
+  })
+    .then(async (response) => {
+      // Filter out rents for the same asset
+      if (!response?.data?.rents) {
+        return {
+          data: [],
+          meta: { count: 0 },
+        };
+      }
+      const groupedRents = response.data.rents.reduce(
+        (entryMap: Map<string, any[]>, e: any) => entryMap.set(e.asset.id, [...(entryMap.get(e.asset.id) || []), e]),
+        new Map()
+      );
+      const now = getNowTs();
+      const filteredRents = [] as RentEntity[];
+      // TODO: optimise search for target rent
+      for (const [, rents] of groupedRents) {
+        if (rents.length == 1) {
+          filteredRents.push(rents[0]);
+        } else {
+          let rent = rents.find((r: RentEntity) => Number(r.start) <= now && now < Number(r.end));
+          if (!rent) {
+            rent = rents.find((r: RentEntity) => now < Number(r.start));
+          }
+          if (!rent) {
+            rent = rents[rents.length - 1];
+          }
+          filteredRents.push(rent!);
+        }
+      }
+
+      const assets = filteredRents
+        .sort((a, b) => Number(b.end) - Number(a.end))
+        // .slice(limit * (page - 1), limit * page)
+        .map((r) => r.asset);
+      return {
+        data: parseAssets(assets),
+        meta: { count: filteredRents.length },
+      };
+    })
+    .catch((e) => {
+      console.log(e);
+      return {
+        data: [],
+        meta: { count: 0 },
+      };
+    });
+}
+
 /**
  * Gets Listed Assets by metaverse id, and lt (less than) than the last rent end (if provided)
  * excluding those with status WITHDRAWN,
@@ -1027,7 +1119,7 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
         assets(
           where: { metaverse: $metaverse, ${
             lastRentEnd != '0' ? 'lastRentEnd_lt: $lastRentEnd' : ''
-          }, status_not: $statusNot, paymentToken: $paymentTokenId  }
+          }, status_not: $statusNot, ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
           orderBy: $orderColumn
           orderDirection: $orderDirection
         ) {
@@ -1050,7 +1142,7 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
                   id
                 }
               }
-            } 
+            }
             metadata
             isLAND
             coordinates {
