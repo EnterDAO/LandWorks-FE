@@ -139,7 +139,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
               </Button>
             </StyledGrid>
           )}
-          {transactionStatus === 'loading' && <ModalLoader href={getEtherscanAddressUrl(wallet.account)!} />}
+          {transactionStatus === 'loading' && <ModalLoader href={getEtherscanAddressUrl(wallet.account) || ''} />}
           {transactionStatus === 'success' && (
             <ModalSuccess
               buttonText="close"

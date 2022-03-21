@@ -100,7 +100,7 @@
     .nearby-heading {
       font-weight: 700;
       font-size: 30px;
-      color: var(--theme-light-color);
+      color: var(--theme-grey100-color);
       margin-right: 18px;
 
       .nearby-description {
@@ -137,7 +137,7 @@
     margin: 5px;
 
     &:disabled {
-      color: var(--theme-grey200-color);
+      color: var(--theme-grey700-color);
       background: var(--theme-separator-color);
     }
   }

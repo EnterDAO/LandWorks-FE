@@ -88,7 +88,7 @@
   }
 
   .land-owner-address {
-    color: #B9B9D3;
+    color: var(--theme-subtle-color);
     font-size: 12px;
     font-weight: 400;
   }
@@ -161,7 +161,7 @@
   }
 
   .available-period {
-    color: #F8F8FF;
+    color: var(--theme-grey100-color);
     font-size: 12px;
     font-weight: 600;
   }
