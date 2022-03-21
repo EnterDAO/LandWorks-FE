@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
 import { Col, Row } from 'antd';
@@ -26,12 +26,18 @@ import { getNowTs } from '../../../../utils';
 
 import './index.scss';
 
+interface LocationState {
+  from: string;
+  title: string;
+}
+
 const SingleLandView: React.FC = () => {
   const wallet = useWallet();
 
   const { landWorksContract } = useLandworks();
 
   const history = useHistory();
+  const location = useLocation<LocationState>();
   const { tokenId } = useParams<{ tokenId: string }>();
   const [asset, setAsset] = useState({} as AssetEntity);
 
@@ -244,17 +250,17 @@ const SingleLandView: React.FC = () => {
       <Row gutter={40} className="head-nav">
         <div className="left-wrapper">
           <div className="head-breadcrumbs">
-            <Link className="button-back" to="/explore">
+            <Link className="button-back" to={location.state?.from || '/explore'}>
               <div className="button-icon">
                 <Icon iconSize={'m'} iconElement={<BackIcon />} />
               </div>
-              <span>Back to Explore</span>
+              <span>Back to {location.state?.title || 'Explore'}</span>
             </Link>
 
             <p className="separator" />
 
-            <Link className="button-explore" to="/explore">
-              Explore
+            <Link className="button-explore" to={location.state?.from || '/explore'}>
+              {location.state?.title || 'Explore'}
             </Link>
 
             <Icon iconSize={'m'} iconElement={<ArrowRightIcon />} />

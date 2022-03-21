@@ -149,7 +149,12 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6} xxl={4} key={land.id}>
               <LandWorkCard
                 onMouseOver={onMouseOverCardHandler}
-                onClick={() => history.push(`/property/${land.id}`)}
+                onClick={() =>
+                  history.push({
+                    pathname: `/property/${land.id}`,
+                    state: { from: window.location.pathname, title: 'Explore' },
+                  })
+                }
                 land={land}
               />
             </Grid>

@@ -157,7 +157,15 @@ const MyPropertiesView: FC = () => {
             ) : filteredLands.length ? (
               filteredLands.slice(0, slicedLands).map((land) => (
                 <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={land.id}>
-                  <LandWorkCard land={land} onClick={() => history.push(`/property/${land.id}`)} />
+                  <LandWorkCard
+                    land={land}
+                    onClick={() =>
+                      history.push({
+                        pathname: `/property/${land.id}`,
+                        state: { from: window.location.pathname, title: 'My properties' },
+                      })
+                    }
+                  />
                 </Grid>
               ))
             ) : (
