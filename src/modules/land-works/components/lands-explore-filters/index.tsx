@@ -1,5 +1,5 @@
-import { FC, useState } from 'react';
-import { metaverseOptions, tokenOptions } from 'constants/modules';
+import { FC, useEffect, useState } from 'react';
+import { metaverseOptions } from 'constants/modules';
 
 import { Box, ControlledSelect, StyledSwitch, Typography } from 'design-system';
 import { useWallet } from 'wallets/wallet';
@@ -24,22 +24,19 @@ const LandWorksFilters: FC<Props> = ({
   onChangeCurrency,
 }) => {
   const wallet = useWallet();
-  const [selectedOrder, setSelectedOrder] = useState(sessionStorageHandler('getItem', 'filters', 'order') || 1);
+  const [selectedOrder, setSelectedOrder] = useState(sessionStorageHandler('explore-filters', 'order') || 1);
   const [selectedMetaverse, setSelectedMetaverse] = useState(
-    sessionStorageHandler('getItem', 'filters', 'metaverse') || 1
+    sessionStorageHandler('explore-filters', 'metaverse') || 1
   );
-  const [selectedCurrency, setSelectedCurrency] = useState(
-    sessionStorageHandler('getItem', 'filters', 'currency') || 1
-  );
-  const [showOnlyOwner, setShowOnlyOwner] = useState(sessionStorageHandler('getItem', 'filters', 'owner') || false);
+  const [selectedCurrency, setSelectedCurrency] = useState(sessionStorageHandler('explore-filters', 'currency') || 0);
+  const [showOnlyOwner, setShowOnlyOwner] = useState(sessionStorageHandler('explore-filters', 'owner') || false);
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(
-    sessionStorageHandler('getItem', 'filters', 'available') || false
+    sessionStorageHandler('explore-filters', 'available') || false
   );
-  const [, setCurrency] = useState(tokenOptions[0]);
   const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
 
   const onChangePlaceHandler = (value: number) => {
-    sessionStorageHandler('setItem', 'filters', 'metaverse', value);
+    sessionStorageHandler('explore-filters', 'metaverse', value);
     setMetaverse(metaverse);
     setSelectedMetaverse(value);
     // TODO:: some filtering here
@@ -48,7 +45,7 @@ const LandWorksFilters: FC<Props> = ({
   const onChangeSortDirectionHandler = (value: number) => {
     setSelectedOrder(value);
     onChangeSortDirection(value);
-    sessionStorageHandler('setItem', 'filters', 'order', value);
+    sessionStorageHandler('explore-filters', 'order', value);
   };
 
   const onChangeOwnerTogglerHandler = () => {
@@ -58,22 +55,24 @@ const LandWorksFilters: FC<Props> = ({
     onChangeOwnerToggler(showOnlyOwnerLast);
 
     setShowOnlyAvailable(false);
-    sessionStorageHandler('setItem', 'filters', 'owner', showOnlyOwnerLast);
+    sessionStorageHandler('explore-filters', 'owner', showOnlyOwnerLast);
   };
 
   const onChangeAvailableHandler = () => {
     setShowOnlyAvailable(!showOnlyAvailable);
     onChangeAvailable(!showOnlyAvailable);
-    sessionStorageHandler('setItem', 'filters', 'available', !showOnlyAvailable);
+    sessionStorageHandler('explore-filters', 'available', !showOnlyAvailable);
   };
 
   const onChangeCurrencyHandler = (value: number) => {
-    const sortIndex = Number(value) - 1;
     setSelectedCurrency(value);
-    setCurrency(tokenOptions[sortIndex]);
     onChangeCurrency(value);
-    sessionStorageHandler('setItem', 'filters', 'currency', value);
+    sessionStorageHandler('explore-filters', 'currency', value);
   };
+
+  useEffect(() => {
+    setTimeout(() => onChangeCurrency(selectedCurrency), 0);
+  }, []);
 
   return (
     <div className={styles.root}>
@@ -81,6 +80,7 @@ const LandWorksFilters: FC<Props> = ({
         <Box className={styles.box}>
           <Box className={styles.box} style={{ marginRight: '20px' }}>
             <ControlledSelect
+              disabled
               width={'12rem'}
               value={selectedMetaverse}
               onChange={onChangePlaceHandler}
@@ -89,7 +89,7 @@ const LandWorksFilters: FC<Props> = ({
           </Box>
           <Box className={styles.box}>
             <ControlledSelect
-              width={'6rem'}
+              width={'7rem'}
               value={selectedCurrency}
               onChange={onChangeCurrencyHandler}
               options={currencyData}
