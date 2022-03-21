@@ -24,19 +24,21 @@ const LandWorksFilters: FC<Props> = ({
   onChangeCurrency,
 }) => {
   const wallet = useWallet();
-  const [selectedOrder, setSelectedOrder] = useState(sessionStorageHandler('explore-filters', 'order') || 1);
+  const [selectedOrder, setSelectedOrder] = useState(sessionStorageHandler('get', 'explore-filters', 'order') || 1);
   const [selectedMetaverse, setSelectedMetaverse] = useState(
-    sessionStorageHandler('explore-filters', 'metaverse') || 1
+    sessionStorageHandler('get', 'explore-filters', 'metaverse') || 1
   );
-  const [selectedCurrency, setSelectedCurrency] = useState(sessionStorageHandler('explore-filters', 'currency') || 0);
-  const [showOnlyOwner, setShowOnlyOwner] = useState(sessionStorageHandler('explore-filters', 'owner') || false);
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    sessionStorageHandler('get', 'explore-filters', 'currency') || 0
+  );
+  const [showOnlyOwner, setShowOnlyOwner] = useState(sessionStorageHandler('get', 'explore-filters', 'owner') || false);
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(
-    sessionStorageHandler('explore-filters', 'available') || false
+    sessionStorageHandler('get', 'explore-filters', 'available') || false
   );
   const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
 
   const onChangePlaceHandler = (value: number) => {
-    sessionStorageHandler('explore-filters', 'metaverse', value);
+    sessionStorageHandler('set', 'explore-filters', 'metaverse', value);
     setMetaverse(metaverse);
     setSelectedMetaverse(value);
     // TODO:: some filtering here
@@ -45,29 +47,30 @@ const LandWorksFilters: FC<Props> = ({
   const onChangeSortDirectionHandler = (value: number) => {
     setSelectedOrder(value);
     onChangeSortDirection(value);
-    sessionStorageHandler('explore-filters', 'order', value);
+    sessionStorageHandler('set', 'explore-filters', 'order', value);
   };
 
   const onChangeOwnerTogglerHandler = () => {
     const showOnlyOwnerLast = !showOnlyOwner;
 
+    sessionStorageHandler('set', 'explore-filters', 'owner', showOnlyOwnerLast);
     setShowOnlyOwner(showOnlyOwnerLast);
     onChangeOwnerToggler(showOnlyOwnerLast);
 
     setShowOnlyAvailable(false);
-    sessionStorageHandler('explore-filters', 'owner', showOnlyOwnerLast);
+    sessionStorageHandler('set', 'explore-filters', 'available', false);
   };
 
   const onChangeAvailableHandler = () => {
     setShowOnlyAvailable(!showOnlyAvailable);
     onChangeAvailable(!showOnlyAvailable);
-    sessionStorageHandler('explore-filters', 'available', !showOnlyAvailable);
+    sessionStorageHandler('set', 'explore-filters', 'available', !showOnlyAvailable);
   };
 
   const onChangeCurrencyHandler = (value: number) => {
     setSelectedCurrency(value);
     onChangeCurrency(value);
-    sessionStorageHandler('explore-filters', 'currency', value);
+    sessionStorageHandler('set', 'explore-filters', 'currency', value);
   };
 
   useEffect(() => {
