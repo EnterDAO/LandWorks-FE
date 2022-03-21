@@ -36,7 +36,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
   const [disabled, setDisabled] = useState<boolean>(true);
   const [newOperator, setNewOperator] = useState<string>('');
   const [transactionStatus, setTransactionStatus] = useState<transactionStatus>('pending');
-  const [canEditOperator, setCanEditOperator] = useState(true);
+  const [canEditOperator, setCanEditOperator] = useState(false);
 
   const shortedOperator = shortenAddr(newOperator || operator);
 
