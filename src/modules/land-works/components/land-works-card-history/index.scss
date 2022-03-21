@@ -3,7 +3,7 @@
 
 .single-land-history-container {
   .history-heading {
-    color: #f8f8ff;
+    color: var(--theme-grey100-color);
     display: inline-block;
     font-weight: bold;
     font-size: 25px;
@@ -216,7 +216,7 @@
   padding-left: 0px;
   span {
     margin-left: 5px;
-    color: #b9b9d3;
+    color: var(--theme-subtle-color);
     padding: 0 5px;
     border-radius: 5px;
     background-color: #272739;
@@ -231,7 +231,7 @@
   margin-left: 10px;
   
   .you {
-    color: #B9B9D3;
+    color: var(--theme-subtle-color);
     border: 1px solid #27273A;
     padding: 0 5px;
     border-radius: 5px;
@@ -258,6 +258,6 @@
   border: 1px solid #69ca7b;
 }
 .passed {
-  color: #b9b9d3;
-  border: 1px solid #b9b9d3;
+  color: var(--theme-subtle-color);
+  border: 1px solid var(--theme-subtle-color);
 }

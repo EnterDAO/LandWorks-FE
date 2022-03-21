@@ -1,7 +1,7 @@
 @import '../../../../styles/variables.scss';
 @import '../../../../styles/text.scss';
 
-.wrapper.lands-search {
+.wrapper-lands-search {
   position: relative;
   background: var(--theme-modal-color);
   border: none;
@@ -14,8 +14,6 @@
   color: white;
   font-size: 14px;
   width: 100%;
-  margin-bottom: 1rem;
-  height: 60px;
 
   .search-label-icon {
     opacity: 0.5;

@@ -7,6 +7,7 @@ import {
   sortDirections,
 } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
+import { isNull } from 'lodash';
 
 import { AtlasTile } from 'components/custom/Atlas/Atlas';
 import { Modal } from 'design-system';
@@ -41,10 +42,11 @@ const ExploreView: React.FC = () => {
   const wallet = useWallet();
 
   const sessionFilters = {
-    available: sessionStorageHandler('getItem', 'filters', 'available'),
-    currency: sessionStorageHandler('getItem', 'filters', 'currency'),
-    order: sessionStorageHandler('getItem', 'filters', 'order'),
-    owner: sessionStorageHandler('getItem', 'filters', 'owner'),
+    available: sessionStorageHandler('get', 'explore-filters', 'available'),
+    currency: sessionStorageHandler('get', 'explore-filters', 'currency'),
+    order: sessionStorageHandler('get', 'explore-filters', 'order'),
+    owner: sessionStorageHandler('get', 'explore-filters', 'owner'),
+    lastRentEnd: sessionStorageHandler('get', 'explore-filters', 'lasrRentEnd'),
   };
 
   const [user, setUser] = useState({} as UserEntity);
@@ -67,17 +69,20 @@ const ExploreView: React.FC = () => {
   const [atlasMapY, setAtlasMapY] = useState(0);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showCardPreview, setShowCardPreview] = useState(false);
 
-  const [lastRentEnd, setLastRentEnd] = useState(
-    sessionFilters.available ? getNowTs().toString() : DEFAULT_LAST_RENT_END
-  );
+  const [lastRentEnd, setLastRentEnd] = useState(sessionFilters.lastRentEnd || DEFAULT_LAST_RENT_END);
 
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
-  const [paymentToken, setPaymentToken] = useState(DEFAULT_TOKEN_ADDRESS);
+  const [paymentToken, setPaymentToken] = useState<string | null>(null);
 
   const [showListNewModal, setShowListNewModal] = useState(false);
+
+  const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
+    skip: wallet.account === undefined,
+    variables: { id: wallet.account?.toLowerCase() },
+  });
 
   const setClickedLandId = (x: number | string, y: number | string) => {
     let landId = `${x},${y}`;
@@ -113,17 +118,31 @@ const ExploreView: React.FC = () => {
     if (value) {
       setLands(user?.ownerAndConsumerAssets || []);
     } else {
-      getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
+      if (!isNull(paymentToken)) {
+        getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
+      }
     }
   };
 
   const onChangeFiltersAvailable = (value: boolean) => {
-    setLastRentEnd(value ? getNowTs().toString() : DEFAULT_LAST_RENT_END);
+    const newValue = value ? getNowTs().toString() : DEFAULT_LAST_RENT_END;
+    setLastRentEnd(newValue);
+    sessionStorageHandler('set', 'explore-filters', 'lastRentEnd', newValue);
   };
 
-  const onChangeFiltersCurrency = (value: number) => {
-    const sortIndex = Number(value) - 1;
-    setPaymentToken(paymentTokens[sortIndex].id);
+  const onChangeFiltersCurrency = async (index: number) => {
+    let tokens: PaymentToken[] = paymentTokens;
+
+    if (index === 0) {
+      return setPaymentToken(DEFAULT_TOKEN_ADDRESS);
+    }
+
+    if (!paymentTokens.length) {
+      tokens = await fetchTokenPayments();
+      setPaymentTokens(tokens);
+    }
+
+    setPaymentToken(tokens[index - 1].id);
   };
 
   const getPaymentTokens = async () => {
@@ -146,8 +165,8 @@ const ExploreView: React.FC = () => {
       );
 
       setLands(lands.data);
-      sessionStorageHandler('getItem', 'filters', 'owner') &&
-        onChangeFiltersOwnerToggler(sessionStorageHandler('getItem', 'filters', 'owner'));
+      sessionStorageHandler('get', 'explore-filters', 'owner') &&
+        onChangeFiltersOwnerToggler(sessionStorageHandler('get', 'explore-filters', 'owner'));
       setLoading(false);
       const highlights = getAllLandsCoordinates(lands.data);
       setCoordinatesHighlights(highlights);
@@ -156,24 +175,13 @@ const ExploreView: React.FC = () => {
     500
   );
 
-  useSubscription(USER_SUBSCRIPTION, {
-    skip: wallet.account === undefined,
-    variables: { id: wallet.account?.toLowerCase() },
-    onSubscriptionData: ({ subscriptionData }) => {
-      if (subscriptionData.error) {
-        // TODO:
-      }
-
-      // setLoading(subscriptionData.loading);
-
-      if (subscriptionData.data.user === null) {
-        setUser({} as UserEntity);
-        return;
-      }
-
-      setUser(parseUser(subscriptionData.data.user));
-    },
-  });
+  const updateUser = async () => {
+    if (userData && userData.user) {
+      setUser(parseUser(userData.user));
+    } else {
+      setUser({} as UserEntity);
+    }
+  };
 
   useEffect(() => {
     if (wallet.account) {
@@ -185,10 +193,26 @@ const ExploreView: React.FC = () => {
   }, [wallet.account]);
 
   useEffect(() => {
-    getPaymentTokens().then((token) => {
-      getLands(sortColumn, sortDir, lastRentEnd, token);
-    });
+    if (!isNull(paymentToken) && !sessionStorageHandler('get', 'explore-filters', 'owner')) {
+      getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
+    }
   }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
+
+  useEffect(() => {
+    updateUser();
+  }, [userData]);
+
+  useEffect(() => {
+    onChangeFiltersOwnerToggler(sessionStorageHandler('get', 'explore-filters', 'owner') || false);
+  }, [user]);
+
+  useEffect(() => {
+    getPaymentTokens();
+  }, []);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [lands]);
 
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
@@ -219,7 +243,12 @@ const ExploreView: React.FC = () => {
 
           <div className="content-container content-container--explore-view">
             <div className="list-lands-container">
-              <LandsExploreList loading={loading} lands={lands} setPointMapCentre={setPointMapCentre} />
+              <LandsExploreList
+                lastRentEnd={lastRentEnd}
+                loading={loading}
+                lands={lands}
+                setPointMapCentre={setPointMapCentre}
+              />
               <LayoutFooter isWrapped={false} />
             </div>
 

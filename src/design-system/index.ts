@@ -1,4 +1,13 @@
-import { Box, FormControl, FormControlLabel, FormGroup, RadioGroup, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  Pagination,
+  RadioGroup,
+  Stack,
+  Typography,
+} from '@mui/material';
 
 import BackgroundContainer from './BackgroundContainer/BackgroundContainer';
 import BoxWithCopyText from './BoxWithCopyText/BoxWithCopyText';
@@ -36,24 +45,27 @@ import Tooltip from './Tooltip/Tooltip';
 import TransactionCard from './TransactionCard/TransactionCard';
 
 export {
+  Box,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  Pagination,
+  RadioGroup,
+  Stack,
   Typography,
   Button,
-  FormControl,
   InputLabel,
   FormHelperText,
   Input,
-  Box,
-  Stack,
   Modal,
-  Grid,
   Textarea,
-  RadioGroup,
   RadioButton,
   Checkbox,
-  FormControlLabel,
   BoxWithCopyText,
   Icon,
   Tooltip,
+  Dropdown,
   DropdownMenu,
   DropdownItem,
   SearchInput,
@@ -66,8 +78,6 @@ export {
   Tab,
   TabPanel,
   ToggleButton,
-  FormGroup,
-  Dropdown,
   HeroCarousel,
   StatusBadge,
   Tag,
