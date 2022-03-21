@@ -5,6 +5,7 @@ import { Col, Pagination, Row } from 'antd';
 
 import { Rent, fetchUserRentPerAsset } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
+import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
 import LandRentingCard from 'modules/land-works/components/land-renting-card';
 import LandsRentingSorter from 'modules/land-works/components/land-renting-sorter';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
@@ -135,6 +136,7 @@ const MyRentingView: React.FC = () => {
           </Col>
         )}
       </Row>
+      <MyPropetiesHistoryTable />
     </div>
   );
 };
