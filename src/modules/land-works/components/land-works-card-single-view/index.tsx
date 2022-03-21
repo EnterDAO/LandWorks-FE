@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import config from 'config';
 import { getENSName, getLandImageUrl, getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
@@ -153,14 +154,20 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     return <p className="remaining-time">{placeholder}</p>;
   };
 
+  const isAssetStaked = () => {
+    return asset?.owner?.id == config.contracts.yf.staking;
+  };
+  const ownerOrConsumer = isAssetStaked() ? asset?.consumer?.id : asset?.owner?.id;
+
   const [ens, setEns] = useState<string>();
   const [ensOperator, setEnsOperator] = useState<string>();
 
   useEffect(() => {
-    if (asset?.owner?.id)
-      getENSName(asset?.owner?.id).then((ensName) => {
+    if (ownerOrConsumer) {
+      getENSName(ownerOrConsumer).then((ensName) => {
         setEns(ensName);
       });
+    }
     if (asset?.operator)
       getENSName(asset?.operator).then((ensName) => {
         setEnsOperator(ensName);
@@ -211,11 +218,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
           <Grid item xs={24} className="properties-row">
             <Grid container>
               <Grid item xs={4} className="land-owner">
-                Owned by{' '}
+                Owned by
               </Grid>
               <Grid item>
-                <ExternalLink href={getEtherscanAddressUrl(asset?.owner?.id)} className="land-owner-address">
-                  {ens && ens !== asset?.owner?.id ? ens : shortenAddr(asset?.owner?.id.toLowerCase(), 25, 4)}
+                <ExternalLink href={getEtherscanAddressUrl(ownerOrConsumer)} className="land-owner-address">
+                  {ens && ens !== ownerOrConsumer ? ens : shortenAddr(ownerOrConsumer, 25, 4)}
                 </ExternalLink>
               </Grid>
             </Grid>

@@ -202,6 +202,8 @@ const SingleLandView: React.FC = () => {
     updateAdjacentLands();
   }, [asset]);
 
+  const withDrawOrDelist = () => (isDirectWithdraw() ? 'withdraw' : 'delist');
+
   return (
     <div className="content-container single-card-section">
       <WarningModal
@@ -223,17 +225,17 @@ const SingleLandView: React.FC = () => {
       <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
         <Grid container width="410px" direction="column">
           <Typography fontSize={25} variant="h2">
-            Do you want to delist?
+            Do you want to {withDrawOrDelist()}?
           </Typography>
           <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 40px 0' }} variant="subtitle1">
-            Are you sure you want to delist this property? This action cannot be reversed.
+            Are you sure you want to {withDrawOrDelist()} this property? This action cannot be reversed.
           </Typography>
           <Grid container direction="row" justifyContent="space-between">
             <Button variant="secondary" btnSize="medium" onClick={() => setOpenDelistPrompt(false)}>
               No, go back
             </Button>
             <Button variant="gradient" btnSize="medium" onClick={handleDelistButton}>
-              Yes, delist
+              Yes, {withDrawOrDelist()}
             </Button>
           </Grid>
         </Grid>
