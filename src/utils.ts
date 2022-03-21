@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js';
 import add from 'date-fns/add';
 import formatDuration from 'date-fns/formatDuration';
 import intervalToDuration from 'date-fns/intervalToDuration';
+import { isUndefined } from 'lodash';
 import { isAddress } from 'web3-utils';
 import { DEFAULT_ADDRESS } from 'web3/utils';
 
@@ -360,16 +361,15 @@ export function getTimeTypeStr(values: ParsedDate): string {
   return `${timeValue} ${timeType}`;
 }
 
-export const sessionStorageHandler = (
-  option: 'getItem' | 'setItem',
-  key: string,
-  name: string,
-  value?: string | number | boolean
-): any => {
-  const filters = sessionStorage.getItem('filters');
-  if (!filters && option === 'getItem') return;
+export const sessionStorageHandler = (key: string, name: string, value?: string | number | boolean): any => {
+  let filters = sessionStorage.getItem(key);
+  const option = isUndefined(value) ? 'getItem' : 'setItem';
 
-  if (!filters) return;
+  if (!filters) {
+    sessionStorage.setItem(key, JSON.stringify({}));
+    filters = JSON.stringify({});
+  }
+
   return option === 'getItem'
     ? JSON.parse(filters)[name]
     : sessionStorage.setItem(key, JSON.stringify({ ...JSON.parse(filters), [`${name}`]: value }));
