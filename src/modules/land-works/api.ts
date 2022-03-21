@@ -853,6 +853,48 @@ export function fetchUserRentPerAsset(address: string, availableOnly = false, pa
     });
 }
 
+export function fetchUserRents(address: string, availableOnly = false, page = 1, limit = 6): Promise<any> {
+  const now = getNowTs();
+  return GraphClient.get({
+    query: gql`
+      query GetUserRents($id: String, $now: BigInt) {
+        rents(orderBy: end, orderDirection: desc, where: {renter: $id, ${
+          availableOnly ? 'start_lte: $now, end_gt: $now' : ''
+        }}) {
+          id
+          operator
+          start
+          end
+          timestamp
+          txHash
+          fee
+          paymentToken {
+              id
+              name
+              symbol
+              decimals
+            }
+          renter {
+            id
+          }
+        }
+      }
+    `,
+    variables: {
+      id: address.toLowerCase(),
+      now: now,
+    },
+  })
+    .then(async (response) => {
+      // Filter out rents for the same asset
+      return response.data;
+    })
+    .catch((e) => {
+      console.log(e);
+      return {} as UserEntity;
+    });
+}
+
 export function fetchAssetRentByTimestamp(assetId: string, timestamp: number): Promise<RentEntity> {
   return GraphClient.get({
     query: gql`
