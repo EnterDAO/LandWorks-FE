@@ -23,7 +23,7 @@ import { ModalLoader } from '../lands-modal-loading';
 import { ModalSuccess } from '../lands-modal-success';
 import { RentDatePicker } from '../lands-rent-date-picker';
 
-import { getTimeType, isValidAddress, secondsToDuration } from 'utils';
+import { isValidAddress } from 'utils';
 
 import './index.scss';
 

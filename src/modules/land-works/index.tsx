@@ -11,6 +11,7 @@ const RentingView = lazy(() => import('./views/my-renting-view'));
 const LendingView = lazy(() => import('./views/my-lending-view'));
 const LandsView = lazy(() => import('./views/lands-view'));
 const ExploreView = lazy(() => import('./views/explore-view'));
+const MyPropertiesView = lazy(() => import('./views/my-properties-view'));
 const SingleLand = lazy(() => import('./views/single-land-view'));
 const ListProperty = lazy(() => import('./views/list-property-view'));
 const EditProperty = lazy(() => import('./views/edit-property-view'));
@@ -42,6 +43,7 @@ const LandworksView: React.FC = () => {
       <Route path="/property/:tokenId" exact component={SingleLand} />
       <Route path="/all" exact component={LandsView} />
       <Route path="/explore" exact component={ExploreView} />
+      <Route path="/my-properties" exact component={MyPropertiesView} />
       <Route path="/lending" exact component={LendingView} />
       <Route path="/renting" exact component={RentingView} />
       <ProtectedRoute

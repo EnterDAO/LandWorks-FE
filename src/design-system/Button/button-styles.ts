@@ -55,6 +55,7 @@ export default styled('button')({
   border: 'none',
   borderRadius: '10px', // TODO: Move radiuses to constants
   color: THEME_COLORS.light,
+  verticalAlign: 'middle',
   cursor: 'pointer',
   '&.large': {
     width: '300px',
@@ -72,6 +73,13 @@ export default styled('button')({
     width: '100px',
     height: '34px',
     padding: '0 8px',
+  },
+  '&.fluid': {
+    width: '100%',
+  },
+  '&.auto': {
+    width: 'auto',
+    padding: '7px 13px',
   },
   '&.tertiary': {
     display: 'inline-flex',
