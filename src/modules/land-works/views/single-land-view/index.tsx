@@ -47,7 +47,7 @@ const SingleLandView: React.FC = () => {
   const [itemsOnPage] = useState(4);
 
   const [showRentModal, setShowRentModal] = useState(false);
-  const [showWarningModal, setShowWarningModal] = useState(true);
+  const [showWarningModal, setShowWarningModal] = useState(false);
   const [openDelistPrompt, setOpenDelistPrompt] = useState(false);
 
   const [rentButtonDisabled, setRentButtonDisabled] = useState(false);
