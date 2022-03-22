@@ -853,7 +853,7 @@ export function fetchUserRentPerAsset(address: string, availableOnly = false, pa
     });
 }
 
-export function fetchUserRents(address: string, availableOnly = false, page = 1, limit = 6): Promise<any> {
+export function fetchUserRents(address: string, availableOnly = false): Promise<any> {
   const now = getNowTs();
   return GraphClient.get({
     query: gql`

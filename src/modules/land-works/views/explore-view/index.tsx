@@ -7,6 +7,7 @@ import {
   sortDirections,
 } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
+import useDebounce from '@rooks/use-debounce';
 import { isNull } from 'lodash';
 
 import { AtlasTile } from 'components/custom/Atlas/Atlas';
@@ -34,7 +35,7 @@ import {
 } from '../../api';
 
 import { filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
-import { getNowTs, sessionStorageHandler, useDebounce } from 'utils';
+import { getNowTs, sessionStorageHandler } from 'utils';
 
 import './explore-view.scss';
 
@@ -46,7 +47,7 @@ const ExploreView: React.FC = () => {
     currency: sessionStorageHandler('get', 'explore-filters', 'currency'),
     order: sessionStorageHandler('get', 'explore-filters', 'order'),
     owner: sessionStorageHandler('get', 'explore-filters', 'owner'),
-    lastRentEnd: sessionStorageHandler('get', 'explore-filters', 'lasrRentEnd'),
+    lastRentEnd: sessionStorageHandler('get', 'explore-filters', 'lastRentEnd'),
   };
 
   const [user, setUser] = useState({} as UserEntity);

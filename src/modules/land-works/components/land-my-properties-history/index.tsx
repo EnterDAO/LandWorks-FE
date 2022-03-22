@@ -35,7 +35,7 @@ const MyPropetiesHistoryTable: React.FC = () => {
   const now = getNowTs();
 
   const fetchRents = async (account: string) => {
-    const rents = await fetchUserRents(account, false, 1, 8);
+    const rents = await fetchUserRents(account, false);
 
     setRents(rents.rents || []);
     setTotalRents(rents.rents.length);
