@@ -33,7 +33,6 @@
       height: 52px;
       font-weight: bold;
       width: 100%;
-
     }
 
     .property-button {
@@ -54,7 +53,7 @@
     justify-content: center;
     position: relative;
     margin-bottom: 20px;
-    
+
     @media all and (min-width: 769px) {
       margin-bottom: 0;
       margin-right: 40px;
@@ -69,7 +68,7 @@
     margin-right: 13px;
   }
 
- .label {
+  .label {
     background: var(--theme-card-color);
     padding: 2px 5px;
     border-radius: 5px;
@@ -82,8 +81,8 @@
     justify-content: flex-end;
     display: flex;
   }
-  
-  .card-hot-label{
+
+  .card-hot-label {
     background: var(--theme-primary-gradient);
     box-shadow: 0px 0px 20px var(--theme-primary-box-shadow);
     border-radius: 20px;
@@ -199,7 +198,7 @@
           font-size: 20px;
           color: var(--theme-primary-color);
           font-weight: bold;
-          margin: 0 10px 0 4px ;
+          margin: 0 10px 0 4px;
         }
       }
 
@@ -246,7 +245,7 @@
         color: rgba(93, 143, 240, 1);
         font-size: 14px;
         font-weight: 500;
-      }      
+      }
     }
   }
   .rented-on {
@@ -258,7 +257,7 @@
   .remaining-time {
     font-size: 30px !important;
     font-weight: bold !important;
-    color: var (--theme-accent-color) !important;
+    color: var(--theme-accent-color) !important;
     // background: -webkit-linear-gradient(rgba(221, 61, 203, 1), rgba(239, 156, 146, 1));
     // -webkit-background-clip: text;
     // -webkit-text-fill-color: transparent;
@@ -267,8 +266,8 @@
     margin-left: 62%;
     width: 253px;
     height: 91px;
-    background-color: var(--theme-grey100-color);
-  
+    background-color: var(--theme-grey900-color);
+
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
     display: flex;
@@ -313,7 +312,7 @@
     .info-warning-text {
       margin-left: 17px;
       h3 {
-        color: var(--theme-grey100-color);
+        color: var(--theme-grey900-color);
         font-size: 18px;
         font-weight: bold;
       }
@@ -324,7 +323,7 @@
       }
     }
     .update-operator-btn {
-      background: var(--theme-grey100-color);
+      background: var(--theme-grey900-color);
       border-radius: 10px;
       padding: 10px 15px;
       color: var(--theme-body-color);
@@ -403,7 +402,6 @@
     font-size: 13px;
     text-transform: uppercase;
     font-weight: 600;
-
   }
 
   .label {
@@ -432,8 +430,7 @@
   }
   .period-separator {
     font-size: 14px;
-        font-weight: 600;
-
+    font-weight: 600;
   }
 }
 
@@ -462,7 +459,7 @@
 .info-warning-text {
   margin-left: 17px;
   h3 {
-    color: #F8F8FF;
+    color: #f8f8ff;
     font-size: 18px;
     font-weight: bold;
   }
