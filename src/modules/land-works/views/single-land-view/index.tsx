@@ -18,7 +18,6 @@ import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
 import { RentModal } from '../../components/lands-rent-modal';
 import { LandsTooltip } from '../../components/lands-tooltip';
-import { WarningModal } from '../../components/lands-warning-modal';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 
