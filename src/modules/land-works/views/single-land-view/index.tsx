@@ -208,6 +208,10 @@ const SingleLandView: React.FC = () => {
     updateAdjacentLands();
   }, [asset]);
 
+  useEffect(() => {
+    setClaimButtonDisabled(!asset?.unclaimedRentFee?.gt(0));
+  }, [asset]);
+
   const withDrawOrDelist = () => (isDirectWithdraw() ? 'withdraw' : 'delist');
 
   return (
