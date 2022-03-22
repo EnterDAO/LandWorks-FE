@@ -66,8 +66,6 @@
   z-index: 0;
 }
 
-
-
 .land-info-row {
   .land-name {
     font-size: 14px;
@@ -161,7 +159,7 @@
   }
 
   .available-period {
-    color: var(--theme-grey100-color);
+    color: var(--theme-grey900-color);
     font-size: 12px;
     font-weight: 600;
   }
@@ -182,12 +180,12 @@
   width: 95%;
   z-index: 1;
   .card-hot-label {
-    background: linear-gradient(83.81deg, #AC2CCB -19.8%, #DD3DCB 22%, #EF9C92 100%);
+    background: linear-gradient(83.81deg, #ac2ccb -19.8%, #dd3dcb 22%, #ef9c92 100%);
     box-shadow: 0px 0px 20px rgba(221, 61, 203, 0.6);
   }
 }
 
-.card-hot-label{
+.card-hot-label {
   border-radius: 20px;
   font-weight: 700;
   left: -10px;
@@ -199,7 +197,6 @@
     width: 18px;
   }
 }
-
 
 .price-chart-container {
   row-gap: 0px;
@@ -218,13 +215,12 @@
     border-radius: 20px;
     background-color: #fff;
     margin-right: 7px;
-   
   }
   &-available-dot {
-    background-color: #6CD27E;
+    background-color: #6cd27e;
   }
   &-rented-dot {
-    background-color: #D7606E;
+    background-color: #d7606e;
   }
   &-delisted-dot {
     background-color: darkgray;
@@ -242,14 +238,13 @@
       flex-direction: row;
       align-items: center;
     }
-  
   }
-  
+
   &-available {
-    border: 1px solid #6CD27E !important;
+    border: 1px solid #6cd27e !important;
   }
   &-rented {
-    border: 1px solid #D7606E !important;
+    border: 1px solid #d7606e !important;
   }
   &-delisted {
     border: 1px solid darkgray !important;
@@ -261,7 +256,7 @@
   margin-top: 15px;
   p {
     font-size: 12px;
-    color: #68687B;
+    color: #68687b;
     margin-right: 8px;
     text-transform: uppercase;
   }
