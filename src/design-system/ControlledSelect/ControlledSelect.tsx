@@ -38,7 +38,7 @@ const StyledButton = styled('button')(
   background: ${THEME_COLORS.grey01};
   border: 1px solid ${THEME_COLORS.grey01};
   border-radius: 10px;
-  padding: 10px;
+  padding: 10px 12px;
   text-align: left;
   line-height: 1.5;
   width: 100%;
@@ -158,7 +158,7 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
       >
         {options.map((o) => (
           <StyledOption key={o.value} value={o.value}>
-            <span style={{ marginRight: '15px', width: '15px' }}>{o.icon}</span>
+            {o.icon && <span style={{ marginRight: '15px', width: '15px' }}>{o.icon}</span>}
             {o.label}
           </StyledOption>
         ))}
