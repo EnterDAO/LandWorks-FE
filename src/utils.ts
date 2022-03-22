@@ -1,8 +1,10 @@
+import { useCallback, useRef } from 'react';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import BigNumber from 'bignumber.js';
 import add from 'date-fns/add';
 import formatDuration from 'date-fns/formatDuration';
 import intervalToDuration from 'date-fns/intervalToDuration';
+import { isUndefined } from 'lodash';
 import { isAddress } from 'web3-utils';
 import { DEFAULT_ADDRESS } from 'web3/utils';
 
@@ -361,16 +363,39 @@ export function getTimeTypeStr(values: ParsedDate): string {
 }
 
 export const sessionStorageHandler = (
-  option: 'getItem' | 'setItem',
+  option: 'get' | 'set',
   key: string,
   name: string,
   value?: string | number | boolean
 ): any => {
-  const filters = sessionStorage.getItem('filters');
-  if (!filters && option === 'getItem') return;
+  const filters = sessionStorage.getItem(key);
+  if (filters == null) {
+    if (option == 'get') {
+      return;
+    } else {
+      return sessionStorage.setItem(key, JSON.stringify({ [`${name}`]: value }));
+    }
+  }
 
-  if (!filters) return;
-  return option === 'getItem'
+  return option === 'get'
     ? JSON.parse(filters)[name]
     : sessionStorage.setItem(key, JSON.stringify({ ...JSON.parse(filters), [`${name}`]: value }));
 };
+
+export function useDebounce(callback: (...args: any[]) => void, delay: number) {
+  const timer = useRef<any>();
+
+  const debouncedCallback = useCallback(
+    (...args) => {
+      if (timer.current) {
+        clearTimeout(timer.current);
+      }
+      timer.current = setTimeout(() => {
+        callback(...args);
+      }, delay);
+    },
+    [callback, delay]
+  );
+
+  return debouncedCallback;
+}

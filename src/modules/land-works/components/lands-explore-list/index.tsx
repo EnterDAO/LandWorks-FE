@@ -14,15 +14,18 @@ import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
 
-import { filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
+import { LandsSearchBarWrapperStyled } from './styled';
+
+import { filterLandsByAvailability, filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
 
 interface Props {
+  lastRentEnd: string;
   loading: boolean;
   lands: AssetEntity[];
   setPointMapCentre: (lands: CoordinatesLand[]) => void;
 }
 
-const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
+const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRentEnd }) => {
   const history = useHistory();
   const isGridPerTwo = useMediaQuery('(max-width: 1599px)');
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
@@ -117,7 +120,12 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
     setSlicedLands(isGridPerTwo ? DEFAULT_SLICED_PAGE : 6);
   }, []);
 
-  const filteredLands = filterLandsByQuery(lands, searchQuery);
+  let filteredLands = filterLandsByQuery(lands, searchQuery);
+
+  if (lastRentEnd !== '0') {
+    filteredLands = filterLandsByAvailability(filteredLands);
+  }
+
   const slicedLandsInTotal = filteredLands.slice(0, slicedLands).length;
 
   return (
@@ -125,7 +133,10 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
       onMouseMove={() => setBlockAutoScroll(true)}
       onMouseOut={() => setTimeout(() => setBlockAutoScroll(false), 350)}
     >
-      <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <LandsSearchBarWrapperStyled>
+        <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search by name" />
+      </LandsSearchBarWrapperStyled>
+
       <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
         {loading ? (
           [1, 2, 3, 4].map((i) => (
@@ -138,7 +149,12 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre }) => {
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6} xxl={4} key={land.id}>
               <LandWorkCard
                 onMouseOver={onMouseOverCardHandler}
-                onClick={() => history.push(`/property/${land.id}`)}
+                onClick={() =>
+                  history.push({
+                    pathname: `/property/${land.id}`,
+                    state: { from: window.location.pathname, title: 'Explore' },
+                  })
+                }
                 land={land}
               />
             </Grid>

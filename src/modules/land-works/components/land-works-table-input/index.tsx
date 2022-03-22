@@ -37,7 +37,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
   const [disabled, setDisabled] = useState<boolean>(true);
   const [newOperator, setNewOperator] = useState<string>('');
   const [transactionStatus, setTransactionStatus] = useState<transactionStatus>('pending');
-  const [canEditOperator, setCanEditOperator] = useState(false);
+  const [canEditOperator, setCanEditOperator] = useState(true);
 
   const shortedOperator = shortenAddr(newOperator || operator);
 
@@ -54,6 +54,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
               style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
             });
             setTransactionStatus('pending');
+            setNewOperator('');
             return;
           }
           setNewOperator(address);
@@ -66,6 +67,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
             style: { borderRadius: '10px', fontSize: '14px', padding: '20px' },
           });
           setTransactionStatus('pending');
+          setNewOperator('');
           return;
         }
 
@@ -91,9 +93,10 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
   };
 
   const handleCancel = () => {
-    setNewOperator(operator);
-    setTransactionStatus('pending');
     setDisabled(true);
+    if (transactionStatus === 'pending') {
+      setNewOperator(operator);
+    }
   };
 
   const successfully = () => {
@@ -116,7 +119,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
       {!canEditOperator ? (
         <></>
       ) : disabled ? (
-        <button className="edit-btn" onClick={() => setDisabled(false)}>
+        <button className="edit-btn" disabled={transactionStatus === 'loading'} onClick={() => setDisabled(false)}>
           <EditIcon />
         </button>
       ) : (
@@ -137,7 +140,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
               </Button>
             </StyledGrid>
           )}
-          {transactionStatus === 'loading' && <ModalLoader href={getEtherscanAddressUrl(wallet.account)!} />}
+          {transactionStatus === 'loading' && <ModalLoader href={getEtherscanAddressUrl(wallet.account) || ''} />}
           {transactionStatus === 'success' && (
             <ModalSuccess
               buttonText="close"

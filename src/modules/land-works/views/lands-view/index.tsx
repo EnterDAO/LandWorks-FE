@@ -240,8 +240,8 @@ const LandsView: React.FC = () => {
             <Col>
               <LandsPlaceSorter onPlaceChange={onPlaceChange} />
             </Col>
-            <Col>
-              <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+            <Col style={{ marginBottom: '1rem' }}>
+              <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search by name" />
             </Col>
           </Row>
           <Row

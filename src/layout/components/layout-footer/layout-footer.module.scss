@@ -5,7 +5,7 @@
   &--wrapped {
     width: 100%;
     margin: 0 auto;
-    max-width: calc((var(--horizontal-padding) * 2) + 1100px);
+    max-width: 1440px;
     padding-left: var(--horizontal-padding);
     padding-right: var(--horizontal-padding);
 
@@ -26,6 +26,7 @@
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 40px;
+  flex-wrap: wrap;
 
   &--link {
     display: flex;
@@ -45,7 +46,7 @@
   line-height: 21px;
 
   a {
-    color: #f8f8ff;
+    color: var(--theme-grey100-color);
     margin-right: 40px;
 
     &:hover {

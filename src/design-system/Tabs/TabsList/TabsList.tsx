@@ -5,6 +5,8 @@ import { StyledTabsList } from './tabs-list-styles';
 
 const TabsList: FC<TabsListUnstyledProps> = (props) => {
   const { children } = props;
+
   return <StyledTabsList {...props}>{children}</StyledTabsList>;
 };
+
 export default TabsList;

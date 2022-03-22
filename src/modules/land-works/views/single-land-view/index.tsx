@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
 import { Col, Row } from 'antd';
@@ -27,12 +27,18 @@ import { getNowTs } from '../../../../utils';
 
 import './index.scss';
 
+interface LocationState {
+  from: string;
+  title: string;
+}
+
 const SingleLandView: React.FC = () => {
   const wallet = useWallet();
 
   const { landWorksContract } = useLandworks();
 
   const history = useHistory();
+  const location = useLocation<LocationState>();
   const { tokenId } = useParams<{ tokenId: string }>();
   const [asset, setAsset] = useState({} as AssetEntity);
 
@@ -205,10 +211,14 @@ const SingleLandView: React.FC = () => {
     updateAdjacentLands();
   }, [asset]);
 
+<<<<<<< HEAD
   const showPrompt = () => {
     setShowEditModal(false);
     setOpenDelistPrompt(true);
   };
+=======
+  const withDrawOrDelist = () => (isDirectWithdraw() ? 'withdraw' : 'delist');
+>>>>>>> develop
 
   return (
     <div className="content-container single-card-section">
@@ -231,17 +241,17 @@ const SingleLandView: React.FC = () => {
       <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
         <Grid container width="410px" direction="column">
           <Typography fontSize={25} variant="h2">
-            Do you want to delist?
+            Do you want to {withDrawOrDelist()}?
           </Typography>
           <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 40px 0' }} variant="subtitle1">
-            Are you sure you want to delist this property? This action cannot be reversed.
+            Are you sure you want to {withDrawOrDelist()} this property? This action cannot be reversed.
           </Typography>
           <Grid container direction="row" justifyContent="space-between">
             <Button variant="secondary" btnSize="medium" onClick={() => setOpenDelistPrompt(false)}>
               No, go back
             </Button>
             <Button variant="gradient" btnSize="medium" onClick={handleDelistButton}>
-              Yes, delist
+              Yes, {withDrawOrDelist()}
             </Button>
           </Grid>
         </Grid>
@@ -250,17 +260,17 @@ const SingleLandView: React.FC = () => {
       <Row gutter={40} className="head-nav">
         <div className="left-wrapper">
           <div className="head-breadcrumbs">
-            <Link className="button-back" to="/explore">
+            <Link className="button-back" to={location.state?.from || '/explore'}>
               <div className="button-icon">
                 <Icon iconSize={'m'} iconElement={<BackIcon />} />
               </div>
-              <span>Back to Explore</span>
+              <span>Back to {location.state?.title || 'Explore'}</span>
             </Link>
 
             <p className="separator" />
 
-            <Link className="button-explore" to="/explore">
-              Explore
+            <Link className="button-explore" to={location.state?.from || '/explore'}>
+              {location.state?.title || 'Explore'}
             </Link>
 
             <Icon iconSize={'m'} iconElement={<ArrowRightIcon />} />
