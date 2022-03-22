@@ -8,6 +8,7 @@ import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import config from 'config';
+import { Button } from 'design-system';
 import { getENSName, getLandImageUrl, getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
@@ -61,8 +62,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
 
   const isNotListed = () => asset?.status !== AssetStatus.LISTED;
   const isAvailable = asset?.isAvailable && asset?.availability.isCurrentlyAvailable;
-
-  const shouldShowClaimButton = () => isOwnerOrConsumer() && asset?.unclaimedRentFee.gt(0);
 
   const shouldShowUpdateOperator = () => {
     const validOperator =
@@ -244,7 +243,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
           </Grid>
 
           <Grid container className="rent-section">
-            <Grid container className="rent-price">
+            <Grid container columnSpacing={5} rowSpacing={2} className="rent-price">
               <Grid item xs={12} xl={6.5} className="price-wrapper">
                 {asset?.availability?.isRentable && (
                   <div className="period-wrapper">
@@ -291,15 +290,17 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
               </Grid>
               <Grid item xs={12} xl={5.5}>
                 <Grid item className="property-button">
-                  {shouldShowClaimButton() && (
-                    <button
+                  {isOwnerOrConsumer() && (
+                    <Button
+                      variant="gradient"
+                      btnSize="small"
                       type="button"
                       className={'button-primary'}
                       onClick={handleClaim}
                       disabled={isClaimButtonDisabled}
                     >
                       <span>CLAIM RENT</span>
-                    </button>
+                    </Button>
                   )}
                   {!isOwnerOrConsumer() && (
                     <button
