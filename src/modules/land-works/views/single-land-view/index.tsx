@@ -47,7 +47,7 @@ const SingleLandView: React.FC = () => {
   const [itemsOnPage] = useState(4);
 
   const [showRentModal, setShowRentModal] = useState(false);
-  const [showWarningModal, setShowWarningModal] = useState(false);
+  const [showWarningModal, setShowWarningModal] = useState(true);
   const [openDelistPrompt, setOpenDelistPrompt] = useState(false);
 
   const [rentButtonDisabled, setRentButtonDisabled] = useState(false);
@@ -219,21 +219,23 @@ const SingleLandView: React.FC = () => {
 
   return (
     <div className="content-container single-card-section">
-      <WarningModal
-        onCancel={() => {
-          setShowWarningModal(false);
-        }}
-        style={{ zIndex: '1005' }}
-        onOk={handleDelist}
-        visible={showWarningModal}
-        text={
-          <>
+      <Modal height={'80%'} handleClose={() => setShowWarningModal(false)} open={showWarningModal}>
+        <Grid container width="410px" direction="column">
+          <Typography fontSize={25} variant="h2">
+            Warning
+          </Typography>
+          <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 40px 0' }} variant="subtitle1">
             The property is rented until <strong>{timestampSecondsToDate(asset.lastRentEnd || '0')}</strong>. Delisting
             the property now will make it unavailable for new renters. You will be able to withdraw your property from
             the Protocol once all rents end.
-          </>
-        }
-      />
+          </Typography>
+          <Grid container direction="row" justifyContent="center">
+            <Button variant="gradient" btnSize="small" onClick={() => setShowWarningModal(false)}>
+              OK
+            </Button>
+          </Grid>
+        </Grid>
+      </Modal>
 
       <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
         <Grid container width="410px" direction="column">
