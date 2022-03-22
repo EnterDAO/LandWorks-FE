@@ -211,14 +211,11 @@ const SingleLandView: React.FC = () => {
     updateAdjacentLands();
   }, [asset]);
 
-<<<<<<< HEAD
   const showPrompt = () => {
     setShowEditModal(false);
     setOpenDelistPrompt(true);
   };
-=======
   const withDrawOrDelist = () => (isDirectWithdraw() ? 'withdraw' : 'delist');
->>>>>>> develop
 
   return (
     <div className="content-container single-card-section">
