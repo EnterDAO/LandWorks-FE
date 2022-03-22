@@ -456,7 +456,15 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
           <Box fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
             Update Rent Conditions
           </Box>
-          <Grid container xs={12} columnSpacing={5} justifyContent="space-between" mt={4}>
+          <Grid
+            container
+            xs={12}
+            maxHeight={'50vh'}
+            overflow="scroll"
+            columnSpacing={5}
+            justifyContent="space-between"
+            mt={4}
+          >
             <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={470} overflow="scroll">
               <DropdownSection
                 defaultOpen={true}
