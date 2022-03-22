@@ -145,9 +145,9 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
       setCountDownTimestamp('0');
     }
     const days = props.days > 0 ? `${props.days} : ` : '';
-    const hours = props.hours > 0 ? `${zeroPad(props.hours)} : ` : '';
-    const minutes = props.minutes > 0 ? `${zeroPad(props.minutes)} : ` : '';
-    const seconds = props.seconds > 0 ? `${zeroPad(props.seconds)} ` : '';
+    const hours = props.hours >= 0 ? `${zeroPad(props.hours)} : ` : '';
+    const minutes = props.minutes >= 0 ? `${zeroPad(props.minutes)} : ` : '';
+    const seconds = props.seconds >= 0 ? `${zeroPad(props.seconds)} ` : '';
     const expired = days || hours || minutes || seconds;
     const placeholder = expired ? `${days}${hours}${minutes}${seconds} ` : '';
     return <p className="remaining-time">{placeholder}</p>;
