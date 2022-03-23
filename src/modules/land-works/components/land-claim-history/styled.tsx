@@ -1,4 +1,4 @@
-import { TableBody, TableHead, styled } from '@mui/material';
+import { TableBody, TableHead, Typography, TypographyProps, styled } from '@mui/material';
 import { Paper, PaperProps } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
@@ -6,9 +6,20 @@ import TableRow from '@mui/material/TableRow';
 export const RootStyled = styled('div')(() => ({
   backgroundColor: 'var(--theme-card-color)',
   padding: '30px',
-  margin: '120px 20px',
   borderRadius: '10px',
-  maxWidth: 'calc(var(--horizontal-padding) * 2 + 1100px)',
+}));
+
+export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
+  display: 'block',
+  width: '100%',
+  fontSize: '30px',
+  fontWeight: 700,
+  marginBottom: '20px',
+  span: {
+    fontSize: '14px',
+    fontWeight: 600,
+    color: 'var(--theme-subtle-color)',
+  },
 }));
 
 export const StyledTableCell = styled(TableCell)(() => ({
