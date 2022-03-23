@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Box } from '@mui/material';
 import { uniqueId } from 'lodash';
 import { getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
@@ -64,11 +65,17 @@ const MyPropetiesHistoryTable: React.FC = () => {
     return isActiveRent || isUpcomingRent;
   };
 
+  const rentStatus = (start: string, end: string) => {
+    const upcoming = now < Number(start);
+    const active = Number(start) < now && now < Number(end);
+    const passed = Number(start) < now && now > Number(end);
+    return { upcoming, passed, active };
+  };
+
   return (
-    <>
+    <Box style={{ margin: '200px 0' }}>
       <Title>Rent History</Title>
       <RootStyled>
-        {/* This wraps the table in a container that allows a better scroll  */}
         <StyledPaper>
           <table style={{ width: '100%' }} aria-label="table">
             <StyledTableHead>
@@ -151,9 +158,9 @@ const MyPropetiesHistoryTable: React.FC = () => {
                       />
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      {now < Number(data.start) && <UpcomingButton>Upcoming</UpcomingButton>}
-                      {Number(data.start) < now && now < Number(data.end) && <ActiveButton>Active</ActiveButton>}
-                      {Number(data.start) < now && now > Number(data.end) && <PassedButton>Passed</PassedButton>}
+                      {rentStatus(data.start, data.end).upcoming && <UpcomingButton>Upcoming</UpcomingButton>}
+                      {rentStatus(data.start, data.end).active && <ActiveButton>Active</ActiveButton>}
+                      {rentStatus(data.start, data.end).passed && <PassedButton>Passed</PassedButton>}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
@@ -162,7 +169,7 @@ const MyPropetiesHistoryTable: React.FC = () => {
           </table>
         </StyledPaper>
       </RootStyled>
-    </>
+    </Box>
   );
 };
 
