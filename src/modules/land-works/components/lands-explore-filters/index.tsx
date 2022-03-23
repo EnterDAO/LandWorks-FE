@@ -92,7 +92,7 @@ const LandWorksFilters: FC<Props> = ({
           </Box>
           <Box className={styles.box}>
             <ControlledSelect
-              width={'7rem'}
+              width={'10rem'}
               value={selectedCurrency}
               onChange={onChangeCurrencyHandler}
               options={currencyData}
