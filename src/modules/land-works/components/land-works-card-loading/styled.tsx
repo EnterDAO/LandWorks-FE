@@ -14,8 +14,7 @@ export const RootStyled = styled('div')(() => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: '300px',
-  height: '330px',
+  height: '388px',
 }));
 
 export const ContainerStyled = styled('div')(() => ({
