@@ -36,6 +36,7 @@ export const WalletConnectors: WalletConnector[] = [
 type WalletData = {
   initialized: boolean;
   connecting?: WalletConnector;
+  disconnecting?: boolean;
   isActive: boolean;
   account?: string;
   networkId?: number;
@@ -53,6 +54,7 @@ export type Wallet = WalletData & {
 const WalletContext = React.createContext<Wallet>({
   initialized: false,
   connecting: undefined,
+  disconnecting: undefined,
   isActive: false,
   account: undefined,
   networkId: undefined,
@@ -77,6 +79,7 @@ const WalletProvider: React.FC = (props) => {
 
   const [initialized, setInitialized] = React.useState<boolean>(false);
   const [connecting, setConnecting] = React.useState<WalletConnector | undefined>(undefined);
+  const [disconnecting, setDisconnecting] = React.useState<boolean | undefined>(undefined);
   const connectingRef = React.useRef<WalletConnector | undefined>(connecting);
   connectingRef.current = connecting;
   const [activeConnector, setActiveConnector] = React.useState<WalletConnector | undefined>();
@@ -88,6 +91,7 @@ const WalletProvider: React.FC = (props) => {
   const [showDisclaimerModal, setShowDisclaimerModal] = React.useState<boolean>(false);
 
   const disconnect = React.useCallback(() => {
+    setDisconnecting(true);
     web3React.deactivate();
     activeConnector?.onDisconnect?.(web3React.connector);
     setConnecting(undefined);
@@ -95,6 +99,7 @@ const WalletProvider: React.FC = (props) => {
     setActiveProvider(undefined);
     removeSessionProvider();
     localStorage.removeItem('disclaimerShown');
+    setTimeout(() => setDisconnecting(undefined), 0);
   }, [web3React, activeConnector, removeSessionProvider, setConnecting]);
 
   const connect = React.useCallback(
@@ -171,6 +176,7 @@ const WalletProvider: React.FC = (props) => {
     () => ({
       initialized,
       connecting,
+      disconnecting,
       isActive: web3React.active,
       account: web3React.account ?? undefined,
       networkId: web3React.chainId,
@@ -183,7 +189,7 @@ const WalletProvider: React.FC = (props) => {
       connect,
       disconnect,
     }),
-    [web3React, initialized, connecting, activeConnector, activeProvider, disconnect, connect]
+    [web3React, initialized, connecting, disconnecting, activeConnector, activeProvider, disconnect, connect]
   );
 
   return (

@@ -118,10 +118,24 @@ const MyPropertiesView: FC = () => {
   }, [wallet.account]);
 
   useEffect(() => {
+    if (wallet.disconnecting) {
+      history.push('/explore');
+    }
+  }, [wallet.disconnecting]);
+
+  useEffect(() => {
     if (!wallet.account || lands.length) {
       setLoading(false);
     }
   }, [lands]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (!wallet.account) {
+        wallet.showWalletsModal();
+      }
+    }, 500);
+  }, []);
 
   useEffect(() => {
     setLoadPercentageValue(getLoadPercentageValue());
