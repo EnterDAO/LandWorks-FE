@@ -19,7 +19,7 @@ const LandsNav: React.FC = () => {
         <div className="active-tab"></div>
       </NavLink>
 
-      <NavLink className="tab" activeClassName="selected" to="/my-properties">
+      <NavLink className="tab" activeClassName="selected" to="/lending">
         <div className="nav-content">My Properties</div>
         <div className="active-tab"></div>
       </NavLink>

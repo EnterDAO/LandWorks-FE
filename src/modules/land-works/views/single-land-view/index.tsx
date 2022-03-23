@@ -8,6 +8,7 @@ import { Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
+import EditPropertyViewNew from 'modules/land-works/components/edit-property';
 
 import ExternalLink from '../../../../components/custom/externalLink';
 import { useWallet } from '../../../../wallets/wallet';
@@ -17,7 +18,6 @@ import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
 import { RentModal } from '../../components/lands-rent-modal';
 import { LandsTooltip } from '../../components/lands-tooltip';
-import { WarningModal } from '../../components/lands-warning-modal';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 
@@ -56,6 +56,8 @@ const SingleLandView: React.FC = () => {
   const [editButtonDisabled, setEditButtonDisabled] = useState(false);
   const [isUpdateOperatorDisabled, setIsUpdateOperatorDisabled] = useState(false);
   const [page, setPage] = useState(1);
+
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
@@ -208,6 +210,10 @@ const SingleLandView: React.FC = () => {
     updateAdjacentLands();
   }, [asset]);
 
+  const showPrompt = () => {
+    setShowEditModal(false);
+    setOpenDelistPrompt(true);
+  };
   useEffect(() => {
     setClaimButtonDisabled(!asset?.unclaimedRentFee?.gt(0));
   }, [asset]);
@@ -216,21 +222,23 @@ const SingleLandView: React.FC = () => {
 
   return (
     <div className="content-container single-card-section">
-      <WarningModal
-        onCancel={() => {
-          setShowWarningModal(false);
-        }}
-        style={{ zIndex: '1005' }}
-        onOk={handleDelist}
-        visible={showWarningModal}
-        text={
-          <>
+      <Modal height={'80%'} handleClose={() => setShowWarningModal(false)} open={showWarningModal}>
+        <Grid container width="410px" direction="column">
+          <Typography fontSize={25} variant="h2">
+            Warning
+          </Typography>
+          <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 40px 0' }} variant="subtitle1">
             The property is rented until <strong>{timestampSecondsToDate(asset.lastRentEnd || '0')}</strong>. Delisting
             the property now will make it unavailable for new renters. You will be able to withdraw your property from
             the Protocol once all rents end.
-          </>
-        }
-      />
+          </Typography>
+          <Grid container direction="row" justifyContent="center">
+            <Button variant="gradient" btnSize="small" onClick={() => setShowWarningModal(false)}>
+              OK
+            </Button>
+          </Grid>
+        </Grid>
+      </Modal>
 
       <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
         <Grid container width="410px" direction="column">
@@ -309,7 +317,7 @@ const SingleLandView: React.FC = () => {
               variant="accentblue"
               btnSize="xsmall"
               disabled={editButtonDisabled}
-              onClick={() => history.push(`/property/${asset.id}/edit`, asset)}
+              onClick={() => setShowEditModal(true)}
             >
               EDIT
             </Button>
@@ -403,6 +411,12 @@ const SingleLandView: React.FC = () => {
             </Row>
           </Col>
         </Row>
+      )}
+
+      {showEditModal && (
+        <Modal height={'90vh'} open={showEditModal} handleClose={() => setShowEditModal(false)}>
+          <EditPropertyViewNew closeModal={() => setShowEditModal(false)} openDelistPrompt={showPrompt} />
+        </Modal>
       )}
 
       {showRentModal && (

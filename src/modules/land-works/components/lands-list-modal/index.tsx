@@ -51,7 +51,7 @@ export const SuccessModal: React.FC<IProps> = ({ showModal, setShowModal }) => {
         </div>
         <div>Nice! You’ve successfully listed property.</div>
         <Button variant="gradient" btnSize="medium">
-          <Link className="link-to-properties" to="/lending">
+          <Link className="link-to-properties" to="/my-properties">
             Go to my properties
           </Link>
         </Button>
