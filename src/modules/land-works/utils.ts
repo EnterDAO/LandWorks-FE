@@ -76,7 +76,6 @@ export const isListingInProgress = (lands: AssetEntity[], loadingLands: boolean)
   const listingInProgressExists = idOfListingInProgress && idOfListingInProgress.length > 0;
   const listingExistsInLands = lands.find((l) => l.metaverseAssetId === idOfListingInProgress);
   const shouldDisplayListingCard = !!(listingInProgressExists && !listingExistsInLands);
-  console.log({ idOfListingInProgress, listingInProgressExists, listingExistsInLands, loadingLands });
   // should lands still be loading, we don't want to assume the listing in progress was loaded into
   // lands, since lands could be a empty array until everything is loaded
   if (loadingLands) {

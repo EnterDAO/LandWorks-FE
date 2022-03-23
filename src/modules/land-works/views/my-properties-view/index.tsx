@@ -43,8 +43,6 @@ const MyPropertiesView: FC = () => {
 
   const displayListingInProgressCard = isListingInProgress(lands, loading);
 
-  console.log({ displayListingInProgressCard });
-
   const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
     variables: { id: wallet.account?.toLowerCase() },

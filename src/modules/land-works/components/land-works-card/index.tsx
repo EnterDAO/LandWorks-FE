@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Card, Col, Image, Row } from 'antd';
 
 import Icon from 'components/custom/icon';
@@ -21,7 +21,6 @@ interface ILandWorksCardProps {
 }
 
 const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
-  const history = useHistory();
   const [showChart] = useState(false);
   const isNotListed = () => land?.status !== AssetStatus.LISTED;
   const isAvailable = land.isAvailable && land.availability.isCurrentlyAvailable;
