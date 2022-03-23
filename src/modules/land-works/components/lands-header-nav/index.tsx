@@ -6,8 +6,6 @@ import { ReactComponent as Rocket } from '../../../../resources/svg/rocket-02.sv
 import './index.scss';
 
 const LandsNav: React.FC = () => {
-  // TODO replace path for my properties with correct path
-
   return (
     <div className="lands-nav-container">
       <div className="divider"></div>
