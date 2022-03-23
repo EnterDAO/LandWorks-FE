@@ -307,6 +307,7 @@ const ListNewProperty: React.FC = () => {
         paymentToken.id,
         pricePerSecond.toFixed(0)
       );
+      localStorage.setItem('LISTING_IN_PROGRESS', selectedProperty.id);
 
       setShowApproveModal(false);
       setShowSignModal(false);

@@ -13,6 +13,7 @@ import { Grid } from 'design-system';
 import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssetsByRents, parseUser } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
+import LandWorksLoadingCard from 'modules/land-works/components/land-works-card-loading';
 import LandsWorksGridEmptyState from 'modules/land-works/components/land-works-grid-empty-state';
 import LoadMoreLands from 'modules/land-works/components/lands-explore-load-more';
 import LandsMyPropertiesHeader from 'modules/land-works/components/lands-my-properties-header';
@@ -20,7 +21,7 @@ import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-p
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 import { useWallet } from 'wallets/wallet';
 
-import { filterLandsByCurrencyId, filterLandsByQuery } from 'modules/land-works/utils';
+import { filterLandsByCurrencyId, filterLandsByQuery, isListingInProgress } from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
 
 const MyPropertiesView: FC = () => {
@@ -38,6 +39,10 @@ const MyPropertiesView: FC = () => {
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [slicedLands, setSlicedLands] = useState(pageSize);
   const [currencyId, setCurrencyId] = useState(sessionStorageHandler('get', 'my-properties-filters', 'currency') || 0);
+
+  const displayListingInProgressCard = isListingInProgress(lands, loading);
+
+  console.log({ displayListingInProgressCard });
 
   const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -155,22 +160,25 @@ const MyPropertiesView: FC = () => {
                 </Grid>
               ))
             ) : filteredLands.length ? (
-              filteredLands.slice(0, slicedLands).map((land) => (
-                <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={land.id}>
-                  <LandWorkCard
-                    land={land}
-                    onClick={() =>
-                      history.push({
-                        pathname: `/property/${land.id}`,
-                        state: { from: window.location.pathname, title: 'My properties' },
-                      })
-                    }
-                  />
-                </Grid>
-              ))
+              <>
+                {filteredLands.slice(0, slicedLands).map((land) => (
+                  <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={land.id}>
+                    <LandWorkCard
+                      land={land}
+                      onClick={() =>
+                        history.push({
+                          pathname: `/property/${land.id}`,
+                          state: { from: window.location.pathname, title: 'My properties' },
+                        })
+                      }
+                    />
+                  </Grid>
+                ))}
+                {displayListingInProgressCard && <LandWorksLoadingCard />}
+              </>
             ) : (
               <Grid item xs={12}>
-                <LandsWorksGridEmptyState />
+                {displayListingInProgressCard ? <LandWorksLoadingCard /> : <LandsWorksGridEmptyState />}
               </Grid>
             )}
           </Grid>

@@ -70,3 +70,25 @@ export const filterLandsByCurrencyId = (lands: AssetEntity[], currencyId: number
     return land.paymentToken.symbol === symbolFromCurrencyValue;
   });
 };
+
+export const isListingInProgress = (lands: AssetEntity[], loadingLands: boolean): boolean => {
+  const idOfListingInProgress = localStorage.getItem('LISTING_IN_PROGRESS');
+  const listingInProgressExists = idOfListingInProgress && idOfListingInProgress.length > 0;
+  const listingExistsInLands = lands.find((l) => l.metaverseAssetId === idOfListingInProgress);
+  const shouldDisplayListingCard = !!(listingInProgressExists && !listingExistsInLands);
+  console.log({ idOfListingInProgress, listingInProgressExists, listingExistsInLands, loadingLands });
+  // should lands still be loading, we don't want to assume the listing in progress was loaded into
+  // lands, since lands could be a empty array until everything is loaded
+  if (loadingLands) {
+    return false;
+  }
+  // display the listing card since we know lands did load and the listing progress was not found in lands
+  if (shouldDisplayListingCard) {
+    return true;
+  } else {
+    // remove the item from local storage since it does exist in lands now
+    // and return false since we know the item exists in lands now
+    localStorage.removeItem('LISTING_IN_PROGRESS');
+    return false;
+  }
+};
