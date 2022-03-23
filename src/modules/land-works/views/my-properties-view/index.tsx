@@ -12,6 +12,7 @@ import { useMediaQuery } from '@mui/material';
 import { Grid } from 'design-system';
 import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssetsByRents, parseUser } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
+import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import LandWorksLoadingCard from 'modules/land-works/components/land-works-card-loading';
 import LandsWorksGridEmptyState from 'modules/land-works/components/land-works-grid-empty-state';
@@ -196,6 +197,8 @@ const MyPropertiesView: FC = () => {
               disabled={slicedLandsInTotal === filteredLands.length}
             />
           )}
+
+          <ClaimHistoryTable />
         </div>
       </TabContext>
     </LandsSearchQueryProvider>
