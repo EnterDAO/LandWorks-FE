@@ -12,8 +12,8 @@ const LandWorksLoadingCard: React.FC = () => {
         style={{ position: 'absolute' }}
         className="card-image"
         name="png/CardLoadingSkeleton"
-        width="300"
-        height="353"
+        width="100%"
+        height="388"
       />
       <ContainerStyled>
         <Spinner>
