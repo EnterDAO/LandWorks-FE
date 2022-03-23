@@ -214,6 +214,10 @@ const SingleLandView: React.FC = () => {
     setShowEditModal(false);
     setOpenDelistPrompt(true);
   };
+  useEffect(() => {
+    setClaimButtonDisabled(!asset?.unclaimedRentFee?.gt(0));
+  }, [asset]);
+
   const withDrawOrDelist = () => (isDirectWithdraw() ? 'withdraw' : 'delist');
 
   return (
