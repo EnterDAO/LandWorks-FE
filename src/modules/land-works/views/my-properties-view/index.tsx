@@ -13,6 +13,7 @@ import { Grid } from 'design-system';
 import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssetsByRents, parseUser } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
+import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import LandWorksLoadingCard from 'modules/land-works/components/land-works-card-loading';
 import LandsWorksGridEmptyState from 'modules/land-works/components/land-works-grid-empty-state';
@@ -210,7 +211,8 @@ const MyPropertiesView: FC = () => {
             />
           )}
 
-          <ClaimHistoryTable />
+          {tab === MY_PROPERTIES_TAB_STATE_LENT && <ClaimHistoryTable />}
+          {tab === MY_PROPERTIES_TAB_STATE_RENTED && <MyPropetiesHistoryTable />}
         </div>
       </TabContext>
     </LandsSearchQueryProvider>
