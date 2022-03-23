@@ -8,7 +8,6 @@ export const RootStyled = styled('div')(() => ({
   backgroundColor: 'var(--theme-card-color)',
   padding: '30px',
   borderRadius: '10px',
-  maxWidth: 'calc(var(--horizontal-padding) * 2 + 1100px)',
 }));
 
 export const StyledTableCell = styled(TableCell)(() => ({
@@ -34,9 +33,10 @@ export const StyledTableCell = styled(TableCell)(() => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: '13px',
-    color: 'var(--theme-light-color) !important',
+    color: 'var(--theme-light-color)',
     borderBottom: 0,
     fontWeight: '400',
+    padding: '15px 16px',
   },
   '& a': {
     color: 'var(--toastify-color-info)',
