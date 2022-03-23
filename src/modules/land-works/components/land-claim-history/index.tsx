@@ -84,7 +84,9 @@ const ClaimHistoryTable: React.FC = () => {
                   }}
                 >
                   <EmptyIcon />
-                  <span style={{ fontSize: '18px', fontWeight: '700' }}>There is no claim history yet.</span>
+                  <span style={{ fontSize: '18px', fontWeight: '700', color: '#f8f8ff' }}>
+                    There is no claim history yet.
+                  </span>
                 </Box>
               </tbody>
             ) : (
