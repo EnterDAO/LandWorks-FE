@@ -233,7 +233,7 @@ const SingleLandView: React.FC = () => {
             the Protocol once all rents end.
           </Typography>
           <Grid container direction="row" justifyContent="center">
-            <Button variant="gradient" btnSize="small" onClick={() => setShowWarningModal(false)}>
+            <Button variant="gradient" btnSize="small" onClick={handleDelist}>
               OK
             </Button>
           </Grid>
