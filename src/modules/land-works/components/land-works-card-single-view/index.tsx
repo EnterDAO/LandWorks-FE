@@ -18,6 +18,7 @@ import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, RentEntity, fetchAssetRentByTimestamp, fetchUserFirstRentByTimestamp } from '../../api';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
+import SingleLandCardSkeleton from '../land-single-card-loader';
 import LandsMapOverlay from '../lands-map-overlay';
 import { LandsTooltip } from '../lands-tooltip';
 
@@ -51,6 +52,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const [currentRent, setCurrentRent] = useState({} as RentEntity);
   const [countDownRent, setCountDownRent] = useState({} as RentEntity);
   const [countDownTimestamp, setCountDownTimestamp] = useState('0');
+  const [loading, setLoading] = useState(true);
 
   const isOwnerOrConsumer = () => {
     return (
@@ -162,6 +164,12 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const [ensOperator, setEnsOperator] = useState<string>();
 
   useEffect(() => {
+    if (!wallet.account || asset?.id) {
+      setLoading(false);
+    }
+  }, [asset]);
+
+  useEffect(() => {
     if (ownerOrConsumer) {
       getENSName(ownerOrConsumer).then((ensName) => {
         setEns(ensName);
@@ -174,16 +182,21 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   }, [asset]);
 
   return (
-    <Grid container className="single-land-card-container">
-      <Grid xs={12} md={6} item>
-        <div className="map-image-wrapper">
-          <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)} />
-          <LandsMapOverlay
-            title={asset?.decentralandData?.isLAND ? 'Land' : 'Estate'}
-            coordinates={asset?.decentralandData?.coordinates}
-          />
-        </div>
-      </Grid>
+    <Grid container justifyContent="space-between" className="single-land-card-container">
+      {loading ? (
+        <SingleLandCardSkeleton />
+      ) : (
+        <Grid xs={12} md={6} item>
+          <div className="map-image-wrapper">
+            <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)} />
+            <LandsMapOverlay
+              title={asset?.decentralandData?.isLAND ? 'Land' : 'Estate'}
+              coordinates={asset?.decentralandData?.coordinates}
+            />
+          </div>
+        </Grid>
+      )}
+
       <Grid xs={12} md={6} item className="properties-container">
         <Grid container className="head-container">
           <Grid item className="title-container">
