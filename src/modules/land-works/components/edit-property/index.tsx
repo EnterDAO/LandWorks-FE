@@ -1,64 +1,62 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ChangeEvent, useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   AtMostRentPeriodOptions,
   DEFAULT_LIST_MAX_FUTURE_PERIOD,
   DEFAULT_LIST_MAX_PERIOD,
+  DEFAULT_MAX_PERIOD,
   DEFAULT_MIN_PERIOD,
   FEE_PRECISION,
   MaxRentPeriodOptions,
   MinRentPeriodOptions,
-  PlaceOptions,
 } from 'constants/modules';
 import BigNumber from 'bignumber.js';
-import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
-import { Box, Button, ControlledSelect, Grid } from 'design-system';
-import CustomizedSteppers from 'design-system/Stepper';
+import { Box, Button, Grid, Modal, Typography } from 'design-system';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import { DecentralandNFT, Estate } from 'modules/interface';
-import { EstateListingCard, LandListingCard } from 'modules/land-works/components/land-works-list-card';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
 import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
-import { currencyData, landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
+import { currencyData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
-import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-modal';
-import { Token } from 'modules/land-works/contracts/decentraland/land/LANDRegistryContract';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
-import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
-import { PaymentToken, fetchTokenPayments } from '../../api';
-import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
-import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
-import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
+import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
+import EditFormCardSkeleton from '../land-edit-form-loader-card';
 
-import { getTimeType, secondsToDuration } from 'utils';
-import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from 'utils/date';
+import { getTimeType, secondsToDuration } from '../../../../utils';
+import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from '../../../../utils/date';
+import { ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
 
 import './index.scss';
 
-// import { getTimeType, secondsToDuration } from '../../../../utils';
+interface Props {
+  openDelistPrompt: () => void;
+  closeModal: () => void;
+}
 
-const ListNewProperty: React.FC = () => {
+const EditPropertyViewNew: React.FC<Props> = (props) => {
+  const { openDelistPrompt, closeModal } = props;
+
   const walletCtx = useWallet();
   const landworks = useLandworks();
-  const estateRegistry = useEstateRegistry();
-  const landRegistry = useLandRegistry();
-  // const history = useHistory();
+  const history = useHistory();
 
   const { landWorksContract } = landworks;
-  const { landRegistryContract } = landRegistry;
-  const { estateRegistryContract } = estateRegistry;
+
+  const [asset, setAsset] = useState<AssetEntity>({} as AssetEntity);
+  const { tokenId } = useParams<{ tokenId: string }>();
+  const [loading, setLoading] = useState(false);
 
   const [minPeriod, setMinPeriod] = useState(new BigNumber(DAY_IN_SECONDS));
   const [isMinPeriodSelected, setMinPeriodSelected] = useState(false);
   const [minInput, setMinInput] = useState(DEFAULT_MIN_PERIOD);
-  const [minPeriodType, setMinPeriodType] = useState(BigNumber.from(MinRentPeriodOptions[2].value));
+  const [minPeriodType, setMinPeriodType] = useState(BigNumber.from(MinRentPeriodOptions[2].value)); // in seconds
   const [minPeriodSelectedOption, setMinPeriodSelectedOption] = useState(MinRentPeriodOptions[2]); // Selected Option Value for the select menu
   const [minError, setMinError] = useState('');
 
@@ -66,8 +64,8 @@ const ListNewProperty: React.FC = () => {
   const [isMaxPeriodSelected, setMaxPeriodSelected] = useState(true);
   const [maxInput, setMaxInput] = useState(DEFAULT_LIST_MAX_PERIOD);
   const [maxPeriodType, setMaxPeriodType] = useState(BigNumber.from(MaxRentPeriodOptions[4].value));
-  const [maxPeriodSelectedOption, setMaxPeriodSelectedOption] = useState(MaxRentPeriodOptions[4]); // Selected Option Value for the select menu
-  const [maxError, setMaxError] = useState('');
+  const [maxPeriodSelectedOption, setMaxPeriodSelectedOption] = useState(MaxRentPeriodOptions[4]);
+  const [maxError, setMaxError] = useState(''); // Selected Option Value for the select menu
 
   const [maxFutureTime, setMaxFutureTime] = useState(DEFAULT_LIST_MAX_FUTURE_PERIOD.multipliedBy(MONTH_IN_SECONDS));
   const [maxFutureTimeInput, setMaxFutureTimeInput] = useState(DEFAULT_LIST_MAX_FUTURE_PERIOD);
@@ -75,17 +73,13 @@ const ListNewProperty: React.FC = () => {
   const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[4]); // Selected Option Value for the select menu
   const [maxFutureError, setMaxFutureError] = useState('');
 
-  const [selectedProperty, setSelectedProperty] = useState(null as DecentralandNFT | Estate | null);
-
-  const [assetProperties, setAssetProperties] = useState<DecentralandNFT[]>([]);
-  const [assetEstates, setAssetEstates] = useState<Estate[]>([]);
-  const [estateGroup, setEstateGroup] = useState<Token[]>([]);
+  const [selectedProperty, setSelectedProperty] = useState(null as AssetEntity | null);
 
   const [showRentPeriodInput, setShowRentPeriodInput] = useState(true);
   const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(true);
 
-  const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
-  const [paymentToken, setPaymentToken] = useState({} as PaymentToken);
+  const [paymentTokens, setPaymentTokens] = useState<PaymentToken[]>([]);
+  const [paymentToken, setPaymentToken] = useState<PaymentToken>({} as PaymentToken);
   const [selectedCurrency, setSelectedCurrency] = useState(1);
 
   const [tokenCost, setTokenCost] = useState(new BigNumber(0));
@@ -93,23 +87,92 @@ const ListNewProperty: React.FC = () => {
   const [protocolFee, setProtocolFee] = useState(ZERO_BIG_NUMBER);
   const [feePercentage, setFeePercentage] = useState(0);
   const [pricePerSecond, setPricePerSecond] = useState(ZERO_BIG_NUMBER);
+  const [usdPrice, setUsdPrice] = useState('0');
   const [priceError, setPriceError] = useState('');
 
-  const [approveDisabled, setApproveDisabled] = useState(false);
-  const [listDisabled, setListDisabled] = useState(true);
-  const [usdPrice, setUsdPrice] = useState('0');
+  const [showWarningModal, setShowWarningModal] = useState(false);
 
-  const [loading, setLoading] = useState(false);
-  const [selectedMetaverse, setSelectedMetaverse] = useState(1);
-  //const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
-  const [activeStep, setActiveStep] = useState(0);
-  const [showApproveModal, setShowApproveModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showSignModal, setShowSignModal] = useState(false);
+  const [saveDisabled, setSaveDisabled] = useState(false);
 
-  const handlePropertyChange = (selectedLand: DecentralandNFT | Estate) => {
-    setSelectedProperty(selectedLand);
-  };
+  useEffect(() => {
+    // Pre-populate user properties
+    setSelectedProperty(asset);
+
+    // Pre-populate minPeriod values
+    if (asset.minPeriod) {
+      const minPeriod: BigNumber = new BigNumber(asset.minPeriod);
+      const hasMinPeriod = minPeriod.gt(DEFAULT_MIN_PERIOD);
+      if (hasMinPeriod) {
+        setMinPeriod(minPeriod);
+        setMinPeriodSelected(true);
+
+        const parsedDate = secondsToDuration(minPeriod.toNumber());
+        const { timeValue, timeType } = getTimeType(parsedDate);
+
+        setMinInput(new BigNumber(timeValue.toFixed(2)));
+
+        const typeSuffix = timeType.substr(0, 3);
+        const optionByType = MinRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
+        const optionIndex = MinRentPeriodOptions.indexOf(optionByType!);
+
+        setMinPeriodSelectedOption(MinRentPeriodOptions[optionIndex]);
+        setMinPeriodType(BigNumber.from(optionByType?.value));
+      }
+    }
+
+    // Pre-populate maxPeriod values
+    if (asset.maxPeriod) {
+      const maxPeriod: BigNumber = new BigNumber(asset.maxPeriod);
+      setMaxPeriod(maxPeriod);
+      const hasCustomMaxPeriod = maxPeriod.lt(DEFAULT_MAX_PERIOD);
+
+      if (hasCustomMaxPeriod) {
+        setMaxPeriodSelected(true);
+
+        const parsedDate = secondsToDuration(maxPeriod.toNumber());
+        const { timeValue, timeType } = getTimeType(parsedDate);
+
+        setMaxInput(new BigNumber(timeValue.toFixed(2)));
+
+        const typeSuffix = timeType.substr(0, 3);
+        const optionByType = MaxRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
+        const optionIndex = MaxRentPeriodOptions.indexOf(optionByType!);
+
+        setMaxPeriodSelectedOption(MaxRentPeriodOptions[optionIndex]);
+        setMaxPeriodType(BigNumber.from(optionByType?.value));
+      }
+    }
+
+    // Pre-populate at most given Time
+    if (asset.maxFutureTime) {
+      const maxFutureTime: BigNumber = new BigNumber(asset.maxFutureTime);
+      setMaxFutureTime(maxFutureTime);
+      const hasCustomMaxFutureTime = maxFutureTime.lt(DEFAULT_MAX_PERIOD);
+
+      if (hasCustomMaxFutureTime) {
+        const parsedDate = secondsToDuration(maxFutureTime.toNumber());
+        const { timeValue, timeType } = getTimeType(parsedDate);
+        setMaxFutureTimeInput(new BigNumber(timeValue.toFixed(2)));
+
+        const typeSuffix = timeType.substr(0, 3);
+        const optionByType = AtMostRentPeriodOptions.find((o) => o.label.includes(typeSuffix));
+        const optionIndex = AtMostRentPeriodOptions.indexOf(optionByType!);
+
+        setMaxFutureSelectedOption(AtMostRentPeriodOptions[optionIndex]);
+        setMaxFuturePeriodType(BigNumber.from(optionByType?.value));
+      }
+    }
+
+    // Get usd price per day for the asset
+    if (asset.paymentToken) {
+      getUsdPrice(asset.paymentToken?.symbol, asset.pricePerMagnitude ? asset.pricePerMagnitude.price : '');
+      setPaymentToken(asset.paymentToken);
+    }
+
+    if (asset.pricePerMagnitude) {
+      setTokenCost(new BigNumber(asset.pricePerMagnitude.price || 0));
+    }
+  }, [asset]);
 
   const handleMinCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMinPeriodSelected(e.target.checked);
@@ -245,34 +308,8 @@ const ListNewProperty: React.FC = () => {
     setTokenCost(dynamicValue!);
   };
 
-  const handleApprove = async () => {
-    if (selectedProperty === null) {
-      return;
-    }
-    try {
-      let approvedAddress = DEFAULT_ADDRESS;
-      if (selectedProperty.isLAND) {
-        setShowApproveModal(true);
-        await landRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
-
-        approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
-      } else {
-        await estateRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
-
-        approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
-      }
-      if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
-        setApproveDisabled(true);
-        setShowApproveModal(false);
-      }
-    } catch (e) {
-      console.log(e);
-      // If there is an error enable the approve button
-    }
-  };
-
-  const calculateTotalAndFeePrecision = () => {
-    const fee = tokenCost?.multipliedBy(paymentToken.feePercentage).dividedBy(FEE_PRECISION);
+  const calculateTotalAndFeePrecision = (feePercentage: BigNumber.Value) => {
+    const fee = tokenCost?.multipliedBy(feePercentage).dividedBy(FEE_PRECISION);
     const earnings = tokenCost?.minus(fee!);
     setProtocolFee(fee!);
     setEarnings(earnings!);
@@ -280,126 +317,49 @@ const ListNewProperty: React.FC = () => {
   };
 
   const calculatePricePerSecond = () => {
-    const pricePerSecond = getNonHumanValue(tokenCost, paymentToken.decimals).dividedBy(DAY_IN_SECONDS);
+    const pricePerSecond = getNonHumanValue(tokenCost, paymentToken?.decimals).dividedBy(DAY_IN_SECONDS);
     setPricePerSecond(pricePerSecond);
   };
 
-  const handleConfirmListing = async () => {
-    if (selectedProperty === null) {
-      return;
-    }
-
-    setListDisabled(true);
-
-    const metaverseRegistry = selectedProperty.isLAND
-      ? config.contracts.decentraland.landRegistry
-      : config.contracts.decentraland.estateRegistry;
-
-    try {
-      setShowSignModal(true);
-      await landWorksContract?.list(
-        Number(PlaceOptions[0].value),
-        metaverseRegistry,
-        selectedProperty.id,
-        minPeriod,
-        maxPeriod,
-        maxFutureTime,
-        paymentToken.id,
-        pricePerSecond.toFixed(0)
-      );
-
-      setShowApproveModal(false);
-      setShowSignModal(false);
-      setShowSuccessModal(true);
-      setListDisabled(false);
-    } catch (e) {
-      setShowSignModal(false);
-      setListDisabled(false);
-      showToastNotification(ToastType.Error, 'There was an error while listing the property.');
-      console.log(e);
-    }
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const retrieveLandIds = (estate: any) => estate.landIds.landIds;
-
-  const decodeXYForLand = (landId: BigNumber) => landRegistry?.landRegistryContract?.getTokenData(landId);
-
-  const getLandsForEstate = async (estate: Estate) => {
-    const landIds = retrieveLandIds(estate);
-    const landPromises: Promise<Token>[] = landIds.map((landId: BigNumber) => decodeXYForLand(landId));
-    let landsForEstate: Token[] = [];
-    const values = await Promise.allSettled(landPromises);
-    values.forEach((v) => {
-      if (v.status === 'fulfilled') {
-        landsForEstate = [...landsForEstate, v.value];
-      }
-    });
-    return landsForEstate;
-  };
-
-  const getLandsForEstates = async (estates: Estate[]) => {
-    let allLandsForEstates: Token[] = [];
-    const values = await Promise.allSettled(estates.map((e: Estate) => getLandsForEstate(e)));
-    values.forEach((v) => {
-      if (v.status === 'fulfilled') {
-        allLandsForEstates = [...allLandsForEstates, ...v.value];
-      }
-    });
-    return allLandsForEstates;
-  };
-
-  const getUserNfts = async () => {
-    if (!walletCtx.account) {
-      return;
-    }
-
-    try {
-      const lands = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
-      const estates = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
-
-      const landsForEstates = await getLandsForEstates(estates);
-      setEstateGroup(landsForEstates);
-      setAssetProperties(lands);
-      setAssetEstates(estates);
-    } catch (e) {
-      console.log(e);
-    }
-    setLoading(false);
+  const getUsdPrice = (symbol: string, price: string | number | BigNumber) => {
+    const ethPrice = new BigNumber(getTokenPrice(symbol) || '0');
+    const ethToUsdPrice = ethPrice.multipliedBy(price);
+    setUsdPrice(ethToUsdPrice.toFixed(2).replace(/\.00$/, ''));
   };
 
   const getPaymentTokens = async () => {
     const tokens = await fetchTokenPayments();
     setPaymentTokens(tokens);
-    if (tokens.length > 0) {
-      setPaymentToken(tokens[0]);
-    }
   };
 
   const evaluateInput = () => {
-    let isListDisabled = true;
     if (!minPeriod && isMinPeriodSelected) {
-      setMinError('Min period must be set');
+      setMinError('Min Rent Period must be set');
+      setSaveDisabled(true);
     } else if (minPeriod?.gt(maxPeriod)) {
-      setMinError('Min period should be equal or smaller than Max period');
+      setMinError('Min Rent Period exceeds Max Rent Period');
+      setSaveDisabled(true);
     } else if (!maxPeriod && isMaxPeriodSelected) {
-      setMaxError('Max period must be set');
+      setMaxError('Max Rent Period must be set');
+      setSaveDisabled(true);
     } else if (maxPeriod?.gt(maxFutureTime)) {
-      setMaxError('Max period should be equal or smaller than Max rent queue');
+      setMaxError('Max Rent Period exceeds Max Rent Queue');
+      setSaveDisabled(true);
     } else if (!maxFutureTime) {
-      setMaxFutureError('Max rent queue must be set');
+      setMaxFutureError('Max Rent Queue must be set');
+      setSaveDisabled(true);
     } else if (pricePerSecond.eq(ZERO_BIG_NUMBER)) {
       setPriceError('Price cannot be zero');
+      setSaveDisabled(true);
     } else if (pricePerSecond.toFixed(0) === '0') {
       setPriceError('Price per second equals to zero');
-    } else if (!approveDisabled) {
-      clearErrorMessages();
+      setSaveDisabled(true);
+    } else if (selectedProperty === null) {
+      setSaveDisabled(true);
     } else {
       clearErrorMessages();
-      isListDisabled = false;
+      setSaveDisabled(false);
     }
-
-    setListDisabled(isListDisabled);
   };
 
   const clearErrorMessages = () => {
@@ -409,122 +369,103 @@ const ListNewProperty: React.FC = () => {
     setPriceError('');
   };
 
-  const evaluateSelectedProperty = async () => {
-    if (selectedProperty) {
-      setApproveDisabled(false);
-      let approvedAddress: string;
-      if (selectedProperty.isLAND) {
-        approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
-      } else {
-        approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
-      }
-      if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
-        setApproveDisabled(true);
-      } else {
-        setApproveDisabled(false);
-      }
-    }
-  };
+  const handleSave = async () => {
+    setShowWarningModal(false);
+    setSaveDisabled(true);
 
-  const getUsdPrice = (symbol: string, price: string | number | BigNumber) => {
-    const ethPrice = new BigNumber(getTokenPrice(symbol) || '0');
-    const ethToUsdPrice = ethPrice.multipliedBy(price);
-    setUsdPrice(ethToUsdPrice.toFixed(2).replace(/\.00$/, ''));
+    try {
+      await landWorksContract?.updateConditions(
+        asset.id,
+        minPeriod,
+        maxPeriod,
+        maxFutureTime,
+        paymentToken?.id || '',
+        pricePerSecond.toFixed(0)
+      );
+      showToastNotification(ToastType.Success, 'Property Updated successfully!');
+    } catch (e) {
+      console.log(e);
+      showToastNotification(ToastType.Error, 'There was an error while updating the property.');
+    }
+
+    setSaveDisabled(false);
   };
 
   useEffect(() => {
-    setLoading(true);
-    getUserNfts();
-    getPaymentTokens();
+    if (asset) {
+      getPaymentTokens();
+    }
   }, [walletCtx.account]);
 
   useEffect(() => {
-    evaluateInput();
-  }, [approveDisabled, minPeriod, maxPeriod, maxFutureTime, paymentToken, selectedProperty, pricePerSecond]);
+    if (asset) {
+      evaluateInput();
+    }
+  }, [minPeriod, maxPeriod, maxFutureTime, paymentToken, selectedProperty, pricePerSecond]);
 
   useEffect(() => {
-    calculateTotalAndFeePrecision();
-    calculatePricePerSecond();
-    getUsdPrice(paymentToken.symbol, tokenCost?.toNumber() || 0);
+    if (asset) {
+      calculateTotalAndFeePrecision(asset?.paymentToken?.feePercentage);
+      calculatePricePerSecond();
+      getUsdPrice(paymentToken.symbol, tokenCost?.toNumber() || 0);
+    }
   }, [paymentToken, tokenCost]);
 
   useEffect(() => {
-    evaluateSelectedProperty();
-  }, [selectedProperty]);
+    getAsset();
+  }, [tokenId]);
 
-  const onChangePlaceHandler = (value: number) => {
-    // setMetaverse(metaverse);
-    setSelectedMetaverse(value);
-    // TODO:: some filtering here
+  const getAsset = async () => {
+    setLoading(true);
+    const asset = await fetchAsset(tokenId);
+    if (!asset) {
+      history.push(`/all`);
+      return;
+    }
+    setAsset(parseAsset(asset));
+    setLoading(false);
   };
+
+  const hasChangesToSave = () => {
+    const changedMin = !new BigNumber(asset.minPeriod).isEqualTo(minPeriod);
+    const changedMax = !new BigNumber(asset.maxPeriod).isEqualTo(maxPeriod);
+    const changedMaxFuture = !new BigNumber(asset.maxFutureTime).isEqualTo(maxFutureTime);
+    const changedToken = asset?.paymentToken?.symbol !== paymentToken?.symbol;
+    const changedPrice = !new BigNumber(asset?.pricePerMagnitude?.price || 0).isEqualTo(tokenCost);
+
+    return changedMin || changedMax || changedMaxFuture || changedToken || changedPrice;
+  };
+
+  const canSave = hasChangesToSave();
 
   const showPriceInUsd = `$${usdPrice}`;
 
-  const steps = ['Choose Property', 'Rent Specification'];
-
   return (
     <section className="list-view">
-      <Grid container xs={12} direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
-        <Box fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
-          List Property
-        </Box>
-        <Grid container direction="row" alignItems="center" justifyContent="center" width={400} alignSelf="center">
-          <CustomizedSteppers steps={steps} activeStep={activeStep} />
-        </Grid>
-        {activeStep === 0 && (
-          <>
-            <Grid item margin={'40px 0 10px'}>
-              <ControlledSelect
-                width={'12rem'}
-                value={selectedMetaverse}
-                onChange={onChangePlaceHandler}
-                options={landsData}
-              />
-            </Grid>
-
-            {loading ? (
-              <Grid width={'100%'}>
-                <EditFormCardSkeleton />
-              </Grid>
-            ) : (
-              <Grid container flexDirection="row" wrap="wrap" xs={12} className="properties">
-                {assetProperties.map((land) => (
-                  <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
-                    <LandListingCard
-                      isSelectedProperty={land.name === selectedProperty?.name}
-                      handleClick={handlePropertyChange}
-                      key={land.name}
-                      land={land}
-                    />
-                  </Grid>
-                ))}
-                {assetEstates.map((land) => (
-                  <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
-                    <EstateListingCard
-                      isSelectedProperty={land.name === selectedProperty?.name}
-                      handleClick={handlePropertyChange}
-                      key={land.name}
-                      land={land}
-                      landsContent={estateGroup}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            )}
-          </>
-        )}
-
-        {activeStep === 1 && (
+      {loading ? (
+        <EditFormCardSkeleton />
+      ) : (
+        <Grid
+          container
+          xs={12}
+          direction="column"
+          alignItems="flex-start"
+          justifyContent="space-between"
+          height={'100%'}
+        >
+          <Box fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
+            Update Rent Conditions
+          </Box>
           <Grid
-            maxHeight={'50vh'}
-            overflow="scroll"
             container
             xs={12}
+            maxHeight={'50vh'}
+            overflow="scroll"
             columnSpacing={5}
             justifyContent="space-between"
             mt={4}
           >
-            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={450} overflow="scroll">
+            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={470} overflow="scroll">
               <DropdownSection
                 defaultOpen={true}
                 variant="calendar"
@@ -585,7 +526,7 @@ const ListNewProperty: React.FC = () => {
             </Grid>
             <Grid item xs={6} rowSpacing={5}>
               <Grid item xs={12}>
-                <SelectedListCard landsContent={estateGroup} land={selectedProperty!} />
+                <SelectedListCard asset={selectedProperty!} />
               </Grid>
               <Grid item xs={12}>
                 <ListNewSummary
@@ -597,56 +538,58 @@ const ListNewProperty: React.FC = () => {
                   maxFuturePeriod={maxFutureTime}
                   rentPrice={tokenCost}
                   paymentToken={paymentToken}
+                  asset={asset}
                 />
               </Grid>
             </Grid>
           </Grid>
-        )}
 
-        <hr className="divider" />
+          <hr className="divider" />
 
-        {activeStep === 0 && (
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
-            <Button variant="secondary" btnSize="medium">
-              Found in wallet ({assetProperties.length + assetEstates.length})
-            </Button>
-            <Button
-              disabled={selectedProperty === null}
-              variant="secondary"
-              btnSize="medium"
-              onClick={() => setActiveStep(1)}
-            >
-              Next
-            </Button>
-          </Grid>
-        )}
-        {activeStep === 1 && (
-          <Grid container direction="row" alignItems="center" justifyContent="space-between">
-            <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(0)}>
+            <Button variant="secondary" btnSize="medium" onClick={closeModal}>
               Back
             </Button>
             <Grid direction="row" alignItems="center" justifyContent="space-between">
               <Button
-                disabled={approveDisabled}
+                disabled={false}
+                variant="tertiary"
+                btnSize="medium"
+                onClick={openDelistPrompt}
+                style={{ marginRight: 25 }}
+              >
+                Delist Property
+              </Button>
+              <Button
+                disabled={saveDisabled || !canSave}
                 variant="gradient"
                 btnSize="medium"
-                onClick={handleApprove}
-                style={{ marginRight: 15 }}
+                onClick={() => setShowWarningModal(true)}
               >
-                Approve
-              </Button>
-              <Button disabled={listDisabled} variant="gradient" btnSize="medium" onClick={handleConfirmListing}>
-                Confirm Listing
+                Save Changes
               </Button>
             </Grid>
           </Grid>
-        )}
-        <TxModal variant="approve" showModal={showApproveModal} setShowModal={setShowApproveModal} />
-        <TxModal variant="sign" showModal={showSignModal} setShowModal={setShowSignModal} />
-        <SuccessModal showModal={showSuccessModal} setShowModal={setShowSuccessModal} />
-      </Grid>
+
+          <Modal height={'100%'} handleClose={() => setShowWarningModal(false)} open={showWarningModal}>
+            <Grid container width="410px" direction="column">
+              <Typography fontSize={25} variant="h2">
+                Warning
+              </Typography>
+              <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 40px 0' }} variant="subtitle1">
+                Changing the payment type will enforce the payout of any unclaimed rent accumulated for this property.
+              </Typography>
+              <Grid container direction="row" justifyContent="center">
+                <Button variant="gradient" btnSize="small" onClick={handleSave}>
+                  OK
+                </Button>
+              </Grid>
+            </Grid>
+          </Modal>
+        </Grid>
+      )}
     </section>
   );
 };
 
-export default ListNewProperty;
+export default EditPropertyViewNew;
