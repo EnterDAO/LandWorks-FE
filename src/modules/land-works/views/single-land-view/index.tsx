@@ -46,7 +46,6 @@ const SingleLandView: React.FC = () => {
   const [itemsOnPage] = useState(4);
 
   const [showRentModal, setShowRentModal] = useState(false);
-  const [showWarningModal, setShowWarningModal] = useState(false);
   const [openDelistPrompt, setOpenDelistPrompt] = useState(false);
 
   const [rentButtonDisabled, setRentButtonDisabled] = useState(false);
@@ -167,7 +166,6 @@ const SingleLandView: React.FC = () => {
     try {
       await landWorksContract?.delist(asset.id, () => {
         disableButtons(true);
-        setShowWarningModal(false);
       });
       showToastNotification(
         ToastType.Success,
@@ -176,7 +174,6 @@ const SingleLandView: React.FC = () => {
       if (isDirectWithdraw()) {
         history.push('/explore');
       }
-      setShowWarningModal(false);
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
       console.log(e);
