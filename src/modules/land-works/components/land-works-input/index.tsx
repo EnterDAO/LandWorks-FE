@@ -40,7 +40,13 @@ const CustomDropdownInput: FC<InputProps> = ({
       justifyContent="space-between"
       className={s.wrapper}
     >
-      <input className={s.input} type={'number'} onInput={onInput} defaultValue={defaultInputValue} />
+      <input
+        className={s.input}
+        onWheel={(event) => event.currentTarget.blur()}
+        type={'number'}
+        onInput={onInput}
+        defaultValue={defaultInputValue}
+      />
       <Box display="flex" flexDirection="row" className={s.dropdownBox}>
         <span>{ethInUsd}</span>
         <Divider orientation="vertical" flexItem className={s.divider} />
