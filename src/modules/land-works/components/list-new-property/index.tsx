@@ -465,7 +465,7 @@ const ListNewProperty: React.FC = () => {
 
   return (
     <section className="list-view">
-      <Grid container xs={12} direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
+      <Grid container direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
         <Box fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
           List Property
         </Box>
@@ -488,7 +488,7 @@ const ListNewProperty: React.FC = () => {
                 <EditFormCardSkeleton />
               </Grid>
             ) : (
-              <Grid container flexDirection="row" wrap="wrap" xs={12} className="properties">
+              <Grid container flexDirection="row" wrap="wrap" className="properties">
                 {assetProperties.map((land) => (
                   <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
                     <LandListingCard
@@ -516,15 +516,7 @@ const ListNewProperty: React.FC = () => {
         )}
 
         {activeStep === 1 && (
-          <Grid
-            maxHeight={'50vh'}
-            overflow="scroll"
-            container
-            xs={12}
-            columnSpacing={5}
-            justifyContent="space-between"
-            mt={4}
-          >
+          <Grid maxHeight={'50vh'} overflow="scroll" container columnSpacing={5} justifyContent="space-between" mt={4}>
             <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={450} overflow="scroll">
               <DropdownSection
                 defaultOpen={true}
@@ -626,7 +618,7 @@ const ListNewProperty: React.FC = () => {
             <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(0)}>
               Back
             </Button>
-            <Grid direction="row" alignItems="center" justifyContent="space-between">
+            <Grid container direction="row" alignItems="center" justifyContent="space-between">
               <Button
                 disabled={approveDisabled}
                 variant="gradient"
