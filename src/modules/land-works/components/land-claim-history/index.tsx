@@ -73,21 +73,25 @@ const ClaimHistoryTable: React.FC = () => {
                   position: 'relative',
                 }}
               >
-                <Box
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    position: 'absolute',
-                    right: '40%',
-                    bottom: '30%',
-                  }}
-                >
-                  <EmptyIcon />
-                  <span style={{ fontSize: '18px', fontWeight: '700', color: '#f8f8ff' }}>
-                    There is no claim history yet.
-                  </span>
-                </Box>
+                <tr>
+                  <td>
+                    <Box
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        position: 'absolute',
+                        right: '40%',
+                        bottom: '30%',
+                      }}
+                    >
+                      <EmptyIcon />
+                      <span style={{ fontSize: '18px', fontWeight: '700', color: '#f8f8ff' }}>
+                        There is no claim history yet.
+                      </span>
+                    </Box>
+                  </td>
+                </tr>
               </tbody>
             ) : (
               <StyledTableBody style={{ maxHeight: 260, overflowY: 'scroll' }}>
