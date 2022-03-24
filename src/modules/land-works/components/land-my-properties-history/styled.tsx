@@ -112,4 +112,5 @@ export const Title = styled(Typography)<TypographyProps>(() => ({
   fontSize: '30px',
   color: 'var(--theme-light-color)',
   margin: '50px 0 20px 0',
+  fontWeight: 700,
 }));
