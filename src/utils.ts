@@ -100,7 +100,7 @@ export function isValidAddress(value: string | undefined): boolean {
   return !!value && isAddress(value) && value !== DEFAULT_ADDRESS;
 }
 
-export function getDecentralandAssetName(decentralandData: DecentralandData): string {
+export function getDecentralandAssetName(decentralandData: DecentralandData | null): string {
   if (decentralandData === null) {
     return '';
   }

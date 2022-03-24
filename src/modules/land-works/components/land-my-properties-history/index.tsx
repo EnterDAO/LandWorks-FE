@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { uniqueId } from 'lodash';
-import { getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
-import ExternalLink from 'components/custom/externalLink';
 import { EmptyIcon } from 'design-system/icons';
 import { getENSName } from 'helpers/helpers';
 import { RentEntity, fetchUserRents } from 'modules/land-works/api';
@@ -27,7 +25,7 @@ import {
   UpcomingButton,
 } from './styled';
 
-import { getNowTs } from '../../../../utils';
+import { getDecentralandAssetName, getNowTs } from '../../../../utils';
 
 const MyPropetiesHistoryTable: React.FC = () => {
   const wallet = useWallet();
@@ -74,7 +72,7 @@ const MyPropetiesHistoryTable: React.FC = () => {
           <table style={{ width: '100%' }} aria-label="table">
             <StyledTableHead>
               <StyledTableHeaderRow>
-                <StyledTableCell align="left">Renter</StyledTableCell>
+                <StyledTableCell align="left">Property</StyledTableCell>
                 <StyledTableCell align="left">Rented from</StyledTableCell>
                 <StyledTableCell align="left">Rented to</StyledTableCell>
                 <StyledTableCell align="left">Tx hash</StyledTableCell>
@@ -114,9 +112,7 @@ const MyPropetiesHistoryTable: React.FC = () => {
                 {rents.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id}>
                     <StyledTableCell align="left">
-                      <ExternalLink href={getEtherscanTxUrl(data.renter.id)}>
-                        {shortenAddr(data.renter.id) || data.renter.id}
-                      </ExternalLink>
+                      {getDecentralandAssetName(data.asset?.decentralandData || null)}
                     </StyledTableCell>
 
                     <StyledTableCell align="left">

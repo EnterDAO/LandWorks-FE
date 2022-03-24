@@ -877,6 +877,18 @@ export function fetchUserRents(address: string, availableOnly = false): Promise<
           renter {
             id
           }
+          asset {
+            id
+            decentralandData {
+              metadata
+              isLAND
+              coordinates {
+                id
+                x
+                y
+              }
+            }
+          }
         }
       }
     `,
@@ -886,7 +898,6 @@ export function fetchUserRents(address: string, availableOnly = false): Promise<
     },
   })
     .then(async (response) => {
-      // Filter out rents for the same asset
       return response.data;
     })
     .catch((e) => {
