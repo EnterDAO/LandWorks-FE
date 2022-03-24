@@ -119,7 +119,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
       title: 'Tx hash',
       width: '10%',
       dataIndex: 'txHash',
-      render: (txHash: string) => <LandTableTxHash txHash={txHash} />, // TODO: On click should open getEtherscanTxUrl(text) in another tab
+      render: (txHash: string) => <LandTableTxHash txHash={txHash} />,
     },
     {
       title: 'Cost',
@@ -139,6 +139,10 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
     },
     {
       title: 'Configured operator',
+      shouldCellUpdate: (record: RentEntity, prevRecord: RentEntity) => {
+        const isEqual = record.operator === prevRecord.operator;
+        return isEqual ? false : true;
+      },
       dataIndex: 'operator',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (operator: string, data: any) => {
