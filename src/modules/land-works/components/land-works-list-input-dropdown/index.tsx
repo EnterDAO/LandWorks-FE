@@ -23,7 +23,7 @@ const DropdownSection: FC<Props> = ({ handleOpen, variant, defaultOpen }) => {
   };
 
   return (
-    <Grid display="flex" flexDirection="column" xs={12} mt={8} className={s.wrapper} onClick={handleClick}>
+    <Grid item display="flex" flexDirection="column" xs={12} mt={8} className={s.wrapper} onClick={handleClick}>
       <Box display="flex" flexDirection="row" className={s.content}>
         <Icon
           iconElement={variant === 'currency' ? <Currency /> : <Calendar02 />}
