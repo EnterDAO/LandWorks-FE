@@ -413,7 +413,11 @@ const SingleLandView: React.FC = () => {
 
       {showEditModal && (
         <Modal height={'90vh'} open={showEditModal} handleClose={() => setShowEditModal(false)}>
-          <EditPropertyViewNew closeModal={() => setShowEditModal(false)} openDelistPrompt={showPrompt} />
+          <EditPropertyViewNew
+            closeModal={() => setShowEditModal(false)}
+            openDelistPrompt={showPrompt}
+            delistText={isWithdraw() ? 'withdraw property' : 'delist property'}
+          />
         </Modal>
       )}
 
