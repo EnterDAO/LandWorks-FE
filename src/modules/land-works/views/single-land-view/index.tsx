@@ -120,7 +120,6 @@ const SingleLandView: React.FC = () => {
   };
 
   const handleWithdraw = async () => {
-    console.log('withdraw');
     if (!asset.id || !isOwner()) {
       return;
     }
@@ -136,7 +135,7 @@ const SingleLandView: React.FC = () => {
     }
   };
 
-  const handleContructFunctions = () => {
+  const handleConfirmDialog = () => {
     setOpenDelistPrompt(false);
     // no active rent - delist & withdraw , handeDelist()
     // active rent - delist, handleDelist()
@@ -220,7 +219,7 @@ const SingleLandView: React.FC = () => {
     setClaimButtonDisabled(!asset?.unclaimedRentFee?.gt(0));
   }, [asset]);
 
-  const isWithDraw = () => {
+  const isWithdraw = () => {
     return isDirectWithdraw() || shouldShowWithdraw();
   };
 
@@ -229,10 +228,10 @@ const SingleLandView: React.FC = () => {
       <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
         <Grid container width="410px" direction="column">
           <Typography fontSize={25} variant="h2">
-            {isWithDraw() ? 'Do you want to withdraw ?' : 'Warning'}
+            {isWithdraw() ? 'Do you want to withdraw ?' : 'Warning'}
           </Typography>
           <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 40px 0' }} variant="subtitle1">
-            {isWithDraw() ? (
+            {isWithdraw() ? (
               'Are you sure you want to withdraw this property? This action cannot be reversed.'
             ) : (
               <span>
@@ -246,8 +245,8 @@ const SingleLandView: React.FC = () => {
             <Button variant="secondary" btnSize="medium" onClick={() => setOpenDelistPrompt(false)}>
               No, go back
             </Button>
-            <Button variant="gradient" btnSize="medium" onClick={handleContructFunctions}>
-              Yes, {isWithDraw() ? 'withdraw' : 'delist'}
+            <Button variant="gradient" btnSize="medium" onClick={handleConfirmDialog}>
+              Yes, {isWithdraw() ? 'withdraw' : 'delist'}
             </Button>
           </Grid>
         </Grid>
@@ -332,7 +331,7 @@ const SingleLandView: React.FC = () => {
                 <LandsTooltip
                   placement="bottom"
                   trigger="hover"
-                  text="There are still active/pending rents. You will be able to withdraw your property once all rents"
+                  text="There are still active/pending rents. You will be able to withdraw your property once all rents end."
                 >
                   <span>
                     <Button variant="tertiary" btnSize="xsmall" disabled={true}>
