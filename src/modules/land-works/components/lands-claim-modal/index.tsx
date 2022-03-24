@@ -20,7 +20,7 @@ type Props = ModalProps & {
   onSubmit: () => void;
 };
 
-const MAX_CLAIM_SELECTED_ASSETS = 3; // Can be updated to 7-8
+const MAX_CLAIM_SELECTED_ASSETS = 10;
 
 export const ClaimModal: React.FC<Props> = (props) => {
   const landWorksCtx = useLandworks();
