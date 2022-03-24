@@ -37,7 +37,7 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
           <TypographyStyled variant="h1">My Properties</TypographyStyled>
         </Box>
 
-        <Box>
+        <Box style={{ marginLeft: '19%' }}>
           <TabListStyled onChange={handleChange} aria-label="Lands tabs filter">
             <TabStyled
               label={
@@ -73,7 +73,7 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
         </Box>
 
         {user?.hasUnclaimedRent && (
-          <Box>
+          <Box style={{ marginLeft: 'auto' }}>
             <LandsBannerClaimRents
               onButtonClick={() => setShowClaimModal(true)}
               isClaimButtonDisabled={claimButtonDisabled}
