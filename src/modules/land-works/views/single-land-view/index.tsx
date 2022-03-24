@@ -135,12 +135,16 @@ const SingleLandView: React.FC = () => {
     }
   };
 
-  const handleDelistButton = () => {
+  const handleConfirmDialog = () => {
     setOpenDelistPrompt(false);
-    if (isDirectWithdraw()) {
-      handleDelist();
-    } else {
+    // no active rent - delist & withdraw , handeDelist()
+    // active rent - delist, handleDelist()
+    // delisted & actie - button disabled
+    // delisted & no active rent - withdraw, handleWithDraw()
+    if (shouldShowWithdraw()) {
       handleWithdraw();
+    } else {
+      handleDelist();
     }
   };
 
@@ -215,15 +219,19 @@ const SingleLandView: React.FC = () => {
     setClaimButtonDisabled(!asset?.unclaimedRentFee?.gt(0));
   }, [asset]);
 
+  const isWithdraw = () => {
+    return isDirectWithdraw() || shouldShowWithdraw();
+  };
+
   return (
     <div className="content-container single-card-section">
       <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
         <Grid container width="410px" direction="column">
           <Typography fontSize={25} variant="h2">
-            {isDirectWithdraw() ? 'Do you want to withdraw ?' : 'Warning'}
+            {isWithdraw() ? 'Do you want to withdraw ?' : 'Warning'}
           </Typography>
           <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 40px 0' }} variant="subtitle1">
-            {isDirectWithdraw() ? (
+            {isWithdraw() ? (
               'Are you sure you want to withdraw this property? This action cannot be reversed.'
             ) : (
               <span>
@@ -237,8 +245,8 @@ const SingleLandView: React.FC = () => {
             <Button variant="secondary" btnSize="medium" onClick={() => setOpenDelistPrompt(false)}>
               No, go back
             </Button>
-            <Button variant="gradient" btnSize="medium" onClick={handleDelistButton}>
-              Yes, {isDirectWithdraw() ? 'withdraw' : 'delist'}
+            <Button variant="gradient" btnSize="medium" onClick={handleConfirmDialog}>
+              Yes, {isWithdraw() ? 'withdraw' : 'delist'}
             </Button>
           </Grid>
         </Grid>
@@ -323,7 +331,7 @@ const SingleLandView: React.FC = () => {
                 <LandsTooltip
                   placement="bottom"
                   trigger="hover"
-                  text="There are still active/pending rents. You will be able to withdraw your property once all rents"
+                  text="There are still active/pending rents. You will be able to withdraw your property once all rents end."
                 >
                   <span>
                     <Button variant="tertiary" btnSize="xsmall" disabled={true}>
@@ -332,7 +340,12 @@ const SingleLandView: React.FC = () => {
                   </span>
                 </LandsTooltip>
               ) : (
-                <Button variant="tertiary" btnSize="xsmall" onClick={handleWithdraw} disabled={withdrawButtonDisabled}>
+                <Button
+                  variant="tertiary"
+                  btnSize="xsmall"
+                  onClick={() => setOpenDelistPrompt(true)}
+                  disabled={withdrawButtonDisabled}
+                >
                   WITHDRAW
                 </Button>
               )
