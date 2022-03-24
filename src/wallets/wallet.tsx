@@ -10,7 +10,7 @@ import * as Antd from 'antd';
 import Spin from 'components/antd/spin';
 import ExternalLink from 'components/custom/externalLink';
 import config from 'config';
-import { WarningModal } from 'modules/land-works/components/lands-warning-modal';
+import { Button, Grid, Modal, Typography } from 'design-system';
 import { getNetworkName } from 'providers/eth-web3-provider';
 import ConnectWalletModal from 'wallets/components/connect-wallet-modal';
 import InstallMetaMaskModal from 'wallets/components/install-metamask-modal';
@@ -198,30 +198,41 @@ const WalletProvider: React.FC = (props) => {
       {installMetaMaskModal && <InstallMetaMaskModal onCancel={() => setInstallMetaMaskModal(false)} />}
       {unsupportedChainModal && <UnsupportedChainModal onCancel={() => setUnsupportedChainModal(false)} />}
       {initialized ? props.children : <Spin spinning className="absolute-center" />}
-      {showDisclaimerModal && (
-        <WarningModal
-          onCancel={() => {
-            setShowDisclaimerModal(false);
-            localStorage.setItem('disclaimerShown', 'true');
-          }}
-          onOk={async () => {
-            setShowDisclaimerModal(false);
-            localStorage.setItem('disclaimerShown', 'true');
-          }}
-          title="Beta Software Disclaimer"
-          text={
-            <>
-              Listing/Renting properties on LandWorks doesn't come without risks. Before making a deposit, it is best to
-              research and understand the risks involved. LandWorks smart contracts have been{' '}
-              <ExternalLink href="https://github.com/EnterDAO/LandWorks-protocol/tree/main/audits" target="_blank">
-                <span>audited</span>
-              </ExternalLink>
-              , however, security audits don't eliminate risks completely. Do not supply assets that you can't afford to
-              lose as LandWorks is still in Beta.
-            </>
-          }
-        />
-      )}
+      <Modal
+        height={'100%'}
+        open={showDisclaimerModal}
+        handleClose={() => {
+          setShowDisclaimerModal(false);
+          localStorage.setItem('disclaimerShown', 'true');
+        }}
+      >
+        <Grid container width="480px" direction="column">
+          <Typography fontSize={25} variant="h2">
+            Beta Software Disclaimer
+          </Typography>
+          <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 20px 0' }} variant="subtitle1">
+            Listing/Renting properties on LandWorks doesn't come without risks. Before making a deposit, it is best to
+            research and understand the risks involved. LandWorks smart contracts have been{' '}
+            <ExternalLink href="https://github.com/EnterDAO/LandWorks-protocol/tree/main/audits" target="_blank">
+              <span>audited</span>
+            </ExternalLink>
+            , however, security audits don't eliminate risks completely. Do not supply assets that you can't afford to
+            lose as LandWorks is still in Beta.
+          </Typography>
+          <Grid item>
+            <Button
+              variant="gradient"
+              btnSize="medium"
+              onClick={async () => {
+                setShowDisclaimerModal(false);
+                localStorage.setItem('disclaimerShown', 'true');
+              }}
+            >
+              ok
+            </Button>
+          </Grid>
+        </Grid>
+      </Modal>
     </WalletContext.Provider>
   );
 };
