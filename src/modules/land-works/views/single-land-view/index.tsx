@@ -141,7 +141,7 @@ const SingleLandView: React.FC = () => {
     if (isDirectWithdraw()) {
       handleDelist();
     } else {
-      setShowWarningModal(true);
+      handleWithdraw();
     }
   };
 
@@ -218,42 +218,30 @@ const SingleLandView: React.FC = () => {
     setClaimButtonDisabled(!asset?.unclaimedRentFee?.gt(0));
   }, [asset]);
 
-  const withDrawOrDelist = () => (isDirectWithdraw() ? 'withdraw' : 'delist');
-
   return (
     <div className="content-container single-card-section">
-      <Modal height={'80%'} handleClose={() => setShowWarningModal(false)} open={showWarningModal}>
-        <Grid container width="410px" direction="column">
-          <Typography fontSize={25} variant="h2">
-            Warning
-          </Typography>
-          <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 40px 0' }} variant="subtitle1">
-            The property is rented until <strong>{timestampSecondsToDate(asset.lastRentEnd || '0')}</strong>. Delisting
-            the property now will make it unavailable for new renters. You will be able to withdraw your property from
-            the Protocol once all rents end.
-          </Typography>
-          <Grid container direction="row" justifyContent="center">
-            <Button variant="gradient" btnSize="small" onClick={handleDelist}>
-              OK
-            </Button>
-          </Grid>
-        </Grid>
-      </Modal>
-
       <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
         <Grid container width="410px" direction="column">
           <Typography fontSize={25} variant="h2">
-            Do you want to {withDrawOrDelist()}?
+            {isDirectWithdraw() ? 'Do you want to withdraw ?' : 'Warning'}
           </Typography>
           <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 40px 0' }} variant="subtitle1">
-            Are you sure you want to {withDrawOrDelist()} this property? This action cannot be reversed.
+            {isDirectWithdraw() ? (
+              'Are you sure you want to withdraw this property? This action cannot be reversed.'
+            ) : (
+              <span>
+                The property is rented until <strong>{timestampSecondsToDate(asset.lastRentEnd || '0')}</strong>.
+                Delisting the property now will make it unavailable for new renters. You will be able to withdraw your
+                property from the Protocol once all rents end.
+              </span>
+            )}
           </Typography>
           <Grid container direction="row" justifyContent="space-between">
             <Button variant="secondary" btnSize="medium" onClick={() => setOpenDelistPrompt(false)}>
               No, go back
             </Button>
             <Button variant="gradient" btnSize="medium" onClick={handleDelistButton}>
-              Yes, {withDrawOrDelist()}
+              Yes, {isDirectWithdraw() ? 'withdraw' : 'delist'}
             </Button>
           </Grid>
         </Grid>
