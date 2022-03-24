@@ -38,10 +38,11 @@ import './index.scss';
 interface Props {
   openDelistPrompt: () => void;
   closeModal: () => void;
+  delistText: string;
 }
 
 const EditPropertyViewNew: React.FC<Props> = (props) => {
-  const { openDelistPrompt, closeModal } = props;
+  const { openDelistPrompt, closeModal, delistText } = props;
 
   const walletCtx = useWallet();
   const landworks = useLandworks();
@@ -558,7 +559,7 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
                 onClick={openDelistPrompt}
                 style={{ marginRight: 25 }}
               >
-                Delist Property
+                {delistText}
               </Button>
               <Button
                 disabled={saveDisabled || !canSave}
