@@ -48,7 +48,7 @@ export const RentDatePicker = (props: {
   }, []);
 
   return (
-    <Grid container spacing={1} className="dateRange">
+    <Grid container className="dateRange">
       <InputLabel>
         <p>
           Start Date
@@ -74,13 +74,18 @@ export const RentDatePicker = (props: {
       <InputLabel>
         <p>End Date</p>
         <TextField
+          style={{ fontSize: '14px' }}
           className="input date-input"
           type="date"
           disabled={isMinEqualMax()}
           onChange={(e) => handleDate(e.target.value)}
           defaultValue={minRentPeriod.format().split('T')[0]}
           InputProps={{
-            inputProps: { min: minRentPeriod.format().split('T')[0], max: maxEndDate.format().split('T')[0] },
+            inputProps: {
+              min: minRentPeriod.format().split('T')[0],
+              max: maxEndDate.format().split('T')[0],
+              style: { fontSize: 14 },
+            },
           }}
         />
       </InputLabel>
@@ -103,7 +108,7 @@ export const RentDatePicker = (props: {
           disabled={isMinEqualMax()}
           onChange={(e) => handleHours(e.target.value)}
           defaultValue={endDate?.slice(-5) || fixedMinRentPeriodMinutes()}
-          inputProps={{ min: minRentTime }}
+          inputProps={{ min: minRentTime, style: { fontSize: 14 } }}
         />
       </InputLabel>
     </Grid>
