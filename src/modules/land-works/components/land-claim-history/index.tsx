@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useSubscription } from '@apollo/client';
 import { Box } from '@mui/material';
-import { getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
-import ExternalLink from 'components/custom/externalLink';
 import { EmptyIcon } from 'design-system/icons';
 import { ClaimHistory, USER_CLAIM_HISTORY_SUBSCRIPTION } from 'modules/land-works/api';
 
 import { useWallet } from '../../../../wallets/wallet';
+import LandTableTxHash from '../land-table-tx-hash';
 import LandWorksTableDate from '../land-works-table-date';
 import LandTablePrice from '../land-works-table-price';
 import {
@@ -100,8 +99,8 @@ const ClaimHistoryTable: React.FC = () => {
                     <StyledTableCell style={{ color: THEME_COLORS.light }} align="left">
                       {getDecentralandAssetName(data.asset.decentralandData)}
                     </StyledTableCell>
-                    <StyledTableCell style={{ fontWeight: '500', color: THEME_COLORS.accentBlue }} align="left">
-                      <ExternalLink href={getEtherscanTxUrl(data.txHash)}>{shortenAddr(data.txHash, 22)}</ExternalLink>
+                    <StyledTableCell style={{ fontWeight: '500' }} align="left">
+                      <LandTableTxHash txHash={data.txHash} firstSymbolsLength={22} />
                     </StyledTableCell>
                     <StyledTableCell style={{ color: THEME_COLORS.light }} align="left">
                       <LandTablePrice
