@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useSubscription } from '@apollo/client';
 import { Box } from '@mui/material';
-import { getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
-import ExternalLink from 'components/custom/externalLink';
 import { EmptyIcon } from 'design-system/icons';
 import { ClaimHistory, USER_CLAIM_HISTORY_SUBSCRIPTION } from 'modules/land-works/api';
 
