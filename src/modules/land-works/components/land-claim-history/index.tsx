@@ -101,7 +101,7 @@ const ClaimHistoryTable: React.FC = () => {
                     <StyledTableCell style={{ color: THEME_COLORS.light }} align="left">
                       {getDecentralandAssetName(data.asset.decentralandData)}
                     </StyledTableCell>
-                    <StyledTableCell style={{ fontWeight: '500', color: THEME_COLORS.accentBlue }} align="left">
+                    <StyledTableCell style={{ fontWeight: '500' }} align="left">
                       <LandTableTxHash txHash={data.txHash} firstSymbolsLength={22} />
                     </StyledTableCell>
                     <StyledTableCell style={{ color: THEME_COLORS.light }} align="left">
