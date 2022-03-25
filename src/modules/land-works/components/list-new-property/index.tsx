@@ -257,6 +257,7 @@ const ListNewProperty: React.FC = () => {
 
         approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
       } else {
+        setShowApproveModal(true);
         await estateRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
 
         approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
