@@ -117,7 +117,11 @@ const ExploreView: React.FC = () => {
 
   const onChangeFiltersOwnerToggler = (value: boolean) => {
     if (value) {
-      setLands(user?.ownerAndConsumerAssets || []);
+      setLands(
+        user?.ownerAndConsumerAssets?.filter(
+          (land) => land.paymentToken.id === paymentToken || !paymentToken?.length
+        ) || []
+      );
     } else {
       if (!isNull(paymentToken)) {
         getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
@@ -194,7 +198,7 @@ const ExploreView: React.FC = () => {
   }, [wallet.account]);
 
   useEffect(() => {
-    if (!isNull(paymentToken) && !sessionStorageHandler('get', 'explore-filters', 'owner')) {
+    if (!isNull(paymentToken)) {
       getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
     }
   }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
@@ -202,10 +206,6 @@ const ExploreView: React.FC = () => {
   useEffect(() => {
     updateUser();
   }, [userData]);
-
-  useEffect(() => {
-    onChangeFiltersOwnerToggler(sessionStorageHandler('get', 'explore-filters', 'owner') || false);
-  }, [user]);
 
   useEffect(() => {
     getPaymentTokens();
