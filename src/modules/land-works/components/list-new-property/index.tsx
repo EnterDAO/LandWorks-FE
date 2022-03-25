@@ -614,11 +614,11 @@ const ListNewProperty: React.FC = () => {
           </Grid>
         )}
         {activeStep === 1 && (
-          <Grid container direction="row" alignItems="center" justifyContent="space-between">
+          <Grid maxHeight={'50vh'} overflow="scroll" container columnSpacing={5} justifyContent="space-between" mt={4}>
             <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(0)}>
               Back
             </Button>
-            <Grid container direction="row" alignItems="center" justifyContent="space-between">
+            <Grid alignItems="center" justifyContent="space-between">
               <Button
                 disabled={approveDisabled}
                 variant="gradient"
