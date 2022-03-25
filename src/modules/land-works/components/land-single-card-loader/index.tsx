@@ -12,8 +12,8 @@ const baseColor = '#c1c1cf';
 
 const SingleLandCardSkeleton: FC = () => {
   return (
-    <GridStyled mt={0} xs={12} minHeight={350} container columnSpacing={2}>
-      <GridStyledInnerContainer mr={3} xs={5.8} flexDirection="column">
+    <GridStyled minHeight={350} container columnSpacing={2}>
+      <GridStyledInnerContainer item mr={3} xs={5.8} flexDirection="column">
         <Box height={'80%'}>
           <Skeleton width={'100%'} height={'100%'} baseColor={baseColor} highlightColor={highlightColor} duration={3} />
         </Box>
@@ -21,7 +21,7 @@ const SingleLandCardSkeleton: FC = () => {
           <Skeleton width={'100%'} height={'100%'} baseColor={baseColor} highlightColor={highlightColor} duration={3} />
         </Box>
       </GridStyledInnerContainer>
-      <GridStyledInnerContainer xs={5.8} flexDirection="column">
+      <GridStyledInnerContainer item xs={5.8} flexDirection="column">
         <Box height={'20%'}>
           <Skeleton width={'100%'} height={'100%'} baseColor={baseColor} highlightColor={highlightColor} duration={3} />
         </Box>
