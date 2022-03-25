@@ -56,7 +56,7 @@ const SelectedListCard: React.FC<ISelectedListCard> = ({ land, landsContent, ass
                     ? coords?.slice(0, 3).map((co) => {
                         return (
                           <>
-                            <span style={{ marginRight: '8px' }}>
+                            <span key={`${co[0]}-${co[1]}`} style={{ marginRight: '8px' }}>
                               X: {co[0]} Y: {co[1]}
                               {''}
                             </span>
@@ -66,7 +66,7 @@ const SelectedListCard: React.FC<ISelectedListCard> = ({ land, landsContent, ass
                       })
                     : coords?.map((co) => {
                         return (
-                          <span style={{ marginRight: '8px' }}>
+                          <span key={`${co[0]}-${co[1]}`} style={{ marginRight: '8px' }}>
                             X: {co[0]} Y: {co[1]}
                             {''}
                           </span>
