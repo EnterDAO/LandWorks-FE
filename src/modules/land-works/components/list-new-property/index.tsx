@@ -428,6 +428,8 @@ const ListNewProperty: React.FC = () => {
 
     if (pricePerSecondisLTE) {
       setPriceError('Price per second cannot be negative or equal zero');
+    } else if (pricePerSecond.toFixed(0) === '0') {
+      setPriceError('Price per second equals to zero');
     } else {
       setPriceError('');
     }
