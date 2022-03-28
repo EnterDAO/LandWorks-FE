@@ -5,7 +5,6 @@
   margin-top: 10px;
   margin-left: 0;
   width: 100%;
-  gap: 20px;
 
   label {
     margin: 0;
@@ -13,6 +12,7 @@
   p {
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
   }
   .rangeDivider {
     width: 20px;
@@ -23,7 +23,7 @@
 
   .input {
     max-width: 169px;
-    min-width: 120px;
+    min-width: 164px;
     font-size: 14px;
 
     input {
