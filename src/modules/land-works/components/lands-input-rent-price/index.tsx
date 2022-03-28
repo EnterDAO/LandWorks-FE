@@ -67,7 +67,6 @@ export const RentPrice: React.FC<IProps> = ({
           <Grid display="flex" flexDirection="row" alignItems="center">
             <Icon
               name={getTokenIconName(paymentToken.symbol || 'png/eth')}
-              // className="info-icon"
               style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
             />
             <SmallAmountTooltip className="amount" amount={new BigNumber(earnings || '0')} />
@@ -79,7 +78,6 @@ export const RentPrice: React.FC<IProps> = ({
           <Grid display="flex" flexDirection="row" alignItems="center">
             <Icon
               name={getTokenIconName(paymentToken.symbol || 'png/eth')}
-              // className="info-icon"
               style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
             />
             <span className="earnings-num">

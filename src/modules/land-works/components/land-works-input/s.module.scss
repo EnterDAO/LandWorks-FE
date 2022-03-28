@@ -8,7 +8,6 @@
   border-radius: 10px;
   position: relative;
   width: 100%;
-  //max-width: 370px;
 
   input[type='number']::-webkit-inner-spin-button,
   input[type='number']::-webkit-outer-spin-button {
@@ -16,8 +15,8 @@
     margin: 0;
   }
   span {
-    max-width: 75px;
-    overflow: scroll;
+    max-width: 85px;
+    overflow: hidden;
     margin-right: 10px;
   }
 }
