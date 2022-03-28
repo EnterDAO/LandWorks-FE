@@ -397,7 +397,7 @@ const ListNewProperty: React.FC = () => {
       !pricePerSecondisLTE &&
       !maxPeriodIsLTE &&
       !minPeriodIsLTE &&
-      !pricePerSecondEqualZero; &&
+      !pricePerSecondEqualZero &&
       maxFutureTime;
 
     if (noMinPeriod) {
