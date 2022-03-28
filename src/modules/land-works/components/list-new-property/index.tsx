@@ -467,7 +467,7 @@ const ListNewProperty: React.FC = () => {
   return (
     <section className="list-view">
       <Grid container direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
-        <Box fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
+        <Box marginBottom="10px" fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
           List Property
         </Box>
         <Grid container direction="row" alignItems="center" justifyContent="center" width={400} alignSelf="center">
@@ -615,7 +615,7 @@ const ListNewProperty: React.FC = () => {
           </Grid>
         )}
         {activeStep === 1 && (
-          <Grid maxHeight={'50vh'} overflow="scroll" container columnSpacing={5} justifyContent="space-between" mt={4}>
+          <Grid maxHeight={'50vh'} overflow="scroll" container columnSpacing={1} justifyContent="space-between" mt={4}>
             <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(0)}>
               Back
             </Button>
