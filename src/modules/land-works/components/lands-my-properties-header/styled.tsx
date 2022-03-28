@@ -8,7 +8,6 @@ import { Box, Typography } from 'design-system';
 export const RootStyled = styled(Box)(({ theme }) => ({
   display: 'flex',
   width: 'auto',
-  justifyContent: 'space-between',
   alignItems: 'center',
   margin: '0 0 12px 0',
   paddingBottom: '20px',
