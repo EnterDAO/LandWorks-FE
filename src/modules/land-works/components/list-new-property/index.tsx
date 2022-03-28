@@ -379,36 +379,64 @@ const ListNewProperty: React.FC = () => {
   };
 
   const evaluateInput = () => {
-    let isListDisabled = true;
-    if (!minPeriod && isMinPeriodSelected) {
+    const noMinPeriod = !minPeriod && isMinPeriodSelected;
+    const minPeriodLessMaxPeriod = minPeriod?.gt(maxPeriod);
+    // lte - LessThanOrEqualTo
+    const minPeriodIsLTE = minPeriod?.lte(ZERO_BIG_NUMBER);
+    const noMaxPeriod = !maxPeriod && isMaxPeriodSelected;
+    const maxPeriodLessMaxFutureTime = maxPeriod?.gt(maxFutureTime);
+    const maxPeriodIsLTE = maxPeriod?.lte(ZERO_BIG_NUMBER);
+    const pricePerSecondisLTE = pricePerSecond.lte(ZERO_BIG_NUMBER);
+
+    const noErrors =
+      !noMinPeriod &&
+      !minPeriodLessMaxPeriod &&
+      !noMaxPeriod &&
+      !maxPeriodLessMaxFutureTime &&
+      !pricePerSecondisLTE &&
+      !maxPeriodIsLTE &&
+      !minPeriodIsLTE &&
+      maxFutureTime;
+
+    if (noMinPeriod) {
       setMinError('Min period must be set');
-    } else if (minPeriod?.gt(maxPeriod)) {
+    } else if (minPeriodLessMaxPeriod) {
       setMinError('Min period should be equal or smaller than Max period');
-    } else if (!maxPeriod && isMaxPeriodSelected) {
-      setMaxError('Max period must be set');
-    } else if (maxPeriod?.gt(maxFutureTime)) {
-      setMaxError('Max period should be equal or smaller than Max rent queue');
-    } else if (!maxFutureTime) {
-      setMaxFutureError('Max rent queue must be set');
-    } else if (pricePerSecond.eq(ZERO_BIG_NUMBER)) {
-      setPriceError('Price cannot be zero');
-    } else if (pricePerSecond.toFixed(0) === '0') {
-      setPriceError('Price per second equals to zero');
-    } else if (!approveDisabled) {
-      clearErrorMessages();
+    } else if (minPeriodIsLTE) {
+      setMinError('Min period cannot be negative or equal zero');
     } else {
-      clearErrorMessages();
-      isListDisabled = false;
+      setMinError('');
     }
 
-    setListDisabled(isListDisabled);
-  };
+    if (noMaxPeriod) {
+      setMaxError('Max period must be set');
+    } else if (maxPeriodLessMaxFutureTime) {
+      setMaxError('Max period should be equal or smaller than Max rent queue');
+    } else if (maxPeriodIsLTE) {
+      setMaxError('Max period cannot be negative or equal zero');
+    } else {
+      setMaxError('');
+    }
 
-  const clearErrorMessages = () => {
-    setMinError('');
-    setMaxError('');
-    setMaxFutureError('');
-    setPriceError('');
+    if (!maxFutureTime) {
+      setMaxFutureError('Max rent queue must be set');
+    } else if (maxFutureTime.lte(ZERO_BIG_NUMBER)) {
+      setMaxFutureError('Max rent queue cannot be negative or equal zero');
+    } else {
+      setMaxFutureError('');
+    }
+
+    if (pricePerSecondisLTE) {
+      setPriceError('Price per second cannot be negative or equal zero');
+    } else {
+      setPriceError('');
+    }
+
+    if (noErrors && approveDisabled) {
+      setListDisabled(false);
+    } else {
+      setListDisabled(true);
+    }
   };
 
   const evaluateSelectedProperty = async () => {
