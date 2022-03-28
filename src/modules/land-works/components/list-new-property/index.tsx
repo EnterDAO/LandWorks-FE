@@ -387,6 +387,7 @@ const ListNewProperty: React.FC = () => {
     const maxPeriodLessMaxFutureTime = maxPeriod?.gt(maxFutureTime);
     const maxPeriodIsLTE = maxPeriod?.lte(ZERO_BIG_NUMBER);
     const pricePerSecondisLTE = pricePerSecond.lte(ZERO_BIG_NUMBER);
+    const pricePerSecondEqualZero = pricePerSecond.toFixed(0) === '0';
 
     const noErrors =
       !noMinPeriod &&
@@ -396,6 +397,7 @@ const ListNewProperty: React.FC = () => {
       !pricePerSecondisLTE &&
       !maxPeriodIsLTE &&
       !minPeriodIsLTE &&
+      !pricePerSecondEqualZero; &&
       maxFutureTime;
 
     if (noMinPeriod) {
@@ -428,7 +430,7 @@ const ListNewProperty: React.FC = () => {
 
     if (pricePerSecondisLTE) {
       setPriceError('Price per second cannot be negative or equal zero');
-    } else if (pricePerSecond.toFixed(0) === '0') {
+    } else if (pricePerSecondEqualZero) {
       setPriceError('Price per second equals to zero');
     } else {
       setPriceError('');
