@@ -33,7 +33,7 @@ const SelectedListCard: React.FC<ISelectedListCard> = ({ land, landsContent, ass
                   maxHeight: { xs: 233, md: 167 },
                 }}
                 className={s.image}
-                alt="The house from the offer."
+                alt="The property from the offer."
                 src={land.isLAND ? getDecentralandNftImageUrl(land) : getEstateImageUrl(land)}
               />
             </Grid>
@@ -89,7 +89,7 @@ const SelectedListCard: React.FC<ISelectedListCard> = ({ land, landsContent, ass
                   maxHeight: { xs: 233, md: 167 },
                 }}
                 className={s.image}
-                alt="The house from the offer."
+                alt="The property from the offer."
                 src={getLandImageUrl(asset)}
               />
             </Grid>
