@@ -20,6 +20,16 @@ export const sortData = [
     value: 3,
     icon: <HighIcon />,
   },
+  {
+    label: 'Period: shortest',
+    value: 4,
+    icon: <LowIcon />,
+  },
+  {
+    label: 'Period: longest',
+    value: 5,
+    icon: <HighIcon />,
+  },
 ];
 
 export const landsData = [
