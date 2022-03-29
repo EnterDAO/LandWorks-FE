@@ -8,7 +8,6 @@ import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 
 import { AssetEntity } from '../../api';
 import LandCardAvailability from '../land-works-card-availability';
-import { LandsTooltip } from '../lands-tooltip';
 import { ReactComponent as HotIcon } from './assets/hot.svg';
 
 import './index.scss';
@@ -74,17 +73,6 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
           <SmallAmountTooltip symbol="$" amount={land.pricePerMagnitude.usdPrice || ZERO_BIG_NUMBER} />
           <span>/{land.pricePerMagnitude.magnitude}</span>
         </span>
-
-        <LandsTooltip
-          placement="bottomLeft"
-          trigger="hover"
-          text={
-            <>
-              The price for renting this property is {land.humanPricePerSecond.toString(10)}{' '}
-              <Icon name={getTokenIconName(land.paymentToken.symbol)} className="eth-icon" /> per second.
-            </>
-          }
-        />
       </div>
 
       <div className="land-explore-divider"></div>

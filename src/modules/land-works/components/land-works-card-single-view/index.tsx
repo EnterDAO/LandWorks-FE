@@ -294,17 +294,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                             amount={asset?.pricePerMagnitude?.usdPrice || ZERO_BIG_NUMBER}
                           />
                           <span className="per-day">/{asset?.pricePerMagnitude?.magnitude}</span>
-                          <LandsTooltip
-                            placement="bottomLeft"
-                            trigger="hover"
-                            text={
-                              <>
-                                The price for renting this property is {asset?.humanPricePerSecond?.toString(10)}{' '}
-                                <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" />{' '}
-                                per second.
-                              </>
-                            }
-                          />
                         </div>
                       </Grid>
                     </Grid>
