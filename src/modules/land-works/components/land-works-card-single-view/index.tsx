@@ -164,7 +164,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const [ensOperator, setEnsOperator] = useState<string>();
 
   useEffect(() => {
-    if (!wallet.account || asset?.id) {
+    if (asset?.id) {
       setLoading(false);
     }
   }, [asset]);
