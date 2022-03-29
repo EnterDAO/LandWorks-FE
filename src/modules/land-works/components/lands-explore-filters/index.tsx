@@ -112,7 +112,7 @@ const LandWorksFilters: FC<Props> = ({
             </Box>
           </Box>
           <ControlledSelect
-            width={'12rem'}
+            width={'13rem'}
             value={selectedOrder}
             onChange={onChangeSortDirectionHandler}
             options={sortData}
