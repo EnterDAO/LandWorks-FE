@@ -21,12 +21,12 @@ export const sortData = [
     icon: <HighIcon />,
   },
   {
-    label: 'Period: shortest',
+    label: 'Period: shortest first',
     value: 4,
     icon: <LowIcon />,
   },
   {
-    label: 'Period: longest',
+    label: 'Period: longest first',
     value: 5,
     icon: <HighIcon />,
   },

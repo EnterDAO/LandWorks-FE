@@ -108,7 +108,13 @@ export const pageSizeOptions = ['8', '12', '24'];
 
 export const sortColumns = ['totalRents', 'pricePerSecond', 'pricePerSecond', 'minPeriod', 'maxPeriod'];
 
-export const sortDirections = [SortDirection.DESC, SortDirection.ASC, SortDirection.DESC, SortDirection.ASC, SortDirection.DESC];
+export const sortDirections = [
+  SortDirection.DESC,
+  SortDirection.ASC,
+  SortDirection.DESC,
+  SortDirection.ASC,
+  SortDirection.DESC,
+];
 
 export const metaverseOptions = ['Decentraland'];
 
