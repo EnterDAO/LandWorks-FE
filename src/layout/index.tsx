@@ -12,6 +12,7 @@ import LandRegistryProvider from 'modules/land-works/providers/decentraland/land
 import LandWorksProvider from 'modules/land-works/providers/landworks-provider';
 import WarningProvider from 'providers/warning-provider';
 
+import NotionProvider from '../api/notion/client';
 import Erc20Provider from '../modules/land-works/providers/erc20-provider';
 import { GraphClient } from '../web3/graph/client';
 
@@ -34,17 +35,19 @@ const LayoutView: React.FC = () => {
               <EstateRegistryProvider>
                 <Erc20Provider>
                   <ApolloProvider client={client}>
-                    <LayoutHeader />
-                    <main className={s.main}>
-                      <ErrorBoundary>
-                        <Suspense fallback={<AntdSpin className="pv-24 ph-64" style={{ width: '100%' }} />}>
-                          <Switch>
-                            <Route path="/" component={LandworksView} />
-                          </Switch>
-                        </Suspense>
-                      </ErrorBoundary>
-                    </main>
-                    {isntExploreViewRoute && <LayoutFooter />}
+                    <NotionProvider>
+                      <LayoutHeader />
+                      <main className={s.main}>
+                        <ErrorBoundary>
+                          <Suspense fallback={<AntdSpin className="pv-24 ph-64" style={{ width: '100%' }} />}>
+                            <Switch>
+                              <Route path="/" component={LandworksView} />
+                            </Switch>
+                          </Suspense>
+                        </ErrorBoundary>
+                      </main>
+                      {isntExploreViewRoute && <LayoutFooter />}
+                    </NotionProvider>
                   </ApolloProvider>
                 </Erc20Provider>
               </EstateRegistryProvider>

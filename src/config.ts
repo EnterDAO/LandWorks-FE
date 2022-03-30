@@ -86,6 +86,11 @@ const config = {
     u: String(process.env.REACT_APP_MAILCHIMP_U),
     id: String(process.env.REACT_APP_MAILCHIMP_ID),
   },
+  notion: {
+    apiKey: String(process.env.REACT_APP_NOTION_API_KEY),
+    baseUrl: String(process.env.REACT_APP_NOTION_BASE_URL),
+    databaseId: String(process.env.REACT_APP_NOTION_DATABASE_ID),
+  },
 };
 
 export const ENTR_MARKET_LINK = `https://app.sushi.com/swap?inputCurrency=${config.tokens.usdc}&outputCurrency=${config.tokens.entr}`;
