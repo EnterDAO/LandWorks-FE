@@ -32,6 +32,7 @@ import { ReactComponent as HeartInCircleNotFilledIcon } from 'assets/icons/heart
 import { ReactComponent as HeartOutlinedIcon } from 'assets/icons/heart-outlined.svg';
 import { ReactComponent as HiIcon } from 'assets/icons/hi.svg';
 import { ReactComponent as HomeIcon } from 'assets/icons/home.svg';
+import { ReactComponent as LocationIcon } from 'assets/icons/location-icon.svg';
 // import { ReactComponent as InfoIcon} from 'assets/icons/info.svg';
 import { ReactComponent as LoginIcon } from 'assets/icons/log-in.svg';
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg';
@@ -91,6 +92,7 @@ export {
   HeartOutlinedIcon,
   HomeIcon,
   AlertIcon,
+  LocationIcon,
   // InfoIcon,
   LoginIcon,
   MinusIcon,

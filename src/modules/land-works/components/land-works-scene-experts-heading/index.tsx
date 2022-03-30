@@ -29,7 +29,7 @@ const SceneExpertHeading: FC = () => {
           marginTop: '20px',
           maxHeight: '50vh',
         }}
-        alt="The property from the offer."
+        alt="Landing image"
         src={landingImage}
       />
     </Grid>
