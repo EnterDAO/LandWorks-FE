@@ -117,11 +117,7 @@ const ExploreView: React.FC = () => {
 
   const onChangeFiltersOwnerToggler = (value: boolean) => {
     if (value) {
-      setLands(
-        user?.ownerAndConsumerAssets?.filter(
-          (land) => land.paymentToken.id === paymentToken || !paymentToken?.length
-        ) || []
-      );
+      getLands(sortColumn, sortDir, lastRentEnd, paymentToken, user.id);
     } else {
       if (!isNull(paymentToken)) {
         getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
@@ -158,7 +154,7 @@ const ExploreView: React.FC = () => {
   };
 
   const getLands = useDebounce(
-    async (orderColumn: string, sortDir: string, lastRentEnd: string, paymentToken: string) => {
+    async (orderColumn: string, sortDir: string, lastRentEnd: string, paymentToken: string, owner: string) => {
       setLoading(true);
 
       const lands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
@@ -166,12 +162,11 @@ const ExploreView: React.FC = () => {
         lastRentEnd,
         orderColumn,
         sortDir,
-        paymentToken
+        paymentToken,
+        owner
       );
 
       setLands(lands.data);
-      sessionStorageHandler('get', 'explore-filters', 'owner') &&
-        onChangeFiltersOwnerToggler(sessionStorageHandler('get', 'explore-filters', 'owner'));
       setLoading(false);
       const highlights = getAllLandsCoordinates(lands.data);
       setCoordinatesHighlights(highlights);
@@ -199,9 +194,11 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     if (!isNull(paymentToken)) {
-      getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
+      sessionStorageHandler('get', 'explore-filters', 'owner')
+        ? getLands(sortColumn, sortDir, lastRentEnd, paymentToken, user.id)
+        : getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
     }
-  }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
+  }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken, user]);
 
   useEffect(() => {
     updateUser();
