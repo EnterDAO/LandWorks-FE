@@ -767,6 +767,7 @@ export function fetchUserFirstRentByTimestamp(
 /**
  * Gets the last rent end for an asset.
  * Returns the current time in seconds:
+ * if the last rent is less than now
  * if there are no rents
  * if the request throws an error
  * @param asset The target asset id
@@ -791,10 +792,12 @@ export function fetchAssetLastRentEnd(asset: string): Promise<number> {
     },
   })
     .then(async (response) => {
-      if (response.data.rents.length > 0) {
-        return Number(response.data.rents[0].end);
+      const now = getNowTs();
+      if (response.data.rents.length == 1) {
+        const rentEnd = Number(response.data.rents[0].end);
+        return rentEnd < now ? now : rentEnd;
       } else {
-        return getNowTs();
+        return now;
       }
     })
     .catch((e) => {
@@ -908,11 +911,11 @@ export function fetchUserRents(address: string, availableOnly = false): Promise<
           txHash
           fee
           paymentToken {
-              id
-              name
-              symbol
-              decimals
-            }
+            id
+            name
+            symbol
+            decimals
+          }
           renter {
             id
           }
