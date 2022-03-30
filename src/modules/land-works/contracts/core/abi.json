@@ -5,25 +5,6 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "_metaverseRegistry",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_administrativeConsumer",
-        "type": "address"
-      }
-    ],
-    "name": "AdministrativeConsumerUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "owner",
         "type": "address"
       },
@@ -122,25 +103,6 @@
       }
     ],
     "name": "ClaimRentFee",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_metaverseRegistry",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_adapter",
-        "type": "address"
-      }
-    ],
-    "name": "ConsumableAdapterUpdated",
     "type": "event"
   },
   {
@@ -488,62 +450,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "_assetId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_adapter",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_consumer",
-        "type": "address"
-      }
-    ],
-    "name": "UpdateAdapterAdministrativeConsumer",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "_assetId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_rentId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_adapter",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_consumer",
-        "type": "address"
-      }
-    ],
-    "name": "UpdateAdapterConsumer",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "address",
         "name": "_administrativeOperator",
@@ -658,31 +564,6 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "_consumer",
-        "type": "address"
-      }
-    ],
-    "name": "UpdateRentConsumer",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "_assetId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_rentId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "_operator",
         "type": "address"
       }
@@ -708,25 +589,6 @@
     ],
     "name": "Withdraw",
     "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_metaverseRegistry",
-        "type": "address"
-      }
-    ],
-    "name": "administrativeConsumer",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
   },
   {
     "inputs": [],
@@ -954,25 +816,6 @@
     "name": "claimRentFee",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_metaverseRegistry",
-        "type": "address"
-      }
-    ],
-    "name": "consumableAdapter",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1419,11 +1262,6 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_maxRentStart",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "_paymentToken",
         "type": "address"
@@ -1500,36 +1338,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_rentId",
-        "type": "uint256"
-      }
-    ],
-    "name": "rentConsumer",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_assetId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
         "name": "_period",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_maxRentStart",
         "type": "uint256"
       },
       {
@@ -1549,44 +1358,6 @@
       }
     ],
     "name": "rentDecentraland",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_assetId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_period",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_maxRentStart",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_consumer",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_paymentToken",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "rentWithConsumer",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -1646,24 +1417,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_metaverseRegistry",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_administrativeConsumer",
-        "type": "address"
-      }
-    ],
-    "name": "setAdministrativeConsumerFor",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "operator",
         "type": "address"
       },
@@ -1687,24 +1440,6 @@
       }
     ],
     "name": "setBaseURI",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_metaverseRegistry",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_consumableAdapter",
-        "type": "address"
-      }
-    ],
-    "name": "setConsumableAdapter",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -2031,37 +1766,6 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_assetId",
-        "type": "uint256"
-      }
-    ],
-    "name": "updateAdapterAdministrativeState",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_assetId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_rentId",
-        "type": "uint256"
-      }
-    ],
-    "name": "updateAdapterState",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "_administrativeOperator",
         "type": "address"
@@ -2119,29 +1823,6 @@
       }
     ],
     "name": "updateConditions",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_assetId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_rentId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_newConsumer",
-        "type": "address"
-      }
-    ],
-    "name": "updateConsumer",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

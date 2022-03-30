@@ -16,7 +16,7 @@ import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 import { useWallet } from 'wallets/wallet';
 
-import { AssetAvailablity, PaymentToken, fetchAssetLastRentEnd } from '../../api';
+import { AssetAvailablity, PaymentToken } from '../../api';
 import { useErc20 } from '../../providers/erc20-provider';
 import { useLandworks } from '../../providers/landworks-provider';
 import { ModalLoader } from '../lands-modal-loading';
@@ -24,7 +24,6 @@ import { ModalSuccess } from '../lands-modal-success';
 import { RentDatePicker } from '../lands-rent-date-picker';
 
 import { isValidAddress } from 'utils';
-import { HOUR_IN_SECONDS } from '../../../../utils/date';
 
 import './index.scss';
 
@@ -161,17 +160,13 @@ export const RentModal: React.FC<Props> = (props) => {
       return;
     }
     try {
-      setTransactionLoading(true);
       const bnPeriod = new BigNumber(period);
-      const lastRentEnd = await fetchAssetLastRentEnd(assetId);
-      const maxRentStart = lastRentEnd + HOUR_IN_SECONDS;
-
+      setTransactionLoading(true);
       if (paymentToken?.symbol.toLowerCase() === 'eth') {
         await landWorksContract?.rentDecentralandWithETH(
           assetId,
           editedValue,
           bnPeriod,
-          maxRentStart,
           paymentToken.id,
           value,
           onSubmit
@@ -181,7 +176,6 @@ export const RentModal: React.FC<Props> = (props) => {
           assetId,
           editedValue,
           bnPeriod,
-          maxRentStart,
           paymentToken.id,
           value,
           onSubmit

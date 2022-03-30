@@ -152,7 +152,6 @@ export default class LandWorksContract extends Web3Contract {
     assetId: BigNumber | string,
     operator: string,
     period: BigNumber,
-    maxRentStart: number,
     paymentToken: string,
     value: BigNumber,
     callback: () => void = () => {}
@@ -163,7 +162,7 @@ export default class LandWorksContract extends Web3Contract {
 
     return this.send(
       'rentDecentraland',
-      [assetId, period.toNumber(), maxRentStart, operator, paymentToken, value],
+      [assetId, period.toNumber(), operator, paymentToken, value],
       {
         from: this.account,
         value: value,
@@ -182,7 +181,6 @@ export default class LandWorksContract extends Web3Contract {
     assetId: BigNumber | string,
     operator: string,
     period: BigNumber,
-    maxRentStart: number,
     paymentToken: string,
     value: BigNumber,
     callback: () => void = () => {}
@@ -192,7 +190,7 @@ export default class LandWorksContract extends Web3Contract {
     }
     return this.send(
       'rentDecentraland',
-      [assetId, period, maxRentStart, operator, paymentToken, value],
+      [assetId, period, operator, paymentToken, value],
       {
         from: this.account,
       },
