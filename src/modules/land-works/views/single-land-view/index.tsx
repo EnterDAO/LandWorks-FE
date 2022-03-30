@@ -10,7 +10,7 @@ import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import EditPropertyViewNew from 'modules/land-works/components/edit-property';
 
-import ExternalLink from '../../../../components/custom/externalLink';
+import ExternalLink from '../../../../components/custom/external-link';
 import { useWallet } from '../../../../wallets/wallet';
 import { ASSET_SUBSCRIPTION, AssetEntity, fetchAdjacentDecentralandAssets, parseAsset } from '../../api';
 import LandWorkCard from '../../components/land-works-card';

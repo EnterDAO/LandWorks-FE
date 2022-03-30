@@ -1,4 +1,4 @@
-@import '../../../../styles/variables.scss';
+
 @import '../../../../styles/text.scss';
 
 .root {
@@ -7,7 +7,7 @@
   justify-content: space-between;
   align-items: center;
   margin: 10px var(--horizontal-padding);
-  border-bottom: 2px solid $grey01;
+  border-bottom: 2px solid var(--theme-modal-color);
   height: var(--explore-subheader);
 
   h1 {
@@ -20,7 +20,7 @@
     span {
       font-size: 14px;
       font-weight: 600;
-      color: $grey03;
+      color: var(--theme-subtle-color);
     }
   }
 }
@@ -30,7 +30,7 @@
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
-  box-shadow: 0px 0px 1px 1px $neonPink;
+  box-shadow: 0px 0px 1px 1px var(--theme-neon-pink-color);
   display: flex;
   justify-content: space-around;
   align-items: center;

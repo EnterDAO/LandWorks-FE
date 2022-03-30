@@ -1,4 +1,3 @@
-@import 'styles/variables.scss';
 @import 'styles/text.scss';
 
 .properties {
@@ -14,8 +13,8 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: $grey03;
-    outline: 1px solid $grey03;
+    background-color: var(--theme-subtle-color);
+    outline: 1px solid var(--theme-subtle-color);
   }
 }
 

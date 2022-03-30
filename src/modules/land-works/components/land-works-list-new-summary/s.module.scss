@@ -1,4 +1,4 @@
-@import '../../../../styles/variables.scss';
+
 @import '../../../../styles/utils.scss';
 
 .wrapper {
@@ -15,16 +15,16 @@
     transition: all 0.2s ease-out;
     padding: 10px;
     box-shadow: none;
-    background: $grey01;
+    background: var(--theme-modal-color);
 
     .details {
-      color: $grey03;
+      color: var(--theme-subtle-color);
       text-transform: uppercase;
       font-weight: 600;
       font-size: 12px;
 
       p {
-        color: $light;
+        color: var(--theme-grey900-color);
         text-transform: none;
       }
     }

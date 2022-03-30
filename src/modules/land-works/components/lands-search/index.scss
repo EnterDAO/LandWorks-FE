@@ -1,4 +1,4 @@
-@import '../../../../styles/variables.scss';
+
 @import '../../../../styles/text.scss';
 
 .wrapper-lands-search {
@@ -56,7 +56,7 @@
   }
 
   input::placeholder {
-    color: $grey02;
+    color: var(--theme-grey700-color);
   }
 
   form:-webkit-autofill,

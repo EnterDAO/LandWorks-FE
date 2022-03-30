@@ -6,20 +6,19 @@ export const THEME_OVERLAY_OPACITY_SMALL = 0.1;
 export const THEME_OVERLAY_OPACITY_MEDIUM = 0.2;
 
 export const THEME_COLORS = {
-  primaryGradient: 'linear-gradient(83.81deg, #ac2ccb -19.8%, #dd3dcb 22%, #ef9c92 100%)',
-  accentBlue: '#5d8ff0',
-  red: '#d7606e',
-  yellow: '#dfb068',
-  green: '#6cd27e',
-  neonPink: '#dd3dcb',
-  peachPink: '#EF9C92',
-  darkBlue01: '#161622',
-  darkBlue02: '#1e1e2e',
-  grey01: '#27273a',
-  grey02: '#68687b',
-  grey03: '#b9b9d3',
-  grey04: '#3a3a4e',
-  light: '#f8f8ff',
+  primaryGradient: 'var(--theme-primary-gradient)',
+  accentBlue: 'var(--theme-accent-color)',
+  red: 'var(--theme-red-color)',
+  yellow: 'var(--theme-yellow-color)',
+  green: 'var(--theme-green-color)',
+  neonPink: 'var(--theme-neon-pink-color)',
+  darkBlue01: 'var(--theme-body-color)',
+  darkBlue02: 'var(--theme-card-color)',
+  grey01: 'var(--theme-grey200-color)',
+  grey02: 'var(--theme-grey700-color)',
+  grey03: 'var(--theme-subtle-color)',
+  grey04: 'var(--theme-grey400-color)',
+  light: 'var(--theme-grey900-color)',
 } as const;
 
 export const BUTTON_2_STYLES = {
@@ -31,7 +30,7 @@ export const BUTTON_2_STYLES = {
 } as const;
 
 export const GRADIENT_TEXT = {
-  background: THEME_COLORS.primaryGradient,
+  background: 'var(--theme-primary-gradient)',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
 } as const;

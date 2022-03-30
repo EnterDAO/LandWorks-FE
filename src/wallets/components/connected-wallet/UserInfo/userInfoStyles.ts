@@ -1,7 +1,5 @@
 import { BEFORE_ELEMENT_BASE, OVERLAY_MEDIUM, OVERLAY_SMALL } from 'themes/utility-styles';
 
-import { THEME_COLORS } from 'themes/theme-constants';
-
 const styles = {
   userDetails: {
     minWidth: '265px',
@@ -27,7 +25,7 @@ const styles = {
       '::before': {
         ...OVERLAY_MEDIUM,
         borderRadius: '10px',
-        background: THEME_COLORS.light,
+        background: 'var(--theme-grey900-color)',
         zIndex: 1,
       },
     },
@@ -38,11 +36,11 @@ const styles = {
     position: 'relative',
     margin: '0 10px 0 25px',
     borderRadius: '30px',
-    border: `2px solid ${THEME_COLORS.light}`,
+    border: `2px solid ${'var(--theme-grey900-color)'}`,
     zIndex: 0,
     '::before': {
       ...BEFORE_ELEMENT_BASE,
-      boxShadow: `0 0 0 3px ${THEME_COLORS.light} inset`,
+      boxShadow: `0 0 0 3px ${'var(--theme-grey900-color)'} inset`,
       borderRadius: '30px', // TODO: Move radiuses to constants
       filter: 'blur(5px)',
       boxSizing: 'border-box',
@@ -51,7 +49,7 @@ const styles = {
   },
   userName: {
     fontWeight: '700',
-    color: THEME_COLORS.light,
+    color: 'var(--theme-grey900-color)',
     margin: '0 0 0 5px',
   },
   hiIcon: {
@@ -65,7 +63,7 @@ const styles = {
     margin: '5px',
     width: '40px',
     height: '40px',
-    background: THEME_COLORS.grey01,
+    background: 'var(--theme-grey200-color)',
     borderRadius: '10px',
     flexDirection: 'column',
     padding: '12px 15px',
@@ -80,7 +78,7 @@ const styles = {
     margin: '5px',
     width: '40px',
     height: '40px',
-    background: THEME_COLORS.grey01,
+    background: 'var(--theme-grey200-color)',
     borderRadius: '10px',
     flexDirection: 'column',
     padding: '12px 15px',
@@ -96,7 +94,7 @@ const styles = {
   divider: {
     height: '20px',
     width: '2px',
-    backgroundColor: THEME_COLORS.grey04,
+    backgroundColor: 'var(--theme-grey400-color)',
     margin: '10px',
     alignSelf: 'center',
   },
@@ -108,12 +106,12 @@ const styles = {
     left: '31px',
     width: '9px',
     height: '9px',
-    background: THEME_COLORS.accentBlue,
+    background: 'var(--theme-accent-color)',
     borderRadius: '50%',
     zIndex: 0,
     '::before': {
       ...BEFORE_ELEMENT_BASE,
-      boxShadow: `0 0 0 3px ${THEME_COLORS.accentBlue} inset`,
+      boxShadow: `0 0 0 3px ${'var(--theme-accent-color)'} inset`,
       borderRadius: '50%', // TODO: Move radiuses to constants
       filter: 'blur(5px)',
       boxSizing: 'border-box',
