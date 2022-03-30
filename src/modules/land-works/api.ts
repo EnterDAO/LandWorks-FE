@@ -765,6 +765,45 @@ export function fetchUserFirstRentByTimestamp(
 }
 
 /**
+ * Gets the last rent end for an asset.
+ * Returns the current time in seconds:
+ * if there are no rents
+ * if the request throws an error
+ * @param asset The target asset id
+ */
+export function fetchAssetLastRentEnd(asset: string): Promise<number> {
+  return GraphClient.get({
+    query: gql`
+      query GetAssetLastRent($assetId: String) {
+        rents(first: 1, orderBy: end, orderDirection: desc, where: { asset: $assetId }) {
+          id
+          start
+          end
+          timestamp
+          renter {
+            id
+          }
+        }
+      }
+    `,
+    variables: {
+      assetId: asset,
+    },
+  })
+    .then(async (response) => {
+      if (response.data.rents.length > 0) {
+        return Number(response.data.rents[0].end);
+      } else {
+        return getNowTs();
+      }
+    })
+    .catch((e) => {
+      console.log(e);
+      return getNowTs();
+    });
+}
+
+/**
  * Gets user's rents from GraphQL. Filters out only the last rent for an asset.
  * TODO: Can be optimised, query should be done in the reverse order.
  * @param address The address of the user
