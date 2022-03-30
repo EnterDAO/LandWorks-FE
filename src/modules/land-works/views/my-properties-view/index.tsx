@@ -72,6 +72,8 @@ const MyPropertiesView: FC = () => {
 
   const updateUser = async () => {
     await fetchRents();
+    setLoading(false);
+
     if (userData && userData.user) {
       setUser(parseUser(userData.user));
     } else {
