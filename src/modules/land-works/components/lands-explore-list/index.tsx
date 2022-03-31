@@ -2,6 +2,7 @@ import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { DEFAULT_SLICED_PAGE } from 'constants/modules';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import useDebounce from '@rooks/use-debounce';
 
 import { AtlasTile } from 'components/custom/Atlas/Atlas';
 import { Grid } from 'design-system';
@@ -17,6 +18,7 @@ import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-q
 import { LandsSearchBarWrapperStyled } from './styled';
 
 import { filterLandsByAvailability, filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
+import { sessionStorageHandler } from 'utils';
 
 interface Props {
   lastRentEnd: string;
@@ -39,6 +41,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
 
   const handleLoadMore = () => {
     const newSlicedLands = slicedLands + (isGridPerTwo ? DEFAULT_SLICED_PAGE : 6);
+    sessionStorageHandler('set', 'explore-filters', 'slicedLands', newSlicedLands);
     setSlicedLands(newSlicedLands);
     const highlights = getAllLandsCoordinates(lands.slice(0, newSlicedLands));
     setPointMapCentre(highlights);
@@ -117,7 +120,13 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   }, [clickedLandId]);
 
   useEffect(() => {
-    setSlicedLands(isGridPerTwo ? DEFAULT_SLICED_PAGE : 6);
+    setSlicedLands(
+      sessionStorageHandler('get', 'explore-filters', 'slicedLands')
+        ? sessionStorageHandler('get', 'explore-filters', 'slicedLands')
+        : isGridPerTwo
+        ? DEFAULT_SLICED_PAGE
+        : 6
+    );
   }, []);
 
   let filteredLands = filterLandsByQuery(lands, searchQuery);
@@ -127,6 +136,24 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   }
 
   const slicedLandsInTotal = filteredLands.slice(0, slicedLands).length;
+
+  const saveScrollPosition = useDebounce(() => {
+    if (filteredLands) sessionStorage.setItem('scroll-position', String(window.scrollY));
+  }, 500);
+
+  useEffect(() => {
+    const scroll = () => saveScrollPosition();
+
+    const scrollPosition = sessionStorage.getItem('scroll-position');
+    if (!loading && scrollPosition && filteredLands.length) {
+      window.scrollTo({ top: +scrollPosition, behavior: 'smooth' });
+    }
+    document.addEventListener('scroll', scroll);
+
+    return () => {
+      document.removeEventListener('scroll', scroll);
+    };
+  }, [loading]);
 
   return (
     <div
