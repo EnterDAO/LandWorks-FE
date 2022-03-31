@@ -30,6 +30,22 @@ export interface NotionResultForCard {
   price: string;
 }
 
+export interface NotionResultForPage {
+  coverPhotoLink: string;
+  avatarPhotoLink: string;
+  builderName: string;
+  definition: string;
+  builderType: string;
+  longDescription: string;
+  location: string;
+  price: string;
+  website: string;
+  discord: string;
+  twitter: string;
+  languages: string;
+  tags: string;
+}
+
 export interface Properties {
   Timezone: Timezone;
   Type: Type;
