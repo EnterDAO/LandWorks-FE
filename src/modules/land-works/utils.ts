@@ -3,6 +3,8 @@ import { find } from 'lodash';
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 import { currencyData } from './components/lands-explore-filters/filters-data';
 
+import { NotionResult, NotionResultForCard } from './components/scene-expert-card/types';
+
 export const calculateNeighbours = (coordinatesList: CoordinatesLand[]): string[] => {
   let neighbours = [] as string[];
 
@@ -90,4 +92,17 @@ export const isListingInProgress = (lands: AssetEntity[], loadingLands: boolean)
     localStorage.removeItem('LISTING_IN_PROGRESS');
     return false;
   }
+};
+
+export const transformSceneProvider = (notionEntity: NotionResult): NotionResultForCard => {
+  return {
+    coverPhotoLink: notionEntity.properties['Cover Photo'].files[0].file.url,
+    avatarPhotoLink: notionEntity.properties['Profile Picture'].files[0].file.url,
+    builderName: notionEntity.properties['Scene Builder Name'].title[0].plain_text,
+    definition: notionEntity.properties.Definition.rich_text[0].plain_text,
+    builderType: notionEntity.properties.Type.select.name,
+    shortDescription: notionEntity.properties['Short Description'].rich_text[0].plain_text,
+    location: notionEntity.properties.Location.rich_text[0].plain_text,
+    price: notionEntity.properties.Price.select.name,
+  };
 };
