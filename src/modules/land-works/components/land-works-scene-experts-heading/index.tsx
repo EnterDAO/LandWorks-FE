@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { Box, Button, Grid } from 'design-system';
 
@@ -6,6 +7,8 @@ import landingImage from './assets/scene-expert-landing.png';
 import { TypographyStyled } from './styled';
 
 const SceneExpertHeading: FC = () => {
+  const history = useHistory();
+
   return (
     <Grid display="flex" flexDirection="column" alignItems="center" justifyContent="space-around" height="80vh">
       <div>
@@ -17,7 +20,16 @@ const SceneExpertHeading: FC = () => {
           <Button variant="secondary" btnSize="medium">
             Explore Experts
           </Button>
-          <Button variant="gradient" btnSize="medium">
+          <Button
+            variant="gradient"
+            btnSize="medium"
+            onClick={() =>
+              history.push({
+                pathname: '/join-experts',
+                state: { from: window.location.pathname, title: 'Scene Expert' },
+              })
+            }
+          >
             Join Experts
           </Button>
         </Grid>
