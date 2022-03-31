@@ -1,39 +1,70 @@
 import { FC } from 'react';
 
-import { Grid } from 'design-system';
-import { LocationIcon } from 'design-system/icons';
+import { Box, Grid } from 'design-system';
+import { BlueDollarIcon, LocationIcon } from 'design-system/icons';
 
 import { AvatarContainer, CardContainer, DividerStyled, TypeChip, TypographyStyled } from './styled';
 
-const SceneExpertCard: FC = () => {
+import { NotionResultForCard } from './types';
+
+interface ISceneExpertCard {
+  builder: NotionResultForCard;
+}
+
+const SceneExpertCard: FC<ISceneExpertCard> = ({ builder }) => {
+  const greyStyle = {
+    fill: '#3A3A4E',
+    marginLeft: '15px',
+  };
+
+  const blueStyle = {
+    fill: '#5D8FF0',
+    marginLeft: '15px',
+  };
+
   return (
     <CardContainer className="scene-expert-card">
       <Grid height={133} width="100%" borderRadius="20px" overflow="hidden">
-        <div style={{ height: '100%', width: '100%', backgroundColor: 'grey' }}></div>
-        {/* <Box
+        <Box
           component="img"
           sx={{
-            height: 133,
-            width: '100%',
+            height: '100%',
             borderRadius: '20px',
-            // maxHeight: { xs: 110, md: 90 },
-            // maxWidth: { xs: 350, md: 250 },
           }}
           alt="The property from the offer."
-          src=""
-        /> */}
+          src={builder.coverPhotoLink}
+        />
       </Grid>
-      <AvatarContainer></AvatarContainer>
-      <TypographyStyled variant="h4">Anzette Muntingh</TypographyStyled>
-      <TypographyStyled variant="h5">3D Artist, Scene Builder</TypographyStyled>
-      <TypeChip>Individual</TypeChip>
-      <TypographyStyled variant="body1">
-        I'm passionate 3D Designer with experience in Metaverse, Blockchain and Digital Products.
-      </TypographyStyled>
+      <AvatarContainer>
+        <Box
+          component="img"
+          sx={{
+            width: '100%',
+            borderRadius: '20px',
+          }}
+          alt="The property from the offer."
+          src={builder.avatarPhotoLink}
+        />
+      </AvatarContainer>
+      <TypographyStyled variant="h4">{builder.builderName}</TypographyStyled>
+      <TypographyStyled variant="h5">{builder.definition}</TypographyStyled>
+      <TypeChip>{builder.builderType}</TypeChip>
+      <TypographyStyled variant="body1">{builder.shortDescription}</TypographyStyled>
       <DividerStyled orientation="horizontal" />
-      <Grid display="flex">
-        <LocationIcon />
-        <div>Sofia, Bulgaria</div>
+      <Grid display="flex" justifyContent="space-between" width="100%" container>
+        <Grid display="flex" alignItems="center">
+          <LocationIcon style={{ marginRight: '13px' }} />
+          <div>{builder.location}</div>
+        </Grid>
+        <Grid item display="flex" alignItems="center">
+          <BlueDollarIcon style={blueStyle} />
+          {builder.price === '2' || builder.price === '3' ? (
+            <BlueDollarIcon style={blueStyle} />
+          ) : (
+            <BlueDollarIcon style={greyStyle} />
+          )}
+          {builder.price === '3' ? <BlueDollarIcon style={blueStyle} /> : <BlueDollarIcon style={greyStyle} />}
+        </Grid>
       </Grid>
     </CardContainer>
   );

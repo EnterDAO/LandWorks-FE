@@ -24,10 +24,10 @@ export const AvatarContainer = styled(Grid)<GridProps>(() => ({
   boxShadow: '0 0 3px 1px #757575',
   borderRadius: '50%',
   marginTop: '-70px',
-  // position: 'absolute',
-  // top: '20%',
-  // left: '50%',
-  // right: '50%',
+  overflow: 'hidden',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 }));
 
 export const DividerStyled = styled(Divider)<DividerProps>(() => ({
