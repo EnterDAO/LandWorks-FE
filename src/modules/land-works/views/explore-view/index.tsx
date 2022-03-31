@@ -34,7 +34,7 @@ import {
   parseUser,
 } from '../../api';
 
-import { filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
+import { filterLandsByAvailability, filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
 import { getNowTs, sessionStorageHandler } from 'utils';
 
 import './explore-view.scss';
@@ -212,6 +212,7 @@ const ExploreView: React.FC = () => {
     setLoading(false);
   }, [lands]);
 
+  const availableLands = filterLandsByAvailability(filterLandsByQuery(lands, searchQuery));
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
       <LandsMapTilesProvider value={{ mapTiles, setMapTiles }}>
@@ -227,7 +228,7 @@ const ExploreView: React.FC = () => {
         >
           <div className="content-container--explore-view--header">
             <LandsExploreSubheader
-              totalLands={filterLandsByQuery(lands, searchQuery).length}
+              totalLands={lastRentEnd !== '0' ? availableLands.length : filterLandsByQuery(lands, searchQuery).length}
               hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
               handleListNew={() => setShowListNewModal(true)}
             />
