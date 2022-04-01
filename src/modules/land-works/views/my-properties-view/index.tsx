@@ -23,7 +23,12 @@ import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-p
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 import { useWallet } from 'wallets/wallet';
 
-import { filterLandsByCurrencyId, filterLandsByQuery, isListingInProgress } from 'modules/land-works/utils';
+import {
+  filterLandsByCurrencyId,
+  filterLandsByQuery,
+  isListingInProgress,
+  isWithdrawInProgress,
+} from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
 
 const MyPropertiesView: FC = () => {
@@ -43,6 +48,7 @@ const MyPropertiesView: FC = () => {
   const [currencyId, setCurrencyId] = useState(sessionStorageHandler('get', 'my-properties-filters', 'currency') || 0);
 
   const displayListingInProgressCard = isListingInProgress(lands, loading);
+  const displayWithdrawInProgressCard = isWithdrawInProgress(lands, loading);
 
   const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -185,27 +191,31 @@ const MyPropertiesView: FC = () => {
               <>
                 {filteredLands.slice(0, slicedLands).map((land) => (
                   <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={land.id}>
-                    <LandWorkCard
-                      land={land}
-                      onClick={() =>
-                        history.push({
-                          pathname: `/property/${land.id}`,
-                          state: { from: window.location.pathname, title: 'My properties' },
-                        })
-                      }
-                    />
+                    {displayWithdrawInProgressCard === land.metaverseAssetId ? (
+                      <LandWorksLoadingCard title="Withdraw" />
+                    ) : (
+                      <LandWorkCard
+                        land={land}
+                        onClick={() =>
+                          history.push({
+                            pathname: `/property/${land.id}`,
+                            state: { from: window.location.pathname, title: 'My properties' },
+                          })
+                        }
+                      />
+                    )}
                   </Grid>
                 ))}
                 {displayListingInProgressCard && (
                   <Grid item xs={12} sm={6} md={6} lg={4} xl={3}>
                     {' '}
-                    <LandWorksLoadingCard />
+                    <LandWorksLoadingCard title="Listing" />
                   </Grid>
                 )}
               </>
             ) : (
               <Grid item xs={12}>
-                {displayListingInProgressCard ? <LandWorksLoadingCard /> : <LandsWorksGridEmptyState />}
+                {displayListingInProgressCard ? <LandWorksLoadingCard title="Listing" /> : <LandsWorksGridEmptyState />}
               </Grid>
             )}
           </Grid>

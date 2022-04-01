@@ -91,3 +91,19 @@ export const isListingInProgress = (lands: AssetEntity[], loadingLands: boolean)
     return false;
   }
 };
+
+export const isWithdrawInProgress = (lands: AssetEntity[], loadingLands: boolean): string | boolean => {
+  const idOfWithdrawInProgress = localStorage.getItem('WITHDRAW_IN_PROGRESS');
+  const withdrawInProgressExists = idOfWithdrawInProgress && idOfWithdrawInProgress.length > 0;
+  const withdrawExistsInLands = lands.find((l) => l.metaverseAssetId === idOfWithdrawInProgress);
+  const shouldDisplayLoadingCard = !!(withdrawInProgressExists && withdrawExistsInLands);
+  if (loadingLands || !lands.length) {
+    return false;
+  }
+  if (shouldDisplayLoadingCard) {
+    return idOfWithdrawInProgress;
+  } else {
+    localStorage.removeItem('WITHDRAW_IN_PROGRESS');
+  }
+  return false;
+};
