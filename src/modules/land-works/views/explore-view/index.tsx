@@ -6,7 +6,6 @@ import {
   sortColumns,
   sortDirections,
 } from 'constants/modules';
-import { useSubscription } from '@apollo/client';
 import useDebounce from '@rooks/use-debounce';
 import { isNull } from 'lodash';
 
@@ -27,11 +26,8 @@ import {
   AssetEntity,
   CoordinatesLand,
   PaymentToken,
-  USER_SUBSCRIPTION,
-  UserEntity,
   fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   fetchTokenPayments,
-  parseUser,
 } from '../../api';
 
 import { filterLandsByAvailability, filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
@@ -50,7 +46,6 @@ const ExploreView: React.FC = () => {
     lastRentEnd: sessionStorageHandler('get', 'explore-filters', 'lastRentEnd'),
   };
 
-  const [user, setUser] = useState({} as UserEntity);
   const [lands, setLands] = useState<AssetEntity[]>([]);
   const [clickedLandId, setStateClickedLandId] = useState<AssetEntity['id']>('');
   const [mapTiles, setMapTiles] = useState<Record<string, AtlasTile>>({});
@@ -79,11 +74,6 @@ const ExploreView: React.FC = () => {
   const [paymentToken, setPaymentToken] = useState<string | null>(null);
 
   const [showListNewModal, setShowListNewModal] = useState(false);
-
-  const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
-    skip: wallet.account === undefined,
-    variables: { id: wallet.account?.toLowerCase() },
-  });
 
   const setClickedLandId = (x: number | string, y: number | string) => {
     let landId = `${x},${y}`;
@@ -175,19 +165,10 @@ const ExploreView: React.FC = () => {
     500
   );
 
-  const updateUser = async () => {
-    if (userData && userData.user) {
-      setUser(parseUser(userData.user));
-    } else {
-      setUser({} as UserEntity);
-    }
-  };
-
   useEffect(() => {
     if (wallet.account) {
       setLoading(true);
     } else {
-      setUser({} as UserEntity);
       setLands([]);
     }
   }, [wallet.account]);
@@ -199,10 +180,6 @@ const ExploreView: React.FC = () => {
         : getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
     }
   }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
-
-  useEffect(() => {
-    updateUser();
-  }, [userData]);
 
   useEffect(() => {
     getPaymentTokens();
