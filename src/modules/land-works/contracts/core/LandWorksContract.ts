@@ -35,7 +35,8 @@ export default class LandWorksContract extends Web3Contract {
     maxPeriod: BigNumber,
     maxFutureTime: BigNumber,
     paymentToken: string,
-    pricePerSecond: BigNumber | string
+    pricePerSecond: BigNumber | string,
+    callback: () => void = () => {}
   ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
@@ -55,7 +56,8 @@ export default class LandWorksContract extends Web3Contract {
       ],
       {
         from: this.account,
-      }
+      },
+      callback
     ).then();
   }
 
@@ -74,15 +76,21 @@ export default class LandWorksContract extends Web3Contract {
     maxPeriod: BigNumber,
     maxFutureTime: BigNumber,
     paymentToken: string,
-    pricePerSecond: BigNumber | string
+    pricePerSecond: BigNumber | string,
+    callback: () => void = () => {}
   ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
 
-    return this.send('updateConditions', [assetId, minPeriod, maxPeriod, maxFutureTime, paymentToken, pricePerSecond], {
-      from: this.account,
-    }).then();
+    return this.send(
+      'updateConditions',
+      [assetId, minPeriod, maxPeriod, maxFutureTime, paymentToken, pricePerSecond],
+      {
+        from: this.account,
+      },
+      callback
+    ).then();
   }
 
   /**

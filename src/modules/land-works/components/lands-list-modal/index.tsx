@@ -1,4 +1,4 @@
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { getEtherscanAddressUrl } from 'web3/utils';
 
 import ExternalLink from 'components/custom/externalLink';
@@ -10,20 +10,22 @@ import './index.scss';
 
 interface IProps {
   showModal: boolean;
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  variant?: 'approve' | 'sign';
+  handleClose: () => void;
 }
 
-export const TxModal: React.FC<IProps> = ({ showModal, setShowModal, variant }) => {
-  const text = variant === 'approve' ? 'Approving...' : 'Signing Transaction...';
+interface ITxModal extends IProps {
+  textMessage: string;
+}
+
+export const TxModal: React.FC<ITxModal> = ({ showModal, handleClose, textMessage }) => {
   const wallet = useWallet();
 
   return (
-    <Modal height={600} open={showModal} handleClose={() => setShowModal(false)}>
+    <Modal height={600} open={showModal} handleClose={handleClose}>
       <div className="wrapper">
         <Icon className="spinner" iconElement={<Spinner />} iconSize="s" />
         <div className="heading" style={{ fontSize: 30 }}>
-          {text}
+          {textMessage}
         </div>
         <ExternalLink className="subheading" href={getEtherscanAddressUrl(wallet.account)}>
           Check your wallet for details
@@ -33,17 +35,9 @@ export const TxModal: React.FC<IProps> = ({ showModal, setShowModal, variant }) 
   );
 };
 
-export const SuccessModal: React.FC<IProps> = ({ showModal, setShowModal }) => {
-  const history = useHistory();
+export const SuccessModal: React.FC<IProps> = ({ showModal, handleClose }) => {
   return (
-    <Modal
-      height={600}
-      open={showModal}
-      handleClose={() => {
-        history.push('/my-properties');
-        setShowModal(false);
-      }}
-    >
+    <Modal height={600} open={showModal} handleClose={handleClose}>
       <div className="success-wrapper">
         <Icon className="star-icon" iconElement={<SuccessStarIcon />} iconSize="s" />
         <div className="heading" style={{ fontSize: 25 }}>

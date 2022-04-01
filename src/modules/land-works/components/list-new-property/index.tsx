@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ChangeEvent, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   AtMostRentPeriodOptions,
   DEFAULT_LIST_MAX_FUTURE_PERIOD,
@@ -44,12 +45,15 @@ import './index.scss';
 
 // import { getTimeType, secondsToDuration } from '../../../../utils';
 
+const SignTransactionMessage = 'Signing transaction...';
+const MineTransactionMessage = 'Waiting for transaction to be mined...';
+
 const ListNewProperty: React.FC = () => {
   const walletCtx = useWallet();
   const landworks = useLandworks();
   const estateRegistry = useEstateRegistry();
   const landRegistry = useLandRegistry();
-  // const history = useHistory();
+  const history = useHistory();
 
   const { landWorksContract } = landworks;
   const { landRegistryContract } = landRegistry;
@@ -106,6 +110,8 @@ const ListNewProperty: React.FC = () => {
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSignModal, setShowSignModal] = useState(false);
+
+  const [listModalMessage, setListModalMessage] = useState(SignTransactionMessage);
 
   const handlePropertyChange = (selectedLand: DecentralandNFT | Estate) => {
     setSelectedProperty(selectedLand);
@@ -306,7 +312,10 @@ const ListNewProperty: React.FC = () => {
         maxPeriod,
         maxFutureTime,
         paymentToken.id,
-        pricePerSecond.toFixed(0)
+        pricePerSecond.toFixed(0),
+        () => {
+          setListModalMessage(MineTransactionMessage);
+        }
       );
       localStorage.setItem('LISTING_IN_PROGRESS', selectedProperty.id);
 
@@ -669,9 +678,27 @@ const ListNewProperty: React.FC = () => {
             </Grid>
           </Grid>
         )}
-        <TxModal variant="approve" showModal={showApproveModal} setShowModal={setShowApproveModal} />
-        <TxModal variant="sign" showModal={showSignModal} setShowModal={setShowSignModal} />
-        <SuccessModal showModal={showSuccessModal} setShowModal={setShowSuccessModal} />
+        <TxModal
+          textMessage="Approving..."
+          showModal={showApproveModal}
+          handleClose={() => {
+            setShowApproveModal(false);
+          }}
+        />
+        <TxModal
+          textMessage={listModalMessage}
+          showModal={showSignModal}
+          handleClose={() => {
+            setShowSignModal(false);
+          }}
+        />
+        <SuccessModal
+          showModal={showSuccessModal}
+          handleClose={() => {
+            history.push('/my-properties');
+            setShowSuccessModal(false);
+          }}
+        />
       </Grid>
     </section>
   );
