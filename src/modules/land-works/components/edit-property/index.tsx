@@ -539,6 +539,7 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
                   maxFuturePeriod={maxFutureTime}
                   rentPrice={tokenCost}
                   paymentToken={paymentToken}
+                  feeText="There is a small network fee upon updating the rent conditions."
                   asset={asset}
                 />
               </Grid>
