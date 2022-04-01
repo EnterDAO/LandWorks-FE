@@ -51,6 +51,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const [currentRent, setCurrentRent] = useState({} as RentEntity);
   const [countDownRent, setCountDownRent] = useState({} as RentEntity);
   const [countDownTimestamp, setCountDownTimestamp] = useState('0');
+  const [countDownPlaceholderMessage, setCountDownPlaceholderMessage] = useState('');
   const [loading, setLoading] = useState(true);
 
   const isOwnerOrConsumer = () => {
@@ -83,10 +84,12 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
       if (wallet.account) {
         if (wallet.account.toLowerCase() === rent.renter?.id) {
           setCountDownTimestamp(rent.end);
+          setCountDownPlaceholderMessage('rent ends in');
           setCountDownRent(rent);
         } else {
           const rent = await fetchUserFirstRentByTimestamp(asset.id, wallet.account.toLowerCase(), getNowTs());
           setCountDownTimestamp(rent.start);
+          setCountDownPlaceholderMessage('rent starts in');
           setCountDownRent(rent);
         }
       }
@@ -349,9 +352,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                 <Countdown date={Number(countDownTimestamp) * 1000} zeroPadTime={3} renderer={renderCountdown} />
               </Grid>
               <Grid item>
-                <p className="rented-on">
-                  {Number(countDownTimestamp) > getNowTs() ? 'rent ends in' : 'rent starts in'}
-                </p>
+                <p className="rented-on">{countDownPlaceholderMessage}</p>
               </Grid>
             </Grid>
           )}
