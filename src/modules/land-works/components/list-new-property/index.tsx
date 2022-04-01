@@ -353,6 +353,7 @@ const ListNewProperty: React.FC = () => {
 
   const getUserNfts = async () => {
     if (!walletCtx.account) {
+      setTimeout(() => setLoading(false), 1000);
       return;
     }
 
