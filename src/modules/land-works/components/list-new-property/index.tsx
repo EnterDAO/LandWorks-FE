@@ -624,6 +624,7 @@ const ListNewProperty: React.FC = () => {
                   maxFuturePeriod={maxFutureTime}
                   rentPrice={tokenCost}
                   paymentToken={paymentToken}
+                  feeText="There is small fee upon listing the property."
                 />
               </Grid>
             </Grid>
