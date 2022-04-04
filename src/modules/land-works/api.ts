@@ -1,12 +1,16 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { gql } from '@apollo/client';
 import BigNumber from 'bignumber.js';
 import { constants } from 'ethers';
 
-import { getUsdPrice } from '../../components/providers/known-tokens-provider';
+import { getUsdPrice } from 'providers/known-tokens-provider';
+
 import { GraphClient } from '../../web3/graph/client';
 import { AssetStatus } from './models/AssetStatus';
 
-import { getDecentralandAssetName, getFormattedTime, getNowTs, getTimeType, secondsToDuration } from '../../utils';
+import { getDecentralandAssetName, getNowTs, getTimeType, getTimeTypeStr, secondsToDuration } from '../../utils';
 import { DAY_IN_SECONDS, ONE_HUNDRED_YEARS_IN_SECONDS, ONE_SECOND } from '../../utils/date';
 import { MAX_UINT_256, getHumanValue } from '../../web3/utils';
 
@@ -266,6 +270,7 @@ export type DecentralandData = {
   metadata: string;
   isLAND: boolean;
   coordinates: any[];
+  asset: AssetEntity;
 };
 
 export type Data = {
@@ -275,10 +280,14 @@ export type Data = {
   version: string;
 };
 
-export type CoordinatesLAND = {
+export type CoordinatesLand = {
   id: string;
   x: string;
   y: string;
+};
+
+export type CoordinatesLandWithLandId = CoordinatesLand & {
+  landId: string;
 };
 
 export type PaymentToken = {
@@ -295,8 +304,11 @@ export type AssetEntity = {
   id: string;
   name: string;
   minPeriod: BigNumber;
+  minPeriodTimedType: string;
   maxPeriod: BigNumber;
+  maxPeriodTimedType: string;
   maxFutureTime: BigNumber;
+  maxFutureTimeTimedType: string;
   pricePerSecond: BigNumber;
   humanPricePerSecond: BigNumber;
   pricePerMagnitude: PricePerMagnitude;
@@ -306,12 +318,24 @@ export type AssetEntity = {
   availability: AssetAvailablity;
   isHot: boolean;
   decentralandData?: DecentralandData;
+  metaverse: {
+    name: string;
+  };
   owner: IdEntity;
   operator: string;
   status: string;
   rents: RentEntity[];
   lastRentEnd: string;
   isAvailable: boolean;
+};
+
+export type Rent = {
+  operator: string;
+  asset: AssetEntity;
+  end: string;
+  start: string;
+  id: string | null | undefined;
+  name: string;
 };
 
 export type AssetAvailablity = {
@@ -350,6 +374,7 @@ export type RentEntity = {
   renter: IdEntity;
   renterAddress: string;
   price: string;
+  asset?: AssetEntity;
 };
 
 export type UserEntity = {
@@ -371,6 +396,19 @@ export type ClaimHistory = {
   timestamp: number;
 };
 
+export type ParsedDate = {
+  minutes: number;
+  hours: number;
+  days: number;
+  weeks: number;
+  months: number;
+};
+
+export type ExtractedTime = {
+  timeType: string;
+  timeValue: number;
+};
+
 /**
  * Gets all Decentraland assets, that have coordinates from the provided.
  * @param coordinates An array of coordinates, each coordinate in the following format: `{x}-{y}`.
@@ -385,6 +423,12 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
             id
             asset {
               id
+              owner {
+                id
+              }
+              metaverse {
+                name
+              }
               metaverseAssetId
               minPeriod
               maxPeriod
@@ -813,7 +857,7 @@ export function fetchUserRentPerAsset(address: string, availableOnly = false, pa
       const now = getNowTs();
       const filteredRents = [] as RentEntity[];
       // TODO: optimise search for target rent
-      for (const [_, rents] of groupedRents) {
+      for (const [, rents] of groupedRents) {
         if (rents.length == 1) {
           filteredRents.push(rents[0]);
         } else {
@@ -838,6 +882,59 @@ export function fetchUserRentPerAsset(address: string, availableOnly = false, pa
         })),
         meta: { count: filteredRents.length },
       };
+    })
+    .catch((e) => {
+      console.log(e);
+      return {} as UserEntity;
+    });
+}
+
+export function fetchUserRents(address: string, availableOnly = false): Promise<any> {
+  const now = getNowTs();
+  return GraphClient.get({
+    query: gql`
+      query GetUserRents($id: String, $now: BigInt) {
+        rents(orderBy: end, orderDirection: desc, where: {renter: $id, ${
+          availableOnly ? 'start_lte: $now, end_gt: $now' : ''
+        }}) {
+          id
+          operator
+          start
+          end
+          timestamp
+          txHash
+          fee
+          paymentToken {
+            id
+            name
+            symbol
+            decimals
+          }
+          renter {
+            id
+          }
+          asset {
+            id
+            decentralandData {
+              metadata
+              isLAND
+              coordinates {
+                id
+                x
+                y
+              }
+            }
+          }
+        }
+      }
+    `,
+    variables: {
+      id: address.toLowerCase(),
+      now: now,
+    },
+  })
+    .then(async (response) => {
+      return response.data;
     })
     .catch((e) => {
       console.log(e);
@@ -901,7 +998,7 @@ export function fetchAssetRentByTimestamp(assetId: string, timestamp: number): P
  * @param orderDirection asc or desc
  * Default '0'. Used to determined Availability of assets
  */
-export function fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
+export function fetchListedAssetsByMetaverseAndGetLastRentEndWithOrder(
   page = 1,
   limit = 6,
   metaverse = '1',
@@ -927,6 +1024,12 @@ export function fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
         ) {
           id
           metaverseAssetId
+          metaverse {
+            name
+          }
+          owner {
+            id
+          }
           minPeriod
           maxPeriod
           maxFutureTime
@@ -973,6 +1076,191 @@ export function fetchListedAssetsByMetaverseAndGteLastRentEndWithOrder(
 
       return {
         data: parseAssets(paginatedAssets),
+        meta: { count: response.data.assets.length },
+      };
+    })
+    .catch((e) => {
+      console.log(e);
+      return { data: [], meta: { count: 0, block: 0 } };
+    });
+}
+
+export function fetchUserAssetsByRents(address: string): Promise<PaginatedResult<AssetEntity>> {
+  return GraphClient.get({
+    query: gql`
+      query GetUserRents($id: String, $now: BigInt) {
+        rents(orderBy: end, orderDirection: asc, where: { renter: $id }) {
+          id
+          operator
+          start
+          end
+          timestamp
+          asset {
+            id
+            metaverseAssetId
+            minPeriod
+            maxPeriod
+            maxFutureTime
+            unclaimedRentFee
+            pricePerSecond
+            lastRentEnd
+            status
+            paymentToken {
+              id
+              name
+              symbol
+              decimals
+            }
+            decentralandData {
+              metadata
+              isLAND
+              coordinates {
+                id
+                x
+                y
+              }
+            }
+          }
+        }
+      }
+    `,
+    variables: {
+      id: address.toLowerCase(),
+    },
+  })
+    .then(async (response) => {
+      // Filter out rents for the same asset
+      if (!response?.data?.rents) {
+        return {
+          data: [],
+          meta: { count: 0 },
+        };
+      }
+      const groupedRents = response.data.rents.reduce(
+        (entryMap: Map<string, any[]>, e: any) => entryMap.set(e.asset.id, [...(entryMap.get(e.asset.id) || []), e]),
+        new Map()
+      );
+      const now = getNowTs();
+      const filteredRents = [] as RentEntity[];
+      // TODO: optimise search for target rent
+      for (const [, rents] of groupedRents) {
+        if (rents.length == 1) {
+          filteredRents.push(rents[0]);
+        } else {
+          let rent = rents.find((r: RentEntity) => Number(r.start) <= now && now < Number(r.end));
+          if (!rent) {
+            rent = rents.find((r: RentEntity) => now < Number(r.start));
+          }
+          if (!rent) {
+            rent = rents[rents.length - 1];
+          }
+          filteredRents.push(rent!);
+        }
+      }
+
+      const assets = filteredRents
+        .sort((a, b) => Number(b.end) - Number(a.end))
+        // .slice(limit * (page - 1), limit * page)
+        .map((r) => r.asset);
+      return {
+        data: parseAssets(assets),
+        meta: { count: filteredRents.length },
+      };
+    })
+    .catch((e) => {
+      console.log(e);
+      return {
+        data: [],
+        meta: { count: 0 },
+      };
+    });
+}
+
+/**
+ * Gets Listed Assets by metaverse id, and lt (less than) than the last rent end (if provided)
+ * excluding those with status WITHDRAWN,
+ * ordered by a given column in ascending/descending order
+ * @param page Which page to load. Default 1
+ * @param limit How many items per page. Default 6
+ * @param metaverse The target metaverse id. Default '1', which is considered Decentraland
+ * @param lastRentEnd A timestamp (in seconds), which will be used to query assets with lastRentEnd greater than the given.
+ * @param orderColumn The name of the order column
+ * @param orderDirection asc or desc
+ * Default '0'. Used to determined Availability of assets
+ */
+export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
+  metaverse = '1',
+  lastRentEnd = '0',
+  orderColumn = 'totalRents',
+  orderDirection: string,
+  paymentTokenId: string,
+  owner?: string
+): Promise<PaginatedResult<AssetEntity>> {
+  return GraphClient.get({
+    query: gql`
+      query GetAssets(
+        $metaverse: String
+        $lastRentEnd: String
+        $orderColumn: String
+        $orderDirection: String
+        $statusNot: String
+        $paymentTokenId: String
+        $owner: String
+      ) {
+        assets(
+          where: { metaverse: $metaverse, ${lastRentEnd != '0' ? 'lastRentEnd_lt: $lastRentEnd' : ''}, 
+          ${owner ? 'owner: $owner' : ''}, status_not: $statusNot, 
+          ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
+          orderBy: $orderColumn
+          orderDirection: $orderDirection
+        ) {
+          id
+          metaverseAssetId
+          minPeriod
+          maxPeriod
+          maxFutureTime
+          pricePerSecond
+          paymentToken {
+            name
+            symbol
+            decimals
+          }
+          decentralandData {
+            asset {
+              consumer {
+                id
+                consumerTo {
+                  id
+                }
+              }
+            }
+            metadata
+            isLAND
+            coordinates {
+              id
+              x
+              y
+            }
+          }
+          lastRentEnd
+          totalRents
+          status
+        }
+      }
+    `,
+    variables: {
+      lastRentEnd: lastRentEnd,
+      metaverse: metaverse,
+      orderColumn: orderColumn,
+      orderDirection: orderDirection,
+      statusNot: AssetStatus.WITHDRAWN,
+      paymentTokenId: paymentTokenId,
+      owner: owner,
+    },
+  })
+    .then(async (response) => {
+      return {
+        data: parseAssets(response.data.assets),
         meta: { count: response.data.assets.length },
       };
     })
@@ -1042,6 +1330,9 @@ export function parseAsset(asset: any): AssetEntity {
   liteAsset.isHot = asset.totalRents > 0;
   liteAsset.unclaimedRentFee = getHumanValue(new BigNumber(asset.unclaimedRentFee), asset.paymentToken.decimals)!;
   liteAsset.operator = asset.operator ?? constants.AddressZero;
+  liteAsset.minPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.minPeriod));
+  liteAsset.maxPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.maxPeriod));
+  liteAsset.maxFutureTimeTimedType = getTimeTypeStr(secondsToDuration(asset.maxFutureTime));
 
   // Calculates the intervals for availability
   // const now = getNowTs();
@@ -1123,7 +1414,7 @@ function getAvailability(asset: any): AssetAvailablity {
   if (maxRentPeriod) {
     const parsedDate = secondsToDuration(asset.minPeriod - maxRentPeriod.toNumber());
     const { timeValue, timeType } = getTimeType(parsedDate);
-    const period = `${timeValue} ${timeType}`;
+    // const period = `${timeValue} ${timeType}`;
     maxRentPeriodType = timeType;
     maxRentPeriodTime = timeValue;
   }

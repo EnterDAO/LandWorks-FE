@@ -1,0 +1,18 @@
+name: Build Front-end
+
+on: push
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Install Dependencies
+        run: npm install
+      - name: Create .env file
+        run: |
+          touch .env | echo "${{ secrets.ENVIRONMENT_TESTNET }}" > .env
+      - name: Build
+        run: CI=false npm run build

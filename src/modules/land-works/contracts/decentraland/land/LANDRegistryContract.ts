@@ -7,6 +7,13 @@ import LANDRegistryABI from './abi.json';
 
 import { buildData } from '../../../../../utils';
 
+export interface Token {
+  id: BigNumber;
+  name: string;
+  coords: string;
+  isLAND: boolean;
+}
+
 export default class LANDRegistryContract extends ERC721Contract {
   constructor(abi: AbiItem[], address: string) {
     super([...(LANDRegistryABI as Web3ContractAbiItem[]), ...abi], address);
@@ -16,6 +23,7 @@ export default class LANDRegistryContract extends ERC721Contract {
    * Gets the balance of the user and all the LANDs with their metadata and coordinates.
    * @param user The address of the user.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getUserData(user: string): Promise<any> {
     const tokens = await this.call('tokensOf', [user]);
 
@@ -30,7 +38,7 @@ export default class LANDRegistryContract extends ERC721Contract {
    * Returns the coordinates and metadata of the token.
    * @param tokenId
    */
-  async getTokenData(tokenId: BigNumber): Promise<any> {
+  async getTokenData(tokenId: BigNumber): Promise<Token> {
     const data = await this.batch([
       {
         method: 'tokenMetadata', // LAND name
@@ -43,7 +51,9 @@ export default class LANDRegistryContract extends ERC721Contract {
     ]);
 
     const metadata = buildData(data[0]);
+
     let name = `LAND (${data[1][0]}, ${data[1][1]})`;
+
     if (metadata !== null && metadata.name !== '') {
       name = `${metadata.name} - ${name}`;
     }

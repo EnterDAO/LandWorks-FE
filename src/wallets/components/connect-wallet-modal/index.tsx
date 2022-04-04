@@ -1,12 +1,11 @@
-import React from 'react';
 import { Col, Row } from 'antd';
 
 import Modal, { ModalProps } from 'components/antd/modal';
 import Grid from 'components/custom/grid';
 import { IconWallet } from 'components/custom/icon-wallet';
 import { Text } from 'components/custom/typography';
-import { useGeneral } from 'components/providers/general-provider';
 import useMergeState from 'hooks/useMergeState';
+import { useGeneral } from 'providers/general-provider';
 import LedgerDerivationPathModal from 'wallets/components/ledger-deriviation-path-modal';
 import { CoinbaseWalletArgs } from 'wallets/connectors/coinbase';
 import { WalletConnectors, useWallet } from 'wallets/wallet';

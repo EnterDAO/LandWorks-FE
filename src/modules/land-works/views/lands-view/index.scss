@@ -32,6 +32,43 @@
   }
 }
 
+.list-new-property {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  box-shadow: 0px 0px 1px 1px $neonPink;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  .add-icon {
+    margin-right: 10px;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.addTokenButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+
+  svg {
+    width: 36px;
+    height: 36px;
+    transform: scale(2);
+  }
+}
+
 .lands-pagination {
   margin-top: 60px;
 

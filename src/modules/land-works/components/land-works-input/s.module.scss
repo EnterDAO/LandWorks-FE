@@ -1,0 +1,40 @@
+@import '../../../../styles/variables.scss';
+@import '../../../../styles/utils.scss';
+
+.wrapper {
+  background-color: $grey01;
+  height: 52px;
+  align-items: center;
+  border-radius: 10px;
+  position: relative;
+  width: 100%;
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  span {
+    max-width: 85px;
+    overflow: hidden;
+    margin-right: 10px;
+  }
+}
+
+.divider {
+  margin: 15px 0 !important;
+  background-color: $grey02;
+}
+
+.input {
+  background: none;
+  border: none;
+  padding: 16px;
+  max-width: 140px;
+}
+
+.dropdownBox {
+  height: 100%;
+  align-items: center;
+  justify-content: space-evenly;
+}

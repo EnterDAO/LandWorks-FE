@@ -6,3 +6,20 @@ input.ant-input,
     box-shadow: 0 0 0 transparent;
   }
 }
+
+::-webkit-scrollbar {
+  width: 14px;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  border-right: 3px solid $grey01;
+  width: 3px;
+}
+
+::-webkit-scrollbar-corner {
+  background: rgba(0, 0, 0, 0);
+}

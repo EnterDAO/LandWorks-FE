@@ -1,4 +1,3 @@
-import React from 'react';
 import BigNumber from 'bignumber.js';
 import cn from 'classnames';
 
@@ -6,7 +5,7 @@ import { DropdownList } from 'components/custom/dropdown';
 import Icon, { TokenIconNames } from 'components/custom/icon';
 import { Slider } from 'components/custom/slider';
 import { Text } from 'components/custom/typography';
-import { KnownTokens, getTokenBySymbol } from 'components/providers/known-tokens-provider';
+import { KnownTokens, getTokenBySymbol } from 'providers/known-tokens-provider';
 
 import s from './s.module.scss';
 
@@ -61,10 +60,10 @@ export const TokenAmount: React.FC<TokenAmountType> = ({
             inputMode="numeric"
             step={1 / 10 ** Math.min(decimals, 6)}
             lang="en"
-            onChange={ev => {
+            onChange={(ev) => {
               onChange(ev.target.value);
             }}
-            onWheel={ev => {
+            onWheel={(ev) => {
               ev.currentTarget.blur();
             }}
             onKeyPress={handlerKeyPress}
@@ -83,9 +82,10 @@ export const TokenAmount: React.FC<TokenAmountType> = ({
                 (max?.toFormat as any)({
                   groupSeparator: '',
                   decimalSeparator: '.',
-                }),
+                })
               )
-            }>
+            }
+          >
             <span>MAX</span>
           </button>
         )}
@@ -99,7 +99,7 @@ export const TokenAmount: React.FC<TokenAmountType> = ({
           step={1 / 10 ** Math.min(decimals ?? 6, 6)}
           value={Number(rest.value) || 0}
           disabled={rest.disabled || max?.isEqualTo(BigNumber.ZERO)}
-          onChange={e => {
+          onChange={(e) => {
             onChange(e.target.value);
           }}
         />
@@ -156,13 +156,15 @@ export const TokenSelect: React.FC<TokenSelectType> = ({ value, onChange, tokens
             'aria-selected': foundToken?.symbol === found.symbol ? 'true' : 'false',
           },
         ];
-      }, [])}>
+      }, [])}
+    >
       {({ ref, setOpen, open }) => (
         <button
           type="button"
           ref={ref}
-          onClick={() => setOpen(isOpen => !isOpen)}
-          className="token-amount-select-token">
+          onClick={() => setOpen((isOpen) => !isOpen)}
+          className="token-amount-select-token"
+        >
           {foundToken ? (
             <Icon name={foundToken.icon as TokenIconNames} width={24} height={24} className="mr-16" />
           ) : null}

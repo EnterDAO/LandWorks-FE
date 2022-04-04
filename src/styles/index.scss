@@ -101,6 +101,8 @@ body.mobile-menu-open {
   --theme-input-background: #fff;
   --theme-input-placeholder: #aaafb3;
 
+  --theme-light-color: #f8f8ff;
+
   --theme-red-color: #ff4949; // red500
   --theme-red-color-rgb: 255, 73, 73; // red500
 
@@ -120,7 +122,10 @@ body.mobile-menu-open {
   --theme-purple-color-rgb: 162, 110, 227; // purple500
   --theme-purple700-color: #614288;
 
-  --theme-grey900-color: #060a0d;
+  --theme-grey100-color: #060a0d;
+  --theme-grey400-color: #3a3a4e;
+  --theme-grey700-color: #68687B;
+  --theme-grey900-color: #f8f8ff;
 
   --theme-white-color: #fff;
 
@@ -165,6 +170,10 @@ body.mobile-menu-open {
 
   --toastify-text-color-light: var(--theme-modal-color);
   --toastify-text-color-dark: var(--theme-primary-color);
+
+  --navbar-height: 107px;
+  --explore-subheader: 88px;
+  --explore-filters: 60px;
 }
 
 @media (max-width: 1024px) {
@@ -202,10 +211,14 @@ body.mobile-menu-open {
   --theme-icon-hover-color: #fff;
   --theme-icon-hover-gradient: linear-gradient(135deg, #dd3dcb 15%, #ef9c92 85%);
   --theme-modal-color: #27273a;
+  --theme-primary-gradient: linear-gradient(83.81deg, #ac2ccb -19.8%, #dd3dcb 22%, #ef9c92 100%);
+  --theme-separator-color: #27273a;
   --theme-checkbox-color: #414163;
   --theme-warning-color: #d92687;
   --theme-warning-border: #4d2f3f;
   --theme-warning-background: #321e29;
+  
+  --theme-primary-box-shadow: rgba(221, 61, 203, 0.6);
 
   --theme-primary-color: #fff;
   --theme-secondary-color: #b3b1cf;

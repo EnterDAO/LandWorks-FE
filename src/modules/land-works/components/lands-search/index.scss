@@ -1,0 +1,67 @@
+@import '../../../../styles/variables.scss';
+@import '../../../../styles/text.scss';
+
+.wrapper-lands-search {
+  position: relative;
+  background: var(--theme-modal-color);
+  border: none;
+  border-radius: 10px;
+  padding: 15px 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  color: white;
+  font-size: 14px;
+  width: 100%;
+
+  .search-label-icon {
+    opacity: 0.5;
+    margin-right: 15px;
+  }
+
+  .search-icon {
+    float: left;
+  }
+
+  .search-reset-icon {
+    position: absolute;
+    top: 0;
+    right: 16px;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      opacity: 0.5;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  form {
+    width: 100%;
+  }
+
+  input {
+    background: none;
+    border: none;
+    color: white;
+    width: 100%;
+  }
+
+  input::placeholder {
+    color: $grey02;
+  }
+
+  form:-webkit-autofill,
+  input:-webkit-autofill {
+    box-shadow: 0 0 0 50px var(--theme-modal-color) inset !important;
+    -webkit-text-fill-color: white !important;
+  }
+}

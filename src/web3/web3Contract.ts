@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import * as Antd from 'antd';
 import debounce from 'lodash/debounce';
@@ -9,7 +10,7 @@ import { AbiItem } from 'web3-utils';
 import { getGasValue } from 'web3/utils';
 import EventEmitter from 'wolfy87-eventemitter';
 
-import { DEFAULT_WEB3, DEFAULT_WEB3_PROVIDER, WEB3_ERROR_VALUE } from 'components/providers/eth-web3-provider';
+import { DEFAULT_WEB3, DEFAULT_WEB3_PROVIDER, WEB3_ERROR_VALUE } from 'providers/eth-web3-provider';
 
 export type Web3ContractAbiItem = AbiItem;
 
@@ -64,7 +65,7 @@ class Web3Contract extends EventEmitter {
   static sendIncNumber = 0;
   static requestsPool: Map<any, Method[]> = new Map();
 
-  static addRequest(source: Web3Contract, request: Method) {
+  static addRequest(source: Web3Contract, request: Method): void {
     const provider = source._callContract.currentProvider;
     const collected = this.requestsPool.get(provider) ?? [];
 
@@ -132,7 +133,7 @@ class Web3Contract extends EventEmitter {
     this.emit(Web3Contract.UPDATE_ACCOUNT, account);
   }
 
-  assertAccount() {
+  assertAccount(): void {
     if (!this.account) {
       throw new Error('This operation requires account to be connected!');
     }

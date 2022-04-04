@@ -1,4 +1,7 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
+import { Component } from 'react';
 import AntdNotification from 'antd/lib/notification';
 import AntdResult from 'antd/lib/result';
 
@@ -8,7 +11,7 @@ type State = {
   error?: Error;
 };
 
-export default class ErrorBoundary extends React.Component<any, State> {
+export default class ErrorBoundary extends Component<any, State> {
   constructor(props: any) {
     super(props);
 
@@ -52,7 +55,8 @@ export default class ErrorBoundary extends React.Component<any, State> {
               type="button"
               className="button-primary button-small"
               style={{ margin: '0 auto' }}
-              onClick={this.handleRefresh}>
+              onClick={this.handleRefresh}
+            >
               Refresh page
             </button>
           }

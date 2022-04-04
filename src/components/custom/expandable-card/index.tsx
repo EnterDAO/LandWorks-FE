@@ -8,7 +8,7 @@ export type ExpandableCardProps = AntdCardProps & {
   footer?: React.ReactNode;
 };
 
-const ExpandableCard: React.FC<ExpandableCardProps> = props => {
+const ExpandableCard: React.FC<ExpandableCardProps> = (props) => {
   const { className, children, footer, ...cardProps } = props;
 
   return (

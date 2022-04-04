@@ -1,38 +1,41 @@
-import React from 'react';
+import { Typography } from '@mui/material';
 
-import Button from 'components/antd/button';
-import Modal, { ModalProps } from 'components/antd/modal';
-import Grid from 'components/custom/grid';
-import { Text } from 'components/custom/typography';
-import { useEthWeb3 } from 'components/providers/eth-web3-provider';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Button, Grid, Modal } from 'design-system';
 import { networks } from 'helpers/chain-configurations';
+import { useEthWeb3 } from 'providers/eth-web3-provider';
 import { useWallet } from 'wallets/wallet';
 
-export type UnsupportedChainModalProps = ModalProps;
+interface UnsupportedChainModalProps {
+  open: boolean;
+  handleClose: () => void;
+}
 
-const UnsupportedChainModal: React.FC<UnsupportedChainModalProps> = (props) => {
-  const { ...modalProps } = props;
-
+const UnsupportedChainModal: React.FC<UnsupportedChainModalProps> = ({
+  handleClose,
+  open,
+}: UnsupportedChainModalProps) => {
   const ethWeb3 = useEthWeb3();
   const wallet = useWallet();
 
   return (
-    <Modal width={568} {...modalProps}>
-      <Grid flow="row" gap={24} align="start">
-        <Grid flow="row" gap={16}>
-          <Text type="h2" weight="bold" color="primary">
-            Wrong network
-          </Text>
-          <Text type="p1" weight="semibold" color="secondary">
+    <Modal handleClose={handleClose} height={'100%'} open={open}>
+      <Grid width="480px" gap={24}>
+        <Grid gap={16}>
+          <Typography variant="h2">Wrong network</Typography>
+          <Typography variant="body1">
             Please switch your wallet network to {ethWeb3.networkName ?? '<!>'} to use the app
-          </Text>
-          <Text type="p1" color="secondary">
+          </Typography>
+          <Typography variant="body1">
             If you still encounter problems, you may want to switch to a different wallet
-          </Text>
+          </Typography>
         </Grid>
 
         <Button
-          type="primary"
+          variant="gradient"
+          sx={{
+            marginTop: 5,
+          }}
           onClick={async () => {
             if (!(window as any).ethereum) {
               console.log("Couldn't find wallet");
@@ -42,7 +45,7 @@ const UnsupportedChainModal: React.FC<UnsupportedChainModalProps> = (props) => {
                 method: 'wallet_switchEthereumChain',
                 params: [{ chainId: networks[ethWeb3.networkName.toLowerCase() as keyof typeof networks].chainId }],
               });
-              props.onCancel?.();
+              handleClose?.();
               wallet.showWalletsModal();
             } catch (err) {
               console.error('error while switching networks');

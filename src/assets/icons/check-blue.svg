@@ -1,0 +1,16 @@
+<svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_4808_13036)">
+<path d="M10.2 15.2334C10.0906 15.2335 9.9822 15.212 9.88109 15.1701C9.77998 15.1282 9.68815 15.0667 9.61088 14.9892L6.41101 11.7894C6.33291 11.7122 6.27084 11.6203 6.22838 11.519C6.18592 11.4177 6.16389 11.3091 6.16358 11.1992C6.16326 11.0894 6.18466 10.9806 6.22654 10.8791C6.26842 10.7776 6.32996 10.6853 6.40761 10.6077C6.48526 10.53 6.5775 10.4685 6.67903 10.4266C6.78055 10.3847 6.88935 10.3633 6.99917 10.3636C7.10899 10.3639 7.21767 10.3859 7.31895 10.4284C7.42024 10.4708 7.51213 10.5329 7.58934 10.611L10.2 13.2217L16.411 7.01075C16.5674 6.85502 16.7792 6.76769 16.9999 6.76793C17.2205 6.76817 17.4321 6.85594 17.5882 7.012C17.7442 7.16806 17.832 7.37965 17.8322 7.60035C17.8324 7.82104 17.7451 8.0328 17.5893 8.18917L10.7892 14.9893C10.7119 15.0668 10.6201 15.1283 10.519 15.1701C10.4179 15.212 10.3095 15.2335 10.2 15.2334Z" fill="#5D8FF0"/>
+</g>
+<defs>
+<filter id="filter0_d_4808_13036" x="-4" y="-5" width="32" height="32" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="3"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.364849 0 0 0 0 0.560937 0 0 0 0 0.94158 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_4808_13036"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_4808_13036" result="shape"/>
+</filter>
+</defs>
+</svg>

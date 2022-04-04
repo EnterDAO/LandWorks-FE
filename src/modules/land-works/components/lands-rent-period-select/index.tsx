@@ -1,4 +1,3 @@
-import React from 'react';
 import { Input } from 'antd';
 
 import Select from 'components/antd/select';
@@ -16,14 +15,14 @@ interface IProps {
   onChange: (event: any) => void;
   onInputChange: (event: any) => void;
   options: Item[];
-  initialValuе: Item;
+  initialValue: Item;
 }
 
-export const LandsPeriodDropdown: React.FC<IProps> = ({ onChange, onInputChange, options, initialValuе }) => {
+export const LandsPeriodDropdown: React.FC<IProps> = ({ onChange, onInputChange, options, initialValue }) => {
   return (
     <div className="period-select-component">
       <LandsInput onInputChange={onInputChange} />
-      <Select options={options} defaultValue={initialValuе.value} onChange={onChange} className="lands-period-drop" />
+      <Select options={options} defaultValue={initialValue.value} onChange={onChange} className="lands-period-drop" />
     </div>
   );
 };

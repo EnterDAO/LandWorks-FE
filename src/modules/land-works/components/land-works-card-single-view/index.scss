@@ -2,10 +2,6 @@
 @import '../../../../styles/text.scss';
 
 .single-land-card-container {
-  background: #27273a;
-  border-radius: 10px;
-  padding: 20px 0px;
-
   .availability {
     display: flex;
     flex-direction: column;
@@ -14,74 +10,97 @@
 
   .rent-price {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     padding: 0 20px;
 
     @media all and (max-width: 400px) {
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-
       button {
         margin-top: 20px;
       }
     }
 
     .price-wrapper {
-      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      margin: 10px 0;
+      width: 100%;
     }
 
     button {
-      flex-shrink: 0;
+      line-height: 0;
+      font-size: 13px;
+      height: 52px;
+      font-weight: bold;
+      width: 100%;
+    }
+
+    .property-button {
+      width: 100%;
+
+      &:nth-child(1) {
+        margin-bottom: 15px;
+      }
     }
   }
 
-  .image-wrapper {
-    max-height: 280px;
+  .map-image-wrapper {
+    max-height: 418px;
+    border-radius: 20px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    margin-bottom: 20px;
 
-    @media all and (max-width: 769px) {
-      margin-bottom: 20px;
-      max-height: 200px;
+    @media all and (min-width: 769px) {
+      margin-bottom: 0;
+      margin-right: 40px;
     }
   }
 
   .card-name {
     font-weight: 700;
-    font-size: 18px;
+    font-size: 20px;
+    text-transform: capitalize;
     color: white;
     margin-right: 13px;
   }
 
   .label {
-    background: #1e1e2e;
-    padding: 5px 10px;
+    background: var(--theme-card-color);
+    padding: 2px 5px;
     border-radius: 5px;
     font-weight: 700;
+    font-size: 12px;
+    position: relative;
   }
 
-  .card-name-hot-label {
-    color: #dd3dcb;
+  .land-info-row {
+    justify-content: flex-end;
+    display: flex;
+  }
+
+  .card-hot-label {
+    background: var(--theme-primary-gradient);
+    box-shadow: 0px 0px 20px var(--theme-primary-box-shadow);
+    border-radius: 20px;
     font-weight: 700;
+    left: -10px;
+    margin-left: auto;
 
     svg {
-      margin-right: 3px;
       position: relative;
-      bottom: -1px;
+      bottom: -2px;
+      height: 18px;
+      width: 18px;
     }
-  }
-
-  .card-name-estate-label {
-    margin-left: 10px;
-    color: var(--theme-accent-color);
   }
 
   .card-name-you-label {
     margin-left: 10px;
-    color: #d92687;
+    color: var(--theme-warning-color);
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -99,24 +118,36 @@
   }
 
   .properties-container {
+    position: relative;
+    background: var(--theme-separator-color);
+    padding: 30px !important;
+    border-radius: 20px;
+
+    .hashtag-row {
+      margin-top: 7px;
+    }
+
     .properties-row {
       padding: 20px 0;
     }
 
     .land-owner {
-      color: rgba(93, 143, 240, 0.4);
+      display: flex;
+      align-items: center;
+      color: var(--theme-subtle-color);
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 500;
+      min-width: 156px;
     }
 
     .land-owner-address {
-      color: rgba(93, 143, 240, 1);
-      font-size: 16px;
-      font-weight: 600;
+      color: var(--theme-accent-color);
+      font-size: 14px;
+      font-weight: 500;
     }
 
     .available-heading {
-      color: #b9b9d3;
+      color: var(--theme-subtle-color);
       font-size: 14px;
       font-weight: 400;
     }
@@ -128,14 +159,18 @@
     }
 
     .available-period {
-      color: #ffffff;
-      font-size: 18px;
+      margin-left: 12px;
+      margin-right: 12px;
+      color: var(--theme-white-color);
+      font-size: 13px;
+      text-transform: uppercase;
       font-weight: 700;
     }
 
     .rent-section {
-      background: #1e1e2e;
+      background: var(--theme-card-color);
       border-radius: 25px;
+      margin-top: 20px;
       padding: 15px 0px;
 
       @media all and (max-width: 500px) {
@@ -148,6 +183,7 @@
       }
 
       .eth-price-container {
+        padding-top: 15px;
         display: flex;
         align-items: center;
 
@@ -158,6 +194,12 @@
           color: var(--theme-primary-color);
           font-weight: bold;
         }
+        p {
+          font-size: 20px;
+          color: var(--theme-primary-color);
+          font-weight: bold;
+          margin: 0 10px 0 4px;
+        }
       }
 
       .usd-price-container {
@@ -166,14 +208,12 @@
 
         .price {
           font-size: 14px;
-          margin-right: 35px;
         }
         .per-day {
           font-size: 14px;
-          margin-right: 15px;
         }
         .info-icon {
-          color: #b9b9d3;
+          color: var(--theme-subtle-color);
           width: 16px;
           height: 16px;
         }
@@ -189,9 +229,14 @@
       .current-address {
         display: flex;
         align-items: center;
+        color: var(--theme-subtle-color);
+        font-size: 12px;
+        font-weight: 500;
+        min-width: 156px;
 
         .info-icon {
-          width: 16;
+          color: var(--theme-subtle-color);
+          width: 16px;
           height: 16px;
         }
       }
@@ -199,74 +244,135 @@
       .land-operator-address {
         color: rgba(93, 143, 240, 1);
         font-size: 14px;
-        font-weight: 600;
+        font-weight: 500;
       }
+    }
+  }
+  .rented-on {
+    font-weight: 400;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: var(--theme-subtle-color);
+  }
+  .remaining-time {
+    font-size: 30px !important;
+    font-weight: bold !important;
+    color: var(--theme-accent-color) !important;
+    // background: -webkit-linear-gradient(rgba(221, 61, 203, 1), rgba(239, 156, 146, 1));
+    // -webkit-background-clip: text;
+    // -webkit-text-fill-color: transparent;
+  }
+  .countdown {
+    margin-left: 62%;
+    width: 260px;
+    height: 91px;
+    background-color: var(--theme-grey900-color);
 
-      .rented-on {
-        font-weight: 400;
-        color: rgba(185, 185, 211, 1);
-      }
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    & > div {
+      max-height: 40px;
+    }
+    @media all and (max-width: 900px) {
+      margin-left: 35%;
+    }
+    @media all and (max-width: 465px) {
+      margin-left: 20%;
+    }
+  }
+  .operator-update-container {
+    padding: 30px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: rgba(92, 141, 240, 0.2);
+    max-width: 1024px;
+    margin: auto;
+    margin-top: 30px;
+    flex-wrap: nowrap;
 
-      .remaining-time {
-        font-size: 16px;
-        font-weight: bold;
-        background: -webkit-linear-gradient(rgba(221, 61, 203, 1), rgba(239, 156, 146, 1));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+    @media all and (max-width: 465px) {
+      flex-direction: column;
+    }
+
+    .info-warning-container {
+      display: flex;
+      flex-direction: row;
+      svg {
+        height: 24px;
+        width: 24px;
       }
     }
 
-    .operator-update-container {
-      .info-warning-text {
-        padding: 10px;
-        color: #d92687;
-        background: #321e29;
-        border: 1px solid #4d2f3f;
-        border-radius: 4px;
+    .info-warning-text {
+      margin-left: 17px;
+      h3 {
+        color: var(--theme-grey900-color);
+        font-size: 18px;
+        font-weight: bold;
       }
+      p {
+        color: var(--theme-subtle-color);
+        font-weight: normal;
+        word-wrap: break-word;
+      }
+    }
+    .update-operator-btn {
+      background: var(--theme-grey900-color);
+      border-radius: 10px;
+      padding: 10px 15px;
+      color: var(--theme-body-color);
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      margin-left: 26px;
 
-      .update-operator-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        button {
-          background: #f8f8ff;
-          border-radius: 10px;
-          padding: 10px 15px;
-          color: #161622;
-          font-size: 14px;
-          font-weight: 600;
-          border: none;
-          &:disabled,
-          &[disabled] {
-            background: rgba(170, 175, 179, 0.08);
-            color: #aaafb3;
-            cursor: not-allowed;
-          }
-        }
+      &:disabled,
+      &[disabled] {
+        background: rgba(170, 175, 179, 0.08);
+        color: var(--theme-icon-color);
+        cursor: not-allowed;
       }
     }
   }
 }
 
+.single-land-label-row {
+  display: flex;
+  align-items: center;
+}
+
 .marketplace-link {
   align-items: center;
   display: flex;
-  justify-content: flex-end;
-  color: #5d8ff0;
+  justify-content: center;
   font-weight: bold;
-  font-size: 12px;
+  text-transform: uppercase;
+  font-size: 13px;
+  color: var(--theme-grey900-color);
+  background-color: var(--theme-grey400-color);
+  padding: 0 16px;
+  width: 100%;
+  border-radius: 14px;
+  height: 52px;
 }
 
 .title-container {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
 }
 
 .head-container {
+  display: flex;
+  justify-content: space-between;
   @media all and (max-width: 500px) {
-    background: #1e1e2e;
+    background: var(--theme-card-color);
     padding: 10px 20px;
     margin-left: -20px;
     margin-right: -20px;
@@ -286,26 +392,30 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
+  flex-direction: row;
+  text-align: center;
+  border-bottom: 1px solid var(--theme-grey400-color);
+  padding-bottom: 10px;
 
   .period-title {
     color: var(--theme-subtle-color);
-    margin-right: 11px;
-    font-size: 14px;
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 600;
   }
 
   .label {
-    margin-right: 11px;
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    padding: 3px 8px;
+    padding: 0;
     color: var(--theme-primary-color);
-    font-size: 12px;
-    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600;
 
     .preffix {
-      color: #d92687;
+      color: var(--theme-warning-color);
       font-size: 12px;
       text-transform: uppercase;
       margin-right: 5px;
@@ -317,5 +427,45 @@
       text-transform: uppercase;
       margin-right: 5px;
     }
+  }
+  .period-separator {
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+@media all and (max-width: 400px) {
+  .single-land-card-container .card-name {
+    font-size: 17px;
+  }
+  .rent-section .eth-price-container {
+    .price-eth {
+      font-size: 17px !important;
+    }
+    p {
+      font-size: 17px !important;
+    }
+  }
+}
+.info-warning-container {
+  display: flex;
+  flex-direction: row;
+  svg {
+    height: 24px;
+    width: 24px;
+  }
+}
+
+.info-warning-text {
+  margin-left: 17px;
+  h3 {
+    color: #f8f8ff;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  p {
+    color: var(--theme-subtle-color);
+    font-weight: normal;
+    word-wrap: break-word;
   }
 }

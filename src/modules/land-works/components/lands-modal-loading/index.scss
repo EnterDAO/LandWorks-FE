@@ -1,0 +1,25 @@
+.rent-modal-loader {
+  display: flex;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  p {
+    font-size: 30px;
+    font-weight: bold;
+    color: #f8f8f8;
+  }
+  span {
+    margin-bottom: 30px;
+  }
+  .success-icon {
+    height: 60px;
+    width: 60px;
+  }
+  .loader {
+    height: 50px;
+    width: 50px;
+    margin-bottom: 15px;
+    animation: loader 1.1s infinite linear;
+  }
+}

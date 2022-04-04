@@ -1,7 +1,8 @@
-import React from "react";
-import { withRouter } from "react-router-dom";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 
-class ScrollToTop extends React.Component<any, any> {
+class ScrollToTop extends Component<any, any> {
   componentDidUpdate(prevProps: any) {
     if (this.props.location.pathname !== prevProps.location.pathname) {
       window.scrollTo(0, 0);

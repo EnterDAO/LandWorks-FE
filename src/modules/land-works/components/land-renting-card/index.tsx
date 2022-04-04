@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { bottom } from '@popperjs/core';
 import { Card, Col, Image, Row } from 'antd';
 import { ethers } from 'ethers';
 import { shortenAddr } from 'web3/utils';
 
-import { getLandImageUrl, isDateBeforeNow as isTimestampBeforeNow, timestampSecondsToDate } from 'helpers/helpers';
+import { getENSName, getLandImageUrl, timestampSecondsToDate } from 'helpers/helpers';
+import { Rent } from 'modules/land-works/api';
 
 import { ReactComponent as HotIcon } from '../../../../resources/svg/hot.svg';
 import landImage from '../land-works-card/assets/land.png';
@@ -15,7 +16,7 @@ import { getNowTs } from '../../../../utils';
 import './index.scss';
 
 interface ILandRentingCardProps {
-  land: any;
+  land: Rent;
   userAddress: string;
 }
 const LandRentingCard: React.FC<ILandRentingCardProps> = ({ land, userAddress }) => {
@@ -46,6 +47,13 @@ const LandRentingCard: React.FC<ILandRentingCardProps> = ({ land, userAddress })
       }
     }
   };
+  const [ens, setEns] = useState<string>();
+  useEffect(() => {
+    if (land.operator)
+      getENSName(land.operator).then((ensName) => {
+        setEns(ensName);
+      });
+  }, [land]);
 
   return (
     <Col className="rent-land-card-wrapper" xl={8} md={8} sm={12} xs={24}>
@@ -61,7 +69,7 @@ const LandRentingCard: React.FC<ILandRentingCardProps> = ({ land, userAddress })
                     HOT
                   </span>
                 )}
-                {!land.asset.decentralandData.isLAND && <span className="label card-name-estate-label">ESTATE</span>}
+                {!land.asset.decentralandData?.isLAND && <span className="label card-name-estate-label">ESTATE</span>}
               </div>
             </div>
           </Col>
@@ -84,7 +92,7 @@ const LandRentingCard: React.FC<ILandRentingCardProps> = ({ land, userAddress })
                 </Row>
                 <Row>
                   <span className="rent-operator-address">
-                    {shortenAddr(land.operator || ethers.constants.AddressZero)}
+                    {ens && ens !== land.operator ? ens : shortenAddr(land.operator || ethers.constants.AddressZero)}
                     {land.operator && land.operator.toLowerCase() === userAddress.toLowerCase() && ' (YOU)'}
                   </span>
                 </Row>

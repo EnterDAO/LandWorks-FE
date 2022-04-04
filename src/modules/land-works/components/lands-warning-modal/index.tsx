@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Col, Row } from 'antd';
 
 import Button from 'components/antd/button';
@@ -7,15 +6,13 @@ import Modal, { ModalProps } from 'components/antd/modal';
 import './index.scss';
 
 type Props = ModalProps & {
-  renderProgress?: () => React.ReactNode;
-  renderSuccess?: () => React.ReactNode;
   onOk: () => Promise<void>;
-  text: any;
+  text: React.ReactNode | string;
   title?: string;
 };
 
 export const WarningModal: React.FC<Props> = (props) => {
-  const { renderProgress, renderSuccess, title, onOk, text, ...modalProps } = props;
+  const { title, onOk, text, ...modalProps } = props;
 
   return (
     <Modal

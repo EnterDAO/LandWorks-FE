@@ -1,45 +1,75 @@
+@import 'src/styles/text';
+
 .lands-nav-container {
-    margin-left: auto !important;
-    margin-right: auto !important;
-    background-color: transparent;
-    border: none;
+  margin-right: auto !important;
+  background-color: transparent;
+  border: none;
+  color: $grey02;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
 
-    @media (max-width: 768px) {
-        display: none;
+  @media (max-width: 768px) {
+    display: none;
+  }
+
+  .divider {
+    height: 20px;
+    width: 2px;
+    background: $grey01;
+    margin: 0 31px;
+    @media (max-width: 1000px) {
+      margin: 0 20px;
+    }
+  }
+
+  .nav-content {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 21px;
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 20px;
+      opacity: 1;
+    }
+    .active-tab {
+      display: none;
+    }
+  }
+
+  .tab {
+    color: $grey02;
+    height: 107px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    display: flex;
+    margin: 0 12.5px;
+    .icon {
+      fill: $grey02;
+    }
+  }
+
+  .selected {
+    color: $light;
+    position: relative;
+    .icon {
+      fill: $light;
     }
 
-    .ant-menu-item {
-        color: rgba(185, 185, 211, 1) !important;
-        text-align: center;
-        padding: 0px 10px 0px 10px !important;
-        min-width: 90px;
-        border-radius: 12px;
-        background: #161622;
-        font-size: 16px !important;
-        font-weight: 500 !important;
-
-
-        &:hover {
-            border-bottom: none !important;
-            background: #161622;
-        }
+    .active-tab {
+      position: absolute;
+      bottom: 0;
+      height: 5px;
+      width: 100%;
+      border-radius: 2px 2px 0 0;
+      background: $accentBlue;
+      box-shadow: 0px 0px 7px 1px $accentBlue;
     }
-
-    .ant-menu-item-selected {
-        font-weight: 700 !important;
-        color: rgba(217, 38, 135, 1) !important;
-        border-bottom: none !important;
-        background: rgba(93, 143, 240, 1);
-        color: white !important;
-        box-shadow: 0px 0px 20px rgba(93, 143, 240, 0.4);
-
-        &:hover {
-            background: rgba(93, 143, 240, 1);
-        }
-    }
-
-    .ant-menu-item-selected a {
-      color: white !important;
-    }
-    
+  }
 }

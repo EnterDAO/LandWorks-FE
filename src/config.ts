@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function toLowerCase(value: any): string {
   return String(value ?? '').toLowerCase();
 }
@@ -45,7 +46,6 @@ const config = {
       barn: toLowerCase(process.env.REACT_APP_CONTRACT_DAO_BARN_ADDR),
       reward: toLowerCase(process.env.REACT_APP_CONTRACT_DAO_REWARD_ADDR),
     },
-    merkleDistributor: toLowerCase(process.env.REACT_APP_CONTRACT_MERKLE_DISTRIBUTOR_ADDR),
     landworksContract: toLowerCase(process.env.REACT_APP_CONTRACT_LANDWORKS_ADDR),
     decentraland: {
       estateRegistry: toLowerCase(process.env.REACT_APP_CONTRACT_DECENTRALAND_ESTATE_REGISTRY_ADDR),

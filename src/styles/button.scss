@@ -22,17 +22,19 @@
   color: white;
 
   &:hover {
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), linear-gradient(135deg, #DD3DCB 15.57%, #EF9C92 84.88%);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
+      linear-gradient(135deg, #dd3dcb 15.57%, #ef9c92 84.88%);
   }
 
   &:active {
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(135deg, #DD3DCB 15.57%, #EF9C92 84.88%);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)),
+      linear-gradient(135deg, #dd3dcb 15.57%, #ef9c92 84.88%);
   }
 
   &:disabled,
   &[disabled] {
     background: rgb(46, 43, 43);
-    color:  rgb(241, 233, 233);
+    color: rgb(241, 233, 233);
     box-shadow: none;
     cursor: not-allowed;
 
@@ -78,6 +80,28 @@
     color: #aaafb3;
     cursor: not-allowed;
   }
+}
+
+.button-primary-grey {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 53px;
+  position: relative;
+  border: 0;
+  background-color: $grey01;
+  box-sizing: border-box;
+  border-radius: 12px;
+
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 24px;
+
+  text-align: center;
+
+  color: var(--theme-white-color);
 }
 
 .button-ghost {
@@ -223,12 +247,13 @@
   }
 }
 
-.button-back {
+.button-back,
+.button-explore {
   font-style: normal;
-  font-weight: bold;
+  font-weight: 500;
   font-size: 12px;
   line-height: 24px;
-  color: var(--theme-secondary-color);
+  color: var(--theme-subtle-color);
   border: 0;
   background-color: transparent;
   padding: 12px 0;

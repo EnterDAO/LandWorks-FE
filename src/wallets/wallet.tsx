@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React from 'react';
 import { useSessionStorage } from 'react-use-storage';
 import { Web3Provider } from '@ethersproject/providers';
@@ -7,9 +9,9 @@ import * as Antd from 'antd';
 
 import Spin from 'components/antd/spin';
 import ExternalLink from 'components/custom/externalLink';
-import { getNetworkName } from 'components/providers/eth-web3-provider';
 import config from 'config';
-import { WarningModal } from 'modules/land-works/components/lands-warning-modal';
+import { Button, Grid, Modal, Typography } from 'design-system';
+import { getNetworkName } from 'providers/eth-web3-provider';
 import ConnectWalletModal from 'wallets/components/connect-wallet-modal';
 import InstallMetaMaskModal from 'wallets/components/install-metamask-modal';
 import UnsupportedChainModal from 'wallets/components/unsupported-chain-modal';
@@ -34,6 +36,7 @@ export const WalletConnectors: WalletConnector[] = [
 type WalletData = {
   initialized: boolean;
   connecting?: WalletConnector;
+  disconnecting?: boolean;
   isActive: boolean;
   account?: string;
   networkId?: number;
@@ -51,6 +54,7 @@ export type Wallet = WalletData & {
 const WalletContext = React.createContext<Wallet>({
   initialized: false,
   connecting: undefined,
+  disconnecting: undefined,
   isActive: false,
   account: undefined,
   networkId: undefined,
@@ -75,6 +79,7 @@ const WalletProvider: React.FC = (props) => {
 
   const [initialized, setInitialized] = React.useState<boolean>(false);
   const [connecting, setConnecting] = React.useState<WalletConnector | undefined>(undefined);
+  const [disconnecting, setDisconnecting] = React.useState<boolean | undefined>(undefined);
   const connectingRef = React.useRef<WalletConnector | undefined>(connecting);
   connectingRef.current = connecting;
   const [activeConnector, setActiveConnector] = React.useState<WalletConnector | undefined>();
@@ -86,6 +91,7 @@ const WalletProvider: React.FC = (props) => {
   const [showDisclaimerModal, setShowDisclaimerModal] = React.useState<boolean>(false);
 
   const disconnect = React.useCallback(() => {
+    setDisconnecting(true);
     web3React.deactivate();
     activeConnector?.onDisconnect?.(web3React.connector);
     setConnecting(undefined);
@@ -93,6 +99,7 @@ const WalletProvider: React.FC = (props) => {
     setActiveProvider(undefined);
     removeSessionProvider();
     localStorage.removeItem('disclaimerShown');
+    setTimeout(() => setDisconnecting(undefined), 0);
   }, [web3React, activeConnector, removeSessionProvider, setConnecting]);
 
   const connect = React.useCallback(
@@ -169,6 +176,7 @@ const WalletProvider: React.FC = (props) => {
     () => ({
       initialized,
       connecting,
+      disconnecting,
       isActive: web3React.active,
       account: web3React.account ?? undefined,
       networkId: web3React.chainId,
@@ -181,39 +189,50 @@ const WalletProvider: React.FC = (props) => {
       connect,
       disconnect,
     }),
-    [web3React, initialized, connecting, activeConnector, activeProvider, disconnect, connect]
+    [web3React, initialized, connecting, disconnecting, activeConnector, activeProvider, disconnect, connect]
   );
 
   return (
     <WalletContext.Provider value={value}>
       {walletsModal && <ConnectWalletModal onCancel={() => setWalletsModal(false)} />}
       {installMetaMaskModal && <InstallMetaMaskModal onCancel={() => setInstallMetaMaskModal(false)} />}
-      {unsupportedChainModal && <UnsupportedChainModal onCancel={() => setUnsupportedChainModal(false)} />}
+      <UnsupportedChainModal open={unsupportedChainModal} handleClose={() => setUnsupportedChainModal(false)} />
       {initialized ? props.children : <Spin spinning className="absolute-center" />}
-      {showDisclaimerModal && (
-        <WarningModal
-          onCancel={() => {
-            setShowDisclaimerModal(false);
-            localStorage.setItem('disclaimerShown', 'true');
-          }}
-          onOk={async () => {
-            setShowDisclaimerModal(false);
-            localStorage.setItem('disclaimerShown', 'true');
-          }}
-          title="Beta Software Disclaimer"
-          text={
-            <>
-              Listing/Renting properties on LandWorks doesn't come without risks. Before making a deposit, it is best to
-              research and understand the risks involved. LandWorks smart contracts have been{' '}
-              <ExternalLink href="https://github.com/EnterDAO/LandWorks-protocol/tree/main/audits" target="_blank">
-                <span>audited</span>
-              </ExternalLink>
-              , however, security audits don't eliminate risks completely. Do not supply assets that you can't afford to
-              lose as LandWorks is still in Beta.
-            </>
-          }
-        />
-      )}
+      <Modal
+        height={'100%'}
+        open={showDisclaimerModal}
+        handleClose={() => {
+          setShowDisclaimerModal(false);
+          localStorage.setItem('disclaimerShown', 'true');
+        }}
+      >
+        <Grid container width="480px" direction="column">
+          <Typography fontSize={25} variant="h2">
+            Beta Software Disclaimer
+          </Typography>
+          <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 20px 0' }} variant="subtitle1">
+            Listing/Renting properties on LandWorks doesn't come without risks. Before making a deposit, it is best to
+            research and understand the risks involved. LandWorks smart contracts have been{' '}
+            <ExternalLink href="https://github.com/EnterDAO/LandWorks-protocol/tree/main/audits" target="_blank">
+              <span>audited</span>
+            </ExternalLink>
+            , however, security audits don't eliminate risks completely. Do not supply assets that you can't afford to
+            lose as LandWorks is still in Beta.
+          </Typography>
+          <Grid item>
+            <Button
+              variant="gradient"
+              btnSize="medium"
+              onClick={async () => {
+                setShowDisclaimerModal(false);
+                localStorage.setItem('disclaimerShown', 'true');
+              }}
+            >
+              ok
+            </Button>
+          </Grid>
+        </Grid>
+      </Modal>
     </WalletContext.Provider>
   );
 };

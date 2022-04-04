@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { Input } from 'antd';
 
 import './index.scss';
 
 interface IProps {
-  onInputChange: (event: any) => void;
+  onInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
   customClassName?: string;
   value?: number;
   disabled?: boolean;

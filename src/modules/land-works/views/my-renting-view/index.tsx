@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { pageSizeOptions } from 'constants/modules';
 import { Col, Pagination, Row } from 'antd';
 
-import { UserEntity, fetchUserRentPerAsset } from 'modules/land-works/api';
+import { Rent, fetchUserRentPerAsset } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
+import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
 import LandRentingCard from 'modules/land-works/components/land-renting-card';
 import LandsRentingSorter from 'modules/land-works/components/land-renting-sorter';
 import { LandsPlaceSorter } from 'modules/land-works/components/lands-place-sorter';
@@ -14,13 +16,12 @@ import { LandsAvailableSorter } from '../../components/lands-available-sorter';
 
 import './index.scss';
 
-const RentingView = () => {
+const MyRentingView: React.FC = () => {
   const wallet = useWallet();
   const history = useHistory();
-  const pageSizeOptions = ['6', '12', '24'];
 
   const [byAvailability, setByAvailability] = useState(false);
-  const [rents, setRents] = useState([] as any);
+  const [rents, setRents] = useState([] as Rent[]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(Number(pageSizeOptions[0]));
   const [totalRents, setTotalRents] = useState(0);
@@ -37,7 +38,7 @@ const RentingView = () => {
     setLoading(false);
   };
 
-  const onSortByAvailability = (availabilityEvent: any) => {
+  const onSortByAvailability = (availabilityEvent: { target: { checked: boolean } }) => {
     const checked = availabilityEvent?.target?.checked;
     if (checked !== undefined) {
       setByAvailability(checked);
@@ -60,11 +61,11 @@ const RentingView = () => {
     }
   }, [wallet.account]);
 
-  const onPlaceChange = (placeChangeEvent: any) => {
+  const onPlaceChange = () => {
     // TODO:: some filtering here
   };
 
-  const onRentSortChange = (sortEvent: any) => {
+  const onRentSortChange = () => {
     // TODO:: some filtering here
   };
 
@@ -105,7 +106,9 @@ const RentingView = () => {
             {loading ? (
               [1, 2, 3].map((i) => <LandCardSkeleton key={i} />)
             ) : rents.length ? (
-              rents.map((rent: any) => <LandRentingCard key={rent.id} land={rent} userAddress={wallet.account || ''} />)
+              rents.map((rent: Rent) => (
+                <LandRentingCard key={rent.id} land={rent} userAddress={wallet.account || ''} />
+              ))
             ) : (
               <div className="empty-state">
                 <p>Rent history is empty, check out</p>
@@ -133,8 +136,9 @@ const RentingView = () => {
           </Col>
         )}
       </Row>
+      <MyPropetiesHistoryTable />
     </div>
   );
 };
 
-export default RentingView;
+export default MyRentingView;
