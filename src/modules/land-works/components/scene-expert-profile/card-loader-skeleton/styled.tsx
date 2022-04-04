@@ -9,7 +9,7 @@ export const GridStyled = styled(Grid)(() => ({
   border: '1px solid rgba(0, 0, 0, 0.1)',
   boxSizing: 'border-box',
   transition: '0.3s ease-in-out',
-  margin: 0,
+  margin: '40px 0 0',
 }));
 
 export const GridStyledInnerContainer = styled(Grid)(() => ({
