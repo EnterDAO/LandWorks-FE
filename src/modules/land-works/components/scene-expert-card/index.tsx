@@ -31,7 +31,7 @@ const SceneExpertCard: FC<ISceneExpertCard> = ({ builder }) => {
             height: '100%',
             borderRadius: '20px',
           }}
-          alt="The property from the offer."
+          alt="Scene builder cover image."
           src={builder.coverPhotoLink}
         />
       </Grid>
@@ -42,7 +42,7 @@ const SceneExpertCard: FC<ISceneExpertCard> = ({ builder }) => {
             width: '100%',
             borderRadius: '20px',
           }}
-          alt="The property from the offer."
+          alt="Scene builder profile image."
           src={builder.avatarPhotoLink}
         />
       </AvatarContainer>
