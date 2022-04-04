@@ -163,8 +163,8 @@ export const RentModal: React.FC<Props> = (props) => {
     try {
       setTransactionLoading(true);
       const bnPeriod = new BigNumber(period);
-      const lastRentEnd = await fetchAssetLastRentEnd(assetId);
-      const maxRentStart = lastRentEnd + HOUR_IN_SECONDS;
+      const assetLastRentEnd = await fetchAssetLastRentEnd(assetId);
+      const maxRentStart = assetLastRentEnd + HOUR_IN_SECONDS;
 
       if (paymentToken?.symbol.toLowerCase() === 'eth') {
         await landWorksContract?.rentDecentralandWithETH(
