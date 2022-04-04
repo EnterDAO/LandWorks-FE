@@ -134,6 +134,6 @@ export const MY_PROPERTIES_TAB_STATE_LENT = 'lent';
 
 export const SCENE_EXPERT_TAB_STATE_ALL = 'all';
 
-export const SCENE_EXPERT_TAB_STATE_INDIVIDUAL = 'individual';
+export const SCENE_EXPERT_TAB_STATE_INDIVIDUAL = 'Individual';
 
-export const SCENE_EXPERT_TAB_STATE_STUDIO = 'studio';
+export const SCENE_EXPERT_TAB_STATE_STUDIO = 'Studio';
