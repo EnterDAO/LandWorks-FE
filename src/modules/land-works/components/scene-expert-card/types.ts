@@ -38,9 +38,13 @@ export interface NotionResultForProfile {
   builderType: string;
   longDescription: string;
   website: string;
-  //linkedin: string;
   twitter: string;
   discord: string;
+  location: string;
+  price: string;
+  // profileType: string;
+  tags: string;
+  languages: string;
 }
 
 export interface NotionResultForPage {

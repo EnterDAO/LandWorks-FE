@@ -118,11 +118,10 @@ export const transformSceneProviderForProfile = (notionEntity: NotionResult): No
     website: notionEntity.properties.Website.url,
     twitter: notionEntity.properties.Twitter.url,
     discord: notionEntity.properties.Discord.rich_text[0].plain_text,
+    location: notionEntity.properties.Location.rich_text[0].plain_text,
+    price: notionEntity.properties.Price.select.name,
+    // profileType: notionEntity.properties.
+    tags: notionEntity.properties.Tags.multi_select.map((t) => t.name).join(', '),
+    languages: notionEntity.properties.Languages.multi_select.map((t) => t.name).join(', '),
   };
 };
-
-// longDescription: notionEntity.properties['Long Description'].rich_text[0].plain_text,
-// website: notionEntity.properties.Website.url
-// linkedin: notionEntity.properties.
-// twitter: notionEntity.properties.Twitter.rich_text[0].href,
-// discord: notionEntity.properties.Discord.rich_text[0].plain_text

@@ -4,6 +4,7 @@ import { useNotion } from 'api/notion/client';
 import { Grid } from 'design-system';
 import CardLoaderSkeleton from 'modules/land-works/components/scene-expert-card/card-loader-skeleton';
 import SceneExpertProfile from 'modules/land-works/components/scene-expert-profile';
+import SceneExpertDetails from 'modules/land-works/components/scene-expert-profile/scene-expert-details';
 
 import { transformSceneProviderForProfile } from 'modules/land-works/utils';
 
@@ -43,7 +44,7 @@ const SingleExpertView: FC = () => {
               <SceneExpertProfile builder={sceneBuilders && sceneBuilders[0]} />
             </Grid>
             <Grid item xs={4}>
-              <SceneExpertProfile builder={sceneBuilders && sceneBuilders[0]} />
+              <SceneExpertDetails builder={sceneBuilders && sceneBuilders[0]} />
             </Grid>
           </Grid>
         </>

@@ -44,13 +44,10 @@ const SceneExpertProfile: FC<ISceneExpertProfile> = ({ builder }) => {
             <TypeChip>{builder.builderType}</TypeChip>
           </Grid>
           <Grid>
-            <ExternalLink href="https://twitter.com/EnterDao">
-              <Icon name="linkedin" width="20" height="20" style={{ color: 'white' }} />
-            </ExternalLink>
-            <ExternalLink href="https://twitter.com/EnterDao">
+            <ExternalLink href={builder.twitter}>
               <Icon name="twitter" width="20" height="20" style={{ color: 'white', marginLeft: '20px' }} />
             </ExternalLink>
-            <ExternalLink href="https://discord.gg/7QJvEctG2G">
+            <ExternalLink href={builder.discord}>
               <Icon name="discord" width="20" height="20" style={{ color: 'white', marginLeft: '20px' }} />
             </ExternalLink>
           </Grid>
@@ -60,7 +57,9 @@ const SceneExpertProfile: FC<ISceneExpertProfile> = ({ builder }) => {
           {builder.longDescription}
         </Grid>
         <Grid display="flex" flexDirection="column" textAlign="left" margin="20px 0 6px" width="300px">
-          <TypographyStyled variant="h4">My Website</TypographyStyled>
+          <TypographyStyled variant="h4" style={{ textTransform: 'uppercase' }}>
+            My Website
+          </TypographyStyled>
           <a href={builder.website}>{builder.website}</a>
         </Grid>
       </Grid>

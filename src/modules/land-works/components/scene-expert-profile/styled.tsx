@@ -34,6 +34,7 @@ export const DividerStyled = styled(Divider)<DividerProps>(() => ({
   '&.MuiDivider-root': {
     backgroundColor: 'var(--theme-modal-color)',
     width: '100%',
+    margin: '18px 0',
   },
 }));
 
@@ -79,4 +80,31 @@ export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
     lineHeight: '21px',
     color: 'var(--theme-subtle-color)',
   },
+}));
+
+export const PriceContainer = styled(Box)<BoxProps>(() => ({
+  width: '100px',
+  height: '40px',
+  padding: '0 20px',
+  backgroundColor: 'var(--theme-modal-color)',
+  borderRadius: '6px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-around',
+}));
+
+export const BlueBoxContainer = styled(Box)<BoxProps>(() => ({
+  padding: '10px 16px',
+  backgroundColor: '#5D8FF033',
+  borderRadius: '10px',
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center'
+}));
+
+export const StyledBox = styled(Grid)<GridProps>(() => ({
+  display: 'flex',
+  textAlign: 'left',
+  marginBottom: '15px',
 }));
