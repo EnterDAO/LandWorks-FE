@@ -3,7 +3,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { FC } from 'react';
 import Skeleton from 'react-loading-skeleton';
 
-import { Box, Grid } from 'design-system';
+import { Box } from 'design-system';
 
 import { GridStyled, GridStyledInnerContainer } from './styled';
 
