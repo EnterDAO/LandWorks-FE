@@ -630,6 +630,42 @@ export function fetchAssetUserRents(
 }
 
 /**
+ * Gets the last rent end for an asset.
+ * Returns the current time in seconds:
+ * if the last rent is less than now
+ * if there are no rents
+ * if the request throws an error
+ * @param asset The target asset id
+ */
+export function fetchAssetLastRentEnd(asset: string): Promise<number> {
+  return GraphClient.get({
+    query: gql`
+      query GetAssetLastRentEnd($assetId: String) {
+        rents(first: 1, orderBy: end, orderDirection: desc, where: { asset: $assetId }) {
+          end
+        }
+      }
+    `,
+    variables: {
+      assetId: asset,
+    },
+  })
+    .then(async (response) => {
+      const now = getNowTs();
+      if (response.data.rents.length == 1) {
+        const rentEnd = Number(response.data.rents[0].end);
+        return rentEnd < now ? now : rentEnd;
+      } else {
+        return now;
+      }
+    })
+    .catch((e) => {
+      console.log(e);
+      return getNowTs();
+    });
+}
+
+/**
  * Gets all the assets and consumerTo assets for a given user.
  * @param address The address of the user
  */
@@ -869,11 +905,11 @@ export function fetchUserRents(address: string, availableOnly = false): Promise<
           txHash
           fee
           paymentToken {
-              id
-              name
-              symbol
-              decimals
-            }
+            id
+            name
+            symbol
+            decimals
+          }
           renter {
             id
           }
@@ -1157,7 +1193,8 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
   lastRentEnd = '0',
   orderColumn = 'totalRents',
   orderDirection: string,
-  paymentTokenId: string
+  paymentTokenId: string,
+  owner?: string
 ): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
     query: gql`
@@ -1168,11 +1205,12 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
         $orderDirection: String
         $statusNot: String
         $paymentTokenId: String
+        $owner: String
       ) {
         assets(
-          where: { metaverse: $metaverse, ${
-            lastRentEnd != '0' ? 'lastRentEnd_lt: $lastRentEnd' : ''
-          }, status_not: $statusNot, ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
+          where: { metaverse: $metaverse, ${lastRentEnd != '0' ? 'lastRentEnd_lt: $lastRentEnd' : ''}, 
+          ${owner ? 'owner: $owner' : ''}, status_not: $statusNot, 
+          ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
           orderBy: $orderColumn
           orderDirection: $orderDirection
         ) {
@@ -1217,6 +1255,7 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
       orderDirection: orderDirection,
       statusNot: AssetStatus.WITHDRAWN,
       paymentTokenId: paymentTokenId,
+      owner: owner,
     },
   })
     .then(async (response) => {

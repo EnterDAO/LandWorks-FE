@@ -158,7 +158,7 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
       >
         {options.map((o) => (
           <StyledOption key={o.value} value={o.value}>
-            {o.icon && <span style={{ marginRight: '15px', width: '15px' }}>{o.icon}</span>}
+            {o.icon && <span style={{ marginRight: '15px', width: '20px' }}>{o.icon}</span>}
             {o.label}
           </StyledOption>
         ))}

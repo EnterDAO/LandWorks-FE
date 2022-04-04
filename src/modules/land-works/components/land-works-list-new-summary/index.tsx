@@ -21,6 +21,7 @@ interface IListNewSummary {
   maxFutureSelectedOption: string;
   maxFuturePeriod: BigNumber;
   paymentToken: PaymentToken;
+  feeText: string;
   asset?: AssetEntity;
 }
 
@@ -33,6 +34,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   maxPeriodSelectedOption,
   maxFutureSelectedOption,
   paymentToken,
+  feeText,
   asset,
 }) => {
   const min = minRentPeriod?.toNumber();
@@ -108,7 +110,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
             </div>
             <div>
               <div>Keep in mind</div>
-              <p>There is a network fee in order to save the changes.</p>
+              <p>{feeText}</p>
             </div>
           </Grid>
         </Grid>

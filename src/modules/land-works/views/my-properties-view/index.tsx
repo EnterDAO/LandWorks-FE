@@ -72,6 +72,8 @@ const MyPropertiesView: FC = () => {
 
   const updateUser = async () => {
     await fetchRents();
+    setLoading(false);
+
     if (userData && userData.user) {
       setUser(parseUser(userData.user));
     } else {
@@ -85,6 +87,12 @@ const MyPropertiesView: FC = () => {
 
   const onChangeCurrencyHandler = (value: number) => {
     setCurrencyId(value);
+  };
+
+  const removeLands = () => {
+    setLands([]);
+    setRents([]);
+    setTotalRents(0);
   };
 
   useEffect(() => {
@@ -104,17 +112,17 @@ const MyPropertiesView: FC = () => {
   useEffect(() => {
     if (Object.keys(user).length) {
       // We setLands only if the tab is still MY_PROPERTIES_TAB_STATE_ALL
-      if (tab === MY_PROPERTIES_TAB_STATE_ALL) {
-        setLands(concatOwnerAndConsumerAssetsAndRents());
-      }
+      if (tab === MY_PROPERTIES_TAB_STATE_ALL) setLands(concatOwnerAndConsumerAssetsAndRents());
+      if (tab === MY_PROPERTIES_TAB_STATE_RENTED) setLands(rents);
+      if (tab === MY_PROPERTIES_TAB_STATE_LENT) setLands(user?.ownerAndConsumerAssets || []);
+    } else {
+      removeLands();
     }
   }, [user]);
 
   useEffect(() => {
     if (!wallet.account) {
-      setLands([]);
-      setRents([]);
-      setTotalRents(0);
+      removeLands();
     }
   }, [wallet.account]);
 

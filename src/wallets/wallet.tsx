@@ -196,7 +196,7 @@ const WalletProvider: React.FC = (props) => {
     <WalletContext.Provider value={value}>
       {walletsModal && <ConnectWalletModal onCancel={() => setWalletsModal(false)} />}
       {installMetaMaskModal && <InstallMetaMaskModal onCancel={() => setInstallMetaMaskModal(false)} />}
-      {unsupportedChainModal && <UnsupportedChainModal onCancel={() => setUnsupportedChainModal(false)} />}
+      <UnsupportedChainModal open={unsupportedChainModal} handleClose={() => setUnsupportedChainModal(false)} />
       {initialized ? props.children : <Spin spinning className="absolute-center" />}
       <Modal
         height={'100%'}
