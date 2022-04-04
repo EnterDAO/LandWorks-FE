@@ -21,6 +21,11 @@ const LandsNav: React.FC = () => {
         <div className="nav-content">My Properties</div>
         <div className="active-tab"></div>
       </NavLink>
+
+      <NavLink className="tab" activeClassName="selected" to="/scene-expert">
+        <div className="nav-content">Scene Expert</div>
+        <div className="active-tab"></div>
+      </NavLink>
     </div>
   );
 };

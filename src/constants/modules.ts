@@ -106,9 +106,15 @@ export const DEFAULT_LAST_RENT_END = '0';
 
 export const pageSizeOptions = ['8', '12', '24'];
 
-export const sortColumns = ['totalRents', 'pricePerSecond', 'pricePerSecond'];
+export const sortColumns = ['totalRents', 'pricePerSecond', 'pricePerSecond', 'minPeriod', 'maxPeriod'];
 
-export const sortDirections = [SortDirection.DESC, SortDirection.ASC, SortDirection.DESC];
+export const sortDirections = [
+  SortDirection.DESC,
+  SortDirection.ASC,
+  SortDirection.DESC,
+  SortDirection.ASC,
+  SortDirection.DESC,
+];
 
 export const metaverseOptions = ['Decentraland'];
 
@@ -119,10 +125,15 @@ export const BASE_URL_DECENTRALEND = 'https://api.decentraland.org/v1';
 export const DEFAULT_SLICED_PAGE = 4;
 
 export const DEFAULT_TOKEN_ADDRESS = '';
-// export const DEFAULT_TOKEN_ADDRESS = '0x0000000000000000000000000000000000000001';
 
 export const MY_PROPERTIES_TAB_STATE_ALL = 'all';
 
 export const MY_PROPERTIES_TAB_STATE_RENTED = 'rented';
 
 export const MY_PROPERTIES_TAB_STATE_LENT = 'lent';
+
+export const SCENE_EXPERT_TAB_STATE_ALL = 'all';
+
+export const SCENE_EXPERT_TAB_STATE_INDIVIDUAL = 'Individual';
+
+export const SCENE_EXPERT_TAB_STATE_STUDIO = 'Studio';

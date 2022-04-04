@@ -1,5 +1,6 @@
 import Icon from 'components/custom/icon';
 
+import { ReactComponent as ClockIcon } from '../../../../resources/svg/clock.svg';
 import { ReactComponent as HighIcon } from '../../../../resources/svg/order-high-first.svg';
 import { ReactComponent as HottestIcon } from '../../../../resources/svg/order-hot.svg';
 import { ReactComponent as LowIcon } from '../../../../resources/svg/order-low-first.svg';
@@ -19,6 +20,16 @@ export const sortData = [
     label: 'Price: high first',
     value: 3,
     icon: <HighIcon />,
+  },
+  {
+    label: 'Period: shortest first',
+    value: 4,
+    icon: <ClockIcon />,
+  },
+  {
+    label: 'Period: longest first',
+    value: 5,
+    icon: <ClockIcon />,
   },
 ];
 

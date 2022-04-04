@@ -26,7 +26,7 @@ import { getNowTs } from '../../../../utils';
 
 import './index.scss';
 
-interface LocationState {
+export interface LocationState {
   from: string;
   title: string;
 }
