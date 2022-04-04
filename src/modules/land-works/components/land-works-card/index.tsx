@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { Card, Col, Image, Row } from 'antd';
 
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
 import { AssetStatus } from 'modules/land-works/models/AssetStatus';
+import { LocationState } from 'modules/land-works/views/single-land-view';
 
 import { ReactComponent as FireIcon } from '../../../../resources/svg/white_fire.svg';
 import { AssetEntity } from '../../api';
@@ -21,13 +22,28 @@ interface ILandWorksCardProps {
 }
 
 const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
+  const history = useHistory();
+  const location = useLocation<LocationState>();
   const [showChart] = useState(false);
   const isNotListed = () => land?.status !== AssetStatus.LISTED;
   const isAvailable = land.isAvailable && land.availability.isCurrentlyAvailable;
 
   return (
     <Col className="land-card-wrapper" xl={6} md={12} sm={24} xs={24}>
-      <Link to={`/property/${land.id}`}>
+      <Link
+        to={`/property/${land.id}`}
+        onClick={(e) => {
+          e.preventDefault();
+          history.push({
+            pathname: `/property/${land.id}`,
+            state: {
+              from: window.location.pathname,
+              title: 'My properties',
+              previousPage: { from: location?.state?.from, title: location?.state?.title },
+            },
+          });
+        }}
+      >
         <Card className="land-card">
           <Row className="label-row" justify="space-between">
             {land.isHot && (

@@ -29,6 +29,10 @@ import './index.scss';
 export interface LocationState {
   from: string;
   title: string;
+  previousPage?: {
+    from: string;
+    title: string;
+  };
 }
 
 const SingleLandView: React.FC = () => {
@@ -225,6 +229,13 @@ const SingleLandView: React.FC = () => {
     return isDirectWithdraw() || shouldShowWithdraw();
   };
 
+  const breadcrumbs = () => {
+    const url = location.state.previousPage?.from || location.state.from || '/explore';
+    const title = location.state.previousPage?.title || location.state.title || 'Explore';
+
+    return { url, title };
+  };
+
   return (
     <div className="content-container single-card-section">
       <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
@@ -257,17 +268,17 @@ const SingleLandView: React.FC = () => {
       <Row gutter={40} className="head-nav">
         <div className="left-wrapper">
           <div className="head-breadcrumbs">
-            <Link className="button-back" to={location.state?.from || '/explore'}>
+            <Link className="button-back" to={breadcrumbs().url}>
               <div className="button-icon">
                 <Icon iconSize={'m'} iconElement={<BackIcon />} />
               </div>
-              <span>Back to {location.state?.title || 'Explore'}</span>
+              <span>Back to {breadcrumbs().title}</span>
             </Link>
 
             <p className="separator" />
 
-            <Link className="button-explore" to={location.state?.from || '/explore'}>
-              {location.state?.title || 'Explore'}
+            <Link className="button-explore" to={breadcrumbs().url}>
+              {breadcrumbs().title}
             </Link>
 
             <Icon iconSize={'m'} iconElement={<ArrowRightIcon />} />
