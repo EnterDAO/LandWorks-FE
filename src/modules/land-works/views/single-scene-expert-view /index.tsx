@@ -1,10 +1,15 @@
 import { FC, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { useNotion } from 'api/notion/client';
 import { Grid } from 'design-system';
+import { Icon } from 'design-system';
+import { ArrowRightIcon, BackIcon } from 'design-system/icons';
 import CardLoaderSkeleton from 'modules/land-works/components/scene-expert-card/card-loader-skeleton';
 import SceneExpertProfile from 'modules/land-works/components/scene-expert-profile';
 import SceneExpertDetails from 'modules/land-works/components/scene-expert-profile/scene-expert-details';
+
+import { BreadCrumbs, Separator } from '../scene-expert-form-view/styled';
 
 import { transformSceneProviderForProfile } from 'modules/land-works/utils';
 
@@ -29,8 +34,22 @@ const SingleExpertView: FC = () => {
 
   return (
     <Grid className="content-container">
+      <BreadCrumbs>
+        <Link className="button-back" to={'/scene-expert'}>
+          <div className="button-icon">
+            <BackIcon style={{ width: '20px' }} />
+          </div>
+          <span>Back to {'Scene Experts'}</span>
+        </Link>
+        <Separator />
+        <Link className="button-explore" to={'/scene-expert'}>
+          <span>{'Experts'}</span>
+        </Link>
+        <ArrowRightIcon style={{ width: '20px' }} />
+        <span>{sceneBuilders && sceneBuilders[0]?.builderName}</span>
+      </BreadCrumbs>
       {loading ? (
-        <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
+        <Grid mt="28px" container spacing={4} rowSpacing={4} columnSpacing={4}>
           {[1, 2, 3, 4].map((i) => (
             <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={i}>
               <CardLoaderSkeleton key={i} />
@@ -39,7 +58,7 @@ const SingleExpertView: FC = () => {
         </Grid>
       ) : (
         <>
-          <Grid container spacing={2} rowSpacing={4} columnSpacing={4}>
+          <Grid mt="28px" container spacing={2} rowSpacing={4} columnSpacing={4}>
             <Grid item xs={8}>
               <SceneExpertProfile builder={sceneBuilders && sceneBuilders[0]} />
             </Grid>
