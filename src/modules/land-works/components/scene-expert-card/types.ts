@@ -30,6 +30,19 @@ export interface NotionResultForCard {
   price: string;
 }
 
+export interface NotionResultForProfile {
+  coverPhotoLink: string;
+  avatarPhotoLink: string;
+  builderName: string;
+  definition: string;
+  builderType: string;
+  longDescription: string;
+  website: string;
+  //linkedin: string;
+  twitter: string;
+  discord: string;
+}
+
 export interface NotionResultForPage {
   coverPhotoLink: string;
   avatarPhotoLink: string;

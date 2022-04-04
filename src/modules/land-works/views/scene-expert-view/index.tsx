@@ -13,7 +13,7 @@ import SceneExpertCard from 'modules/land-works/components/scene-expert-card';
 import CardLoaderSkeleton from 'modules/land-works/components/scene-expert-card/card-loader-skeleton';
 import SceneExpertTabs from 'modules/land-works/components/scene-expert-tabs';
 
-import { transformSceneProvider } from 'modules/land-works/utils';
+import { transformSceneProviderForCard } from 'modules/land-works/utils';
 
 import { NotionResultForCard } from 'modules/land-works/components/scene-expert-card/types';
 
@@ -27,8 +27,10 @@ const SceneExpertView: FC = () => {
   useEffect(() => {
     (async () => {
       const sceneProv = await getSceneProviders();
+
+      console.log({ sceneProv });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const data = sceneProv.results.map((i: any) => transformSceneProvider(i));
+      const data = sceneProv.results.map((i: any) => transformSceneProviderForCard(i));
       setSceneBuilders(data);
       setLoading(false);
     })();
