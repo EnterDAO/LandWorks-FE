@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 import { useNotion } from 'api/notion/client';
 import { Grid } from 'design-system';
-import { Icon } from 'design-system';
 import { ArrowRightIcon, BackIcon } from 'design-system/icons';
 import CardLoaderSkeleton from 'modules/land-works/components/scene-expert-card/card-loader-skeleton';
 import SceneExpertProfile from 'modules/land-works/components/scene-expert-profile';
@@ -19,18 +18,16 @@ const SingleExpertView: FC = () => {
   const { getSceneProviders } = useNotion();
   const [sceneBuilders, setSceneBuilders] = useState<NotionResultForProfile[]>([]);
   const [loading, setLoading] = useState(true);
-  const [expert, setExpert] = useState(true);
 
   useEffect(() => {
     (async () => {
       const sceneProv = await getSceneProviders();
-      console.log({ sceneProv });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data = sceneProv.results.map((i: any) => transformSceneProviderForProfile(i));
       setSceneBuilders(data);
       setLoading(false);
     })();
-  }, [expert]);
+  }, [sceneBuilders]);
 
   return (
     <Grid className="content-container">

@@ -4,7 +4,6 @@ import { BoxProps, GridProps, TypographyProps, styled } from '@mui/system';
 import { Box, Typography } from 'design-system';
 
 export const CardContainer = styled(Box)<BoxProps>(() => ({
-  //height: '580px',
   textAlign: 'center',
   padding: '15px',
   backgroundColor: 'var(--theme-card-color)',
@@ -100,7 +99,7 @@ export const BlueBoxContainer = styled(Box)<BoxProps>(() => ({
   width: '100%',
   display: 'flex',
   justifyContent: 'space-between',
-  alignItems: 'center'
+  alignItems: 'center',
 }));
 
 export const StyledBox = styled(Grid)<GridProps>(() => ({

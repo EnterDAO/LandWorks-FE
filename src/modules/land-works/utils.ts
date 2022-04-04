@@ -120,7 +120,6 @@ export const transformSceneProviderForProfile = (notionEntity: NotionResult): No
     discord: notionEntity.properties.Discord.rich_text[0].plain_text,
     location: notionEntity.properties.Location.rich_text[0].plain_text,
     price: notionEntity.properties.Price.select.name,
-    // profileType: notionEntity.properties.
     tags: notionEntity.properties.Tags.multi_select.map((t) => t.name).join(', '),
     languages: notionEntity.properties.Languages.multi_select.map((t) => t.name).join(', '),
   };

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Box, Button, Grid } from 'design-system';
+import { Button, Grid } from 'design-system';
 import { AlertIcon, BlueDollarIcon, LanguagesIcon, LocationIcon, ProfileIcon02, TagIcon } from 'design-system/icons';
 
 import { BlueBoxContainer, CardContainer, DividerStyled, PriceContainer, StyledBox, TypographyStyled } from '../styled';
