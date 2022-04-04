@@ -176,6 +176,7 @@ const SingleLandView: React.FC = () => {
       }
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
+      localStorage.removeItem('WITHDRAW_IN_PROGRESS');
       console.log(e);
     }
   };
@@ -433,6 +434,7 @@ const SingleLandView: React.FC = () => {
           }}
           open={showRentModal}
           availability={asset.availability}
+          metaverseAssetId={asset.metaverseAssetId}
           assetId={asset.id}
           children={<></>}
           pricePerSecond={asset.pricePerSecond}

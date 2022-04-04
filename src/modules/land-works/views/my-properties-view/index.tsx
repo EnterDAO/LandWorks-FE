@@ -26,8 +26,8 @@ import { useWallet } from 'wallets/wallet';
 import {
   filterLandsByCurrencyId,
   filterLandsByQuery,
-  isListingInProgress,
-  isWithdrawInProgress,
+  isExistingLandInProgress,
+  isNewLandTxInProgress,
 } from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
 
@@ -46,9 +46,6 @@ const MyPropertiesView: FC = () => {
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [slicedLands, setSlicedLands] = useState(pageSize);
   const [currencyId, setCurrencyId] = useState(sessionStorageHandler('get', 'my-properties-filters', 'currency') || 0);
-
-  const displayListingInProgressCard = isListingInProgress(lands, loading);
-  const displayWithdrawInProgressCard = isWithdrawInProgress(lands, loading);
 
   const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -164,6 +161,27 @@ const MyPropertiesView: FC = () => {
 
   const slicedLandsInTotal = filteredLands.slice(0, slicedLands).length;
 
+  const displayNewLandLoader = () => {
+    return (
+      isNewLandTxInProgress(lands, loading, 'LISTING_IN_PROGRESS') ||
+      isNewLandTxInProgress(lands, loading, 'RENT_IN_PROGRESS')
+    );
+  };
+
+  const displayExistLandLoader = () => {
+    return (
+      isExistingLandInProgress(lands, loading, 'WITHDRAW_IN_PROGRESS') ||
+      isExistingLandInProgress(lands, loading, 'EXIST_RENT_IN_PROGRESS')
+    );
+  };
+
+  const newProtertyTitle = () => {
+    return localStorage.getItem('LISTING_IN_PROGRESS') ? 'Listing' : 'Renting';
+  };
+  const existProtertyTitle = () => {
+    return localStorage.getItem('WITHDRAW_IN_PROGRESS') ? 'Withdraw' : 'Renting';
+  };
+
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
       <TabContext value={tab}>
@@ -191,8 +209,8 @@ const MyPropertiesView: FC = () => {
               <>
                 {filteredLands.slice(0, slicedLands).map((land) => (
                   <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={land.id}>
-                    {displayWithdrawInProgressCard === land.metaverseAssetId ? (
-                      <LandWorksLoadingCard title="Withdraw" />
+                    {displayExistLandLoader() === land.metaverseAssetId ? (
+                      <LandWorksLoadingCard title={existProtertyTitle()} />
                     ) : (
                       <LandWorkCard
                         land={land}
@@ -206,17 +224,24 @@ const MyPropertiesView: FC = () => {
                     )}
                   </Grid>
                 ))}
-                {displayListingInProgressCard && (
+                {displayNewLandLoader() && (
                   <Grid item xs={12} sm={6} md={6} lg={4} xl={3}>
-                    {' '}
-                    <LandWorksLoadingCard title="Listing" />
+                    <LandWorksLoadingCard title={newProtertyTitle()} />
                   </Grid>
                 )}
               </>
             ) : (
-              <Grid item xs={12}>
-                {displayListingInProgressCard ? <LandWorksLoadingCard title="Listing" /> : <LandsWorksGridEmptyState />}
-              </Grid>
+              <>
+                {displayNewLandLoader() ? (
+                  <Grid item xs={12} sm={6} md={6} lg={4} xl={3}>
+                    <LandWorksLoadingCard title={newProtertyTitle()} />
+                  </Grid>
+                ) : (
+                  <Grid item xs={12}>
+                    <LandsWorksGridEmptyState />
+                  </Grid>
+                )}
+              </>
             )}
           </Grid>
 
