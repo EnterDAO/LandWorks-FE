@@ -42,7 +42,7 @@ export const LandListingCard: React.FC<ILandCardProps> = ({ land, handleClick, i
               maxWidth: { xs: 350, md: 250 },
             }}
             className={s.image}
-            alt="The house from the offer."
+            alt="The property from the offer."
             src={getDecentralandNftImageUrl(land)}
           />
         </Grid>
@@ -95,7 +95,7 @@ export const EstateListingCard: React.FC<IEstateCardProps> = ({
               maxWidth: { xs: 350, md: 250 },
             }}
             className={s.image}
-            alt="The house from the offer."
+            alt="The property from the offer."
             src={getEstateImageUrl(land)}
           />
         </Grid>
