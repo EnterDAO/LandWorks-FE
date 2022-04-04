@@ -37,8 +37,6 @@ const SceneExpertView: FC = () => {
   const individualBuilders = sceneBuilders?.filter((i) => i.builderType === 'Individual');
   const studioBuilders = sceneBuilders?.filter((i) => i.builderType === 'Studio');
 
-  console.log({ individualBuilders, studioBuilders }, studioBuilders);
-
   useEffect(() => {
     if (tab === SCENE_EXPERT_TAB_STATE_INDIVIDUAL && individualBuilders !== undefined) {
       setFilteredData(individualBuilders);
