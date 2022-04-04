@@ -13,6 +13,7 @@ const LandsView = lazy(() => import('./views/lands-view'));
 const ExploreView = lazy(() => import('./views/explore-view'));
 const MyPropertiesView = lazy(() => import('./views/my-properties-view'));
 const SceneExpertView = lazy(() => import('./views/scene-expert-view'));
+const SceneExpertFormView = lazy(() => import('./views/scene-expert-form-view'));
 const SingleLand = lazy(() => import('./views/single-land-view'));
 const ListProperty = lazy(() => import('./views/list-property-view'));
 const EditProperty = lazy(() => import('./views/edit-property-view'));
@@ -46,6 +47,7 @@ const LandworksView: React.FC = () => {
       <Route path="/explore" exact component={ExploreView} />
       <Route path="/my-properties" exact component={MyPropertiesView} />
       <Route path="/scene-expert" exact component={SceneExpertView} />
+      <Route path="/join-experts" exact component={SceneExpertFormView} />
       <Route path="/lending" exact component={LendingView} />
       <Route path="/renting" exact component={RentingView} />
       <ProtectedRoute

@@ -8,7 +8,7 @@ import ExternalLink from 'components/custom/externalLink';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import config from 'config';
-import { Button } from 'design-system';
+import { Button, Tooltip } from 'design-system';
 import { getENSName, getLandImageUrl, getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
@@ -20,7 +20,6 @@ import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 import SingleLandCardSkeleton from '../land-single-card-loader';
 import LandsMapOverlay from '../lands-map-overlay';
-import { LandsTooltip } from '../lands-tooltip';
 
 import { getNowTs } from '../../../../utils';
 import { ZERO_BIG_NUMBER, getDecentralandPlayUrl, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
@@ -52,6 +51,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const [currentRent, setCurrentRent] = useState({} as RentEntity);
   const [countDownRent, setCountDownRent] = useState({} as RentEntity);
   const [countDownTimestamp, setCountDownTimestamp] = useState('0');
+  const [countDownPlaceholderMessage, setCountDownPlaceholderMessage] = useState('');
   const [loading, setLoading] = useState(true);
 
   const isOwnerOrConsumer = () => {
@@ -84,10 +84,12 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
       if (wallet.account) {
         if (wallet.account.toLowerCase() === rent.renter?.id) {
           setCountDownTimestamp(rent.end);
+          setCountDownPlaceholderMessage('rent ends in');
           setCountDownRent(rent);
         } else {
           const rent = await fetchUserFirstRentByTimestamp(asset.id, wallet.account.toLowerCase(), getNowTs());
           setCountDownTimestamp(rent.start);
+          setCountDownPlaceholderMessage('rent starts in');
           setCountDownRent(rent);
         }
       }
@@ -247,11 +249,17 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                 <Grid container className="operator-container">
                   <Grid item xs={4} className="current-address">
                     Current Operator
-                    <LandsTooltip
-                      placement="bottomLeft"
-                      trigger="hover"
-                      text="The operator currently set and authorised to deploy scenes and experiences in the metaverse."
-                    />
+                    <Tooltip
+                      disableFocusListener
+                      placement="bottom-start"
+                      title={
+                        'The operator currently set and authorised to deploy scenes and experiences in the metaverse.'
+                      }
+                    >
+                      <div>
+                        <Icon name="about" className="info-icon" />
+                      </div>
+                    </Tooltip>
                   </Grid>
                   <Grid item>
                     <ExternalLink href={getEtherscanAddressUrl(asset?.operator)} className="land-operator-address">
@@ -344,9 +352,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                 <Countdown date={Number(countDownTimestamp) * 1000} zeroPadTime={3} renderer={renderCountdown} />
               </Grid>
               <Grid item>
-                <p className="rented-on">
-                  {Number(countDownTimestamp) > getNowTs() ? 'rent ends in' : 'rent starts in'}
-                </p>
+                <p className="rented-on">{countDownPlaceholderMessage}</p>
               </Grid>
             </Grid>
           )}
