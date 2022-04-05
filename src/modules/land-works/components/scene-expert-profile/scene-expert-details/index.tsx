@@ -40,7 +40,7 @@ const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
   // };
 
   return (
-    <CardContainer className="scene-expert-card" style={{ padding: '20px 30px' }}>
+    <CardContainer className="scene-expert-card" style={{ padding: '20px 30px', height: '578px' }}>
       <TypographyStyled variant="h4" style={{ textTransform: 'uppercase' }}>
         Expert Details & Services
       </TypographyStyled>

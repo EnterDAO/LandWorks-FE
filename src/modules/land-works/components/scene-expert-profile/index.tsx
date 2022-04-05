@@ -14,7 +14,7 @@ interface ISceneExpertProfile {
 
 const SceneExpertProfile: FC<ISceneExpertProfile> = ({ builder }) => {
   return (
-    <CardContainer className="scene-expert-card">
+    <CardContainer className="scene-expert-card" style={{ height: '578px' }}>
       <Grid height={185} width="100%" borderRadius="20px" overflow="hidden">
         <Box
           component="img"
