@@ -46,6 +46,13 @@ export interface NotionResultForProfile {
   languages: string;
 }
 
+export interface NotionResultForPortfolio {
+  portfolio1: string;
+  portfolio2: string;
+  portfolio3: string;
+  portfolio4: string;
+}
+
 export interface NotionResultForPage {
   coverPhotoLink: string;
   avatarPhotoLink: string;

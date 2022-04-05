@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -7,24 +8,30 @@ import { ArrowRightIcon, BackIcon } from 'design-system/icons';
 import SceneExpertProfile from 'modules/land-works/components/scene-expert-profile';
 import ProfileLoaderSkeleton from 'modules/land-works/components/scene-expert-profile/card-loader-skeleton';
 import SceneExpertDetails from 'modules/land-works/components/scene-expert-profile/scene-expert-details';
+import SceneExpertPortfolio from 'modules/land-works/components/scene-expert-profile/scene-expert-portfolio';
 
 import { BreadCrumbs, Separator } from '../scene-expert-form-view/styled';
 
-import { transformSceneProviderForProfile } from 'modules/land-works/utils';
+import { transformSceneProviderForPortfolio, transformSceneProviderForProfile } from 'modules/land-works/utils';
 
-import { NotionResultForProfile } from 'modules/land-works/components/scene-expert-card/types';
+import {
+  NotionResultForPortfolio,
+  NotionResultForProfile,
+} from 'modules/land-works/components/scene-expert-card/types';
 
 const SingleExpertView: FC = () => {
   const { getSceneProviders } = useNotion();
   const [sceneBuilders, setSceneBuilders] = useState<NotionResultForProfile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [portfolio, setPortfolio] = useState<NotionResultForPortfolio[]>([]);
 
   useEffect(() => {
     (async () => {
       const sceneProv = await getSceneProviders();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data = sceneProv.results.map((i: any) => transformSceneProviderForProfile(i));
+      const portfolioImages = sceneProv.results.map((i: any) => transformSceneProviderForPortfolio(i));
       setSceneBuilders(data);
+      setPortfolio(portfolioImages);
       setLoading(false);
     })();
   }, [sceneBuilders]);
@@ -55,6 +62,11 @@ const SingleExpertView: FC = () => {
             </Grid>
             <Grid item xs={4}>
               <SceneExpertDetails builder={sceneBuilders && sceneBuilders[0]} />
+            </Grid>
+          </Grid>
+          <Grid mt="28px" container spacing={2} rowSpacing={4} columnSpacing={4}>
+            <Grid item xs={12}>
+              <SceneExpertPortfolio portfolio={portfolio} />
             </Grid>
           </Grid>
         </>
