@@ -33,7 +33,7 @@ export const LandsNavMobile: React.FC<INavProps> = ({ setNavOpen }) => {
         </Link>
       </Col>
       <Col span={24}>
-        <Link to="/renting" className="menu-item-mobile" onClick={() => setNavOpen(false)}>
+        <Link to="/explore" className="menu-item-mobile" onClick={() => setNavOpen(false)}>
           <span>Renting</span>
         </Link>
       </Col>

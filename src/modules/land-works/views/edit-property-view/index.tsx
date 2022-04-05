@@ -405,7 +405,7 @@ const EditPropertyView: React.FC = () => {
     setLoading(true);
     const asset = await fetchAsset(tokenId);
     if (!asset) {
-      history.push(`/all`);
+      history.push(`/explore`);
       return;
     }
     setAsset(parseAsset(asset));

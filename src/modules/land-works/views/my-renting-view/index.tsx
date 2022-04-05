@@ -112,7 +112,7 @@ const MyRentingView: React.FC = () => {
             ) : (
               <div className="empty-state">
                 <p>Rent history is empty, check out</p>
-                <button className="accent" onClick={() => history.push('/all')}>
+                <button className="accent" onClick={() => history.push('/explore')}>
                   All properties
                 </button>
                 <InfographicRent />
