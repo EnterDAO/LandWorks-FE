@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import { Button, Grid } from 'design-system';
-import { AlertIcon, BlueDollarIcon, LanguagesIcon, LocationIcon, ProfileIcon02, TagIcon } from 'design-system/icons';
+import { AlertIcon, BlueDollarIcon, LanguagesIcon, LocationIcon, TagIcon } from 'design-system/icons';
 
 import { BlueBoxContainer, CardContainer, DividerStyled, PriceContainer, StyledBox, TypographyStyled } from '../styled';
 
@@ -26,20 +26,21 @@ const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
     height: '20px',
   };
 
-  const getPrice = (price: string) => {
-    let rate = '';
-    if (price == '1') {
-      rate = '$50 - $100';
-    } else if (price == '2') {
-      rate = '$100 - $150';
-    } else {
-      rate = '$150 - $200';
-    }
-    return rate;
-  };
+  // Leave out for now but might use in future iteration
+  // const getPrice = (price: string) => {
+  //   let rate = '';
+  //   if (price == '1') {
+  //     rate = '$50 - $100';
+  //   } else if (price == '2') {
+  //     rate = '$100 - $150';
+  //   } else {
+  //     rate = '$150 - $200';
+  //   }
+  //   return rate;
+  // };
 
   return (
-    <CardContainer className="scene-expert-card" style={{ padding: '30px' }}>
+    <CardContainer className="scene-expert-card" style={{ padding: '60px 40px' }}>
       <TypographyStyled variant="h4" marginBottom="25px" style={{ textTransform: 'uppercase' }}>
         Expert Details & Services
       </TypographyStyled>
@@ -54,10 +55,6 @@ const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
       <StyledBox>
         <TagIcon style={{ marginRight: '20px' }} />
         {builder.tags}
-      </StyledBox>
-      <StyledBox>
-        <ProfileIcon02 style={iconStyle} />
-        Freelancer
       </StyledBox>
       <BlueBoxContainer>
         <AlertIcon style={{ width: '20px', height: '20px' }} />
@@ -77,10 +74,7 @@ const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
           )}
           {builder.price === '3' ? <BlueDollarIcon style={blueStyle} /> : <BlueDollarIcon style={greyStyle} />}
         </PriceContainer>
-        <TypographyStyled variant="h4" style={{ margin: '20px 0 28px', textAlign: 'center' }}>
-          Typically {getPrice(builder.price)} per hour
-        </TypographyStyled>
-        <Button variant="gradient" btnSize="medium">
+        <Button style={{ marginTop: '10px' }} variant="gradient" btnSize="medium">
           Send a message
         </Button>
       </Grid>

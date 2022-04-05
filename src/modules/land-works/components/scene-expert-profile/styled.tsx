@@ -33,7 +33,7 @@ export const DividerStyled = styled(Divider)<DividerProps>(() => ({
   '&.MuiDivider-root': {
     backgroundColor: 'var(--theme-modal-color)',
     width: '100%',
-    margin: '18px 0',
+    margin: '26px 0',
   },
 }));
 
@@ -90,6 +90,7 @@ export const PriceContainer = styled(Box)<BoxProps>(() => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-around',
+  marginBottom: '20px',
 }));
 
 export const BlueBoxContainer = styled(Box)<BoxProps>(() => ({
