@@ -57,10 +57,10 @@ const SingleExpertView: FC = () => {
       ) : (
         <>
           <Grid mt="28px" container spacing={2} rowSpacing={4} columnSpacing={4}>
-            <Grid item xs={8}>
+            <Grid item xs={12} sm={12} md={12} lg={8}>
               <SceneExpertProfile builder={sceneBuilders && sceneBuilders[0]} />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={12} md={12} lg={4}>
               <SceneExpertDetails builder={sceneBuilders && sceneBuilders[0]} />
             </Grid>
           </Grid>

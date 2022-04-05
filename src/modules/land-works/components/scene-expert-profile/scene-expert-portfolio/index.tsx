@@ -21,7 +21,7 @@ const SceneExpertPortfolio: FC<ISceneExpertPortfolio> = ({ portfolio }) => {
         My Projects
       </TypographyStyled>
       {pf.map((p) => (
-        <Grid item xs={12} sm={12} md={6} lg={6}>
+        <Grid item xs={12} sm={12} md={12} lg={6}>
           <CardContainer style={{ height: '300px' }}>
             <Grid
               overflow="hidden"
