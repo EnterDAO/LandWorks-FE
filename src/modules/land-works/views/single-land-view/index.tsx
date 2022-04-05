@@ -130,6 +130,7 @@ const SingleLandView: React.FC = () => {
     try {
       await landWorksContract?.withdraw(asset.id, () => {
         setWithdrawButtonDisabled(true);
+        localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
       });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
       history.push('/explore');
