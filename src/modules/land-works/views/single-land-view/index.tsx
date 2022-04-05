@@ -168,7 +168,7 @@ const SingleLandView: React.FC = () => {
 
     try {
       await landWorksContract?.delist(asset.id, () => {
-        localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
+        isDirectWithdraw() && localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
         disableButtons(true);
       });
       showToastNotification(
