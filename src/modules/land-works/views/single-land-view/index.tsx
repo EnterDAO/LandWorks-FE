@@ -135,6 +135,7 @@ const SingleLandView: React.FC = () => {
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
       history.push('/explore');
     } catch (e) {
+      localStorage.removeItem('WITHDRAW_IN_PROGRESS');
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
       console.log(e);
     }
