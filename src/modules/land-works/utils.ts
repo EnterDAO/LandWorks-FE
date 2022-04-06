@@ -3,12 +3,7 @@ import { find } from 'lodash';
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 import { currencyData } from './components/lands-explore-filters/filters-data';
 
-import {
-  NotionResult,
-  NotionResultForCard,
-  NotionResultForPortfolio,
-  NotionResultForProfile,
-} from './components/scene-expert-card/types';
+import { NotionResult, NotionResultForCard, NotionResultForProfile } from './components/scene-expert-card/types';
 
 export const calculateNeighbours = (coordinatesList: CoordinatesLand[]): string[] => {
   let neighbours = [] as string[];
@@ -113,6 +108,12 @@ export const transformSceneProviderForCard = (notionEntity: NotionResult): Notio
 };
 
 export const transformSceneProviderForProfile = (notionEntity: NotionResult): NotionResultForProfile => {
+  const portfolio = [
+    notionEntity.properties['Portfolio 1'].files[0]?.file?.url,
+    notionEntity.properties['Portfolio 2'].files[0]?.file?.url,
+    notionEntity.properties['Portfolio 3'].files[0]?.file?.url,
+    notionEntity.properties['Portfolio 4'].files[0]?.file?.url,
+  ];
   return {
     coverPhotoLink: notionEntity.properties['Cover Photo'].files[0].file.url,
     avatarPhotoLink: notionEntity.properties['Profile Picture'].files[0].file.url,
@@ -127,14 +128,6 @@ export const transformSceneProviderForProfile = (notionEntity: NotionResult): No
     price: notionEntity.properties.Price.select.name,
     tags: notionEntity.properties.Tags.multi_select.map((t) => t.name).join(', '),
     languages: notionEntity.properties.Languages.multi_select.map((t) => t.name).join(', '),
-  };
-};
-
-export const transformSceneProviderForPortfolio = (notionEntity: NotionResult): NotionResultForPortfolio => {
-  return {
-    portfolio1: notionEntity.properties['Portfolio 1'].files[0].file.url,
-    portfolio2: notionEntity.properties['Portfolio 2'].files[0].file.url,
-    portfolio3: notionEntity.properties['Portfolio 3'].files[0].file.url,
-    portfolio4: notionEntity.properties['Portfolio 4'].files[0].file.url,
+    portfolio,
   };
 };

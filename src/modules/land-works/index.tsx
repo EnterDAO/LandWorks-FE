@@ -7,7 +7,7 @@ import ProtectedRoute from 'components/custom/protected-route';
 import { useWarning } from 'providers/warning-provider';
 import { useWallet } from 'wallets/wallet';
 
-import SingleExpertView from './views/single-scene-expert-view ';
+import SingleExpertView from './views/single-scene-expert-view';
 
 const RentingView = lazy(() => import('./views/my-renting-view'));
 const LendingView = lazy(() => import('./views/my-lending-view'));

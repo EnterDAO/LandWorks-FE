@@ -46,15 +46,15 @@ const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
       </TypographyStyled>
       <StyledBox>
         <LocationIcon style={iconStyle} />
-        {builder.location}
+        {builder?.location}
       </StyledBox>
       <StyledBox>
         <LanguagesIcon style={iconStyle} />
-        {builder.languages}
+        {builder?.languages}
       </StyledBox>
       <StyledBox>
         <TagIcon style={{ marginRight: '20px' }} />
-        {builder.tags}
+        {builder?.tags}
       </StyledBox>
       <BlueBoxContainer>
         <AlertIcon style={{ width: '20px', height: '20px' }} />
@@ -67,12 +67,12 @@ const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
       <Grid display="flex" flexDirection="column" alignItems="center" width="100%">
         <PriceContainer>
           <BlueDollarIcon style={blueStyle} />
-          {builder.price === '2' || builder.price === '3' ? (
+          {builder?.price === '2' || builder?.price === '3' ? (
             <BlueDollarIcon style={blueStyle} />
           ) : (
             <BlueDollarIcon style={greyStyle} />
           )}
-          {builder.price === '3' ? <BlueDollarIcon style={blueStyle} /> : <BlueDollarIcon style={greyStyle} />}
+          {builder?.price === '3' ? <BlueDollarIcon style={blueStyle} /> : <BlueDollarIcon style={greyStyle} />}
         </PriceContainer>
         <Button style={{ marginTop: '10px' }} variant="gradient" btnSize="medium">
           Send a message

@@ -23,7 +23,7 @@ const SceneExpertProfile: FC<ISceneExpertProfile> = ({ builder }) => {
             borderRadius: '20px',
           }}
           alt="Scene builder cover image."
-          src={builder.coverPhotoLink}
+          src={builder?.coverPhotoLink}
         />
       </Grid>
       <AvatarContainer>
@@ -34,33 +34,33 @@ const SceneExpertProfile: FC<ISceneExpertProfile> = ({ builder }) => {
             borderRadius: '20px',
           }}
           alt="Scene builder profile image."
-          src={builder.avatarPhotoLink}
+          src={builder?.avatarPhotoLink}
         />
       </AvatarContainer>
       <Grid padding="20px 35px 40px">
         <Grid width="100%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
           <Grid display="flex" alignItems="center">
-            <TypographyStyled variant="h3">{builder.builderName}</TypographyStyled>
-            <TypeChip>{builder.builderType}</TypeChip>
+            <TypographyStyled variant="h3">{builder?.builderName}</TypographyStyled>
+            <TypeChip>{builder?.builderType}</TypeChip>
           </Grid>
           <Grid>
-            <ExternalLink href={builder.twitter}>
+            <ExternalLink href={builder?.twitter}>
               <Icon name="twitter" width="20" height="20" style={{ color: 'white', marginLeft: '20px' }} />
             </ExternalLink>
-            <ExternalLink href={builder.discord}>
+            <ExternalLink href={builder?.discord}>
               <Icon name="discord" width="20" height="20" style={{ color: 'white', marginLeft: '20px' }} />
             </ExternalLink>
           </Grid>
         </Grid>
-        <TypographyStyled variant="h5">{builder.definition}</TypographyStyled>
+        <TypographyStyled variant="h5">{builder?.definition}</TypographyStyled>
         <Grid item display="flex" textAlign="left">
-          {builder.longDescription}
+          {builder?.longDescription}
         </Grid>
         <Grid display="flex" flexDirection="column" textAlign="left" margin="20px 0 6px" width="300px">
           <TypographyStyled variant="h4" style={{ textTransform: 'uppercase' }}>
             My Website
           </TypographyStyled>
-          <a href={builder.website}>{builder.website}</a>
+          <a href={builder?.website}>{builder?.website}</a>
         </Grid>
       </Grid>
     </CardContainer>

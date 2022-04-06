@@ -44,6 +44,7 @@ export interface NotionResultForProfile {
   price: string;
   tags: string;
   languages: string;
+  portfolio: string[];
 }
 
 export interface NotionResultForPortfolio {
