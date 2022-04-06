@@ -193,7 +193,7 @@ const LandsView: React.FC = () => {
               <button
                 type="button"
                 className={`button-primary list-new-property`}
-                onClick={() => history.push('/list')}
+                onClick={() => history.push('/explore')}
               >
                 <AddIcon className={`add-icon`} />
                 List New Property
