@@ -64,7 +64,7 @@ const MyPropetiesHistoryTable: React.FC = () => {
     getENSName(operator).then((result) => {
       ens = result;
     });
-    return ens;
+    return ens !== operator ? ens : null;
   };
 
   const isEditableRow = (start: string, end: string) => {

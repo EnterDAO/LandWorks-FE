@@ -124,7 +124,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
     getENSName(operator).then((result) => {
       ens = result;
     });
-    return ens;
+    return ens !== operator ? ens : null;
   };
 
   const isEditableRow = (start: string, end: string) => {
@@ -206,7 +206,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
                     <StyledTableCell align="left">
                       <Box display="flex" alignItems="center">
                         <ExternalLink href={getEtherscanAddressUrl(data.renter.id)}>
-                          {shortenAddr(data.renter.id) || data.renter.id}
+                          {getEns(data.renter.id) || shortenAddr(data.renter.id) || data.renter.id}
                         </ExternalLink>
                         {isYou(data.renter.id) && <YourLabel>You</YourLabel>}
                       </Box>
