@@ -6,7 +6,6 @@ import { Box, Typography } from 'design-system';
 export const CardContainer = styled(Box)<BoxProps>(() => ({
   textAlign: 'center',
   padding: '15px',
-  // height: '578px',
   backgroundColor: 'var(--theme-card-color)',
   borderRadius: '20px',
   position: 'relative',
@@ -23,7 +22,8 @@ export const AvatarContainer = styled(Grid)<GridProps>(() => ({
   backgroundColor: 'var(--theme-modal-color)',
   boxShadow: '0 0 3px 2px #757575',
   borderRadius: '50%',
-  margin: '-80px 0 0 35px',
+  top: '-60px',
+  position: 'absolute',
   overflow: 'hidden',
   display: 'flex',
   alignItems: 'center',
@@ -34,7 +34,6 @@ export const DividerStyled = styled(Divider)<DividerProps>(() => ({
   '&.MuiDivider-root': {
     backgroundColor: 'var(--theme-modal-color)',
     width: '100%',
-    // margin: '26px 0',
   },
 }));
 

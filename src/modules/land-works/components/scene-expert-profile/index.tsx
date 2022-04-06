@@ -26,19 +26,27 @@ const SceneExpertProfile: FC<ISceneExpertProfile> = ({ builder }) => {
           src={builder?.coverPhotoLink}
         />
       </Grid>
-      <AvatarContainer>
-        <Box
-          component="img"
-          sx={{
-            width: '100%',
-            borderRadius: '20px',
-          }}
-          alt="Scene builder profile image."
-          src={builder?.avatarPhotoLink}
-        />
-      </AvatarContainer>
-      <Grid padding="20px 35px 40px">
-        <Grid width="100%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
+
+      <Grid padding="20px 35px 40px" position="relative">
+        <AvatarContainer>
+          <Box
+            component="img"
+            sx={{
+              width: '100%',
+              borderRadius: '20px',
+            }}
+            alt="Scene builder profile image."
+            src={builder?.avatarPhotoLink}
+          />
+        </AvatarContainer>
+        <Grid
+          paddingTop="20px"
+          width="100%"
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
           <Grid display="flex" alignItems="center">
             <TypographyStyled variant="h3">{builder?.builderName}</TypographyStyled>
             <TypeChip>{builder?.builderType}</TypeChip>
