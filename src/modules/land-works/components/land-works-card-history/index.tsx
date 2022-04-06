@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { DEFAULT_SLICED_HISTORY } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { Box } from '@mui/system';
 import { uniqueId } from 'lodash';
@@ -6,7 +7,7 @@ import { uniqueId } from 'lodash';
 import ExternalLink from 'components/custom/externalLink';
 import { EmptyIcon } from 'design-system/icons';
 import { getENSName } from 'helpers/helpers';
-import { useElementOnScreen } from 'hooks/useElementOnScreen';
+import useIntersectionObserver from 'hooks/useElementOnScreen';
 
 import { useWallet } from '../../../../wallets/wallet';
 import {
@@ -49,15 +50,13 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
   const wallet = useWallet();
   const [areAllSelected, setAreAllSelected] = useState(true);
   const [rents, setRents] = useState([] as RentEntity[]);
+  const [paginatedRents, setPaginatedRents] = useState([] as RentEntity[]);
   const [totalRents, setTotalRents] = useState(rents.length);
-  const [pageSize] = useState(6);
-  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULT_SLICED_HISTORY);
   const now = getNowTs();
-  const [containerRef, isVisible] = useElementOnScreen({
-    root: null,
-    rootMargin: '0px',
-    threshold: 0,
-  });
+  const ref = useRef<HTMLDivElement | null>(null);
+  const entry = useIntersectionObserver(ref, { freezeOnceInvisible: true });
+  const isVisible = !!entry?.isIntersecting;
 
   const isYou = (text: string) => {
     return wallet.account && wallet.account?.toLowerCase() === text.toLowerCase();
@@ -68,8 +67,8 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
   useSubscription(subscription, {
     variables: {
       id: assetId,
-      offset: pageSize * (page - 1),
-      limit: pageSize,
+      // offset: pageSize * (page - 1),
+      // limit: pageSize,
       renter: wallet.account?.toLowerCase(),
     },
     onSubscriptionData: ({ subscriptionData }) => {
@@ -86,7 +85,9 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
       const rents = areAllSelected
         ? parseAssetRents(subscriptionData.data?.asset)
         : parseUserRents(subscriptionData.data?.asset, totalRents, 1);
+
       setRents(rents.data);
+      setPaginatedRents(rents.data.slice(0, DEFAULT_SLICED_HISTORY));
       setTotalRents(rents.meta.count);
     },
   });
@@ -133,12 +134,11 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
   };
 
   useEffect(() => {
-    console.log('called');
-    if (isVisible && page < totalRents / pageSize) {
-      setPage((prev) => prev + 1);
-      console.log('visible');
+    if (rents.length > paginatedRents.length && isVisible) {
+      setPaginatedRents(rents.slice(0, pageSize + DEFAULT_SLICED_HISTORY));
+      setPageSize((prev) => prev + DEFAULT_SLICED_HISTORY);
     }
-  }, [isVisible]);
+  }, [entry]);
 
   return (
     <Box>
@@ -201,7 +201,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
               </tbody>
             ) : (
               <StyledTableBody style={{ maxHeight: 260, overflowY: 'scroll' }}>
-                {rents.map((data) => (
+                {paginatedRents.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id + uniqueId()}>
                     <StyledTableCell align="left">
                       <Box display="flex" alignItems="center">
@@ -254,11 +254,11 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
               </StyledTableBody>
             )}
           </table>
-          <div ref={containerRef} />
+          <div ref={ref} />
         </StyledPaper>
       </RootStyled>
     </Box>
   );
 };
 
-export default SingleViewLandHistory;
+export default React.memo(SingleViewLandHistory);
