@@ -130,10 +130,12 @@ const SingleLandView: React.FC = () => {
     try {
       await landWorksContract?.withdraw(asset.id, () => {
         setWithdrawButtonDisabled(true);
+        localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
       });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
       history.push('/explore');
     } catch (e) {
+      localStorage.removeItem('WITHDRAW_IN_PROGRESS');
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
       console.log(e);
     }
@@ -168,6 +170,7 @@ const SingleLandView: React.FC = () => {
 
     try {
       await landWorksContract?.delist(asset.id, () => {
+        isDirectWithdraw() && localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
         disableButtons(true);
       });
       showToastNotification(
@@ -179,6 +182,7 @@ const SingleLandView: React.FC = () => {
       }
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
+      localStorage.removeItem('WITHDRAW_IN_PROGRESS');
       console.log(e);
     }
   };
@@ -443,6 +447,7 @@ const SingleLandView: React.FC = () => {
           }}
           open={showRentModal}
           availability={asset.availability}
+          metaverseAssetId={asset.metaverseAssetId}
           assetId={asset.id}
           children={<></>}
           pricePerSecond={asset.pricePerSecond}
