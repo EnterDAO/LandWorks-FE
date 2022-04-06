@@ -43,23 +43,29 @@ const LandworksView: React.FC = () => {
   return (
     <Switch>
       <Route path="/property/:tokenId" exact component={SingleLand} />
-      <Route path="/all" exact component={LandsView} />
+      <ProtectedRoute isAuthenticated={false} authenticationPath="/explore" path="/all" exact component={LandsView} />
       <Route path="/explore" exact component={ExploreView} />
       <Route path="/my-properties" exact component={MyPropertiesView} />
       <Route path="/scene-expert" exact component={SceneExpertView} />
       <Route path="/join-experts" exact component={SceneExpertFormView} />
       <Route path="/lending" exact component={LendingView} />
-      <Route path="/renting" exact component={RentingView} />
       <ProtectedRoute
-        isAuthenticated={!!sessionProvider || !!walletCtx.account}
-        authenticationPath="/"
+        isAuthenticated={false}
+        authenticationPath="/my-properties"
+        path="/renting"
+        exact
+        component={RentingView}
+      />
+      <ProtectedRoute
+        isAuthenticated={false}
+        authenticationPath="/explore"
         path="/list"
         exact
         component={ListProperty}
       />
       <ProtectedRoute
-        isAuthenticated={!!sessionProvider || !!walletCtx.account}
-        authenticationPath="/"
+        isAuthenticated={false}
+        authenticationPath="/explore"
         path="/property/:tokenId/edit/"
         exact
         component={EditProperty}

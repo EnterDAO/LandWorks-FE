@@ -420,7 +420,7 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
     setLoading(true);
     const asset = await fetchAsset(tokenId);
     if (!asset) {
-      history.push(`/all`);
+      history.push(`/explore`);
       return;
     }
     setAsset(parseAsset(asset));
