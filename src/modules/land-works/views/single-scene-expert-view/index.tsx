@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { FC, useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { useNotion } from 'api/notion/client';
 import { Grid } from 'design-system';
@@ -17,23 +17,26 @@ import { transformSceneProviderForProfile } from 'modules/land-works/utils';
 
 import { NotionResultForProfile } from 'modules/land-works/components/scene-expert-card/types';
 
+interface SingleExpertViewParams {
+  expertName: string;
+}
+
 const SingleExpertView: FC = () => {
   const { getSceneProviders } = useNotion();
   const [loading, setLoading] = useState(true);
   const [selectedExpert, setSelectedExpert] = useState<NotionResultForProfile>();
-
-  const location = useLocation();
+  const expertFromParam = useParams() as SingleExpertViewParams;
+  const { expertName } = expertFromParam;
 
   useEffect(() => {
     (async () => {
       const sceneProv = await getSceneProviders();
       const data = sceneProv.results.map((i: any) => transformSceneProviderForProfile(i));
-      const expertFromParam = location.pathname.substring(14);
-      const filterDataByExpertName = data?.find((e) => e.builderName === expertFromParam);
+      const filterDataByExpertName = data?.find((e) => e.builderName === expertName);
       setSelectedExpert(filterDataByExpertName!);
       setLoading(false);
     })();
-  }, [selectedExpert]);
+  }, [expertFromParam]);
 
   const hasPortfolio = selectedExpert?.portfolio[0] !== undefined;
 
@@ -67,8 +70,8 @@ const SingleExpertView: FC = () => {
           </Grid>
           {selectedExpert && hasPortfolio && (
             <Grid mt="28px" container spacing={2} rowSpacing={4} columnSpacing={4}>
-              <Grid item xs={12}>
-                <SceneExpertPortfolio portfolio={selectedExpert.portfolio} />
+              <Grid item xs={8}>
+                <SceneExpertPortfolio portfolio={selectedExpert?.portfolio} />
               </Grid>
             </Grid>
           )}

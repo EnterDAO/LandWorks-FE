@@ -10,12 +10,12 @@ interface ISceneExpertPortfolio {
 
 const SceneExpertPortfolio: FC<ISceneExpertPortfolio> = ({ portfolio }) => {
   return (
-    <Grid container xs={8} spacing={2} rowSpacing={4} columnSpacing={2}>
+    <Grid container spacing={2} rowSpacing={4} columnSpacing={2}>
       <TypographyStyled variant="h3" style={{ padding: '32px 0 28px 15px' }}>
         My Projects
       </TypographyStyled>
-      {portfolio.map((p) => (
-        <Grid item xs={12} sm={12} md={12} lg={6}>
+      {portfolio.map((url) => (
+        <Grid item xs={12} sm={12} md={12} lg={6} key={url}>
           <CardContainer style={{ height: '300px' }}>
             <Grid
               overflow="hidden"
@@ -37,7 +37,7 @@ const SceneExpertPortfolio: FC<ISceneExpertPortfolio> = ({ portfolio }) => {
                   overflow: 'hidden',
                 }}
                 alt="Scene builder portfolio."
-                src={p}
+                src={url}
               />
             </Grid>
           </CardContainer>
