@@ -175,10 +175,10 @@ const MyPropertiesView: FC = () => {
     );
   };
 
-  const newProtertyTitle = () => {
+  const newPropertyTitle = () => {
     return localStorage.getItem('LISTING_IN_PROGRESS') ? 'Listing' : 'Renting';
   };
-  const existProtertyTitle = () => {
+  const existPropertyTitle = () => {
     return localStorage.getItem('WITHDRAW_IN_PROGRESS') ? 'Withdraw' : 'Renting';
   };
 
@@ -210,7 +210,7 @@ const MyPropertiesView: FC = () => {
                 {filteredLands.slice(0, slicedLands).map((land) => (
                   <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={land.id}>
                     {displayExistLandLoader() === land.metaverseAssetId ? (
-                      <LandWorksLoadingCard title={existProtertyTitle()} />
+                      <LandWorksLoadingCard title={existPropertyTitle()} />
                     ) : (
                       <LandWorkCard
                         land={land}
@@ -226,7 +226,7 @@ const MyPropertiesView: FC = () => {
                 ))}
                 {displayNewLandLoader() && (
                   <Grid item xs={12} sm={6} md={6} lg={4} xl={3}>
-                    <LandWorksLoadingCard title={newProtertyTitle()} />
+                    <LandWorksLoadingCard title={newPropertyTitle()} />
                   </Grid>
                 )}
               </>
@@ -234,7 +234,7 @@ const MyPropertiesView: FC = () => {
               <>
                 {displayNewLandLoader() ? (
                   <Grid item xs={12} sm={6} md={6} lg={4} xl={3}>
-                    <LandWorksLoadingCard title={newProtertyTitle()} />
+                    <LandWorksLoadingCard title={newPropertyTitle()} />
                   </Grid>
                 ) : (
                   <Grid item xs={12}>
