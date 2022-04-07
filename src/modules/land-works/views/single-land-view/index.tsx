@@ -232,8 +232,8 @@ const SingleLandView: React.FC = () => {
   };
 
   const breadcrumbs = () => {
-    const url = location.state.previousPage?.from || location.state.from || '/explore';
-    const title = location.state.previousPage?.title || location.state.title || 'Explore';
+    const url = location.state?.previousPage?.from || location.state?.from || '/explore';
+    const title = location.state?.previousPage?.title || location.state?.title || 'Explore';
 
     return { url, title };
   };
