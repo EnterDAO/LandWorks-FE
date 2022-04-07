@@ -108,7 +108,7 @@ const MyLendingView: React.FC = () => {
             ) : (
               <div className="empty-state">
                 <p>You do not have any listed properties. Fill this page by adding one</p>
-                <button className="accent" onClick={() => history.push('/list')}>
+                <button className="accent" onClick={() => history.push('/explore')}>
                   List property
                 </button>
               </div>

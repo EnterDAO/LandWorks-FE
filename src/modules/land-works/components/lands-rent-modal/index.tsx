@@ -32,6 +32,7 @@ type Props = ModalProps & {
   txHash?: string;
   availability?: AssetAvailablity;
   assetId?: string;
+  metaverseAssetId?: string;
   pricePerSecond?: BigNumber;
   paymentToken?: PaymentToken;
   onSubmit: () => void;
@@ -39,7 +40,8 @@ type Props = ModalProps & {
 };
 
 export const RentModal: React.FC<Props> = (props) => {
-  const { availability, assetId, pricePerSecond, paymentToken, onCancel, onSubmit, ...modalProps } = props;
+  const { availability, assetId, pricePerSecond, paymentToken, metaverseAssetId, onCancel, onSubmit, ...modalProps } =
+    props;
 
   // added one minute each to be able to choose if MIN & MAX
   const fixedMinStartRentDate = availability?.startRentDate || 0;
@@ -161,6 +163,9 @@ export const RentModal: React.FC<Props> = (props) => {
       return;
     }
     try {
+      metaverseAssetId && localStorage.setItem('RENT_IN_PROGRESS', metaverseAssetId);
+      metaverseAssetId && localStorage.setItem('EXIST_RENT_IN_PROGRESS', metaverseAssetId);
+
       setTransactionLoading(true);
       const bnPeriod = new BigNumber(period);
       const assetLastRentEnd = await fetchAssetLastRentEnd(assetId);
@@ -191,6 +196,8 @@ export const RentModal: React.FC<Props> = (props) => {
       setTransactionLoading(false);
       setSuccessTrunsaction(true);
     } catch (e) {
+      localStorage.removeItem('RENT_IN_PROGRESS');
+      localStorage.removeItem('EXIST_RENT_IN_PROGRESS');
       showToastNotification(ToastType.Error, 'There was an error while renting the property.');
       setTransactionLoading(false);
       console.log(e);

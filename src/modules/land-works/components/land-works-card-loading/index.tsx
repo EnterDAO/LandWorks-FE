@@ -5,7 +5,11 @@ import { SpinnerSecondary } from 'design-system/icons';
 
 import { ContainerStyled, RootStyled, Spinner, TypographyStyled } from './styled';
 
-const LandWorksLoadingCard: React.FC = () => {
+interface LoadingCardProps {
+  title: string;
+}
+
+const LandWorksLoadingCard: React.FC<LoadingCardProps> = ({ title }) => {
   return (
     <RootStyled>
       <Icon
@@ -19,7 +23,7 @@ const LandWorksLoadingCard: React.FC = () => {
         <Spinner>
           <SpinnerSecondary />
         </Spinner>
-        <TypographyStyled>Listing in progress...</TypographyStyled>
+        <TypographyStyled>{title} in progress...</TypographyStyled>
       </ContainerStyled>
     </RootStyled>
   );

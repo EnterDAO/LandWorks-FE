@@ -29,6 +29,10 @@ import './index.scss';
 export interface LocationState {
   from: string;
   title: string;
+  previousPage?: {
+    from: string;
+    title: string;
+  };
 }
 
 const SingleLandView: React.FC = () => {
@@ -126,10 +130,12 @@ const SingleLandView: React.FC = () => {
     try {
       await landWorksContract?.withdraw(asset.id, () => {
         setWithdrawButtonDisabled(true);
+        localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
       });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
       history.push('/explore');
     } catch (e) {
+      localStorage.removeItem('WITHDRAW_IN_PROGRESS');
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
       console.log(e);
     }
@@ -164,6 +170,7 @@ const SingleLandView: React.FC = () => {
 
     try {
       await landWorksContract?.delist(asset.id, () => {
+        isDirectWithdraw() && localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
         disableButtons(true);
       });
       showToastNotification(
@@ -175,6 +182,7 @@ const SingleLandView: React.FC = () => {
       }
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
+      localStorage.removeItem('WITHDRAW_IN_PROGRESS');
       console.log(e);
     }
   };
@@ -223,6 +231,13 @@ const SingleLandView: React.FC = () => {
     return isDirectWithdraw() || shouldShowWithdraw();
   };
 
+  const breadcrumbs = () => {
+    const url = location.state.previousPage?.from || location.state.from || '/explore';
+    const title = location.state.previousPage?.title || location.state.title || 'Explore';
+
+    return { url, title };
+  };
+
   return (
     <div className="content-container single-card-section">
       <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
@@ -255,17 +270,17 @@ const SingleLandView: React.FC = () => {
       <Row gutter={40} className="head-nav">
         <div className="left-wrapper">
           <div className="head-breadcrumbs">
-            <Link className="button-back" to={location.state?.from || '/explore'}>
+            <Link className="button-back" to={breadcrumbs().url}>
               <div className="button-icon">
                 <Icon iconSize={'m'} iconElement={<BackIcon />} />
               </div>
-              <span>Back to {location.state?.title || 'Explore'}</span>
+              <span>Back to {breadcrumbs().title}</span>
             </Link>
 
             <p className="separator" />
 
-            <Link className="button-explore" to={location.state?.from || '/explore'}>
-              {location.state?.title || 'Explore'}
+            <Link className="button-explore" to={breadcrumbs().url}>
+              {breadcrumbs().title}
             </Link>
 
             <Icon iconSize={'m'} iconElement={<ArrowRightIcon />} />
@@ -432,6 +447,7 @@ const SingleLandView: React.FC = () => {
           }}
           open={showRentModal}
           availability={asset.availability}
+          metaverseAssetId={asset.metaverseAssetId}
           assetId={asset.id}
           children={<></>}
           pricePerSecond={asset.pricePerSecond}
