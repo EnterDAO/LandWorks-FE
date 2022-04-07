@@ -13,6 +13,7 @@ import SingleExpertView from './views/single-scene-expert-view';
 
 const RentingView = lazy(() => import('./views/my-renting-view'));
 const LendingView = lazy(() => import('./views/my-lending-view'));
+const LandsView = lazy(() => import('./views/lands-view'));
 const ExploreView = lazy(() => import('./views/explore-view'));
 const MyPropertiesView = lazy(() => import('./views/my-properties-view'));
 const SceneExpertView = lazy(() => import('./views/scene-expert-view'));
