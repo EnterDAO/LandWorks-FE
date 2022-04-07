@@ -7,10 +7,6 @@ import { useWarning } from 'providers/warning-provider';
 
 import SingleExpertView from './views/single-scene-expert-view';
 
-// import { useSessionStorage } from 'react-use-storage';
-
-// import { useWallet } from 'wallets/wallet';
-
 const RentingView = lazy(() => import('./views/my-renting-view'));
 const LendingView = lazy(() => import('./views/my-lending-view'));
 const LandsView = lazy(() => import('./views/lands-view'));
@@ -25,8 +21,6 @@ const LandingView = lazy(() => import('modules/landing'));
 
 const LandworksView: React.FC = () => {
   const warning = useWarning();
-  // const walletCtx = useWallet();
-  // const [sessionProvider] = useSessionStorage<string | undefined>('wallet_provider');
 
   React.useEffect(() => {
     let warningDestructor: () => void;
