@@ -53,7 +53,7 @@ const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
         {builder?.languages}
       </StyledBox>
       <StyledBox>
-        <TagIcon style={{ marginRight: '20px' }} />
+        <TagIcon className="tag-icon" style={{ minWidth: '20px', marginRight: '20px' }} />
         {builder?.tags}
       </StyledBox>
       <BlueBoxContainer>
