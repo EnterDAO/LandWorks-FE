@@ -27,8 +27,6 @@ const SceneExpertView: FC = () => {
   useEffect(() => {
     (async () => {
       const sceneProv = await getSceneProviders();
-
-      console.log({ sceneProv });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data = sceneProv.results.map((i: any) => transformSceneProviderForCard(i));
       setSceneBuilders(data);
