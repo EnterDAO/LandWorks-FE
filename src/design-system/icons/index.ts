@@ -33,6 +33,7 @@ import { ReactComponent as HeartInCircleNotFilledIcon } from 'assets/icons/heart
 import { ReactComponent as HeartOutlinedIcon } from 'assets/icons/heart-outlined.svg';
 import { ReactComponent as HiIcon } from 'assets/icons/hi.svg';
 import { ReactComponent as HomeIcon } from 'assets/icons/home.svg';
+import { ReactComponent as LanguagesIcon } from 'assets/icons/languages-icon.svg';
 import { ReactComponent as LocationIcon } from 'assets/icons/location-icon.svg';
 // import { ReactComponent as InfoIcon} from 'assets/icons/info.svg';
 import { ReactComponent as LoginIcon } from 'assets/icons/log-in.svg';
@@ -44,6 +45,7 @@ import { ReactComponent as NextIcon } from 'assets/icons/next.svg';
 import { ReactComponent as NoConnectionIcon } from 'assets/icons/no-connection.svg';
 import { ReactComponent as NotVisibleIcon } from 'assets/icons/not-visible.svg';
 import { ReactComponent as PlusIcon } from 'assets/icons/plus.svg';
+import { ReactComponent as ProfileIcon02 } from 'assets/icons/profile-01.svg';
 import { ReactComponent as ProfileIcon } from 'assets/icons/profile.svg';
 import { ReactComponent as Refresh1Icon } from 'assets/icons/refresh-1.svg';
 import { ReactComponent as Refresh2Icon } from 'assets/icons/refresh-2.svg';
@@ -57,6 +59,7 @@ import { ReactComponent as StarIcon } from 'assets/icons/star.svg';
 import { ReactComponent as SuccessStarIcon } from 'assets/icons/success-star.svg';
 import { ReactComponent as SuccessIcon } from 'assets/icons/success.svg';
 import { ReactComponent as SunIcon } from 'assets/icons/sun.svg';
+import { ReactComponent as TagIcon } from 'assets/icons/tag-icon.svg';
 import { ReactComponent as ToTopIcon } from 'assets/icons/to-top.svg';
 import { ReactComponent as TransactionReceiptIcon } from 'assets/icons/transaction-receipt.svg';
 import { ReactComponent as TransactionIcon } from 'assets/icons/transaction.svg';
@@ -69,6 +72,9 @@ import { ReactComponent as WarningIcon } from 'assets/icons/warning.svg';
 
 // One-color icons
 export {
+  LanguagesIcon,
+  ProfileIcon02,
+  TagIcon,
   EmptyIcon,
   SuccessStarIcon,
   ArrowDownIcon,
