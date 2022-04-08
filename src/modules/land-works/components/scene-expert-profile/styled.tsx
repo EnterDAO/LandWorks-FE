@@ -15,6 +15,22 @@ export const CardContainer = styled(Box)<BoxProps>(() => ({
   justifyContent: 'space-evenly',
 }));
 
+export const StyledImageContainer = styled(Box)<BoxProps>(() => ({
+  textAlign: 'center',
+  padding: '15px',
+  backgroundColor: 'var(--theme-card-color)',
+  borderRadius: '20px',
+  position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'space-evenly',
+  border: '1px solid #1e1e2e',
+  '&:hover': {
+    border: '1px solid #f8f8ff',
+  },
+}));
+
 export const AvatarContainer = styled(Grid)<GridProps>(() => ({
   width: '100px',
   height: '100px',
