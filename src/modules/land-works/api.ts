@@ -1243,6 +1243,7 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
             }
           }
           lastRentEnd
+          timestamp
           totalRents
           status
         }
@@ -1267,6 +1268,32 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
     .catch((e) => {
       console.log(e);
       return { data: [], meta: { count: 0, block: 0 } };
+    });
+}
+
+export function fetchAssetIdByTxHash(txHash: string): Promise<string> {
+  return GraphClient.get({
+    query: gql`
+      query GetAssetByTxHash($txHash: String) {
+        assets(where: { txHash: $txHash }) {
+          id
+        }
+      }
+    `,
+    variables: {
+      txHash: txHash,
+    },
+  })
+    .then(async (response) => {
+      const assets = response.data.assets;
+      if (assets.length > 0) {
+        return assets[0].id;
+      }
+      return '';
+    })
+    .catch((e) => {
+      console.log(e);
+      return '';
     });
 }
 

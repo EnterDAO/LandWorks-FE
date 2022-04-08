@@ -37,7 +37,7 @@ export default class LandWorksContract extends Web3Contract {
     paymentToken: string,
     pricePerSecond: BigNumber | string,
     callback: () => void = () => {}
-  ): Promise<void> {
+  ): Promise<any> {
     if (!this.account) {
       return Promise.reject();
     }

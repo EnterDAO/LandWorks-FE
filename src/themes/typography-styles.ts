@@ -1,4 +1,4 @@
-import { BUTTON_2_STYLES, THEME_COLORS, THEME_FONT_FAMILY } from './theme-constants';
+import { BUTTON_2_STYLES, THEME_FONT_FAMILY } from './theme-constants';
 
 export default {
   fontFamily: THEME_FONT_FAMILY,
@@ -7,49 +7,49 @@ export default {
     fontWeight: 'bold',
     fontSize: '40px',
     lineHeight: '60px',
-    color: THEME_COLORS.light,
+    color: 'var(--theme-grey900-color)',
   },
   h2: {
     fontStyle: 'normal',
     fontWeight: 'bold',
     fontSize: '30px',
     lineHeight: '45px',
-    color: THEME_COLORS.light,
+    color: 'var(--theme-grey900-color)',
   },
   h3: {
     fontStyle: 'normal',
     fontWeight: 'bold',
     fontSize: '25px',
     lineHeight: '37px',
-    color: THEME_COLORS.light,
+    color: 'var(--theme-grey900-color)',
   },
   h4: {
     fontStyle: 'normal',
     fontWeight: 'bold',
     fontSize: '18px',
     lineHeight: '27px',
-    color: THEME_COLORS.light,
+    color: 'var(--theme-grey900-color)',
   },
   subtitle1: {
     fontStyle: 'normal',
     fontWeight: '500',
     fontSize: '18px',
     lineHeight: '27px',
-    color: THEME_COLORS.grey03,
+    color: 'var(--theme-subtle-color)',
   },
   body1: {
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: '16px',
     lineHeight: '24px',
-    color: THEME_COLORS.grey03,
+    color: 'var(--theme-subtle-color)',
   },
   body2: {
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: '12px',
     lineHeight: '18px',
-    color: THEME_COLORS.grey02,
+    color: 'var(--theme-grey700-color)',
   },
   button: {
     fontStyle: 'normal',
@@ -57,10 +57,10 @@ export default {
     fontSize: '14px',
     lineHeight: '21px',
     textTransform: 'initial',
-    color: THEME_COLORS.light,
+    color: 'var(--theme-grey900-color)',
   },
   caption: {
     ...BUTTON_2_STYLES,
-    color: THEME_COLORS.light,
+    color: 'var(--theme-grey900-color)',
   },
 } as const;

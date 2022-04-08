@@ -7,10 +7,9 @@ import { UnsupportedChainIdError, Web3ReactProvider, useWeb3React } from '@web3-
 import { NoEthereumProviderError } from '@web3-react/injected-connector';
 import * as Antd from 'antd';
 
-import Spin from 'components/antd/spin';
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import config from 'config';
-import { Button, Grid, Modal, Typography } from 'design-system';
+import { Button, Grid, Loader, Modal, Typography } from 'design-system';
 import { getNetworkName } from 'providers/eth-web3-provider';
 import ConnectWalletModal from 'wallets/components/connect-wallet-modal';
 import InstallMetaMaskModal from 'wallets/components/install-metamask-modal';
@@ -197,7 +196,19 @@ const WalletProvider: React.FC = (props) => {
       {walletsModal && <ConnectWalletModal onCancel={() => setWalletsModal(false)} />}
       {installMetaMaskModal && <InstallMetaMaskModal onCancel={() => setInstallMetaMaskModal(false)} />}
       <UnsupportedChainModal open={unsupportedChainModal} handleClose={() => setUnsupportedChainModal(false)} />
-      {initialized ? props.children : <Spin spinning className="absolute-center" />}
+      {initialized ? (
+        props.children
+      ) : (
+        <Loader
+          sx={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            zoom: '0.5',
+            transform: 'translate(-50%, -50%)',
+          }}
+        />
+      )}
       <Modal
         height={'100%'}
         open={showDisclaimerModal}

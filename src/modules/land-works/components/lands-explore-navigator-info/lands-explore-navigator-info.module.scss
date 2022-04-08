@@ -1,4 +1,4 @@
-@import '../../../../styles/variables.scss';
+
 @import '../../../../styles/utils.scss';
 
 .root {
@@ -14,7 +14,7 @@
 
 .block {
   padding: 10px;
-  background: $darkBlue02;
+  background: var(--theme-card-color);
   border-radius: 8px;
   box-shadow: 1px 1px 20px rgba(22, 22, 34, 0.5);
   text-transform: capitalize;

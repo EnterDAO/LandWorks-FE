@@ -30,6 +30,30 @@ export interface NotionResultForCard {
   price: string;
 }
 
+export interface NotionResultForProfile {
+  coverPhotoLink: string;
+  avatarPhotoLink: string;
+  builderName: string;
+  definition: string;
+  builderType: string;
+  longDescription: string;
+  website: string;
+  twitter: string;
+  discord: string;
+  location: string;
+  price: string;
+  tags: string;
+  languages: string;
+  portfolio: string[];
+}
+
+export interface NotionResultForPortfolio {
+  portfolio1: string;
+  portfolio2: string;
+  portfolio3: string;
+  portfolio4: string;
+}
+
 export interface NotionResultForPage {
   coverPhotoLink: string;
   avatarPhotoLink: string;

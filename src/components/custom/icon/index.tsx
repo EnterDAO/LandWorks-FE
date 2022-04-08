@@ -165,6 +165,7 @@ export type IconNames =
   | 'docs'
   | 'twitter'
   | 'discord'
+  | 'linkedin'
   | 'dropdown'
   | 'theme-switcher-sun'
   | 'theme-switcher-moon'

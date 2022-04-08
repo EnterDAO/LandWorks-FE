@@ -16,7 +16,6 @@ import WindowStateProvider from 'providers/window-state';
 import { ReactComponent as StaticSprite } from 'resources/svg/static-sprite.svg';
 import Web3WalletProvider from 'wallets/wallet';
 
-import { checkFlexGapSupport } from './checkFlexGap';
 import * as sw from './serviceWorker';
 import appTheme from './themes/theme';
 import ScrollToTop from './top-scroll';
@@ -64,9 +63,3 @@ document.body.addEventListener('keydown', (event) => {
     document.body.classList.remove('using-mouse');
   }
 });
-
-if (checkFlexGapSupport()) {
-  // document.documentElement.classList.add('flexbox-gap');
-} else {
-  document.documentElement.classList.add('no-flexbox-gap');
-}

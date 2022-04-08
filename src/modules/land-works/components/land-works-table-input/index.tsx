@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import web3 from 'web3';
 import { getEtherscanAddressUrl, shortenAddr } from 'web3/utils';
 
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import { Button, Input, InputLabel, Modal, Typography } from 'design-system';
 import { EditIcon } from 'design-system/icons';
 import { getAddressFromENS } from 'helpers/helpers';
