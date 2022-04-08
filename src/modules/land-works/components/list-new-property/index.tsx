@@ -32,7 +32,7 @@ import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
-import { PaymentToken, fetchTokenPayments } from '../../api';
+import { PaymentToken, fetchAssetIdByTxHash, fetchTokenPayments } from '../../api';
 import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
 import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
@@ -42,8 +42,6 @@ import { getTimeType, secondsToDuration } from 'utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from 'utils/date';
 
 import './index.scss';
-
-// import { getTimeType, secondsToDuration } from '../../../../utils';
 
 const SignTransactionMessage = 'Signing transaction...';
 const MineTransactionMessage = 'Waiting for transaction to be mined...';
@@ -110,6 +108,7 @@ const ListNewProperty: React.FC = () => {
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSignModal, setShowSignModal] = useState(false);
+  const [listedPropertyId, setListedPropertyId] = useState('');
 
   const [listModalMessage, setListModalMessage] = useState(SignTransactionMessage);
 
@@ -304,19 +303,23 @@ const ListNewProperty: React.FC = () => {
 
     try {
       setShowSignModal(true);
-      await landWorksContract?.list(
-        Number(PlaceOptions[0].value),
-        metaverseRegistry,
-        selectedProperty.id,
-        minPeriod,
-        maxPeriod,
-        maxFutureTime,
-        paymentToken.id,
-        pricePerSecond.toFixed(0),
-        () => {
-          setListModalMessage(MineTransactionMessage);
-        }
-      );
+      await landWorksContract
+        ?.list(
+          Number(PlaceOptions[0].value),
+          metaverseRegistry,
+          selectedProperty.id,
+          minPeriod,
+          maxPeriod,
+          maxFutureTime,
+          paymentToken.id,
+          pricePerSecond.toFixed(0),
+          () => {
+            setListModalMessage(MineTransactionMessage);
+          }
+        )
+        .then((response) => {
+          fetchAssetIdByTxHash(response.transactionHash).then((id) => setListedPropertyId(id));
+        });
       localStorage.setItem('LISTING_IN_PROGRESS', selectedProperty.id);
 
       setShowApproveModal(false);
@@ -693,6 +696,9 @@ const ListNewProperty: React.FC = () => {
           }}
         />
         <SuccessModal
+          listedPropertyId={listedPropertyId}
+          showShareButton={true}
+          price={showPriceInUsd}
           showModal={showSuccessModal}
           handleClose={() => {
             history.push('/my-properties');

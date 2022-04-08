@@ -63,6 +63,7 @@ import { ReactComponent as TagIcon } from 'assets/icons/tag-icon.svg';
 import { ReactComponent as ToTopIcon } from 'assets/icons/to-top.svg';
 import { ReactComponent as TransactionReceiptIcon } from 'assets/icons/transaction-receipt.svg';
 import { ReactComponent as TransactionIcon } from 'assets/icons/transaction.svg';
+import { ReactComponent as TwitterIcon } from 'assets/icons/twitter.svg';
 import { ReactComponent as UpdateIcon } from 'assets/icons/update.svg';
 import { ReactComponent as UploadIcon } from 'assets/icons/upload.svg';
 import { ReactComponent as UploadingIcon } from 'assets/icons/uploading.svg';
@@ -72,6 +73,7 @@ import { ReactComponent as WarningIcon } from 'assets/icons/warning.svg';
 
 // One-color icons
 export {
+  TwitterIcon,
   LanguagesIcon,
   ProfileIcon02,
   TagIcon,
