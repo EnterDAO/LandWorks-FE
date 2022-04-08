@@ -29,6 +29,12 @@ const LayoutFooter: React.FC<Props> = ({ isWrapped = true }) => {
             <Icon name="discord" width="20" height="20" />
           </ExternalLink>
           <ExternalLink
+            href="https://dune.xyz/1ab/EnterDAO-Landworks"
+            className={styles['social-media-container--link']}
+          >
+            <Icon name="dune" width="20" height="20" />
+          </ExternalLink>
+          <ExternalLink
             href="https://www.coingecko.com/en/coins/enterdao"
             className={styles['social-media-container--link']}
           >
