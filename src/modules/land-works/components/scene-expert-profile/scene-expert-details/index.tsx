@@ -1,8 +1,9 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { Button, Grid } from 'design-system';
 import { AlertIcon, BlueDollarIcon, LanguagesIcon, LocationIcon, TagIcon } from 'design-system/icons';
 
+import ExpertContactModal from '../../scene-expert-contact-modal';
 import { BlueBoxContainer, CardContainer, DividerStyled, PriceContainer, StyledBox, TypographyStyled } from '../styled';
 
 import { NotionResultForProfile } from '../../scene-expert-card/types';
@@ -12,6 +13,7 @@ interface ISceneExpertDetails {
 }
 
 const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
+  const [showContactModal, setShowContactModal] = useState(false);
   const greyStyle = {
     fill: '#3A3A4E',
   };
@@ -74,10 +76,22 @@ const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
           )}
           {builder?.price === '3' ? <BlueDollarIcon style={blueStyle} /> : <BlueDollarIcon style={greyStyle} />}
         </PriceContainer>
-        <Button style={{ marginTop: '10px' }} variant="gradient" btnSize="medium">
+        <Button
+          style={{ marginTop: '10px' }}
+          variant="gradient"
+          btnSize="medium"
+          onClick={() => setShowContactModal(true)}
+        >
           Send a message
         </Button>
       </Grid>
+      <ExpertContactModal
+        open={showContactModal}
+        handleClose={() => setShowContactModal(false)}
+        email={builder.email}
+        discord={builder.discord}
+        twitter={builder.twitter}
+      />
     </CardContainer>
   );
 };
