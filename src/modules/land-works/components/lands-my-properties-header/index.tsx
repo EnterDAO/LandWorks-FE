@@ -25,6 +25,7 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    sessionStorage.setItem('MY_PROPERTIES_TAB', newValue);
     setTab(newValue);
   };
 

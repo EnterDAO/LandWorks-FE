@@ -7,6 +7,7 @@ import {
 } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
 import { useMediaQuery } from '@mui/material';
 
 import { Grid } from 'design-system';
@@ -36,7 +37,7 @@ const MyPropertiesView: FC = () => {
   const isGridPerFour = useMediaQuery('(max-width: 1599px)');
   const wallet = useWallet();
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState(MY_PROPERTIES_TAB_STATE_ALL);
+  const [tab, setTab] = useState(getTabs());
   const [searchQuery, setSearchQuery] = useState('');
   const [pageSize] = useState(getPageSize());
   const [user, setUser] = useState({} as UserEntity);
@@ -63,6 +64,12 @@ const MyPropertiesView: FC = () => {
   const getLoadPercentageValue = () => {
     return (lands.slice(0, slicedLands).length * 100) / lands.length;
   };
+
+  function getTabs() {
+    const tab = sessionStorage.getItem('MY_PROPERTIES_TAB');
+    const tabsList = [MY_PROPERTIES_TAB_STATE_ALL, MY_PROPERTIES_TAB_STATE_RENTED, MY_PROPERTIES_TAB_STATE_LENT];
+    return tab && tabsList.includes(tab) ? tab : tabsList[0];
+  }
 
   const fetchRents = async () => {
     if (!wallet.account) return;
