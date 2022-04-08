@@ -1,11 +1,9 @@
 import React, { lazy } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Route, Switch } from 'react-router-dom';
-import { useSessionStorage } from 'react-use-storage';
 
 import ProtectedRoute from 'components/custom/protected-route';
 import { useWarning } from 'providers/warning-provider';
-import { useWallet } from 'wallets/wallet';
 
 import SingleExpertView from './views/single-scene-expert-view';
 
@@ -23,8 +21,6 @@ const LandingView = lazy(() => import('modules/landing'));
 
 const LandworksView: React.FC = () => {
   const warning = useWarning();
-  const walletCtx = useWallet();
-  const [sessionProvider] = useSessionStorage<string | undefined>('wallet_provider');
 
   React.useEffect(() => {
     let warningDestructor: () => void;

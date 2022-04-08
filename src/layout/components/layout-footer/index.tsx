@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
 
 import styles from './layout-footer.module.scss';

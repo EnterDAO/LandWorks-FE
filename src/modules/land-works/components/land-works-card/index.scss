@@ -1,9 +1,9 @@
-@import '../../../../styles/variables.scss';
+
 @import '../../../../styles/utils.scss';
 
 .land {
   &-card-wrapper {
-    color: $black;
+    color: var(--theme-black-color);
 
     @media all and (max-width: 760px) {
       margin-bottom: 20px;
@@ -34,12 +34,12 @@
     margin-bottom: 12px;
   }
   &-rank {
-    font-size: $text;
-    color: $pinkish;
+    font-size: var(--font-size-p1);
+    color: var(--theme-pinkish-color);
   }
   &-rarity-score {
-    font-size: $text;
-    color: $black;
+    font-size: var(--font-size-p1);
+    color: var(--theme-black-color);
   }
   &-info-row {
     margin-top: 15px;
@@ -80,7 +80,7 @@
   }
 
   .land-owner {
-    color: $brown;
+    color: var(--theme-brown-color);
     font-size: 12px;
     font-weight: 600;
   }

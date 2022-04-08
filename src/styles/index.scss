@@ -1,6 +1,7 @@
 @import '~antd/dist/antd.css';
 @import '~antd/dist/antd.dark.css';
 @import '~react-toastify/dist/ReactToastify.css';
+@import '~react-loading-skeleton/dist/skeleton.css';
 @import 'flex';
 @import 'grid';
 @import 'box';
@@ -123,6 +124,7 @@ body.mobile-menu-open {
   --theme-purple700-color: #614288;
 
   --theme-grey100-color: #060a0d;
+  --theme-grey200-color: #27273a;
   --theme-grey400-color: #3a3a4e;
   --theme-grey700-color: #68687B;
   --theme-grey900-color: #f8f8ff;
@@ -226,6 +228,14 @@ body.mobile-menu-open {
   --theme-subtle-color: #b9b9d3;
   --theme-accent-color: #5d8ff0;
   --theme-accent-hover-color: #7aa6fc;
+  --theme-black-color: #0b0834;
+  --theme-blackish-color: #252155;
+  --theme-pinkish-color: #fceffb;
+  --theme-brown-color: #552c49;
+  --theme-red-color: #d7606e;
+  --theme-green-color: #6cd27e;
+  --theme-neon-pink-color: #dd3dcb;
+  --theme-yellow-color: #dfb068;
 
   --theme-card-shadow: 0px 12px 25px #161344;
   --theme-modal-shadow: 0px 12px 25px #161344;

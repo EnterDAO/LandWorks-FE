@@ -1,8 +1,8 @@
-@import '../../../../styles/variables.scss';
+
 @import '../../../../styles/utils.scss';
 
 .wrapper {
-  background-color: $grey01;
+  background-color: var(--theme-modal-color);
   height: 52px;
   align-items: center;
   border-radius: 10px;
@@ -23,7 +23,7 @@
 
 .divider {
   margin: 15px 0 !important;
-  background-color: $grey02;
+  background-color: var(--theme-grey700-color);
 }
 
 .input {

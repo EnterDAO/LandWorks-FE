@@ -3,7 +3,7 @@ import { useSubscription } from '@apollo/client';
 import { Col, ConfigProvider, Empty, Row, Table } from 'antd';
 import { uniqueId } from 'lodash';
 
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import { getENSName, timestampSecondsToDate } from 'helpers/helpers';
 
 import EmptyTable from '../../../../resources/svg/empty-table.svg';
