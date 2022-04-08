@@ -334,10 +334,6 @@ const ListNewProperty: React.FC = () => {
     }
   };
 
-  const fetch = () => {
-    fetchAssetIdByTxHash('0xde9168a53c3f619ff0a546bce631b2b0c417743753c00a8758f3e530d32e37df').then(console.log);
-  };
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const retrieveLandIds = (estate: any) => estate.landIds.landIds;
 
