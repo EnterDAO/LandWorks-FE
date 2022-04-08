@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
 import { Box, Grid } from 'design-system';
 

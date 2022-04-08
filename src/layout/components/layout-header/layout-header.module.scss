@@ -10,7 +10,7 @@
   display: flex;
   padding: 12px var(--horizontal-padding);
   height: var(--navbar-height);
-  border-bottom: 2px solid $grey01;
+  border-bottom: 2px solid var(--theme-modal-color);
   background-color: var(--theme-body-color);
 
   @media (max-width: 1024px) {

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { getEtherscanAddressUrl } from 'web3/utils';
 
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import { Button, Icon, Modal } from 'design-system';
 import { Spinner, SuccessStarIcon } from 'design-system/icons';
 import { useWallet } from 'wallets/wallet';

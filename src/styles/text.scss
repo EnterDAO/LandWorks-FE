@@ -1,4 +1,3 @@
-@import './variables.scss';
 @import './utils.scss';
 
 @mixin font($size, $height, $weight: normal, $style: normal, $family: var(--font-family)) {
@@ -195,35 +194,14 @@ $text-aligns: left, center, right;
   font-weight: normal;
 }
 
-// Typography
-.h1-bold {
-  font-weight: $h1-bold;
-  color: $black;
-  font-size: $h1;
-
-  @include md {
-    font-size: $h1-mobile;
-  }
-}
-
-.h2-bold {
-  font-weight: $h1-bold;
-  color: $black;
-  font-size: $h2;
-
-  @include md {
-    font-size: $h2-mobile;
-  }
-}
-
 .text {
-  font-size: $text;
-  color: $blackish;
+  font-size: var(--font-size-p1);
+  color: var(--theme-blackish-color);
 }
 
 .text-white {
-  font-size: $text;
-  color: $white;
+  font-size: var(--font-size-p1);
+  color: var(--theme-primary-color);
 }
 
 .text-center {

@@ -2,9 +2,9 @@ import React, { Suspense, lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
-import AntdSpin from 'antd/lib/spin';
 
 import ErrorBoundary from 'components/custom/error-boundary';
+import { Loader } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
 import LayoutHeader from 'layout/components/layout-header';
 import EstateRegistryProvider from 'modules/land-works/providers/decentraland/estate-registry-provider';
@@ -39,7 +39,19 @@ const LayoutView: React.FC = () => {
                       <LayoutHeader />
                       <main className={s.main}>
                         <ErrorBoundary>
-                          <Suspense fallback={<AntdSpin className="pv-24 ph-64" style={{ width: '100%' }} />}>
+                          <Suspense
+                            fallback={
+                              <Loader
+                                sx={{
+                                  position: 'fixed',
+                                  top: '50%',
+                                  left: '50%',
+                                  zoom: '0.5',
+                                  transform: 'translate(-50%, -50%)',
+                                }}
+                              />
+                            }
+                          >
                             <Switch>
                               <Route path="/" component={LandworksView} />
                             </Switch>

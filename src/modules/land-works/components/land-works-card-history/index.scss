@@ -1,4 +1,4 @@
-@import '../../../../styles/variables.scss';
+
 @import '../../../../styles/text.scss';
 
 .single-land-history-container {
@@ -174,10 +174,10 @@
       .ant-pagination-item,
       .ant-pagination-item-link,
       .ant-select-selector {
-        color: $white;
+        color: var(--theme-primary-color);
         border-radius: 10px;
         a {
-          color: $white;
+          color: var(--theme-primary-color);
         }
         font-weight: 700;
         background: none;
@@ -195,7 +195,7 @@
         background: none;
         border: 1px solid #e255cf;
         a {
-          color: $white !important;
+          color: var(--theme-primary-color) !important;
         }
       }
 
