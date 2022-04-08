@@ -14,9 +14,9 @@ export const CardContainer = styled(Box)<BoxProps>(() => ({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'space-between',
-  border: '1px solid #1e1e2e',
+  border: '1px solid var(--theme-card-color)',
   '&:hover': {
-    border: '1px solid #f8f8ff',
+    border: '1px solid var(--theme-light-color)',
   },
 }));
 
