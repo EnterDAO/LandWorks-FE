@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Box, Grid } from 'design-system';
@@ -13,7 +13,6 @@ interface ISceneExpertCard {
 }
 
 const SceneExpertCard: FC<ISceneExpertCard> = ({ builder }) => {
-  const [focus, setFocus] = useState(false);
   const greyStyle = {
     fill: '#3A3A4E',
     marginLeft: '15px',
@@ -25,15 +24,8 @@ const SceneExpertCard: FC<ISceneExpertCard> = ({ builder }) => {
   };
 
   return (
-    <Link
-      to={`/scene-expert/${builder.builderName}`}
-      onMouseOver={() => setFocus(true)}
-      onMouseLeave={() => setFocus(false)}
-    >
-      <CardContainer
-        className="scene-expert-card"
-        style={{ border: focus ? '1px solid #f8f8ff' : '1px solid #1e1e2e' }}
-      >
+    <Link to={`/scene-expert/${builder.builderName}`}>
+      <CardContainer className="scene-expert-card">
         <Grid height={133} width="100%" borderRadius="20px" overflow="hidden">
           <Box
             component="img"

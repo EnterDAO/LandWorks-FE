@@ -14,6 +14,10 @@ export const CardContainer = styled(Box)<BoxProps>(() => ({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'space-between',
+  border: '1px solid #1e1e2e',
+  '&:hover': {
+    border: '1px solid #f8f8ff',
+  },
 }));
 
 export const AvatarContainer = styled(Grid)<GridProps>(() => ({
