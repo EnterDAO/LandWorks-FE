@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import { Button, Grid, Modal } from 'design-system';
 
 import { TypographyStyled } from './styled';
