@@ -4,7 +4,7 @@ import { useSubscription } from '@apollo/client';
 import { Box } from '@mui/system';
 import { uniqueId } from 'lodash';
 
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import { EmptyIcon } from 'design-system/icons';
 import { getENSName } from 'helpers/helpers';
 import useIntersectionObserver from 'hooks/useElementOnScreen';
