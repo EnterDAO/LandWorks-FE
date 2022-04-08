@@ -7,7 +7,7 @@ import { Col, Row } from 'antd';
 import cn from 'classnames';
 
 // import Button from 'components/antd/button';
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
 import LandsNav from 'modules/land-works/components/lands-header-nav';
 import { useGeneral } from 'providers/general-provider';

@@ -19,10 +19,10 @@
   align-items: center;
   justify-content: space-evenly;
   padding: 11px 12px;
-  background: $grey01;
+  background: var(--theme-modal-color);
   font-size: 12px;
   font-weight: 500;
-  color: $grey03;
+  color: var(--theme-subtle-color);
 
   .link {
     margin-left: 15px;
@@ -49,11 +49,11 @@
   background: rgba(108, 210, 126, 0.2);
   border-radius: 12px;
   padding: 7px 13px;
-  color: $green;
+  color: var(--theme-green-color);
 }
 
 .divider {
-  background: $grey04;
+  background: var(--theme-grey400-color);
 }
 
 .notifications {
@@ -72,7 +72,7 @@
 }
 
 .hamburger {
-  background-color: $darkBlue02;
+  background-color: var(--theme-card-color);
   border-radius: 10px;
 
   @media (max-width: 768px) {

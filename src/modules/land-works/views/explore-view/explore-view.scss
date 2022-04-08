@@ -1,14 +1,13 @@
-@import 'styles/variables.scss';
 @import 'styles/text.scss';
 
 .content-container--explore-view--header {
-  @media screen and (min-width: $screen-lg-max) {
+  @media screen and (min-width: 992px) {
     position: fixed;
     top: var(--navbar-height);
     left: 0;
     right: 0;
     z-index: 1;
-    background-color: #161621;
+    background-color: var(--theme-body-color);
   }
 }
 
@@ -24,7 +23,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     
-    @media screen and (min-width: $screen-lg-max) {
+    @media screen and (min-width: 992px) {
       margin-top: calc(var(--explore-subheader) + var(--explore-filters));
       width: 50%;
     }
@@ -54,7 +53,7 @@
       left: 0%;
     }
 
-    @media screen and (min-width: $screen-lg-max) {
+    @media screen and (min-width: 992px) {
       display: block;
     }
   }

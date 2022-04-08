@@ -1,4 +1,3 @@
-@import 'styles/variables.scss';
 @import 'styles/text.scss';
 
 .wrapper {
@@ -28,7 +27,7 @@
 }
 
 .heading {
-  color: $light;
+  color: var(--theme-grey900-color);
   font-weight: 700;
 }
 
@@ -38,11 +37,11 @@
 }
 
 .subheading {
-  color: $accentBlue;
+  color: var(--theme-accent-color);
 }
 
 .link-to-properties {
-  color: $light;
+  color: var(--theme-grey900-color);
 }
 
 @keyframes spin {

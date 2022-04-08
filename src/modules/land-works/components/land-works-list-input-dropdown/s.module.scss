@@ -1,4 +1,4 @@
-@import '../../../../styles/variables.scss';
+
 @import '../../../../styles/utils.scss';
 
 .wrapper {
@@ -20,7 +20,7 @@
     font-size: 18px;
     font-weight: 700;
     margin-left: 11px;
-    color: $light;
+    color: var(--theme-grey900-color);
   }
 }
 
@@ -34,7 +34,7 @@
 
 .divider {
   margin: 15px 0 0 !important;
-  background-color: $grey02;
+  background-color: var(--theme-grey700-color);
 }
 
 .icon {
