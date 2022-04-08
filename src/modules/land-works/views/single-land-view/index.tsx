@@ -231,11 +231,9 @@ const SingleLandView: React.FC = () => {
     return isDirectWithdraw() || shouldShowWithdraw();
   };
 
-  const breadcrumbs = () => {
-    const url = location.state.previousPage?.from || location.state.from || '/explore';
-    const title = location.state.previousPage?.title || location.state.title || 'Explore';
-
-    return { url, title };
+  const breadcrumbs = {
+    url: location.state?.previousPage?.from || location.state?.from || '/explore',
+    title: location.state?.previousPage?.title || location.state?.title || 'Explore',
   };
 
   return (
@@ -270,17 +268,17 @@ const SingleLandView: React.FC = () => {
       <Row gutter={40} className="head-nav">
         <div className="left-wrapper">
           <div className="head-breadcrumbs">
-            <Link className="button-back" to={breadcrumbs().url}>
+            <Link className="button-back" to={breadcrumbs.url}>
               <div className="button-icon">
                 <Icon iconSize={'m'} iconElement={<BackIcon />} />
               </div>
-              <span>Back to {breadcrumbs().title}</span>
+              <span>Back to {breadcrumbs.title}</span>
             </Link>
 
             <p className="separator" />
 
-            <Link className="button-explore" to={breadcrumbs().url}>
-              {breadcrumbs().title}
+            <Link className="button-explore" to={breadcrumbs.url}>
+              {breadcrumbs.title}
             </Link>
 
             <Icon iconSize={'m'} iconElement={<ArrowRightIcon />} />

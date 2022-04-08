@@ -202,8 +202,10 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
           <Grid xs={12} md={6} item className="properties-container">
             <Grid container className="head-container">
               <Grid item className="title-container">
-                <span className="card-name">{asset?.name?.toLowerCase()}</span>
-                <Grid className="button-section">
+                <span className="title-container__text" title={asset?.name?.toLowerCase()}>
+                  {asset?.name?.toLowerCase()}
+                </span>
+                <span className={`title-container__pill button-section `}>
                   <button
                     className={`${
                       isNotListed() ? 'button-delisted' : isAvailable ? 'button-available' : 'button-rented'
@@ -220,11 +222,9 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                     />
                     {isNotListed() ? 'Delisted' : isAvailable ? 'Available' : 'Rented'}
                   </button>
-                </Grid>
-              </Grid>
-              <Grid item className="single-land-label-row">
+                </span>
                 {asset?.isHot && (
-                  <span className="label card-hot-label">
+                  <span className="title-container__hot label card-hot-label">
                     <FireIcon className="name-label" />
                   </span>
                 )}
