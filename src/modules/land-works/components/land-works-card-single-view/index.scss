@@ -60,14 +60,6 @@
     }
   }
 
-  .card-name {
-    font-weight: 700;
-    font-size: 20px;
-    text-transform: capitalize;
-    color: white;
-    margin-right: 13px;
-  }
-
   .label {
     background: var(--theme-card-color);
     padding: 2px 5px;
@@ -88,7 +80,6 @@
     border-radius: 20px;
     font-weight: 700;
     left: -10px;
-    margin-left: auto;
 
     svg {
       position: relative;
@@ -342,11 +333,6 @@
   }
 }
 
-.single-land-label-row {
-  display: flex;
-  align-items: center;
-}
-
 .marketplace-link {
   align-items: center;
   display: flex;
@@ -363,9 +349,38 @@
 }
 
 .title-container {
+  position: relative;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  width: 100%;
+  // overflow: hidden;
+
+  &__text {
+    font-weight: 700;
+    font-size: 20px;
+    text-transform: capitalize;
+    color: white;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    max-width: 75%;
+    overflow: hidden;
+  }
+  
+  &__pill {
+    flex-grow: 1;
+  }
+
+  &__hot {
+    position: absolute;
+    right: 0;
+
+    &.label {
+      left: 10px;
+    }
+  }
 }
 
 .head-container {

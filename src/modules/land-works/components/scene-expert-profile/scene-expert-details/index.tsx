@@ -1,8 +1,9 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { Button, Grid } from 'design-system';
 import { AlertIcon, LanguagesIcon, LocationIcon, TagIcon } from 'design-system/icons';
 
+import ExpertContactModal from '../../scene-expert-contact-modal';
 import { BlueBoxContainer, CardContainer, DividerStyled, StyledBox, TypographyStyled } from '../styled';
 
 import { NotionResultForProfile } from '../../scene-expert-card/types';
@@ -12,6 +13,8 @@ interface ISceneExpertDetails {
 }
 
 const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
+  const [showContactModal, setShowContactModal] = useState(false);
+
   const iconStyle = {
     marginRight: '20px',
     width: '20px',
@@ -44,10 +47,22 @@ const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
       </BlueBoxContainer>
       <DividerStyled sx={{ borderBottomWidth: 2 }} orientation="horizontal" />
       <Grid display="flex" flexDirection="column" alignItems="center" width="100%">
-        <Button style={{ marginTop: '10px' }} variant="gradient" btnSize="medium">
+        <Button
+          style={{ marginTop: '10px' }}
+          variant="gradient"
+          btnSize="medium"
+          onClick={() => setShowContactModal(true)}
+        >
           Send a message
         </Button>
       </Grid>
+      <ExpertContactModal
+        open={showContactModal}
+        handleClose={() => setShowContactModal(false)}
+        email={builder.email}
+        discord={builder.discord}
+        twitter={builder.twitter}
+      />
     </CardContainer>
   );
 };
