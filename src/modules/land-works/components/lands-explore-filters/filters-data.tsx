@@ -21,6 +21,14 @@ export const sortData = [
     label: 'Period: longest first',
     value: 5,
   },
+  {
+    label: 'Recently: listed',
+    value: 6,
+  },
+  {
+    label: 'Recently: rented',
+    value: 7,
+  },
 ];
 
 export const landsData = [
