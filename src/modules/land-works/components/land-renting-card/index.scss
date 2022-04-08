@@ -1,9 +1,9 @@
-@import '../../../../styles/variables.scss';
+
 @import '../../../../styles/utils.scss';
 
 .rent-land {
   &-card-wrapper {
-    color: $black;
+    color: var(--theme-black-color);
   }
 
   &-card {
@@ -30,12 +30,12 @@
     margin-bottom: 12px;
   }
   &-rank {
-    font-size: $text;
-    color: $pinkish;
+    font-size: var(--font-size-p1);
+    color: var(--theme-pinkish-color);
   }
   &-rarity-score {
-    font-size: $text;
-    color: $black;
+    font-size: var(--font-size-p1);
+    color: var(--theme-black-color);
   }
   &-image {
     border-radius: 6px;

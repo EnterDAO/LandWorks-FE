@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-// import TxStatusModal from 'web3/components/tx-status-modal';
-// import UserRejectedModal from 'web3/components/user-rejected-modal';
 import React from 'react';
 import Web3Contract, { Web3SendMeta, Web3SendState } from 'web3/web3Contract';
 
@@ -20,11 +18,11 @@ type TxStatus = {
 };
 
 const ContractListener: React.FC<Props> = (props) => {
-  const { contract, /*renderProgress, renderSuccess,*/ setLandworksTxInProgress, setTxHash } = props;
+  const { contract, setLandworksTxInProgress, setTxHash } = props;
 
-  const [, /* userRejectedVisible */ setUserRejected] = React.useState(false);
+  const [, setUserRejected] = React.useState(false);
 
-  const [, /* txStatus */ setTxStatus] = React.useState<TxStatus>({
+  const [, setTxStatus] = React.useState<TxStatus>({
     visible: false,
     state: undefined,
     meta: undefined,
@@ -88,35 +86,7 @@ const ContractListener: React.FC<Props> = (props) => {
     };
   }, [contract, setLandworksTxInProgress]);
 
-  // const handleUserRejectedCancel = React.useCallback(() => {
-  //   setLandworksTxInProgress(false);
-  //   setUserRejected(false);
-  // }, []);
-
-  // const handleStatusModalCancel = React.useCallback(() => {
-  //   setLandworksTxInProgress(false);
-  //   setTxStatus((prevState) => ({
-  //     ...prevState,
-  //     visible: false,
-  //     state: undefined,
-  //     txHash: undefined,
-  //   }));
-  // }, []);
-
-  return (
-    <>
-      {/* {userRejectedVisible && <UserRejectedModal onCancel={handleUserRejectedCancel} />}
-      {txStatus.visible && (
-        <TxStatusModal
-          state={txStatus.state}
-          txHash={txStatus.meta?.txHash}
-          renderProgress={() => renderProgress?.(txStatus.meta)}
-          renderSuccess={() => renderSuccess?.(txStatus.meta)}
-          onCancel={handleStatusModalCancel}
-        />
-      )} */}
-    </>
-  );
+  return <></>;
 };
 
 export default ContractListener;

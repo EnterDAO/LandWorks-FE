@@ -1,8 +1,7 @@
-@import 'styles/variables.scss';
 @import 'styles/text.scss';
 
 .label {
-  color: $light;
+  color: var(--theme-grey900-color);
   font-weight: 600;
 }
 
@@ -10,5 +9,5 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  color: $red;
+  color: var(--theme-red-color);
 }

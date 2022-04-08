@@ -19,7 +19,7 @@ import { useReload } from 'hooks/useReload';
 import { EnterToken } from 'providers/known-tokens-provider';
 import { NotificationType, useNotifications } from 'providers/notifications-provider';
 
-import ExternalLink from '../externalLink';
+import ExternalLink from '../external-link';
 import NotificationIcon from './icon';
 
 import { getSessionContractByAddress, setSessionContractByAddress } from 'utils/contracts';
