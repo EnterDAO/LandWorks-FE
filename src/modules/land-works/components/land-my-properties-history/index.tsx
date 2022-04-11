@@ -170,6 +170,7 @@ const MyPropetiesHistoryTable: React.FC = () => {
                       <TableInput
                         operator={data.operator}
                         assetId={data.asset?.id || ''}
+                        metaverseRegistry={data.asset?.metaverseRegistry?.id || ''}
                         rentId={data.id}
                         ens={getEns(data.operator)}
                         renter={data.renter.id}

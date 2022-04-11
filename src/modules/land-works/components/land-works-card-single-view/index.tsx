@@ -100,7 +100,12 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     try {
       const rentArray = currentRent.id.split('-');
       if (rentArray.length === 2) {
-        await landWorksContract?.updateState(asset!.id, rentArray[1], onClaimSubmit);
+        await landWorksContract?.updateState(
+          asset!.id,
+          asset?.metaverseRegistry?.id || '',
+          rentArray[1],
+          onClaimSubmit
+        );
         showToastNotification(ToastType.Success, 'Operator updated successfully!');
       }
     } catch (e) {
