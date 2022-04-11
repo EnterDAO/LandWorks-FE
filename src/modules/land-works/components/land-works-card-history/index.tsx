@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { DEFAULT_SLICED_HISTORY } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
-import { Col, ConfigProvider, Empty, Row, Table } from 'antd';
+import { Box } from '@mui/system';
 import { uniqueId } from 'lodash';
 
 import ExternalLink from 'components/custom/external-link';
-import { getENSName, timestampSecondsToDate } from 'helpers/helpers';
+import { EmptyIcon } from 'design-system/icons';
+import { getENSName } from 'helpers/helpers';
+import useIntersectionObserver from 'hooks/useElementOnScreen';
 
-import EmptyTable from '../../../../resources/svg/empty-table.svg';
 import { useWallet } from '../../../../wallets/wallet';
 import {
   ASSET_RENTS_SUBSCRIPTION,
@@ -19,6 +21,21 @@ import LandTableTxHash from '../land-table-tx-hash';
 import LandWorksTableDate from '../land-works-table-date';
 import TableInput from '../land-works-table-input';
 import LandTablePrice from '../land-works-table-price';
+import {
+  ActiveButton,
+  PassedButton,
+  RootStyled,
+  StyledButton,
+  StyledPaper,
+  StyledTableBody,
+  StyledTableCell,
+  StyledTableHead,
+  StyledTableHeaderRow,
+  StyledTableRow,
+  Title,
+  UpcomingButton,
+  YourLabel,
+} from './styled';
 
 import { getNowTs } from '../../../../utils';
 import { getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
@@ -33,7 +50,17 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
   const wallet = useWallet();
   const [areAllSelected, setAreAllSelected] = useState(true);
   const [rents, setRents] = useState([] as RentEntity[]);
+  const [paginatedRents, setPaginatedRents] = useState([] as RentEntity[]);
   const [totalRents, setTotalRents] = useState(rents.length);
+  const [pageSize, setPageSize] = useState(DEFAULT_SLICED_HISTORY);
+  const now = getNowTs();
+  const ref = useRef<HTMLDivElement | null>(null);
+  const entry = useIntersectionObserver(ref, { freezeOnceInvisible: true });
+  const isVisible = !!entry?.isIntersecting;
+
+  const isYou = (text: string) => {
+    return wallet.account && wallet.account?.toLowerCase() === text.toLowerCase();
+  };
 
   const [subscription, setSubscription] = useState(ASSET_RENTS_SUBSCRIPTION);
 
@@ -58,149 +85,12 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
       const rents = areAllSelected
         ? parseAssetRents(subscriptionData.data?.asset)
         : parseUserRents(subscriptionData.data?.asset, totalRents, 1);
-      // setUser(parseUser(subscriptionData.data.user));
+
       setRents(rents.data);
+      setPaginatedRents(rents.data.slice(0, DEFAULT_SLICED_HISTORY));
       setTotalRents(rents.meta.count);
     },
   });
-
-  const dateFormat = 'HH:mm dd.MM.yyyy';
-  const columns = [
-    {
-      title: 'Renter',
-      width: '12%',
-      dataIndex: 'renterAddress',
-      render: (text: string) => {
-        let isYou = false;
-        const shortedRenter = shortenAddr(text);
-        if (wallet.account && wallet.account?.toLowerCase() === text.toLowerCase()) {
-          isYou = true;
-        }
-        const [ens, setEns] = useState<string>();
-        useEffect(() => {
-          if (text)
-            getENSName(text).then((ensName) => {
-              setEns(ensName);
-            });
-        }, [text]);
-
-        return (
-          <ExternalLink href={getEtherscanAddressUrl(text.toLowerCase())} className={'by-text'}>
-            <div className="renter-row">
-              <p>{ens && ens !== text ? ens : shortedRenter}</p>
-              {isYou && <p className="you">You</p>}
-            </div>
-          </ExternalLink>
-        );
-      },
-    },
-    {
-      title: 'Rented from',
-      dataIndex: 'start',
-      render: (start: string) => <LandWorksTableDate timestamp={start} dateFormat={dateFormat} />,
-    },
-    {
-      title: 'Rented to',
-      dataIndex: 'end',
-      render: (end: string) => {
-        const fullDate = timestampSecondsToDate(end, dateFormat);
-        const utc = fullDate.substring(fullDate.length - 6);
-        const date = fullDate.substring(0, fullDate.length - 6);
-
-        return (
-          <div className="timezone">
-            {date}
-            <span>{utc}</span>
-          </div>
-        );
-      },
-    },
-    {
-      title: 'Tx hash',
-      width: '10%',
-      dataIndex: 'txHash',
-      render: (txHash: string) => <LandTableTxHash txHash={txHash} />,
-    },
-    {
-      title: 'Cost',
-      width: '13%',
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      sorter: (a: any, b: any) => a.price - b.price,
-      dataIndex: 'cost',
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      render: (amount: string, data: any) => (
-        <LandTablePrice
-          tokenDecimals={data.paymentToken.decimals}
-          tokenSymbol={data.paymentToken.symbol}
-          weiAmount={data.price}
-          dateTimestamp={data.timestamp}
-        />
-      ),
-    },
-    {
-      title: 'Configured operator',
-      shouldCellUpdate: (record: RentEntity, prevRecord: RentEntity) => {
-        const isEqual = record.operator === prevRecord.operator;
-        return isEqual ? false : true;
-      },
-      dataIndex: 'operator',
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      render: (operator: string, data: any) => {
-        const now = getNowTs();
-        const isActiveRent = Number(data.start) <= now && now < Number(data.end);
-        const isUpcomingRent = Number(data.start) >= now;
-        const [ens, setEns] = useState<string>();
-
-        useEffect(() => {
-          if (operator)
-            getENSName(operator).then((ensName) => {
-              setEns(ensName);
-            });
-        }, [operator]);
-        return (
-          <TableInput
-            operator={operator}
-            assetId={assetId}
-            rentId={data.id}
-            ens={ens !== operator ? ens : null}
-            renter={data.renterAddress}
-            key={operator + uniqueId()}
-            isEditable={isActiveRent || isUpcomingRent}
-          />
-        );
-      },
-    },
-    {
-      title: 'Status',
-      width: '12%',
-      sorter: (a: { end: string }, b: { end: string }) => +a.end - +b.end,
-      dataIndex: 'end',
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      render: (end: string, record: RentEntity) => {
-        let isUpcoming = false;
-        let isActive = false;
-        const now = getNowTs();
-        if (now < Number(record.start)) {
-          isUpcoming = true;
-        } else if (Number(record.start) <= now && now <= Number(record.end)) {
-          isActive = true;
-        }
-
-        function handleClass() {
-          if (isUpcoming) return 'upcoming';
-          if (isActive) return 'active';
-          if (!isActive && !isUpcoming) return 'passed';
-        }
-        return (
-          <div className={`button ${handleClass()}`}>
-            {isUpcoming && 'Upcoming'}
-            {isActive && 'Active'}
-            {!isActive && !isUpcoming && 'Passed'}
-          </div>
-        );
-      },
-    },
-  ];
 
   const onAllSelected = () => {
     setSubscription(ASSET_RENTS_SUBSCRIPTION);
@@ -229,45 +119,160 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
     }
   }, [wallet.account]);
 
+  const getEns = (operator: string) => {
+    let ens = operator;
+    getENSName(operator).then((result) => {
+      ens = result;
+    });
+    return ens !== operator ? ens : null;
+  };
+
+  const isEditableRow = (start: string, end: string) => {
+    const isActiveRent = Number(start) <= now && now < Number(end);
+    const isUpcomingRent = Number(start) >= now;
+    return isActiveRent || isUpcomingRent;
+  };
+
+  useEffect(() => {
+    if (rents.length > paginatedRents.length && isVisible) {
+      setPaginatedRents(rents.slice(0, pageSize + DEFAULT_SLICED_HISTORY));
+      setPageSize((prev) => prev + DEFAULT_SLICED_HISTORY);
+    }
+  }, [entry]);
+
+  const rentStatus = (start: string, end: string) => {
+    let isUpcoming = false;
+    let isActive = false;
+    const now = getNowTs();
+    if (now < Number(start)) {
+      isUpcoming = true;
+    } else if (Number(start) <= now && now <= Number(end)) {
+      isActive = true;
+    }
+
+    return { isUpcoming, isActive };
+  };
+
   return (
-    <Row gutter={40} className="single-land-history-container">
-      <span className="history-heading">Rent History</span>
-      <Col span={24} style={{ padding: '0px' }}>
-        <Row className="history">
-          <Col>
-            <button
-              className={`btn all-btn ${areAllSelected ? 'active-table-button' : ''}`}
-              onClick={() => {
-                onAllSelected();
-              }}
-            >
-              All <span>{areAllSelected && totalRents}</span>
-            </button>
-            {showYoursSection() && (
-              <button
-                className={`btn yours-btn ${!areAllSelected ? 'active-table-button' : ''}`}
-                onClick={onYouSelected}
+    <Box>
+      <Title>Rent History</Title>
+      <RootStyled>
+        <Box>
+          <StyledButton
+            className={`${areAllSelected ? 'active-table-button' : ''}`}
+            onClick={() => {
+              onAllSelected();
+            }}
+          >
+            All <span>{areAllSelected && totalRents}</span>
+          </StyledButton>
+          {showYoursSection() && (
+            <StyledButton className={`${!areAllSelected ? 'active-table-button' : ''}`} onClick={onYouSelected}>
+              Yours <span>{!areAllSelected && totalRents}</span>
+            </StyledButton>
+          )}
+        </Box>
+        {/* This wraps the table in a container that allows a better scroll  */}
+        <StyledPaper>
+          <table style={{ width: '100%' }} aria-label="table">
+            <StyledTableHead>
+              <StyledTableHeaderRow>
+                <StyledTableCell align="left">Renter</StyledTableCell>
+                <StyledTableCell align="left">Rented from</StyledTableCell>
+                <StyledTableCell align="left">Rented to</StyledTableCell>
+                <StyledTableCell align="left">Tx hash</StyledTableCell>
+                <StyledTableCell align="left">Cost</StyledTableCell>
+                <StyledTableCell align="left">Operator</StyledTableCell>
+                <StyledTableCell align="left">Status</StyledTableCell>
+              </StyledTableHeaderRow>
+            </StyledTableHead>
+
+            {totalRents < 1 ? (
+              <tbody
+                style={{
+                  height: '240px',
+                  position: 'relative',
+                }}
               >
-                Yours <span>{!areAllSelected && totalRents}</span>
-              </button>
+                <tr>
+                  <td
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      position: 'absolute',
+                      right: '40%',
+                      bottom: '30%',
+                    }}
+                  >
+                    <EmptyIcon />
+                    <span style={{ fontSize: '18px', fontWeight: '700', color: '#f8f8ff' }}>
+                      There is no rent history yet.
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            ) : (
+              <StyledTableBody style={{ maxHeight: 260, overflowY: 'scroll' }}>
+                {paginatedRents.map((data) => (
+                  <StyledTableRow style={{ padding: '10px 0' }} key={data.id + uniqueId()}>
+                    <StyledTableCell align="left">
+                      <Box display="flex" alignItems="center">
+                        <ExternalLink href={getEtherscanAddressUrl(data.renter.id)}>
+                          {getEns(data.renter.id) || shortenAddr(data.renter.id) || data.renter.id}
+                        </ExternalLink>
+                        {isYou(data.renter.id) && <YourLabel>You</YourLabel>}
+                      </Box>
+                    </StyledTableCell>
+
+                    <StyledTableCell align="left">
+                      <LandWorksTableDate timestamp={data.start} dateFormat={'HH:mm dd.MM.yyyy'} />
+                    </StyledTableCell>
+
+                    <StyledTableCell align="left">
+                      <LandWorksTableDate timestamp={data.end} dateFormat={'HH:mm dd.MM.yyyy'} />
+                    </StyledTableCell>
+
+                    <StyledTableCell align="left">
+                      <LandTableTxHash txHash={data.txHash} />
+                    </StyledTableCell>
+
+                    <StyledTableCell align="left">
+                      <LandTablePrice
+                        tokenDecimals={data.paymentToken.decimals}
+                        tokenSymbol={data.paymentToken.symbol}
+                        weiAmount={data.fee}
+                        dateTimestamp={data.timestamp}
+                      />
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <TableInput
+                        operator={data.operator}
+                        assetId={data.id}
+                        rentId={data.id}
+                        ens={getEns(data.operator)}
+                        renter={data.renter.id}
+                        key={uniqueId()}
+                        isEditable={isEditableRow(data.start, data.end)}
+                      />
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      {rentStatus(data.start, data.end).isUpcoming && <UpcomingButton>Upcoming</UpcomingButton>}
+                      {rentStatus(data.start, data.end).isActive && <ActiveButton>Active</ActiveButton>}
+                      {!rentStatus(data.start, data.end).isUpcoming && !rentStatus(data.start, data.end).isActive && (
+                        <PassedButton>Passed</PassedButton>
+                      )}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </StyledTableBody>
             )}
-          </Col>
-          <Col span={24} className="table-wrapper">
-            <ConfigProvider renderEmpty={() => <Empty image={EmptyTable} description="No rent history present" />}>
-              <Table
-                columns={columns}
-                dataSource={rents}
-                size="middle"
-                className="history-table"
-                pagination={false}
-                scroll={{ x: 768, y: 340 }}
-              />
-            </ConfigProvider>
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+          </table>
+          <div ref={ref} />
+        </StyledPaper>
+      </RootStyled>
+    </Box>
   );
 };
 
-export default SingleViewLandHistory;
+export default React.memo(SingleViewLandHistory);

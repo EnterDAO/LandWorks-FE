@@ -114,7 +114,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
   return (
     <div className="operator">
       <ExternalLink className="operator-input-link" target="_blank" href={getEtherscanAddressUrl(operator)}>
-        {shortedOperator || ens}
+        {ens || shortedOperator}
       </ExternalLink>
       {!canEditOperator ? (
         <></>
