@@ -8,6 +8,7 @@ import TabContext from '@mui/lab/TabContext';
 
 import { useNotion } from 'api/notion/client';
 import { Grid } from 'design-system';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import SceneExpertHeading from 'modules/land-works/components/land-works-scene-experts-heading';
 import SceneExpertCard from 'modules/land-works/components/scene-expert-card';
 import CardLoaderSkeleton from 'modules/land-works/components/scene-expert-card/card-loader-skeleton';
@@ -23,6 +24,16 @@ const SceneExpertView: FC = () => {
   const [filteredData, setFilteredData] = useState(sceneBuilders);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState(SCENE_EXPERT_TAB_STATE_ALL);
+  const { height } = useWindowDimensions();
+
+  const scrollToDiv = () => {
+    window.scrollTo({
+      top: height - 90,
+      behavior: 'smooth',
+    });
+  };
+
+  scrollToDiv();
 
   useEffect(() => {
     (async () => {
@@ -48,7 +59,10 @@ const SceneExpertView: FC = () => {
   }, [tab, sceneBuilders]);
 
   return (
-    <Grid className="content-container">
+    <Grid
+      className="content-container"
+      style={{ transform: 'translate3d(0px, 0px, 0px)', transition: 'all 700ms ease' }}
+    >
       <SceneExpertHeading />
       <TabContext value={tab}>
         <SceneExpertTabs setTab={setTab} />
