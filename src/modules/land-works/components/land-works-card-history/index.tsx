@@ -140,6 +140,19 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
     }
   }, [entry]);
 
+  const rentStatus = (start: string, end: string) => {
+    let isUpcoming = false;
+    let isActive = false;
+    const now = getNowTs();
+    if (now < Number(start)) {
+      isUpcoming = true;
+    } else if (Number(start) <= now && now <= Number(end)) {
+      isActive = true;
+    }
+
+    return { isUpcoming, isActive };
+  };
+
   return (
     <Box>
       <Title>Rent History</Title>
@@ -232,7 +245,6 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
                         dateTimestamp={data.timestamp}
                       />
                     </StyledTableCell>
-                    {/* //TODO: add ensName */}
                     <StyledTableCell align="left">
                       <TableInput
                         operator={data.operator}
@@ -245,9 +257,11 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
                       />
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      {now < Number(data.start) && <UpcomingButton>Upcoming</UpcomingButton>}
-                      {Number(data.start) < now && now < Number(data.end) && <ActiveButton>Active</ActiveButton>}
-                      {Number(data.start) < now && now > Number(data.end) && <PassedButton>Passed</PassedButton>}
+                      {rentStatus(data.start, data.end).isUpcoming && <UpcomingButton>Upcoming</UpcomingButton>}
+                      {rentStatus(data.start, data.end).isActive && <ActiveButton>Active</ActiveButton>}
+                      {!rentStatus(data.start, data.end).isUpcoming && !rentStatus(data.start, data.end).isActive && (
+                        <PassedButton>Passed</PassedButton>
+                      )}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}

@@ -80,6 +80,19 @@ const MyPropetiesHistoryTable: React.FC = () => {
     }
   }, [entry]);
 
+  const rentStatus = (start: string, end: string) => {
+    let isUpcoming = false;
+    let isActive = false;
+    const now = getNowTs();
+    if (now < Number(start)) {
+      isUpcoming = true;
+    } else if (Number(start) <= now && now <= Number(end)) {
+      isActive = true;
+    }
+
+    return { isUpcoming, isActive };
+  };
+
   return (
     <Box style={{ margin: '200px 0' }}>
       <Title>Rent History</Title>
@@ -165,9 +178,11 @@ const MyPropetiesHistoryTable: React.FC = () => {
                       />
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      {now < Number(data.start) && <UpcomingButton>Upcoming</UpcomingButton>}
-                      {Number(data.start) < now && now < Number(data.end) && <ActiveButton>Active</ActiveButton>}
-                      {Number(data.start) < now && now > Number(data.end) && <PassedButton>Passed</PassedButton>}
+                      {rentStatus(data.start, data.end).isUpcoming && <UpcomingButton>Upcoming</UpcomingButton>}
+                      {rentStatus(data.start, data.end).isActive && <ActiveButton>Active</ActiveButton>}
+                      {!rentStatus(data.start, data.end).isUpcoming && !rentStatus(data.start, data.end).isActive && (
+                        <PassedButton>Passed</PassedButton>
+                      )}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
