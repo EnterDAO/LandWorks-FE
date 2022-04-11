@@ -316,7 +316,10 @@ export type AssetEntity = {
   paymentToken: PaymentToken;
   consumer?: IdEntity;
   availability: AssetAvailablity;
+  attributes: AssetAttributes;
+  externalUrl: string;
   isHot: boolean;
+  imageUrl: string;
   decentralandData?: DecentralandData;
   metaverse: {
     name: string;
@@ -327,6 +330,29 @@ export type AssetEntity = {
   rents: RentEntity[];
   lastRentEnd: string;
   isAvailable: boolean;
+};
+
+export type CryptoVoxelsType = {
+  name: string;
+  image: string;
+  description: string;
+  attributes: AssetAttributes;
+  external_url: string;
+  background_color: string;
+};
+
+type AssetAttributes = {
+  area: number;
+  width: number;
+  depth: number;
+  height: number;
+  elevation: number;
+  suburb: string;
+  island: string;
+  has_basement: boolean;
+  title: string;
+  waterfront: boolean;
+  closestCommon: string;
 };
 
 export type Rent = {

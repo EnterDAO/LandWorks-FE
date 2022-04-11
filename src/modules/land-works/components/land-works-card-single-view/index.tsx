@@ -19,10 +19,16 @@ import { AssetEntity, RentEntity, fetchAssetRentByTimestamp, fetchUserFirstRentB
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 import SingleLandCardSkeleton from '../land-single-card-loader';
-import LandsMapOverlay from '../lands-map-overlay';
+import LandsMapOverlay, { CryptoVoxelsPlace } from '../lands-map-overlay';
 
 import { getNowTs } from '../../../../utils';
-import { ZERO_BIG_NUMBER, getDecentralandPlayUrl, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
+import {
+  ZERO_BIG_NUMBER,
+  getCryptoVexelsPlayUrl,
+  getDecentralandPlayUrl,
+  getEtherscanAddressUrl,
+  shortenAddr,
+} from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -160,13 +166,15 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const isAssetStaked = () => {
     return asset?.owner?.id == config.contracts.yf.staking;
   };
+
   const ownerOrConsumer = isAssetStaked() ? asset?.consumer?.id : asset?.owner?.id;
+  const isDecentraland = Boolean(asset?.decentralandData);
 
   const [ens, setEns] = useState<string>();
   const [ensOperator, setEnsOperator] = useState<string>();
 
   useEffect(() => {
-    if (asset?.id) {
+    if (asset?.name) {
       setLoading(false);
     }
   }, [asset]);
@@ -183,6 +191,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
       });
   }, [asset]);
 
+  const cryptoVoxelsPlace = (): CryptoVoxelsPlace => {
+    if (!asset?.attributes) return undefined;
+    return { island: asset?.attributes?.island, suburb: asset?.attributes?.suburb };
+  };
+
   return (
     <Grid container justifyContent="space-between" className="single-land-card-container">
       {loading ? (
@@ -191,10 +204,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
         <>
           <Grid xs={12} md={6} item>
             <div className="map-image-wrapper">
-              <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)} />
+              <img alt="vector Icon" className="card-image" src={asset?.imageUrl || getLandImageUrl(asset)} />
               <LandsMapOverlay
-                title={asset?.decentralandData?.isLAND ? 'Land' : 'Estate'}
+                title={asset?.attributes?.title || (asset?.decentralandData?.isLAND ? 'Land' : 'Estate')}
                 coordinates={asset?.decentralandData?.coordinates}
+                place={cryptoVoxelsPlace()}
               />
             </div>
           </Grid>
@@ -231,7 +245,13 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
               </Grid>
             </Grid>
             <Grid container className="hashtag-row">
-              <Grid item>{asset?.decentralandData?.isLAND ? <p>#LAND</p> : <p>#ESTATE</p>}</Grid>
+              {isDecentraland ? (
+                <Grid item>{asset?.decentralandData?.isLAND ? <p>#LAND</p> : <p>#ESTATE</p>}</Grid>
+              ) : (
+                <Grid item>
+                  <p>#{asset?.attributes?.title.toUpperCase()}</p>
+                </Grid>
+              )}
               <Grid item>{asset?.metaverse?.name && <p>#{asset?.metaverse?.name}</p>}</Grid>
             </Grid>
             <Grid container>
@@ -334,7 +354,10 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       <ExternalLink
                         className="marketplace-link"
                         target={'_blank'}
-                        href={getDecentralandPlayUrl(asset?.decentralandData?.coordinates)}
+                        href={
+                          getCryptoVexelsPlayUrl(asset?.metaverseAssetId) ||
+                          getDecentralandPlayUrl(asset?.decentralandData?.coordinates)
+                        }
                       >
                         <span>view in metaverse</span>
                       </ExternalLink>

@@ -6,7 +6,7 @@ import { Col, Row } from 'antd';
 
 import { Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon } from 'design-system/icons';
-import { timestampSecondsToDate } from 'helpers/helpers';
+import { getCryptoVoxelsAsset, timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import EditPropertyViewNew from 'modules/land-works/components/edit-property';
 
@@ -225,11 +225,17 @@ const SingleLandView: React.FC = () => {
   };
   useEffect(() => {
     setClaimButtonDisabled(!asset?.unclaimedRentFee?.gt(0));
+    isCryptoVoxels &&
+      getCryptoVoxelsAsset(asset?.metaverseAssetId).then((data) => {
+        const { name, image, attributes, external_url } = data;
+        setAsset({ ...asset, name, imageUrl: image, attributes, externalUrl: external_url });
+      });
   }, [asset]);
 
   const isWithdraw = () => {
     return isDirectWithdraw() || shouldShowWithdraw();
   };
+  const isCryptoVoxels = asset?.metaverseAssetId && asset.metaverse.name === 'CryptoVoxels' && !asset.imageUrl;
 
   const breadcrumbs = {
     url: location.state?.previousPage?.from || location.state?.from || '/explore',
