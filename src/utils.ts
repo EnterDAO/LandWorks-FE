@@ -6,6 +6,7 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 import { isAddress } from 'web3-utils';
 import { DEFAULT_ADDRESS } from 'web3/utils';
 
+import config from './config';
 import { Data, DecentralandData, ExtractedTime, ParsedDate } from './modules/land-works/api';
 
 import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from './utils/date';
@@ -145,6 +146,13 @@ export function buildData(csv: string): Data | null {
   }
 
   return dataEntity;
+}
+
+export function isDecentralandMetaverseRegistry(registry: string): boolean {
+  return (
+    registry === config.contracts.decentraland.landRegistry.toLowerCase() ||
+    registry === config.contracts.decentraland.estateRegistry.toLowerCase()
+  );
 }
 
 /**

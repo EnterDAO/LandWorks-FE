@@ -44,9 +44,10 @@ import './index.scss';
 
 type SingleViewRentHistoryProps = {
   assetId: string;
+  metaverseRegistry?: string;
 };
 
-const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }) => {
+const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId, metaverseRegistry }) => {
   const wallet = useWallet();
   const [areAllSelected, setAreAllSelected] = useState(true);
   const [rents, setRents] = useState([] as RentEntity[]);
@@ -248,7 +249,8 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
                     <StyledTableCell align="left">
                       <TableInput
                         operator={data.operator}
-                        assetId={data.id}
+                        assetId={assetId}
+                        metaverseRegistry={metaverseRegistry}
                         rentId={data.id}
                         ens={getEns(data.operator)}
                         renter={data.renter.id}

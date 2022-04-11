@@ -33,6 +33,7 @@ type Props = ModalProps & {
   availability?: AssetAvailablity;
   assetId?: string;
   metaverseAssetId?: string;
+  metaverseRegistry?: string;
   pricePerSecond?: BigNumber;
   paymentToken?: PaymentToken;
   onSubmit: () => void;
@@ -40,8 +41,17 @@ type Props = ModalProps & {
 };
 
 export const RentModal: React.FC<Props> = (props) => {
-  const { availability, assetId, pricePerSecond, paymentToken, metaverseAssetId, onCancel, onSubmit, ...modalProps } =
-    props;
+  const {
+    availability,
+    assetId,
+    pricePerSecond,
+    paymentToken,
+    metaverseAssetId,
+    metaverseRegistry,
+    onCancel,
+    onSubmit,
+    ...modalProps
+  } = props;
 
   // added one minute each to be able to choose if MIN & MAX
   const fixedMinStartRentDate = availability?.startRentDate || 0;
@@ -159,7 +169,7 @@ export const RentModal: React.FC<Props> = (props) => {
   };
 
   const handleRent = async () => {
-    if (!isValidForm() || !assetId || !paymentToken) {
+    if (!isValidForm() || !assetId || !paymentToken || !metaverseRegistry) {
       return;
     }
     try {
@@ -172,8 +182,9 @@ export const RentModal: React.FC<Props> = (props) => {
       const maxRentStart = assetLastRentEnd + HOUR_IN_SECONDS;
 
       if (paymentToken?.symbol.toLowerCase() === 'eth') {
-        await landWorksContract?.rentDecentralandWithETH(
+        await landWorksContract?.rentWithETH(
           assetId,
+          metaverseRegistry,
           editedValue,
           bnPeriod,
           maxRentStart,
@@ -182,8 +193,9 @@ export const RentModal: React.FC<Props> = (props) => {
           onSubmit
         );
       } else {
-        await landWorksContract?.rentDecentralandWithERC20(
+        await landWorksContract?.rentWithERC20(
           assetId,
+          metaverseRegistry,
           editedValue,
           bnPeriod,
           maxRentStart,
