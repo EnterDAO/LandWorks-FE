@@ -97,18 +97,6 @@ export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
   },
 }));
 
-export const PriceContainer = styled(Box)<BoxProps>(() => ({
-  width: '100px',
-  height: '40px',
-  padding: '0 20px',
-  backgroundColor: 'var(--theme-modal-color)',
-  borderRadius: '6px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-around',
-  marginBottom: '20px',
-}));
-
 export const BlueBoxContainer = styled(Box)<BoxProps>(() => ({
   padding: '10px 16px',
   backgroundColor: '#5D8FF033',
