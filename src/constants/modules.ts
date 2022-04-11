@@ -106,13 +106,23 @@ export const DEFAULT_LAST_RENT_END = '0';
 
 export const pageSizeOptions = ['8', '12', '24'];
 
-export const sortColumns = ['totalRents', 'pricePerSecond', 'pricePerSecond', 'minPeriod', 'maxPeriod'];
+export const sortColumns = [
+  'totalRents',
+  'pricePerSecond',
+  'pricePerSecond',
+  'minPeriod',
+  'maxPeriod',
+  'timestamp',
+  'lastRentTimestamp',
+];
 
 export const sortDirections = [
   SortDirection.DESC,
   SortDirection.ASC,
   SortDirection.DESC,
   SortDirection.ASC,
+  SortDirection.DESC,
+  SortDirection.DESC,
   SortDirection.DESC,
 ];
 

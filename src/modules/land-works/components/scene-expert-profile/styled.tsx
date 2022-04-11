@@ -15,6 +15,22 @@ export const CardContainer = styled(Box)<BoxProps>(() => ({
   justifyContent: 'space-evenly',
 }));
 
+export const StyledImageContainer = styled(Box)<BoxProps>(() => ({
+  textAlign: 'center',
+  padding: '15px',
+  backgroundColor: 'var(--theme-card-color)',
+  borderRadius: '20px',
+  position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'space-evenly',
+  border: '1px solid var(--theme-card-color)',
+  '&:hover': {
+    border: '1px solid var(--theme-light-color)',
+  },
+}));
+
 export const AvatarContainer = styled(Grid)<GridProps>(() => ({
   width: '100px',
   height: '100px',
@@ -79,18 +95,6 @@ export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
     lineHeight: '21px',
     color: 'var(--theme-subtle-color)',
   },
-}));
-
-export const PriceContainer = styled(Box)<BoxProps>(() => ({
-  width: '100px',
-  height: '40px',
-  padding: '0 20px',
-  backgroundColor: 'var(--theme-modal-color)',
-  borderRadius: '6px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-around',
-  marginBottom: '20px',
 }));
 
 export const BlueBoxContainer = styled(Box)<BoxProps>(() => ({

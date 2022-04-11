@@ -40,6 +40,7 @@ export interface NotionResultForProfile {
   website: string;
   twitter: string;
   discord: string;
+  email: string;
   location: string;
   price: string;
   tags: string;
@@ -286,7 +287,7 @@ export interface MultiSelect2 {
 export interface Twitter {
   id: string;
   type: string;
-  url: string;
+  rich_text: RichText2[];
 }
 
 export interface Definition {
