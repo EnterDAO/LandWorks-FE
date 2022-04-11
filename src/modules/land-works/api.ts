@@ -68,6 +68,9 @@ export const USER_SUBSCRIPTION = gql`
       id
       consumerTo {
         id
+        metaverseRegistry {
+          id
+        }
         minPeriod
         maxPeriod
         maxFutureTime
@@ -95,6 +98,9 @@ export const USER_SUBSCRIPTION = gql`
       assets {
         id
         metaverseAssetId
+        metaverseRegistry {
+          id
+        }
         minPeriod
         maxPeriod
         maxFutureTime
@@ -122,6 +128,9 @@ export const USER_SUBSCRIPTION = gql`
       rents {
         asset {
           metaverseAssetId
+          metaverseRegistry {
+            id
+          }
           decentralandData {
             metadata
             isLAND
@@ -145,6 +154,9 @@ export const USER_CLAIM_HISTORY_SUBSCRIPTION = gql`
         id
         asset {
           metaverseAssetId
+          metaverseRegistry {
+            id
+          }
           status
           decentralandData {
             id
@@ -175,6 +187,9 @@ export const ASSET_RENTS_SUBSCRIPTION = gql`
   subscription GetAssetRents($id: String, $limit: Int, $offset: Int) {
     asset(id: $id) {
       totalRents
+      metaverseRegistry {
+        id
+      }
       rents(first: $limit, skip: $offset, orderBy: end, orderDirection: desc) {
         id
         renter {
@@ -200,6 +215,9 @@ export const ASSET_RENTS_SUBSCRIPTION = gql`
 export const USER_ASSET_RENTS_SUBSCRIPTION = gql`
   subscription GetAssetUserRents($id: String, $renter: String) {
     asset(id: $id) {
+      metaverseRegistry {
+        id
+      }
       rents(where: { renter: $renter }, orderBy: end, orderDirection: desc) {
         id
         renter {
@@ -456,6 +474,9 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
                 name
               }
               metaverseAssetId
+              metaverseRegistry {
+                id
+              }
               minPeriod
               maxPeriod
               maxFutureTime
@@ -703,6 +724,9 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
           id
           consumerTo {
             id
+            metaverseRegistry {
+              id
+            }
             minPeriod
             maxPeriod
             maxFutureTime
@@ -729,6 +753,9 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
           assets {
             id
             metaverseAssetId
+            metaverseRegistry {
+              id
+            }
             minPeriod
             maxPeriod
             maxFutureTime
@@ -755,6 +782,9 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
           rents {
             asset {
               metaverseAssetId
+              metaverseRegistry {
+                id
+              }
               decentralandData {
                 metadata
                 isLAND
@@ -849,6 +879,9 @@ export function fetchUserRentPerAsset(address: string, availableOnly = false, pa
           asset {
             id
             metaverseAssetId
+            metaverseRegistry {
+              id
+            }
             decentralandData {
               id
               metadata
@@ -941,6 +974,9 @@ export function fetchUserRents(address: string, availableOnly = false): Promise<
           }
           asset {
             id
+            metaverseRegistry {
+              id
+            }
             decentralandData {
               metadata
               isLAND
@@ -1050,6 +1086,9 @@ export function fetchListedAssetsByMetaverseAndGetLastRentEndWithOrder(
         ) {
           id
           metaverseAssetId
+          metaverseRegistry {
+            id
+          }
           metaverse {
             name
           }
@@ -1124,6 +1163,9 @@ export function fetchUserAssetsByRents(address: string): Promise<PaginatedResult
           asset {
             id
             metaverseAssetId
+            metaverseRegistry {
+              id
+            }
             minPeriod
             maxPeriod
             maxFutureTime
@@ -1242,6 +1284,9 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
         ) {
           id
           metaverseAssetId
+          metaverseRegistry {
+            id
+          }
           minPeriod
           maxPeriod
           maxFutureTime

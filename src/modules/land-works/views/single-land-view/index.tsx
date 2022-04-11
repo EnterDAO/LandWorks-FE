@@ -400,7 +400,7 @@ const SingleLandView: React.FC = () => {
         }}
       />
 
-      <SingleViewLandHistory assetId={tokenId} />
+      <SingleViewLandHistory assetId={tokenId} metaverseRegistry={asset.metaverseRegistry?.id} />
 
       {!!adjacentLands.length && (
         <Row className="nearby-section">
@@ -452,6 +452,7 @@ const SingleLandView: React.FC = () => {
           open={showRentModal}
           availability={asset.availability}
           metaverseAssetId={asset.metaverseAssetId}
+          metaverseRegistry={asset.metaverseRegistry?.id}
           assetId={asset.id}
           children={<></>}
           pricePerSecond={asset.pricePerSecond}
