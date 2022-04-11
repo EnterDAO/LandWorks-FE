@@ -169,7 +169,7 @@ const MyPropetiesHistoryTable: React.FC = () => {
                     <StyledTableCell align="left">
                       <TableInput
                         operator={data.operator}
-                        assetId={data.id}
+                        assetId={data.asset?.id || ''}
                         rentId={data.id}
                         ens={getEns(data.operator)}
                         renter={data.renter.id}
