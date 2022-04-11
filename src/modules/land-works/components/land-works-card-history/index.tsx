@@ -248,7 +248,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId }
                     <StyledTableCell align="left">
                       <TableInput
                         operator={data.operator}
-                        assetId={data.id}
+                        assetId={assetId}
                         rentId={data.id}
                         ens={getEns(data.operator)}
                         renter={data.renter.id}
