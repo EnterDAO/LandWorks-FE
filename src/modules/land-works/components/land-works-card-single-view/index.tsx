@@ -19,7 +19,7 @@ import { AssetEntity, RentEntity, fetchAssetRentByTimestamp, fetchUserFirstRentB
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 import SingleLandCardSkeleton from '../land-single-card-loader';
-import LandsMapOverlay, { CryptoVoxelsPlace } from '../lands-map-overlay';
+import LandsMapOverlay from '../lands-map-overlay';
 
 import { getNowTs } from '../../../../utils';
 import {
@@ -196,11 +196,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
       });
   }, [asset]);
 
-  const cryptoVoxelsPlace = (): CryptoVoxelsPlace => {
-    if (!asset?.attributes) return undefined;
-    return { island: asset?.attributes?.island, suburb: asset?.attributes?.suburb };
-  };
-
   return (
     <Grid container justifyContent="space-between" className="single-land-card-container">
       {loading ? (
@@ -209,11 +204,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
         <>
           <Grid xs={12} md={6} item>
             <div className="map-image-wrapper">
-              <img alt="vector Icon" className="card-image" src={asset?.imageUrl || getLandImageUrl(asset)} />
+              <img alt="vector Icon" className="card-image" src={asset?.imageUrl} />
               <LandsMapOverlay
                 title={asset?.attributes?.title || (asset?.decentralandData?.isLAND ? 'Land' : 'Estate')}
                 coordinates={asset?.decentralandData?.coordinates}
-                place={cryptoVoxelsPlace()}
+                place={asset?.place}
               />
             </div>
           </Grid>
@@ -356,14 +351,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       )}
                     </Grid>
                     <Grid item className="property-button">
-                      <ExternalLink
-                        className="marketplace-link"
-                        target={'_blank'}
-                        href={
-                          getCryptoVexelsPlayUrl(asset?.metaverseAssetId) ||
-                          getDecentralandPlayUrl(asset?.decentralandData?.coordinates)
-                        }
-                      >
+                      <ExternalLink className="marketplace-link" target={'_blank'} href={asset?.externalUrl}>
                         <span>view in metaverse</span>
                       </ExternalLink>
                     </Grid>

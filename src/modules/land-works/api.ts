@@ -5,14 +5,22 @@ import { gql } from '@apollo/client';
 import BigNumber from 'bignumber.js';
 import { constants } from 'ethers';
 
+import { getLandImageUrl } from 'helpers/helpers';
 import { getUsdPrice } from 'providers/known-tokens-provider';
 
 import { GraphClient } from '../../web3/graph/client';
 import { AssetStatus } from './models/AssetStatus';
 
-import { getDecentralandAssetName, getNowTs, getTimeType, getTimeTypeStr, secondsToDuration } from '../../utils';
+import {
+  getDecentralandAssetName,
+  getNowTs,
+  getTimeType,
+  getTimeTypeStr,
+  isDecentralandMetaverseRegistry,
+  secondsToDuration,
+} from '../../utils';
 import { DAY_IN_SECONDS, ONE_HUNDRED_YEARS_IN_SECONDS, ONE_SECOND } from '../../utils/date';
-import { MAX_UINT_256, getHumanValue } from '../../web3/utils';
+import { MAX_UINT_256, getCryptoVexelsPlayUrl, getDecentralandPlayUrl, getHumanValue } from '../../web3/utils';
 
 export const ASSET_SUBSCRIPTION = gql`
   subscription GetAsset($id: String) {
@@ -335,10 +343,11 @@ export type AssetEntity = {
   consumer?: IdEntity;
   availability: AssetAvailablity;
   attributes: AssetAttributes;
-  externalUrl: string;
   isHot: boolean;
   imageUrl: string;
+  externalUrl: string | undefined;
   decentralandData?: DecentralandData;
+  place: string[] | null;
   metaverse: {
     name: string;
   };
@@ -1423,7 +1432,7 @@ export function parseAssets(assets: any[]): AssetEntity[] {
 export function parseAsset(asset: any): AssetEntity {
   const liteAsset: AssetEntity = { ...asset };
   liteAsset.humanPricePerSecond = getHumanValue(new BigNumber(asset.pricePerSecond), asset.paymentToken.decimals)!;
-  liteAsset.name = getDecentralandAssetName(asset.decentralandData);
+  liteAsset.name = asset.name ?? getDecentralandAssetName(asset.decentralandData);
   liteAsset.paymentToken = { ...asset.paymentToken };
   liteAsset.isHot = asset.totalRents > 0;
   liteAsset.unclaimedRentFee = getHumanValue(new BigNumber(asset.unclaimedRentFee), asset.paymentToken.decimals)!;
@@ -1431,6 +1440,13 @@ export function parseAsset(asset: any): AssetEntity {
   liteAsset.minPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.minPeriod));
   liteAsset.maxPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.maxPeriod));
   liteAsset.maxFutureTimeTimedType = getTimeTypeStr(secondsToDuration(asset.maxFutureTime));
+
+  liteAsset.imageUrl = asset.image ?? getLandImageUrl(asset);
+  liteAsset.attributes = asset.attributes;
+  liteAsset.externalUrl = isDecentralandMetaverseRegistry(asset?.metaverseRegistry?.id)
+    ? getCryptoVexelsPlayUrl(asset?.metaverseAssetId)
+    : getDecentralandPlayUrl(asset?.decentralandData?.coordinates);
+  liteAsset.place = asset?.attributes ? [asset?.attributes?.island, asset?.attributes?.suburb] : null;
 
   // Calculates the intervals for availability
   // const now = getNowTs();

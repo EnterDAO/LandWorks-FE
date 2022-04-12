@@ -8,17 +8,10 @@ type Coordinate = {
   y: string;
 };
 
-export type CryptoVoxelsPlace =
-  | {
-      island: string;
-      suburb: string;
-    }
-  | undefined;
-
 interface IEstateLandOverlay {
   title: string;
   coordinates?: Coordinate[];
-  place: CryptoVoxelsPlace;
+  place?: string[] | null | undefined;
 }
 
 const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates, place }) => {
@@ -34,10 +27,11 @@ const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates, pla
         </div>
       )}
       <>
-        {place && (
+        {place && place.length && (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <ChipStyled key={place.island} label={place.island} variant="outlined" />
-            <ChipStyled key={place.suburb} label={place.suburb} variant="outlined" />
+            {place.map((title, index) => (
+              <ChipStyled key={index} label={title} variant="outlined" />
+            ))}
           </Box>
         )}
       </>

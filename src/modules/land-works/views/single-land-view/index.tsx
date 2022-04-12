@@ -22,7 +22,7 @@ import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 
 import { calculateNeighbours } from 'modules/land-works/utils';
-import { getNowTs } from '../../../../utils';
+import { getNowTs, isDecentralandMetaverseRegistry } from '../../../../utils';
 
 import './index.scss';
 
@@ -223,19 +223,22 @@ const SingleLandView: React.FC = () => {
     setShowEditModal(false);
     setOpenDelistPrompt(true);
   };
+
+  const isCryptoVoxelsAsset =
+    asset?.metaverseRegistry && !asset.name && !isDecentralandMetaverseRegistry(asset?.metaverseRegistry?.id);
+
   useEffect(() => {
     setClaimButtonDisabled(!asset?.unclaimedRentFee?.gt(0));
-    isCryptoVoxels &&
+    isCryptoVoxelsAsset &&
       getCryptoVoxelsAsset(asset?.metaverseAssetId).then((data) => {
-        const { name, image, attributes, external_url } = data;
-        setAsset({ ...asset, name, imageUrl: image, attributes, externalUrl: external_url });
+        const { name, image, attributes } = data;
+        setAsset(parseAsset({ ...asset, name, image, attributes }));
       });
   }, [asset]);
 
   const isWithdraw = () => {
     return isDirectWithdraw() || shouldShowWithdraw();
   };
-  const isCryptoVoxels = asset?.metaverseAssetId && asset.metaverse.name === 'CryptoVoxels' && !asset.imageUrl;
 
   const breadcrumbs = {
     url: location.state?.previousPage?.from || location.state?.from || '/explore',
