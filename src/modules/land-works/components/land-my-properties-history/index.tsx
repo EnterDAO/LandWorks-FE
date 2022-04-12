@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { DEFAULT_SLICED_HISTORY } from 'constants/modules';
 import { Box } from '@mui/material';
 import { uniqueId } from 'lodash';
 
 import { EmptyIcon } from 'design-system/icons';
 import { getENSName } from 'helpers/helpers';
+import useIntersectionObserver from 'hooks/useElementOnScreen';
 import { RentEntity, fetchUserRents } from 'modules/land-works/api';
 
 import { useWallet } from '../../../../wallets/wallet';
@@ -31,12 +33,20 @@ const MyPropetiesHistoryTable: React.FC = () => {
   const wallet = useWallet();
   const [rents, setRents] = useState([] as RentEntity[]);
   const [totalRents, setTotalRents] = useState(0);
+  const [pageSize, setPageSize] = useState(DEFAULT_SLICED_HISTORY);
+  const [paginatedRents, setPaginatedRents] = useState([] as RentEntity[]);
+
   const now = getNowTs();
+  const ref = useRef<HTMLDivElement | null>(null);
+  const entry = useIntersectionObserver(ref, { freezeOnceInvisible: true });
+  const isVisible = !!entry?.isIntersecting;
 
   const fetchRents = async (account: string) => {
     const rents = await fetchUserRents(account, false);
 
     setRents(rents.rents || []);
+    setPaginatedRents(rents.rents.slice(0, DEFAULT_SLICED_HISTORY));
+
     setTotalRents(rents.rents.length);
   };
 
@@ -54,13 +64,33 @@ const MyPropetiesHistoryTable: React.FC = () => {
     getENSName(operator).then((result) => {
       ens = result;
     });
-    return ens;
+    return ens !== operator ? ens : null;
   };
 
   const isEditableRow = (start: string, end: string) => {
     const isActiveRent = Number(start) <= now && now < Number(end);
     const isUpcomingRent = Number(start) >= now;
     return isActiveRent || isUpcomingRent;
+  };
+
+  useEffect(() => {
+    if (rents.length > paginatedRents.length && isVisible) {
+      setPaginatedRents(rents.slice(0, pageSize + DEFAULT_SLICED_HISTORY));
+      setPageSize((prev) => prev + DEFAULT_SLICED_HISTORY);
+    }
+  }, [entry]);
+
+  const rentStatus = (start: string, end: string) => {
+    let isUpcoming = false;
+    let isActive = false;
+    const now = getNowTs();
+    if (now < Number(start)) {
+      isUpcoming = true;
+    } else if (Number(start) <= now && now <= Number(end)) {
+      isActive = true;
+    }
+
+    return { isUpcoming, isActive };
   };
 
   return (
@@ -109,7 +139,7 @@ const MyPropetiesHistoryTable: React.FC = () => {
               </tbody>
             ) : (
               <StyledTableBody style={{ maxHeight: 260, overflowY: 'scroll' }}>
-                {rents.map((data) => (
+                {paginatedRents.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id}>
                     <StyledTableCell align="left">
                       {getDecentralandAssetName(data.asset?.decentralandData || null)}
@@ -139,7 +169,8 @@ const MyPropetiesHistoryTable: React.FC = () => {
                     <StyledTableCell align="left">
                       <TableInput
                         operator={data.operator}
-                        assetId={data.id}
+                        assetId={data.asset?.id || ''}
+                        metaverseRegistry={data.asset?.metaverseRegistry?.id || ''}
                         rentId={data.id}
                         ens={getEns(data.operator)}
                         renter={data.renter.id}
@@ -148,15 +179,18 @@ const MyPropetiesHistoryTable: React.FC = () => {
                       />
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      {now < Number(data.start) && <UpcomingButton>Upcoming</UpcomingButton>}
-                      {Number(data.start) < now && now < Number(data.end) && <ActiveButton>Active</ActiveButton>}
-                      {Number(data.start) < now && now > Number(data.end) && <PassedButton>Passed</PassedButton>}
+                      {rentStatus(data.start, data.end).isUpcoming && <UpcomingButton>Upcoming</UpcomingButton>}
+                      {rentStatus(data.start, data.end).isActive && <ActiveButton>Active</ActiveButton>}
+                      {!rentStatus(data.start, data.end).isUpcoming && !rentStatus(data.start, data.end).isActive && (
+                        <PassedButton>Passed</PassedButton>
+                      )}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
               </StyledTableBody>
             )}
           </table>
+          <div ref={ref} />
         </StyledPaper>
       </RootStyled>
     </Box>

@@ -21,6 +21,7 @@ import './index.scss';
 type Iprops = {
   operator: string;
   assetId: string;
+  metaverseRegistry?: string;
   rentId: string;
   renter: string;
   ens?: string | null;
@@ -28,7 +29,7 @@ type Iprops = {
 };
 type transactionStatus = 'loading' | 'success' | 'pending';
 
-const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEditable, ens }) => {
+const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, rentId, renter, isEditable, ens }) => {
   const wallet = useWallet();
   const landWorks = useLandworks();
 
@@ -73,7 +74,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
 
         const rentArray = rentId.split('-');
         if (rentArray.length === 2) {
-          await landWorksContract.updateOperator(assetId, rentArray[1], newOperator);
+          await landWorksContract.updateOperator(assetId, metaverseRegistry || '', rentArray[1], newOperator);
           showToastNotification(ToastType.Success, 'Operator updated successfully!');
           setTransactionStatus('success');
           setNewOperator('');
@@ -114,7 +115,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
   return (
     <div className="operator">
       <ExternalLink className="operator-input-link" target="_blank" href={getEtherscanAddressUrl(operator)}>
-        {shortedOperator || ens}
+        {ens || shortedOperator}
       </ExternalLink>
       {!canEditOperator ? (
         <></>

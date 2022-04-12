@@ -1,6 +1,6 @@
 import { timestampSecondsToDate } from 'helpers/helpers';
 
-import '../land-works-card-history/index.scss';
+import { StyledLabel } from './styled';
 
 interface ILandWorksTableDateProps {
   timestamp: string;
@@ -15,9 +15,9 @@ const LandWorksTableDate: React.FC<ILandWorksTableDateProps> = ({ timestamp, dat
   const slicedDate = `${date.slice(0, slice)}${date.slice(slice, date.length)}`;
 
   return (
-    <div className="timezone">
+    <StyledLabel>
       {slicedDate} <span>{utc}</span>
-    </div>
+    </StyledLabel>
   );
 };
 

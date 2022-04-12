@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { DEFAULT_SLICED_HISTORY } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { Box } from '@mui/material';
 
 import { EmptyIcon } from 'design-system/icons';
+import useIntersectionObserver from 'hooks/useElementOnScreen';
 import { ClaimHistory, USER_CLAIM_HISTORY_SUBSCRIPTION } from 'modules/land-works/api';
 
 import { useWallet } from '../../../../wallets/wallet';
@@ -27,7 +29,12 @@ import { THEME_COLORS } from 'themes/theme-constants';
 const ClaimHistoryTable: React.FC = () => {
   const wallet = useWallet();
   const [claimHistory, setClaimHistory] = useState([] as ClaimHistory[]);
+  const [paginatedClaimHistory, setPaginatedClaimHistory] = useState([] as ClaimHistory[]);
   const [totalClaims, setTotalClaims] = useState(0);
+  const [pageSize, setPageSize] = useState(DEFAULT_SLICED_HISTORY);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const entry = useIntersectionObserver(ref, { freezeOnceInvisible: true });
+  const isVisible = !!entry?.isIntersecting;
 
   useSubscription(USER_CLAIM_HISTORY_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -42,9 +49,17 @@ const ClaimHistoryTable: React.FC = () => {
         key: history.id,
       }));
       setClaimHistory(claimHistory);
+      setPaginatedClaimHistory(claimHistory.slice(0, DEFAULT_SLICED_HISTORY));
       setTotalClaims(claimHistory?.length || 0);
     },
   });
+
+  useEffect(() => {
+    if (claimHistory.length > paginatedClaimHistory.length && isVisible) {
+      setPaginatedClaimHistory(claimHistory.slice(0, pageSize + DEFAULT_SLICED_HISTORY));
+      setPageSize((prev) => prev + DEFAULT_SLICED_HISTORY);
+    }
+  }, [entry]);
 
   return (
     <Box style={{ margin: '200px 0' }}>
@@ -94,7 +109,7 @@ const ClaimHistoryTable: React.FC = () => {
               </tbody>
             ) : (
               <StyledTableBody style={{ maxHeight: 260, overflowY: 'scroll' }}>
-                {claimHistory.map((data) => (
+                {paginatedClaimHistory.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id}>
                     <StyledTableCell style={{ color: THEME_COLORS.light }} align="left">
                       {getDecentralandAssetName(data.asset.decentralandData)}
@@ -118,6 +133,7 @@ const ClaimHistoryTable: React.FC = () => {
               </StyledTableBody>
             )}
           </table>
+          <div ref={ref} />
         </StyledPaper>
       </RootStyled>
     </Box>
