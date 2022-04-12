@@ -9,7 +9,7 @@ import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import config from 'config';
 import { Button, Tooltip } from 'design-system';
-import { getENSName, getLandImageUrl, getTokenIconName } from 'helpers/helpers';
+import { getENSName, getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import { ReactComponent as WarningIcon } from '../../../../resources/svg/warning.svg';
@@ -22,13 +22,7 @@ import SingleLandCardSkeleton from '../land-single-card-loader';
 import LandsMapOverlay from '../lands-map-overlay';
 
 import { getNowTs } from '../../../../utils';
-import {
-  ZERO_BIG_NUMBER,
-  getCryptoVexelsPlayUrl,
-  getDecentralandPlayUrl,
-  getEtherscanAddressUrl,
-  shortenAddr,
-} from '../../../../web3/utils';
+import { ZERO_BIG_NUMBER, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -173,13 +167,12 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   };
 
   const ownerOrConsumer = isAssetStaked() ? asset?.consumer?.id : asset?.owner?.id;
-  const isDecentraland = Boolean(asset?.decentralandData);
 
   const [ens, setEns] = useState<string>();
   const [ensOperator, setEnsOperator] = useState<string>();
 
   useEffect(() => {
-    if (asset?.name) {
+    if (asset?.id) {
       setLoading(false);
     }
   }, [asset]);
@@ -206,7 +199,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
             <div className="map-image-wrapper">
               <img alt="vector Icon" className="card-image" src={asset?.imageUrl} />
               <LandsMapOverlay
-                title={asset?.attributes?.title || (asset?.decentralandData?.isLAND ? 'Land' : 'Estate')}
+                title={asset?.type || ''}
                 coordinates={asset?.decentralandData?.coordinates}
                 place={asset?.place}
               />
@@ -245,14 +238,8 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
               </Grid>
             </Grid>
             <Grid container className="hashtag-row">
-              {isDecentraland ? (
-                <Grid item>{asset?.decentralandData?.isLAND ? <p>#LAND</p> : <p>#ESTATE</p>}</Grid>
-              ) : (
-                <Grid item>
-                  <p>#{asset?.attributes?.title.toUpperCase()}</p>
-                </Grid>
-              )}
-              <Grid item>{asset?.metaverse?.name && <p>#{asset?.metaverse?.name}</p>}</Grid>
+              <Grid item>#{asset?.type}</Grid>
+              <Grid item>#{asset?.metaverse?.name}</Grid>
             </Grid>
             <Grid container>
               <Grid item xs={24} className="properties-row">

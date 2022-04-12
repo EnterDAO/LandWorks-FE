@@ -408,7 +408,7 @@ const EditPropertyView: React.FC = () => {
       history.push(`/explore`);
       return;
     }
-    setAsset(parseAsset(asset));
+    setAsset(await parseAsset(asset));
     setLoading(false);
   };
 

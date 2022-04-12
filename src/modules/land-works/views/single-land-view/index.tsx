@@ -6,7 +6,7 @@ import { Col, Row } from 'antd';
 
 import { Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon } from 'design-system/icons';
-import { getCryptoVoxelsAsset, timestampSecondsToDate } from 'helpers/helpers';
+import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import EditPropertyViewNew from 'modules/land-works/components/edit-property';
 
@@ -22,7 +22,7 @@ import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 
 import { calculateNeighbours } from 'modules/land-works/utils';
-import { getNowTs, isDecentralandMetaverseRegistry } from '../../../../utils';
+import { getNowTs } from '../../../../utils';
 
 import './index.scss';
 
@@ -64,7 +64,7 @@ const SingleLandView: React.FC = () => {
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
-    onSubscriptionData: ({ subscriptionData }) => {
+    onSubscriptionData: async ({ subscriptionData }) => {
       if (subscriptionData.error) {
         // TODO:
       }
@@ -73,7 +73,7 @@ const SingleLandView: React.FC = () => {
         return;
       }
       disableButtons(false);
-      setAsset(parseAsset(subscriptionData.data.asset));
+      setAsset(await parseAsset(subscriptionData.data.asset));
     },
   });
 
@@ -224,16 +224,8 @@ const SingleLandView: React.FC = () => {
     setOpenDelistPrompt(true);
   };
 
-  const isCryptoVoxelsAsset =
-    asset?.metaverseRegistry && !asset.name && !isDecentralandMetaverseRegistry(asset?.metaverseRegistry?.id);
-
   useEffect(() => {
     setClaimButtonDisabled(!asset?.unclaimedRentFee?.gt(0));
-    isCryptoVoxelsAsset &&
-      getCryptoVoxelsAsset(asset?.metaverseAssetId).then((data) => {
-        const { name, image, attributes } = data;
-        setAsset(parseAsset({ ...asset, name, image, attributes }));
-      });
   }, [asset]);
 
   const isWithdraw = () => {

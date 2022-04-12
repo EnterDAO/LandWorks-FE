@@ -30,7 +30,7 @@ const MyLendingView: React.FC = () => {
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
     variables: { id: wallet.account?.toLowerCase() },
-    onSubscriptionData: ({ subscriptionData }) => {
+    onSubscriptionData: async ({ subscriptionData }) => {
       if (subscriptionData.error) {
         // TODO:
       }
@@ -42,7 +42,7 @@ const MyLendingView: React.FC = () => {
         return;
       }
 
-      const user = parseUser(subscriptionData.data.user);
+      const user = await parseUser(subscriptionData.data.user);
       setClaimButtonDisabled(false);
       setUser(user);
       setAssets(user?.ownerAndConsumerAssets || []);
