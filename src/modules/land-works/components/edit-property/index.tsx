@@ -423,7 +423,7 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
       history.push(`/explore`);
       return;
     }
-    setAsset(parseAsset(asset));
+    setAsset(await parseAsset(asset));
     setLoading(false);
   };
 

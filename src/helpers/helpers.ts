@@ -5,7 +5,7 @@ import format from 'date-fns/format';
 import fromUnixTime from 'date-fns/fromUnixTime';
 
 import { DecentralandNFT } from 'modules/interface';
-import { AssetEntity } from 'modules/land-works/api';
+import { AssetEntity, CryptoVoxelsType } from 'modules/land-works/api';
 
 import defaultLandImage from '../modules/land-works/components/land-works-card/assets/land.png';
 
@@ -87,4 +87,8 @@ export const getAddressFromENS = async (ens: string) => {
   const provider = new InfuraProvider();
   const address = await provider.resolveName(ens);
   return address;
+};
+
+export const getCryptoVoxelsAsset = async (id: string): Promise<CryptoVoxelsType> => {
+  return await fetch(`https://www.cryptovoxels.com/p/${id}`).then((result) => result.json());
 };

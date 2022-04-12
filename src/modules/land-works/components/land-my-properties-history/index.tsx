@@ -27,7 +27,7 @@ import {
   UpcomingButton,
 } from './styled';
 
-import { getDecentralandAssetName, getNowTs } from '../../../../utils';
+import { getAssetName, getNowTs } from '../../../../utils';
 
 const MyPropetiesHistoryTable: React.FC = () => {
   const wallet = useWallet();
@@ -141,9 +141,7 @@ const MyPropetiesHistoryTable: React.FC = () => {
               <StyledTableBody style={{ maxHeight: 260, overflowY: 'scroll' }}>
                 {paginatedRents.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id}>
-                    <StyledTableCell align="left">
-                      {getDecentralandAssetName(data.asset?.decentralandData || null)}
-                    </StyledTableCell>
+                    <StyledTableCell align="left">{data.asset ? getAssetName(data.asset) : ''}</StyledTableCell>
 
                     <StyledTableCell align="left">
                       <LandWorksTableDate timestamp={data.start} dateFormat={'HH:mm dd.MM.yyyy'} />

@@ -4,7 +4,7 @@ import { Card, Col, Image, Row } from 'antd';
 
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
+import { getTokenIconName } from 'helpers/helpers';
 import { AssetStatus } from 'modules/land-works/models/AssetStatus';
 import { LocationState } from 'modules/land-works/views/single-land-view';
 
@@ -56,7 +56,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
             <Image
               placeholder={<Image className="land-image" src={landImage} preview={false} />}
               className="land-image"
-              src={getLandImageUrl(land)}
+              src={land.imageUrl}
               preview={false}
             />
           </Row>
@@ -115,7 +115,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
             </Col>
           </Row>
           <Row className="hashtag-row">
-            <Col>{land.decentralandData?.isLAND ? <p>#LAND</p> : <p>#ESTATE</p>}</Col>
+            <Col>{land.type}</Col>
             <Col>{land.metaverse?.name && <p>#{land.metaverse?.name}</p>}</Col>
           </Row>
           {showChart && (

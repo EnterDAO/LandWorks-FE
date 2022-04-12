@@ -64,7 +64,7 @@ const SingleLandView: React.FC = () => {
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
-    onSubscriptionData: ({ subscriptionData }) => {
+    onSubscriptionData: async ({ subscriptionData }) => {
       if (subscriptionData.error) {
         // TODO:
       }
@@ -73,7 +73,7 @@ const SingleLandView: React.FC = () => {
         return;
       }
       disableButtons(false);
-      setAsset(parseAsset(subscriptionData.data.asset));
+      setAsset(await parseAsset(subscriptionData.data.asset));
     },
   });
 
@@ -223,6 +223,7 @@ const SingleLandView: React.FC = () => {
     setShowEditModal(false);
     setOpenDelistPrompt(true);
   };
+
   useEffect(() => {
     setClaimButtonDisabled(!asset?.unclaimedRentFee?.gt(0));
   }, [asset]);
