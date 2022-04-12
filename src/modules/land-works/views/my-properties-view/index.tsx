@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import {
   MY_PROPERTIES_TAB_STATE_ALL,
   MY_PROPERTIES_TAB_STATE_LENT,
@@ -24,6 +24,8 @@ import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-p
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 import { useWallet } from 'wallets/wallet';
 
+import { LocationState } from '../single-land-view';
+
 import {
   filterLandsByCurrencyId,
   filterLandsByQuery,
@@ -34,6 +36,7 @@ import { sessionStorageHandler } from 'utils';
 
 const MyPropertiesView: FC = () => {
   const history = useHistory();
+  const location = useLocation<LocationState>();
   const isGridPerFour = useMediaQuery('(max-width: 1599px)');
   const wallet = useWallet();
   const [loading, setLoading] = useState(true);
@@ -66,7 +69,7 @@ const MyPropertiesView: FC = () => {
   };
 
   function getTabs() {
-    const tab = sessionStorage.getItem('MY_PROPERTIES_TAB');
+    const tab = location.state?.tab;
     const tabsList = [MY_PROPERTIES_TAB_STATE_ALL, MY_PROPERTIES_TAB_STATE_RENTED, MY_PROPERTIES_TAB_STATE_LENT];
     return tab && tabsList.includes(tab) ? tab : tabsList[0];
   }
@@ -224,7 +227,7 @@ const MyPropertiesView: FC = () => {
                         onClick={() =>
                           history.push({
                             pathname: `/property/${land.id}`,
-                            state: { from: window.location.pathname, title: 'My properties' },
+                            state: { from: window.location.pathname, title: 'My properties', tab },
                           })
                         }
                       />

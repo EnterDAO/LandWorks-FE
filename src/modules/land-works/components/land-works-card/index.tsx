@@ -39,6 +39,7 @@ const LandWorksCard: React.FC<ILandWorksCardProps> = ({ land }) => {
             state: {
               from: window.location.pathname,
               title: 'My properties',
+              tab: location?.state?.tab,
               previousPage: { from: location?.state?.from, title: location?.state?.title },
             },
           });
