@@ -145,6 +145,7 @@ export const USER_SUBSCRIPTION = gql`
           metaverseRegistry {
             id
           }
+          totalRents
           decentralandData {
             metadata
             isLAND
@@ -1217,6 +1218,7 @@ export function fetchUserAssetsByRents(address: string): Promise<PaginatedResult
             pricePerSecond
             lastRentEnd
             status
+            totalRents
             paymentToken {
               id
               name
