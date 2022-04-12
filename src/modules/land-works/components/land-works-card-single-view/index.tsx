@@ -238,8 +238,12 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
               </Grid>
             </Grid>
             <Grid container className="hashtag-row">
-              <Grid item>#{asset?.type}</Grid>
-              <Grid item>#{asset?.metaverse?.name}</Grid>
+              <Grid item>
+                <p>#{asset?.type}</p>
+              </Grid>
+              <Grid item>
+                <p>#{asset?.metaverse?.name}</p>
+              </Grid>
             </Grid>
             <Grid container>
               <Grid item xs={24} className="properties-row">
