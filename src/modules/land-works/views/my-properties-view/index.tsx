@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import {
   MY_PROPERTIES_TAB_STATE_ALL,
   MY_PROPERTIES_TAB_STATE_LENT,
@@ -7,6 +7,7 @@ import {
 } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
 import { useMediaQuery } from '@mui/material';
 
 import { Grid } from 'design-system';
@@ -23,6 +24,8 @@ import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-p
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 import { useWallet } from 'wallets/wallet';
 
+import { LocationState } from '../single-land-view';
+
 import {
   filterLandsByCurrencyId,
   filterLandsByQuery,
@@ -33,10 +36,11 @@ import { sessionStorageHandler } from 'utils';
 
 const MyPropertiesView: FC = () => {
   const history = useHistory();
+  const location = useLocation<LocationState>();
   const isGridPerFour = useMediaQuery('(max-width: 1599px)');
   const wallet = useWallet();
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState(MY_PROPERTIES_TAB_STATE_ALL);
+  const [tab, setTab] = useState(getTabs());
   const [searchQuery, setSearchQuery] = useState('');
   const [pageSize] = useState(getPageSize());
   const [user, setUser] = useState({} as UserEntity);
@@ -63,6 +67,12 @@ const MyPropertiesView: FC = () => {
   const getLoadPercentageValue = () => {
     return (lands.slice(0, slicedLands).length * 100) / lands.length;
   };
+
+  function getTabs() {
+    const tab = location.state?.tab;
+    const tabsList = [MY_PROPERTIES_TAB_STATE_ALL, MY_PROPERTIES_TAB_STATE_RENTED, MY_PROPERTIES_TAB_STATE_LENT];
+    return tab && tabsList.includes(tab) ? tab : tabsList[0];
+  }
 
   const fetchRents = async () => {
     if (!wallet.account) return;
@@ -217,7 +227,7 @@ const MyPropertiesView: FC = () => {
                         onClick={() =>
                           history.push({
                             pathname: `/property/${land.id}`,
-                            state: { from: window.location.pathname, title: 'My properties' },
+                            state: { from: window.location.pathname, title: 'My properties', tab },
                           })
                         }
                       />

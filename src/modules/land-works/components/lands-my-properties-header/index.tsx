@@ -1,4 +1,5 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   MY_PROPERTIES_TAB_STATE_ALL,
   MY_PROPERTIES_TAB_STATE_LENT,
@@ -21,10 +22,12 @@ interface Props {
 }
 
 const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, setTab, user }) => {
+  const history = useHistory();
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    history.push({ state: { tab: newValue } });
     setTab(newValue);
   };
 

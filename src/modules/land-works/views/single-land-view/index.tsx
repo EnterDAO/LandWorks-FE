@@ -29,6 +29,7 @@ import './index.scss';
 export interface LocationState {
   from: string;
   title: string;
+  tab: string;
   previousPage?: {
     from: string;
     title: string;
@@ -269,7 +270,15 @@ const SingleLandView: React.FC = () => {
       <Row gutter={40} className="head-nav">
         <div className="left-wrapper">
           <div className="head-breadcrumbs">
-            <Link className="button-back" to={breadcrumbs.url}>
+            <Link
+              className="button-back"
+              to={{
+                pathname: breadcrumbs.url,
+                state: {
+                  tab: location.state?.tab,
+                },
+              }}
+            >
               <div className="button-icon">
                 <Icon iconSize={'m'} iconElement={<BackIcon />} />
               </div>
@@ -278,7 +287,15 @@ const SingleLandView: React.FC = () => {
 
             <p className="separator" />
 
-            <Link className="button-explore" to={breadcrumbs.url}>
+            <Link
+              className="button-explore"
+              to={{
+                pathname: breadcrumbs.url,
+                state: {
+                  tab: location.state?.tab,
+                },
+              }}
+            >
               {breadcrumbs.title}
             </Link>
 

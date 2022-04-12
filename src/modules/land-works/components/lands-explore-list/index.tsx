@@ -1,5 +1,5 @@
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { DEFAULT_SLICED_PAGE } from 'constants/modules';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useDebounce from '@rooks/use-debounce';
@@ -14,6 +14,7 @@ import LandsSearchBar from 'modules/land-works/components/lands-search';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
+import { LocationState } from 'modules/land-works/views/single-land-view';
 
 import { LandsSearchBarWrapperStyled } from './styled';
 
@@ -29,6 +30,7 @@ interface Props {
 
 const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRentEnd }) => {
   const history = useHistory();
+  const location = useLocation<LocationState>();
   const isGridPerTwo = useMediaQuery('(max-width: 1599px)');
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
@@ -179,7 +181,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
                 onClick={() =>
                   history.push({
                     pathname: `/property/${land.id}`,
-                    state: { from: window.location.pathname, title: 'Explore' },
+                    state: { from: window.location.pathname, title: 'Explore', tab: location.state?.tab },
                   })
                 }
                 land={land}
