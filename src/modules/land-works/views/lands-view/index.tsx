@@ -91,7 +91,7 @@ const LandsView: React.FC = () => {
   useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
     variables: { id: wallet.account?.toLowerCase() },
-    onSubscriptionData: ({ subscriptionData }) => {
+    onSubscriptionData: async ({ subscriptionData }) => {
       if (subscriptionData.error) {
         // TODO:
       }
@@ -101,7 +101,7 @@ const LandsView: React.FC = () => {
       }
 
       setClaimButtonDisabled(false);
-      setUser(parseUser(subscriptionData.data.user));
+      setUser(await parseUser(subscriptionData.data.user));
     },
   });
 

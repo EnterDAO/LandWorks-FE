@@ -88,7 +88,7 @@ const MyPropertiesView: FC = () => {
     setLoading(false);
 
     if (userData && userData.user) {
-      setUser(parseUser(userData.user));
+      setUser(await parseUser(userData.user));
     } else {
       setUser({} as UserEntity);
     }

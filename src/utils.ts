@@ -7,7 +7,7 @@ import { isAddress } from 'web3-utils';
 import { DEFAULT_ADDRESS } from 'web3/utils';
 
 import config from './config';
-import { Data, DecentralandData, ExtractedTime, ParsedDate } from './modules/land-works/api';
+import { AssetEntity, Data, DecentralandData, ExtractedTime, ParsedDate } from './modules/land-works/api';
 
 import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from './utils/date';
 
@@ -101,8 +101,16 @@ export function isValidAddress(value: string | undefined): boolean {
   return !!value && isAddress(value) && value !== DEFAULT_ADDRESS;
 }
 
-export function getDecentralandAssetName(decentralandData: DecentralandData | null): string {
-  if (decentralandData === null) {
+export function getAssetName(asset: AssetEntity): string {
+  if (isDecentralandMetaverseRegistry(asset.metaverseRegistry?.id.toLowerCase() || '')) {
+    return getDecentralandAssetName(asset.decentralandData);
+  } else {
+    return `${asset.metaverse.name} #${asset.metaverseAssetId}`;
+  }
+}
+
+export function getDecentralandAssetName(decentralandData: DecentralandData | null | undefined): string {
+  if (decentralandData === null || decentralandData === undefined) {
     return '';
   }
 

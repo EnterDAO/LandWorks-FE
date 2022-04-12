@@ -133,6 +133,14 @@ export function getDecentralandPlayUrl(coordinates?: any[]): string | undefined 
   return undefined;
 }
 
+export function getCryptoVexelsPlayUrl(id: string | undefined): string | undefined {
+  if (id) {
+    return `https://www.cryptovoxels.com/play?coords=${id}`;
+  }
+
+  return undefined;
+}
+
 export function getExponentValue(decimals = 0): BigNumber {
   return new BigNumber(10).pow(decimals);
 }

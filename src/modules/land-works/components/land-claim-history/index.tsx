@@ -22,7 +22,7 @@ import {
   TypographyStyled,
 } from './styled';
 
-import { getDecentralandAssetName } from '../../../../utils';
+import { getAssetName } from '../../../../utils';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
@@ -112,7 +112,7 @@ const ClaimHistoryTable: React.FC = () => {
                 {paginatedClaimHistory.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id}>
                     <StyledTableCell style={{ color: THEME_COLORS.light }} align="left">
-                      {getDecentralandAssetName(data.asset.decentralandData)}
+                      {getAssetName(data.asset)}
                     </StyledTableCell>
                     <StyledTableCell style={{ fontWeight: '500' }} align="left">
                       <LandTableTxHash txHash={data.txHash} firstSymbolsLength={22} />
