@@ -75,6 +75,13 @@ export const filterLandsByCurrencyId = (lands: AssetEntity[], currencyId: number
   });
 };
 
+export const filterLandsByMetaverse = (lands: AssetEntity[], metaverse: string): AssetEntity[] => {
+  return lands.filter((land) => {
+    // console.log(land.metaverse.name, metaverse);
+    return land.metaverse.name === metaverse;
+  });
+};
+
 export const isNewLandTxInProgress = (lands: AssetEntity[], loadingLands: boolean, method: string): boolean => {
   const idOfLandInProgress = localStorage.getItem(method);
   const landInProgressExists = idOfLandInProgress && idOfLandInProgress.length > 0;

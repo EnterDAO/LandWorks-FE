@@ -7,7 +7,6 @@ import {
 } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
 import { useMediaQuery } from '@mui/material';
 
 import { Grid } from 'design-system';
@@ -18,6 +17,7 @@ import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-prope
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import LandWorksLoadingCard from 'modules/land-works/components/land-works-card-loading';
 import LandsWorksGridEmptyState from 'modules/land-works/components/land-works-grid-empty-state';
+import { landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import LoadMoreLands from 'modules/land-works/components/lands-explore-load-more';
 import LandsMyPropertiesHeader from 'modules/land-works/components/lands-my-properties-header';
 import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-properties-subheader';
@@ -28,6 +28,7 @@ import { LocationState } from '../single-land-view';
 
 import {
   filterLandsByCurrencyId,
+  filterLandsByMetaverse,
   filterLandsByQuery,
   isExistingLandInProgress,
   isNewLandTxInProgress,
@@ -50,6 +51,7 @@ const MyPropertiesView: FC = () => {
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [slicedLands, setSlicedLands] = useState(pageSize);
   const [currencyId, setCurrencyId] = useState(sessionStorageHandler('get', 'my-properties-filters', 'currency') || 0);
+  const [metaverse, setMetaverse] = useState(sessionStorageHandler('get', 'my-properties-filters', 'metaverse') || 1);
 
   const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
@@ -100,6 +102,10 @@ const MyPropertiesView: FC = () => {
 
   const onChangeCurrencyHandler = (value: number) => {
     setCurrencyId(value);
+  };
+
+  const onChangeMetaverse = (value: number) => {
+    setMetaverse(value);
   };
 
   const removeLands = () => {
@@ -169,6 +175,8 @@ const MyPropertiesView: FC = () => {
     filteredLands = filterLandsByCurrencyId(filteredLands, currencyId);
   }
 
+  filteredLands = filterLandsByMetaverse(filteredLands, landsData[metaverse - 1].label);
+
   const slicedLandsInTotal = filteredLands.slice(0, slicedLands).length;
 
   const displayNewLandLoader = () => {
@@ -206,6 +214,7 @@ const MyPropertiesView: FC = () => {
           <LandsMyPropertiesSubheader
             propertiesCount={lands.length}
             onChangeCurrencyCallback={onChangeCurrencyHandler}
+            onChangeMetaverse={onChangeMetaverse}
           />
 
           <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
