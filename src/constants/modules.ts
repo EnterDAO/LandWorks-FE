@@ -17,6 +17,10 @@ export const PlaceOptions = [
     label: 'Decentraland',
     value: '1',
   },
+  {
+    label: 'Cryptovoxels',
+    value: '2',
+  },
 ];
 
 export const MinRentPeriodOptions = [
@@ -126,7 +130,7 @@ export const sortDirections = [
   SortDirection.DESC,
 ];
 
-export const metaverseOptions = ['Decentraland'];
+export const metaverseOptions = ['Decentraland', 'Cryptovoxels'];
 
 export const TILES_URL_DECENTRALEND = 'https://api.decentraland.org/v2/tiles';
 

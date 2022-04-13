@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
-  DECENTRALAND_METAVERSE,
   DEFAULT_LAST_RENT_END,
-  DEFAULT_TOKEN_ADDRESS,
+  DEFAULT_TOKEN_ADDRESS,  
   sortColumns,
   sortDirections,
 } from 'constants/modules';
@@ -74,6 +73,7 @@ const ExploreView: React.FC = () => {
   const [paymentToken, setPaymentToken] = useState<string | null>(null);
 
   const [showListNewModal, setShowListNewModal] = useState(false);
+  const [selectedMetaverse, setSelectedMetaverse] = useState(1);
 
   const setClickedLandId = (x: number | string, y: number | string) => {
     let landId = `${x},${y}`;
@@ -88,6 +88,10 @@ const ExploreView: React.FC = () => {
     });
 
     return setStateClickedLandId(landId);
+  };
+
+  const onChangePlace = (value: number) => {
+    setSelectedMetaverse(value);
   };
 
   const setPointMapCentre = (lands: CoordinatesLand[]) => {
@@ -148,7 +152,7 @@ const ExploreView: React.FC = () => {
       setLoading(true);
 
       const lands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
-        DECENTRALAND_METAVERSE,
+        selectedMetaverse.toString(),
         lastRentEnd,
         orderColumn,
         sortDir,
@@ -179,7 +183,7 @@ const ExploreView: React.FC = () => {
         ? getLands(sortColumn, sortDir, lastRentEnd, paymentToken, wallet?.account?.toLowerCase())
         : getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
     }
-  }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
+  }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken, selectedMetaverse]);
 
   useEffect(() => {
     getPaymentTokens();
@@ -210,6 +214,7 @@ const ExploreView: React.FC = () => {
               handleListNew={() => setShowListNewModal(true)}
             />
             <LandsExploreFilters
+              onChangePlace={onChangePlace}
               onChangeSortDirection={onChangeFiltersSortDirection}
               onChangeOwnerToggler={onChangeFiltersOwnerToggler}
               onChangeAvailable={onChangeFiltersAvailable}

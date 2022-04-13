@@ -15,6 +15,7 @@ interface Props {
   onChangeOwnerToggler: (value: boolean) => void;
   onChangeAvailable: (value: boolean) => void;
   onChangeCurrency: (value: number) => void;
+  onChangePlace: (value: number) => void;
 }
 
 const LandWorksFilters: FC<Props> = ({
@@ -22,6 +23,7 @@ const LandWorksFilters: FC<Props> = ({
   onChangeOwnerToggler,
   onChangeAvailable,
   onChangeCurrency,
+  onChangePlace,
 }) => {
   const wallet = useWallet();
   const [selectedOrder, setSelectedOrder] = useState(sessionStorageHandler('get', 'explore-filters', 'order') || 1);
@@ -41,6 +43,7 @@ const LandWorksFilters: FC<Props> = ({
     sessionStorageHandler('set', 'explore-filters', 'metaverse', value);
     setMetaverse(metaverse);
     setSelectedMetaverse(value);
+    onChangePlace(value);
     // TODO:: some filtering here
   };
 
@@ -80,7 +83,6 @@ const LandWorksFilters: FC<Props> = ({
         <Box className={styles.box}>
           <Box className={styles.box} style={{ marginRight: '20px' }}>
             <ControlledSelect
-              disabled
               width={'12rem'}
               value={selectedMetaverse}
               onChange={onChangePlaceHandler}
