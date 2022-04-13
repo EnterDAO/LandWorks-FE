@@ -3,7 +3,7 @@ import { find } from 'lodash';
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 import { currencyData } from './components/lands-explore-filters/filters-data';
 
-import { getNowTs } from 'utils';
+import { getNowTs, isDecentralandMetaverseRegistry } from 'utils';
 
 import { NotionResult, NotionResultForCard, NotionResultForProfile } from './components/scene-expert-card/types';
 
@@ -75,10 +75,16 @@ export const filterLandsByCurrencyId = (lands: AssetEntity[], currencyId: number
   });
 };
 
+export const getLandsByMetaverse: {
+  [key: string]: (id: string) => boolean;
+} = {
+  Decentraland: (id: string) => isDecentralandMetaverseRegistry(id),
+  CryptoVoxels: (id: string) => !isDecentralandMetaverseRegistry(id),
+};
+
 export const filterLandsByMetaverse = (lands: AssetEntity[], metaverse: string): AssetEntity[] => {
   return lands.filter((land) => {
-    // console.log(land.metaverse.name, metaverse);
-    return land.metaverse.name === metaverse;
+    return land?.metaverseRegistry ? getLandsByMetaverse[metaverse](land?.metaverseRegistry?.id) : false;
   });
 };
 

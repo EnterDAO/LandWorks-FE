@@ -30,6 +30,7 @@ import {
   filterLandsByCurrencyId,
   filterLandsByMetaverse,
   filterLandsByQuery,
+  getLandsByMetaverse,
   isExistingLandInProgress,
   isNewLandTxInProgress,
 } from 'modules/land-works/utils';
@@ -48,6 +49,7 @@ const MyPropertiesView: FC = () => {
   const [lands, setLands] = useState<AssetEntity[]>([]);
   const [rents, setRents] = useState<AssetEntity[]>([]);
   const [totalRents, setTotalRents] = useState(0);
+  const [totalLents, setTotalLents] = useState(0);
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [slicedLands, setSlicedLands] = useState(pageSize);
   const [currencyId, setCurrencyId] = useState(sessionStorageHandler('get', 'my-properties-filters', 'currency') || 0);
@@ -67,7 +69,7 @@ const MyPropertiesView: FC = () => {
   };
 
   const getLoadPercentageValue = () => {
-    return (lands.slice(0, slicedLands).length * 100) / lands.length;
+    return (filteredLands.slice(0, slicedLands).length * 100) / filteredLands.length;
   };
 
   function getTabs() {
@@ -155,6 +157,7 @@ const MyPropertiesView: FC = () => {
     if (!wallet.account || lands.length) {
       setLoading(false);
     }
+    calculateLandsCount();
   }, [lands]);
 
   useEffect(() => {
@@ -164,6 +167,20 @@ const MyPropertiesView: FC = () => {
       }
     }, 500);
   }, []);
+
+  const calculateLandsCount = () => {
+    lands && setTotalLents(user?.ownerAndConsumerAssets?.filter(filterMetaverseCallback).length);
+    rents && setTotalRents(rents.filter(filterMetaverseCallback).length);
+  };
+
+  const filterMetaverseCallback = (land: AssetEntity): boolean => {
+    const label = landsData[metaverse - 1].label;
+    return land?.metaverseRegistry ? getLandsByMetaverse[label](land?.metaverseRegistry?.id) : false;
+  };
+
+  useEffect(() => {
+    calculateLandsCount();
+  }, [metaverse]);
 
   useEffect(() => {
     setLoadPercentageValue(getLoadPercentageValue());
@@ -207,12 +224,12 @@ const MyPropertiesView: FC = () => {
           <LandsMyPropertiesHeader
             setTab={setTab}
             user={user}
-            allCount={concatOwnerAndConsumerAssetsAndRents().length}
+            allCount={totalRents + totalLents || 0}
             rentedCount={totalRents}
-            lentCount={user?.ownerAndConsumerAssets?.length || 0}
+            lentCount={totalLents}
           />
           <LandsMyPropertiesSubheader
-            propertiesCount={lands.length}
+            propertiesCount={filteredLands.length}
             onChangeCurrencyCallback={onChangeCurrencyHandler}
             onChangeMetaverse={onChangeMetaverse}
           />
