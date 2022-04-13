@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  DEFAULT_LAST_RENT_END,
-  DEFAULT_TOKEN_ADDRESS,  
-  sortColumns,
-  sortDirections,
-} from 'constants/modules';
+import { DEFAULT_LAST_RENT_END, DEFAULT_TOKEN_ADDRESS, sortColumns, sortDirections } from 'constants/modules';
 import useDebounce from '@rooks/use-debounce';
 import { isNull } from 'lodash';
 
