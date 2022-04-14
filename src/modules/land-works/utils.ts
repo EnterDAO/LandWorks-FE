@@ -160,7 +160,7 @@ export const transformSceneProviderForProfile = (notionEntity: NotionResult): No
   };
 };
 
-export const getOwnerOrConsumerId = (asset?: AssetEntity) => {
+export const getOwnerOrConsumerId = (asset?: AssetEntity): string | undefined => {
   if (!asset) {
     return '';
   }
