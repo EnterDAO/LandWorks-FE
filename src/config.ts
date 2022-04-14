@@ -51,6 +51,7 @@ const config = {
       estateRegistry: toLowerCase(process.env.REACT_APP_CONTRACT_DECENTRALAND_ESTATE_REGISTRY_ADDR),
       landRegistry: toLowerCase(process.env.REACT_APP_CONTRACT_DECENTRALAND_LAND_REGISTRY_ADDR),
     },
+    cryptoVoxelsContract: toLowerCase(process.env.REACT_APP_CONTRACT_CRYPTO_VOXELS_ADDR),
   },
   web3: {
     chainId: Number(process.env.REACT_APP_WEB3_CHAIN_ID),
