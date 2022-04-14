@@ -49,7 +49,7 @@ const MyPropertiesView: FC = () => {
   const [lands, setLands] = useState<AssetEntity[]>([]);
   const [rents, setRents] = useState<AssetEntity[]>([]);
   const [totalRents, setTotalRents] = useState(0);
-  const [totalLents, setTotalLents] = useState(0);
+  // const [totalLents, setTotalLents] = useState(0);
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [slicedLands, setSlicedLands] = useState(pageSize);
   const [currencyId, setCurrencyId] = useState(sessionStorageHandler('get', 'my-properties-filters', 'currency') || 0);
@@ -57,7 +57,7 @@ const MyPropertiesView: FC = () => {
 
   const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
-    variables: { id: wallet.account?.toLowerCase() },
+    variables: { id: wallet.account?.toLowerCase(), metaverse: String(metaverse) },
   });
 
   function getPageSize() {
@@ -90,7 +90,6 @@ const MyPropertiesView: FC = () => {
   const updateUser = async () => {
     await fetchRents();
     setLoading(false);
-
     if (userData && userData.user) {
       setUser(await parseUser(userData.user));
     } else {
@@ -157,7 +156,7 @@ const MyPropertiesView: FC = () => {
     if (!wallet.account || lands.length) {
       setLoading(false);
     }
-    calculateLandsCount();
+    // calculateLandsCount();
   }, [lands]);
 
   useEffect(() => {
@@ -168,19 +167,19 @@ const MyPropertiesView: FC = () => {
     }, 500);
   }, []);
 
-  const calculateLandsCount = () => {
-    lands && setTotalLents(user?.ownerAndConsumerAssets?.filter(filterMetaverseCallback).length);
-    rents && setTotalRents(rents.filter(filterMetaverseCallback).length);
-  };
+  // const calculateLandsCount = () => {
+  //   lands && setTotalLents(user?.ownerAndConsumerAssets?.filter(filterMetaverseCallback).length);
+  //   rents && setTotalRents(rents.filter(filterMetaverseCallback).length);
+  // };
 
-  const filterMetaverseCallback = (land: AssetEntity): boolean => {
-    const label = landsData[metaverse - 1].label;
-    return land?.metaverseRegistry ? getLandsByMetaverse[label](land?.metaverseRegistry?.id) : false;
-  };
+  // const filterMetaverseCallback = (land: AssetEntity): boolean => {
+  //   const label = landsData[metaverse - 1].label;
+  //   return land?.metaverseRegistry ? getLandsByMetaverse[label](land?.metaverseRegistry?.id) : false;
+  // };
 
-  useEffect(() => {
-    calculateLandsCount();
-  }, [metaverse]);
+  // useEffect(() => {
+  //   calculateLandsCount();
+  // }, [metaverse]);
 
   useEffect(() => {
     setLoadPercentageValue(getLoadPercentageValue());
@@ -192,7 +191,7 @@ const MyPropertiesView: FC = () => {
     filteredLands = filterLandsByCurrencyId(filteredLands, currencyId);
   }
 
-  filteredLands = filterLandsByMetaverse(filteredLands, landsData[metaverse - 1].label);
+  // filteredLands = filterLandsByMetaverse(filteredLands, landsData[metaverse - 1].label);
 
   const slicedLandsInTotal = filteredLands.slice(0, slicedLands).length;
 
@@ -224,9 +223,9 @@ const MyPropertiesView: FC = () => {
           <LandsMyPropertiesHeader
             setTab={setTab}
             user={user}
-            allCount={totalRents + totalLents || 0}
+            allCount={totalRents + user?.ownerAndConsumerAssets?.length || 0}
             rentedCount={totalRents}
-            lentCount={totalLents}
+            lentCount={user?.ownerAndConsumerAssets?.length || 0}
           />
           <LandsMyPropertiesSubheader
             propertiesCount={filteredLands.length}

@@ -71,7 +71,7 @@ export const ASSET_SUBSCRIPTION = gql`
 `;
 
 export const USER_SUBSCRIPTION = gql`
-  subscription GetUser($id: String) {
+  subscription GetUser($id: String, $metaverse: String) {
     user(id: $id) {
       id
       consumerTo {
@@ -106,7 +106,7 @@ export const USER_SUBSCRIPTION = gql`
           }
         }
       }
-      assets {
+      assets(where: { metaverse: $metaverse }) {
         id
         metaverseAssetId
         metaverse {
