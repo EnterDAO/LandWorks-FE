@@ -572,6 +572,28 @@ export function fetchTokenPayments(): Promise<PaymentToken[]> {
     });
 }
 
+export function fetchMetaverses() {
+  return GraphClient.get({
+    query: gql`
+      {
+        metaverses {
+          id
+          name
+        }
+      }
+    `,
+  })
+    .then(async (response) => {
+      return response.data.metaverses.map((meta: any) => {
+        return { label: meta.name, value: +meta.id };
+      });
+    })
+    .catch((e) => {
+      console.log(e);
+      return [];
+    });
+}
+
 /**
  * Gets all the information for a given asset, including its first five rents
  * @param id The address of the rent
