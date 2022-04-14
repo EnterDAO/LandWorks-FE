@@ -18,7 +18,12 @@ import { LocationState } from 'modules/land-works/views/single-land-view';
 
 import { LandsSearchBarWrapperStyled } from './styled';
 
-import { filterLandsByAvailability, filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
+import {
+  filterLandsByAvailability,
+  filterLandsByQuery,
+  getAllLandsCoordinates,
+  getOwnerOrConsumerId,
+} from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
 
 interface Props {
@@ -64,7 +69,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
         setSelectedTile({
           id,
           type: mapTiles[id].type || '',
-          owner: mapTiles[id].owner || '',
+          owner: getOwnerOrConsumerId(land?.decentralandData?.asset)?.toLowerCase() || '',
         });
     }
   };
