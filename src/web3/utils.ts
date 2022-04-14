@@ -135,7 +135,7 @@ export function getDecentralandPlayUrl(coordinates?: any[]): string | undefined 
 
 export function getCryptoVexelsPlayUrl(id: string | undefined): string | undefined {
   if (id) {
-    return `https://www.cryptovoxels.com/play?coords=${id}`;
+    return `https://www.cryptovoxels.com/parcels/${id}/visit`;
   }
 
   return undefined;
