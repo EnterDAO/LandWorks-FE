@@ -1347,6 +1347,9 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
           }
           decentralandData {
             asset {
+              owner {
+                id
+              }
               consumer {
                 id
                 consumerTo {

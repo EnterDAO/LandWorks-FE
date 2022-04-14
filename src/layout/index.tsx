@@ -13,6 +13,7 @@ import LandWorksProvider from 'modules/land-works/providers/landworks-provider';
 import WarningProvider from 'providers/warning-provider';
 
 import NotionProvider from '../api/notion/client';
+import CryptoVoxelsProvider from '../modules/land-works/providers/cryptovoxels-provider';
 import Erc20Provider from '../modules/land-works/providers/erc20-provider';
 import { GraphClient } from '../web3/graph/client';
 
@@ -33,35 +34,37 @@ const LayoutView: React.FC = () => {
           <LandWorksProvider>
             <LandRegistryProvider>
               <EstateRegistryProvider>
-                <Erc20Provider>
-                  <ApolloProvider client={client}>
-                    <NotionProvider>
-                      <LayoutHeader />
-                      <main className={s.main}>
-                        <ErrorBoundary>
-                          <Suspense
-                            fallback={
-                              <Loader
-                                sx={{
-                                  position: 'fixed',
-                                  top: '50%',
-                                  left: '50%',
-                                  zoom: '0.5',
-                                  transform: 'translate(-50%, -50%)',
-                                }}
-                              />
-                            }
-                          >
-                            <Switch>
-                              <Route path="/" component={LandworksView} />
-                            </Switch>
-                          </Suspense>
-                        </ErrorBoundary>
-                      </main>
-                      {isntExploreViewRoute && <LayoutFooter />}
-                    </NotionProvider>
-                  </ApolloProvider>
-                </Erc20Provider>
+                <CryptoVoxelsProvider>
+                  <Erc20Provider>
+                    <ApolloProvider client={client}>
+                      <NotionProvider>
+                        <LayoutHeader />
+                        <main className={s.main}>
+                          <ErrorBoundary>
+                            <Suspense
+                              fallback={
+                                <Loader
+                                  sx={{
+                                    position: 'fixed',
+                                    top: '50%',
+                                    left: '50%',
+                                    zoom: '0.5',
+                                    transform: 'translate(-50%, -50%)',
+                                  }}
+                                />
+                              }
+                            >
+                              <Switch>
+                                <Route path="/" component={LandworksView} />
+                              </Switch>
+                            </Suspense>
+                          </ErrorBoundary>
+                        </main>
+                        {isntExploreViewRoute && <LayoutFooter />}
+                      </NotionProvider>
+                    </ApolloProvider>
+                  </Erc20Provider>
+                </CryptoVoxelsProvider>
               </EstateRegistryProvider>
             </LandRegistryProvider>
           </LandWorksProvider>

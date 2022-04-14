@@ -34,6 +34,7 @@ import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
 import { PaymentToken, fetchAssetIdByTxHash, fetchTokenPayments } from '../../api';
 import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
+import { useCryptoVoxels } from '../../providers/cryptovoxels-provider';
 import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
 import { useLandworks } from '../../providers/landworks-provider';
@@ -51,11 +52,13 @@ const ListNewProperty: React.FC = () => {
   const landworks = useLandworks();
   const estateRegistry = useEstateRegistry();
   const landRegistry = useLandRegistry();
+  const cryptoVoxels = useCryptoVoxels();
   const history = useHistory();
 
   const { landWorksContract } = landworks;
   const { landRegistryContract } = landRegistry;
   const { estateRegistryContract } = estateRegistry;
+  const { cryptoVoxelsContract } = cryptoVoxels;
 
   const [minPeriod, setMinPeriod] = useState(new BigNumber(DAY_IN_SECONDS));
   const [isMinPeriodSelected, setMinPeriodSelected] = useState(false);
@@ -372,6 +375,7 @@ const ListNewProperty: React.FC = () => {
     try {
       const lands = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
       const estates = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
+      // const cryptoVoxels = await cryptoVoxelsContract?.getUserData(walletCtx.account);
 
       const landsForEstates = await getLandsForEstates(estates);
       setEstateGroup(landsForEstates);
