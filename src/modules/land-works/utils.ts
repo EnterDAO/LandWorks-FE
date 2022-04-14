@@ -1,5 +1,7 @@
 import { find } from 'lodash';
 
+import config from 'config';
+
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 import { currencyData } from './components/lands-explore-filters/filters-data';
 
@@ -156,4 +158,12 @@ export const transformSceneProviderForProfile = (notionEntity: NotionResult): No
     languages: notionEntity.properties.Languages.multi_select.map((t) => t.name).join(', '),
     portfolio,
   };
+};
+
+export const getOwnerOrConsumerId = (asset?: AssetEntity): string | undefined => {
+  if (!asset) {
+    return '';
+  }
+
+  return asset?.owner?.id == config.contracts.yf.staking ? asset?.consumer?.id : asset?.owner?.id;
 };
