@@ -7,7 +7,6 @@ import {
 } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
 import { useMediaQuery } from '@mui/material';
 
 import { Grid } from 'design-system';
