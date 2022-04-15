@@ -10,14 +10,21 @@ import TabContext from '@mui/lab/TabContext';
 import { useMediaQuery } from '@mui/material';
 
 import { Grid } from 'design-system';
-import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssetsByRents, parseUser } from 'modules/land-works/api';
+import {
+  AssetEntity,
+  PaymentToken,
+  USER_SUBSCRIPTION,
+  UserEntity,
+  fetchTokenPayments,
+  fetchUserAssetsByRents,
+  parseUser,
+} from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
 import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import LandWorksLoadingCard from 'modules/land-works/components/land-works-card-loading';
 import LandsWorksGridEmptyState from 'modules/land-works/components/land-works-grid-empty-state';
-import { landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import LoadMoreLands from 'modules/land-works/components/lands-explore-load-more';
 import LandsMyPropertiesHeader from 'modules/land-works/components/lands-my-properties-header';
 import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-properties-subheader';
@@ -26,14 +33,7 @@ import { useWallet } from 'wallets/wallet';
 
 import { LocationState } from '../single-land-view';
 
-import {
-  filterLandsByCurrencyId,
-  filterLandsByMetaverse,
-  filterLandsByQuery,
-  getLandsByMetaverse,
-  isExistingLandInProgress,
-  isNewLandTxInProgress,
-} from 'modules/land-works/utils';
+import { isExistingLandInProgress, isNewLandTxInProgress } from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
 
 const MyPropertiesView: FC = () => {
@@ -49,15 +49,17 @@ const MyPropertiesView: FC = () => {
   const [lands, setLands] = useState<AssetEntity[]>([]);
   const [rents, setRents] = useState<AssetEntity[]>([]);
   const [totalRents, setTotalRents] = useState(0);
-  // const [totalLents, setTotalLents] = useState(0);
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [slicedLands, setSlicedLands] = useState(pageSize);
   const [currencyId, setCurrencyId] = useState(sessionStorageHandler('get', 'my-properties-filters', 'currency') || 0);
   const [metaverse, setMetaverse] = useState(sessionStorageHandler('get', 'my-properties-filters', 'metaverse') || 1);
 
-  const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
+  const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
+  const [paymentToken, setPaymentToken] = useState<string | null>(null);
+
+  const { data: userData } = useSubscription(USER_SUBSCRIPTION(paymentToken), {
     skip: wallet.account === undefined,
-    variables: { id: wallet.account?.toLowerCase(), metaverse: String(metaverse) },
+    variables: { id: wallet.account?.toLowerCase(), metaverse: String(metaverse), paymentToken },
   });
 
   function getPageSize() {
@@ -69,7 +71,7 @@ const MyPropertiesView: FC = () => {
   };
 
   const getLoadPercentageValue = () => {
-    return (filteredLands.slice(0, slicedLands).length * 100) / filteredLands.length;
+    return (lands.slice(0, slicedLands).length * 100) / lands.length;
   };
 
   function getTabs() {
@@ -81,10 +83,18 @@ const MyPropertiesView: FC = () => {
   const fetchRents = async () => {
     if (!wallet.account) return;
 
-    const rents = await fetchUserAssetsByRents(wallet.account);
-
+    setLoading(true);
+    const rents = await fetchUserAssetsByRents(wallet.account, String(metaverse), paymentToken);
     setRents(rents.data || []);
     setTotalRents(rents.meta.count);
+    setLoading(false);
+  };
+
+  const getPaymentTokens = async () => {
+    const savedToken = sessionStorageHandler('get', 'my-properties-filters', 'currency');
+    const tokens = await fetchTokenPayments();
+    savedToken && setPaymentToken(tokens[savedToken - 1].id);
+    setPaymentTokens(tokens);
   };
 
   const updateUser = async () => {
@@ -101,7 +111,20 @@ const MyPropertiesView: FC = () => {
     return [...rents, ...(user?.ownerAndConsumerAssets || [])];
   };
 
-  const onChangeCurrencyHandler = (value: number) => {
+  const onChangeCurrencyHandler = async (value: number) => {
+    let tokens: PaymentToken[] = paymentTokens;
+
+    if (value === 0) {
+      setCurrencyId(value);
+      return setPaymentToken(null);
+    }
+
+    if (!paymentTokens.length) {
+      tokens = await fetchTokenPayments();
+      setPaymentTokens(tokens);
+    }
+
+    setPaymentToken(tokens[value - 1].id);
     setCurrencyId(value);
   };
 
@@ -120,6 +143,11 @@ const MyPropertiesView: FC = () => {
   }, [userData]);
 
   useEffect(() => {
+    paymentTokens.length && fetchRents();
+  }, [metaverse, currencyId, paymentToken]);
+
+  useEffect(() => {
+    if (tab === MY_PROPERTIES_TAB_STATE_ALL) setLands(concatOwnerAndConsumerAssetsAndRents());
     if (tab === MY_PROPERTIES_TAB_STATE_RENTED) {
       return setLands(rents);
     } else if (tab === MY_PROPERTIES_TAB_STATE_LENT) {
@@ -127,7 +155,7 @@ const MyPropertiesView: FC = () => {
     }
 
     setLands(concatOwnerAndConsumerAssetsAndRents());
-  }, [tab]);
+  }, [tab, rents]);
 
   useEffect(() => {
     if (Object.keys(user).length) {
@@ -160,6 +188,7 @@ const MyPropertiesView: FC = () => {
   }, [lands]);
 
   useEffect(() => {
+    getPaymentTokens();
     setTimeout(() => {
       if (!wallet.account) {
         wallet.showWalletsModal();
@@ -167,33 +196,11 @@ const MyPropertiesView: FC = () => {
     }, 500);
   }, []);
 
-  // const calculateLandsCount = () => {
-  //   lands && setTotalLents(user?.ownerAndConsumerAssets?.filter(filterMetaverseCallback).length);
-  //   rents && setTotalRents(rents.filter(filterMetaverseCallback).length);
-  // };
-
-  // const filterMetaverseCallback = (land: AssetEntity): boolean => {
-  //   const label = landsData[metaverse - 1].label;
-  //   return land?.metaverseRegistry ? getLandsByMetaverse[label](land?.metaverseRegistry?.id) : false;
-  // };
-
-  // useEffect(() => {
-  //   calculateLandsCount();
-  // }, [metaverse]);
-
   useEffect(() => {
     setLoadPercentageValue(getLoadPercentageValue());
   }, [lands, slicedLands]);
 
-  let filteredLands = filterLandsByQuery(lands, searchQuery);
-
-  if (currencyId > 0) {
-    filteredLands = filterLandsByCurrencyId(filteredLands, currencyId);
-  }
-
-  // filteredLands = filterLandsByMetaverse(filteredLands, landsData[metaverse - 1].label);
-
-  const slicedLandsInTotal = filteredLands.slice(0, slicedLands).length;
+  const slicedLandsInTotal = lands.slice(0, slicedLands).length;
 
   const displayNewLandLoader = () => {
     return (
@@ -228,7 +235,7 @@ const MyPropertiesView: FC = () => {
             lentCount={user?.ownerAndConsumerAssets?.length || 0}
           />
           <LandsMyPropertiesSubheader
-            propertiesCount={filteredLands.length}
+            propertiesCount={lands.length}
             onChangeCurrencyCallback={onChangeCurrencyHandler}
             onChangeMetaverse={onChangeMetaverse}
           />
@@ -240,9 +247,9 @@ const MyPropertiesView: FC = () => {
                   <LandCardSkeleton key={i} />
                 </Grid>
               ))
-            ) : filteredLands.length ? (
+            ) : lands.length ? (
               <>
-                {filteredLands.slice(0, slicedLands).map((land) => (
+                {lands.slice(0, slicedLands).map((land) => (
                   <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={land.id}>
                     {displayExistLandLoader() === land.metaverseAssetId ? (
                       <LandWorksLoadingCard title={existPropertyTitle()} />
@@ -282,10 +289,10 @@ const MyPropertiesView: FC = () => {
 
           {lands.length > pageSize && (
             <LoadMoreLands
-              textToDisplay={`List ${slicedLandsInTotal} of ${filteredLands.length}`}
+              textToDisplay={`List ${slicedLandsInTotal} of ${lands.length}`}
               handleLoadMore={handleLoadMore}
               percentageValue={loadPercentageValue}
-              disabled={slicedLandsInTotal === filteredLands.length}
+              disabled={slicedLandsInTotal === lands.length}
             />
           )}
 

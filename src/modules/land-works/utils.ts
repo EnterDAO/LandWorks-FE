@@ -67,27 +67,6 @@ export const filterLandsByAvailability = (lands: AssetEntity[]): AssetEntity[] =
   });
 };
 
-export const filterLandsByCurrencyId = (lands: AssetEntity[], currencyId: number): AssetEntity[] => {
-  return lands.filter((land) => {
-    const symbolFromCurrencyValue = find(currencyData, { value: currencyId })?.label;
-
-    return land.paymentToken.symbol === symbolFromCurrencyValue;
-  });
-};
-
-export const getLandsByMetaverse: {
-  [key: string]: (id: string) => boolean;
-} = {
-  Decentraland: (id: string) => isDecentralandMetaverseRegistry(id),
-  CryptoVoxels: (id: string) => !isDecentralandMetaverseRegistry(id),
-};
-
-export const filterLandsByMetaverse = (lands: AssetEntity[], metaverse: string): AssetEntity[] => {
-  return lands.filter((land) => {
-    return land?.metaverseRegistry ? getLandsByMetaverse[metaverse](land?.metaverseRegistry?.id) : false;
-  });
-};
-
 export const isNewLandTxInProgress = (lands: AssetEntity[], loadingLands: boolean, method: string): boolean => {
   const idOfLandInProgress = localStorage.getItem(method);
   const landInProgressExists = idOfLandInProgress && idOfLandInProgress.length > 0;

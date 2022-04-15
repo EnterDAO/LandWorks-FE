@@ -88,7 +88,7 @@ const LandsView: React.FC = () => {
     history.push({ search: searchParams.toString() });
   }, [searchQuery]);
 
-  useSubscription(USER_SUBSCRIPTION, {
+  useSubscription(USER_SUBSCRIPTION(), {
     skip: wallet.account === undefined,
     variables: { id: wallet.account?.toLowerCase() },
     onSubscriptionData: async ({ subscriptionData }) => {
