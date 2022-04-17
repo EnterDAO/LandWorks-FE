@@ -32,7 +32,7 @@ import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
-import { PaymentToken, fetchAssetIdByTxHash, fetchTokenPayments } from '../../api';
+import { PaymentToken, fetchTokenPayments } from '../../api';
 import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
 import { useCryptoVoxels } from '../../providers/cryptovoxels-provider';
 import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
@@ -306,24 +306,21 @@ const ListNewProperty: React.FC = () => {
 
     try {
       setShowSignModal(true);
-      await landWorksContract
-        ?.list(
-          Number(PlaceOptions[0].value),
-          metaverseRegistry,
-          selectedProperty.id,
-          minPeriod,
-          maxPeriod,
-          maxFutureTime,
-          paymentToken.id,
-          pricePerSecond.toFixed(0),
-          () => {
-            setListModalMessage(MineTransactionMessage);
-          }
-        )
-        .then((response) => {
-          fetchAssetIdByTxHash(response.transactionHash).then((id) => setListedPropertyId(id));
-        });
+      const txReceipt = await landWorksContract?.list(
+        Number(PlaceOptions[0].value),
+        metaverseRegistry,
+        selectedProperty.id,
+        minPeriod,
+        maxPeriod,
+        maxFutureTime,
+        paymentToken.id,
+        pricePerSecond.toFixed(0),
+        () => {
+          setListModalMessage(MineTransactionMessage);
+        }
+      );
       localStorage.setItem('LISTING_IN_PROGRESS', selectedProperty.id);
+      setListedPropertyId(txReceipt.events['List'].returnValues[0]);
 
       setShowApproveModal(false);
       setShowSignModal(false);
@@ -699,16 +696,17 @@ const ListNewProperty: React.FC = () => {
             setShowSignModal(false);
           }}
         />
-        <SuccessModal
-          listedPropertyId={listedPropertyId}
-          showShareButton={true}
-          price={showPriceInUsd}
-          showModal={showSuccessModal}
-          handleClose={() => {
-            history.push('/my-properties');
-            setShowSuccessModal(false);
-          }}
-        />
+        {showSuccessModal && (
+          <SuccessModal
+            listedPropertyId={listedPropertyId}
+            showShareButton={true}
+            showModal={showSuccessModal}
+            handleClose={() => {
+              history.push('/my-properties');
+              setShowSuccessModal(false);
+            }}
+          />
+        )}
       </Grid>
     </section>
   );
