@@ -63,7 +63,7 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
         </Button>
         {showShareButton && listedPropertyId.length && (
           <ShareLink
-            href={`https://twitter.com/intent/tweet?text=${text}&url=https://landworks.xyz/property/${listedPropertyId}`}
+            href={`https://twitter.com/intent/tweet?text=${text}&url=${window.location.origin}/property/${listedPropertyId}`}
             target="_blank"
           >
             <Icon iconElement={<TwitterIcon />} iconSize="m" />
