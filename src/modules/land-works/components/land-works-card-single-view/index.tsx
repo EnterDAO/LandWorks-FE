@@ -300,9 +300,10 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                     <Grid item>
                       <Grid item className="eth-price-container">
                         <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" />
-                        <span className="price-eth">
-                          {(asset?.pricePerMagnitude ? asset?.pricePerMagnitude?.price : new BigNumber('0')).toNumber()}
-                        </span>
+                        <SmallAmountTooltip
+                          className="price-eth"
+                          amount={asset?.pricePerMagnitude ? asset?.pricePerMagnitude?.price : new BigNumber('0')}
+                        />
                         <p>{asset?.paymentToken?.symbol}</p>
 
                         <div className="usd-price-container">
