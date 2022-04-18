@@ -70,11 +70,11 @@ export const ASSET_SUBSCRIPTION = gql`
   }
 `;
 
-export const USER_SUBSCRIPTION = gql`
-  subscription GetUser($id: String) {
+export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
+  subscription GetUser($id: String, $metaverse: String, ${paymentToken ? '$paymentToken: String' : ''}) {
     user(id: $id) {
       id
-      consumerTo {
+      consumerTo (where: { metaverse: $metaverse ${paymentToken ? 'paymentToken : $paymentToken' : ''}}) {
         id
         metaverse {
           name
@@ -106,7 +106,7 @@ export const USER_SUBSCRIPTION = gql`
           }
         }
       }
-      assets {
+      assets(where: { metaverse: $metaverse ${paymentToken ? 'paymentToken : $paymentToken' : ''}}) {
         id
         metaverseAssetId
         metaverse {
@@ -565,6 +565,28 @@ export function fetchTokenPayments(): Promise<PaymentToken[]> {
   })
     .then(async (response) => {
       return [...response.data.paymentTokens];
+    })
+    .catch((e) => {
+      console.log(e);
+      return [];
+    });
+}
+
+export function fetchMetaverses() {
+  return GraphClient.get({
+    query: gql`
+      {
+        metaverses {
+          id
+          name
+        }
+      }
+    `,
+  })
+    .then(async (response) => {
+      return response.data.metaverses.map((meta: any) => {
+        return { label: meta.name, value: +meta.id };
+      });
     })
     .catch((e) => {
       console.log(e);
@@ -1192,11 +1214,19 @@ export function fetchListedAssetsByMetaverseAndGetLastRentEndWithOrder(
     });
 }
 
-export function fetchUserAssetsByRents(address: string): Promise<PaginatedResult<AssetEntity>> {
+export function fetchUserAssetsByRents(
+  address: string,
+  metaverse: string,
+  paymentToken: string | null
+): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
     query: gql`
-      query GetUserRents($id: String, $now: BigInt) {
-        rents(orderBy: end, orderDirection: asc, where: { renter: $id }) {
+      query GetUserRents($id: String, $now: BigInt, $metaverse: String, $paymentToken: String) {
+        rents(
+          orderBy: end
+          orderDirection: asc
+          where: { renter: $id, metaverse: $metaverse, ${paymentToken ? 'paymentToken: $paymentToken' : ''} }
+        ) {
           id
           operator
           start
@@ -1240,6 +1270,8 @@ export function fetchUserAssetsByRents(address: string): Promise<PaginatedResult
     `,
     variables: {
       id: address.toLowerCase(),
+      metaverse,
+      paymentToken,
     },
   })
     .then(async (response) => {

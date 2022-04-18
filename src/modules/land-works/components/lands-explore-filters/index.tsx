@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
-import { metaverseOptions } from 'constants/modules';
 
 import { Box, ControlledSelect, StyledSwitch, Typography } from 'design-system';
+import { fetchMetaverses } from 'modules/land-works/api';
 import { useWallet } from 'wallets/wallet';
 
 import { currencyData, landsData, sortData } from './filters-data';
@@ -15,6 +15,7 @@ interface Props {
   onChangeOwnerToggler: (value: boolean) => void;
   onChangeAvailable: (value: boolean) => void;
   onChangeCurrency: (value: number) => void;
+  onChangeMetaverse: (value: string) => void;
 }
 
 const LandWorksFilters: FC<Props> = ({
@@ -22,12 +23,15 @@ const LandWorksFilters: FC<Props> = ({
   onChangeOwnerToggler,
   onChangeAvailable,
   onChangeCurrency,
+  onChangeMetaverse,
 }) => {
   const wallet = useWallet();
   const [selectedOrder, setSelectedOrder] = useState(sessionStorageHandler('get', 'explore-filters', 'order') || 1);
   const [selectedMetaverse, setSelectedMetaverse] = useState(
     sessionStorageHandler('get', 'explore-filters', 'metaverse') || 1
   );
+  const [metaverses, setMetaverses] = useState(landsData);
+
   const [selectedCurrency, setSelectedCurrency] = useState(
     sessionStorageHandler('get', 'explore-filters', 'currency') || 0
   );
@@ -35,11 +39,10 @@ const LandWorksFilters: FC<Props> = ({
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(
     sessionStorageHandler('get', 'explore-filters', 'available') || false
   );
-  const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
 
   const onChangePlaceHandler = (value: number) => {
     sessionStorageHandler('set', 'explore-filters', 'metaverse', value);
-    setMetaverse(metaverse);
+    onChangeMetaverse(`${value}`);
     setSelectedMetaverse(value);
     // TODO:: some filtering here
   };
@@ -74,17 +77,19 @@ const LandWorksFilters: FC<Props> = ({
     setTimeout(() => onChangeCurrency(selectedCurrency), 0);
   }, []);
 
+  useEffect(() => {
+    fetchMetaverses().then(setMetaverses);
+  }, []);
   return (
     <div className={styles.root}>
       <Box className={styles.container}>
         <Box className={styles.box}>
           <Box className={styles.box} style={{ marginRight: '20px' }}>
             <ControlledSelect
-              disabled
               width={'12rem'}
               value={selectedMetaverse}
               onChange={onChangePlaceHandler}
-              options={landsData}
+              options={metaverses}
             />
           </Box>
           <Box className={styles.box}>

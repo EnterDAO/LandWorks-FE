@@ -44,6 +44,7 @@ const ExploreView: React.FC = () => {
     order: sessionStorageHandler('get', 'explore-filters', 'order'),
     owner: sessionStorageHandler('get', 'explore-filters', 'owner'),
     lastRentEnd: sessionStorageHandler('get', 'explore-filters', 'lastRentEnd'),
+    metaverse: sessionStorageHandler('get', 'explore-filters', 'metaverse'),
   };
 
   const [lands, setLands] = useState<AssetEntity[]>([]);
@@ -57,6 +58,8 @@ const ExploreView: React.FC = () => {
 
   const [sortDir, setSortDir] = useState(sortDirections[sessionFilters.order - 1 || 0]);
   const [sortColumn, setSortColumn] = useState(sortColumns[sessionFilters.order - 1 || 0]);
+
+  const [metaverse, setMetaverse] = useState(sessionFilters.metaverse || DECENTRALAND_METAVERSE);
 
   const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
   const [mapExpanded, setMapExpanded] = useState(false);
@@ -122,6 +125,10 @@ const ExploreView: React.FC = () => {
     sessionStorageHandler('set', 'explore-filters', 'lastRentEnd', newValue);
   };
 
+  const onChangeMetaverse = (index: string) => {
+    setMetaverse(index);
+  };
+
   const onChangeFiltersCurrency = async (index: number) => {
     let tokens: PaymentToken[] = paymentTokens;
 
@@ -149,7 +156,7 @@ const ExploreView: React.FC = () => {
       setLoading(true);
 
       const lands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
-        DECENTRALAND_METAVERSE,
+        String(metaverse),
         lastRentEnd,
         orderColumn,
         sortDir,
@@ -180,7 +187,7 @@ const ExploreView: React.FC = () => {
         ? getLands(sortColumn, sortDir, lastRentEnd, paymentToken, wallet?.account?.toLowerCase())
         : getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
     }
-  }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
+  }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken, metaverse]);
 
   useEffect(() => {
     getPaymentTokens();
@@ -215,6 +222,7 @@ const ExploreView: React.FC = () => {
               onChangeOwnerToggler={onChangeFiltersOwnerToggler}
               onChangeAvailable={onChangeFiltersAvailable}
               onChangeCurrency={onChangeFiltersCurrency}
+              onChangeMetaverse={onChangeMetaverse}
             />
           </div>
 
