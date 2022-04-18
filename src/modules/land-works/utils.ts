@@ -1,5 +1,7 @@
 import { find } from 'lodash';
 
+import config from 'config';
+
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 import { currencyData } from './components/lands-explore-filters/filters-data';
 
@@ -120,7 +122,6 @@ export const transformSceneProviderForCard = (notionEntity: NotionResult): Notio
     builderType: notionEntity.properties.Type.select.name,
     shortDescription: notionEntity.properties['Short Description'].rich_text[0].plain_text,
     location: notionEntity.properties.Location.rich_text[0].plain_text,
-    price: notionEntity.properties.Price.select.name,
   };
 };
 
@@ -143,9 +144,16 @@ export const transformSceneProviderForProfile = (notionEntity: NotionResult): No
     discord: notionEntity.properties.Discord.rich_text[0].plain_text,
     email: notionEntity.properties.Email.email,
     location: notionEntity.properties.Location.rich_text[0].plain_text,
-    price: notionEntity.properties.Price.select.name,
     tags: notionEntity.properties.Tags.multi_select.map((t) => t.name).join(', '),
     languages: notionEntity.properties.Languages.multi_select.map((t) => t.name).join(', '),
     portfolio,
   };
+};
+
+export const getOwnerOrConsumerId = (asset?: AssetEntity): string | undefined => {
+  if (!asset) {
+    return '';
+  }
+
+  return asset?.owner?.id == config.contracts.yf.staking ? asset?.consumer?.id : asset?.owner?.id;
 };

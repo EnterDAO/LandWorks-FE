@@ -52,6 +52,20 @@ export function formatBigNumber(value: BigNumber): string {
   }
 }
 
+export function formatBigNumberInput(value: BigNumber): string {
+  if (value.gt(1)) {
+    return value.toFixed(2);
+  } else if (value.eq(0)) {
+    return '0';
+  } else {
+    if (value.lt(1e-6)) {
+      return value.toFixed();
+    } else {
+      return value.toPrecision(2).replace(/\.?0+$/, '');
+    }
+  }
+}
+
 export function getFormattedDuration(value?: number, endValue?: number): string | undefined {
   if (value === undefined) {
     return undefined;

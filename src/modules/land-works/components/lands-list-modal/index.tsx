@@ -20,7 +20,6 @@ interface ITxModal extends IProps {
 }
 interface ISuccessModal extends IProps {
   showShareButton: boolean;
-  price: string | number;
   listedPropertyId: string;
 }
 
@@ -46,9 +45,9 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
   showModal,
   handleClose,
   showShareButton,
-  price,
   listedPropertyId,
 }) => {
+  const text = `gm. Just listed my property at @landworksxyz.\n`;
   return (
     <Modal height={600} open={showModal} handleClose={handleClose}>
       <div className="success-wrapper">
@@ -64,12 +63,7 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
         </Button>
         {showShareButton && listedPropertyId.length && (
           <ShareLink
-            href={
-              `https://twitter.com/intent/tweet?text=gm.%20Just%20listed%20my%20property%20at%20@landworksxyz.` +
-              `%20Rent%20it%20for%20just%20${price}%20per%20day.%20\r\n&url=${
-                window.location.origin + listedPropertyId ? '/property/' + listedPropertyId : ''
-              }`
-            }
+            href={`https://twitter.com/intent/tweet?text=${text}&url=${window.location.origin}/property/${listedPropertyId}`}
             target="_blank"
           >
             <Icon iconElement={<TwitterIcon />} iconSize="m" />

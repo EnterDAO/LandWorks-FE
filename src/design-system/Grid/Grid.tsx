@@ -8,7 +8,7 @@ type GridProps = MuiGridProps & {
 export const MuiGridStyled = styled(MuiGrid)(({ theme }) => ({
   '&.MuiGrid-grid-xxl-4': {
     [theme.breakpoints.up(1600)]: {
-      maxWidth: '33%',
+      maxWidth: '33.33%',
     },
   },
 }));

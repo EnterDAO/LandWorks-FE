@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import BigNumber from 'bignumber.js';
 import { AbiItem } from 'web3-utils';
