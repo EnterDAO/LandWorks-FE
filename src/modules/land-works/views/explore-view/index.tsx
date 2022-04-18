@@ -127,6 +127,7 @@ const ExploreView: React.FC = () => {
 
   const onChangeMetaverse = (index: string) => {
     setMetaverse(index);
+    index !== '1' ? setMapIsHidden(true) : null;
   };
 
   const onChangeFiltersCurrency = async (index: number) => {
@@ -191,6 +192,7 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     getPaymentTokens();
+    String(metaverse) !== '1' ? setMapIsHidden(true) : setMapIsHidden(false);
   }, []);
 
   useEffect(() => {
@@ -231,6 +233,7 @@ const ExploreView: React.FC = () => {
               <LandsExploreList
                 setIsHiddenMap={setMapIsHidden}
                 isHiddenMap={mapIsHidden}
+                metaverse={metaverse}
                 lastRentEnd={lastRentEnd}
                 loading={loading}
                 lands={lands}

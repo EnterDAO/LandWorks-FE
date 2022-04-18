@@ -18,6 +18,19 @@ export const StyledButton = styled('button')(() => ({
       fill: 'white',
     },
   },
+  '&:disabled': {
+    path: {
+      fill: '#666672',
+    },
+    cursor: 'default',
+    '&:hover': {
+      border: '1px solid transparent',
+      boxShadow: 'none',
+      path: {
+        fill: '#666672',
+      },
+    },
+  },
 }));
 
 export const StyledRow = styled('div')(() => ({

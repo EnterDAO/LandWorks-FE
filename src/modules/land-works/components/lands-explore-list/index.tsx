@@ -34,6 +34,7 @@ interface Props {
   setPointMapCentre: (lands: CoordinatesLand[]) => void;
   setIsHiddenMap: (value: boolean) => void;
   isHiddenMap: boolean;
+  metaverse: string;
 }
 
 const LandsExploreList: FC<Props> = ({
@@ -43,6 +44,7 @@ const LandsExploreList: FC<Props> = ({
   lastRentEnd,
   setIsHiddenMap,
   isHiddenMap,
+  metaverse,
 }) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
@@ -182,10 +184,11 @@ const LandsExploreList: FC<Props> = ({
       </LandsSearchBarWrapperStyled>
       <StyledRow>
         <Grid>
-          Listed <StyledText>{filteredLands.length}</StyledText> properties
+          Listed <StyledText>{filteredLands.length} properties</StyledText>
         </Grid>
         <Grid container direction={'row'} display="flex" width={'auto'}>
           <StyledButton
+            disabled={metaverse !== '1'}
             sx={{
               border: !isHiddenMap ? '1px solid white' : '1px solid transparent',
               boxShadow: !isHiddenMap ? '0 0 3px white' : 'none',
@@ -195,6 +198,7 @@ const LandsExploreList: FC<Props> = ({
             <MapIcon />
           </StyledButton>
           <StyledButton
+            disabled={metaverse !== '1'}
             sx={{
               border: isHiddenMap ? '1px solid white' : '1px solid transparent',
               boxShadow: isHiddenMap ? '0 0 3px white' : 'none',
@@ -208,13 +212,13 @@ const LandsExploreList: FC<Props> = ({
       <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
         {loading ? (
           [1, 2, 3, 4].map((i) => (
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={6} xxl={4} key={i}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} xxl={isHiddenMap ? 3 : 4} key={i}>
               <LandCardSkeleton key={i} />
             </Grid>
           ))
         ) : filteredLands.length ? (
           filteredLands.slice(0, slicedLands).map((land) => (
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 4 : 6} xxl={isHiddenMap ? 2 : 4} key={land.id}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} xxl={isHiddenMap ? 3 : 4} key={land.id}>
               <LandWorkCard
                 onMouseOver={onMouseOverCardHandler}
                 onClick={() =>
