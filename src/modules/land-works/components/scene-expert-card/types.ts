@@ -27,7 +27,6 @@ export interface NotionResultForCard {
   builderType: string;
   shortDescription: string;
   location: string;
-  price: string;
 }
 
 export interface NotionResultForProfile {
@@ -42,7 +41,6 @@ export interface NotionResultForProfile {
   discord: string;
   email: string;
   location: string;
-  price: string;
   tags: string;
   languages: string;
   portfolio: string[];

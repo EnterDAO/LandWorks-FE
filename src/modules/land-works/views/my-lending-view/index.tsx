@@ -27,7 +27,7 @@ const MyLendingView: React.FC = () => {
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(wallet.isActive);
 
-  useSubscription(USER_SUBSCRIPTION, {
+  useSubscription(USER_SUBSCRIPTION(), {
     skip: wallet.account === undefined,
     variables: { id: wallet.account?.toLowerCase() },
     onSubscriptionData: async ({ subscriptionData }) => {

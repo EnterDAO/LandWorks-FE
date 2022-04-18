@@ -42,6 +42,7 @@ import {
   fetchTokenPayments,
 } from '../../api';
 import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
+import { useCryptoVoxels } from '../../providers/cryptovoxels-provider';
 import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
 import { useLandworks } from '../../providers/landworks-provider';
@@ -59,11 +60,13 @@ const ListNewProperty: React.FC = () => {
   const landworks = useLandworks();
   const estateRegistry = useEstateRegistry();
   const landRegistry = useLandRegistry();
+  const cryptoVoxels = useCryptoVoxels();
   const history = useHistory();
 
   const { landWorksContract } = landworks;
   const { landRegistryContract } = landRegistry;
   const { estateRegistryContract } = estateRegistry;
+  const { cryptoVoxelsContract } = cryptoVoxels;
 
   const [minPeriod, setMinPeriod] = useState(new BigNumber(DAY_IN_SECONDS));
   const [isMinPeriodSelected, setMinPeriodSelected] = useState(false);
@@ -311,24 +314,21 @@ const ListNewProperty: React.FC = () => {
 
     try {
       setShowSignModal(true);
-      await landWorksContract
-        ?.list(
-          Number(PlaceOptions[0].value),
-          metaverseRegistry,
-          selectedProperty.id,
-          minPeriod,
-          maxPeriod,
-          maxFutureTime,
-          paymentToken.id,
-          pricePerSecond.toFixed(0),
-          () => {
-            setListModalMessage(MineTransactionMessage);
-          }
-        )
-        .then((response) => {
-          fetchAssetIdByTxHash(response.transactionHash).then((id) => setListedPropertyId(id));
-        });
+      const txReceipt = await landWorksContract?.list(
+        Number(PlaceOptions[0].value),
+        metaverseRegistry,
+        selectedProperty.id,
+        minPeriod,
+        maxPeriod,
+        maxFutureTime,
+        paymentToken.id,
+        pricePerSecond.toFixed(0),
+        () => {
+          setListModalMessage(MineTransactionMessage);
+        }
+      );
       localStorage.setItem('LISTING_IN_PROGRESS', selectedProperty.id);
+      setListedPropertyId(txReceipt.events['List'].returnValues[0]);
 
       setShowApproveModal(false);
       setShowSignModal(false);
@@ -394,6 +394,7 @@ const ListNewProperty: React.FC = () => {
     try {
       const lands = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
       const estates = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
+      // const cryptoVoxels = await cryptoVoxelsContract?.getUserData(walletCtx.account);
 
       const cvLands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder('1', walletCtx.account);
       const landsForEstates = await getLandsForEstates(estates);
@@ -718,16 +719,17 @@ const ListNewProperty: React.FC = () => {
             setShowSignModal(false);
           }}
         />
-        <SuccessModal
-          listedPropertyId={listedPropertyId}
-          showShareButton={true}
-          price={showPriceInUsd}
-          showModal={showSuccessModal}
-          handleClose={() => {
-            history.push('/my-properties');
-            setShowSuccessModal(false);
-          }}
-        />
+        {showSuccessModal && (
+          <SuccessModal
+            listedPropertyId={listedPropertyId}
+            showShareButton={true}
+            showModal={showSuccessModal}
+            handleClose={() => {
+              history.push('/my-properties');
+              setShowSuccessModal(false);
+            }}
+          />
+        )}
       </Grid>
     </section>
   );

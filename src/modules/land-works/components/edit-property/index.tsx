@@ -30,7 +30,7 @@ import { AssetEntity, CryptoVoxelsType, PaymentToken, fetchAsset, fetchTokenPaym
 import { useLandworks } from '../../providers/landworks-provider';
 import EditFormCardSkeleton from '../land-edit-form-loader-card';
 
-import { getTimeType, secondsToDuration } from '../../../../utils';
+import { formatBigNumberInput, getTimeType, secondsToDuration } from '../../../../utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from '../../../../utils/date';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
 
@@ -174,7 +174,7 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
     }
 
     if (asset.pricePerMagnitude) {
-      setTokenCost(new BigNumber(asset.pricePerMagnitude.price || 0));
+      setTokenCost(new BigNumber(formatBigNumberInput(asset.pricePerMagnitude.price) || 0));
     }
   }, [asset]);
 
