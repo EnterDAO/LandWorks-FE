@@ -11,7 +11,7 @@ export default class CryptoVoxelsContract extends ERC721Contract {
     super([...(ABI as Web3ContractAbiItem[]), ...abi], address);
   }
 
-  async getUserData(user: string): Promise<any> {
+  async getUserData(user: string) {
     const totalTokens = await this.call('balanceOf', [user]);
 
     const promises = [];
@@ -21,7 +21,7 @@ export default class CryptoVoxelsContract extends ERC721Contract {
     return Promise.all(promises);
   }
 
-  async getTokenData(user: string, index: number): Promise<any> {
+  async getTokenData(user: string, index: number) {
     const tokenId = await this.call('tokenOfOwnerByIndex', [user, index]); // Get the token ID
     const tokenURI = await this.call('tokenURI', [tokenId]);
     const metadata: CryptoVoxelsType = await fetch(tokenURI).then((res) => res.json());
@@ -30,6 +30,8 @@ export default class CryptoVoxelsContract extends ERC721Contract {
       id: tokenId,
       name: metadata.name,
       image: metadata.image,
+      coords: [0, 1],
+      // TODO: Update above to have real coordinates
     };
   }
 }

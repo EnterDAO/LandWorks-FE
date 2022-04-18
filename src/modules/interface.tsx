@@ -22,6 +22,13 @@ export type DecentralandNFT = {
   coords: any[];
 };
 
+export type CryptoVoxelNFT = {
+  id: string;
+  name: string;
+  image: string;
+  coords: number[];
+};
+
 export type Estate = {
   id: string;
   name: string;

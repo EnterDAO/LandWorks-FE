@@ -13,16 +13,18 @@ import {
   PlaceOptions,
   metaverseOptions,
 } from 'constants/modules';
-import useDebounce from '@rooks/use-debounce';
 import BigNumber from 'bignumber.js';
 import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import { Box, Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
-import { getCryptoVoxelsAsset } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import { DecentralandNFT, Estate } from 'modules/interface';
-import { EstateListingCard, LandListingCard } from 'modules/land-works/components/land-works-list-card';
+import { CryptoVoxelNFT, DecentralandNFT, Estate } from 'modules/interface';
+import {
+  EstateListingCard,
+  LandListingCard,
+  VoxelListingCard,
+} from 'modules/land-works/components/land-works-list-card';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
 import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
@@ -35,12 +37,7 @@ import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
-import {
-  PaymentToken,
-  fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
-  fetchAssetIdByTxHash,
-  fetchTokenPayments,
-} from '../../api';
+import { PaymentToken, fetchTokenPayments } from '../../api';
 import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
 import { useCryptoVoxels } from '../../providers/cryptovoxels-provider';
 import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
@@ -93,6 +90,7 @@ const ListNewProperty: React.FC = () => {
   const [assetProperties, setAssetProperties] = useState<DecentralandNFT[]>([]);
   const [assetEstates, setAssetEstates] = useState<Estate[]>([]);
   const [estateGroup, setEstateGroup] = useState<Token[]>([]);
+  const [cryptoVoxelParcels, setCryptoVoxelParcels] = useState<CryptoVoxelNFT[]>([]);
 
   const [showRentPeriodInput, setShowRentPeriodInput] = useState(true);
   const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(true);
@@ -125,6 +123,11 @@ const ListNewProperty: React.FC = () => {
 
   const handlePropertyChange = (selectedLand: DecentralandNFT | Estate) => {
     setSelectedProperty(selectedLand);
+  };
+
+  const handleVoxelPropertyChange = (selectedLand: CryptoVoxelNFT) => {
+    //setSelectedProperty(selectedLand);
+    console.log({ selectedLand });
   };
 
   const handleMinCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -371,20 +374,6 @@ const ListNewProperty: React.FC = () => {
     return allLandsForEstates;
   };
 
-  const getCV = async () => {
-    if (!walletCtx.account) {
-      setTimeout(() => setLoading(false), 1000);
-      return;
-    }
-    try {
-      const cv = await getCryptoVoxelsAsset('2');
-      //const lands = await erc20Contract.getUserData(walletCtx.account ? walletCtx.account : '');
-      //console.log({ cv }, walletCtx.account);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const getUserNfts = async () => {
     if (!walletCtx.account) {
       setTimeout(() => setLoading(false), 1000);
@@ -394,18 +383,21 @@ const ListNewProperty: React.FC = () => {
     try {
       const lands = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
       const estates = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
-      // const cryptoVoxels = await cryptoVoxelsContract?.getUserData(walletCtx.account);
-
-      const cvLands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder('1', walletCtx.account);
+      const cryptoVoxels = await cryptoVoxelsContract?.getUserData(walletCtx.account);
       const landsForEstates = await getLandsForEstates(estates);
       setEstateGroup(landsForEstates);
       setAssetProperties(lands);
       setAssetEstates(estates);
+      if (cryptoVoxels) {
+        setCryptoVoxelParcels(cryptoVoxels);
+      }
     } catch (e) {
       console.log(e);
     }
     setLoading(false);
   };
+
+  console.log({ cryptoVoxelParcels, selectedMetaverse });
 
   const getPaymentTokens = async () => {
     const tokens = await fetchTokenPayments();
@@ -505,7 +497,6 @@ const ListNewProperty: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    getCV();
     getUserNfts();
     getPaymentTokens();
   }, [walletCtx.account]);
@@ -533,6 +524,14 @@ const ListNewProperty: React.FC = () => {
 
   const steps = ['Choose Property', 'Rent Specification'];
 
+  const getPropertyCountForMetaverse = () => {
+    if (selectedMetaverse === 1) {
+      return assetProperties.length + assetEstates.length;
+    } else {
+      return cryptoVoxelParcels.length;
+    }
+  };
+
   return (
     <section className="list-view">
       <Grid container direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
@@ -559,27 +558,45 @@ const ListNewProperty: React.FC = () => {
               </Grid>
             ) : (
               <Grid container flexDirection="row" wrap="wrap" className="properties">
-                {assetProperties.map((land) => (
-                  <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
-                    <LandListingCard
-                      isSelectedProperty={land.name === selectedProperty?.name}
-                      handleClick={handlePropertyChange}
-                      key={land.name}
-                      land={land}
-                    />
-                  </Grid>
-                ))}
-                {assetEstates.map((land) => (
-                  <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
-                    <EstateListingCard
-                      isSelectedProperty={land.name === selectedProperty?.name}
-                      handleClick={handlePropertyChange}
-                      key={land.name}
-                      land={land}
-                      landsContent={estateGroup}
-                    />
-                  </Grid>
-                ))}
+                {selectedMetaverse === 1 && (
+                  <>
+                    {assetProperties.map((land) => (
+                      <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
+                        <LandListingCard
+                          isSelectedProperty={land.name === selectedProperty?.name}
+                          handleClick={handlePropertyChange}
+                          key={land.name}
+                          land={land}
+                        />
+                      </Grid>
+                    ))}
+                    {assetEstates.map((land) => (
+                      <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
+                        <EstateListingCard
+                          isSelectedProperty={land.name === selectedProperty?.name}
+                          handleClick={handlePropertyChange}
+                          key={land.name}
+                          land={land}
+                          landsContent={estateGroup}
+                        />
+                      </Grid>
+                    ))}
+                  </>
+                )}
+                {selectedMetaverse === 2 && (
+                  <>
+                    {cryptoVoxelParcels.map((parcel) => (
+                      <Grid key={parcel.id} item xs={3} margin={'0 0 10px'}>
+                        <VoxelListingCard
+                          isSelectedProperty={parcel.name === selectedProperty?.name}
+                          handleClick={handleVoxelPropertyChange}
+                          key={parcel.name}
+                          land={parcel}
+                        />
+                      </Grid>
+                    ))}
+                  </>
+                )}
               </Grid>
             )}
           </>
@@ -672,7 +689,7 @@ const ListNewProperty: React.FC = () => {
         {activeStep === 0 && (
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
             <Button variant="secondary" btnSize="medium">
-              Found in wallet ({assetProperties.length + assetEstates.length})
+              Found in wallet ({getPropertyCountForMetaverse()})
             </Button>
             <Button
               disabled={selectedProperty === null}
