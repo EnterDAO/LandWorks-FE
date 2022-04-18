@@ -36,6 +36,10 @@ export const landsData = [
     label: 'Decentraland',
     value: 1,
   },
+  {
+    label: 'CryptoVoxels',
+    value: 2,
+  },
 ];
 
 export const currencyData = [

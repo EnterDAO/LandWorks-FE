@@ -11,12 +11,15 @@ import {
   MaxRentPeriodOptions,
   MinRentPeriodOptions,
   PlaceOptions,
+  metaverseOptions,
 } from 'constants/modules';
+import useDebounce from '@rooks/use-debounce';
 import BigNumber from 'bignumber.js';
 import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import { Box, Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
+import { getCryptoVoxelsAsset } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { DecentralandNFT, Estate } from 'modules/interface';
 import { EstateListingCard, LandListingCard } from 'modules/land-works/components/land-works-list-card';
@@ -32,7 +35,12 @@ import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
-import { PaymentToken, fetchAssetIdByTxHash, fetchTokenPayments } from '../../api';
+import {
+  PaymentToken,
+  fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
+  fetchAssetIdByTxHash,
+  fetchTokenPayments,
+} from '../../api';
 import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
 import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
@@ -103,7 +111,7 @@ const ListNewProperty: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
-  //const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
+  const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
   const [activeStep, setActiveStep] = useState(0);
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -363,6 +371,20 @@ const ListNewProperty: React.FC = () => {
     return allLandsForEstates;
   };
 
+  const getCV = async () => {
+    if (!walletCtx.account) {
+      setTimeout(() => setLoading(false), 1000);
+      return;
+    }
+    try {
+      const cv = await getCryptoVoxelsAsset('2');
+      //const lands = await erc20Contract.getUserData(walletCtx.account ? walletCtx.account : '');
+      //console.log({ cv }, walletCtx.account);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const getUserNfts = async () => {
     if (!walletCtx.account) {
       setTimeout(() => setLoading(false), 1000);
@@ -373,6 +395,7 @@ const ListNewProperty: React.FC = () => {
       const lands = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
       const estates = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
 
+      const cvLands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder('1', walletCtx.account);
       const landsForEstates = await getLandsForEstates(estates);
       setEstateGroup(landsForEstates);
       setAssetProperties(lands);
@@ -481,6 +504,7 @@ const ListNewProperty: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
+    getCV();
     getUserNfts();
     getPaymentTokens();
   }, [walletCtx.account]);
@@ -499,10 +523,9 @@ const ListNewProperty: React.FC = () => {
     evaluateSelectedProperty();
   }, [selectedProperty]);
 
-  const onChangePlaceHandler = (value: number) => {
-    // setMetaverse(metaverse);
+  const onChangeMetaverse = (value: number) => {
+    setMetaverse(metaverse);
     setSelectedMetaverse(value);
-    // TODO:: some filtering here
   };
 
   const showPriceInUsd = `$${usdPrice}`;
@@ -524,7 +547,7 @@ const ListNewProperty: React.FC = () => {
               <ControlledSelect
                 width={'12rem'}
                 value={selectedMetaverse}
-                onChange={onChangePlaceHandler}
+                onChange={onChangeMetaverse}
                 options={landsData}
               />
             </Grid>
