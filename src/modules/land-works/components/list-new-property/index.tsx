@@ -683,7 +683,7 @@ const ListNewProperty: React.FC = () => {
                       <SelectedListCard
                         src={getEstateImageUrl(selectedProperty)}
                         name={selectedProperty.name}
-                        coordinatesChild={<SelectedFeatureCoords asset={selectedProperty} />}
+                        coordinatesChild={<SelectedFeatureCoords asset={selectedProperty} estateLands={estateGroup} />}
                       />
                     )}
                   </>

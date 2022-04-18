@@ -1,10 +1,6 @@
 import React from 'react';
 
 import { Box, Grid } from 'design-system';
-import { getDecentralandNftImageUrl, getEstateImageUrl, getLandImageUrl } from 'helpers/helpers';
-import { DecentralandNFT, Estate } from 'modules/interface';
-import { AssetEntity, CryptoVoxelsType } from 'modules/land-works/api';
-import { Token } from 'modules/land-works/contracts/decentraland/land/LANDRegistryContract';
 
 import s from './s.module.scss';
 

@@ -2,11 +2,13 @@ import React from 'react';
 
 import { Grid } from 'design-system';
 import { DecentralandNFT, Estate } from 'modules/interface';
+import { Token } from 'modules/land-works/contracts/decentraland/land/LANDRegistryContract';
 
 import s from './s.module.scss';
 
 interface ISelectedFeatureCoords {
-  asset: DecentralandNFT;
+  asset: DecentralandNFT | Estate;
+  estateLands?: Token[] | undefined;
 }
 
 const LandCoordinates: React.FC<{ x: string; y: string }> = ({ x, y }) => {
@@ -23,26 +25,30 @@ const LandCoordinates: React.FC<{ x: string; y: string }> = ({ x, y }) => {
   );
 };
 
-const EstateCoordinates: React.FC<{ assetCoords: { x: string; y: string }[] }> = ({ assetCoords }) => {
+const EstateCoordinates: React.FC<{ assetCoords: { x: string; y: string }[]; estateLands: Token[] }> = ({
+  assetCoords,
+  estateLands,
+}) => {
   console.log({ assetCoords });
+  const coords = estateLands && estateLands.map((i: Token) => i.coords);
   return (
     <Grid className={s.details}>
-      {assetCoords && assetCoords?.length > 3
-        ? assetCoords?.slice(0, 3).map((c) => {
+      {estateLands && estateLands?.length > 3
+        ? coords?.slice(0, 3).map((co) => {
             return (
               <>
-                <span style={{ marginRight: '8px' }}>
-                  X: {c.x} Y: {c.y}
+                <span key={`${co[0]}-${co[1]}`} style={{ marginRight: '8px' }}>
+                  X: {co[0]} Y: {co[1]}
                   {''}
                 </span>
                 <span>. . .</span>
               </>
             );
           })
-        : assetCoords?.map((c) => {
+        : coords?.map((co) => {
             return (
-              <span style={{ marginRight: '8px' }}>
-                X: {c.x} Y: {c.y}
+              <span key={`${co[0]}-${co[1]}`} style={{ marginRight: '8px' }}>
+                X: {co[0]} Y: {co[1]}
                 {''}
               </span>
             );
@@ -51,21 +57,16 @@ const EstateCoordinates: React.FC<{ assetCoords: { x: string; y: string }[] }> =
   );
 };
 
-const SelectedFeatureCoords: React.FC<ISelectedFeatureCoords> = ({ asset }) => {
-  console.log({ asset });
-  if (asset.coords) {
-    return (
-      <>
-        {asset.isLAND ? (
-          <LandCoordinates x={asset.coords[0]} y={asset.coords[1]} />
-        ) : (
-          <EstateCoordinates assetCoords={asset.coords} />
-        )}
-      </>
-    );
-  } else {
-    return <>No co-ordinates available</>;
+const SelectedFeatureCoords: React.FC<ISelectedFeatureCoords> = ({ asset, estateLands }) => {
+  if (asset.isLAND) {
+    return <LandCoordinates x={asset.coords[0]} y={asset.coords[1]} />;
   }
+
+  if (!asset.isLAND && estateLands && estateLands.length > 0) {
+    return <EstateCoordinates assetCoords={asset.coords} estateLands={estateLands} />;
+  }
+
+  return <>No co-ordinates available</>;
 };
 
 export default SelectedFeatureCoords;
