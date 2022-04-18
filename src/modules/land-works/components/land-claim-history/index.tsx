@@ -26,7 +26,11 @@ import { getAssetName } from '../../../../utils';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
-const ClaimHistoryTable: React.FC = () => {
+interface Props {
+  metaverse: string;
+}
+
+const ClaimHistoryTable: React.FC<Props> = ({ metaverse }) => {
   const wallet = useWallet();
   const [claimHistory, setClaimHistory] = useState([] as ClaimHistory[]);
   const [paginatedClaimHistory, setPaginatedClaimHistory] = useState([] as ClaimHistory[]);
@@ -38,7 +42,7 @@ const ClaimHistoryTable: React.FC = () => {
 
   useSubscription(USER_CLAIM_HISTORY_SUBSCRIPTION, {
     skip: wallet.account === undefined,
-    variables: { id: wallet.account?.toLowerCase() },
+    variables: { id: wallet.account?.toLowerCase(), metaverse: String(metaverse) },
     onSubscriptionData: ({ subscriptionData }) => {
       if (subscriptionData.error) {
         // TODO:
