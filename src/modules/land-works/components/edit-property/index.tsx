@@ -532,7 +532,7 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
             </Grid>
             <Grid item xs={6} rowSpacing={5}>
               <Grid item xs={12}>
-                {selectedProperty && <SelectedListCard asset={selectedProperty} />}
+                {/* {selectedProperty && <SelectedListCard asset={selectedProperty} />} */}
               </Grid>
               <Grid item xs={12}>
                 <ListNewSummary

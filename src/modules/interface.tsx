@@ -17,7 +17,7 @@ export interface AssetOption {
 export type DecentralandNFT = {
   id: string;
   name: string;
-  isLAND: boolean;
+  isLAND?: boolean;
   landIds?: any[];
   coords: any[];
 };

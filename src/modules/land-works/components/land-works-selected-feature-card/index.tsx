@@ -2,14 +2,14 @@ import React from 'react';
 
 import { Box, Grid } from 'design-system';
 import { getDecentralandNftImageUrl, getEstateImageUrl, getLandImageUrl } from 'helpers/helpers';
-import { DecentralandNFT, Estate } from 'modules/interface';
+import { CryptoVoxelNFT, DecentralandNFT, Estate } from 'modules/interface';
 import { AssetEntity } from 'modules/land-works/api';
 import { Token } from 'modules/land-works/contracts/decentraland/land/LANDRegistryContract';
 
 import s from './s.module.scss';
 
 interface ISelectedListCard {
-  land: DecentralandNFT | Estate;
+  land: any;
   asset?: AssetEntity;
   landsContent?: Token[];
 }
@@ -18,7 +18,7 @@ const SelectedListCard: React.FC<ISelectedListCard> = ({ land, landsContent, ass
   const coords = landsContent && landsContent.map((i: Token) => i.coords);
   const assetCoords = asset?.decentralandData?.coordinates;
   const srcForImage = land.isLAND ? getDecentralandNftImageUrl(land) : getEstateImageUrl(land);
-  console.log({ land, srcForImage });
+
   return (
     <Grid className={s.wrapper} item>
       <Grid className={s.card}>
