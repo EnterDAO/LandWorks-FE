@@ -74,7 +74,7 @@ export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
   subscription GetUser($id: String, $metaverse: String, ${paymentToken ? '$paymentToken: String' : ''}) {
     user(id: $id) {
       id
-      consumerTo {
+      consumerTo (where: { metaverse: $metaverse ${paymentToken ? 'paymentToken : $paymentToken' : ''}}) {
         id
         metaverse {
           name
