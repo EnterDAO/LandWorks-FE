@@ -6,6 +6,7 @@ import useDebounce from '@rooks/use-debounce';
 
 import { AtlasTile } from 'components/custom/Atlas/Atlas';
 import { Grid } from 'design-system';
+import { GridIcon, MapIcon } from 'design-system/icons';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
@@ -16,7 +17,7 @@ import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
 import { LocationState } from 'modules/land-works/views/single-land-view';
 
-import { LandsSearchBarWrapperStyled } from './styled';
+import { LandsSearchBarWrapperStyled, StyledButton, StyledRow, StyledText } from './styled';
 
 import {
   filterLandsByAvailability,
@@ -31,9 +32,18 @@ interface Props {
   loading: boolean;
   lands: AssetEntity[];
   setPointMapCentre: (lands: CoordinatesLand[]) => void;
+  setIsHiddenMap: (value: boolean) => void;
+  isHiddenMap: boolean;
 }
 
-const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRentEnd }) => {
+const LandsExploreList: FC<Props> = ({
+  loading,
+  lands,
+  setPointMapCentre,
+  lastRentEnd,
+  setIsHiddenMap,
+  isHiddenMap,
+}) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
   const isGridPerTwo = useMediaQuery('(max-width: 1599px)');
@@ -170,7 +180,31 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
       <LandsSearchBarWrapperStyled>
         <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search by name" />
       </LandsSearchBarWrapperStyled>
-
+      <StyledRow>
+        <Grid>
+          Listed <StyledText>{filteredLands.length}</StyledText> properties
+        </Grid>
+        <Grid container direction={'row'} display="flex" width={'auto'}>
+          <StyledButton
+            sx={{
+              border: !isHiddenMap ? '1px solid white' : '1px solid transparent',
+              boxShadow: !isHiddenMap ? '0 0 3px white' : 'none',
+            }}
+            onClick={() => setIsHiddenMap(false)}
+          >
+            <MapIcon />
+          </StyledButton>
+          <StyledButton
+            sx={{
+              border: isHiddenMap ? '1px solid white' : '1px solid transparent',
+              boxShadow: isHiddenMap ? '0 0 3px white' : 'none',
+            }}
+            onClick={() => setIsHiddenMap(true)}
+          >
+            <GridIcon />
+          </StyledButton>
+        </Grid>
+      </StyledRow>
       <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
         {loading ? (
           [1, 2, 3, 4].map((i) => (
@@ -180,7 +214,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
           ))
         ) : filteredLands.length ? (
           filteredLands.slice(0, slicedLands).map((land) => (
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={6} xxl={4} key={land.id}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 4 : 6} xxl={isHiddenMap ? 2 : 4} key={land.id}>
               <LandWorkCard
                 onMouseOver={onMouseOverCardHandler}
                 onClick={() =>
