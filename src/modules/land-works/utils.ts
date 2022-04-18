@@ -5,7 +5,7 @@ import config from 'config';
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 import { currencyData } from './components/lands-explore-filters/filters-data';
 
-import { getNowTs } from 'utils';
+import { getNowTs, isDecentralandMetaverseRegistry } from 'utils';
 
 import { NotionResult, NotionResultForCard, NotionResultForProfile } from './components/scene-expert-card/types';
 
@@ -66,14 +66,6 @@ export const filterLandsByQuery = (lands: AssetEntity[], query: string): AssetEn
 export const filterLandsByAvailability = (lands: AssetEntity[]): AssetEntity[] => {
   return lands.filter((land) => {
     return land.isAvailable === true;
-  });
-};
-
-export const filterLandsByCurrencyId = (lands: AssetEntity[], currencyId: number): AssetEntity[] => {
-  return lands.filter((land) => {
-    const symbolFromCurrencyValue = find(currencyData, { value: currencyId })?.label;
-
-    return land.paymentToken.symbol === symbolFromCurrencyValue;
   });
 };
 
