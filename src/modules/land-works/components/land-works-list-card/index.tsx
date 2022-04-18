@@ -156,14 +156,10 @@ export const VoxelListingCard: React.FC<ICryptoVoxel> = ({ land, handleClick, is
             <span>{land.name.toLowerCase()}</span>
           </Grid>
           <Grid textAlign="left" className={s.details}>
-            <span>
-              X: {land.coords[0]} Y: {land.coords[1]}
-            </span>
+            <span>{land.formattedCoords}</span>
           </Grid>
           <Grid textAlign="left" className={s.details}>
-            <span>
-              Parcel {land.coords[0]}:{land.coords[1]}
-            </span>
+            <span>Parcel {land.formattedCoords}</span>
           </Grid>
         </Grid>
       </Grid>

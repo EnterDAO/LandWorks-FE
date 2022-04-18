@@ -1,6 +1,7 @@
 import { find } from 'lodash';
 
 import config from 'config';
+import { CryptoVoxelXYcoords } from 'modules/interface';
 
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 import { currencyData } from './components/lands-explore-filters/filters-data';
@@ -47,6 +48,17 @@ export const getAllLandsCoordinates = (data: AssetEntity[]): CoordinatesLand[] =
   });
 
   return coords;
+};
+
+export const getCoordsFromCryptoVoxelImageUrl = (url: string) => {
+  const coordsFromUrl = url.split('?')[1];
+  const x = coordsFromUrl.split('&')[0].replace('x=', '');
+  const y = coordsFromUrl.split('&')[1].replace('y=', '');
+  return { x, y };
+};
+
+export const formatCryptoVoxelsCoords = ({ x, y }: CryptoVoxelXYcoords) => {
+  return `X: ${x} Y: ${y}`;
 };
 
 export const shortenString = (str: string): string => {

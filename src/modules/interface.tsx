@@ -22,11 +22,17 @@ export type DecentralandNFT = {
   coords: any[];
 };
 
+export interface CryptoVoxelXYcoords {
+  x: string;
+  y: string;
+}
+
 export type CryptoVoxelNFT = {
   id: string;
   name: string;
   image: string;
-  coords: number[];
+  coords: CryptoVoxelXYcoords;
+  formattedCoords: string;
 };
 
 export type Estate = {
