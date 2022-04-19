@@ -119,7 +119,7 @@ const MyLendingView: React.FC = () => {
       {!!assets.length && (
         <Row gutter={40} className="claim-history-container">
           <Col span={24} style={{ padding: '0px' }}>
-            <ClaimHistoryTable />
+            <ClaimHistoryTable metaverse="1" />
           </Col>
         </Row>
       )}
