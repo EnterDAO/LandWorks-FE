@@ -7,7 +7,7 @@ import { getEtherscanAddressUrl, shortenAddr } from 'web3/utils';
 import ExternalLink from 'components/custom/external-link';
 import { Button, Input, InputLabel, Modal, Typography } from 'design-system';
 import { EditIcon } from 'design-system/icons';
-import { getAddressFromENS } from 'helpers/helpers';
+import { getAddressFromENS, getENSName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 
@@ -24,12 +24,11 @@ type Iprops = {
   metaverseRegistry?: string;
   rentId: string;
   renter: string;
-  ens?: string | null;
   isEditable: boolean;
 };
 type transactionStatus = 'loading' | 'success' | 'pending';
 
-const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, rentId, renter, isEditable, ens }) => {
+const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, rentId, renter, isEditable }) => {
   const wallet = useWallet();
   const landWorks = useLandworks();
 
@@ -39,15 +38,26 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, re
   const [newOperator, setNewOperator] = useState<string>('');
   const [transactionStatus, setTransactionStatus] = useState<transactionStatus>('pending');
   const [canEditOperator, setCanEditOperator] = useState(false);
+  const [ens, setEns] = useState('');
 
   const shortedOperator = shortenAddr(newOperator || operator);
 
+  useEffect(() => {
+    getENSName(operator).then((result) => {
+      result !== operator ? setEns(result) : null;
+    });
+    return () => {
+      setEns('');
+    };
+  }, []);
+
   const handleSave = async () => {
+    let scopedAddress = newOperator;
     if (landWorksContract) {
       setTransactionStatus('loading');
       try {
-        if (!web3.utils.isAddress(newOperator)) {
-          const address = await getAddressFromENS(newOperator);
+        if (!web3.utils.isAddress(scopedAddress)) {
+          const address = await getAddressFromENS(scopedAddress);
           if (!address) {
             toast.error('The new operator address is invalid.', {
               position: toast.POSITION.TOP_RIGHT,
@@ -59,9 +69,10 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, re
             return;
           }
           setNewOperator(address);
+          scopedAddress = address;
         }
 
-        if (newOperator?.toLowerCase() === operator?.toLowerCase()) {
+        if (scopedAddress?.toLowerCase() === operator?.toLowerCase()) {
           toast.error('New operator is the same as the current one.', {
             position: toast.POSITION.TOP_RIGHT,
             className: 'error-toast',
@@ -74,7 +85,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, re
 
         const rentArray = rentId.split('-');
         if (rentArray.length === 2) {
-          await landWorksContract.updateOperator(assetId, metaverseRegistry || '', rentArray[1], newOperator);
+          await landWorksContract.updateOperator(assetId, metaverseRegistry || '', rentArray[1], scopedAddress);
           showToastNotification(ToastType.Success, 'Operator updated successfully!');
           setTransactionStatus('success');
           setNewOperator('');
@@ -106,6 +117,8 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, re
   };
 
   useEffect(() => {
+    // "0xCF83B1C347C558923860Bd19702D80e86ff81177"
+    // getAddressFromENS('ellis2323.eth').then(console.log);
     // Check if renter is equal to connected wallet address
     if (wallet.account && wallet.account.toLowerCase() === renter.toLowerCase() && isEditable) {
       setCanEditOperator(true);
@@ -146,7 +159,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, re
             <ModalSuccess
               buttonText="close"
               title="Successfully Changed!"
-              description="Nice! You’ve successfully changed operator."
+              description="Nice! You've successfully changed operator."
               buttonEvent={successfully}
             />
           )}

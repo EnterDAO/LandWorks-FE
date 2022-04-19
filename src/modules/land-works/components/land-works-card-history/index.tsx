@@ -120,14 +120,6 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId, 
     }
   }, [wallet.account]);
 
-  const getEns = (operator: string) => {
-    let ens = operator;
-    getENSName(operator).then((result) => {
-      ens = result;
-    });
-    return ens !== operator ? ens : null;
-  };
-
   const isEditableRow = (start: string, end: string) => {
     const isActiveRent = Number(start) <= now && now < Number(end);
     const isUpcomingRent = Number(start) >= now;
@@ -220,7 +212,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId, 
                     <StyledTableCell align="left">
                       <Box display="flex" alignItems="center">
                         <ExternalLink href={getEtherscanAddressUrl(data.renter.id)}>
-                          {getEns(data.renter.id) || shortenAddr(data.renter.id) || data.renter.id}
+                          <OperatorName id={'0xCF83B1C347C558923860Bd19702D80e86ff81177'} />
                         </ExternalLink>
                         {isYou(data.renter.id) && <YourLabel>You</YourLabel>}
                       </Box>
@@ -252,7 +244,6 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId, 
                         assetId={assetId}
                         metaverseRegistry={metaverseRegistry}
                         rentId={data.id}
-                        ens={getEns(data.operator)}
                         renter={data.renter.id}
                         key={uniqueId()}
                         isEditable={isEditableRow(data.start, data.end)}
@@ -278,3 +269,17 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId, 
 };
 
 export default React.memo(SingleViewLandHistory);
+
+const OperatorName: React.FC<{ id: string }> = ({ id }) => {
+  const [ens, setEns] = useState<string>();
+  useEffect(() => {
+    getENSName(id).then((result) => {
+      result !== id ? setEns(result) : null;
+    });
+    return () => {
+      setEns('');
+    };
+  }, []);
+
+  return <span>{ens || shortenAddr(id) || id}</span>;
+};
