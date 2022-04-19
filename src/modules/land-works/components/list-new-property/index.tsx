@@ -18,7 +18,7 @@ import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import { Box, Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
-import { getDecentralandNftImageUrl, getEstateImageUrl, getLandImageUrl } from 'helpers/helpers';
+import { getDecentralandNftImageUrl, getEstateImageUrl } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { CryptoVoxelNFT, DecentralandNFT, Estate } from 'modules/interface';
 import {
@@ -536,8 +536,6 @@ const ListNewProperty: React.FC = () => {
     }
   };
 
-  const selectedCard = selectedMetaverse === 1 ? selectedProperty : selectedVoxel;
-  console.log({ selectedProperty });
   return (
     <section className="list-view">
       <Grid container direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>

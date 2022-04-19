@@ -15,7 +15,7 @@ import {
 import BigNumber from 'bignumber.js';
 
 import { Box, Button, Grid, Modal, Typography } from 'design-system';
-import { getCryptoVoxelsAsset } from 'helpers/helpers';
+import { getDecentralandDataImageUrl, getEstateImageUrl } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
@@ -26,7 +26,7 @@ import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import { useWallet } from '../../../../wallets/wallet';
-import { AssetEntity, CryptoVoxelsType, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset } from '../../api';
+import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
 import EditFormCardSkeleton from '../land-edit-form-loader-card';
 
@@ -77,7 +77,6 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
   const [maxFutureError, setMaxFutureError] = useState('');
 
   const [selectedProperty, setSelectedProperty] = useState(null as AssetEntity | null);
-  const [cvAsset, setCVAsset] = useState(null as AssetEntity | null);
 
   const [showRentPeriodInput, setShowRentPeriodInput] = useState(true);
   const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(true);
@@ -427,8 +426,6 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
       return;
     }
     setAsset(await parseAsset(asset));
-    const cv = await getCryptoVoxelsAsset(tokenId);
-    setCVAsset(asset);
     setLoading(false);
   };
 
@@ -532,7 +529,33 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
             </Grid>
             <Grid item xs={6} rowSpacing={5}>
               <Grid item xs={12}>
-                {/* {selectedProperty && <SelectedListCard asset={selectedProperty} />} */}
+                <>
+                  {selectedProperty && selectedProperty.decentralandData && (
+                    <>
+                      {selectedProperty.decentralandData.isLAND ? (
+                        <SelectedListCard
+                          src={getDecentralandDataImageUrl(selectedProperty.decentralandData)}
+                          name={selectedProperty.name}
+                          coordinatesChild={
+                            // TODO: WHEN APPROVE FUNCTION IS SET UP
+                            // <SelectedFeatureCoords asset={selectedProperty.decentralandData} />
+                            <></>
+                          }
+                        />
+                      ) : (
+                        <SelectedListCard
+                          src={getEstateImageUrl(selectedProperty)}
+                          name={selectedProperty.name}
+                          coordinatesChild={
+                            // TODO: WHEN APPROVE FUNCTION IS SET UP
+                            //<SelectedFeatureCoords asset={selectedProperty} estateLands={estateGroup} />
+                            <></>
+                          }
+                        />
+                      )}
+                    </>
+                  )}
+                </>
               </Grid>
               <Grid item xs={12}>
                 <ListNewSummary

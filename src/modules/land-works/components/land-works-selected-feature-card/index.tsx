@@ -2,22 +2,22 @@ import React from 'react';
 
 import { Box, Grid } from 'design-system';
 import { getDecentralandNftImageUrl, getEstateImageUrl, getLandImageUrl } from 'helpers/helpers';
-import { CryptoVoxelNFT, DecentralandNFT, Estate } from 'modules/interface';
+import { DecentralandNFT, Estate } from 'modules/interface';
 import { AssetEntity } from 'modules/land-works/api';
 import { Token } from 'modules/land-works/contracts/decentraland/land/LANDRegistryContract';
 
 import s from './s.module.scss';
 
 interface ISelectedListCard {
-  land: any;
+  land?: DecentralandNFT | Estate;
   asset?: AssetEntity;
   landsContent?: Token[];
 }
 
 const SelectedListCard: React.FC<ISelectedListCard> = ({ land, landsContent, asset }) => {
   const coords = landsContent && landsContent.map((i: Token) => i.coords);
+
   const assetCoords = asset?.decentralandData?.coordinates;
-  const srcForImage = land.isLAND ? getDecentralandNftImageUrl(land) : getEstateImageUrl(land);
 
   return (
     <Grid className={s.wrapper} item>
@@ -33,8 +33,8 @@ const SelectedListCard: React.FC<ISelectedListCard> = ({ land, landsContent, ass
                   maxHeight: { xs: 233, md: 167 },
                 }}
                 className={s.image}
-                alt="The property from the offer."
-                src={srcForImage}
+                alt="The house from the offer."
+                src={land.isLAND ? getDecentralandNftImageUrl(land) : getEstateImageUrl(land)}
               />
             </Grid>
             <Grid flexDirection="column" alignContent="flex-start" textAlign="left">
@@ -89,7 +89,7 @@ const SelectedListCard: React.FC<ISelectedListCard> = ({ land, landsContent, ass
                   maxHeight: { xs: 233, md: 167 },
                 }}
                 className={s.image}
-                alt="The property from the offer."
+                alt="The house from the offer."
                 src={getLandImageUrl(asset)}
               />
             </Grid>
