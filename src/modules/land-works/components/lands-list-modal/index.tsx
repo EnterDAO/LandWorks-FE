@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { TWITTER_TEXT } from 'constants/modules';
 import { getEtherscanAddressUrl } from 'web3/utils';
 
 import ExternalLink from 'components/custom/external-link';
@@ -47,7 +48,6 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
   showShareButton,
   listedPropertyId,
 }) => {
-  const text = `gm. Just listed my property at @landworksxyz.\n`;
   return (
     <Modal height={600} open={showModal} handleClose={handleClose}>
       <div className="success-wrapper">
@@ -63,7 +63,7 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
         </Button>
         {showShareButton && listedPropertyId.length && (
           <ShareLink
-            href={`https://twitter.com/intent/tweet?text=${text}&url=${window.location.origin}/property/${listedPropertyId}`}
+            href={`https://twitter.com/intent/tweet?text=${TWITTER_TEXT}&url=${window.location.origin}/property/${listedPropertyId}`}
             target="_blank"
           >
             <Icon iconElement={<TwitterIcon />} iconSize="m" />
