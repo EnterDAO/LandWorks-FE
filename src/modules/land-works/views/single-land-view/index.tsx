@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import { TWITTER_TEXT } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
 import { Col, Row } from 'antd';
 
 import { Button, Grid, Icon, Modal, Typography } from 'design-system';
-import { ArrowLeftIcon, ArrowRightIcon, BackIcon } from 'design-system/icons';
+import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import EditPropertyViewNew from 'modules/land-works/components/edit-property';
+import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 
 import ExternalLink from '../../../../components/custom/external-link';
 import { useWallet } from '../../../../wallets/wallet';
@@ -306,6 +308,19 @@ const SingleLandView: React.FC = () => {
         </div>
 
         <div className="right-wrapper">
+          {isOwnerOrConsumer() && (
+            <>
+              <ShareLink
+                className="shareLink"
+                target={'_blank'}
+                href={`https://twitter.com/intent/tweet?text=${TWITTER_TEXT}&url=${window.location.origin}/property/${asset.id}`}
+              >
+                <TwitterIcon height={20} width={30} />
+                share on twitter
+              </ShareLink>
+              <span className="separator" style={{ marginRight: '15px' }} />
+            </>
+          )}
           {shouldShowDelist() &&
             (isOwner() ? (
               <Button
