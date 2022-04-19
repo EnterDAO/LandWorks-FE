@@ -1338,8 +1338,8 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
   metaverse = '1',
   lastRentEnd = '0',
   orderColumn = 'totalRents',
-  orderDirection?: string,
-  paymentTokenId?: string,
+  orderDirection: string,
+  paymentTokenId: string,
   owner?: string
 ): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
@@ -1356,7 +1356,7 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
         assets(
           where: { metaverse: $metaverse, ${lastRentEnd != '0' ? 'lastRentEnd_lt: $lastRentEnd' : ''}, 
           ${owner ? 'owner: $owner' : ''}, status_not: $statusNot, 
-          ${paymentTokenId && paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
+          ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
           orderBy: $orderColumn
           orderDirection: $orderDirection
         ) {
