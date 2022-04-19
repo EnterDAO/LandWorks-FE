@@ -592,7 +592,7 @@ const ListNewProperty: React.FC = () => {
                     {cryptoVoxelParcels.map((parcel) => (
                       <Grid key={parcel.id} item xs={3} margin={'0 0 10px'}>
                         <VoxelListingCard
-                          isSelectedProperty={parcel.name === selectedProperty?.name}
+                          isSelectedProperty={parcel.name === selectedVoxel?.name}
                           handleClick={handleVoxelPropertyChange}
                           key={parcel.name}
                           land={parcel}
