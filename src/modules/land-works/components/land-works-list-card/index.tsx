@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 import { Box, Grid } from 'design-system';
-import { getDecentralandNftImageUrl, getEstateImageUrl } from 'helpers/helpers';
-import { CryptoVoxelNFT, DecentralandNFT, Estate } from 'modules/interface';
+import { getDecentralandNftImageUrl } from 'helpers/helpers';
+import { CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
 
 import s from './s.module.scss';
 

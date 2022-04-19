@@ -26,7 +26,7 @@ import {
 } from 'modules/land-works/components/land-works-list-card';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
-import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card-v2';
+import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
 import { currencyData, landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';

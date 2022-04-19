@@ -19,7 +19,7 @@ import { getDecentralandDataImageUrl, getEstateImageUrl } from 'helpers/helpers'
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
-import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card-v2';
+import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
 import { currencyData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
@@ -30,6 +30,7 @@ import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset }
 import { useLandworks } from '../../providers/landworks-provider';
 import EditFormCardSkeleton from '../land-edit-form-loader-card';
 
+import { formatCryptoVoxelsCoords, getCoordsFromCryptoVoxelImageUrl } from 'modules/land-works/utils';
 import { formatBigNumberInput, getTimeType, secondsToDuration } from '../../../../utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from '../../../../utils/date';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
@@ -442,6 +443,17 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
   const canSave = hasChangesToSave();
 
   const showPriceInUsd = `$${usdPrice}`;
+  const isDecentraland = selectedProperty?.metaverse?.name === 'Decentraland';
+
+  const formattedCoords = () => {
+    if (!isDecentraland) {
+      const coords = getCoordsFromCryptoVoxelImageUrl(selectedProperty?.imageUrl!);
+      const formattedCoords = formatCryptoVoxelsCoords(coords);
+      return formattedCoords;
+    }
+  };
+
+  const estateCoords = selectedProperty?.decentralandData?.coordinates;
 
   return (
     <section className="list-view">
@@ -538,22 +550,32 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
                           name={selectedProperty.name}
                           coordinatesChild={
                             // TODO: WHEN APPROVE FUNCTION IS SET UP
-                            // <SelectedFeatureCoords asset={selectedProperty.decentralandData} />
-                            <></>
+                            //<SelectedFeatureCoords asset={selectedProperty.decentralandData} />
+                            <>
+                              X: {selectedProperty.decentralandData.coordinates[0].x} Y:
+                              {selectedProperty.decentralandData.coordinates[0].y}
+                            </>
                           }
                         />
                       ) : (
                         <SelectedListCard
                           src={getEstateImageUrl(selectedProperty)}
                           name={selectedProperty.name}
-                          coordinatesChild={
-                            // TODO: WHEN APPROVE FUNCTION IS SET UP
-                            //<SelectedFeatureCoords asset={selectedProperty} estateLands={estateGroup} />
-                            <></>
-                          }
+                          coordinatesChild={estateCoords?.map((co) => (
+                            <span key={`${co[0]}-${co[1]}`} style={{ marginRight: '8px' }}>
+                              X: {co.x} Y: {co.y}
+                            </span>
+                          ))}
                         />
                       )}
                     </>
+                  )}
+                  {selectedProperty && !isDecentraland && (
+                    <SelectedListCard
+                      src={selectedProperty.imageUrl}
+                      name={selectedProperty?.name}
+                      coordinatesChild={formattedCoords()}
+                    />
                   )}
                 </>
               </Grid>
