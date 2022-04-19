@@ -15,7 +15,7 @@ interface props {
 }
 
 export const LandClaimCheckBox: React.FC<props> = (props) => {
-  const { name, unclaimedRentFee, paymentToken } = props.data;
+  const { name, unclaimedRentFee, paymentToken, metaverse } = props.data;
 
   const onChecked = (isChecked: boolean) => {
     setChecked(isChecked);
@@ -27,7 +27,7 @@ export const LandClaimCheckBox: React.FC<props> = (props) => {
     <Row className={`claim-input-container ${checked ? 'checked' : ''}`} align={'middle'}>
       <Col span={18}>
         <Checkbox className="land-name-checkbox" onChange={(e) => onChecked(e.target.checked)}>
-          {name}
+          {name} - {metaverse.name}
         </Checkbox>
       </Col>
       <Col span={6} className="price">
