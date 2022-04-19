@@ -29,7 +29,11 @@ import {
 
 import { getAssetName, getNowTs } from '../../../../utils';
 
-const MyPropetiesHistoryTable: React.FC = () => {
+interface Props {
+  metaverse: string;
+}
+
+const MyPropetiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
   const wallet = useWallet();
   const [rents, setRents] = useState([] as RentEntity[]);
   const [totalRents, setTotalRents] = useState(0);
@@ -42,10 +46,10 @@ const MyPropetiesHistoryTable: React.FC = () => {
   const isVisible = !!entry?.isIntersecting;
 
   const fetchRents = async (account: string) => {
-    const rents = await fetchUserRents(account, false);
+    const rents = await fetchUserRents(account, false, metaverse);
 
     setRents(rents.rents || []);
-    setPaginatedRents(rents.rents.slice(0, DEFAULT_SLICED_HISTORY));
+    setPaginatedRents(rents.rents?.slice(0, DEFAULT_SLICED_HISTORY));
 
     setTotalRents(rents.rents.length);
   };
@@ -57,7 +61,7 @@ const MyPropetiesHistoryTable: React.FC = () => {
       setRents([]);
       setTotalRents(0);
     }
-  }, [wallet.account]);
+  }, [wallet.account, metaverse]);
 
   const getEns = (operator: string) => {
     let ens = operator;

@@ -162,10 +162,10 @@ export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
 `;
 
 export const USER_CLAIM_HISTORY_SUBSCRIPTION = gql`
-  subscription GetUserClaimHistory($id: String) {
+  subscription GetUserClaimHistory($id: String, $metaverse: String) {
     user(id: $id) {
       id
-      claimHistory(orderBy: timestamp, orderDirection: desc) {
+      claimHistory(orderBy: timestamp, orderDirection: desc, where: { metaverse: $metaverse }) {
         id
         asset {
           metaverseAssetId
@@ -1005,14 +1005,14 @@ export function fetchUserRentPerAsset(address: string, availableOnly = false, pa
     });
 }
 
-export function fetchUserRents(address: string, availableOnly = false): Promise<any> {
+export function fetchUserRents(address: string, availableOnly = false, metaverse: string): Promise<any> {
   const now = getNowTs();
   return GraphClient.get({
     query: gql`
       query GetUserRents($id: String, $now: BigInt) {
-        rents(orderBy: end, orderDirection: desc, where: {renter: $id, ${
-          availableOnly ? 'start_lte: $now, end_gt: $now' : ''
-        }}) {
+        rents(orderBy: end, orderDirection: desc, where: { metaverse: "${metaverse}",renter: $id, ${
+      availableOnly ? 'start_lte: $now, end_gt: $now' : ''
+    }}) {
           id
           operator
           start

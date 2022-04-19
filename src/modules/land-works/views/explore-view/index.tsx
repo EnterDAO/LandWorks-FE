@@ -63,6 +63,7 @@ const ExploreView: React.FC = () => {
 
   const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
   const [mapExpanded, setMapExpanded] = useState(false);
+  const [mapIsHidden, setMapIsHidden] = useState(false);
 
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
@@ -126,6 +127,7 @@ const ExploreView: React.FC = () => {
 
   const onChangeMetaverse = (index: string) => {
     setMetaverse(index);
+    index !== '1' ? setMapIsHidden(true) : null;
   };
 
   const onChangeFiltersCurrency = async (index: number) => {
@@ -190,6 +192,7 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     getPaymentTokens();
+    String(metaverse) !== '1' ? setMapIsHidden(true) : setMapIsHidden(false);
   }, []);
 
   useEffect(() => {
@@ -226,8 +229,11 @@ const ExploreView: React.FC = () => {
           </div>
 
           <div className="content-container content-container--explore-view">
-            <div className="list-lands-container">
+            <div className={`list-lands-container ${mapIsHidden ? 'fullWidth' : ''}`}>
               <LandsExploreList
+                setIsHiddenMap={setMapIsHidden}
+                isHiddenMap={mapIsHidden}
+                metaverse={metaverse}
                 lastRentEnd={lastRentEnd}
                 loading={loading}
                 lands={lands}
@@ -236,16 +242,18 @@ const ExploreView: React.FC = () => {
               <LayoutFooter isWrapped={false} />
             </div>
 
-            <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
-              <LandsExploreMap
-                positionX={atlasMapX}
-                positionY={atlasMapY}
-                expanded={mapExpanded}
-                onClick={() => setMapExpanded(!mapExpanded)}
-                highlights={coordinatesHighlights}
-                lands={lands}
-              />
-            </div>
+            {!mapIsHidden && (
+              <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
+                <LandsExploreMap
+                  positionX={atlasMapX}
+                  positionY={atlasMapY}
+                  expanded={mapExpanded}
+                  onClick={() => setMapExpanded(!mapExpanded)}
+                  highlights={coordinatesHighlights}
+                  lands={lands}
+                />
+              </div>
+            )}
             <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
               <ListNewProperty />
             </Modal>

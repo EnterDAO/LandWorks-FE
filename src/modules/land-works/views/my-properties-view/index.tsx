@@ -296,8 +296,8 @@ const MyPropertiesView: FC = () => {
             />
           )}
 
-          {tab === MY_PROPERTIES_TAB_STATE_LENT && <ClaimHistoryTable />}
-          {tab === MY_PROPERTIES_TAB_STATE_RENTED && <MyPropetiesHistoryTable />}
+          {tab === MY_PROPERTIES_TAB_STATE_LENT && <ClaimHistoryTable metaverse={metaverse} />}
+          {tab === MY_PROPERTIES_TAB_STATE_RENTED && <MyPropetiesHistoryTable metaverse={metaverse} />}
         </div>
       </TabContext>
     </LandsSearchQueryProvider>
