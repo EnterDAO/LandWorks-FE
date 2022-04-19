@@ -45,7 +45,7 @@ import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from 'utils/date';
 import './index.scss';
 
 const SignTransactionMessage = 'Signing transaction...';
-const MineTransactionMessage = 'Waiting for transaction to be mined...';
+const MineTransactionMessage = 'Listing property...';
 
 const ListNewProperty: React.FC = () => {
   const walletCtx = useWallet();
