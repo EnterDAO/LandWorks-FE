@@ -149,3 +149,5 @@ export const SCENE_EXPERT_TAB_STATE_ALL = 'all';
 export const SCENE_EXPERT_TAB_STATE_INDIVIDUAL = 'Individual';
 
 export const SCENE_EXPERT_TAB_STATE_STUDIO = 'Studio';
+
+export const TWITTER_TEXT = `gm. Just listed my property at @landworksxyz.\n`;
