@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSubscription } from '@apollo/client';
 import { Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
@@ -9,15 +10,16 @@ import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { Text } from 'components/custom/typography';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { LandClaimCheckBox } from 'modules/land-works/components/land-claim-modal-checkbox';
+import { useWallet } from 'wallets/wallet';
 
-import { AssetEntity } from '../../api';
+import { AssetEntity, USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
 
 import './index.scss';
 
 type Props = ModalProps & {
-  rentFees?: AssetEntity[];
   onSubmit: () => void;
+  rentFees?: AssetEntity[];
 };
 
 const MAX_CLAIM_SELECTED_ASSETS = 10;
@@ -26,11 +28,28 @@ export const ClaimModal: React.FC<Props> = (props) => {
   const landWorksCtx = useLandworks();
   const { landWorksContract } = landWorksCtx;
 
-  const { rentFees, onCancel, onSubmit, ...modalProps } = props;
+  const { onCancel, onSubmit, ...modalProps } = props;
 
   const [assets, setAssets] = useState([] as AssetEntity[]);
   const [totalEth, setTotalEth] = useState(BigNumber.ZERO);
   const [totalUsdc, setTotalUsdc] = useState(BigNumber.ZERO);
+  const [user, setUser] = useState<UserEntity>();
+  const wallet = useWallet();
+
+  const { data: userData } = useSubscription(USER_CLAIM_SUBSCRIPTION, {
+    skip: wallet.account === undefined,
+    variables: { id: wallet.account?.toLowerCase() },
+  });
+
+  useEffect(() => {
+    if (userData && userData.user) {
+      parseUser(userData.user).then((result) => {
+        setUser(result);
+      });
+    } else {
+      setUser({} as UserEntity);
+    }
+  }, [userData]);
 
   async function claim() {
     try {
@@ -90,7 +109,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
         Select the properties you want to claim your rent for
       </Text>
       <Row gutter={[10, 10]}>
-        {rentFees?.map((data) => (
+        {user?.unclaimedRentAssets?.map((data) => (
           <Col key={data.id} span={24}>
             <LandClaimCheckBox key={data.id} onSelected={updateAssets} data={data} />
           </Col>

@@ -92,7 +92,6 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
         }}
         onCancel={() => setShowClaimModal(false)}
         visible={showClaimModal}
-        rentFees={user?.unclaimedRentAssets}
       />
     </>
   );

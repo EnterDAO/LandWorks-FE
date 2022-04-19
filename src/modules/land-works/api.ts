@@ -161,6 +161,45 @@ export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
   }
 `;
 
+export const USER_CLAIM_SUBSCRIPTION = gql`
+  subscription GetUser($id: String) {
+    user(id: $id) {
+      id
+      consumerTo {
+        id
+        unclaimedRentFee
+      }
+      assets {
+        id
+        metaverseAssetId
+        metaverse {
+          name
+        }
+        metaverseRegistry {
+          id
+        }
+        unclaimedRentFee
+        decentralandData {
+          id
+          metadata
+          isLAND
+          coordinates {
+            id
+            x
+            y
+          }
+        }
+        paymentToken {
+          id
+          name
+          symbol
+          decimals
+        }
+      }
+    }
+  }
+`;
+
 export const USER_CLAIM_HISTORY_SUBSCRIPTION = gql`
   subscription GetUserClaimHistory($id: String, $metaverse: String) {
     user(id: $id) {
