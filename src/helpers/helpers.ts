@@ -55,6 +55,11 @@ export const getLandImageUrl = (land: AssetEntity | undefined) => {
   }
 };
 
+export const getLANDImageUrl = (x: any, y: any) => {
+  const imageUrl = `${BASE_URL_DECENTRALEND}/parcels/${x}/${y}/map.png`;
+  return imageUrl;
+};
+
 export const getDecentralandNftImageUrl = (land: DecentralandNFT) => {
   const imageUrl = `${BASE_URL_DECENTRALEND}/parcels/${land.coords[0]}/${land.coords[1]}/map.png`;
   return imageUrl;

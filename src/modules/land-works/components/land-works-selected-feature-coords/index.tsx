@@ -2,13 +2,12 @@ import React from 'react';
 
 import { Grid } from 'design-system';
 import { DecentralandNFT, Estate } from 'modules/interface';
-import { Token } from 'modules/land-works/contracts/decentraland/land/LANDRegistryContract';
 
 import s from './s.module.scss';
 
 interface ISelectedFeatureCoords {
   asset: DecentralandNFT | Estate;
-  estateLands?: Token[] | undefined;
+  estateLands?: DecentralandNFT[] | undefined;
 }
 
 const LandCoordinates: React.FC<{ x: string; y: string }> = ({ x, y }) => {
@@ -25,12 +24,12 @@ const LandCoordinates: React.FC<{ x: string; y: string }> = ({ x, y }) => {
   );
 };
 
-const EstateCoordinates: React.FC<{ assetCoords: { x: string; y: string }[]; estateLands: Token[] }> = ({
+const EstateCoordinates: React.FC<{ assetCoords: { x: string; y: string }[]; estateLands: DecentralandNFT[] }> = ({
   assetCoords,
   estateLands,
 }) => {
   console.log({ assetCoords });
-  const coords = estateLands && estateLands.map((i: Token) => i.coords);
+  const coords = estateLands && estateLands.map((i: DecentralandNFT) => i.coords);
   return (
     <Grid className={s.details}>
       {estateLands && estateLands?.length > 3

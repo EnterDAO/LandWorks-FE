@@ -2,17 +2,12 @@ import BigNumber from 'bignumber.js';
 import { AbiItem } from 'web3-utils';
 import { Web3ContractAbiItem } from 'web3/web3Contract';
 
+import { getLANDImageUrl } from '../../../../../helpers/helpers';
+import { DecentralandNFT } from '../../../../interface';
 import ERC721Contract from '../../erc721/ERC721Contract';
 import LANDRegistryABI from './abi.json';
 
 import { buildData } from '../../../../../utils';
-
-export interface Token {
-  id: BigNumber;
-  name: string;
-  coords: string;
-  isLAND: boolean;
-}
 
 export default class LANDRegistryContract extends ERC721Contract {
   constructor(abi: AbiItem[], address: string) {
@@ -38,7 +33,7 @@ export default class LANDRegistryContract extends ERC721Contract {
    * Returns the coordinates and metadata of the token.
    * @param tokenId
    */
-  async getTokenData(tokenId: BigNumber): Promise<Token> {
+  async getTokenData(tokenId: BigNumber): Promise<DecentralandNFT> {
     const data = await this.batch([
       {
         method: 'tokenMetadata', // LAND name
@@ -59,8 +54,10 @@ export default class LANDRegistryContract extends ERC721Contract {
     }
 
     return {
-      id: tokenId,
+      id: tokenId.toString(),
       name: name,
+      image: getLANDImageUrl(data[1][0], data[1][1]),
+      contractAddress: this.address,
       coords: data[1],
       isLAND: true,
     };

@@ -3,15 +3,14 @@ import React, { useState } from 'react';
 import { Box, Grid } from 'design-system';
 import { getDecentralandNftImageUrl, getEstateImageUrl } from 'helpers/helpers';
 import { CryptoVoxelNFT, DecentralandNFT, Estate } from 'modules/interface';
-import { Token } from 'modules/land-works/contracts/decentraland/land/LANDRegistryContract';
 
 import s from './s.module.scss';
 
 interface IEstateCardProps {
-  land: Estate;
-  handleClick: (option: Estate) => void;
+  land: DecentralandNFT;
+  handleClick: (option: DecentralandNFT) => void;
   isSelectedProperty: boolean;
-  landsContent: Token[];
+  landsContent: DecentralandNFT[];
 }
 
 interface ILandCardProps {
@@ -80,7 +79,7 @@ export const EstateListingCard: React.FC<IEstateCardProps> = ({
 }) => {
   const [selected, setSelected] = useState(false);
 
-  const coords = landsContent.map((i: Token) => i.coords);
+  const coords = landsContent.map((i: DecentralandNFT) => i.coords);
 
   return (
     <Grid className={s.wrapper} item>
@@ -102,7 +101,7 @@ export const EstateListingCard: React.FC<IEstateCardProps> = ({
             }}
             className={s.image}
             alt="The property from the offer."
-            src={getEstateImageUrl(land)}
+            src={land.image}
           />
         </Grid>
         <Grid flexDirection="column" alignContent="flex-start" textAlign="left">

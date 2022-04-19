@@ -33,6 +33,7 @@ export default class CryptoVoxelsContract extends ERC721Contract {
       id: tokenId,
       name: metadata.name,
       image: metadata.image,
+      contractAddress: this.address,
       coords,
       formattedCoords,
     };
