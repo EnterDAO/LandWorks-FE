@@ -117,8 +117,6 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, re
   };
 
   useEffect(() => {
-    // "0xCF83B1C347C558923860Bd19702D80e86ff81177"
-    // getAddressFromENS('ellis2323.eth').then(console.log);
     // Check if renter is equal to connected wallet address
     if (wallet.account && wallet.account.toLowerCase() === renter.toLowerCase() && isEditable) {
       setCanEditOperator(true);

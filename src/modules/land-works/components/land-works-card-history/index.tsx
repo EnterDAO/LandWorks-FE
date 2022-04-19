@@ -212,7 +212,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId, 
                     <StyledTableCell align="left">
                       <Box display="flex" alignItems="center">
                         <ExternalLink href={getEtherscanAddressUrl(data.renter.id)}>
-                          <OperatorName id={'0xCF83B1C347C558923860Bd19702D80e86ff81177'} />
+                          <OperatorName id={data.renter.id} />
                         </ExternalLink>
                         {isYou(data.renter.id) && <YourLabel>You</YourLabel>}
                       </Box>
