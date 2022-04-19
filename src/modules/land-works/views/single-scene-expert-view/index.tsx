@@ -71,7 +71,7 @@ const SingleExpertView: FC = () => {
           {selectedExpert && hasPortfolio && (
             <Grid mt="28px" container spacing={2} rowSpacing={4} columnSpacing={4}>
               <Grid item xs={8}>
-                <SceneExpertPortfolio portfolio={selectedExpert?.portfolio} />
+                <SceneExpertPortfolio portfolio={selectedExpert?.portfolio?.filter((p) => p !== undefined)} />
               </Grid>
             </Grid>
           )}
