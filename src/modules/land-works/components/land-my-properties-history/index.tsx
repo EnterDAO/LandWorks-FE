@@ -4,7 +4,6 @@ import { Box } from '@mui/material';
 import { uniqueId } from 'lodash';
 
 import { EmptyIcon } from 'design-system/icons';
-import { getENSName } from 'helpers/helpers';
 import useIntersectionObserver from 'hooks/useElementOnScreen';
 import { RentEntity, fetchUserRents } from 'modules/land-works/api';
 
@@ -62,14 +61,6 @@ const MyPropetiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
       setTotalRents(0);
     }
   }, [wallet.account, metaverse]);
-
-  const getEns = (operator: string) => {
-    let ens = operator;
-    getENSName(operator).then((result) => {
-      ens = result;
-    });
-    return ens !== operator ? ens : null;
-  };
 
   const isEditableRow = (start: string, end: string) => {
     const isActiveRent = Number(start) <= now && now < Number(end);
@@ -174,7 +165,6 @@ const MyPropetiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
                         assetId={data.asset?.id || ''}
                         metaverseRegistry={data.asset?.metaverseRegistry?.id || ''}
                         rentId={data.id}
-                        ens={getEns(data.operator)}
                         renter={data.renter.id}
                         key={uniqueId()}
                         isEditable={isEditableRow(data.start, data.end)}
