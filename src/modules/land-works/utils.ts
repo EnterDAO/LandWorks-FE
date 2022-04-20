@@ -1,12 +1,9 @@
-import { find } from 'lodash';
-
 import config from 'config';
 import { CryptoVoxelXYcoords } from 'modules/interface';
 
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
-import { currencyData } from './components/lands-explore-filters/filters-data';
 
-import { getNowTs, isDecentralandMetaverseRegistry } from 'utils';
+import { getNowTs } from 'utils';
 
 import { NotionResult, NotionResultForCard, NotionResultForProfile } from './components/scene-expert-card/types';
 
@@ -50,14 +47,14 @@ export const getAllLandsCoordinates = (data: AssetEntity[]): CoordinatesLand[] =
   return coords;
 };
 
-export const getCoordsFromCryptoVoxelImageUrl = (url: string) => {
+export const getCoordsFromCryptoVoxelImageUrl = (url: string): CryptoVoxelXYcoords => {
   const coordsFromUrl = url.split('?')[1];
   const x = coordsFromUrl.split('&')[0].replace('x=', '');
   const y = coordsFromUrl.split('&')[1].replace('y=', '');
   return { x, y };
 };
 
-export const formatCryptoVoxelsCoords = ({ x, y }: CryptoVoxelXYcoords) => {
+export const formatCryptoVoxelsCoords = ({ x, y }: CryptoVoxelXYcoords): string => {
   return `X: ${x} Y: ${y}`;
 };
 
@@ -77,7 +74,7 @@ export const filterLandsByQuery = (lands: AssetEntity[], query: string): AssetEn
 
 export const filterLandsByAvailability = (lands: AssetEntity[]): AssetEntity[] => {
   return lands.filter((land) => {
-    return land.isAvailable === true;
+    return land.isAvailable;
   });
 };
 
@@ -87,7 +84,7 @@ export const isNewLandTxInProgress = (lands: AssetEntity[], loadingLands: boolea
   const landExistsInLands = lands.find((l) => l.metaverseAssetId === idOfLandInProgress);
   const shouldDisplayLandCard = !!(landInProgressExists && !landExistsInLands);
   // should lands still be loading, we don't want to assume the land in progress was loaded into
-  // lands, since lands could be a empty array until everything is loaded
+  // lands, since lands could be an empty array until everything is loaded
   if (loadingLands) {
     return false;
   }

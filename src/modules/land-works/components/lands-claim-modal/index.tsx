@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useSubscription } from '@apollo/client';
 import { Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
@@ -10,9 +9,8 @@ import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { Text } from 'components/custom/typography';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { LandClaimCheckBox } from 'modules/land-works/components/land-claim-modal-checkbox';
-import { useWallet } from 'wallets/wallet';
 
-import { AssetEntity, USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from '../../api';
+import { AssetEntity } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
 
 import './index.scss';

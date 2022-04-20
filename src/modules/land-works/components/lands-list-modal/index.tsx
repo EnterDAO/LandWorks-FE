@@ -1,4 +1,5 @@
-import { Link, useHistory } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { TWITTER_TEXT } from 'constants/modules';
 import { getEtherscanAddressUrl } from 'web3/utils';
 
@@ -48,7 +49,6 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
   showShareButton,
   listedPropertyId,
 }) => {
-  const history = useHistory();
   return (
     <Modal height={600} open={showModal} handleClose={handleClose}>
       <div className="success-wrapper">

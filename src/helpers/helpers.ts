@@ -55,7 +55,7 @@ export const getLandImageUrl = (land: AssetEntity | undefined) => {
   }
 };
 
-export const getLANDImageUrl = (x: any, y: any) => {
+export const getLANDImageUrl = (x: number, y: number) => {
   const imageUrl = `${BASE_URL_DECENTRALEND}/parcels/${x}/${y}/map.png`;
   return imageUrl;
 };
