@@ -41,7 +41,7 @@ type Props = ModalProps & {
 };
 
 const SignTransactionMessage = 'Signing transaction...';
-const RentTransactionMessage = 'Renting roperty...';
+const RentTransactionMessage = 'Renting property...';
 
 export const RentModal: React.FC<Props> = (props) => {
   const {
