@@ -5,6 +5,7 @@ import { Box, Button, Grid } from 'design-system';
 
 import landingImage from './assets/scene-expert-landing.png';
 import { TypographyStyled } from './styled';
+
 interface Props {
   navigateToBuilders: () => void;
 }
