@@ -66,6 +66,17 @@ export function formatBigNumberInput(value: BigNumber): string {
   }
 }
 
+export function formatShortDescription(desc: string): string {
+  const limitStringLength = desc.slice(0, 105);
+  const cutOff = limitStringLength.lastIndexOf(' ');
+  const shortenedDescription = limitStringLength.substring(0, cutOff);
+  if (desc.length > 105) {
+    return `${shortenedDescription}...`;
+  } else {
+    return desc;
+  }
+}
+
 export function getFormattedDuration(value?: number, endValue?: number): string | undefined {
   if (value === undefined) {
     return undefined;

@@ -33,8 +33,6 @@ const SceneBuilderView: FC = () => {
     });
   };
 
-  scrollToDiv();
-
   useEffect(() => {
     (async () => {
       const sceneProv = await getSceneProviders();
@@ -63,7 +61,7 @@ const SceneBuilderView: FC = () => {
       className="content-container"
       style={{ transform: 'translate3d(0px, 0px, 0px)', transition: 'all 700ms ease' }}
     >
-      <SceneBuilderHeading />
+      <SceneBuilderHeading navigateToBuilders={() => scrollToDiv()} />
       <TabContext value={tab}>
         <SceneBuilderTabs setTab={setTab} />
         {loading ? (

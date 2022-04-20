@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { TWITTER_TEXT } from 'constants/modules';
 import { getEtherscanAddressUrl } from 'web3/utils';
@@ -56,7 +57,13 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
           Successfully Listed!
         </div>
         <div>Nice! You’ve successfully listed property.</div>
-        <Button variant="gradient" btnSize="medium">
+        <Button
+          variant="gradient"
+          btnSize="medium"
+          onClick={(e) => {
+            window.location.pathname === '/my-properties' ? handleClose() : e.preventDefault;
+          }}
+        >
           <Link className="link-to-properties" to="/my-properties">
             Go to my properties
           </Link>

@@ -1,12 +1,16 @@
-import { FC } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Box, Button, Grid } from 'design-system';
 
 import landingImage from './assets/scene-expert-landing.png';
 import { TypographyStyled } from './styled';
+interface Props {
+  navigateToBuilders: () => void;
+}
 
-const SceneBuilderHeading: FC = () => {
+const SceneBuilderHeading: React.FC<Props> = (props: Props) => {
+  const { navigateToBuilders } = props;
   const history = useHistory();
 
   return (
@@ -17,8 +21,8 @@ const SceneBuilderHeading: FC = () => {
           A place to find builders and professionals in developoing 3D metaverse assets.
         </TypographyStyled>
         <Grid justifyContent="center" display="flex" mt={'30px'} columnGap={3}>
-          <Button variant="secondary" btnSize="medium">
-            Explore Builders
+          <Button variant="secondary" btnSize="medium" onClick={navigateToBuilders}>
+            Explore Experts
           </Button>
           <Button
             variant="gradient"

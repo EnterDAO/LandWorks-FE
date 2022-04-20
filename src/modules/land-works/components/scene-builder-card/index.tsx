@@ -6,6 +6,8 @@ import { LocationIcon } from 'design-system/icons';
 
 import { AvatarContainer, CardContainer, DividerStyled, TypeChip, TypographyStyled } from './styled';
 
+import { formatShortDescription } from '../../../../utils';
+
 import { NotionResultForCard } from './types';
 
 interface ISceneBuilderCard {
@@ -41,7 +43,7 @@ const SceneBuilderCard: FC<ISceneBuilderCard> = ({ builder }) => {
         <TypographyStyled variant="h4">{builder.builderName}</TypographyStyled>
         <TypographyStyled variant="h5">{builder.definition}</TypographyStyled>
         <TypeChip>{builder.builderType}</TypeChip>
-        <TypographyStyled variant="body1">{builder.shortDescription}</TypographyStyled>
+        <TypographyStyled variant="body1">{formatShortDescription(builder.shortDescription)}</TypographyStyled>
         <DividerStyled orientation="horizontal" />
         <Grid display="flex" justifyContent="flex-start" width="100%" container>
           <LocationIcon style={{ marginRight: '13px' }} />

@@ -17,7 +17,7 @@ import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
 import { LocationState } from 'modules/land-works/views/single-land-view';
 
-import { LandsSearchBarWrapperStyled, StyledButton, StyledRow, StyledText } from './styled';
+import { LandsSearchBarWrapperStyled, StyledButton, StyledGrid, StyledRow, StyledText } from './styled';
 
 import {
   filterLandsByAvailability,
@@ -211,14 +211,14 @@ const LandsExploreList: FC<Props> = ({
       </StyledRow>
       <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
         {loading ? (
-          [1, 2, 3, 4].map((i) => (
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} xxl={isHiddenMap ? 3 : 4} key={i}>
+          [1, 2, 3, 4, 5].map((i) => (
+            <StyledGrid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} key={i}>
               <LandCardSkeleton key={i} />
-            </Grid>
+            </StyledGrid>
           ))
         ) : filteredLands.length ? (
           filteredLands.slice(0, slicedLands).map((land) => (
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} xxl={isHiddenMap ? 3 : 4} key={land.id}>
+            <StyledGrid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} key={land.id}>
               <LandWorkCard
                 onMouseOver={onMouseOverCardHandler}
                 onClick={() =>
@@ -229,7 +229,7 @@ const LandsExploreList: FC<Props> = ({
                 }
                 land={land}
               />
-            </Grid>
+            </StyledGrid>
           ))
         ) : (
           <Grid item xs={12}>

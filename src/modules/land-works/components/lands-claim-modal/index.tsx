@@ -16,8 +16,8 @@ import { useLandworks } from '../../providers/landworks-provider';
 import './index.scss';
 
 type Props = ModalProps & {
-  rentFees?: AssetEntity[];
   onSubmit: () => void;
+  rentFees?: AssetEntity[];
 };
 
 const MAX_CLAIM_SELECTED_ASSETS = 10;
@@ -26,7 +26,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
   const landWorksCtx = useLandworks();
   const { landWorksContract } = landWorksCtx;
 
-  const { rentFees, onCancel, onSubmit, ...modalProps } = props;
+  const { onCancel, onSubmit, rentFees, ...modalProps } = props;
 
   const [assets, setAssets] = useState([] as AssetEntity[]);
   const [totalEth, setTotalEth] = useState(BigNumber.ZERO);
