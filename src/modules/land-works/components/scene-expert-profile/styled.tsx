@@ -68,7 +68,6 @@ export const TypeChip = styled(Box)<BoxProps>(() => ({
 
 export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
   display: 'block',
-  width: '100%',
   textAlign: 'left',
   '&.MuiTypography-h5': {
     fontSize: '14px',
