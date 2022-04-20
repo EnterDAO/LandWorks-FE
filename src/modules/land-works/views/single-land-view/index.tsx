@@ -136,7 +136,7 @@ const SingleLandView: React.FC = () => {
         localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
       });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
-      history.push('/explore');
+      if (isNeedRedirect()) history.push('/explore');
     } catch (e) {
       localStorage.removeItem('WITHDRAW_IN_PROGRESS');
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
@@ -180,7 +180,7 @@ const SingleLandView: React.FC = () => {
         ToastType.Success,
         `Property ${isDirectWithdraw() ? 'withdrawn' : 'delisted'} successfully!`
       );
-      if (isDirectWithdraw()) {
+      if (isDirectWithdraw() && isNeedRedirect()) {
         history.push('/explore');
       }
     } catch (e) {
@@ -235,6 +235,7 @@ const SingleLandView: React.FC = () => {
     return isDirectWithdraw() || shouldShowWithdraw();
   };
 
+  const isNeedRedirect = () => window.location.pathname === `/property/${asset.id}`;
   const breadcrumbs = {
     url: location.state?.previousPage?.from || location.state?.from || '/explore',
     title: location.state?.previousPage?.title || location.state?.title || 'Explore',
