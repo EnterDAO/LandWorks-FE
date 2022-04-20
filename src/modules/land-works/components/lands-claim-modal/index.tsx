@@ -28,28 +28,11 @@ export const ClaimModal: React.FC<Props> = (props) => {
   const landWorksCtx = useLandworks();
   const { landWorksContract } = landWorksCtx;
 
-  const { onCancel, onSubmit, ...modalProps } = props;
+  const { onCancel, onSubmit, rentFees, ...modalProps } = props;
 
   const [assets, setAssets] = useState([] as AssetEntity[]);
   const [totalEth, setTotalEth] = useState(BigNumber.ZERO);
   const [totalUsdc, setTotalUsdc] = useState(BigNumber.ZERO);
-  const [user, setUser] = useState<UserEntity>();
-  const wallet = useWallet();
-
-  const { data: userData } = useSubscription(USER_CLAIM_SUBSCRIPTION, {
-    skip: wallet.account === undefined,
-    variables: { id: wallet.account?.toLowerCase() },
-  });
-
-  useEffect(() => {
-    if (userData && userData.user) {
-      parseUser(userData.user).then((result) => {
-        setUser(result);
-      });
-    } else {
-      setUser({} as UserEntity);
-    }
-  }, [userData]);
 
   async function claim() {
     try {
@@ -109,7 +92,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
         Select the properties you want to claim your rent for
       </Text>
       <Row gutter={[10, 10]}>
-        {user?.unclaimedRentAssets?.map((data) => (
+        {rentFees?.map((data) => (
           <Col key={data.id} span={24}>
             <LandClaimCheckBox key={data.id} onSelected={updateAssets} data={data} />
           </Col>
