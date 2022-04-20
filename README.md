@@ -2,11 +2,42 @@
 
 Landworks is an innovative Metaverse land / Renting marketplace for the crypto metaverse. It includes land providers like Decentraland and Cryptovoxels.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and customised as needed.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and customised as needed. Check Architecture below for more details.
 
 ## Architecture
 
-Architecture. WP
+The Single Page Application has a common React boilerplate structure but with a more structured modules and dependencies organisation of folders structure. The React and Typescript code is present inside the `./src` folder. Key folders under, are:
+
+```shell
+$ ls src/
+desygn-system/
+modules/
+styles/
+```
+
+Under `./src/modules/` we have a name folder for the specific module and an organitation os subfolders like below:
+
+```shell
+$ ls src/modules/land-works
+components/
+contracts/
+models/
+providers/
+views/
+```
+
+Folder `views/` will contain respective folder with a React index.tsx as view and route of the application. Check current file `./src/modules/land-works/views/single-land-view/index.tsx` as example.
+
+### Styling
+
+Styling has a multiple layers from different frameworks. It starts with the `./src/styles` as first layer. Indeed the `./src/styles/index.scss` contains all CSS variables (ex. var(--theme-card-color) ) used all around our codebase. Including in `styled-components`, that is also the designated best way to style a React component.
+
+Examples of `styled-component` approach, here:
+`./src/modules/land-works/views/scene-expert-form-view/styled.ts`
+
+### Main styling framework
+
+At folder `./src/design-system` we have our main design library shared with Metaportal. In our latest code and how we approach the creation of components, we usually start a new component under our dedicated module folder or `./src/components` with relative component unstyled from the `design-system` based on MUI framework.
 
 ## Setup
 
