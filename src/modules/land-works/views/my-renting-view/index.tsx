@@ -136,7 +136,7 @@ const MyRentingView: React.FC = () => {
           </Col>
         )}
       </Row>
-      <MyPropetiesHistoryTable />
+      <MyPropetiesHistoryTable metaverse="1" />
     </div>
   );
 };

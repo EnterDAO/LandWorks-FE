@@ -55,10 +55,20 @@ const LandsMyPropertiesSubheader: FC<Props> = ({
         <Grid item xs={12} lg={6} sx={{ display: 'flex', alignItems: 'center' }}>
           <Grid container spacing={2} sx={{ justifyContent: 'flex-end' }}>
             <Grid item xs={6} lg={4}>
-              <ControlledSelect value={selectedMetaverse} onChange={onChangeMetaverseHandler} options={metaverses} />
+              <ControlledSelect
+                value={selectedMetaverse}
+                onChange={onChangeMetaverseHandler}
+                width={'12rem'}
+                options={metaverses}
+              />
             </Grid>
             <Grid item xs={6} md={6} lg={4}>
-              <ControlledSelect value={selectedCurrency} onChange={onChangeCurrencyHandler} options={currencyData} />
+              <ControlledSelect
+                value={selectedCurrency}
+                onChange={onChangeCurrencyHandler}
+                width={'12rem'}
+                options={currencyData}
+              />
             </Grid>
           </Grid>
         </Grid>

@@ -14,7 +14,7 @@ interface ISceneExpertProfile {
 
 const SceneExpertProfile: FC<ISceneExpertProfile> = ({ builder }) => {
   return (
-    <CardContainer className="scene-expert-card" style={{ height: '578px' }}>
+    <CardContainer className="scene-expert-card" style={{ minHeight: '578px' }}>
       <Grid height={185} width="100%" borderRadius="20px" overflow="hidden">
         <Box
           component="img"
@@ -47,7 +47,7 @@ const SceneExpertProfile: FC<ISceneExpertProfile> = ({ builder }) => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Grid display="flex" alignItems="center">
+          <Grid display="flex" alignItems="center" gap={'10px'}>
             <TypographyStyled variant="h3">{builder?.builderName}</TypographyStyled>
             <TypeChip>{builder?.builderType}</TypeChip>
           </Grid>

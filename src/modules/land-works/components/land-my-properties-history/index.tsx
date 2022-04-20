@@ -4,7 +4,6 @@ import { Box } from '@mui/material';
 import { uniqueId } from 'lodash';
 
 import { EmptyIcon } from 'design-system/icons';
-import { getENSName } from 'helpers/helpers';
 import useIntersectionObserver from 'hooks/useElementOnScreen';
 import { RentEntity, fetchUserRents } from 'modules/land-works/api';
 
@@ -29,7 +28,11 @@ import {
 
 import { getAssetName, getNowTs } from '../../../../utils';
 
-const MyPropetiesHistoryTable: React.FC = () => {
+interface Props {
+  metaverse: string;
+}
+
+const MyPropetiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
   const wallet = useWallet();
   const [rents, setRents] = useState([] as RentEntity[]);
   const [totalRents, setTotalRents] = useState(0);
@@ -42,10 +45,10 @@ const MyPropetiesHistoryTable: React.FC = () => {
   const isVisible = !!entry?.isIntersecting;
 
   const fetchRents = async (account: string) => {
-    const rents = await fetchUserRents(account, false);
+    const rents = await fetchUserRents(account, false, metaverse);
 
     setRents(rents.rents || []);
-    setPaginatedRents(rents.rents.slice(0, DEFAULT_SLICED_HISTORY));
+    setPaginatedRents(rents.rents?.slice(0, DEFAULT_SLICED_HISTORY));
 
     setTotalRents(rents.rents.length);
   };
@@ -57,15 +60,7 @@ const MyPropetiesHistoryTable: React.FC = () => {
       setRents([]);
       setTotalRents(0);
     }
-  }, [wallet.account]);
-
-  const getEns = (operator: string) => {
-    let ens = operator;
-    getENSName(operator).then((result) => {
-      ens = result;
-    });
-    return ens !== operator ? ens : null;
-  };
+  }, [wallet.account, metaverse]);
 
   const isEditableRow = (start: string, end: string) => {
     const isActiveRent = Number(start) <= now && now < Number(end);
@@ -170,7 +165,6 @@ const MyPropetiesHistoryTable: React.FC = () => {
                         assetId={data.asset?.id || ''}
                         metaverseRegistry={data.asset?.metaverseRegistry?.id || ''}
                         rentId={data.id}
-                        ens={getEns(data.operator)}
                         renter={data.renter.id}
                         key={uniqueId()}
                         isEditable={isEditableRow(data.start, data.end)}

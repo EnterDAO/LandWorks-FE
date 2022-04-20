@@ -94,7 +94,7 @@ const LandWorksFilters: FC<Props> = ({
           </Box>
           <Box className={styles.box}>
             <ControlledSelect
-              width={'10rem'}
+              width={'12rem'}
               value={selectedCurrency}
               onChange={onChangeCurrencyHandler}
               options={currencyData}
@@ -117,7 +117,7 @@ const LandWorksFilters: FC<Props> = ({
             </Box>
           </Box>
           <ControlledSelect
-            width={'13rem'}
+            width={'12rem'}
             value={selectedOrder}
             onChange={onChangeSortDirectionHandler}
             options={sortData}
