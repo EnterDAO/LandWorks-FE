@@ -7,7 +7,7 @@ import './index.scss';
 
 interface ModalProps {
   href: string;
-  text: string
+  text: string;
 }
 
 export const ModalLoader: React.FC<ModalProps> = ({ href, text }) => {
