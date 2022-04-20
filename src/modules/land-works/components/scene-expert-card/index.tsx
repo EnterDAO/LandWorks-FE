@@ -6,6 +6,8 @@ import { LocationIcon } from 'design-system/icons';
 
 import { AvatarContainer, CardContainer, DividerStyled, TypeChip, TypographyStyled } from './styled';
 
+import { formatShortDescription } from '../../../../utils';
+
 import { NotionResultForCard } from './types';
 
 interface ISceneExpertCard {
@@ -13,17 +15,6 @@ interface ISceneExpertCard {
 }
 
 const SceneExpertCard: FC<ISceneExpertCard> = ({ builder }) => {
-  const formatShortDescription = (desc: string) => {
-    const limitStringLength = builder.shortDescription.slice(0, 105);
-    const cutOff = limitStringLength.lastIndexOf(' ');
-    const shortenedDescription = limitStringLength.substring(0, cutOff);
-    if (desc.length > 105) {
-      return `${shortenedDescription}...`;
-    } else {
-      return builder.shortDescription;
-    }
-  };
-
   return (
     <Link to={`/scene-expert/${builder.builderName}`}>
       <CardContainer className="scene-expert-card">
