@@ -4,11 +4,11 @@ import { Box, Grid, Modal } from 'design-system';
 
 import { StyledImageContainer, TypographyStyled } from '../styled';
 
-interface ISceneExpertPortfolio {
+interface ISceneBuilderPortfolio {
   portfolio: string[];
 }
 
-const SceneExpertPortfolio: FC<ISceneExpertPortfolio> = ({ portfolio }) => {
+const SceneBuilderPortfolio: FC<ISceneBuilderPortfolio> = ({ portfolio }) => {
   const [imageModal, setImageModal] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
 
@@ -79,4 +79,4 @@ const SceneExpertPortfolio: FC<ISceneExpertPortfolio> = ({ portfolio }) => {
   );
 };
 
-export default SceneExpertPortfolio;
+export default SceneBuilderPortfolio;

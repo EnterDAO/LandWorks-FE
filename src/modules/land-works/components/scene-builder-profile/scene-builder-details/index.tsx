@@ -3,16 +3,16 @@ import { FC, useState } from 'react';
 import { Button, Grid } from 'design-system';
 import { AlertIcon, LanguagesIcon, LocationIcon, TagIcon } from 'design-system/icons';
 
-import ExpertContactModal from '../../scene-expert-contact-modal';
+import BuilderContactModal from '../../scene-builder-contact-modal';
 import { BlueBoxContainer, CardContainer, DividerStyled, StyledBox, TypographyStyled } from '../styled';
 
-import { NotionResultForProfile } from '../../scene-expert-card/types';
+import { NotionResultForProfile } from '../../scene-builder-card/types';
 
-interface ISceneExpertDetails {
+interface ISceneBuilderDetails {
   builder: NotionResultForProfile;
 }
 
-const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
+const SceneBuilderDetails: FC<ISceneBuilderDetails> = ({ builder }) => {
   const [showContactModal, setShowContactModal] = useState(false);
 
   const iconStyle = {
@@ -22,9 +22,9 @@ const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
   };
 
   return (
-    <CardContainer className="scene-expert-card" style={{ padding: '20px 30px', height: '578px' }}>
+    <CardContainer className="scene-builder-card" style={{ padding: '20px 30px', height: '578px' }}>
       <TypographyStyled variant="h4" style={{ textTransform: 'uppercase' }}>
-        Expert Details & Services
+        Builder Details & Services
       </TypographyStyled>
       <StyledBox>
         <LocationIcon style={iconStyle} />
@@ -42,7 +42,7 @@ const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
         <AlertIcon style={{ width: '20px', height: '20px' }} />
         <Grid item width="90%" textAlign="left">
           <TypographyStyled variant="h4">Good to know</TypographyStyled>
-          For more information send a message to the expert. Some details here might be missing.
+          For more information send a message to the builder. Some details here might be missing.
         </Grid>
       </BlueBoxContainer>
       <DividerStyled sx={{ borderBottomWidth: 2 }} orientation="horizontal" />
@@ -56,7 +56,7 @@ const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
           Send a message
         </Button>
       </Grid>
-      <ExpertContactModal
+      <BuilderContactModal
         open={showContactModal}
         handleClose={() => setShowContactModal(false)}
         email={builder.email}
@@ -67,4 +67,4 @@ const SceneExpertDetails: FC<ISceneExpertDetails> = ({ builder }) => {
   );
 };
 
-export default SceneExpertDetails;
+export default SceneBuilderDetails;

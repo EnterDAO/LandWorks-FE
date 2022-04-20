@@ -8,7 +8,7 @@ import { currencyData } from './components/lands-explore-filters/filters-data';
 
 import { getNowTs, isDecentralandMetaverseRegistry } from 'utils';
 
-import { NotionResult, NotionResultForCard, NotionResultForProfile } from './components/scene-expert-card/types';
+import { NotionResult, NotionResultForCard, NotionResultForProfile } from './components/scene-builder-card/types';
 
 export const calculateNeighbours = (coordinatesList: CoordinatesLand[]): string[] => {
   let neighbours = [] as string[];

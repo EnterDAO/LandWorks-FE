@@ -37,9 +37,9 @@ const LandsNav: React.FC = () => {
       <NavLink
         className="tab"
         activeClassName="selected"
-        to={{ pathname: '/scene-expert', state: { tab: location.state?.tab } }}
+        to={{ pathname: '/scene-builder', state: { tab: location.state?.tab } }}
       >
-        <div className="nav-content">Scene Expert</div>
+        <div className="nav-content">Scene Builder</div>
         <div className="active-tab"></div>
       </NavLink>
     </div>
