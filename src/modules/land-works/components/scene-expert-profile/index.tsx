@@ -52,24 +52,30 @@ const SceneExpertProfile: FC<ISceneExpertProfile> = ({ builder }) => {
             <TypeChip>{builder?.builderType}</TypeChip>
           </Grid>
           <Grid>
-            <ExternalLink href={builder?.twitter}>
-              <Icon name="twitter" width="20" height="20" style={{ color: 'white', marginLeft: '20px' }} />
-            </ExternalLink>
-            <ExternalLink href={builder?.discord}>
-              <Icon name="discord" width="20" height="20" style={{ color: 'white', marginLeft: '20px' }} />
-            </ExternalLink>
+            {builder?.twitter && (
+              <ExternalLink href={builder?.twitter}>
+                <Icon name="twitter" width="20" height="20" style={{ color: 'white', marginLeft: '20px' }} />
+              </ExternalLink>
+            )}
+            {builder?.discord && (
+              <ExternalLink href={builder?.discord}>
+                <Icon name="discord" width="20" height="20" style={{ color: 'white', marginLeft: '20px' }} />
+              </ExternalLink>
+            )}
           </Grid>
         </Grid>
         <TypographyStyled variant="h5">{builder?.definition}</TypographyStyled>
         <Grid item display="flex" textAlign="left">
           {builder?.longDescription}
         </Grid>
-        <Grid display="flex" flexDirection="column" textAlign="left" margin="20px 0 6px" width="300px">
-          <TypographyStyled variant="h4" style={{ textTransform: 'uppercase' }}>
-            My Website
-          </TypographyStyled>
-          <a href={builder?.website}>{builder?.website}</a>
-        </Grid>
+        {builder?.website && (
+          <Grid display="flex" flexDirection="column" textAlign="left" margin="20px 0 6px" width="300px">
+            <TypographyStyled variant="h4" style={{ textTransform: 'uppercase' }}>
+              My Website
+            </TypographyStyled>
+            <a href={builder?.website}>{builder?.website}</a>
+          </Grid>
+        )}
       </Grid>
     </CardContainer>
   );
