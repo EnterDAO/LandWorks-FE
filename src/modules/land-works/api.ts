@@ -167,7 +167,16 @@ export const USER_CLAIM_SUBSCRIPTION = gql`
       id
       consumerTo {
         id
+        metaverseRegistry {
+          id
+        }
         unclaimedRentFee
+        paymentToken {
+          id
+          name
+          symbol
+          decimals
+        }
       }
       assets {
         id
