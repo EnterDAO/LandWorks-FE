@@ -211,10 +211,10 @@ const LandsExploreList: FC<Props> = ({
       </StyledRow>
       <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
         {loading ? (
-          [1, 2, 3, 4].map((i) => (
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} key={i}>
+          [1, 2, 3, 4, 5].map((i) => (
+            <StyledGrid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} key={i}>
               <LandCardSkeleton key={i} />
-            </Grid>
+            </StyledGrid>
           ))
         ) : filteredLands.length ? (
           filteredLands.slice(0, slicedLands).map((land) => (
