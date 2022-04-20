@@ -167,6 +167,10 @@ export const USER_CLAIM_SUBSCRIPTION = gql`
       id
       consumerTo {
         id
+        metaverseAssetId
+        metaverse {
+          name
+        }
         metaverseRegistry {
           id
         }
@@ -176,6 +180,16 @@ export const USER_CLAIM_SUBSCRIPTION = gql`
           name
           symbol
           decimals
+        }
+        decentralandData {
+          id
+          metadata
+          isLAND
+          coordinates {
+            id
+            x
+            y
+          }
         }
       }
       assets {
