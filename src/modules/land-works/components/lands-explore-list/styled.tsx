@@ -1,3 +1,4 @@
+import { Grid } from '@mui/material';
 import { styled } from '@mui/system';
 
 export const LandsSearchBarWrapperStyled = styled('div')(() => ({
@@ -43,4 +44,12 @@ export const StyledRow = styled('div')(() => ({
 
 export const StyledText = styled('span')(() => ({
   color: 'white',
+}));
+
+export const StyledGrid = styled(Grid)(() => ({
+  '&.MuiGrid-grid-xl-3': {
+    ['@media (min-aspect-ratio: 16/9)']: {
+      maxWidth: '20%',
+    },
+  },
 }));

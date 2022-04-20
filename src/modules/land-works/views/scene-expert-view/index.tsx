@@ -33,8 +33,6 @@ const SceneExpertView: FC = () => {
     });
   };
 
-  scrollToDiv();
-
   useEffect(() => {
     (async () => {
       const sceneProv = await getSceneProviders();
@@ -63,7 +61,7 @@ const SceneExpertView: FC = () => {
       className="content-container"
       style={{ transform: 'translate3d(0px, 0px, 0px)', transition: 'all 700ms ease' }}
     >
-      <SceneExpertHeading />
+      <SceneExpertHeading navigateToBuilders={() => scrollToDiv()} />
       <TabContext value={tab}>
         <SceneExpertTabs setTab={setTab} />
         {loading ? (

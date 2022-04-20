@@ -6,7 +6,12 @@ import { Box, Button, Grid } from 'design-system';
 import landingImage from './assets/scene-expert-landing.png';
 import { TypographyStyled } from './styled';
 
-const SceneExpertHeading: FC = () => {
+interface Props {
+  navigateToBuilders: () => void;
+}
+
+const SceneExpertHeading: React.FC<Props> = (props: Props) => {
+  const { navigateToBuilders } = props;
   const history = useHistory();
 
   return (
@@ -17,7 +22,7 @@ const SceneExpertHeading: FC = () => {
           A place to find experts and professionals in developoing 3D metaverse assets.
         </TypographyStyled>
         <Grid justifyContent="center" display="flex" mt={'30px'} columnGap={3}>
-          <Button variant="secondary" btnSize="medium">
+          <Button variant="secondary" btnSize="medium" onClick={navigateToBuilders}>
             Explore Experts
           </Button>
           <Button
