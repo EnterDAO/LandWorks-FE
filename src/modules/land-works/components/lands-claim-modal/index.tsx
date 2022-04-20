@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSubscription } from '@apollo/client';
 import { Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
@@ -9,15 +10,16 @@ import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import { Text } from 'components/custom/typography';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { LandClaimCheckBox } from 'modules/land-works/components/land-claim-modal-checkbox';
+import { useWallet } from 'wallets/wallet';
 
-import { AssetEntity } from '../../api';
+import { AssetEntity, USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
 
 import './index.scss';
 
 type Props = ModalProps & {
-  rentFees?: AssetEntity[];
   onSubmit: () => void;
+  rentFees?: AssetEntity[];
 };
 
 const MAX_CLAIM_SELECTED_ASSETS = 10;
@@ -26,7 +28,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
   const landWorksCtx = useLandworks();
   const { landWorksContract } = landWorksCtx;
 
-  const { rentFees, onCancel, onSubmit, ...modalProps } = props;
+  const { onCancel, onSubmit, rentFees, ...modalProps } = props;
 
   const [assets, setAssets] = useState([] as AssetEntity[]);
   const [totalEth, setTotalEth] = useState(BigNumber.ZERO);

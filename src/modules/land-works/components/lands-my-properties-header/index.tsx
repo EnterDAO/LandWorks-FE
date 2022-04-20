@@ -5,9 +5,11 @@ import {
   MY_PROPERTIES_TAB_STATE_LENT,
   MY_PROPERTIES_TAB_STATE_RENTED,
 } from 'constants/modules';
+import { useSubscription } from '@apollo/client';
 
 import { Box } from 'design-system';
-import { UserEntity } from 'modules/land-works/api';
+import { USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
+import { useWallet } from 'wallets/wallet';
 
 import LandsBannerClaimRents from '../lands-banner-claim-rents';
 import { ClaimModal } from '../lands-claim-modal';
@@ -30,6 +32,23 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
     history.push({ state: { tab: newValue } });
     setTab(newValue);
   };
+  const [claimData, setClaimData] = useState<UserEntity>();
+  const wallet = useWallet();
+
+  const { data: userClaimData } = useSubscription(USER_CLAIM_SUBSCRIPTION, {
+    skip: wallet.account === undefined,
+    variables: { id: wallet.account?.toLowerCase() },
+  });
+
+  useEffect(() => {
+    if (userClaimData && userClaimData.user) {
+      parseUser(userClaimData.user).then((result) => {
+        setClaimData(result);
+      });
+    } else {
+      setClaimData({} as UserEntity);
+    }
+  }, [userClaimData]);
 
   useEffect(() => setClaimButtonDisabled(false), [user]);
 
@@ -75,7 +94,7 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
           </TabListStyled>
         </Box>
 
-        {user?.hasUnclaimedRent && (
+        {claimData?.hasUnclaimedRent && (
           <Box style={{ marginLeft: 'auto' }}>
             <LandsBannerClaimRents
               onButtonClick={() => setShowClaimModal(true)}
@@ -92,7 +111,7 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
         }}
         onCancel={() => setShowClaimModal(false)}
         visible={showClaimModal}
-        rentFees={user?.unclaimedRentAssets}
+        rentFees={claimData?.unclaimedRentAssets}
       />
     </>
   );
