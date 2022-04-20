@@ -6,11 +6,14 @@ import {
   MY_PROPERTIES_TAB_STATE_RENTED,
 } from 'constants/modules';
 
-import { Box } from 'design-system';
+import { Box, Button, Modal } from 'design-system';
 import { UserEntity } from 'modules/land-works/api';
+import { useWallet } from 'wallets/wallet';
 
+import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
 import LandsBannerClaimRents from '../lands-banner-claim-rents';
 import { ClaimModal } from '../lands-claim-modal';
+import ListNewProperty from '../list-new-property';
 import { RootStyled, TabListStyled, TabStyled, TypographyStyled } from './styled';
 
 interface Props {
@@ -22,8 +25,10 @@ interface Props {
 }
 
 const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, setTab, user }) => {
+  const wallet = useWallet();
   const history = useHistory();
   const [showClaimModal, setShowClaimModal] = useState(false);
+  const [showListNewModal, setShowListNewModal] = useState(false);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -32,9 +37,18 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
   };
 
   useEffect(() => setClaimButtonDisabled(false), [user]);
+  const hasMetamaskConnected = wallet.isActive && wallet.connector?.id === 'metamask';
 
   return (
     <>
+      {user?.hasUnclaimedRent && (
+        <Box>
+          <LandsBannerClaimRents
+            onButtonClick={() => setShowClaimModal(true)}
+            isClaimButtonDisabled={claimButtonDisabled}
+          />
+        </Box>
+      )}
       <RootStyled>
         <Box>
           <TypographyStyled variant="h1">My Properties</TypographyStyled>
@@ -74,16 +88,22 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
             />
           </TabListStyled>
         </Box>
-
-        {user?.hasUnclaimedRent && (
-          <Box style={{ marginLeft: 'auto' }}>
-            <LandsBannerClaimRents
-              onButtonClick={() => setShowClaimModal(true)}
-              isClaimButtonDisabled={claimButtonDisabled}
-            />
-          </Box>
+        {hasMetamaskConnected && (
+          <Button
+            btnSize="medium"
+            variant="gradient"
+            sx={{ marginLeft: 'auto', alignItems: 'center' }}
+            onClick={() => setShowListNewModal(true)}
+          >
+            <AddIcon style={{ marginRight: '10px' }} />
+            List New Property
+          </Button>
         )}
       </RootStyled>
+
+      <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
+        <ListNewProperty />
+      </Modal>
 
       <ClaimModal
         onSubmit={() => {
