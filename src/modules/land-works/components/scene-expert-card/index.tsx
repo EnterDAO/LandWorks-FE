@@ -13,6 +13,17 @@ interface ISceneExpertCard {
 }
 
 const SceneExpertCard: FC<ISceneExpertCard> = ({ builder }) => {
+  const formatShortDescription = (desc: string) => {
+    const limitStringLength = builder.shortDescription.slice(0, 105);
+    const cutOff = limitStringLength.lastIndexOf(' ');
+    const shortenedDescription = limitStringLength.substring(0, cutOff);
+    if (desc.length > 105) {
+      return `${shortenedDescription}...`;
+    } else {
+      return builder.shortDescription;
+    }
+  };
+
   return (
     <Link to={`/scene-expert/${builder.builderName}`}>
       <CardContainer className="scene-expert-card">
@@ -41,7 +52,7 @@ const SceneExpertCard: FC<ISceneExpertCard> = ({ builder }) => {
         <TypographyStyled variant="h4">{builder.builderName}</TypographyStyled>
         <TypographyStyled variant="h5">{builder.definition}</TypographyStyled>
         <TypeChip>{builder.builderType}</TypeChip>
-        <TypographyStyled variant="body1">{builder.shortDescription}</TypographyStyled>
+        <TypographyStyled variant="body1">{formatShortDescription(builder.shortDescription)}</TypographyStyled>
         <DividerStyled orientation="horizontal" />
         <Grid display="flex" justifyContent="flex-start" width="100%" container>
           <LocationIcon style={{ marginRight: '13px' }} />
