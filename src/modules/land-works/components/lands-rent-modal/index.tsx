@@ -40,6 +40,9 @@ type Props = ModalProps & {
   onCancel: () => void;
 };
 
+const SignTransactionMessage = 'Signing transaction...';
+const RentTransactionMessage = 'Renting roperty...';
+
 export const RentModal: React.FC<Props> = (props) => {
   const {
     availability,
@@ -67,6 +70,7 @@ export const RentModal: React.FC<Props> = (props) => {
   const { landWorksContract } = landworks;
   const { erc20Contract } = erc20;
 
+  const [modalText, setModalText] = useState<string>(SignTransactionMessage);
   const [editedValue, setEditedValue] = useState<string>(wallet.account || '');
   const [period, setPeriod] = useState(0);
   const [endDate, setEndDate] = useState<string>();
@@ -190,7 +194,10 @@ export const RentModal: React.FC<Props> = (props) => {
           maxRentStart,
           paymentToken.id,
           value,
-          onSubmit
+          () => {
+            onSubmit();
+            setModalText(RentTransactionMessage);
+          }
         );
       } else {
         await landWorksContract?.rentWithERC20(
@@ -201,7 +208,10 @@ export const RentModal: React.FC<Props> = (props) => {
           maxRentStart,
           paymentToken.id,
           value,
-          onSubmit
+          () => {
+            onSubmit();
+            setModalText(RentTransactionMessage);
+          }
         );
         erc20Contract?.loadAllowance(config.contracts.landworksContract);
       }
@@ -392,11 +402,11 @@ export const RentModal: React.FC<Props> = (props) => {
         <ModalSuccess
           title="Successfully Rented!"
           buttonText="go to my properties"
-          description="Nice! You’ve successfully rented this property."
+          description="Nice! You've successfully rented this property."
           buttonEvent={() => history.push('/my-properties')}
         />
       )}
-      {showLoader() && <ModalLoader href={getEtherscanAddressUrl(wallet.account) || ''} />}
+      {showLoader() && <ModalLoader text={modalText} href={getEtherscanAddressUrl(wallet.account) || ''} />}
     </Modal>
   );
 };
