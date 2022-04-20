@@ -102,7 +102,7 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
       </RootStyled>
 
       <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
-        <ListNewProperty />
+        <ListNewProperty closeModal={() => setShowListNewModal(false)} />
       </Modal>
 
       <ClaimModal
