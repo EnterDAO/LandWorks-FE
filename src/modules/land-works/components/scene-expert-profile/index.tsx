@@ -52,12 +52,12 @@ const SceneExpertProfile: FC<ISceneExpertProfile> = ({ builder }) => {
             <TypeChip>{builder?.builderType}</TypeChip>
           </Grid>
           <Grid>
-            {builder?.twitter && (
+            {builder?.twitter !== undefined && (
               <ExternalLink href={builder?.twitter}>
                 <Icon name="twitter" width="20" height="20" style={{ color: 'white', marginLeft: '20px' }} />
               </ExternalLink>
             )}
-            {builder?.discord && (
+            {builder?.discord !== undefined && (
               <ExternalLink href={builder?.discord}>
                 <Icon name="discord" width="20" height="20" style={{ color: 'white', marginLeft: '20px' }} />
               </ExternalLink>
@@ -68,7 +68,7 @@ const SceneExpertProfile: FC<ISceneExpertProfile> = ({ builder }) => {
         <Grid item display="flex" textAlign="left">
           {builder?.longDescription}
         </Grid>
-        {builder?.website && (
+        {builder?.website !== undefined && (
           <Grid display="flex" flexDirection="column" textAlign="left" margin="20px 0 6px" width="300px">
             <TypographyStyled variant="h4" style={{ textTransform: 'uppercase' }}>
               My Website
