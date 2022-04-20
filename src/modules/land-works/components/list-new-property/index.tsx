@@ -51,7 +51,11 @@ import './index.scss';
 const SignTransactionMessage = 'Signing transaction...';
 const MineTransactionMessage = 'Listing property...';
 
-const ListNewProperty: React.FC = () => {
+interface IProps {
+  closeModal?: () => void;
+}
+
+const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const walletCtx = useWallet();
   const landworks = useLandworks();
   const estateRegistry = useEstateRegistry();
@@ -797,6 +801,7 @@ const ListNewProperty: React.FC = () => {
             showShareButton={true}
             showModal={showSuccessModal}
             handleClose={() => {
+              closeModal && closeModal();
               history.push('/my-properties');
               setShowSuccessModal(false);
             }}
