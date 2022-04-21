@@ -6,16 +6,18 @@ import { LocationIcon } from 'design-system/icons';
 
 import { AvatarContainer, CardContainer, DividerStyled, TypeChip, TypographyStyled } from './styled';
 
+import { formatShortDescription } from '../../../../utils';
+
 import { NotionResultForCard } from './types';
 
-interface ISceneExpertCard {
+interface ISceneBuilderCard {
   builder: NotionResultForCard;
 }
 
-const SceneExpertCard: FC<ISceneExpertCard> = ({ builder }) => {
+const SceneBuilderCard: FC<ISceneBuilderCard> = ({ builder }) => {
   return (
-    <Link to={`/scene-expert/${builder.builderName}`}>
-      <CardContainer className="scene-expert-card">
+    <Link to={`/scene-builder/${builder.builderName}`}>
+      <CardContainer className="scene-builder-card">
         <Grid height={133} width="100%" borderRadius="20px" overflow="hidden">
           <Box
             component="img"
@@ -41,7 +43,7 @@ const SceneExpertCard: FC<ISceneExpertCard> = ({ builder }) => {
         <TypographyStyled variant="h4">{builder.builderName}</TypographyStyled>
         <TypographyStyled variant="h5">{builder.definition}</TypographyStyled>
         <TypeChip>{builder.builderType}</TypeChip>
-        <TypographyStyled variant="body1">{builder.shortDescription}</TypographyStyled>
+        <TypographyStyled variant="body1">{formatShortDescription(builder.shortDescription)}</TypographyStyled>
         <DividerStyled orientation="horizontal" />
         <Grid display="flex" justifyContent="flex-start" width="100%" container>
           <LocationIcon style={{ marginRight: '13px' }} />
@@ -52,4 +54,4 @@ const SceneExpertCard: FC<ISceneExpertCard> = ({ builder }) => {
   );
 };
 
-export default SceneExpertCard;
+export default SceneBuilderCard;

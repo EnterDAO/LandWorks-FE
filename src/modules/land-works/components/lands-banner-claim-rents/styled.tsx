@@ -8,8 +8,14 @@ export const RootStyled = styled(Box)(() => ({
   background: 'rgba(93, 143, 240, 0.2)',
   padding: '18px 20px',
   borderRadius: '10px',
+  marginBottom: '25px',
 }));
 
-export const SpanStyled = styled('span')(() => ({
-  margin: '0 18px 0 13px',
+export const TitleStyled = styled('div')(() => ({}));
+
+export const BoxStyled = styled(Box)(() => ({
+  marginLeft: '20px',
+  '& h3': {
+    color: 'var(--theme-grey900-color)',
+  },
 }));

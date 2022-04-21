@@ -12,7 +12,7 @@ const baseColor = '#c1c1cf';
 
 const CardLoaderSkeleton: FC = () => {
   return (
-    <GridStyled minHeight={350} xs={12} container columnSpacing={2}>
+    <GridStyled item minHeight={350} xs={12} container columnSpacing={2}>
       <GridStyledInnerContainer item xs={12} flexDirection="column">
         <Box height={'40%'}>
           <Skeleton width={'100%'} height={'100%'} baseColor={baseColor} highlightColor={highlightColor} duration={3} />

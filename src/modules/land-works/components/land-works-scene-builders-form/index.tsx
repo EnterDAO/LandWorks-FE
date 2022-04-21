@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { StyledRoot } from './styled';
 
-const SceneExpertForm: React.FC = () => {
+const SceneBuildersForm: React.FC = () => {
   useEffect(() => {
     const script = document.createElement('script');
 
@@ -24,4 +24,4 @@ const SceneExpertForm: React.FC = () => {
   );
 };
 
-export default SceneExpertForm;
+export default SceneBuildersForm;

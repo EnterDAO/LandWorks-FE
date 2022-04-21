@@ -11,7 +11,6 @@ interface ISelectedFeatureCoords {
 }
 
 const LandCoordinates: React.FC<{ x: string; y: string }> = ({ x, y }) => {
-  console.log({ x, y });
   return (
     <Grid textAlign="left" className={s.details}>
       <span style={{ marginRight: '20px' }}>
@@ -25,10 +24,8 @@ const LandCoordinates: React.FC<{ x: string; y: string }> = ({ x, y }) => {
 };
 
 const EstateCoordinates: React.FC<{ assetCoords: { x: string; y: string }[]; estateLands: DecentralandNFT[] }> = ({
-  assetCoords,
   estateLands,
 }) => {
-  console.log({ assetCoords });
   const coords = estateLands && estateLands.map((i: DecentralandNFT) => i.coords);
   return (
     <Grid className={s.details}>
