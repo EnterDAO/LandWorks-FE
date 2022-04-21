@@ -218,7 +218,7 @@ const LandsExploreList: FC<Props> = ({
       </StyledRow>
       <StyledGridContainer container spacing={4} rowSpacing={4} columnSpacing={4}>
         {loading ? (
-          [1, 2, 3, 4].map((i) => (
+          [1, 2, 3, 4, 5, 6].map((i) => (
             <StyledGrid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 4} key={i}>
               <LandCardSkeleton key={i} />
             </StyledGrid>
