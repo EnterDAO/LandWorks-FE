@@ -14,10 +14,10 @@ const SceneBuilderPortfolio: FC<ISceneBuilderPortfolio> = ({ portfolio }) => {
 
   return (
     <>
+      <TypographyStyled variant="h3" style={{ padding: '32px 0 28px 15px' }}>
+        My Projects
+      </TypographyStyled>
       <Grid container spacing={2} rowSpacing={4} columnSpacing={2}>
-        <TypographyStyled variant="h3" style={{ padding: '32px 0 28px 15px' }}>
-          My Projects
-        </TypographyStyled>
         {portfolio.map((url) => (
           <>
             <Grid
