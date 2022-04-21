@@ -42,7 +42,7 @@ const LandsExploreNavigatorInfo: FC = () => {
         Owner:{' '}
         {!!positionOwner?.length && (
           <a href={`https://etherscan.io/address/${positionOwner}`} target="_blank">
-            {shortenString(positionOwner)}
+            {positionOwner.search('0x') !== -1 ? shortenString(positionOwner) : positionOwner}
           </a>
         )}
       </div>
