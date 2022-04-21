@@ -39,10 +39,10 @@ Examples of `styled-component` approach, here:
 
 At folder `./src/design-system` we have our main design library shared with Metaportal. In our latest code and how we approach the creation of components, we usually start a new component under our dedicated module folder or `./src/components` with relative component unstyled from the `design-system` based on MUI framework.
 
-## Setup
+## Get started
 
 As important step to run the project locally, you will need to create a `.env` environment file, like the example `.env-example` file.
-Please, contact admins of the project for proper environment key-values.
+Please, contact admins of the project for proper environment key-values. After created the env file locally, please follow the below `npm install` command from terminal.
 
 ## Available Scripts
 
@@ -73,7 +73,15 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.
 Your app is ready to be deployed!
 
-## Learn More
+## Extra
+
+Following, some extra documentation regarding specific contexts of the codebase.
+
+### Decentraland Map Integration
+
+
+
+## Learn More React
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
