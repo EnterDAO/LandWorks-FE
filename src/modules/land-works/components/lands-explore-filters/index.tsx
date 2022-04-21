@@ -42,6 +42,7 @@ const LandWorksFilters: FC<Props> = ({
 
   const onChangePlaceHandler = (value: number) => {
     sessionStorageHandler('set', 'explore-filters', 'metaverse', value);
+    sessionStorageHandler('set', 'my-properties-filters', 'metaverse', value);
     onChangeMetaverse(`${value}`);
     setSelectedMetaverse(value);
     // TODO:: some filtering here

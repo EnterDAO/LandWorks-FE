@@ -39,6 +39,7 @@ const LandsMyPropertiesSubheader: FC<Props> = ({
   const onChangeMetaverseHandler = (value: number) => {
     onChangeMetaverse && onChangeMetaverse(value);
     sessionStorageHandler('set', 'my-properties-filters', 'metaverse', value);
+    sessionStorageHandler('set', 'explore-filters', 'metaverse', value);
     setSelectedMetaverse(value);
   };
 
