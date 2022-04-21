@@ -22,6 +22,9 @@ const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDeci
 
   useEffect(() => {
     getTokenPrice();
+    return () => {
+      setUsdPrice(new BigNumber(0));
+    };
   }, []);
 
   const getTokenPrice = async () => {

@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js';
 import { AbiItem } from 'web3-utils';
 import { BatchContractMethod, Web3ContractAbiItem } from 'web3/web3Contract';
 
+import { getEstateImageUrl } from '../../../../../helpers/helpers';
 import ERC721Contract from '../../erc721/ERC721Contract';
 import EstateRegistryABI from './abi.json';
 
@@ -46,6 +47,8 @@ export default class EstateRegistryContract extends ERC721Contract {
     return {
       id: tokenId,
       name: name,
+      image: getEstateImageUrl(tokenId),
+      contractAddress: this.address,
       landIds: estateData,
       isLAND: false,
     };

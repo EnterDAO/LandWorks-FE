@@ -27,6 +27,7 @@ import { ReactComponent as FiltersIcon } from 'assets/icons/filters.svg';
 import { ReactComponent as FireIcon } from 'assets/icons/fire.svg';
 import { ReactComponent as FolderIcon } from 'assets/icons/folder.svg';
 import { ReactComponent as GamesIcon } from 'assets/icons/games.svg';
+import { ReactComponent as GridIcon } from 'assets/icons/grid.svg';
 import { ReactComponent as HeartFilledIcon } from 'assets/icons/heart-filled.svg';
 import { ReactComponent as HeartInCircleFilledIcon } from 'assets/icons/heart-in-circle-filled.svg';
 import { ReactComponent as HeartInCircleNotFilledIcon } from 'assets/icons/heart-in-circle-not-filled.svg';
@@ -38,6 +39,7 @@ import { ReactComponent as LocationIcon } from 'assets/icons/location-icon.svg';
 // import { ReactComponent as InfoIcon} from 'assets/icons/info.svg';
 import { ReactComponent as LoginIcon } from 'assets/icons/log-in.svg';
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg';
+import { ReactComponent as MapIcon } from 'assets/icons/map.svg';
 import { ReactComponent as MinusIcon } from 'assets/icons/minus.svg';
 import { ReactComponent as MoonIcon } from 'assets/icons/moon.svg';
 import { ReactComponent as MoreIcon } from 'assets/icons/more.svg';
@@ -80,6 +82,7 @@ export {
   EmptyIcon,
   SuccessStarIcon,
   ArrowDownIcon,
+  GridIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
   ArrowUpIcon,
@@ -89,6 +92,7 @@ export {
   CalendarIcon,
   CheckIcon,
   CloseIcon,
+  MapIcon,
   CopyIcon,
   EditIcon,
   EventsIcon,
