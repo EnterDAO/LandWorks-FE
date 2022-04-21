@@ -17,7 +17,14 @@ import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
 import { LocationState } from 'modules/land-works/views/single-land-view';
 
-import { LandsSearchBarWrapperStyled, StyledButton, StyledGrid, StyledRow, StyledText } from './styled';
+import {
+  LandsSearchBarWrapperStyled,
+  StyledButton,
+  StyledGrid,
+  StyledGridContainer,
+  StyledRow,
+  StyledText,
+} from './styled';
 
 import {
   filterLandsByAvailability,
@@ -209,16 +216,16 @@ const LandsExploreList: FC<Props> = ({
           </StyledButton>
         </Grid>
       </StyledRow>
-      <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
+      <StyledGridContainer container spacing={4} rowSpacing={4} columnSpacing={4}>
         {loading ? (
           [1, 2, 3, 4].map((i) => (
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} key={i}>
+            <StyledGrid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 4} key={i}>
               <LandCardSkeleton key={i} />
-            </Grid>
+            </StyledGrid>
           ))
         ) : filteredLands.length ? (
           filteredLands.slice(0, slicedLands).map((land) => (
-            <StyledGrid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} key={land.id}>
+            <StyledGrid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 4} key={land.id}>
               <LandWorkCard
                 onMouseOver={onMouseOverCardHandler}
                 onClick={() =>
@@ -236,7 +243,7 @@ const LandsExploreList: FC<Props> = ({
             <p>No properties are currently listed</p>
           </Grid>
         )}
-      </Grid>
+      </StyledGridContainer>
       <LoadMoreLands
         textToDisplay={`List ${slicedLandsInTotal} of ${filteredLands.length}`}
         handleLoadMore={handleLoadMore}
