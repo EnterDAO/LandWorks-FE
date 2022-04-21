@@ -5,7 +5,7 @@ import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 
 import { getNowTs } from 'utils';
 
-import { NotionResult, NotionResultForCard, NotionResultForProfile } from './components/scene-expert-card/types';
+import { NotionResult, NotionResultForCard, NotionResultForProfile } from './components/scene-builder-card/types';
 
 export const calculateNeighbours = (coordinatesList: CoordinatesLand[]): string[] => {
   let neighbours = [] as string[];

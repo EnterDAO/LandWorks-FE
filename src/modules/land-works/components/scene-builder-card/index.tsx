@@ -10,14 +10,14 @@ import { formatShortDescription } from '../../../../utils';
 
 import { NotionResultForCard } from './types';
 
-interface ISceneExpertCard {
+interface ISceneBuilderCard {
   builder: NotionResultForCard;
 }
 
-const SceneExpertCard: FC<ISceneExpertCard> = ({ builder }) => {
+const SceneBuilderCard: FC<ISceneBuilderCard> = ({ builder }) => {
   return (
-    <Link to={`/scene-expert/${builder.builderName}`}>
-      <CardContainer className="scene-expert-card">
+    <Link to={`/scene-builder/${builder.builderName}`}>
+      <CardContainer className="scene-builder-card">
         <Grid height={133} width="100%" borderRadius="20px" overflow="hidden">
           <Box
             component="img"
@@ -54,4 +54,4 @@ const SceneExpertCard: FC<ISceneExpertCard> = ({ builder }) => {
   );
 };
 
-export default SceneExpertCard;
+export default SceneBuilderCard;

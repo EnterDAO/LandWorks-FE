@@ -1,8 +1,8 @@
 import { Dispatch, FC, SetStateAction } from 'react';
 import {
-  SCENE_EXPERT_TAB_STATE_ALL,
-  SCENE_EXPERT_TAB_STATE_INDIVIDUAL,
-  SCENE_EXPERT_TAB_STATE_STUDIO,
+  SCENE_BUILDER_TAB_STATE_ALL,
+  SCENE_BUILDER_TAB_STATE_INDIVIDUAL,
+  SCENE_BUILDER_TAB_STATE_STUDIO,
 } from 'constants/modules';
 
 import { Box } from 'design-system';
@@ -13,14 +13,14 @@ interface Props {
   setTab: Dispatch<SetStateAction<string>>;
 }
 
-const SceneExpertTabs: FC<Props> = ({ setTab }) => {
+const SceneBuilderTabs: FC<Props> = ({ setTab }) => {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
   };
 
   return (
     <>
-      <TypographyStyled>Scene Experts</TypographyStyled>
+      <TypographyStyled>Scene Builders</TypographyStyled>
       <RootStyled style={{ display: 'flex', justifyContent: 'center' }}>
         <Box>
           <TabListStyled onChange={handleChange} aria-label="Lands tabs filter">
@@ -30,7 +30,7 @@ const SceneExpertTabs: FC<Props> = ({ setTab }) => {
                   <strong>All</strong>
                 </>
               }
-              value={SCENE_EXPERT_TAB_STATE_ALL}
+              value={SCENE_BUILDER_TAB_STATE_ALL}
             />
             <TabStyled
               label={
@@ -38,7 +38,7 @@ const SceneExpertTabs: FC<Props> = ({ setTab }) => {
                   <strong>Individual</strong>
                 </>
               }
-              value={SCENE_EXPERT_TAB_STATE_INDIVIDUAL}
+              value={SCENE_BUILDER_TAB_STATE_INDIVIDUAL}
             />
             <TabStyled
               label={
@@ -46,7 +46,7 @@ const SceneExpertTabs: FC<Props> = ({ setTab }) => {
                   <strong>Studio</strong>
                 </>
               }
-              value={SCENE_EXPERT_TAB_STATE_STUDIO}
+              value={SCENE_BUILDER_TAB_STATE_STUDIO}
             />
           </TabListStyled>
         </Box>
@@ -55,4 +55,4 @@ const SceneExpertTabs: FC<Props> = ({ setTab }) => {
   );
 };
 
-export default SceneExpertTabs;
+export default SceneBuilderTabs;
