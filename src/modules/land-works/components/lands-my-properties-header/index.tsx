@@ -58,7 +58,7 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
 
   return (
     <>
-      {user?.hasUnclaimedRent && (
+      {claimData?.hasUnclaimedRent && (
         <Box>
           <LandsBannerClaimRents
             onButtonClick={() => setShowClaimModal(true)}
