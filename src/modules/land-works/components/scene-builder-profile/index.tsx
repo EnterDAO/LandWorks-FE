@@ -13,6 +13,16 @@ interface ISceneBuilderProfile {
 }
 
 const SceneBuilderProfile: FC<ISceneBuilderProfile> = ({ builder }) => {
+  const hasValue = (val: string) => {
+    if (val === undefined) {
+      return false;
+    } else if (val === '-') {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   return (
     <CardContainer className="scene-builder-card" style={{ minHeight: '578px' }}>
       <Grid height={185} width="100%" borderRadius="20px" overflow="hidden">
@@ -52,12 +62,12 @@ const SceneBuilderProfile: FC<ISceneBuilderProfile> = ({ builder }) => {
             <TypeChip>{builder?.builderType}</TypeChip>
           </Grid>
           <Grid>
-            {builder?.twitter !== undefined && (
+            {hasValue(builder.twitter) && (
               <ExternalLink href={builder?.twitter}>
                 <Icon name="twitter" width="20" height="20" style={{ color: 'white', marginLeft: '20px' }} />
               </ExternalLink>
             )}
-            {builder?.discord !== undefined && (
+            {hasValue(builder.discord) && (
               <ExternalLink href={builder?.discord}>
                 <Icon name="discord" width="20" height="20" style={{ color: 'white', marginLeft: '20px' }} />
               </ExternalLink>
