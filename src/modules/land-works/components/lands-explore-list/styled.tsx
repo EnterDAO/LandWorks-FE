@@ -51,5 +51,15 @@ export const StyledGrid = styled(Grid)(() => ({
     ['@media (min-aspect-ratio: 16/9)']: {
       maxWidth: '20%',
     },
+    ['@media (min-width: 1600px)']: {
+      maxWidth: '16.6%',
+    },
+  },
+}));
+
+export const StyledGridContainer = styled(Grid)(() => ({
+  ['@media (min-width: 2660px)']: {
+    maxWidth: '2540px',
+    margin: '0 auto',
   },
 }));
