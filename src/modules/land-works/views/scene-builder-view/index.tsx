@@ -1,29 +1,29 @@
 import { FC, useEffect, useState } from 'react';
 import {
-  SCENE_EXPERT_TAB_STATE_ALL,
-  SCENE_EXPERT_TAB_STATE_INDIVIDUAL,
-  SCENE_EXPERT_TAB_STATE_STUDIO,
+  SCENE_BUILDER_TAB_STATE_ALL,
+  SCENE_BUILDER_TAB_STATE_INDIVIDUAL,
+  SCENE_BUILDER_TAB_STATE_STUDIO,
 } from 'constants/modules';
 import TabContext from '@mui/lab/TabContext';
 
 import { useNotion } from 'api/notion/client';
 import { Grid } from 'design-system';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import SceneExpertHeading from 'modules/land-works/components/land-works-scene-experts-heading';
-import SceneExpertCard from 'modules/land-works/components/scene-expert-card';
-import CardLoaderSkeleton from 'modules/land-works/components/scene-expert-card/card-loader-skeleton';
-import SceneExpertTabs from 'modules/land-works/components/scene-expert-tabs';
+import SceneBuilderHeading from 'modules/land-works/components/land-works-scene-builders-heading';
+import SceneBuilderCard from 'modules/land-works/components/scene-builder-card';
+import CardLoaderSkeleton from 'modules/land-works/components/scene-builder-card/card-loader-skeleton';
+import SceneBuilderTabs from 'modules/land-works/components/scene-builder-tabs';
 
 import { transformSceneProviderForCard } from 'modules/land-works/utils';
 
-import { NotionResultForCard } from 'modules/land-works/components/scene-expert-card/types';
+import { NotionResultForCard } from 'modules/land-works/components/scene-builder-card/types';
 
-const SceneExpertView: FC = () => {
+const SceneBuilderView: FC = () => {
   const { getSceneProviders } = useNotion();
   const [sceneBuilders, setSceneBuilders] = useState<NotionResultForCard[]>([]);
   const [filteredData, setFilteredData] = useState(sceneBuilders);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState(SCENE_EXPERT_TAB_STATE_ALL);
+  const [tab, setTab] = useState(SCENE_BUILDER_TAB_STATE_ALL);
   const { height } = useWindowDimensions();
 
   const scrollToDiv = () => {
@@ -32,8 +32,6 @@ const SceneExpertView: FC = () => {
       behavior: 'smooth',
     });
   };
-
-  scrollToDiv();
 
   useEffect(() => {
     (async () => {
@@ -49,9 +47,9 @@ const SceneExpertView: FC = () => {
   const studioBuilders = sceneBuilders?.filter((i) => i.builderType === 'Studio');
 
   useEffect(() => {
-    if (tab === SCENE_EXPERT_TAB_STATE_INDIVIDUAL && individualBuilders !== undefined) {
+    if (tab === SCENE_BUILDER_TAB_STATE_INDIVIDUAL && individualBuilders !== undefined) {
       setFilteredData(individualBuilders);
-    } else if (tab === SCENE_EXPERT_TAB_STATE_STUDIO && studioBuilders !== undefined) {
+    } else if (tab === SCENE_BUILDER_TAB_STATE_STUDIO && studioBuilders !== undefined) {
       setFilteredData(studioBuilders);
     } else {
       setFilteredData(sceneBuilders);
@@ -63,9 +61,9 @@ const SceneExpertView: FC = () => {
       className="content-container"
       style={{ transform: 'translate3d(0px, 0px, 0px)', transition: 'all 700ms ease' }}
     >
-      <SceneExpertHeading />
+      <SceneBuilderHeading navigateToBuilders={() => scrollToDiv()} />
       <TabContext value={tab}>
-        <SceneExpertTabs setTab={setTab} />
+        <SceneBuilderTabs setTab={setTab} />
         {loading ? (
           <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
             {[1, 2, 3, 4].map((i) => (
@@ -79,7 +77,7 @@ const SceneExpertView: FC = () => {
             {sceneBuilders.length &&
               filteredData.map((builder) => (
                 <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={builder.builderName}>
-                  <SceneExpertCard builder={builder} />
+                  <SceneBuilderCard builder={builder} />
                 </Grid>
               ))}
           </Grid>
@@ -89,4 +87,4 @@ const SceneExpertView: FC = () => {
   );
 };
 
-export default SceneExpertView;
+export default SceneBuilderView;

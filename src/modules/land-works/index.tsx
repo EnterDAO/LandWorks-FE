@@ -5,15 +5,15 @@ import { Route, Switch } from 'react-router-dom';
 import ProtectedRoute from 'components/custom/protected-route';
 import { useWarning } from 'providers/warning-provider';
 
-import SingleExpertView from './views/single-scene-expert-view';
+import SceneBuilderFormView from './views/scene-builder-form-view';
+import SceneBuilderView from './views/scene-builder-view';
+import SingleBuilderView from './views/single-scene-builder-view';
 
 const RentingView = lazy(() => import('./views/my-renting-view'));
 const LendingView = lazy(() => import('./views/my-lending-view'));
 const LandsView = lazy(() => import('./views/lands-view'));
 const ExploreView = lazy(() => import('./views/explore-view'));
 const MyPropertiesView = lazy(() => import('./views/my-properties-view'));
-const SceneExpertView = lazy(() => import('./views/scene-expert-view'));
-const SceneExpertFormView = lazy(() => import('./views/scene-expert-form-view'));
 const SingleLand = lazy(() => import('./views/single-land-view'));
 const ListProperty = lazy(() => import('./views/list-property-view'));
 const EditProperty = lazy(() => import('./views/edit-property-view'));
@@ -44,9 +44,9 @@ const LandworksView: React.FC = () => {
       <ProtectedRoute isAuthenticated={false} authenticationPath="/explore" path="/all" exact component={LandsView} />
       <Route path="/explore" exact component={ExploreView} />
       <Route path="/my-properties" exact component={MyPropertiesView} />
-      <Route path="/scene-expert" exact component={SceneExpertView} />
-      <Route path="/scene-expert/:expertName" exact component={SingleExpertView} />
-      <Route path="/join-experts" exact component={SceneExpertFormView} />
+      <Route path="/scene-builder" exact component={SceneBuilderView} />
+      <Route path="/scene-builder/:builderName" exact component={SingleBuilderView} />
+      <Route path="/join-builders" exact component={SceneBuilderFormView} />
       <Route path="/lending" exact component={LendingView} />
       <ProtectedRoute
         isAuthenticated={false}

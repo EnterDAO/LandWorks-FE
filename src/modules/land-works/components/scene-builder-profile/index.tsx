@@ -6,15 +6,15 @@ import { Box, Grid } from 'design-system';
 
 import { AvatarContainer, CardContainer, TypeChip, TypographyStyled } from './styled';
 
-import { NotionResultForProfile } from '../scene-expert-card/types';
+import { NotionResultForProfile } from '../scene-builder-card/types';
 
-interface ISceneExpertProfile {
+interface ISceneBuilderProfile {
   builder: NotionResultForProfile;
 }
 
-const SceneExpertProfile: FC<ISceneExpertProfile> = ({ builder }) => {
+const SceneBuilderProfile: FC<ISceneBuilderProfile> = ({ builder }) => {
   return (
-    <CardContainer className="scene-expert-card" style={{ minHeight: '578px' }}>
+    <CardContainer className="scene-builder-card" style={{ minHeight: '578px' }}>
       <Grid height={185} width="100%" borderRadius="20px" overflow="hidden">
         <Box
           component="img"
@@ -75,4 +75,4 @@ const SceneExpertProfile: FC<ISceneExpertProfile> = ({ builder }) => {
   );
 };
 
-export default SceneExpertProfile;
+export default SceneBuilderProfile;

@@ -5,7 +5,7 @@ import { Button, Grid, Modal } from 'design-system';
 
 import { TypographyStyled } from './styled';
 
-interface ExpertContactModal {
+interface BuilderContactModal {
   email: string;
   discord: string;
   twitter: string;
@@ -13,7 +13,7 @@ interface ExpertContactModal {
   handleClose: () => void;
 }
 
-const ExpertContactModal: FC<ExpertContactModal> = ({ email, discord, twitter, open, handleClose }) => {
+const BuilderContactModal: FC<BuilderContactModal> = ({ email, discord, twitter, open, handleClose }) => {
   const linkStyle = {
     color: '#F8F8FF',
   };
@@ -23,7 +23,7 @@ const ExpertContactModal: FC<ExpertContactModal> = ({ email, discord, twitter, o
       <Grid display="flex" flexDirection="column" alignItems="center">
         <TypographyStyled variant="h1">Send a Message</TypographyStyled>
         <TypographyStyled variant="h2">
-          Choose method to contact the expert. The communication happens outside of LandWorks.
+          Choose method to contact the builder. The communication happens outside of LandWorks.
         </TypographyStyled>
         <Grid display="flex" width="300px" flexDirection="column" gap="15px" mt="30px">
           <Button btnSize="medium" variant="gradient">
@@ -50,4 +50,4 @@ const ExpertContactModal: FC<ExpertContactModal> = ({ email, discord, twitter, o
   );
 };
 
-export default ExpertContactModal;
+export default BuilderContactModal;
