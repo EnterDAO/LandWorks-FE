@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 
+import { getENSName } from 'helpers/helpers';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 
 import { shortenString } from 'modules/land-works/utils';
@@ -17,6 +18,14 @@ const LandsExploreNavigatorInfo: FC = () => {
     setPositionType(selectedTile?.type);
     setPositionOwner(selectedTile?.owner || '');
   }, [selectedTile]);
+
+  useEffect(() => {
+    if (positionOwner && !!positionOwner.length && positionOwner.search('0x') !== -1) {
+      getENSName(positionOwner).then((ensName) => {
+        setPositionOwner(ensName);
+      });
+    }
+  }, [positionOwner]);
 
   return (
     <div
