@@ -19,11 +19,11 @@ const SceneBuilderHeading: React.FC<Props> = (props: Props) => {
       <div>
         <TypographyStyled variant="h1">Find Scene Builders for Your Land or Become One</TypographyStyled>
         <TypographyStyled variant="h4" marginTop="10px">
-          A place to find builders and professionals in developoing 3D metaverse assets.
+          A place to find builders and professionals in developing 3D metaverse assets.
         </TypographyStyled>
         <Grid justifyContent="center" display="flex" mt={'30px'} columnGap={3}>
           <Button variant="secondary" btnSize="medium" onClick={navigateToBuilders}>
-            Explore Experts
+            Explore Builders
           </Button>
           <Button
             variant="gradient"
