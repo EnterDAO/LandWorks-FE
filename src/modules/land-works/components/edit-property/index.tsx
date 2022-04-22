@@ -30,7 +30,6 @@ import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset }
 import { useLandworks } from '../../providers/landworks-provider';
 import EditFormCardSkeleton from '../land-edit-form-loader-card';
 
-import { formatCryptoVoxelsCoords, getCoordsFromCryptoVoxelImageUrl } from 'modules/land-works/utils';
 import { formatBigNumberInput, getTimeType, secondsToDuration } from '../../../../utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from '../../../../utils/date';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
@@ -443,15 +442,6 @@ const EditProperty: React.FC<Props> = (props) => {
   const canSave = hasChangesToSave();
 
   const showPriceInUsd = `$${usdPrice}`;
-  const isDecentraland = selectedProperty?.metaverse?.name === 'Decentraland';
-
-  const formattedCoords = () => {
-    if (!isDecentraland) {
-      const coords = getCoordsFromCryptoVoxelImageUrl(selectedProperty?.imageUrl!);
-      const formattedCoords = formatCryptoVoxelsCoords(coords);
-      return formattedCoords;
-    }
-  };
 
   const estateCoords = selectedProperty?.decentralandData?.coordinates;
 
@@ -570,11 +560,15 @@ const EditProperty: React.FC<Props> = (props) => {
                       )}
                     </>
                   )}
-                  {selectedProperty && !isDecentraland && (
+                  {selectedProperty?.place && (
                     <SelectedListCard
                       src={selectedProperty.imageUrl}
                       name={selectedProperty?.name}
-                      coordinatesChild={formattedCoords()}
+                      coordinatesChild={
+                        <span>
+                          {selectedProperty?.place[0]}, {selectedProperty?.place[1]}
+                        </span>
+                      }
                     />
                   )}
                 </>
