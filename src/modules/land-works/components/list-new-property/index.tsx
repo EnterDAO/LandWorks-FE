@@ -722,7 +722,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
                   <SelectedListCard
                     src={selectedVoxel.image}
                     name={selectedVoxel.name}
-                    coordinatesChild={<>{selectedVoxel.formattedCoords}</>}
+                    coordinatesChild={<>{selectedVoxel.place}</>}
                   />
                 )}
               </Grid>

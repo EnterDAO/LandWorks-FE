@@ -34,7 +34,7 @@ export type CryptoVoxelNFT = {
   name: string;
   image: string;
   contractAddress: string;
-  coords: CryptoVoxelXYcoords;
+  place: string;
   formattedCoords: string;
 };
 
