@@ -43,7 +43,7 @@ import { useLandRegistry } from '../../providers/decentraland/land-registry-prov
 import { useLandworks } from '../../providers/landworks-provider';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
 
-import { getTimeType, secondsToDuration } from 'utils';
+import { getTimeType, secondsToDuration, sessionStorageHandler } from 'utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from 'utils/date';
 
 import './index.scss';
@@ -301,6 +301,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
         setShowApproveModal(false);
       }
     } catch (e) {
+      setShowApproveModal(false);
       console.log(e);
       // If there is an error enable the approve button
     }
@@ -801,9 +802,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
             showShareButton={true}
             showModal={showSuccessModal}
             handleClose={() => {
+              sessionStorageHandler('set', 'general', 'metaverse', selectedMetaverse);
+              setShowSuccessModal(false);
               closeModal && closeModal();
               history.push('/my-properties');
-              setShowSuccessModal(false);
             }}
           />
         )}
