@@ -195,7 +195,7 @@ const LandsExploreList: FC<Props> = ({
         </Grid>
         <Grid container direction={'row'} display="flex" width={'auto'}>
           <StyledButton
-            disabled={metaverse !== '1'}
+            disabled={metaverse != '1'}
             sx={{
               border: !isHiddenMap ? '1px solid white' : '1px solid transparent',
               boxShadow: !isHiddenMap ? '0 0 3px white' : 'none',
@@ -205,7 +205,7 @@ const LandsExploreList: FC<Props> = ({
             <MapIcon />
           </StyledButton>
           <StyledButton
-            disabled={metaverse !== '1'}
+            disabled={metaverse != '1'}
             sx={{
               border: isHiddenMap ? '1px solid white' : '1px solid transparent',
               boxShadow: isHiddenMap ? '0 0 3px white' : 'none',
