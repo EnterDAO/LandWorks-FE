@@ -39,6 +39,12 @@ const NotionProvider: FC = (props) => {
           },
         ],
       },
+      sorts: [
+        {
+          property: 'Prio',
+          direction: 'ascending',
+        },
+      ],
     });
   };
 
