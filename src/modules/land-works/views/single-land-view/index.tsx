@@ -9,7 +9,7 @@ import { Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import EditPropertyViewNew from 'modules/land-works/components/edit-property';
+import EditProperty from 'modules/land-works/components/edit-property';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 
 import ExternalLink from '../../../../components/custom/external-link';
@@ -460,7 +460,7 @@ const SingleLandView: React.FC = () => {
 
       {showEditModal && (
         <Modal height={'90vh'} open={showEditModal} handleClose={() => setShowEditModal(false)}>
-          <EditPropertyViewNew
+          <EditProperty
             closeModal={() => setShowEditModal(false)}
             openDelistPrompt={showPrompt}
             delistText={isWithdraw() ? 'withdraw property' : 'delist property'}

@@ -43,7 +43,7 @@ interface Props {
   delistText: string;
 }
 
-const EditPropertyViewNew: React.FC<Props> = (props) => {
+const EditProperty: React.FC<Props> = (props) => {
   const { openDelistPrompt, closeModal, delistText } = props;
 
   const walletCtx = useWallet();
@@ -644,4 +644,4 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
   );
 };
 
-export default EditPropertyViewNew;
+export default EditProperty;
