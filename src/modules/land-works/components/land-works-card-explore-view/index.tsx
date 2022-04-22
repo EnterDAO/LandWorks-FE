@@ -2,7 +2,7 @@ import React, { SyntheticEvent, useState } from 'react';
 import { ZERO_BIG_NUMBER } from 'web3/utils';
 
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { getTokenIconName } from 'helpers/helpers';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 
@@ -64,8 +64,10 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
 
       <div className="land-explore-row start">
         <span className="land-explore-price-crypto">
-          <Icon name={getTokenIconName(land.paymentToken.symbol)} className="eth-icon" />
-          <SmallAmountTooltip amount={land.pricePerMagnitude.price} />
+          <SmallAmountTooltip
+            amount={land.pricePerMagnitude.price}
+            icon={<Icon name={getTokenIconName(land.paymentToken.symbol)} className="eth-icon" />}
+          />
         </span>
 
         <span className="land-explore-price">

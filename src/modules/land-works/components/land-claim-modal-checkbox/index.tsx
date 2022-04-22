@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Checkbox, Col, Row } from 'antd';
 
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 
 import { getTokenIconName } from '../../../../helpers/helpers';
 import { AssetEntity } from '../../api';
