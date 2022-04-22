@@ -19,7 +19,7 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import BigNumber from 'bignumber.js';
 
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { DecentralandNFT, Option } from 'modules/interface';

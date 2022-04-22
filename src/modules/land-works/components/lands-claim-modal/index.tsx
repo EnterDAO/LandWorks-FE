@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { Text } from 'components/custom/typography';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { LandClaimCheckBox } from 'modules/land-works/components/land-claim-modal-checkbox';

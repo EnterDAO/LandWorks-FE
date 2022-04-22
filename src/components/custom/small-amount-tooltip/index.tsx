@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
-import { Tooltip } from 'antd';
 import BigNumber from 'bignumber.js';
+
+import { Tooltip } from 'components/custom/tooltip';
 
 import { formatBigNumber } from 'utils';
 
@@ -10,18 +11,24 @@ interface ISmallAmountTooltip {
   className?: string;
   icon?: ReactElement;
 }
+
 const SmallAmountTooltip: React.FC<ISmallAmountTooltip> = ({ amount, symbol, className, icon }) => {
   const symbolNoSpace = ['$'];
   const formattedAmount = formatBigNumber(amount);
   const isExponential = amount.lt(1e-6);
 
   return isExponential ? (
-    <Tooltip color={'#5d8ff0'} title={amount.toFixed()}>
-      <span className={className}>
-        {icon || symbol}
-        {'  '}
-        {formattedAmount}
-      </span>
+    <Tooltip
+      placement="top"
+      target={
+        <span className={className}>
+          {icon || symbol}
+          {'  '}
+          {formattedAmount}
+        </span>
+      }
+    >
+      {amount.toFixed()}
     </Tooltip>
   ) : (
     <span className={className}>
