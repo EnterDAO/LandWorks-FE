@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface SceneProv {
   object: string;
   results: NotionResult[];
@@ -469,7 +470,9 @@ export interface Annotations7 {
   color: string;
 }
 
-export interface Page {}
+export interface Page {
+  something: string;
+}
 
 export interface Daum {
   coverPhotoLink: string;

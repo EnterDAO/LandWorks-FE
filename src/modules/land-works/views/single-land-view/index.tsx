@@ -3,13 +3,14 @@ import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { TWITTER_TEXT } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
-import { Col, Row } from 'antd';
 
+import { Col, Row } from 'antd';
 import { Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import EditProperty from 'modules/land-works/components/edit-property';
+import { LocationState } from 'modules/interface';
+import EditPropertyViewNew from 'modules/land-works/components/edit-property';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 
 import ExternalLink from '../../../../components/custom/external-link';
@@ -27,16 +28,6 @@ import { calculateNeighbours } from 'modules/land-works/utils';
 import { getNowTs } from '../../../../utils';
 
 import './index.scss';
-
-export interface LocationState {
-  from: string;
-  title: string;
-  tab: string;
-  previousPage?: {
-    from: string;
-    title: string;
-  };
-}
 
 const SingleLandView: React.FC = () => {
   const wallet = useWallet();

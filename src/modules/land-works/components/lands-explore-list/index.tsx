@@ -7,6 +7,7 @@ import useDebounce from '@rooks/use-debounce';
 import { AtlasTile } from 'components/custom/Atlas/Atlas';
 import { Grid } from 'design-system';
 import { GridIcon, MapIcon } from 'design-system/icons';
+import { LocationState } from 'modules/interface';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
@@ -15,7 +16,6 @@ import LandsSearchBar from 'modules/land-works/components/lands-search';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
-import { LocationState } from 'modules/land-works/views/single-land-view';
 
 import {
   LandsSearchBarWrapperStyled,

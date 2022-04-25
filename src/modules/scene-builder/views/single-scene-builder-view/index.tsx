@@ -6,16 +6,16 @@ import { Link, useParams } from 'react-router-dom';
 import { useNotion } from 'api/notion/client';
 import { Grid } from 'design-system';
 import { ArrowRightIcon, BackIcon } from 'design-system/icons';
-import SceneBuilderProfile from 'modules/land-works/components/scene-builder-profile';
-import ProfileLoaderSkeleton from 'modules/land-works/components/scene-builder-profile/card-loader-skeleton';
-import SceneBuilderDetails from 'modules/land-works/components/scene-builder-profile/scene-builder-details';
-import SceneBuilderPortfolio from 'modules/land-works/components/scene-builder-profile/scene-builder-portfolio';
+import SceneBuilderProfile from 'modules/scene-builder/components/scene-builder-profile';
+import ProfileLoaderSkeleton from 'modules/scene-builder/components/scene-builder-profile/card-loader-skeleton';
+import SceneBuilderDetails from 'modules/scene-builder/components/scene-builder-profile/scene-builder-details';
+import SceneBuilderPortfolio from 'modules/scene-builder/components/scene-builder-profile/scene-builder-portfolio';
 
 import { BreadCrumbs, Separator } from '../scene-builder-form-view/styled';
 
-import { transformSceneProviderForProfile } from 'modules/land-works/utils';
+import { transformSceneProviderForProfile } from 'modules/scene-builder/utils';
 
-import { NotionResultForProfile } from 'modules/land-works/components/scene-builder-card/types';
+import { NotionResultForProfile } from 'modules/scene-builder/components/scene-builder-card/types';
 
 interface SingleBuilderViewParams {
   builderName: string;

@@ -9,14 +9,14 @@ import TabContext from '@mui/lab/TabContext';
 import { useNotion } from 'api/notion/client';
 import { Grid } from 'design-system';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import SceneBuilderHeading from 'modules/land-works/components/land-works-scene-builders-heading';
-import SceneBuilderCard from 'modules/land-works/components/scene-builder-card';
-import CardLoaderSkeleton from 'modules/land-works/components/scene-builder-card/card-loader-skeleton';
-import SceneBuilderTabs from 'modules/land-works/components/scene-builder-tabs';
+import SceneBuilderHeading from 'modules/scene-builder/components/land-works-scene-builders-heading';
+import SceneBuilderCard from 'modules/scene-builder/components/scene-builder-card';
+import CardLoaderSkeleton from 'modules/scene-builder/components/scene-builder-card/card-loader-skeleton';
+import SceneBuilderTabs from 'modules/scene-builder/components/scene-builder-tabs';
 
-import { transformSceneProviderForCard } from 'modules/land-works/utils';
+import { transformSceneProviderForCard } from 'modules/scene-builder/utils';
 
-import { NotionResultForCard } from 'modules/land-works/components/scene-builder-card/types';
+import { NotionResultForCard } from 'modules/scene-builder/components/scene-builder-card/types';
 
 const SceneBuilderView: FC = () => {
   const { getSceneProviders } = useNotion();

@@ -30,7 +30,7 @@ const SceneBuilderHeading: React.FC<Props> = (props: Props) => {
             btnSize="medium"
             onClick={() =>
               history.push({
-                pathname: '/join-builders',
+                pathname: '/scene-builder/join-builders',
                 state: { from: window.location.pathname, title: 'Scene Builder' },
               })
             }
