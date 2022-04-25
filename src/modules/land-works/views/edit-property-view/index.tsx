@@ -26,7 +26,6 @@ import { getTokenPrice } from 'providers/known-tokens-provider';
 import SmallAmountTooltip from '../../../../components/custom/smallAmountTooltip';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset } from '../../api';
-import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
 import { EditViewLandDropdown } from '../../components/lands-edit-dropdown-select';
 import { LandsEditInput } from '../../components/lands-edit-input';
 import { LandsEditPeriodDropdown } from '../../components/lands-edit-rent-period-select';
@@ -427,7 +426,7 @@ const EditPropertyView: React.FC = () => {
   return (
     <section className="list-view">
       {loading ? (
-        <EditFormCardSkeleton />
+        <></>
       ) : (
         <Row>
           <Col span={24}>
