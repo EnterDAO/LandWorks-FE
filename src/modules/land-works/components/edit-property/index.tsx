@@ -2,16 +2,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import {
-  AtMostRentPeriodOptions,
-  DEFAULT_LIST_MAX_FUTURE_PERIOD,
-  DEFAULT_LIST_MAX_PERIOD,
-  DEFAULT_MAX_PERIOD,
-  DEFAULT_MIN_PERIOD,
-  FEE_PRECISION,
-  MaxRentPeriodOptions,
-  MinRentPeriodOptions,
-} from 'constants/modules';
 import BigNumber from 'bignumber.js';
 
 import { Box, Button, Grid, Modal, Typography } from 'design-system';
@@ -33,6 +23,17 @@ import EditFormCardSkeleton from '../land-edit-form-loader-card';
 import { formatBigNumberInput, getTimeType, secondsToDuration } from '../../../../utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from '../../../../utils/date';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
+
+import {
+  AtMostRentPeriodOptions,
+  DEFAULT_LIST_MAX_FUTURE_PERIOD,
+  DEFAULT_LIST_MAX_PERIOD,
+  DEFAULT_MAX_PERIOD,
+  DEFAULT_MIN_PERIOD,
+  FEE_PRECISION,
+  MaxRentPeriodOptions,
+  MinRentPeriodOptions,
+} from 'modules/land-works/constants';
 
 import './index.scss';
 

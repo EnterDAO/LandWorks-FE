@@ -1,9 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import {
-  SCENE_BUILDER_TAB_STATE_ALL,
-  SCENE_BUILDER_TAB_STATE_INDIVIDUAL,
-  SCENE_BUILDER_TAB_STATE_STUDIO,
-} from 'constants/modules';
 import TabContext from '@mui/lab/TabContext';
 
 import { useNotion } from 'api/notion/client';
@@ -15,6 +10,12 @@ import CardLoaderSkeleton from 'modules/scene-builder/components/scene-builder-c
 import SceneBuilderTabs from 'modules/scene-builder/components/scene-builder-tabs';
 
 import { transformSceneProviderForCard } from 'modules/scene-builder/utils';
+
+import {
+  SCENE_BUILDER_TAB_STATE_ALL,
+  SCENE_BUILDER_TAB_STATE_INDIVIDUAL,
+  SCENE_BUILDER_TAB_STATE_STUDIO,
+} from 'modules/scene-builder/constants';
 
 import { NotionResultForCard } from 'modules/scene-builder/components/scene-builder-card/types';
 

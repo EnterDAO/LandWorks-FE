@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React from 'react';
+import MenuItem from '@mui/material/MenuItem';
 
-import Select, { SelectOption } from 'components/antd/select';
 import Grid from 'components/custom/grid';
-import { Button, Modal } from 'design-system';
+import { Button, Dropdown, Modal } from 'design-system';
 import LedgerWalletConfig from 'wallets/connectors/ledger';
 import { useWallet } from 'wallets/wallet';
 
-const WEB3_LEDGER_DERIVATION_PATHS: SelectOption[] = [
+const WEB3_LEDGER_DERIVATION_PATHS = [
   {
     value: `m/44'/60'/0'`,
     label: `Ethereum - m/44'/60'/0'`,
@@ -51,12 +51,15 @@ const LedgerDerivationPathModal: React.FC<Props> = (props) => {
   return (
     <Modal {...modalProps}>
       <Grid flow="row" gap={32} align="center">
-        <Select
-          options={WEB3_LEDGER_DERIVATION_PATHS}
-          value={derivationPath}
-          onSelect={handleSelect}
-          style={{ width: '352px' }}
-        />
+        <Dropdown value={derivationPath} onSelect={handleSelect} style={{ width: '352px' }}>
+          {WEB3_LEDGER_DERIVATION_PATHS.map((item, key) => {
+            return (
+              <MenuItem key={key} value={item.value}>
+                {item.label}
+              </MenuItem>
+            );
+          })}
+        </Dropdown>
         <Button variant="primary" onClick={handleConnect}>
           Connect
         </Button>
