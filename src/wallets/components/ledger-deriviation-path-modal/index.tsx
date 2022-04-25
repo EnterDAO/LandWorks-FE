@@ -2,10 +2,9 @@
 
 import React from 'react';
 
-import Button from 'components/antd/button';
-import Modal, { ModalProps } from 'components/antd/modal';
 import Select, { SelectOption } from 'components/antd/select';
 import Grid from 'components/custom/grid';
+import { Button, Modal } from 'design-system';
 import LedgerWalletConfig from 'wallets/connectors/ledger';
 import { useWallet } from 'wallets/wallet';
 
@@ -20,7 +19,13 @@ const WEB3_LEDGER_DERIVATION_PATHS: SelectOption[] = [
   },
 ];
 
-const LedgerDerivationPathModal: React.FC<ModalProps> = (props) => {
+type Props = {
+  open: boolean;
+  onSubmit?: () => void;
+  handleClose: () => void;
+};
+
+const LedgerDerivationPathModal: React.FC<Props> = (props) => {
   const { ...modalProps } = props;
 
   const wallet = useWallet();
@@ -32,7 +37,7 @@ const LedgerDerivationPathModal: React.FC<ModalProps> = (props) => {
   }
 
   function handleConnect() {
-    modalProps.onCancel?.();
+    modalProps.handleClose?.();
 
     setTimeout(() => {
       wallet
@@ -44,7 +49,7 @@ const LedgerDerivationPathModal: React.FC<ModalProps> = (props) => {
   }
 
   return (
-    <Modal width={568} {...modalProps}>
+    <Modal {...modalProps}>
       <Grid flow="row" gap={32} align="center">
         <Select
           options={WEB3_LEDGER_DERIVATION_PATHS}
@@ -52,7 +57,7 @@ const LedgerDerivationPathModal: React.FC<ModalProps> = (props) => {
           onSelect={handleSelect}
           style={{ width: '352px' }}
         />
-        <Button type="primary" onClick={handleConnect}>
+        <Button variant="primary" onClick={handleConnect}>
           Connect
         </Button>
       </Grid>

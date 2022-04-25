@@ -183,8 +183,8 @@ const WalletProvider: React.FC = (props) => {
 
   return (
     <WalletContext.Provider value={value}>
-      {walletsModal && <ConnectWalletModal onCancel={() => setWalletsModal(false)} />}
-      {installMetaMaskModal && <InstallMetaMaskModal onCancel={() => setInstallMetaMaskModal(false)} />}
+      <ConnectWalletModal open={walletsModal} handleClose={() => setWalletsModal(false)} />
+      <InstallMetaMaskModal open={installMetaMaskModal} handleClose={() => setInstallMetaMaskModal(false)} />
       <UnsupportedChainModal open={unsupportedChainModal} handleClose={() => setUnsupportedChainModal(false)} />
       {initialized ? (
         props.children

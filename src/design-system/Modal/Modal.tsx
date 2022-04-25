@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import { CloseIcon } from '../icons';
 import {
@@ -11,19 +11,20 @@ import {
 
 interface ModalProps {
   open: boolean;
-  title?: string;
+  title?: ReactNode;
   className?: string;
   handleClose: () => void;
-  children?: React.ReactNode;
+  children?: ReactNode;
   accessibility?: {
     ariaLabelledby: string;
     ariaDescribedby: string;
   };
+  width?: number | string;
   height?: number | string;
 }
 
 const Modal: FC<ModalProps> = (props: ModalProps) => {
-  const { open, title, handleClose, children, accessibility, height, className = '' } = props;
+  const { open, title, handleClose, children, accessibility, width, height, className = '' } = props;
 
   return (
     <StyledModal
@@ -35,7 +36,7 @@ const Modal: FC<ModalProps> = (props: ModalProps) => {
       BackdropComponent={StyledBackdrop}
       style={{ height: height }}
     >
-      <ModalBoxStyled>
+      <ModalBoxStyled style={{ width: width }}>
         {!!title && <ModalTitleBoxStyled>{title}</ModalTitleBoxStyled>}
 
         <CloseIconButtonStyled
