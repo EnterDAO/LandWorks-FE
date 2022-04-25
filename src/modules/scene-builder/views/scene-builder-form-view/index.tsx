@@ -1,11 +1,10 @@
 import { FC } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-import { Icon } from 'design-system';
-import { Grid } from 'design-system';
+import { Grid, Icon } from 'design-system';
 import { ArrowRightIcon, BackIcon } from 'design-system/icons';
-import SceneBuildersForm from 'modules/land-works/components/land-works-scene-builders-form';
-import { LocationState } from 'modules/land-works/views/single-land-view';
+import { LocationState } from 'modules/interface';
+import SceneBuildersForm from 'modules/scene-builder/components/land-works-scene-builders-form';
 
 import { BreadCrumbs, Separator } from './styled';
 
