@@ -5,10 +5,10 @@ import { useSessionStorage } from 'react-use-storage';
 import { Web3Provider } from '@ethersproject/providers';
 import { UnsupportedChainIdError, Web3ReactProvider, useWeb3React } from '@web3-react/core';
 import { NoEthereumProviderError } from '@web3-react/injected-connector';
-import * as Antd from 'antd';
 
 import config from 'config';
 import { Loader } from 'design-system';
+import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { getNetworkName } from 'providers/eth-web3-provider';
 import ConnectWalletModal from 'wallets/components/connect-wallet-modal';
 import InstallMetaMaskModal from 'wallets/components/install-metamask-modal';
@@ -124,9 +124,7 @@ const WalletProvider: React.FC = (props) => {
           const err = walletConnector.onError?.(error);
 
           if (err) {
-            Antd.notification.error({
-              message: err.message,
-            });
+            showToastNotification(ToastType.Error, err.message);
           }
         }
       }
