@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 
 import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import config from 'config';
 import { Button, Tooltip } from 'design-system';
 import { getENSName, getTokenIconName } from 'helpers/helpers';

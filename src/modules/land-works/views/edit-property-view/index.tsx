@@ -23,7 +23,7 @@ import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { DecentralandNFT, Option } from 'modules/interface';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
-import SmallAmountTooltip from '../../../../components/custom/smallAmountTooltip';
+import SmallAmountTooltip from '../../../../components/custom/small-amount-tooltip';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset } from '../../api';
 import { EditViewLandDropdown } from '../../components/lands-edit-dropdown-select';

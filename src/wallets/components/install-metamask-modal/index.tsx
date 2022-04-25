@@ -1,9 +1,9 @@
 import { FC } from 'react';
 
-import Button from 'components/antd/button';
 import Modal, { ModalProps } from 'components/antd/modal';
 import Grid from 'components/custom/grid';
 import { Text } from 'components/custom/typography';
+import { Button } from 'design-system';
 
 const METAMASK_CHROME_EXT_URL = 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
 
@@ -28,11 +28,11 @@ const InstallMetaMaskModal: FC<ModalProps> = (props) => {
           </Text>
         </Grid>
         <Grid flow="col" justify="space-between">
-          <Button type="primary" href={METAMASK_CHROME_EXT_URL} rel="noopener noreferrer" target="_blank">
+          <Button variant="primary" href={METAMASK_CHROME_EXT_URL}>
             Install MetaMask
           </Button>
 
-          <Button type="ghost" onClick={props.onCancel}>
+          <Button variant="primary" onClick={props.onCancel} className="button-ghost">
             <span>Go Back</span>
           </Button>
         </Grid>

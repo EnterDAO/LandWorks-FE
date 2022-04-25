@@ -128,7 +128,7 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
           setShowClaimModal(false);
         }}
         onCancel={() => setShowClaimModal(false)}
-        visible={showClaimModal}
+        open={showClaimModal}
         rentFees={claimData?.unclaimedRentAssets}
       />
     </>

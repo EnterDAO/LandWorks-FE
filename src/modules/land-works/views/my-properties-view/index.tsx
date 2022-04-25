@@ -10,6 +10,7 @@ import TabContext from '@mui/lab/TabContext';
 import { useMediaQuery } from '@mui/material';
 
 import { Grid } from 'design-system';
+import { LocationState } from 'modules/interface';
 import {
   AssetEntity,
   PaymentToken,
@@ -30,8 +31,6 @@ import LandsMyPropertiesHeader from 'modules/land-works/components/lands-my-prop
 import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-properties-subheader';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 import { useWallet } from 'wallets/wallet';
-
-import { LocationState } from '../single-land-view';
 
 import { isExistingLandInProgress, isNewLandTxInProgress } from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';

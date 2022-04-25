@@ -3,10 +3,10 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { Card, Col, Image, Row } from 'antd';
 
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { getTokenIconName } from 'helpers/helpers';
+import { LocationState } from 'modules/interface';
 import { AssetStatus } from 'modules/land-works/models/AssetStatus';
-import { LocationState } from 'modules/land-works/views/single-land-view';
 
 import { ReactComponent as FireIcon } from '../../../../resources/svg/white_fire.svg';
 import { AssetEntity } from '../../api';
