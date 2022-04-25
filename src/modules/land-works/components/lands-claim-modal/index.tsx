@@ -81,8 +81,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
   }, [assets]);
 
   return (
-    <Modal className="claim-modal" handleClose={onCancel} {...modalProps} open={open}>
-      <p style={{ textAlign: 'center', fontSize: '16px' }}>Claim</p>
+    <Modal className="claim-modal" handleClose={onCancel} {...modalProps} open={open} title="Claim">
       <Text type="p1" color="secondary" align="center" className="subtitle">
         Select the properties you want to claim your rent for
       </Text>

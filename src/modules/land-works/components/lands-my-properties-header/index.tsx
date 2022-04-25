@@ -58,14 +58,14 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
 
   return (
     <>
-      {/* {claimData?.hasUnclaimedRent && ( */}
-      <Box>
-        <LandsBannerClaimRents
-          onButtonClick={() => setShowClaimModal(true)}
-          isClaimButtonDisabled={claimButtonDisabled}
-        />
-      </Box>
-      {/* )} */}
+      {claimData?.hasUnclaimedRent && (
+        <Box>
+          <LandsBannerClaimRents
+            onButtonClick={() => setShowClaimModal(true)}
+            isClaimButtonDisabled={claimButtonDisabled}
+          />
+        </Box>
+      )}
       <RootStyled>
         <Box>
           <TypographyStyled variant="h1">My Properties</TypographyStyled>

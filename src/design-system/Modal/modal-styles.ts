@@ -1,5 +1,8 @@
 import ModalUnstyled from '@mui/base/ModalUnstyled';
+import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
+
+import { Box, IconButton } from 'design-system';
 
 import { THEME_COLORS } from '../../themes/theme-constants';
 
@@ -26,24 +29,28 @@ const StyledBackdrop = styled('div')({
   backgroundColor: 'rgba(0, 0, 0, 0.5)',
 });
 
-const modalStyles = {
-  modalBox: {
-    //height: '95vh',
-    width: 'auto',
-    // minWidth: 500,
-    maxHeight: 858,
-    position: 'relative',
-    backgroundColor: THEME_COLORS.darkBlue02,
-    borderRadius: '40px',
-    boxShadow: '0px 0px 20px 10px rgba(0, 0, 0, 0.3)',
-    padding: '55px 40px 40px 40px',
-    textAlign: 'center',
-  },
-  closeIcon: {
-    position: 'absolute',
-    right: '30px',
-    top: '30px',
-  },
-} as const;
+export const ModalBoxStyled = styled(Box)({
+  width: 'auto',
+  maxHeight: 858,
+  position: 'relative',
+  backgroundColor: THEME_COLORS.darkBlue02,
+  borderRadius: '40px',
+  boxShadow: '0px 0px 20px 10px rgba(0, 0, 0, 0.3)',
+  padding: '4rem 40px 40px 40px',
+  textAlign: 'center',
+});
 
-export { StyledModal, StyledBackdrop, modalStyles };
+export const ModalTitleBoxStyled = styled(Typography)({
+  position: 'absolute',
+  left: '30px',
+  top: '30px',
+  fontWeight: '900',
+});
+
+export const CloseIconButtonStyled = styled(IconButton)({
+  position: 'absolute',
+  right: '30px',
+  top: '30px',
+});
+
+export { StyledModal, StyledBackdrop };
