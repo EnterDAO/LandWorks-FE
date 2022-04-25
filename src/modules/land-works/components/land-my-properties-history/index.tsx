@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { DEFAULT_SLICED_HISTORY } from 'constants/modules';
 import { Box } from '@mui/material';
 import { uniqueId } from 'lodash';
 
@@ -27,6 +26,8 @@ import {
 } from './styled';
 
 import { getAssetName, getNowTs } from '../../../../utils';
+
+import { DEFAULT_SLICED_HISTORY } from 'modules/land-works/constants';
 
 interface Props {
   metaverse: string;

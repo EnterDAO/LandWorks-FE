@@ -1,6 +1,5 @@
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { DEFAULT_SLICED_PAGE } from 'constants/modules';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useDebounce from '@rooks/use-debounce';
 
@@ -33,6 +32,8 @@ import {
   getOwnerOrConsumerId,
 } from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
+
+import { DEFAULT_SLICED_PAGE } from 'modules/land-works/constants';
 
 interface Props {
   lastRentEnd: string;

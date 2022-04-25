@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { DEFAULT_SLICED_HISTORY } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { Box } from '@mui/material';
 
@@ -24,6 +23,7 @@ import {
 
 import { getAssetName } from '../../../../utils';
 
+import { DEFAULT_SLICED_HISTORY } from 'modules/land-works/constants';
 import { THEME_COLORS } from 'themes/theme-constants';
 
 interface Props {

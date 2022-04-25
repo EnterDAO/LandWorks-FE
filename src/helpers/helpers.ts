@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { BASE_URL_DECENTRALEND } from 'constants/modules';
 import { InfuraProvider } from '@ethersproject/providers';
 import format from 'date-fns/format';
 import fromUnixTime from 'date-fns/fromUnixTime';
@@ -8,6 +7,8 @@ import { DecentralandNFT } from 'modules/interface';
 import { AssetEntity, CryptoVoxelsType, DecentralandData } from 'modules/land-works/api';
 
 import defaultLandImage from '../modules/land-works/components/land-works-card/assets/land.png';
+
+import { BASE_URL_DECENTRALEND } from 'modules/land-works/constants';
 
 const euDateFormat = 'dd.MM.yyyy HH:mm';
 

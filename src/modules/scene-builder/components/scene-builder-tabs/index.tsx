@@ -1,13 +1,14 @@
 import { Dispatch, FC, SetStateAction } from 'react';
-import {
-  SCENE_BUILDER_TAB_STATE_ALL,
-  SCENE_BUILDER_TAB_STATE_INDIVIDUAL,
-  SCENE_BUILDER_TAB_STATE_STUDIO,
-} from 'constants/modules';
 
 import { Box } from 'design-system';
 
 import { RootStyled, TabListStyled, TabStyled, TypographyStyled } from './styled';
+
+import {
+  SCENE_BUILDER_TAB_STATE_ALL,
+  SCENE_BUILDER_TAB_STATE_INDIVIDUAL,
+  SCENE_BUILDER_TAB_STATE_STUDIO,
+} from 'modules/scene-builder/constants';
 
 interface Props {
   setTab: Dispatch<SetStateAction<string>>;

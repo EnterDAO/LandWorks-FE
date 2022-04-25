@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { DEFAULT_SLICED_HISTORY } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { Box } from '@mui/system';
 import { uniqueId } from 'lodash';
@@ -39,6 +38,8 @@ import {
 
 import { getNowTs } from '../../../../utils';
 import { getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
+
+import { DEFAULT_SLICED_HISTORY } from 'modules/land-works/constants';
 
 import './index.scss';
 
