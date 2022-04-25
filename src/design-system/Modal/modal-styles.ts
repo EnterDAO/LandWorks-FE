@@ -8,7 +8,8 @@ const StyledModal = styled(ModalUnstyled)({
   // TODO: We need to extract z-indexes in constants
   zIndex: '1000',
   right: '0',
-  top: 'calc(10% - 60px)',
+  top: '0',
+  bottom: '0',
   left: '0',
   display: 'flex',
   alignItems: 'center',
