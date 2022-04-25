@@ -2,13 +2,11 @@ import React, { lazy } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Route, Switch } from 'react-router-dom';
 
-import ProtectedRoute from 'components/custom/protected-route';
 import { useWarning } from 'providers/warning-provider';
 
 const ExploreView = lazy(() => import('./views/explore-view'));
 const MyPropertiesView = lazy(() => import('./views/my-properties-view'));
 const SingleLand = lazy(() => import('./views/single-land-view'));
-const EditProperty = lazy(() => import('./views/edit-property-view'));
 
 const LandworksView: React.FC = () => {
   const warning = useWarning();
@@ -34,13 +32,6 @@ const LandworksView: React.FC = () => {
       <Route path="/property/:tokenId" exact component={SingleLand} />
       <Route path="/explore" exact component={ExploreView} />
       <Route path="/my-properties" exact component={MyPropertiesView} />
-      <ProtectedRoute
-        isAuthenticated={false}
-        authenticationPath="/explore"
-        path="/property/:tokenId/edit/"
-        exact
-        component={EditProperty}
-      />
     </Switch>
   );
 };
