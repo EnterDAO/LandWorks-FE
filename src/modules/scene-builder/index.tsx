@@ -29,9 +29,9 @@ const SceneBuilderView: React.FC = () => {
 
   return (
     <Switch>
-      <Route exact component={SceneBuilderMainView} />
-      <Route path="/:builderName" exact component={SingleBuilderView} />
-      <Route path="/join-builders" exact component={SceneBuilderFormView} />
+      <Route path="/scene-builder" exact component={SceneBuilderMainView} />
+      <Route path="/scene-builder/join-builders" exact component={SceneBuilderFormView} />
+      <Route path="/scene-builder/:builderName" exact component={SingleBuilderView} />
     </Switch>
   );
 };
