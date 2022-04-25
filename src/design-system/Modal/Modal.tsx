@@ -1,12 +1,17 @@
 import { FC } from 'react';
-import { Box } from '@mui/system';
 
-import IconButton from '../IconButton/IconButton';
 import { CloseIcon } from '../icons';
-import { StyledBackdrop, StyledModal, modalStyles } from './modal-styles';
+import {
+  CloseIconButtonStyled,
+  ModalBoxStyled,
+  ModalTitleBoxStyled,
+  StyledBackdrop,
+  StyledModal,
+} from './modal-styles';
 
 interface ModalProps {
   open: boolean;
+  title?: string;
   className?: string;
   handleClose: () => void;
   children?: React.ReactNode;
@@ -18,7 +23,7 @@ interface ModalProps {
 }
 
 const Modal: FC<ModalProps> = (props: ModalProps) => {
-  const { open, handleClose, children, accessibility, height, className = '' } = props;
+  const { open, title, handleClose, children, accessibility, height, className = '' } = props;
 
   return (
     <StyledModal
@@ -30,17 +35,19 @@ const Modal: FC<ModalProps> = (props: ModalProps) => {
       BackdropComponent={StyledBackdrop}
       style={{ height: height }}
     >
-      <Box sx={modalStyles.modalBox}>
-        <IconButton
+      <ModalBoxStyled>
+        {!!title && <ModalTitleBoxStyled>{title}</ModalTitleBoxStyled>}
+
+        <CloseIconButtonStyled
           variant="circular"
           btnSize="small"
           icon={<CloseIcon />}
           colorVariant="light"
-          sx={modalStyles.closeIcon}
           onClick={handleClose}
         />
+
         {children}
-      </Box>
+      </ModalBoxStyled>
     </StyledModal>
   );
 };
