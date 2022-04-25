@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
+// import { ModalProps } from '@mui/material/Modal';
 import { Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
-import Button from 'components/antd/button';
-import Modal, { ModalProps } from 'components/antd/modal';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { Text } from 'components/custom/typography';
+import { Button, Modal } from 'design-system';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { LandClaimCheckBox } from 'modules/land-works/components/land-claim-modal-checkbox';
 
@@ -15,8 +15,10 @@ import { useLandworks } from '../../providers/landworks-provider';
 
 import './index.scss';
 
-type Props = ModalProps & {
+type Props = {
+  open: boolean;
   onSubmit: () => void;
+  onCancel: () => void;
   rentFees?: AssetEntity[];
 };
 
@@ -26,13 +28,13 @@ export const ClaimModal: React.FC<Props> = (props) => {
   const landWorksCtx = useLandworks();
   const { landWorksContract } = landWorksCtx;
 
-  const { onCancel, onSubmit, rentFees, ...modalProps } = props;
+  const { open, onCancel, onSubmit, rentFees, ...modalProps } = props;
 
   const [assets, setAssets] = useState([] as AssetEntity[]);
   const [totalEth, setTotalEth] = useState(BigNumber.ZERO);
   const [totalUsdc, setTotalUsdc] = useState(BigNumber.ZERO);
 
-  async function claim() {
+  const claim = async () => {
     try {
       const assetIds = assets.map((a) => new BigNumber(a.id));
       await landWorksContract?.claimMultipleRentFees(assetIds, onSubmit);
@@ -41,9 +43,9 @@ export const ClaimModal: React.FC<Props> = (props) => {
       showToastNotification(ToastType.Error, 'There was an error while claiming the rent.');
       console.log(e);
     }
-  }
+  };
 
-  function calculateTotals() {
+  const calculateTotals = () => {
     let totalEth = BigNumber.ZERO;
     let totalUsdc = BigNumber.ZERO;
     for (const asset of assets) {
@@ -56,7 +58,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
 
     setTotalEth(totalEth);
     setTotalUsdc(totalUsdc);
-  }
+  };
 
   const hasReachedMaxClaimsLimit = () => {
     return assets.length > MAX_CLAIM_SELECTED_ASSETS;
@@ -79,13 +81,8 @@ export const ClaimModal: React.FC<Props> = (props) => {
   }, [assets]);
 
   return (
-    <Modal
-      width={600}
-      className="claim-modal"
-      title={<p style={{ textAlign: 'center', fontSize: '16px' }}>Claim</p>}
-      onCancel={onCancel}
-      {...modalProps}
-    >
+    <Modal className="claim-modal" handleClose={onCancel} {...modalProps} open={open}>
+      <p style={{ textAlign: 'center', fontSize: '16px' }}>Claim</p>
       <Text type="p1" color="secondary" align="center" className="subtitle">
         Select the properties you want to claim your rent for
       </Text>
@@ -110,7 +107,13 @@ export const ClaimModal: React.FC<Props> = (props) => {
               <Icon name="token-usdc" className="eth-icon" />
             </Col>
             <Col span={5}>
-              <Button className="claim-button" disabled={isClaimDisabled()} type="primary" onClick={claim}>
+              <Button
+                btnSize="auto"
+                className="claim-button"
+                disabled={isClaimDisabled()}
+                variant="primary"
+                onClick={claim}
+              >
                 Claim
               </Button>
             </Col>
