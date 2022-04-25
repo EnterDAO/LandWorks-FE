@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-// import { ModalProps } from '@mui/material/Modal';
-import { Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { Text } from 'components/custom/typography';
-import { Button, Modal } from 'design-system';
+import { Button, Grid, Modal } from 'design-system';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { LandClaimCheckBox } from 'modules/land-works/components/land-claim-modal-checkbox';
 
@@ -85,27 +83,27 @@ export const ClaimModal: React.FC<Props> = (props) => {
       <Text type="p1" color="secondary" align="center" className="subtitle">
         Select the properties you want to claim your rent for
       </Text>
-      <Row gutter={[10, 10]}>
+      <Grid container>
         {rentFees?.map((data) => (
-          <Col key={data.id} span={24}>
+          <Grid item key={data.id}>
             <LandClaimCheckBox key={data.id} onSelected={updateAssets} data={data} />
-          </Col>
+          </Grid>
         ))}
         {hasReachedMaxClaimsLimit() && (
-          <Col span={24} className="max-transaction-limit">
+          <Grid item className="max-transaction-limit">
             <p>You have reached the limit of max claims in one transaction.</p>
-          </Col>
+          </Grid>
         )}
-        <Col span={24} className="claim-modal-footer">
-          <Row>
-            <Col span={19} className="prices-container" style={{ gap: 10 }}>
+        <Grid item className="claim-modal-footer">
+          <Grid container spacing={2}>
+            <Grid item xs={8} className="prices-container" style={{ gap: 10 }}>
               <span className="total-label">Total:</span>{' '}
               <SmallAmountTooltip className="totalPrice" amount={totalEth} />
               <Icon name="png/eth" className="eth-icon" />
               <SmallAmountTooltip className="totalPrice" amount={totalUsdc} />
               <Icon name="token-usdc" className="eth-icon" />
-            </Col>
-            <Col span={5}>
+            </Grid>
+            <Grid item xs={4}>
               <Button
                 btnSize="auto"
                 className="claim-button"
@@ -115,10 +113,10 @@ export const ClaimModal: React.FC<Props> = (props) => {
               >
                 Claim
               </Button>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </Modal>
   );
 };
