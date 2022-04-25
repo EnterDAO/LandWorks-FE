@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
 import { Link, useRouteMatch } from 'react-router-dom';
-import { Col, Row } from 'antd';
 import cn from 'classnames';
 
 import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
+import { Grid } from 'design-system';
 import LandsNav from 'modules/land-works/components/lands-header-nav';
 import { useGeneral } from 'providers/general-provider';
 import { useWarning } from 'providers/warning-provider';
@@ -119,8 +119,8 @@ const LayoutHeader: React.FC = () => {
           >
             <div className={styles.mobileInner}>
               <div className={styles.mobileMenuInner}>
-                <Row style={{ width: '100%' }}>
-                  <Col span={24}>
+                <Grid container>
+                  <Grid item>
                     {isLandingPage?.isExact && (
                       <div className={styles.mobileMenuBlock}>
                         <h3>Info</h3>
@@ -162,8 +162,8 @@ const LayoutHeader: React.FC = () => {
                         </ExternalLink>
                       </div>
                     )}
-                  </Col>
-                </Row>
+                  </Grid>
+                </Grid>
               </div>
             </div>
           </div>,
