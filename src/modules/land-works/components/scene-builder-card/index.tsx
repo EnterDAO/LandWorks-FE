@@ -18,10 +18,12 @@ const SceneBuilderCard: FC<ISceneBuilderCard> = ({ builder }) => {
   return (
     <Link to={`/scene-builder/${builder.builderName}`}>
       <CardContainer className="scene-builder-card">
-        <Grid height={133} width="100%" borderRadius="20px" overflow="hidden">
+        <Grid height={'133px'} width="260px" borderRadius="20px" overflow="hidden">
           <Box
             component="img"
             sx={{
+              objectFit: 'cover',
+              width: '100%',
               height: '100%',
               borderRadius: '20px',
             }}
