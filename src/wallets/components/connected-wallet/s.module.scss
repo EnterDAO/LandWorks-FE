@@ -10,7 +10,8 @@
 }
 
 .identicon {
-  margin: 20px 0 15px;
+  margin: 0 15px;
+  padding: 20px 0;
 }
 
 .externalLink {
@@ -35,6 +36,10 @@
 
 .card {
   border: 1px solid red;
+}
+
+.container {
+  background: var(--theme-card-color);
 }
 
 .statusTag {

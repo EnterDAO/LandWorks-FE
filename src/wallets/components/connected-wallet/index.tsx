@@ -183,7 +183,7 @@ const ConnectedWallet: React.FC = () => {
         anchorEl={anchorEl}
         onClose={handleClose}
       >
-        <div className="card">
+        <div className={s.container}>
           <Grid className={s.identicon} flow="col" gap={16} align="center" justify="center">
             <Identicon address={wallet.account} width={40} height={40} />
           </Grid>
