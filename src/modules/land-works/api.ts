@@ -447,7 +447,7 @@ export type CryptoVoxelsType = {
   background_color: string;
 };
 
-type AssetAttributes = {
+export type AssetAttributes = {
   area: number;
   width: number;
   depth: number;
@@ -1585,10 +1585,12 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
     liteAsset.externalUrl = getDecentralandPlayUrl(asset?.decentralandData?.coordinates);
   } else {
     const data = await getCryptoVoxelsAsset(asset.metaverseAssetId);
+    console.log({ data });
     liteAsset.name = data.name;
     liteAsset.type = data.attributes?.title.toUpperCase();
     liteAsset.imageUrl = data.image;
-    liteAsset.attributes = asset.attributes;
+    liteAsset.attributes = data.attributes;
+    // liteAsset.attributes = asset.attributes;
     liteAsset.externalUrl = getCryptoVexelsPlayUrl(asset?.metaverseAssetId);
     liteAsset.place = data?.attributes ? [data?.attributes?.island, data?.attributes?.suburb] : null;
   }
