@@ -44,7 +44,6 @@ export const DividerStyled = styled(Divider)<DividerProps>(() => ({
 export const TypeChip = styled(Box)<BoxProps>(() => ({
   textTransform: 'uppercase',
   width: '79px',
-  height: '26px',
   textAlign: 'center',
   padding: '4px 6px',
   backgroundColor: 'var(--theme-modal-color)',
@@ -55,25 +54,40 @@ export const TypeChip = styled(Box)<BoxProps>(() => ({
 }));
 
 export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
-  display: 'block',
-  width: '100%',
-  textAlign: 'center',
   '&.MuiTypography-h4': {
     fontSize: '18px',
     fontWeight: '700',
     lineHeight: '27px',
     color: 'var(--theme-light-color)',
+    textAlign: 'center',
+    display: 'block',
+    width: '100%',
   },
   '&.MuiTypography-h5': {
     fontSize: '12px',
     fontWeight: '600',
     lineHeight: '18px',
     color: 'var(--theme-grey700-color)',
+    textAlign: 'center',
+    display: 'block',
+    width: '100%',
   },
   '&.MuiTypography-body1': {
     fontSize: '14px',
-    fontWeight: '4400',
+    fontWeight: '400',
     lineHeight: '21px',
     color: 'var(--theme-subtle-color)',
+    textAlign: 'center',
+    display: 'block',
+    width: '100%',
+  },
+  '&.MuiTypography-body2': {
+    fontSize: '14px',
+    fontWeight: '400',
+    lineHeight: '21px',
+    color: 'var(--theme-subtle-color)',
+    textAlign: 'left',
+    display: 'inline',
+    width: 'auto%',
   },
 }));

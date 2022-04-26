@@ -49,7 +49,7 @@ const SceneBuilderCard: FC<ISceneBuilderCard> = ({ builder }) => {
         <DividerStyled orientation="horizontal" />
         <Grid display="flex" justifyContent="flex-start" width="100%" container>
           <LocationIcon style={{ marginRight: '13px' }} />
-          <div>{builder.location}</div>
+          <TypographyStyled variant="body2">{builder.location}</TypographyStyled>
         </Grid>
       </CardContainer>
     </Link>
