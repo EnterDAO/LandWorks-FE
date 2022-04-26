@@ -4,6 +4,8 @@ import { styled } from '@mui/system';
 
 import { Box, IconButton } from 'design-system';
 
+import { THEME_COLORS } from 'themes/theme-constants';
+
 const StyledModal = styled(ModalUnstyled)({
   position: 'fixed',
   // TODO: We need to extract z-indexes in constants
@@ -15,7 +17,7 @@ const StyledModal = styled(ModalUnstyled)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  background: 'var(--theme-card-color)',
+  background: THEME_COLORS.darkBlue02,
 });
 
 const StyledBackdrop = styled('div')({
@@ -32,7 +34,7 @@ export const ModalBoxStyled = styled(Box)({
   width: 'auto',
   maxHeight: 800,
   position: 'relative',
-  background: 'var(--theme-card-color)',
+  background: THEME_COLORS.darkBlue02,
   borderRadius: '10px',
   boxShadow: '0px 0px 20px 10px rgba(0, 0, 0, 0.3)',
   padding: '5rem 40px 40px 40px',
