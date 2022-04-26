@@ -7,9 +7,8 @@ import { UnsupportedChainIdError, Web3ReactProvider, useWeb3React } from '@web3-
 import { NoEthereumProviderError } from '@web3-react/injected-connector';
 import * as Antd from 'antd';
 
-import ExternalLink from 'components/custom/external-link';
 import config from 'config';
-import { Button, Grid, Loader, Modal, Typography } from 'design-system';
+import { Loader } from 'design-system';
 import { getNetworkName } from 'providers/eth-web3-provider';
 import ConnectWalletModal from 'wallets/components/connect-wallet-modal';
 import InstallMetaMaskModal from 'wallets/components/install-metamask-modal';
@@ -87,7 +86,6 @@ const WalletProvider: React.FC = (props) => {
   const [walletsModal, setWalletsModal] = React.useState<boolean>(false);
   const [unsupportedChainModal, setUnsupportedChainModal] = React.useState<boolean>(false);
   const [installMetaMaskModal, setInstallMetaMaskModal] = React.useState<boolean>(false);
-  const [showDisclaimerModal, setShowDisclaimerModal] = React.useState<boolean>(false);
 
   const disconnect = React.useCallback(() => {
     setDisconnecting(true);
@@ -142,12 +140,6 @@ const WalletProvider: React.FC = (props) => {
         connector.getProvider().then(setActiveProvider);
         setActiveConnector(walletConnector);
         setSessionProvider(walletConnector.id);
-
-        const shownDisclaimer = localStorage.getItem('disclaimerShown');
-
-        if (!shownDisclaimer) {
-          setShowDisclaimerModal(true);
-        }
       }
 
       await web3React.activate(connector, undefined, true).then(onSuccess).catch(onError);
@@ -209,41 +201,6 @@ const WalletProvider: React.FC = (props) => {
           }}
         />
       )}
-      <Modal
-        height={'100%'}
-        open={showDisclaimerModal}
-        handleClose={() => {
-          setShowDisclaimerModal(false);
-          localStorage.setItem('disclaimerShown', 'true');
-        }}
-      >
-        <Grid container width="480px" direction="column">
-          <Typography fontSize={25} variant="h2">
-            Beta Software Disclaimer
-          </Typography>
-          <Typography fontSize={16} fontWeight="normal" sx={{ margin: '10px 0 20px 0' }} variant="subtitle1">
-            Listing/Renting properties on LandWorks doesn't come without risks. Before making a deposit, it is best to
-            research and understand the risks involved. LandWorks smart contracts have been{' '}
-            <ExternalLink href="https://github.com/EnterDAO/LandWorks-protocol/tree/main/audits" target="_blank">
-              <span>audited</span>
-            </ExternalLink>
-            , however, security audits don't eliminate risks completely. Do not supply assets that you can't afford to
-            lose as LandWorks is still in Beta.
-          </Typography>
-          <Grid item>
-            <Button
-              variant="gradient"
-              btnSize="medium"
-              onClick={async () => {
-                setShowDisclaimerModal(false);
-                localStorage.setItem('disclaimerShown', 'true');
-              }}
-            >
-              ok
-            </Button>
-          </Grid>
-        </Grid>
-      </Modal>
     </WalletContext.Provider>
   );
 };
