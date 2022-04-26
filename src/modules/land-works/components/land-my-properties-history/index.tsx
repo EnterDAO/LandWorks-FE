@@ -134,7 +134,7 @@ const MyPropetiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
                 </tr>
               </tbody>
             ) : (
-              <StyledTableBody style={{ maxHeight: 260, overflowY: 'scroll' }}>
+              <StyledTableBody style={{ maxHeight: 260, overflowY: 'auto' }}>
                 {paginatedRents.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id}>
                     <StyledTableCell align="left">{data.asset ? getAssetName(data.asset) : ''}</StyledTableCell>

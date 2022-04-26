@@ -168,10 +168,10 @@ const LandsExploreList: FC<Props> = ({
     if (!loading && scrollPosition && filteredLands.length) {
       window.scrollTo({ top: +scrollPosition, behavior: 'smooth' });
     }
-    document.addEventListener('scroll', scroll);
+    document.addEventListener('auto', scroll);
 
     return () => {
-      document.removeEventListener('scroll', scroll);
+      document.removeEventListener('auto', scroll);
     };
   }, [loading]);
 

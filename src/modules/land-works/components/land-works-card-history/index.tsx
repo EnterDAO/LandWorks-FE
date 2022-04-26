@@ -207,7 +207,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId, 
                 </tr>
               </tbody>
             ) : (
-              <StyledTableBody style={{ maxHeight: 260, overflowY: 'scroll' }}>
+              <StyledTableBody style={{ maxHeight: 260, overflowY: 'auto' }}>
                 {paginatedRents.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id + uniqueId()}>
                     <StyledTableCell align="left">

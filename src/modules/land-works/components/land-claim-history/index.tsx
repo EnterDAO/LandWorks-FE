@@ -112,7 +112,7 @@ const ClaimHistoryTable: React.FC<Props> = ({ metaverse }) => {
                 </tr>
               </tbody>
             ) : (
-              <StyledTableBody style={{ maxHeight: 260, overflowY: 'scroll' }}>
+              <StyledTableBody style={{ maxHeight: 260, overflowY: 'auto' }}>
                 {paginatedClaimHistory.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id}>
                     <StyledTableCell style={{ color: THEME_COLORS.light }} align="left">

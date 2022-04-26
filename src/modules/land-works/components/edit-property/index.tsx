@@ -466,12 +466,12 @@ const EditProperty: React.FC<Props> = (props) => {
             container
             xs={12}
             maxHeight={'50vh'}
-            overflow="scroll"
+            overflow="auto"
             columnSpacing={5}
             justifyContent="space-between"
             mt={4}
           >
-            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={470} overflow="scroll">
+            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={470} overflow="auto">
               <DropdownSection
                 defaultOpen={true}
                 variant="calendar"
