@@ -34,7 +34,7 @@ export const ModalBoxStyled = styled(Box)({
   width: 'auto',
   maxHeight: 800,
   position: 'relative',
-  background: THEME_COLORS.darkBlue02,
+  background: THEME_COLORS.darkBlue03,
   borderRadius: '10px',
   boxShadow: '0px 0px 20px 10px rgba(0, 0, 0, 0.3)',
   padding: '5rem 40px 40px 40px',
