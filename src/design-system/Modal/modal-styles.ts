@@ -17,7 +17,7 @@ const StyledModal = styled(ModalUnstyled)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  background: THEME_COLORS.darkBlue02,
+  background: `rgba(${THEME_COLORS.darkBlue02}, 0.4)`,
 });
 
 const StyledBackdrop = styled('div')({
