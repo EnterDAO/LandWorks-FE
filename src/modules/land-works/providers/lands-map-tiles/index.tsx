@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, createContext, useContext } from 'react';
 
-import { AtlasTile } from 'components/custom/Atlas/Atlas';
+import { AtlasTile } from 'components/custom/atlas';
 
 export type ContextProps = {
   mapTiles?: Record<string, AtlasTile> | undefined;

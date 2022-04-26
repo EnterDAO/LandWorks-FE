@@ -18,7 +18,7 @@ import { getTokenPrice } from 'providers/known-tokens-provider';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
-import EditFormCardSkeleton from '../land-edit-form-loader-card';
+import EditFormCardSkeleton from '../land-editing-skeleton';
 
 import { formatBigNumberInput, getTimeType, secondsToDuration } from '../../../../utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from '../../../../utils/date';

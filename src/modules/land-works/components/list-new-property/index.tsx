@@ -26,7 +26,7 @@ import { getTokenPrice } from 'providers/known-tokens-provider';
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
 import { PaymentToken, fetchTokenPayments } from '../../api';
-import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
+import EditFormCardSkeleton from '../../components/land-editing-skeleton';
 import { useCryptoVoxels } from '../../providers/cryptovoxels-provider';
 import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
