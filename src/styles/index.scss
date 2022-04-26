@@ -116,7 +116,7 @@ body.mobile-menu-open {
   --theme-grey100-color: #060a0d;
   --theme-grey200-color: #27273a;
   --theme-grey400-color: #3a3a4e;
-  --theme-grey700-color: #68687B;
+  --theme-grey700-color: #68687b;
   --theme-grey900-color: #f8f8ff;
 
   --theme-white-color: #fff;
@@ -209,7 +209,7 @@ body.mobile-menu-open {
   --theme-warning-color: #d92687;
   --theme-warning-border: #4d2f3f;
   --theme-warning-background: #321e29;
-  
+
   --theme-primary-box-shadow: rgba(221, 61, 203, 0.6);
 
   --theme-primary-color: #fff;
@@ -280,7 +280,7 @@ button {
 
 .tag-icon {
   width: 20px !important;
-  height: 20px !important
+  height: 20px !important;
 }
 
 #notifications-root {
@@ -306,4 +306,13 @@ ul {
 
 a {
   text-decoration: none;
+  color: #177ddc;
+
+  &:hover {
+    color: #165996;
+  }
+
+  &:active {
+    color: #388ed3;
+  }
 }
