@@ -11,6 +11,11 @@ export const MuiGridStyled = styled(MuiGrid)(({ theme }) => ({
       maxWidth: '33.33%',
     },
   },
+  '&.MuiGrid-grid-xxl-2': {
+    [theme.breakpoints.up(1600)]: {
+      maxWidth: '16.66%',
+    },
+  },
 }));
 
 const Grid: FC<GridProps> = ({ children, xxl, ...other }) => {
