@@ -52,7 +52,7 @@ const MyPropertiesView: FC = () => {
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [slicedLands, setSlicedLands] = useState(pageSize);
   const [currencyId, setCurrencyId] = useState(sessionStorageHandler('get', 'my-properties-filters', 'currency') || 0);
-  const [metaverse, setMetaverse] = useState(sessionStorageHandler('get', 'my-properties-filters', 'metaverse') || 1);
+  const [metaverse, setMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
 
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState<string | null>(null);
