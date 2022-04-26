@@ -3,13 +3,12 @@ import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
 
-import { Col, Row } from 'antd';
 import { Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { LocationState } from 'modules/interface';
-import EditPropertyViewNew from 'modules/land-works/components/edit-property';
+import EditProperty from 'modules/land-works/components/edit-property';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 
