@@ -28,6 +28,7 @@ export default class CryptoVoxelsContract extends ERC721Contract {
     const tokenId = await this.call('tokenOfOwnerByIndex', [user, index]); // Get the token ID
     const tokenURI = await this.call('tokenURI', [tokenId]);
     const metadata: CryptoVoxelsType = await fetch(tokenURI).then((res) => res.json());
+    const place = `${metadata.attributes.island}, ${metadata.attributes.suburb}`;
     const coords = getCoordsFromCryptoVoxelImageUrl(metadata.image);
     const formattedCoords = formatCryptoVoxelsCoords(coords);
     return {
@@ -35,7 +36,7 @@ export default class CryptoVoxelsContract extends ERC721Contract {
       name: metadata.name,
       image: metadata.image,
       contractAddress: this.address,
-      coords,
+      place,
       formattedCoords,
     };
   }
