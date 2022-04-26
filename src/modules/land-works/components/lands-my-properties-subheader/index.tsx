@@ -22,9 +22,7 @@ const LandsMyPropertiesSubheader: FC<Props> = ({
   onChangeMetaverse,
 }) => {
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
-  const [selectedMetaverse, setSelectedMetaverse] = useState(
-    sessionStorageHandler('get', 'my-properties-filters', 'metaverse') || 1
-  );
+  const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
   const [selectedCurrency, setSelectedCurrency] = useState(
     sessionStorageHandler('get', 'my-properties-filters', 'currency') || 0
   );
@@ -38,7 +36,7 @@ const LandsMyPropertiesSubheader: FC<Props> = ({
 
   const onChangeMetaverseHandler = (value: number) => {
     onChangeMetaverse && onChangeMetaverse(value);
-    sessionStorageHandler('set', 'my-properties-filters', 'metaverse', value);
+    sessionStorageHandler('set', 'general', 'metaverse', value);
     setSelectedMetaverse(value);
   };
 

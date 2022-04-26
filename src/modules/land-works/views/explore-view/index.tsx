@@ -44,7 +44,7 @@ const ExploreView: React.FC = () => {
     order: sessionStorageHandler('get', 'explore-filters', 'order'),
     owner: sessionStorageHandler('get', 'explore-filters', 'owner'),
     lastRentEnd: sessionStorageHandler('get', 'explore-filters', 'lastRentEnd'),
-    metaverse: sessionStorageHandler('get', 'explore-filters', 'metaverse'),
+    metaverse: sessionStorageHandler('get', 'general', 'metaverse'),
   };
 
   const [lands, setLands] = useState<AssetEntity[]>([]);

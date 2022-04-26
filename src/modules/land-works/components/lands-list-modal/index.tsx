@@ -56,12 +56,13 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
         <div className="heading" style={{ fontSize: 25 }}>
           Successfully Listed!
         </div>
-        <div>Nice! You’ve successfully listed property.</div>
+        <div>Nice! You&apos;ve successfully listed property.</div>
         <Button
           variant="gradient"
           btnSize="medium"
           onClick={(e) => {
-            window.location.pathname === '/my-properties' ? handleClose() : e.preventDefault;
+            e.preventDefault;
+            handleClose();
           }}
         >
           <Link className="link-to-properties" to="/my-properties">

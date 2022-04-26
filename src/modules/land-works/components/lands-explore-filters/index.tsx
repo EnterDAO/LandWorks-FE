@@ -27,9 +27,7 @@ const LandWorksFilters: FC<Props> = ({
 }) => {
   const wallet = useWallet();
   const [selectedOrder, setSelectedOrder] = useState(sessionStorageHandler('get', 'explore-filters', 'order') || 1);
-  const [selectedMetaverse, setSelectedMetaverse] = useState(
-    sessionStorageHandler('get', 'explore-filters', 'metaverse') || 1
-  );
+  const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
   const [metaverses, setMetaverses] = useState(landsData);
 
   const [selectedCurrency, setSelectedCurrency] = useState(
@@ -41,7 +39,7 @@ const LandWorksFilters: FC<Props> = ({
   );
 
   const onChangePlaceHandler = (value: number) => {
-    sessionStorageHandler('set', 'explore-filters', 'metaverse', value);
+    sessionStorageHandler('set', 'general', 'metaverse', value);
     onChangeMetaverse(`${value}`);
     setSelectedMetaverse(value);
     // TODO:: some filtering here
