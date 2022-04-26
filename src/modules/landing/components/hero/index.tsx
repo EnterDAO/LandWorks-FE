@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Col, Row } from 'antd';
 import { Power1, gsap } from 'gsap';
 
-import { Button } from 'design-system';
+import { Button, Grid } from 'design-system';
 import { ReactComponent as LeftBlocks } from 'resources/svg/landing/hero-left-blocks.svg';
 import { ReactComponent as RightBlocks } from 'resources/svg/landing/hero-right-blocks.svg';
 
@@ -101,8 +100,8 @@ export const Hero: React.FC = () => {
         <RightBlocks />
       </div>
       <div className="content-container">
-        <Row>
-          <Col>
+        <Grid container>
+          <Grid item>
             <h2>Metaverse land</h2>
             <h1>Renting marketplace</h1>
             <Link to="/explore">
@@ -110,8 +109,8 @@ export const Hero: React.FC = () => {
                 Launch App
               </Button>
             </Link>
-          </Col>
-        </Row>
+          </Grid>
+        </Grid>
       </div>
     </section>
   );

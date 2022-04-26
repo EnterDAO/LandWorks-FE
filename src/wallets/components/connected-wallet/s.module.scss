@@ -37,14 +37,6 @@
   border: 1px solid red;
 }
 
-.accountLink {
-  &:global(.ant-popover-open) {
-    .dropdownArrow {
-      transform: rotate(-180deg);
-    }
-  }
-}
-
 .statusTag {
   background: rgba(108, 210, 126, 0.2);
   border-radius: 12px;

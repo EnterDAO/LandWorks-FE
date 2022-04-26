@@ -1,5 +1,3 @@
-@import '~antd/dist/antd.css';
-@import '~antd/dist/antd.dark.css';
 @import '~react-toastify/dist/ReactToastify.css';
 @import '~react-loading-skeleton/dist/skeleton.css';
 @import 'flex';
@@ -9,7 +7,7 @@
 @import 'utils';
 @import 'button';
 @import 'rechart';
-@import 'inputs';
+@import 'scrollbar';
 
 html {
   block-size: 100%;
@@ -57,14 +55,6 @@ p {
 
 body.mobile-menu-open {
   overflow: hidden;
-}
-
-.ant-notification-notice {
-  word-break: break-word;
-
-  .ant-notification-notice-message {
-    min-height: 24px;
-  }
 }
 
 :root {
@@ -304,36 +294,6 @@ button {
   }
 }
 
-.ant-switch.ant-switch .ant-switch-handle::before {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.24);
-}
-
-.ant-switch.ant-switch[aria-checked='false'] {
-  background: #43484d;
-}
-
-.ant-switch.ant-switch[aria-checked='true'] {
-  background: var(--gradient-green);
-}
-
-.ant-spin .ant-spin-dot {
-  color: var(--theme-secondary-color);
-}
-
-.ant-spin .ant-spin-dot .ant-spin-dot-item {
-  background: var(--theme-secondary-color);
-}
-
-.ant-empty {
-  margin: 40px 0;
-}
-
-.ant-select-disabled {
-  .ant-select-selection-item {
-    color: var(--theme-subtle-color) !important;
-  }
-}
-
 .link-gradient:hover {
   opacity: 0.7;
 }
@@ -342,4 +302,8 @@ ul {
   ::marker {
     color: var(--theme-primary-color);
   }
+}
+
+a {
+  text-decoration: none;
 }

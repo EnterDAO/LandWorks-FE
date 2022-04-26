@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
-import { Col, Row } from 'antd';
 
 import { Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-system/icons';
@@ -10,12 +9,12 @@ import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { LocationState } from 'modules/interface';
 import EditPropertyViewNew from 'modules/land-works/components/edit-property';
+import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 
 import ExternalLink from '../../../../components/custom/external-link';
 import { useWallet } from '../../../../wallets/wallet';
 import { ASSET_SUBSCRIPTION, AssetEntity, fetchAdjacentDecentralandAssets, parseAsset } from '../../api';
-import LandWorkCard from '../../components/land-works-card';
 import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
 import { RentModal } from '../../components/lands-rent-modal';
@@ -262,7 +261,7 @@ const SingleLandView: React.FC = () => {
         </Grid>
       </Modal>
 
-      <Row gutter={40} className="head-nav">
+      <Grid container className="head-nav">
         <div className="left-wrapper">
           <div className="head-breadcrumbs">
             <Link
@@ -327,8 +326,7 @@ const SingleLandView: React.FC = () => {
             ) : (
               <LandsTooltip
                 placement="bottom"
-                trigger="hover"
-                text={
+                target={
                   <>
                     You are configured as consumer of the property. If you have staked the property in{' '}
                     <ExternalLink href="https://dao.enterdao.xyz/yield-farming">LandWorks Yield Farming</ExternalLink>,
@@ -369,8 +367,7 @@ const SingleLandView: React.FC = () => {
               shouldHaveWithdrawTooltip() ? (
                 <LandsTooltip
                   placement="bottom"
-                  trigger="hover"
-                  text="There are still active/pending rents. You will be able to withdraw your property once all rents end."
+                  target="There are still active/pending rents. You will be able to withdraw your property once all rents end."
                 >
                   <span>
                     <Button variant="tertiary" btnSize="xsmall" disabled={true}>
@@ -391,8 +388,7 @@ const SingleLandView: React.FC = () => {
             ) : (
               <LandsTooltip
                 placement="bottom"
-                trigger="hover"
-                text={
+                target={
                   <>
                     You are configured as consumer of the property. If you have staked the property in{' '}
                     <ExternalLink href="https://dao.enterdao.xyz/yield-farming">LandWorks Yield Farming</ExternalLink>,
@@ -408,7 +404,8 @@ const SingleLandView: React.FC = () => {
               </LandsTooltip>
             ))}
         </div>
-      </Row>
+      </Grid>
+
       <SingleViewLandCard
         isClaimButtonDisabled={claimButtonDisabled}
         isRentButtonDisabled={rentButtonDisabled}
@@ -423,13 +420,13 @@ const SingleLandView: React.FC = () => {
       <SingleViewLandHistory assetId={tokenId} metaverseRegistry={asset.metaverseRegistry?.id} />
 
       {!!adjacentLands.length && (
-        <Row className="nearby-section">
+        <Grid container className="nearby-section">
           <div className="nearby-title">
             <p className="nearby-heading">Nearby Properties </p>
             <p className="nearby-description">{adjacentLands.length} Properties</p>
           </div>
 
-          <Col span={24} className="single-lands-pagination">
+          <Grid item xs={24} className="single-lands-pagination">
             {items.map(({ type, ...item }, index) => {
               if (['next', 'previous'].includes(type))
                 return (
@@ -438,16 +435,16 @@ const SingleLandView: React.FC = () => {
                   </button>
                 );
             })}
-          </Col>
+          </Grid>
 
-          <Col span={24}>
-            <Row gutter={[15, 15]}>
+          <Grid item xs={24}>
+            <Grid container spacing={[15, 15]}>
               {paginatedNearbyLands.map((land) => (
                 <LandWorkCard key={land.id} land={land} />
               ))}
-            </Row>
-          </Col>
-        </Row>
+            </Grid>
+          </Grid>
+        </Grid>
       )}
 
       {showEditModal && (

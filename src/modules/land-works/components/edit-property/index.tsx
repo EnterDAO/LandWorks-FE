@@ -18,7 +18,7 @@ import { getTokenPrice } from 'providers/known-tokens-provider';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
-import EditFormCardSkeleton from '../land-edit-form-loader-card';
+import EditFormCardSkeleton from '../land-editing-skeleton';
 
 import { formatCryptoVoxelsCoords, getCoordsFromCryptoVoxelImageUrl } from 'modules/land-works/utils';
 import { formatBigNumberInput, getTimeType, secondsToDuration } from '../../../../utils';

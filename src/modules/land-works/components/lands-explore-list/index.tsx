@@ -3,7 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useDebounce from '@rooks/use-debounce';
 
-import { AtlasTile } from 'components/custom/Atlas/Atlas';
+import { AtlasTile } from 'components/custom/atlas';
 import { Grid } from 'design-system';
 import { GridIcon, MapIcon } from 'design-system/icons';
 import { LocationState } from 'modules/interface';

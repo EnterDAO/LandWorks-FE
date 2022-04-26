@@ -174,12 +174,6 @@
     color: var(--theme-primary-color);
   }
 
-  &:global(.ant-popover-open) {
-    .dropdownArrow {
-      transform: rotate(-180deg);
-    }
-  }
-
   &:last-child {
     margin-right: 20px;
   }
