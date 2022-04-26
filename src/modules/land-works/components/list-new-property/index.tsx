@@ -26,11 +26,11 @@ import { getTokenPrice } from 'providers/known-tokens-provider';
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
 import { PaymentToken, fetchTokenPayments } from '../../api';
-import EditFormCardSkeleton from '../../components/land-editing-skeleton';
 import { useCryptoVoxels } from '../../providers/cryptovoxels-provider';
 import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
 import { useLandworks } from '../../providers/landworks-provider';
+import ListingCardSkeleton from '../land-listing-skeleton';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
 
 import { getTimeType, secondsToDuration, sessionStorageHandler } from 'utils';
@@ -591,9 +591,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
             </Grid>
 
             {loading ? (
-              <Grid width={'100%'}>
-                <EditFormCardSkeleton />
-              </Grid>
+              <ListingCardSkeleton />
             ) : (
               <Grid container flexDirection="row" wrap="wrap" className="properties">
                 {selectedMetaverse === 1 && (
