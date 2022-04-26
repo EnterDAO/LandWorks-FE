@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { TWITTER_TEXT } from 'constants/modules';
 import { getEtherscanAddressUrl } from 'web3/utils';
 
 import ExternalLink from 'components/custom/external-link';
@@ -9,6 +8,8 @@ import { Spinner, SuccessStarIcon, TwitterIcon } from 'design-system/icons';
 import { useWallet } from 'wallets/wallet';
 
 import { ShareLink } from './styled';
+
+import { TWITTER_TEXT } from 'modules/land-works/constants';
 
 import './index.scss';
 

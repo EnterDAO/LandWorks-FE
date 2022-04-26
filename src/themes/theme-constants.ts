@@ -14,6 +14,7 @@ export const THEME_COLORS = {
   neonPink: 'var(--theme-neon-pink-color)',
   darkBlue01: 'var(--theme-body-color)',
   darkBlue02: 'var(--theme-card-color)',
+  darkBlue03: 'var(--theme-modal-color)',
   grey01: 'var(--theme-grey200-color)',
   grey02: 'var(--theme-grey700-color)',
   grey03: 'var(--theme-subtle-color)',

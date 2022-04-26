@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {
-  DECENTRALAND_METAVERSE,
-  DEFAULT_LAST_RENT_END,
-  DEFAULT_TOKEN_ADDRESS,
-  sortColumns,
-  sortDirections,
-} from 'constants/modules';
 import useDebounce from '@rooks/use-debounce';
 import { isNull } from 'lodash';
 
-import { AtlasTile } from 'components/custom/Atlas/Atlas';
+import { AtlasTile } from 'components/custom/atlas';
 import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
@@ -32,6 +25,14 @@ import {
 
 import { filterLandsByAvailability, filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
 import { getNowTs, sessionStorageHandler } from 'utils';
+
+import {
+  DECENTRALAND_METAVERSE,
+  DEFAULT_LAST_RENT_END,
+  DEFAULT_TOKEN_ADDRESS,
+  sortColumns,
+  sortDirections,
+} from 'modules/land-works/constants';
 
 import './explore-view.scss';
 

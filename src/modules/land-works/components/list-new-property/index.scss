@@ -119,41 +119,6 @@
     }
   }
 
-  .ant-checkbox-inner {
-    width: 20px;
-    height: 20px;
-    background-color: var(--theme-checkbox-color);
-    border-color: var(--theme-checkbox-color);
-    margin-right: 5px;
-
-    &:after {
-      left: 5px;
-      top: 8px;
-    }
-  }
-
-  .ant-checkbox-wrapper {
-    margin-right: 6px;
-
-    .ant-checkbox-inner {
-      border-color: transparent !important;
-    }
-  }
-
-  .ant-checkbox:hover::after,
-  .ant-checkbox-wrapper:hover .ant-checkbox::after {
-    visibility: hidden !important;
-  }
-
-  .ant-checkbox-checked {
-    .ant-checkbox-inner {
-      width: 20px;
-      height: 20px;
-      background-color: var(--theme-accent-color);
-      border-color: var(--theme-accent-color);
-    }
-  }
-
   .price-container {
     background: #1e1e2e;
     border-radius: 4px;
