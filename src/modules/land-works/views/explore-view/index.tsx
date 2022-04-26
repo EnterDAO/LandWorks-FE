@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import useDebounce from '@rooks/use-debounce';
 import { isNull } from 'lodash';
 
-import { AtlasTile } from 'components/custom/atlas';
 import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
+import { AtlasTile } from 'modules/land-works/components/atlas';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
