@@ -16,7 +16,6 @@ const ExploreView = lazy(() => import('./views/explore-view'));
 const MyPropertiesView = lazy(() => import('./views/my-properties-view'));
 const SingleLand = lazy(() => import('./views/single-land-view'));
 const ListProperty = lazy(() => import('./views/list-property-view'));
-const EditProperty = lazy(() => import('./views/edit-property-view'));
 const LandingView = lazy(() => import('modules/landing'));
 
 const LandworksView: React.FC = () => {
@@ -61,13 +60,6 @@ const LandworksView: React.FC = () => {
         path="/list"
         exact
         component={ListProperty}
-      />
-      <ProtectedRoute
-        isAuthenticated={false}
-        authenticationPath="/explore"
-        path="/property/:tokenId/edit/"
-        exact
-        component={EditProperty}
       />
       <Route path={['/home', '/']} component={LandingView} />
     </Switch>
