@@ -85,9 +85,7 @@ const SceneBuilderProfile: FC<ISceneBuilderProfile> = ({ builder }) => {
             <TypographyStyled variant="h4" style={{ textTransform: 'uppercase' }}>
               My Website
             </TypographyStyled>
-            <a style={{ color: 'var(--theme-accent-color)' }} href={builder?.website}>
-              {builder?.website}
-            </a>
+            <a href={builder?.website}>{builder?.website}</a>
           </Grid>
         )}
       </Grid>
