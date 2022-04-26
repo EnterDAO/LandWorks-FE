@@ -32,7 +32,7 @@ const StyledBackdrop = styled('div')({
 
 export const ModalBoxStyled = styled(Box)({
   width: 'auto',
-  maxHeight: 800,
+  maxHeight: 858,
   position: 'relative',
   background: THEME_COLORS.darkBlue03,
   borderRadius: '10px',
