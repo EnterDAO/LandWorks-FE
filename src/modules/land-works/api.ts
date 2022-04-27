@@ -223,6 +223,104 @@ export const USER_CLAIM_SUBSCRIPTION = gql`
   }
 `;
 
+export const USER_NOTIFICATION_SUBSCRIPTION = gql`
+  subscription GetUser($id: String) {
+    user(id: $id) {
+      id
+      consumerTo {
+        id
+        metaverseAssetId
+        metaverse {
+          name
+        }
+        metaverseRegistry {
+          id
+        }
+        unclaimedRentFee
+        paymentToken {
+          id
+          name
+          symbol
+          decimals
+        }
+      }
+      rents(where: { renter: $id }) {
+        id
+        timestamp
+        end
+        asset {
+          id
+          rents {
+            renter {
+              id
+            }
+            start
+            end
+          }
+          decentralandData {
+            id
+            metadata
+            isLAND
+            coordinates {
+              id
+              x
+              y
+            }
+          }
+          metaverse {
+            name
+          }
+          paymentToken {
+            id
+            name
+            symbol
+            decimals
+          }
+          metaverseAssetId
+          unclaimedRentFee
+          lastRentEnd
+          status
+          totalRents
+        }
+      }
+      assets(orderBy: timestamp, orderDirection: desc) {
+        id
+        metaverseAssetId
+        metaverse {
+          name
+        }
+        rents {
+          renter {
+            id
+          }
+          start
+          end
+        }
+        metaverseRegistry {
+          id
+        }
+        decentralandData {
+          id
+          metadata
+          isLAND
+          coordinates {
+            id
+            x
+            y
+          }
+        }
+        unclaimedRentFee
+        paymentToken {
+          id
+          name
+          symbol
+          decimals
+        }
+      }
+    }
+  }
+`;
+
 export const USER_CLAIM_HISTORY_SUBSCRIPTION = gql`
   subscription GetUserClaimHistory($id: String, $metaverse: String) {
     user(id: $id) {

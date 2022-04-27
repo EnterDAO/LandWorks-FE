@@ -16,6 +16,7 @@ import { ReactComponent as CopyIcon } from 'assets/icons/copy.svg';
 import { ReactComponent as Currency } from 'assets/icons/currency.svg';
 import { ReactComponent as EditIcon } from 'assets/icons/edit.svg';
 import { ReactComponent as EmptyIcon } from 'assets/icons/empty.svg';
+import { ReactComponent as EndTimerIcon } from 'assets/icons/endTimer.svg';
 import { ReactComponent as ENTRIcon } from 'assets/icons/ENTR.svg';
 import { ReactComponent as ErrorIcon } from 'assets/icons/error.svg';
 import { ReactComponent as ETHIcon } from 'assets/icons/ETH.svg';
@@ -34,15 +35,18 @@ import { ReactComponent as HeartInCircleNotFilledIcon } from 'assets/icons/heart
 import { ReactComponent as HeartOutlinedIcon } from 'assets/icons/heart-outlined.svg';
 import { ReactComponent as HiIcon } from 'assets/icons/hi.svg';
 import { ReactComponent as HomeIcon } from 'assets/icons/home.svg';
+import { ReactComponent as HourglassIcon } from 'assets/icons/hourglass.svg';
 import { ReactComponent as LanguagesIcon } from 'assets/icons/languages-icon.svg';
 import { ReactComponent as LocationIcon } from 'assets/icons/location-icon.svg';
 // import { ReactComponent as InfoIcon} from 'assets/icons/info.svg';
 import { ReactComponent as LoginIcon } from 'assets/icons/log-in.svg';
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg';
 import { ReactComponent as MapIcon } from 'assets/icons/map.svg';
+import { ReactComponent as MessageIcon } from 'assets/icons/message.svg';
 import { ReactComponent as MinusIcon } from 'assets/icons/minus.svg';
 import { ReactComponent as MoonIcon } from 'assets/icons/moon.svg';
 import { ReactComponent as MoreIcon } from 'assets/icons/more.svg';
+import { ReactComponent as RentingNotificationIcon } from 'assets/icons/newRenting.svg';
 import { ReactComponent as NextIcon } from 'assets/icons/next.svg';
 import { ReactComponent as NoConnectionIcon } from 'assets/icons/no-connection.svg';
 import { ReactComponent as NotVisibleIcon } from 'assets/icons/not-visible.svg';
@@ -78,6 +82,9 @@ import { ReactComponent as WarningIcon } from 'assets/icons/warning.svg';
 // One-color icons
 export {
   NotificationIcon,
+  HourglassIcon,
+  MessageIcon,
+  EndTimerIcon,
   TwitterIcon,
   LanguagesIcon,
   ProfileIcon02,
@@ -142,4 +149,15 @@ export {
 // Multi-color icons
 export { UploadIcon, FileUploadedIcon, UploadingIcon, UpdateIcon, NoConnectionIcon, ErrorIcon };
 // Unique icons
-export { EthereumIcon, ETHIcon, ENTRIcon, HiIcon, CheckGlowIcon, SignGradientIcon, FireIcon, StarIcon, PostBoxIcon };
+export {
+  EthereumIcon,
+  ETHIcon,
+  ENTRIcon,
+  HiIcon,
+  CheckGlowIcon,
+  SignGradientIcon,
+  FireIcon,
+  StarIcon,
+  PostBoxIcon,
+  RentingNotificationIcon,
+};

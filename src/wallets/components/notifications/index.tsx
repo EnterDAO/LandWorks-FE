@@ -1,31 +1,103 @@
+import React, { useEffect, useState } from 'react';
+import { useLocalStorage } from 'react-use-storage';
+import { useSubscription } from '@apollo/client';
 import { Typography } from '@mui/material';
 
-import { Notification } from 'components/custom/notification';
+import IconNotification from 'components/custom/icon-notification';
 import { Button, Grid } from 'design-system';
-import { PostBoxIcon } from 'design-system/icons';
-import { useGeneral } from 'providers/general-provider';
-import { useNotifications } from 'providers/notifications-provider';
+import { NotificationIcon, PostBoxIcon } from 'design-system/icons';
+import { StyledPopover } from 'design-system/Popover/Popover';
+import { USER_NOTIFICATION_SUBSCRIPTION, parseUser } from 'modules/land-works/api';
+import { useWallet } from 'wallets/wallet';
 
+import NotificationMessage from './NotificationMessage';
+import { NotificationList } from './notificationTypes';
 import {
   EmptyContainer,
-  IconWrapper,
-  MessageRoot,
-  StyledGrid,
+  NotificationButton,
+  NotificationContainer,
   StyledRoot,
-  StyledTitle,
   StyledTitleRow,
   StyledTypography,
 } from './styled';
 
+import { parseNotifications, parseRents } from './utils';
+
 interface Props {
   hasUnread: boolean;
   markAllAsRead: () => void;
+  notifications: Array<any>;
 }
 
-const Notifications: React.FC<Props> = ({ hasUnread, markAllAsRead }) => {
-  const { isDarkTheme } = useGeneral();
-  const { notifications } = useNotifications();
+export const NotificationSection: React.FC = () => {
+  const [notifications, setNotification] = useState<NotificationList[] | []>([]);
+  const [lastLogin, setLastLogin] = useLocalStorage<number>('user_profile', 0);
+  const [hasUnread, setHasUnread] = useState<boolean>(false);
 
+  const wallet = useWallet();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
+  const open = Boolean(anchorEl);
+
+  const { data: userData } = useSubscription(USER_NOTIFICATION_SUBSCRIPTION, {
+    skip: wallet.account === undefined,
+    variables: { id: wallet.account?.toLowerCase() },
+  });
+
+  const updateUser = async () => {
+    if (userData && userData.user && wallet.account) {
+      const rented = await parseRents(userData.user);
+      const listed = await (await parseUser(userData.user)).ownerAndConsumerAssets;
+      setNotification(parseNotifications(rented, listed, wallet.account));
+    } else {
+      setNotification([]);
+    }
+  };
+  useEffect(() => {
+    updateUser();
+  }, [userData]);
+
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const markAllAsRead = () => {
+    return null;
+  };
+  const handleClose = () => {
+    setLastLogin(Date.now());
+    setAnchorEl(null);
+  };
+
+  useEffect(() => {
+    if (notifications.length) setHasUnread(!!notifications.filter((item) => item.time >= lastLogin).length);
+  }, [notifications, lastLogin]);
+
+  return (
+    <>
+      <StyledPopover
+        open={open}
+        onClose={handleClose}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Notifications hasUnread={hasUnread} markAllAsRead={markAllAsRead} notifications={notifications} />
+      </StyledPopover>
+      <NotificationButton onClick={handleClick}>
+        <IconNotification width={24} height={24} notificationSize={9} bubble={hasUnread}>
+          <NotificationIcon />
+        </IconNotification>
+      </NotificationButton>
+    </>
+  );
+};
+
+const Notifications: React.FC<Props> = ({ hasUnread, markAllAsRead, notifications }) => {
   const empty = (
     <EmptyContainer container>
       <PostBoxIcon />
@@ -51,113 +123,15 @@ const Notifications: React.FC<Props> = ({ hasUnread, markAllAsRead }) => {
         </Grid>
       </StyledTitleRow>
       {notifications.length ? (
-        <>
-          <RentingNotification startedAt={Date.now() + 100000} time={'3 s'} />
-          <MessageNotification startedAt={Date.now()} time={'15 min'} />
-          <RentEndNotification startedAt={Date.now() - 100} time={'5 d'} />
-        </>
+        <NotificationContainer>
+          {notifications.map((item) => (
+            <NotificationMessage key={item.id} item={item} />
+          ))}
+        </NotificationContainer>
       ) : (
         empty
       )}
     </StyledRoot>
-  );
-};
-
-// type NotificationType = 'newRenting' | 'message' | 'rentEnded' | 'yourRentEnded' | 'endSoon';
-
-// type Foo = {
-//   [K in NotificationType]: any;
-// };
-
-// const obj: Foo = {
-//   newRenting: {
-//     icon: 'a',
-//     title: 'New Renting',
-//     subtitle: (id: string, name: string) => {
-//       return (
-//         <>
-//           Claim rent for <a href={`/property/${id}`}> {name}</a>
-//         </>
-//       );
-//     },
-//     button: (
-//       <Button variant="accentblue" sx={{ marginLeft: 'auto' }} btnSize="xsmall">
-//         CLAIM
-//       </Button>
-//     ),
-//   },
-//   message: {},
-//   rentEnded: {},
-//   yourRentEnded: {},
-//   endSoon: {},
-// };
-
-const RentingNotification: React.FC<{ startedAt: number; time: string }> = ({ startedAt, time }) => {
-  const isNewNotification = Date.now() <= startedAt;
-
-  return (
-    <MessageRoot
-      container
-      sx={{
-        background: isNewNotification ? 'rgba(93, 143, 240, 0.1)' : '',
-      }}
-    >
-      <IconWrapper>a</IconWrapper>
-      <StyledGrid>
-        <StyledTypography fontSize={14}>New Renting</StyledTypography>
-        <Typography fontSize={14}>
-          Claim rent for <a href="/property/123">Land (-12,123)</a>
-        </Typography>
-      </StyledGrid>
-      <Button variant="accentblue" sx={{ marginLeft: 'auto' }} btnSize="xsmall">
-        CLAIM
-      </Button>
-      <StyledTypography sx={{ width: 60, textAlign: 'end' }}>{time}</StyledTypography>
-    </MessageRoot>
-  );
-};
-
-const MessageNotification: React.FC<{ startedAt: number; time: string }> = ({ startedAt, time }) => {
-  const isNewNotification = Date.now() <= startedAt;
-  return (
-    <MessageRoot
-      container
-      sx={{
-        background: isNewNotification ? 'rgba(93, 143, 240, 0.1)' : '',
-      }}
-    >
-      <IconWrapper>a</IconWrapper>
-      <StyledGrid>
-        <StyledTypography fontSize={14}>New Message in Blockscan</StyledTypography>
-        <Typography fontSize={14}>Someone send you a message</Typography>
-      </StyledGrid>
-      <Button variant="accentblue" sx={{ marginLeft: 'auto' }} btnSize="xsmall">
-        OPEN
-      </Button>
-      <StyledTypography sx={{ width: 60, textAlign: 'end' }}>{time}</StyledTypography>
-    </MessageRoot>
-  );
-};
-
-const RentEndNotification: React.FC<{ startedAt: number; time: string }> = ({ startedAt, time }) => {
-  const isNewNotification = Date.now() <= startedAt;
-  return (
-    <MessageRoot
-      container
-      sx={{
-        background: isNewNotification ? 'rgba(93, 143, 240, 0.1)' : '',
-      }}
-    >
-      <IconWrapper>a</IconWrapper>
-      <StyledGrid>
-        <StyledTypography fontSize={14}>Rent on Your Land Ended</StyledTypography>
-        <Typography fontSize={14}>
-          Rent on <a href="/property/123">Land (-12,123)</a> has ended.
-        </Typography>
-      </StyledGrid>
-      <div style={{ marginLeft: 'auto' }} />
-      <StyledTypography sx={{ width: 60, textAlign: 'end' }}>{time}</StyledTypography>
-    </MessageRoot>
   );
 };
 

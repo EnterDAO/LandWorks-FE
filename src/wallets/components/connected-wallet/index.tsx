@@ -10,68 +10,21 @@ import { getEtherscanAddressUrl, getEtherscanTxUrl, shortenAddr } from 'web3/uti
 import ExternalLink from 'components/custom/external-link';
 import Grid from 'components/custom/grid';
 import Icon from 'components/custom/icon';
-import IconNotification from 'components/custom/icon-notification';
 import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
-import { NotificationIcon } from 'design-system/icons';
 import { StyledPopover } from 'design-system/Popover/Popover';
 import { getENSName } from 'helpers/helpers';
 import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
-import { useNotifications } from 'providers/notifications-provider';
 import { ReactComponent as ExternalLinkIcon } from 'resources/svg/external-link.svg';
 import { useWallet } from 'wallets/wallet';
 
 import { useErc20 } from '../../../modules/land-works/providers/erc20-provider';
-import Notifications from '../notifications';
-import { NotificationButton } from './styled';
+import { NotificationSection } from '../notifications';
 import UserInfo from './UserInfo/UserInfo';
 
 import s from './s.module.scss';
-
-const NotificationSection: React.FC = () => {
-  const { setNotificationsReadUntil, notifications, notificationsReadUntil } = useNotifications();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const markAllAsRead = () => {
-    if (notifications.length) {
-      setNotificationsReadUntil(Math.max(...notifications.map((n) => n.startsOn)));
-    }
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const hasUnread = notificationsReadUntil ? notifications.some((n) => n.startsOn > notificationsReadUntil) : false;
-  return (
-    <>
-      <StyledPopover
-        open={open}
-        onClose={handleClose}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-      >
-        <Notifications hasUnread={hasUnread} markAllAsRead={markAllAsRead} />
-      </StyledPopover>
-      <NotificationButton onClick={handleClick}>
-        <IconNotification width={24} height={24} notificationSize={9} bubble={hasUnread} className={s.notificationIcon}>
-          <NotificationIcon />
-        </IconNotification>
-      </NotificationButton>
-    </>
-  );
-};
 
 const ConnectedWallet: React.FC = () => {
   const wallet = useWallet();

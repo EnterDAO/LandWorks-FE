@@ -3,7 +3,8 @@ import { styled } from '@mui/material';
 
 export const StyledRoot = styled(Grid)(() => ({
   justifyContent: 'center',
-  width: '540px',
+  minWidth: '550px',
+  paddingBottom: 10,
 }));
 
 export const StyledTitleRow = styled(Grid)(() => ({
@@ -35,6 +36,15 @@ export const EmptyContainer = styled(Grid)(() => ({
   },
 }));
 
+export const NotificationContainer = styled(Grid)(() => ({
+  minHeight: 350,
+  maxHeight: 400,
+  overflowX: 'auto',
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'column',
+}));
+
 export const MessageRoot = styled(Grid)(() => ({
   padding: '15px 25px',
   alignItems: 'center',
@@ -58,4 +68,17 @@ export const IconWrapper = styled(Typography)(() => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
+}));
+
+export const NotificationButton = styled('div')(() => ({
+  padding: '10px',
+  backgroundColor: 'var(--theme-card-color)',
+  marginRight: '15px',
+  borderRadius: '10px',
+  width: '60px',
+  height: '60px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
 }));
