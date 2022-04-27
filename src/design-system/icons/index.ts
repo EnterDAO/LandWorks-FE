@@ -46,7 +46,9 @@ import { ReactComponent as MoreIcon } from 'assets/icons/more.svg';
 import { ReactComponent as NextIcon } from 'assets/icons/next.svg';
 import { ReactComponent as NoConnectionIcon } from 'assets/icons/no-connection.svg';
 import { ReactComponent as NotVisibleIcon } from 'assets/icons/not-visible.svg';
+import { ReactComponent as NotificationIcon } from 'assets/icons/notification.svg';
 import { ReactComponent as PlusIcon } from 'assets/icons/plus.svg';
+import { ReactComponent as PostBoxIcon } from 'assets/icons/postbox.svg';
 import { ReactComponent as ProfileIcon02 } from 'assets/icons/profile-01.svg';
 import { ReactComponent as ProfileIcon } from 'assets/icons/profile.svg';
 import { ReactComponent as Refresh1Icon } from 'assets/icons/refresh-1.svg';
@@ -75,6 +77,7 @@ import { ReactComponent as WarningIcon } from 'assets/icons/warning.svg';
 
 // One-color icons
 export {
+  NotificationIcon,
   TwitterIcon,
   LanguagesIcon,
   ProfileIcon02,
@@ -139,4 +142,4 @@ export {
 // Multi-color icons
 export { UploadIcon, FileUploadedIcon, UploadingIcon, UpdateIcon, NoConnectionIcon, ErrorIcon };
 // Unique icons
-export { EthereumIcon, ETHIcon, ENTRIcon, HiIcon, CheckGlowIcon, SignGradientIcon, FireIcon, StarIcon };
+export { EthereumIcon, ETHIcon, ENTRIcon, HiIcon, CheckGlowIcon, SignGradientIcon, FireIcon, StarIcon, PostBoxIcon };
