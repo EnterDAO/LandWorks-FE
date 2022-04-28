@@ -101,7 +101,7 @@ const SingleLandView: React.FC = () => {
   };
 
   const shouldShowStake = () => {
-    return isOwner() && asset?.status === AssetStatus.LISTED;
+    return isOwner() && asset?.status === AssetStatus.LISTED && asset?.metaverse.name === 'Decentraland';
   };
 
   // Case when you do 2 in 1 Delist + Withdraw

@@ -13,7 +13,7 @@ import {
   metaverseOptions,
 } from 'constants/modules';
 import BigNumber from 'bignumber.js';
-import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
+import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import { Box, Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
@@ -273,30 +273,30 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       return;
     }
     try {
-      let approvedAddress = DEFAULT_ADDRESS;
+      let isApproved = false;
       setShowApproveModal(true);
 
       if (selectedMetaverse == 1) {
         if (selectedProperty) {
           switch (selectedProperty.contractAddress) {
             case config.contracts.decentraland.landRegistry:
-              await landRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
-              approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
+              await landRegistryContract?.setApprovalForAll(config.contracts.landworksContract, true);
+              isApproved = await landRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
               break;
             case config.contracts.decentraland.estateRegistry:
-              await estateRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
-              approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
+              await estateRegistryContract?.setApprovalForAll(config.contracts.landworksContract, true);
+              isApproved = await estateRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
               break;
           }
         }
       } else {
         if (selectedVoxel) {
-          await cryptoVoxelsContract?.approve(config.contracts.landworksContract, selectedVoxel.id);
-          approvedAddress = await cryptoVoxelsContract?.getApproved(selectedVoxel.id)!;
+          await cryptoVoxelsContract?.setApprovalForAll(config.contracts.landworksContract, true);
+          isApproved = await cryptoVoxelsContract?.isApprovedForAll(config.contracts.landworksContract)!;
         }
       }
 
-      if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
+      if (isApproved) {
         setApproveDisabled(true);
         setShowApproveModal(false);
       }
@@ -506,19 +506,19 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     if (selectedProperty === null && selectedVoxel === null) {
       return;
     }
-    let approvedAddress = '';
+    let isApproved = false;
     setApproveDisabled(false);
     if (selectedProperty && selectedMetaverse == 1) {
       if (selectedProperty.isLAND) {
-        approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
+        isApproved = await landRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
       } else {
-        approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
+        isApproved = await estateRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
       }
     } else if (selectedVoxel) {
-      approvedAddress = await cryptoVoxelsContract?.getApproved(selectedVoxel.id)!;
+      isApproved = await cryptoVoxelsContract?.isApprovedForAll(config.contracts.landworksContract)!;
     }
 
-    if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
+    if (isApproved) {
       setApproveDisabled(true);
     } else {
       setApproveDisabled(false);
