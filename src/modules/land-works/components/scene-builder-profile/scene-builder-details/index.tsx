@@ -22,7 +22,7 @@ const SceneBuilderDetails: FC<ISceneBuilderDetails> = ({ builder }) => {
   };
 
   return (
-    <CardContainer className="scene-builder-card" style={{ padding: '20px 30px', height: '578px' }}>
+    <CardContainer className="scene-builder-card" style={{ padding: '20px 30px', minHeight: '578px', height: '100%' }}>
       <TypographyStyled variant="h4" style={{ textTransform: 'uppercase' }}>
         Builder Details & Services
       </TypographyStyled>
