@@ -1,3 +1,5 @@
+import { TWITTER_TEXT } from 'constants/modules';
+
 import { Button } from 'design-system';
 import { EndTimerIcon, HourglassIcon, MessageIcon, RentingNotificationIcon } from 'design-system/icons';
 
@@ -14,17 +16,29 @@ export const NotificationData: NotificationDataType = {
         </>
       );
     },
-    button: (
-      <Button variant="accentblue" sx={{ marginLeft: 'auto', width: '105px !important' }} btnSize="xsmall">
-        CLAIM
+    button: (history) => (
+      <Button
+        onClick={() =>
+          history.push({
+            pathname: '/explore',
+            state: {
+              openNewListing: true,
+            },
+          })
+        }
+        variant="accentblue"
+        sx={{ marginLeft: 'auto', width: '105px !important' }}
+        btnSize="xsmall"
+      >
+        LIST MORE
       </Button>
     ),
   },
   message: {
     icon: <MessageIcon />,
     title: 'New Message in Blockscan',
-    subtitle: (id, name) => 'Someone send you a message',
-    button: (
+    subtitle: () => 'Someone send you a message',
+    button: (history) => (
       <Button variant="accentblue" sx={{ marginLeft: 'auto', width: '105px !important' }} btnSize="xsmall">
         CHAT
       </Button>
@@ -40,7 +54,20 @@ export const NotificationData: NotificationDataType = {
         </>
       );
     },
-    button: <div style={{ marginLeft: 'auto', width: '105px' }} />,
+    button: (history, id) => (
+      <Button
+        onClick={() => {
+          window.open(
+            `https://twitter.com/intent/tweet?text=${TWITTER_TEXT}&url=${window.location.origin}/property/${id}`
+          );
+        }}
+        variant="accentblue"
+        sx={{ marginLeft: 'auto', width: '105px !important' }}
+        btnSize="xsmall"
+      >
+        PROMOTE
+      </Button>
+    ),
   },
   yourRentEnded: {
     icon: <RentingNotificationIcon />,
@@ -52,8 +79,13 @@ export const NotificationData: NotificationDataType = {
         </>
       );
     },
-    button: (
-      <Button variant="accentblue" sx={{ marginLeft: 'auto', width: '105px !important' }} btnSize="xsmall">
+    button: (history, id) => (
+      <Button
+        onClick={() => history.push(`/property/${id}`)}
+        variant="accentblue"
+        sx={{ marginLeft: 'auto', width: '105px !important' }}
+        btnSize="xsmall"
+      >
         RENT AGAIN
       </Button>
     ),
@@ -61,15 +93,20 @@ export const NotificationData: NotificationDataType = {
   endSoon: {
     icon: <HourglassIcon />,
     title: 'Your Rent on Land Ends Soon',
-    subtitle: (id, name) => {
+    subtitle: (id, name, countdown) => {
       return (
         <>
-          Only 3 days left on <a href={`/property/${id}`}> {name}</a> .
+          Only {countdown} left on <a href={`/property/${id}`}> {name}</a> .
         </>
       );
     },
-    button: (
-      <Button variant="accentblue" sx={{ marginLeft: 'auto', width: '105px !important' }} btnSize="xsmall">
+    button: (history, id) => (
+      <Button
+        onClick={() => history.push(`/property/${id}`)}
+        variant="accentblue"
+        sx={{ marginLeft: 'auto', width: '105px !important' }}
+        btnSize="xsmall"
+      >
         RENT AGAIN
       </Button>
     ),

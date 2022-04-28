@@ -270,6 +270,12 @@ export const USER_NOTIFICATION_SUBSCRIPTION = gql`
           metaverse {
             name
           }
+          owner {
+            id
+          }
+          metaverseRegistry {
+            id
+          }
           paymentToken {
             id
             name
@@ -286,8 +292,14 @@ export const USER_NOTIFICATION_SUBSCRIPTION = gql`
       assets(orderBy: timestamp, orderDirection: desc) {
         id
         metaverseAssetId
+        metaverseRegistry {
+          id
+        }
         metaverse {
           name
+        }
+        owner {
+          id
         }
         rents {
           renter {

@@ -22,6 +22,14 @@ export const StyledTypography = styled(Typography)(() => ({
   color: 'var(--theme-light-color)',
 }));
 
+export const StyledSubtitle = styled(Typography)(() => ({
+  fontSize: 14,
+  maxWidth: 350,
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+}));
+
 export const StyledGrid = styled(Grid)(() => ({
   flexDirection: 'column',
 }));
@@ -43,6 +51,9 @@ export const NotificationContainer = styled(Grid)(() => ({
   justifyContent: 'center',
   alignItems: 'center',
   flexDirection: 'column',
+  '&::-webkit-scrollbar': {
+    width: 3,
+  },
 }));
 
 export const MessageRoot = styled(Grid)(() => ({

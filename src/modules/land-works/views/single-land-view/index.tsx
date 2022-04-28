@@ -32,6 +32,7 @@ export interface LocationState {
   from: string;
   title: string;
   tab: string;
+  openNewListing: boolean;
   previousPage?: {
     from: string;
     title: string;

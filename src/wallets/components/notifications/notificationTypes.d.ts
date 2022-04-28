@@ -2,8 +2,8 @@ export type NotificationKeyTypes = 'newRenting' | 'message' | 'rentEnded' | 'you
 type NotificationType = {
   icon: React.ReactNode;
   title: string;
-  subtitle: (id: string, name: string) => React.ReactNode;
-  button: React.ReactNode;
+  subtitle: (id: string, name: string, endTime?: string) => React.ReactNode;
+  button: (history: History<unknown>, id: string) => React.ReactNode;
 };
 
 export type NotificationDataType = {
@@ -14,6 +14,7 @@ export interface NotificationList {
   id: number;
   name: string;
   time: number;
+  countdown?: string;
   type: NotificationKeyTypes;
   landId: string;
 }

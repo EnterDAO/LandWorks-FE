@@ -1,22 +1,25 @@
+import { useHistory } from 'react-router-dom';
 import { useLocalStorage } from 'react-use-storage';
-import { Typography } from '@mui/material';
-import moment from 'moment';
 
 import { NotificationData } from './data';
 import { NotificationList } from './notificationTypes';
-import { IconWrapper, MessageRoot, StyledGrid, StyledTypography } from './styled';
+import { IconWrapper, MessageRoot, StyledGrid, StyledSubtitle, StyledTypography } from './styled';
+
+import { countdown } from './utils';
 
 const NotificationMessage: React.FC<{ item: NotificationList }> = ({ item }) => {
-  const [value] = useLocalStorage<number>('user_profile', 0);
+  const [lastLogin] = useLocalStorage<number>('user_profile', 0);
+  const history = useHistory();
+  const isNewNotification = lastLogin ? item.time >= lastLogin : true;
 
-  const isNewNotification = value ? Date.now() <= value : true;
   const styleHandler = {
     background: isNewNotification ? 'rgba(93, 143, 240, 0.1)' : '',
     borderBottom: `1px solid ${isNewNotification ? 'var(--theme-card-color)' : '#27273A'}`,
     color: isNewNotification ? 'var(--theme-light-color)' : 'var(--theme-grey700-color)',
   };
-
+  const secondsFromNow = (Date.now() - item.time) / 1000;
   const notification = NotificationData[item.type];
+
   return (
     <MessageRoot
       container
@@ -28,11 +31,11 @@ const NotificationMessage: React.FC<{ item: NotificationList }> = ({ item }) => 
       <IconWrapper>{notification.icon}</IconWrapper>
       <StyledGrid>
         <StyledTypography fontSize={14}>{notification.title}</StyledTypography>
-        <Typography fontSize={14}>{notification.subtitle(item.landId, item.name)}</Typography>
+        <StyledSubtitle>{notification.subtitle(item.landId, item.name, item?.countdown)}</StyledSubtitle>
       </StyledGrid>
-      {notification.button}
-      <StyledTypography sx={{ width: 60, textAlign: 'end', color: styleHandler.color }}>
-        {moment(item.time).fromNow()}
+      {notification.button(history, item.landId)}
+      <StyledTypography sx={{ width: 40, textAlign: 'end', color: styleHandler.color }}>
+        {countdown(secondsFromNow, true)}
       </StyledTypography>
     </MessageRoot>
   );

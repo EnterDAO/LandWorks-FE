@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocalStorage } from 'react-use-storage';
 import { useSubscription } from '@apollo/client';
 import { Typography } from '@mui/material';
+import useDebounce from '@rooks/use-debounce';
 
 import IconNotification from 'components/custom/icon-notification';
 import { Button, Grid } from 'design-system';
 import { NotificationIcon, PostBoxIcon } from 'design-system/icons';
 import { StyledPopover } from 'design-system/Popover/Popover';
+import useIntersectionObserver from 'hooks/useElementOnScreen';
 import { USER_NOTIFICATION_SUBSCRIPTION, parseUser } from 'modules/land-works/api';
 import { useWallet } from 'wallets/wallet';
 
@@ -30,7 +32,7 @@ interface Props {
 }
 
 export const NotificationSection: React.FC = () => {
-  const [notifications, setNotification] = useState<NotificationList[] | []>([]);
+  const [notifications, setNotifications] = useState<NotificationList[] | []>([]);
   const [lastLogin, setLastLogin] = useLocalStorage<number>('user_profile', 0);
   const [hasUnread, setHasUnread] = useState<boolean>(false);
 
@@ -43,15 +45,16 @@ export const NotificationSection: React.FC = () => {
     variables: { id: wallet.account?.toLowerCase() },
   });
 
-  const updateUser = async () => {
-    if (userData && userData.user && wallet.account) {
+  const updateUser = useDebounce(async () => {
+    if (userData && userData.user) {
       const rented = await parseRents(userData.user);
       const listed = await (await parseUser(userData.user)).ownerAndConsumerAssets;
-      setNotification(parseNotifications(rented, listed, wallet.account));
+      setNotifications(parseNotifications(rented, listed, wallet.account ?? ''));
     } else {
-      setNotification([]);
+      setNotifications([]);
     }
-  };
+  }, 500);
+
   useEffect(() => {
     updateUser();
   }, [userData]);
@@ -68,7 +71,7 @@ export const NotificationSection: React.FC = () => {
   };
 
   useEffect(() => {
-    if (notifications.length) setHasUnread(!!notifications.filter((item) => item.time >= lastLogin).length);
+    if (notifications.length) setHasUnread(!!notifications.filter((item) => +item.time >= lastLogin).length);
   }, [notifications, lastLogin]);
 
   return (
@@ -98,6 +101,22 @@ export const NotificationSection: React.FC = () => {
 };
 
 const Notifications: React.FC<Props> = ({ hasUnread, markAllAsRead, notifications }) => {
+  const PAGE_SIZE = 6;
+  const [pageSize, setPageSize] = useState(PAGE_SIZE);
+  const [slicedNotifications, setSlicedNotification] = useState<NotificationList[] | []>(
+    notifications.slice(0, PAGE_SIZE)
+  );
+  const ref = useRef<HTMLDivElement | null>(null);
+  const entry = useIntersectionObserver(ref, { freezeOnceInvisible: true });
+  const isVisible = !!entry?.isIntersecting;
+
+  useEffect(() => {
+    if (notifications.length > slicedNotifications.length && isVisible) {
+      setSlicedNotification(notifications.slice(0, pageSize + PAGE_SIZE));
+      setPageSize((prev) => prev + PAGE_SIZE);
+    }
+  }, [entry]);
+
   const empty = (
     <EmptyContainer container>
       <PostBoxIcon />
@@ -122,11 +141,12 @@ const Notifications: React.FC<Props> = ({ hasUnread, markAllAsRead, notification
           </Button>
         </Grid>
       </StyledTitleRow>
-      {notifications.length ? (
+      {slicedNotifications.length ? (
         <NotificationContainer>
-          {notifications.map((item) => (
+          {slicedNotifications.map((item) => (
             <NotificationMessage key={item.id} item={item} />
           ))}
+          <div ref={ref} />
         </NotificationContainer>
       ) : (
         empty
