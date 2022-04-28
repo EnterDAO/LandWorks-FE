@@ -3,14 +3,14 @@ import { useEffect, useState } from 'react';
 import { AssetAttributes } from 'modules/land-works/api';
 
 import ParcelPropertiesLoader from '../land-parcel-properties-loader';
-import { GridFlexed, GridItem, GridStyled, GridStyledInnerContainer, TypographyStyled } from './styled';
+import { GridFlexed, GridItem, GridStyled, GridStyledInnerContainer, StyledLink, TypographyStyled } from './styled';
 
 interface Props {
   attributes: AssetAttributes;
-  metaverseAssetId: string;
+  id: string;
 }
 
-const SingleViewParcelProperties: React.FC<Props> = ({ attributes, metaverseAssetId }) => {
+const SingleViewParcelProperties: React.FC<Props> = ({ attributes, id }) => {
   const [loading, setLoading] = useState(true);
   const atr = attributes;
 
@@ -19,6 +19,10 @@ const SingleViewParcelProperties: React.FC<Props> = ({ attributes, metaverseAsse
       setLoading(false);
     }
   }, [atr]);
+
+  const volume = (width: number, depth: number, height: number) => {
+    return width * depth * height * 8;
+  };
 
   return (
     <GridStyled minHeight={288} container>
@@ -40,11 +44,11 @@ const SingleViewParcelProperties: React.FC<Props> = ({ attributes, metaverseAsse
               </GridItem>
               <GridItem item display="flex" flexDirection="row" xs={12}>
                 <TypographyStyled variant="h3">Token</TypographyStyled>
-                <TypographyStyled variant="h4">{metaverseAssetId}</TypographyStyled>
+                <StyledLink href={`https://www.cryptovoxels.com/parcels/${id}`}>#{id}</StyledLink>
               </GridItem>
               <GridItem item display="flex" flexDirection="row" xs={12}>
                 <TypographyStyled variant="h3">Neighborhood</TypographyStyled>
-                <TypographyStyled variant="h4">{atr?.suburb}</TypographyStyled>
+                <StyledLink href={`https://www.cryptovoxels.com/map`}>Cryptovoxels</StyledLink>
               </GridItem>
             </GridStyledInnerContainer>
 
@@ -56,7 +60,9 @@ const SingleViewParcelProperties: React.FC<Props> = ({ attributes, metaverseAsse
               </GridItem>
               <GridItem item display="flex" flexDirection="row" xs={12}>
                 <TypographyStyled variant="h3">Size</TypographyStyled>
-                <TypographyStyled variant="h4">Unknown?</TypographyStyled>
+                <TypographyStyled variant="h4">
+                  {atr?.width} x {atr?.depth} metres
+                </TypographyStyled>
               </GridItem>
               <GridItem item display="flex" flexDirection="row" xs={12}>
                 <TypographyStyled variant="h3">Build height</TypographyStyled>
@@ -64,7 +70,7 @@ const SingleViewParcelProperties: React.FC<Props> = ({ attributes, metaverseAsse
               </GridItem>
               <GridItem item display="flex" flexDirection="row" xs={12}>
                 <TypographyStyled variant="h3">Elevation</TypographyStyled>
-                <TypographyStyled variant="h4">{atr?.elevation}</TypographyStyled>
+                <TypographyStyled variant="h4">{atr?.elevation} metres</TypographyStyled>
               </GridItem>
             </GridStyledInnerContainer>
 
@@ -80,7 +86,7 @@ const SingleViewParcelProperties: React.FC<Props> = ({ attributes, metaverseAsse
               </GridItem>
               <GridItem item display="flex" flexDirection="row" xs={12}>
                 <TypographyStyled variant="h3">Volume</TypographyStyled>
-                <TypographyStyled variant="h4">Neighborhood</TypographyStyled>
+                <TypographyStyled variant="h4">{volume(atr?.width, atr?.depth, atr?.height)} voxels</TypographyStyled>
               </GridItem>
             </GridStyledInnerContainer>
           </GridFlexed>

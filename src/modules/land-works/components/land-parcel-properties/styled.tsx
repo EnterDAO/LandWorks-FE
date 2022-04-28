@@ -3,6 +3,8 @@ import { TypographyProps, styled } from '@mui/system';
 
 import { Typography } from 'design-system';
 
+import { THEME_COLORS } from 'themes/theme-constants';
+
 export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
   display: 'block',
   textAlign: 'left',
@@ -70,4 +72,13 @@ export const GridStyledInnerContainer = styled(Grid)(() => ({
   borderRadius: '20px',
   padding: '20px',
   height: '185px',
+}));
+
+export const StyledLink = styled('a')(() => ({
+  width: '100%',
+  fontSize: '14px',
+  fontWeight: '500',
+  lineHeight: '21px',
+  marginTop: '10px',
+  color: THEME_COLORS.accentBlue,
 }));
