@@ -10,7 +10,7 @@ import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-sys
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import EditProperty from 'modules/land-works/components/edit-property';
-import SingleViewParcelProprties from 'modules/land-works/components/land-parcel-properties';
+import SingleViewParcelProperties from 'modules/land-works/components/land-parcel-properties';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 
 import ExternalLink from '../../../../components/custom/external-link';
@@ -431,7 +431,7 @@ const SingleLandView: React.FC = () => {
         }}
       />
 
-      <SingleViewParcelProprties attributes={asset?.attributes} metaverseAssetId={asset.metaverseAssetId} />
+      <SingleViewParcelProperties attributes={asset?.attributes} metaverseAssetId={asset.metaverseAssetId} />
 
       <SingleViewLandHistory assetId={tokenId} metaverseRegistry={asset.metaverseRegistry?.id} />
 
