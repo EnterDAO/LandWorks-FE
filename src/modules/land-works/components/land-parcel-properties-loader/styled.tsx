@@ -5,6 +5,7 @@ export const GridStyled = styled(Grid)(() => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
+  // will replace with color variable after refactor merge
   background: 'var(--theme-card-color)',
   border: '1px solid rgba(0, 0, 0, 0.1)',
   boxSizing: 'border-box',
@@ -15,6 +16,7 @@ export const GridStyled = styled(Grid)(() => ({
 }));
 
 export const GridStyledInnerContainer = styled(Grid)(() => ({
+  // will replace with color variable after refactor merge
   background: 'var(--theme-modal-color)',
   border: '1px solid rgba(0, 0, 0, 0.1)',
   boxSizing: 'border-box',

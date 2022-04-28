@@ -13,6 +13,7 @@ export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
     fontSize: '20px',
     fontWeight: '700',
     lineHeight: '30px',
+    // will replace with color variable after refactor merge
     color: 'var(--theme-light-color)',
   },
   '&.MuiTypography-h2': {
@@ -20,12 +21,14 @@ export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
     fontSize: '14px',
     fontWeight: '700',
     lineHeight: '21px',
+    // will replace with color variable after refactor merge
     color: 'var(--theme-light-color)',
   },
   '&.MuiTypography-h3': {
     fontSize: '14px',
     fontWeight: '500',
     lineHeight: '21px',
+    // will replace with color variable after refactor merge
     color: 'var(--theme-subtle-color)',
     width: '200px',
     marginTop: '10px',
@@ -36,6 +39,7 @@ export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
     fontWeight: '500',
     lineHeight: '21px',
     marginTop: '10px',
+    // will replace with color variable after refactor merge
     color: 'var(--theme-light-color)',
   },
 }));
@@ -44,6 +48,7 @@ export const GridStyled = styled(Grid)(() => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
+  // will replace with color variable after refactor merge
   background: 'var(--theme-card-color)',
   border: '1px solid rgba(0, 0, 0, 0.1)',
   boxSizing: 'border-box',
@@ -66,6 +71,7 @@ export const GridFlexed = styled(Grid)(() => ({
 }));
 
 export const GridStyledInnerContainer = styled(Grid)(() => ({
+  // will replace with color variable after refactor merge
   background: 'var(--theme-modal-color)',
   border: '1px solid rgba(0, 0, 0, 0.1)',
   boxSizing: 'border-box',
