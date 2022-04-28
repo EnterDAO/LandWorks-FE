@@ -27,6 +27,30 @@ export default abstract class ERC721Contract extends Web3Contract {
   }
 
   getApproved(tokenId: BigNumber | string): Promise<string> {
+    if (!this.account) {
+      return Promise.reject();
+    }
+
     return this.call('getApproved', [tokenId]);
+  }
+
+  isApprovedForAll(operator: string): Promise<boolean> {
+    if (!this.account) {
+      return Promise.reject();
+    }
+
+    return this.call('isApprovedForAll', [this.account, operator], {
+      from: this.account,
+    });
+  }
+
+  setApprovalForAll(operator: string, isApproved: boolean): Promise<void> {
+    if (!this.account) {
+      return Promise.reject();
+    }
+
+    return this.send('setApprovalForAll', [operator, isApproved], {
+      from: this.account,
+    });
   }
 }
