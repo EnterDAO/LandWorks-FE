@@ -275,6 +275,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     try {
       let isApproved = false;
       setShowApproveModal(true);
+      if (selectedProperty.isLAND) {
 
       if (selectedMetaverse == 1) {
         if (selectedProperty) {
