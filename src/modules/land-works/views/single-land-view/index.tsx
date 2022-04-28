@@ -242,7 +242,7 @@ const SingleLandView: React.FC = () => {
     title: location.state?.previousPage?.title || location.state?.title || 'Explore',
   };
 
-  console.log({ asset });
+  const isCryptovoxel = asset?.metaverse?.name === 'Cryptovoxels';
 
   return (
     <div className="content-container single-card-section">
@@ -431,7 +431,7 @@ const SingleLandView: React.FC = () => {
         }}
       />
 
-      <SingleViewParcelProperties attributes={asset?.attributes} metaverseAssetId={asset.metaverseAssetId} />
+      {isCryptovoxel && <SingleViewParcelProperties attributes={asset?.attributes} id={asset?.id} />}
 
       <SingleViewLandHistory assetId={tokenId} metaverseRegistry={asset.metaverseRegistry?.id} />
 
