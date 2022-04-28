@@ -40,7 +40,7 @@ import { useLandworks } from '../../providers/landworks-provider';
 
 import { getTimeType, secondsToDuration } from '../../../../utils';
 import { DAY_IN_SECONDS, MINUTE_IN_SECONDS, WEEK_IN_SECONDS } from '../../../../utils/date';
-import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
+import { ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -242,15 +242,15 @@ const ListPropertyView: React.FC = () => {
     }
 
     try {
-      let approvedAddress = DEFAULT_ADDRESS;
+      let isApproved = false;
       if (selectedProperty.isLAND) {
-        await landRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
-        approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
+        await landRegistryContract?.setApprovalForAll(config.contracts.landworksContract, true);
+        isApproved = await landRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
       } else {
-        await estateRegistryContract?.approve(config.contracts.landworksContract, selectedProperty.id);
-        approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
+        await estateRegistryContract?.setApprovalForAll(config.contracts.landworksContract, true);
+        isApproved = await estateRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
       }
-      if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
+      if (isApproved) {
         setApproveDisabled(true);
       }
     } catch (e) {
@@ -378,13 +378,13 @@ const ListPropertyView: React.FC = () => {
   const evaluateSelectedProperty = async () => {
     if (selectedProperty) {
       setApproveDisabled(false);
-      let approvedAddress: string;
+      let isApproved = false;
       if (selectedProperty.isLAND) {
-        approvedAddress = await landRegistryContract?.getApproved(selectedProperty.id)!;
+        isApproved = await landRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
       } else {
-        approvedAddress = await estateRegistryContract?.getApproved(selectedProperty.id)!;
+        isApproved = await estateRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
       }
-      if (approvedAddress.toLowerCase() === config.contracts.landworksContract) {
+      if (isApproved) {
         setApproveDisabled(true);
       } else {
         setApproveDisabled(false);
