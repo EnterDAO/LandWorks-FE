@@ -41,12 +41,10 @@ export const LandListingCard: React.FC<ILandCardProps> = ({ land, handleClick, i
           <Box
             component="img"
             sx={{
-              minHeight: 100,
+              objectFit: 'cover',
               width: '100%',
-              maxHeight: { xs: 110, md: 90 },
-              maxWidth: { xs: 350, md: 250 },
+              height: '100%',
             }}
-            className={s.image}
             alt="The property from the offer."
             src={getDecentralandNftImageUrl(land)}
           />
@@ -94,10 +92,9 @@ export const EstateListingCard: React.FC<IEstateCardProps> = ({
           <Box
             component="img"
             sx={{
-              minHeight: 100,
+              objectFit: 'cover',
               width: '100%',
-              maxHeight: { xs: 110, md: 90 },
-              maxWidth: { xs: 350, md: 250 },
+              height: '100%',
             }}
             className={s.image}
             alt="The property from the offer."
@@ -140,10 +137,9 @@ export const VoxelListingCard: React.FC<ICryptoVoxel> = ({ land, handleClick, is
           <Box
             component="img"
             sx={{
-              minHeight: 100,
+              objectFit: 'cover',
               width: '100%',
-              maxHeight: { xs: 110, md: 90 },
-              maxWidth: { xs: 350, md: 250 },
+              height: '100%',
             }}
             className={s.image}
             alt="The property from the offer."
