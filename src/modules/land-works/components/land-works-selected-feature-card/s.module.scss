@@ -17,6 +17,12 @@
     box-shadow: none;
     background: var(--theme-modal-color);
 
+    .imageListWrapper {
+      height: 178px;
+      width: 366px;
+      overflow: hidden
+    }
+
     .details {
       color: var(--theme-grey700-color);
       font-weight: 600;
