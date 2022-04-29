@@ -34,7 +34,7 @@ const NotificationMessage: React.FC<{ item: NotificationList }> = ({ item }) => 
         <StyledSubtitle>{notification.subtitle(item.landId, item.name, item?.countdown)}</StyledSubtitle>
       </StyledGrid>
       {notification.button(history, item.landId)}
-      <StyledTypography sx={{ width: 40, textAlign: 'end', color: styleHandler.color }}>
+      <StyledTypography sx={{ width: 55, textAlign: 'end', color: styleHandler.color }}>
         {countdown(secondsFromNow, true)}
       </StyledTypography>
     </MessageRoot>

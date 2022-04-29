@@ -54,12 +54,12 @@ export const parseNotifications = (
       } else {
         const halfTime = +rent.start + (+rent.end - +rent.start) / 2;
 
-        if (halfTime <= Date.now() && isYourRent) {
+        if (toTimestamp(halfTime) <= Date.now() && isYourRent) {
           result.push({
             id: result.length,
             name: item.name,
             time: toTimestamp(halfTime),
-            countdown: countdown(rentEnd - halfTime),
+            countdown: countdown(+rent.end - halfTime),
             type: 'endSoon',
             landId: item.id,
           });
@@ -98,7 +98,7 @@ export const countdown = (date: number, isShorted = false) => {
 
   const days = isPositive(time.days) ? `${Math.floor(time.days)} ${isShorted ? 'd' : 'days'}` : '';
   const hours = isPositive(time.hours) ? `${Math.floor(time.hours)} ${isShorted ? 'h' : 'hours'}` : '';
-  const minutes = isPositive(time.minutes) ? `${Math.floor(time.minutes)} ${isShorted ? 'm' : 'mins'}` : '';
+  const minutes = isPositive(time.minutes) ? `${Math.floor(time.minutes)} min` : '';
   const seconds = sec >= 0 ? `${sec} ${isShorted ? 's' : 'seconds'}` : '';
   const expired = days || hours || minutes || seconds;
   return expired;

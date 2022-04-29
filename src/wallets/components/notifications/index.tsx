@@ -111,11 +111,15 @@ const Notifications: React.FC<Props> = ({ hasUnread, markAllAsRead, notification
   const isVisible = !!entry?.isIntersecting;
 
   useEffect(() => {
-    if (notifications.length > slicedNotifications.length && isVisible) {
+    if (slicedNotifications && notifications.length > slicedNotifications.length && isVisible) {
       setSlicedNotification(notifications.slice(0, pageSize + PAGE_SIZE));
       setPageSize((prev) => prev + PAGE_SIZE);
     }
   }, [entry]);
+
+  useEffect(() => {
+    setSlicedNotification(notifications.slice(0, PAGE_SIZE));
+  }, [notifications]);
 
   const empty = (
     <EmptyContainer container>

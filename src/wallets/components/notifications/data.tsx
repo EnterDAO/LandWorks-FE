@@ -70,7 +70,7 @@ export const NotificationData: NotificationDataType = {
     ),
   },
   yourRentEnded: {
-    icon: <RentingNotificationIcon />,
+    icon: <EndTimerIcon />,
     title: 'Your Rent on Land Ended',
     subtitle: (id, name) => {
       return (
