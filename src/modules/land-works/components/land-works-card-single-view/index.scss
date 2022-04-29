@@ -111,7 +111,7 @@
 
   .properties-container {
     position: relative;
-    background: var(--theme-separator-color);
+    background: var(--theme-card-color);
     padding: 30px !important;
     border-radius: 20px;
 
@@ -160,7 +160,7 @@
     }
 
     .rent-section {
-      background: var(--theme-card-color);
+      background: var(--theme-modal-color);
       border-radius: 25px;
       margin-top: 20px;
       padding: 15px 0px;
