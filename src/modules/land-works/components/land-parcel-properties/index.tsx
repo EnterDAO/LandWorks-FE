@@ -44,11 +44,15 @@ const SingleViewParcelProperties: React.FC<Props> = ({ attributes, id }) => {
               </GridItem>
               <GridItem item display="flex" flexDirection="row" xs={12}>
                 <TypographyStyled variant="h3">Token</TypographyStyled>
-                <StyledLink href={`https://www.cryptovoxels.com/parcels/${id}`}>#{id}</StyledLink>
+                <StyledLink target="_blank" href={`https://www.cryptovoxels.com/parcels/${id}`}>
+                  #{id}
+                </StyledLink>
               </GridItem>
               <GridItem item display="flex" flexDirection="row" xs={12}>
                 <TypographyStyled variant="h3">Neighborhood</TypographyStyled>
-                <StyledLink href={`https://www.cryptovoxels.com/map`}>Cryptovoxels</StyledLink>
+                <StyledLink target="_blank" href={`https://www.cryptovoxels.com/map`}>
+                  Cryptovoxels
+                </StyledLink>
               </GridItem>
             </GridStyledInnerContainer>
 
