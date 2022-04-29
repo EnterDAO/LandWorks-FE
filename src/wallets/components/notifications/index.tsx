@@ -63,7 +63,7 @@ export const NotificationSection: React.FC = () => {
     setAnchorEl(event.currentTarget);
   };
   const markAllAsRead = () => {
-    return null;
+    setLastLogin(Date.now());
   };
   const handleClose = () => {
     setLastLogin(Date.now());
@@ -111,7 +111,7 @@ const Notifications: React.FC<Props> = ({ hasUnread, markAllAsRead, notification
   const isVisible = !!entry?.isIntersecting;
 
   useEffect(() => {
-    if (slicedNotifications && notifications.length > slicedNotifications.length && isVisible) {
+    if (slicedNotifications.length && notifications.length > slicedNotifications.length && isVisible) {
       setSlicedNotification(notifications.slice(0, pageSize + PAGE_SIZE));
       setPageSize((prev) => prev + PAGE_SIZE);
     }
