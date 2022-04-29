@@ -23,6 +23,8 @@ const SceneBuilderProfile: FC<ISceneBuilderProfile> = ({ builder }) => {
     }
   };
 
+  const hasEmail = builder?.website !== undefined && builder?.website !== '-';
+
   return (
     <CardContainer className="scene-builder-card" style={{ minHeight: '578px' }}>
       <Grid height={185} width="100%" borderRadius="20px" overflow="hidden">
@@ -78,7 +80,7 @@ const SceneBuilderProfile: FC<ISceneBuilderProfile> = ({ builder }) => {
         <Grid item display="flex" textAlign="left">
           {builder?.longDescription}
         </Grid>
-        {builder?.website !== undefined && (
+        {hasEmail && (
           <Grid display="flex" flexDirection="column" textAlign="left" margin="20px 0 6px" width="300px">
             <TypographyStyled variant="h4" style={{ textTransform: 'uppercase' }}>
               My Website
