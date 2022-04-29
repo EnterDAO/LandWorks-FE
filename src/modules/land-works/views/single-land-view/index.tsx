@@ -242,7 +242,7 @@ const SingleLandView: React.FC = () => {
     title: location.state?.previousPage?.title || location.state?.title || 'Explore',
   };
 
-  const isCryptovoxel = asset?.metaverse?.name === 'Cryptovoxels';
+  const isCryptovoxel = asset?.metaverse?.name === 'Voxels';
 
   return (
     <div className="content-container single-card-section">
