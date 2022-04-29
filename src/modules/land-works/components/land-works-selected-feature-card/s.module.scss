@@ -3,7 +3,7 @@
 
 .wrapper {
   max-width: 406px;
-  width: 100%;
+  width: auto;
   @media all and (max-width: 760px) {
     margin-bottom: 20px;
   }
@@ -16,6 +16,12 @@
     padding: 10px;
     box-shadow: none;
     background: var(--theme-modal-color);
+
+    .imageListWrapper {
+      height: 178px;
+      overflow: hidden;
+      border-radius: 10px;
+    }
 
     .details {
       color: var(--theme-grey700-color);
