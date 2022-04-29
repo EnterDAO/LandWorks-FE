@@ -3,7 +3,7 @@
 
 .wrapper {
   max-width: 406px;
-  width: 100%;
+  width: auto;
   @media all and (max-width: 760px) {
     margin-bottom: 20px;
   }
@@ -19,8 +19,8 @@
 
     .imageListWrapper {
       height: 178px;
-      width: 366px;
-      overflow: hidden
+      overflow: hidden;
+      border-radius: 10px;
     }
 
     .details {
