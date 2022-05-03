@@ -10,6 +10,7 @@ import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { LocationState } from 'modules/interface';
 import EditProperty from 'modules/land-works/components/edit-property';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
+import SingleViewParcelProperties from 'modules/land-works/components/land-parcel-properties';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 
 import ExternalLink from '../../../../components/custom/external-link';
@@ -232,6 +233,8 @@ const SingleLandView: React.FC = () => {
     title: location.state?.previousPage?.title || location.state?.title || 'Explore',
   };
 
+  const isCryptovoxel = asset?.metaverse?.name === 'Voxels';
+
   return (
     <div className="content-container single-card-section">
       <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
@@ -416,6 +419,8 @@ const SingleLandView: React.FC = () => {
           disableButtons(true);
         }}
       />
+
+      {isCryptovoxel && <SingleViewParcelProperties attributes={asset?.attributes} id={asset?.id} />}
 
       <SingleViewLandHistory assetId={tokenId} metaverseRegistry={asset.metaverseRegistry?.id} />
 
