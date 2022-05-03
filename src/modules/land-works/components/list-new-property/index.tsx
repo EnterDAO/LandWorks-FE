@@ -115,7 +115,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [usdPrice, setUsdPrice] = useState('0');
 
   const [loading, setLoading] = useState(false);
-  const [selectedMetaverse, setSelectedMetaverse] = useState(1);
+  const [selectedMetaverse, setSelectedMetaverse] = useState(
+    +sessionStorageHandler('get', 'general', 'metaverse') ?? 1
+  );
   const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
   const [activeStep, setActiveStep] = useState(0);
   const [showApproveModal, setShowApproveModal] = useState(false);
