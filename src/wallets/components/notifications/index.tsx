@@ -71,6 +71,10 @@ export const NotificationSection: React.FC = () => {
   };
 
   useEffect(() => {
+    setAnchorEl(null);
+  }, [window.location.pathname]);
+
+  useEffect(() => {
     if (notifications.length) setHasUnread(!!notifications.filter((item) => +item.time >= lastLogin).length);
   }, [notifications, lastLogin]);
 

@@ -16,23 +16,26 @@ export const NotificationData: NotificationDataType = {
         </>
       );
     },
-    button: (history) => (
-      <Button
-        onClick={() =>
-          history.push({
-            pathname: '/explore',
-            state: {
-              openNewListing: true,
-            },
-          })
-        }
-        variant="accentblue"
-        sx={{ marginLeft: 'auto', width: '105px !important' }}
-        btnSize="xsmall"
-      >
-        LIST MORE
-      </Button>
-    ),
+    button: (history) => {
+      const redirectPath = window.location.pathname === '/explore' ? '/my-properties' : '/explore';
+      return (
+        <Button
+          onClick={() =>
+            history.push({
+              pathname: redirectPath,
+              state: {
+                openNewListing: true,
+              },
+            })
+          }
+          variant="accentblue"
+          sx={{ marginLeft: 'auto', width: '105px !important' }}
+          btnSize="xsmall"
+        >
+          LIST MORE
+        </Button>
+      );
+    },
   },
   message: {
     icon: <MessageIcon />,

@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import {
   MY_PROPERTIES_TAB_STATE_ALL,
   MY_PROPERTIES_TAB_STATE_LENT,
@@ -9,6 +9,7 @@ import { useSubscription } from '@apollo/client';
 
 import { Box, Button, Modal } from 'design-system';
 import { USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
+import { LocationState } from 'modules/land-works/views/single-land-view';
 import { useWallet } from 'wallets/wallet';
 
 import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
@@ -28,6 +29,8 @@ interface Props {
 const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, setTab, user }) => {
   const wallet = useWallet();
   const history = useHistory();
+  const location = useLocation<LocationState>();
+
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [showListNewModal, setShowListNewModal] = useState(false);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
@@ -55,6 +58,15 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
 
   useEffect(() => setClaimButtonDisabled(false), [user]);
   const hasMetamaskConnected = wallet.isActive && wallet.connector?.id === 'metamask';
+
+  useEffect(() => {
+    if (location.state?.openNewListing) {
+      setShowListNewModal(true);
+      history.push({
+        state: { openNewListing: false },
+      });
+    }
+  }, []);
 
   return (
     <>
