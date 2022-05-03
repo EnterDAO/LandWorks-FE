@@ -9,10 +9,6 @@ export const CardContainer = styled(Box)<BoxProps>(() => ({
   backgroundColor: 'var(--theme-card-color)',
   borderRadius: '20px',
   position: 'relative',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  justifyContent: 'space-evenly',
 }));
 
 export const StyledImageContainer = styled(Box)<BoxProps>(() => ({
