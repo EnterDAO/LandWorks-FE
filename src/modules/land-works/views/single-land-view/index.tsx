@@ -9,8 +9,8 @@ import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { LocationState } from 'modules/interface';
 import EditProperty from 'modules/land-works/components/edit-property';
-import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import SingleViewParcelProperties from 'modules/land-works/components/land-parcel-properties';
+import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 
 import ExternalLink from '../../../../components/custom/external-link';
