@@ -18,6 +18,9 @@ const BuilderContactModal: FC<BuilderContactModal> = ({ email, discord, twitter,
     color: '#F8F8FF',
   };
 
+  const hasValidDiscord = discord !== '-' && discord !== undefined;
+  const hasValidTwitter = twitter !== '-' && twitter !== undefined;
+
   return (
     <Modal height="70vh" open={open} handleClose={handleClose}>
       <Grid display="flex" flexDirection="column" alignItems="center">
@@ -32,18 +35,22 @@ const BuilderContactModal: FC<BuilderContactModal> = ({ email, discord, twitter,
               Send Email
             </ExternalLink>
           </Button>
-          <Button btnSize="medium" variant="secondary">
-            {/* THIS VALUE PASSED IN NEEDS TO BE THE USERS DISCORD ID OF ±18 NUMBERS */}
-            <ExternalLink style={linkStyle} href={`https://discordapp.com/users/${discord}`}>
-              Send message in discord
-            </ExternalLink>
-          </Button>
-          <Button btnSize="medium" variant="secondary">
-            {/* THIS VALUE PASSED IN NEEDS TO BE A COMPLETE URL TO THE TWITTER PROFILE  */}
-            <ExternalLink style={linkStyle} href={`${twitter}`}>
-              Send message in Twitter
-            </ExternalLink>
-          </Button>
+          {hasValidDiscord && (
+            <Button btnSize="medium" variant="secondary">
+              {/* THIS VALUE PASSED IN NEEDS TO BE THE USERS DISCORD ID OF ±18 NUMBERS */}
+              <ExternalLink style={linkStyle} href={`https://discordapp.com/users/${discord}`}>
+                Send message in discord
+              </ExternalLink>
+            </Button>
+          )}
+          {hasValidTwitter && (
+            <Button btnSize="medium" variant="secondary">
+              {/* THIS VALUE PASSED IN NEEDS TO BE A COMPLETE URL TO THE TWITTER PROFILE  */}
+              <ExternalLink style={linkStyle} href={`${twitter}`}>
+                Send message in Twitter
+              </ExternalLink>
+            </Button>
+          )}
         </Grid>
       </Grid>
     </Modal>
