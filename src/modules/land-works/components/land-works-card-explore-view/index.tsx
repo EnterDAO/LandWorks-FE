@@ -65,8 +65,14 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
       <div className="land-explore-row start">
         <span className="land-explore-price-crypto">
           <SmallAmountTooltip
+            className="land-explore-price-amount"
             amount={land.pricePerMagnitude.price}
-            icon={<Icon name={getTokenIconName(land.paymentToken.symbol)} className="eth-icon" />}
+            icon={
+              <Icon
+                name={getTokenIconName(land.paymentToken.symbol)}
+                className="land-explore-price-crypto-icon eth-icon"
+              />
+            }
           />
         </span>
 

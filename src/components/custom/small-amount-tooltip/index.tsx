@@ -34,7 +34,7 @@ const SmallAmountTooltip: React.FC<ISmallAmountTooltip> = ({ amount, symbol, cla
     <span className={className}>
       {icon || symbol}
       {!symbolNoSpace.find((s) => s === symbol) ? '  ' : ''}
-      {formattedAmount}
+      <span>{formattedAmount}</span>
     </span>
   );
 };
