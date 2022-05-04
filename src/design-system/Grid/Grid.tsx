@@ -20,7 +20,7 @@ export const MuiGridStyled = styled(MuiGrid)(({ theme }) => ({
 
 const Grid: FC<GridProps> = ({ children, xxl, ...other }) => {
   return (
-    <MuiGridStyled className={`MuiGrid-grid-xxl-${xxl}`} {...other}>
+    <MuiGridStyled className={xxl ? `MuiGrid-grid-xxl-${xxl}` : ''} {...other}>
       {children}
     </MuiGridStyled>
   );
