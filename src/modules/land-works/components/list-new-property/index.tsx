@@ -285,13 +285,13 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           switch (selectedProperty.contractAddress) {
             case config.contracts.decentraland.landRegistry:
               console.log('1');
-              console.log({ landRegistryContract });
+              console.log({ landRegistryContract }, config.contracts.landworksContract);
               await landRegistryContract?.setApprovalForAll(config.contracts.landworksContract, true);
               isApproved = await landRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
               break;
             case config.contracts.decentraland.estateRegistry:
               console.log('2');
-              console.log({ estateRegistryContract });
+              console.log({ estateRegistryContract, config }, config.contracts.landworksContract);
               await estateRegistryContract?.setApprovalForAll(config.contracts.landworksContract, true);
               isApproved = await estateRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
               break;
