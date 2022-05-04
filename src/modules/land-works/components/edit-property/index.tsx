@@ -29,6 +29,7 @@ import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
 import EditFormCardSkeleton from '../land-edit-form-loader-card';
+import { TxModal } from '../lands-list-modal';
 
 import { formatBigNumberInput, getTimeType, secondsToDuration } from '../../../../utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from '../../../../utils/date';
@@ -41,6 +42,8 @@ interface Props {
   closeModal: () => void;
   delistText: string;
 }
+
+const EditMessage = 'Processing...';
 
 const EditProperty: React.FC<Props> = (props) => {
   const { openDelistPrompt, closeModal, delistText } = props;
@@ -94,6 +97,9 @@ const EditProperty: React.FC<Props> = (props) => {
   const [priceError, setPriceError] = useState('');
 
   const [showWarningModal, setShowWarningModal] = useState(false);
+  const [showTxModal, setShowTxModal] = useState(false);
+
+  const [editTxModalMessage, setEditTxModalMessage] = useState(EditMessage);
 
   const [saveDisabled, setSaveDisabled] = useState(false);
 
@@ -383,10 +389,16 @@ const EditProperty: React.FC<Props> = (props) => {
         maxPeriod,
         maxFutureTime,
         paymentToken?.id || '',
-        pricePerSecond.toFixed(0)
+        pricePerSecond.toFixed(0),
+        () => {
+          setShowTxModal(true);
+        }
       );
       showToastNotification(ToastType.Success, 'Property Updated successfully!');
+      setShowTxModal(false);
+      closeModal();
     } catch (e) {
+      setShowTxModal(false);
       console.log(e);
       showToastNotification(ToastType.Error, 'There was an error while updating the property.');
     }
@@ -634,6 +646,14 @@ const EditProperty: React.FC<Props> = (props) => {
           </Modal>
         </Grid>
       )}
+      <TxModal
+        textMessage={editTxModalMessage}
+        showModal={showTxModal}
+        handleClose={() => {
+          closeModal();
+          setShowTxModal(false);
+        }}
+      />
     </section>
   );
 };
