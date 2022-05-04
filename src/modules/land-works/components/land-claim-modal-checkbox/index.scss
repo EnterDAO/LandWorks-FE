@@ -4,7 +4,9 @@
   border-radius: 10px;
   transition: all 0.3s ease-out;
   border: 2px solid transparent;
-  background: var(--theme-card-color);
+  background: var(--theme-modal-color);
+  text-align: left;
+  margin-bottom: 0.75rem;
 
   .price {
     display: flex;
@@ -25,12 +27,6 @@
     .price-checkbox {
       color: var(--theme-accent-color);
     }
-  }
-
-  .land-name-checkbox {
-    font-weight: 400;
-    font-size: 16px;
-    color: var(--theme-primary-color);
   }
 
   .eth-icon {

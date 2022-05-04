@@ -79,25 +79,13 @@ export const ClaimModal: React.FC<Props> = (props) => {
   }, [assets]);
 
   return (
-    <Modal
-      className="claim-modal"
-      handleClose={onCancel}
-      {...modalProps}
-      open={open}
-      title={
-        <Text type="h3" weight="bold" color="primary">
-          Claim
-        </Text>
-      }
-    >
+    <Modal className="claim-modal" handleClose={onCancel} {...modalProps} open={open} title="Claim" width={640}>
       <Text type="p1" color="secondary" align="center" className="subtitle">
         Select the properties you want to claim your rent for
       </Text>
       <Grid container>
         {rentFees?.map((data) => (
-          <Grid item key={data.id}>
-            <LandClaimCheckBox key={data.id} onSelected={updateAssets} data={data} />
-          </Grid>
+          <LandClaimCheckBox key={data.id} onSelected={updateAssets} data={data} />
         ))}
         {hasReachedMaxClaimsLimit() && (
           <Grid item className="max-transaction-limit">
@@ -106,19 +94,19 @@ export const ClaimModal: React.FC<Props> = (props) => {
         )}
         <Grid item className="claim-modal-footer">
           <Grid container spacing={2}>
-            <Grid item xs={8} className="prices-container" style={{ gap: 10 }}>
+            <Grid item xs={10} className="prices-container" style={{ gap: 10 }}>
               <span className="total-label">Total:</span>{' '}
               <SmallAmountTooltip className="totalPrice" amount={totalEth} />
               <Icon name="png/eth" className="eth-icon" />
               <SmallAmountTooltip className="totalPrice" amount={totalUsdc} />
               <Icon name="token-usdc" className="eth-icon" />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={2}>
               <Button
                 btnSize="auto"
                 className="claim-button"
                 disabled={isClaimDisabled()}
-                variant="primary"
+                variant="gradient"
                 onClick={claim}
               >
                 Claim

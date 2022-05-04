@@ -25,13 +25,17 @@ export const LandClaimCheckBox: React.FC<props> = (props) => {
   };
 
   return (
-    <Grid container className={`claim-input-container ${checked ? 'checked' : ''}`}>
-      <Grid item xs={9}>
-        <Checkbox className="land-name-checkbox" onChange={(e) => onChecked(e.target.checked)}>
-          {name} - {metaverse.name}
-        </Checkbox>
+    <Grid
+      container
+      justifyContent="flex-start"
+      alignContent="flex-start"
+      className={`claim-input-container ${checked ? 'checked' : ''}`}
+    >
+      <Grid item xs={8}>
+        <Checkbox onChange={(e) => onChecked(e.target.checked)} />
+        {name} - {metaverse.name}
       </Grid>
-      <Grid item xs={3} className="price">
+      <Grid item xs={4} className="price">
         <SmallAmountTooltip className="price-checkbox" amount={unclaimedRentFee} />
         <Icon name={getTokenIconName(paymentToken.symbol)} className="eth-icon" />
       </Grid>
