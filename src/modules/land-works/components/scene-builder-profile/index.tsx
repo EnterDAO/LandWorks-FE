@@ -32,31 +32,33 @@ const SceneBuilderProfile: FC<ISceneBuilderProfile> = ({ builder }) => {
       display="flex"
       flexDirection="column"
       justifyContent="space-between"
+      position="absolute"
     >
       <Grid height={185} width="100%" borderRadius="20px" overflow="hidden">
+        <Box
+          component="img"
+          sx={{
+            borderRadius: '20px',
+            objectFit: 'cover',
+            width: '100%',
+            height: '100%',
+          }}
+          alt="Scene builder cover image."
+          src={builder?.coverPhotoLink}
+        />
+      </Grid>
+      <AvatarContainer>
         <Box
           component="img"
           sx={{
             width: '100%',
             borderRadius: '20px',
           }}
-          alt="Scene builder cover image."
-          src={builder?.coverPhotoLink}
+          alt="Scene builder profile image."
+          src={builder?.avatarPhotoLink}
         />
-      </Grid>
-
-      <Grid padding="20px 35px 40px" position="relative">
-        <AvatarContainer>
-          <Box
-            component="img"
-            sx={{
-              width: '100%',
-              borderRadius: '20px',
-            }}
-            alt="Scene builder profile image."
-            src={builder?.avatarPhotoLink}
-          />
-        </AvatarContainer>
+      </AvatarContainer>
+      <Grid padding="90px 35px 40px" position="relative">
         <Grid
           paddingTop="20px"
           width="100%"

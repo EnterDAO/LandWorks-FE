@@ -28,13 +28,14 @@ export const StyledImageContainer = styled(Box)<BoxProps>(() => ({
 }));
 
 export const AvatarContainer = styled(Grid)<GridProps>(() => ({
-  width: '100px',
-  height: '100px',
+  width: '180px',
+  height: '180px',
   border: '2px solid white',
   backgroundColor: 'var(--theme-modal-color)',
   boxShadow: '0 0 3px 2px #757575',
   borderRadius: '50%',
-  top: '-60px',
+  top: '110px',
+  left: '35px',
   position: 'absolute',
   overflow: 'hidden',
   display: 'flex',
