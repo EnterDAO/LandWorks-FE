@@ -94,6 +94,8 @@ const ExploreView: React.FC = () => {
     return setStateClickedLandId(landId);
   };
 
+  console.log({ lands });
+
   const setPointMapCentre = (lands: CoordinatesLand[]) => {
     if (lands[0]) {
       const { x, y } = lands[0];

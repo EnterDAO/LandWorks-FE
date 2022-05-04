@@ -27,15 +27,16 @@ import {
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
 import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
-import { currencyData, landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
+import { currencyData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-modal';
+import { useContractRegistry } from 'modules/land-works/providers/generic-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
-import { PaymentToken, fetchTokenPayments } from '../../api';
+import { PaymentToken, fetchMetaverses, fetchTokenPayments } from '../../api';
 import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
 import { useCryptoVoxels } from '../../providers/cryptovoxels-provider';
 import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
@@ -58,15 +59,17 @@ interface IProps {
 const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const walletCtx = useWallet();
   const landworks = useLandworks();
-  const estateRegistry = useEstateRegistry();
-  const landRegistry = useLandRegistry();
-  const cryptoVoxels = useCryptoVoxels();
+  // const estateRegistry = useEstateRegistry();
+  // const landRegistry = useLandRegistry();
+  // const cryptoVoxels = useCryptoVoxels();
+  const registry = useContractRegistry();
   const history = useHistory();
 
   const { landWorksContract } = landworks;
-  const { landRegistryContract } = landRegistry;
-  const { estateRegistryContract } = estateRegistry;
-  const { cryptoVoxelsContract } = cryptoVoxels;
+  // const { landRegistryContract } = landRegistry;
+  // const { estateRegistryContract } = estateRegistry;
+  // const { cryptoVoxelsContract } = cryptoVoxels;
+  const { landRegistryContract, estateRegistryContract, cryptoVoxelsContract } = registry;
 
   const [minPeriod, setMinPeriod] = useState(new BigNumber(DAY_IN_SECONDS));
   const [isMinPeriodSelected, setMinPeriodSelected] = useState(false);
@@ -116,6 +119,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
   const [loading, setLoading] = useState(false);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
+  const [availableMetaverses, setAvailableMetaverses] = useState([]);
   const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
   const [activeStep, setActiveStep] = useState(0);
   const [showApproveModal, setShowApproveModal] = useState(false);
@@ -280,10 +284,14 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
         if (selectedProperty) {
           switch (selectedProperty.contractAddress) {
             case config.contracts.decentraland.landRegistry:
+              console.log('1');
+              console.log({ landRegistryContract });
               await landRegistryContract?.setApprovalForAll(config.contracts.landworksContract, true);
               isApproved = await landRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
               break;
             case config.contracts.decentraland.estateRegistry:
+              console.log('2');
+              console.log({ estateRegistryContract });
               await estateRegistryContract?.setApprovalForAll(config.contracts.landworksContract, true);
               isApproved = await estateRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
               break;
@@ -379,7 +387,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const retrieveLandIds = (estate: any) => estate.landIds.landIds;
 
-  const decodeXYForLand = (landId: BigNumber) => landRegistry?.landRegistryContract?.getTokenData(landId);
+  const decodeXYForLand = (landId: BigNumber) => landRegistryContract?.getTokenData(landId);
 
   const getLandsForEstate = async (estate: DecentralandNFT) => {
     const landIds = retrieveLandIds(estate);
@@ -412,10 +420,13 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     }
 
     try {
-      const lands = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
-      const estates = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
+      const lands = await landRegistryContract?.getUserData(walletCtx.account);
+      const estates = await estateRegistryContract?.getUserData(walletCtx.account);
       const cryptoVoxels = await cryptoVoxelsContract?.getUserData(walletCtx.account);
       const landsForEstates = await getLandsForEstates(estates);
+      const metaverses = await fetchMetaverses();
+      console.log({ metaverses });
+      setAvailableMetaverses(metaverses);
       setEstateGroup(landsForEstates);
       setAssetProperties(lands);
       setAssetEstates(estates);
@@ -585,7 +596,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
                 width={'12rem'}
                 value={selectedMetaverse}
                 onChange={onChangeMetaverse}
-                options={landsData}
+                options={availableMetaverses}
               />
             </Grid>
 

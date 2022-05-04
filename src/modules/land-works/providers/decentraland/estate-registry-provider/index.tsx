@@ -31,12 +31,10 @@ export function useEstateRegistry(): EstateRegistryType {
 
 const EstateRegistryProvider: FC = (props) => {
   const { children } = props;
-
-  const walletCtx = useWallet();
-  const [reload] = useReload();
-
   const [estateTxInProgress, setEstateTxInProgress] = useState(false);
   const [estateTxHash, setEstateTxHash] = useState('');
+  const walletCtx = useWallet();
+  const [reload] = useReload();
 
   const estateRegistryContract = useMemo(() => {
     const estateRegistry = new EstateRegistryContract([], config.contracts.decentraland.estateRegistry);

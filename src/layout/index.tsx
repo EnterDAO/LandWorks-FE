@@ -9,6 +9,7 @@ import LayoutFooter from 'layout/components/layout-footer';
 import LayoutHeader from 'layout/components/layout-header';
 import EstateRegistryProvider from 'modules/land-works/providers/decentraland/estate-registry-provider';
 import LandRegistryProvider from 'modules/land-works/providers/decentraland/land-registry-provider';
+import ContractProvider from 'modules/land-works/providers/generic-provider';
 import LandWorksProvider from 'modules/land-works/providers/landworks-provider';
 import WarningProvider from 'providers/warning-provider';
 
@@ -32,41 +33,43 @@ const LayoutView: React.FC = () => {
       <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <WarningProvider>
           <LandWorksProvider>
-            <LandRegistryProvider>
+            {/* <LandRegistryProvider>
               <EstateRegistryProvider>
-                <CryptoVoxelsProvider>
-                  <Erc20Provider>
-                    <ApolloProvider client={client}>
-                      <NotionProvider>
-                        <LayoutHeader />
-                        <main className={s.main}>
-                          <ErrorBoundary>
-                            <Suspense
-                              fallback={
-                                <Loader
-                                  sx={{
-                                    position: 'fixed',
-                                    top: '50%',
-                                    left: '50%',
-                                    zoom: '0.5',
-                                    transform: 'translate(-50%, -50%)',
-                                  }}
-                                />
-                              }
-                            >
-                              <Switch>
-                                <Route path="/" component={LandworksView} />
-                              </Switch>
-                            </Suspense>
-                          </ErrorBoundary>
-                        </main>
-                        {isntExploreViewRoute && <LayoutFooter />}
-                      </NotionProvider>
-                    </ApolloProvider>
-                  </Erc20Provider>
-                </CryptoVoxelsProvider>
+                <CryptoVoxelsProvider> */}
+            <ContractProvider>
+              <Erc20Provider>
+                <ApolloProvider client={client}>
+                  <NotionProvider>
+                    <LayoutHeader />
+                    <main className={s.main}>
+                      <ErrorBoundary>
+                        <Suspense
+                          fallback={
+                            <Loader
+                              sx={{
+                                position: 'fixed',
+                                top: '50%',
+                                left: '50%',
+                                zoom: '0.5',
+                                transform: 'translate(-50%, -50%)',
+                              }}
+                            />
+                          }
+                        >
+                          <Switch>
+                            <Route path="/" component={LandworksView} />
+                          </Switch>
+                        </Suspense>
+                      </ErrorBoundary>
+                    </main>
+                    {isntExploreViewRoute && <LayoutFooter />}
+                  </NotionProvider>
+                </ApolloProvider>
+              </Erc20Provider>
+            </ContractProvider>
+            {/* </CryptoVoxelsProvider>
               </EstateRegistryProvider>
-            </LandRegistryProvider>
+            </LandRegistryProvider> */}
           </LandWorksProvider>
         </WarningProvider>
       </div>
