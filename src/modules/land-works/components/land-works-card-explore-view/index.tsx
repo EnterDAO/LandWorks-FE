@@ -3,7 +3,7 @@ import { ZERO_BIG_NUMBER } from 'web3/utils';
 
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
-import { getLandImageUrl, getTokenIconName } from 'helpers/helpers';
+import { getTokenIconName } from 'helpers/helpers';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 
 import { AssetEntity } from '../../api';
@@ -50,7 +50,7 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
       href={`/property/${land.id}`}
     >
       <div className="land-explore-image">
-        <img className="land-explore-image-img" src={getLandImageUrl(land)} alt="land-explore-image-img" />
+        <img className="land-explore-image-img" src={land.imageUrl} alt="land-explore-image-img" />
       </div>
       {land.isHot && (
         <span className="land-explore-card-hot">
@@ -60,7 +60,6 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
 
       <div className="land-explore-name">
         <span title={land.name}>{land.name.toLowerCase()}</span>
-        {!land.decentralandData?.isLAND && <span className="label card-name-estate-label"> ESTATE</span>}
       </div>
 
       <div className="land-explore-row start">
@@ -90,7 +89,9 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
       </div>
 
       <div className="land-explore-row start">
-        <div className="land-explore-hashtags">{land.decentralandData?.isLAND ? '#LAND' : '#ESTATE'} #DECENTRALAND</div>
+        <div className="land-explore-hashtags">
+          #{land.type} #{land.metaverse.name}
+        </div>
       </div>
     </a>
   );

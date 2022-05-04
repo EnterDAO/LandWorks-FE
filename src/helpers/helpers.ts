@@ -5,7 +5,7 @@ import format from 'date-fns/format';
 import fromUnixTime from 'date-fns/fromUnixTime';
 
 import { DecentralandNFT } from 'modules/interface';
-import { AssetEntity } from 'modules/land-works/api';
+import { AssetEntity, CryptoVoxelsType, DecentralandData } from 'modules/land-works/api';
 
 import defaultLandImage from '../modules/land-works/components/land-works-card/assets/land.png';
 
@@ -55,8 +55,18 @@ export const getLandImageUrl = (land: AssetEntity | undefined) => {
   }
 };
 
+export const getLANDImageUrl = (x: number, y: number) => {
+  const imageUrl = `${BASE_URL_DECENTRALEND}/parcels/${x}/${y}/map.png`;
+  return imageUrl;
+};
+
 export const getDecentralandNftImageUrl = (land: DecentralandNFT) => {
   const imageUrl = `${BASE_URL_DECENTRALEND}/parcels/${land.coords[0]}/${land.coords[1]}/map.png`;
+  return imageUrl;
+};
+
+export const getDecentralandDataImageUrl = (land: DecentralandData) => {
+  const imageUrl = `${BASE_URL_DECENTRALEND}/parcels/${land.coordinates[0]}/${land.coordinates[1]}/map.png`;
   return imageUrl;
 };
 
@@ -87,4 +97,8 @@ export const getAddressFromENS = async (ens: string) => {
   const provider = new InfuraProvider();
   const address = await provider.resolveName(ens);
   return address;
+};
+
+export const getCryptoVoxelsAsset = async (id: string): Promise<CryptoVoxelsType> => {
+  return await fetch(`https://www.cryptovoxels.com/p/${id}`).then((result) => result.json());
 };

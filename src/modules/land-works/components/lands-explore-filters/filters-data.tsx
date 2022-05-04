@@ -1,24 +1,33 @@
 import Icon from 'components/custom/icon';
 
-import { ReactComponent as HighIcon } from '../../../../resources/svg/order-high-first.svg';
-import { ReactComponent as HottestIcon } from '../../../../resources/svg/order-hot.svg';
-import { ReactComponent as LowIcon } from '../../../../resources/svg/order-low-first.svg';
-
 export const sortData = [
   {
     label: 'Hottest first',
     value: 1,
-    icon: <HottestIcon />,
   },
   {
     label: 'Price: low first',
     value: 2,
-    icon: <LowIcon />,
   },
   {
     label: 'Price: high first',
     value: 3,
-    icon: <HighIcon />,
+  },
+  {
+    label: 'Period: shortest first',
+    value: 4,
+  },
+  {
+    label: 'Period: longest first',
+    value: 5,
+  },
+  {
+    label: 'Recently: listed',
+    value: 6,
+  },
+  {
+    label: 'Recently: rented',
+    value: 7,
   },
 ];
 
@@ -26,6 +35,10 @@ export const landsData = [
   {
     label: 'Decentraland',
     value: 1,
+  },
+  {
+    label: 'Voxels',
+    value: 2,
   },
 ];
 

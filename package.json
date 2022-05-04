@@ -74,6 +74,7 @@
     "@mui/material": "^5.4.1",
     "@mui/styles": "^5.4.1",
     "@mui/system": "^5.4.1",
+    "@notionhq/client": "^1.0.4",
     "@popperjs/core": "2.9.2",
     "@rooks/use-debounce": "4.10.0",
     "@rooks/use-interval": "4.10.0",

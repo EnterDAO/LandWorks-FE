@@ -1,4 +1,4 @@
-@import '../../../../styles/variables.scss';
+
 @import '../../../../styles/text.scss';
 
 .single-land-card-container {
@@ -60,14 +60,6 @@
     }
   }
 
-  .card-name {
-    font-weight: 700;
-    font-size: 20px;
-    text-transform: capitalize;
-    color: white;
-    margin-right: 13px;
-  }
-
   .label {
     background: var(--theme-card-color);
     padding: 2px 5px;
@@ -88,7 +80,6 @@
     border-radius: 20px;
     font-weight: 700;
     left: -10px;
-    margin-left: auto;
 
     svg {
       position: relative;
@@ -115,11 +106,12 @@
 
   .card-image {
     max-width: 100%;
+    width: 100%;
   }
 
   .properties-container {
     position: relative;
-    background: var(--theme-separator-color);
+    background: var(--theme-card-color);
     padding: 30px !important;
     border-radius: 20px;
 
@@ -168,7 +160,7 @@
     }
 
     .rent-section {
-      background: var(--theme-card-color);
+      background: var(--theme-modal-color);
       border-radius: 25px;
       margin-top: 20px;
       padding: 15px 0px;
@@ -342,11 +334,6 @@
   }
 }
 
-.single-land-label-row {
-  display: flex;
-  align-items: center;
-}
-
 .marketplace-link {
   align-items: center;
   display: flex;
@@ -363,9 +350,38 @@
 }
 
 .title-container {
+  position: relative;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  width: 100%;
+  // overflow: hidden;
+
+  &__text {
+    font-weight: 700;
+    font-size: 20px;
+    text-transform: capitalize;
+    color: white;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    max-width: 75%;
+    overflow: hidden;
+  }
+  
+  &__pill {
+    flex-grow: 1;
+  }
+
+  &__hot {
+    position: absolute;
+    right: 0;
+
+    &.label {
+      left: 10px;
+    }
+  }
 }
 
 .head-container {

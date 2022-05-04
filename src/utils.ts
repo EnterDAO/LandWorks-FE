@@ -6,7 +6,8 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 import { isAddress } from 'web3-utils';
 import { DEFAULT_ADDRESS } from 'web3/utils';
 
-import { Data, DecentralandData, ExtractedTime, ParsedDate } from './modules/land-works/api';
+import config from './config';
+import { AssetEntity, Data, DecentralandData, ExtractedTime, ParsedDate } from './modules/land-works/api';
 
 import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from './utils/date';
 
@@ -48,6 +49,31 @@ export function formatBigNumber(value: BigNumber): string {
     } else {
       return value.toPrecision(2).replace(/\.?0+$/, '');
     }
+  }
+}
+
+export function formatBigNumberInput(value: BigNumber): string {
+  if (value.gt(1)) {
+    return value.toFixed(2);
+  } else if (value.eq(0)) {
+    return '0';
+  } else {
+    if (value.lt(1e-6)) {
+      return value.toFixed();
+    } else {
+      return value.toPrecision(2).replace(/\.?0+$/, '');
+    }
+  }
+}
+
+export function formatShortDescription(desc: string): string {
+  const limitStringLength = desc.slice(0, 105);
+  const cutOff = limitStringLength.lastIndexOf(' ');
+  const shortenedDescription = limitStringLength.substring(0, cutOff);
+  if (desc.length > 105) {
+    return `${shortenedDescription}...`;
+  } else {
+    return desc;
   }
 }
 
@@ -100,8 +126,16 @@ export function isValidAddress(value: string | undefined): boolean {
   return !!value && isAddress(value) && value !== DEFAULT_ADDRESS;
 }
 
-export function getDecentralandAssetName(decentralandData: DecentralandData | null): string {
-  if (decentralandData === null) {
+export function getAssetName(asset: AssetEntity): string {
+  if (isDecentralandMetaverseRegistry(asset.metaverseRegistry?.id.toLowerCase() || '')) {
+    return getDecentralandAssetName(asset.decentralandData);
+  } else {
+    return `${asset.metaverse.name} #${asset.metaverseAssetId}`;
+  }
+}
+
+export function getDecentralandAssetName(decentralandData: DecentralandData | null | undefined): string {
+  if (decentralandData === null || decentralandData === undefined) {
     return '';
   }
 
@@ -145,6 +179,13 @@ export function buildData(csv: string): Data | null {
   }
 
   return dataEntity;
+}
+
+export function isDecentralandMetaverseRegistry(registry: string): boolean {
+  return (
+    registry === config.contracts.decentraland.landRegistry.toLowerCase() ||
+    registry === config.contracts.decentraland.estateRegistry.toLowerCase()
+  );
 }
 
 /**

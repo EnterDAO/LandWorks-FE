@@ -44,6 +44,7 @@ const ExploreView: React.FC = () => {
     order: sessionStorageHandler('get', 'explore-filters', 'order'),
     owner: sessionStorageHandler('get', 'explore-filters', 'owner'),
     lastRentEnd: sessionStorageHandler('get', 'explore-filters', 'lastRentEnd'),
+    metaverse: sessionStorageHandler('get', 'general', 'metaverse'),
   };
 
   const [lands, setLands] = useState<AssetEntity[]>([]);
@@ -58,8 +59,11 @@ const ExploreView: React.FC = () => {
   const [sortDir, setSortDir] = useState(sortDirections[sessionFilters.order - 1 || 0]);
   const [sortColumn, setSortColumn] = useState(sortColumns[sessionFilters.order - 1 || 0]);
 
+  const [metaverse, setMetaverse] = useState(sessionFilters.metaverse || DECENTRALAND_METAVERSE);
+
   const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
   const [mapExpanded, setMapExpanded] = useState(false);
+  const [mapIsHidden, setMapIsHidden] = useState(false);
 
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
@@ -121,6 +125,11 @@ const ExploreView: React.FC = () => {
     sessionStorageHandler('set', 'explore-filters', 'lastRentEnd', newValue);
   };
 
+  const onChangeMetaverse = (index: string) => {
+    setMetaverse(index);
+    index !== '1' ? setMapIsHidden(true) : null;
+  };
+
   const onChangeFiltersCurrency = async (index: number) => {
     let tokens: PaymentToken[] = paymentTokens;
 
@@ -148,7 +157,7 @@ const ExploreView: React.FC = () => {
       setLoading(true);
 
       const lands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
-        DECENTRALAND_METAVERSE,
+        String(metaverse),
         lastRentEnd,
         orderColumn,
         sortDir,
@@ -179,10 +188,11 @@ const ExploreView: React.FC = () => {
         ? getLands(sortColumn, sortDir, lastRentEnd, paymentToken, wallet?.account?.toLowerCase())
         : getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
     }
-  }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken]);
+  }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken, metaverse]);
 
   useEffect(() => {
     getPaymentTokens();
+    String(metaverse) !== '1' ? setMapIsHidden(true) : setMapIsHidden(false);
   }, []);
 
   useEffect(() => {
@@ -214,12 +224,16 @@ const ExploreView: React.FC = () => {
               onChangeOwnerToggler={onChangeFiltersOwnerToggler}
               onChangeAvailable={onChangeFiltersAvailable}
               onChangeCurrency={onChangeFiltersCurrency}
+              onChangeMetaverse={onChangeMetaverse}
             />
           </div>
 
           <div className="content-container content-container--explore-view">
-            <div className="list-lands-container">
+            <div className={`list-lands-container ${mapIsHidden ? 'fullWidth' : ''}`}>
               <LandsExploreList
+                setIsHiddenMap={setMapIsHidden}
+                isHiddenMap={mapIsHidden}
+                metaverse={metaverse}
                 lastRentEnd={lastRentEnd}
                 loading={loading}
                 lands={lands}
@@ -228,16 +242,18 @@ const ExploreView: React.FC = () => {
               <LayoutFooter isWrapped={false} />
             </div>
 
-            <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
-              <LandsExploreMap
-                positionX={atlasMapX}
-                positionY={atlasMapY}
-                expanded={mapExpanded}
-                onClick={() => setMapExpanded(!mapExpanded)}
-                highlights={coordinatesHighlights}
-                lands={lands}
-              />
-            </div>
+            {!mapIsHidden && (
+              <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
+                <LandsExploreMap
+                  positionX={atlasMapX}
+                  positionY={atlasMapY}
+                  expanded={mapExpanded}
+                  onClick={() => setMapExpanded(!mapExpanded)}
+                  highlights={coordinatesHighlights}
+                  lands={lands}
+                />
+              </div>
+            )}
             <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
               <ListNewProperty />
             </Modal>

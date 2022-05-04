@@ -15,6 +15,7 @@ import {
 import BigNumber from 'bignumber.js';
 
 import { Box, Button, Grid, Modal, Typography } from 'design-system';
+import { getDecentralandDataImageUrl, getEstateImageUrl } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
@@ -29,7 +30,7 @@ import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset }
 import { useLandworks } from '../../providers/landworks-provider';
 import EditFormCardSkeleton from '../land-edit-form-loader-card';
 
-import { getTimeType, secondsToDuration } from '../../../../utils';
+import { formatBigNumberInput, getTimeType, secondsToDuration } from '../../../../utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from '../../../../utils/date';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
 
@@ -41,7 +42,7 @@ interface Props {
   delistText: string;
 }
 
-const EditPropertyViewNew: React.FC<Props> = (props) => {
+const EditProperty: React.FC<Props> = (props) => {
   const { openDelistPrompt, closeModal, delistText } = props;
 
   const walletCtx = useWallet();
@@ -51,6 +52,7 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
   const { landWorksContract } = landworks;
 
   const [asset, setAsset] = useState<AssetEntity>({} as AssetEntity);
+
   const { tokenId } = useParams<{ tokenId: string }>();
   const [loading, setLoading] = useState(false);
 
@@ -171,7 +173,7 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
     }
 
     if (asset.pricePerMagnitude) {
-      setTokenCost(new BigNumber(asset.pricePerMagnitude.price || 0));
+      setTokenCost(new BigNumber(formatBigNumberInput(asset.pricePerMagnitude.price) || 0));
     }
   }, [asset]);
 
@@ -420,10 +422,10 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
     setLoading(true);
     const asset = await fetchAsset(tokenId);
     if (!asset) {
-      history.push(`/all`);
+      history.push(`/explore`);
       return;
     }
-    setAsset(parseAsset(asset));
+    setAsset(await parseAsset(asset));
     setLoading(false);
   };
 
@@ -440,6 +442,8 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
   const canSave = hasChangesToSave();
 
   const showPriceInUsd = `$${usdPrice}`;
+
+  const estateCoords = selectedProperty?.decentralandData?.coordinates;
 
   return (
     <section className="list-view">
@@ -527,7 +531,47 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
             </Grid>
             <Grid item xs={6} rowSpacing={5}>
               <Grid item xs={12}>
-                <SelectedListCard asset={selectedProperty!} />
+                <>
+                  {selectedProperty && selectedProperty.decentralandData && (
+                    <>
+                      {selectedProperty.decentralandData.isLAND ? (
+                        <SelectedListCard
+                          src={getDecentralandDataImageUrl(selectedProperty.decentralandData)}
+                          name={selectedProperty.name}
+                          coordinatesChild={
+                            // TODO: WHEN APPROVE FUNCTION IS SET UP
+                            //<SelectedFeatureCoords asset={selectedProperty.decentralandData} />
+                            <>
+                              X: {selectedProperty.decentralandData.coordinates[0].x} Y:
+                              {selectedProperty.decentralandData.coordinates[0].y}
+                            </>
+                          }
+                        />
+                      ) : (
+                        <SelectedListCard
+                          src={getEstateImageUrl(selectedProperty)}
+                          name={selectedProperty.name}
+                          coordinatesChild={estateCoords?.map((co) => (
+                            <span key={`${co[0]}-${co[1]}`} style={{ marginRight: '8px' }}>
+                              X: {co.x} Y: {co.y}
+                            </span>
+                          ))}
+                        />
+                      )}
+                    </>
+                  )}
+                  {selectedProperty?.place && (
+                    <SelectedListCard
+                      src={selectedProperty.imageUrl}
+                      name={selectedProperty?.name}
+                      coordinatesChild={
+                        <span>
+                          {selectedProperty?.place[0]}, {selectedProperty?.place[1]}
+                        </span>
+                      }
+                    />
+                  )}
+                </>
               </Grid>
               <Grid item xs={12}>
                 <ListNewSummary
@@ -594,4 +638,4 @@ const EditPropertyViewNew: React.FC<Props> = (props) => {
   );
 };
 
-export default EditPropertyViewNew;
+export default EditProperty;

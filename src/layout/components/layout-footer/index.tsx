@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
 
 import styles from './layout-footer.module.scss';
@@ -27,6 +27,12 @@ const LayoutFooter: React.FC<Props> = ({ isWrapped = true }) => {
           </ExternalLink>
           <ExternalLink href="https://discord.gg/7QJvEctG2G" className={styles['social-media-container--link']}>
             <Icon name="discord" width="20" height="20" />
+          </ExternalLink>
+          <ExternalLink
+            href="https://dune.xyz/1ab/EnterDAO-Landworks"
+            className={styles['social-media-container--link']}
+          >
+            <Icon name="dune" width="20" height="20" />
           </ExternalLink>
           <ExternalLink
             href="https://www.coingecko.com/en/coins/enterdao"

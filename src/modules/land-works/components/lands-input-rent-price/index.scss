@@ -1,4 +1,3 @@
-@import 'styles/variables.scss';
 @import 'styles/text.scss';
 
 .blueBox {
@@ -10,21 +9,21 @@
 }
 
 .light {
-  color: $light;
+  color: var(--theme-grey900-color);
   font-weight: 600;
 }
 
 .grey {
-  color: $grey02;
+  color: var(--theme-grey700-color);
   font-weight: 600;
 }
 
 .amount {
   font-size: 18px;
   font-weight: 600;
-  color: $light ;
+  color: var(--theme-grey900-color) ;
 }
 
 .amount-label {
-  color: $accentBlue
+  color: var(--theme-accent-color)
 }

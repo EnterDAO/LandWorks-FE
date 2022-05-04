@@ -4,12 +4,12 @@ import Countdown, { CountdownTimeDelta, zeroPad } from 'react-countdown';
 import Grid from '@mui/material/Grid';
 import BigNumber from 'bignumber.js';
 
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
 import config from 'config';
 import { Button, Tooltip } from 'design-system';
-import { getENSName, getLandImageUrl, getTokenIconName } from 'helpers/helpers';
+import { getENSName, getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
 import { ReactComponent as WarningIcon } from '../../../../resources/svg/warning.svg';
@@ -22,7 +22,7 @@ import SingleLandCardSkeleton from '../land-single-card-loader';
 import LandsMapOverlay from '../lands-map-overlay';
 
 import { getNowTs } from '../../../../utils';
-import { ZERO_BIG_NUMBER, getDecentralandPlayUrl, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
+import { ZERO_BIG_NUMBER, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -100,7 +100,12 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     try {
       const rentArray = currentRent.id.split('-');
       if (rentArray.length === 2) {
-        await landWorksContract?.updateState(asset!.id, rentArray[1], onClaimSubmit);
+        await landWorksContract?.updateState(
+          asset!.id,
+          asset?.metaverseRegistry?.id || '',
+          rentArray[1],
+          onClaimSubmit
+        );
         showToastNotification(ToastType.Success, 'Operator updated successfully!');
       }
     } catch (e) {
@@ -160,6 +165,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const isAssetStaked = () => {
     return asset?.owner?.id == config.contracts.yf.staking;
   };
+
   const ownerOrConsumer = isAssetStaked() ? asset?.consumer?.id : asset?.owner?.id;
 
   const [ens, setEns] = useState<string>();
@@ -191,10 +197,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
         <>
           <Grid xs={12} md={6} item>
             <div className="map-image-wrapper">
-              <img alt="vector Icon" className="card-image" src={getLandImageUrl(asset)} />
+              <img alt="vector Icon" className="card-image" src={asset?.imageUrl} />
               <LandsMapOverlay
-                title={asset?.decentralandData?.isLAND ? 'Land' : 'Estate'}
+                title={asset?.type || ''}
                 coordinates={asset?.decentralandData?.coordinates}
+                place={asset?.place}
               />
             </div>
           </Grid>
@@ -202,8 +209,10 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
           <Grid xs={12} md={6} item className="properties-container">
             <Grid container className="head-container">
               <Grid item className="title-container">
-                <span className="card-name">{asset?.name?.toLowerCase()}</span>
-                <Grid className="button-section">
+                <span className="title-container__text" title={asset?.name?.toLowerCase()}>
+                  {asset?.name?.toLowerCase()}
+                </span>
+                <span className={`title-container__pill button-section `}>
                   <button
                     className={`${
                       isNotListed() ? 'button-delisted' : isAvailable ? 'button-available' : 'button-rented'
@@ -220,19 +229,21 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                     />
                     {isNotListed() ? 'Delisted' : isAvailable ? 'Available' : 'Rented'}
                   </button>
-                </Grid>
-              </Grid>
-              <Grid item className="single-land-label-row">
+                </span>
                 {asset?.isHot && (
-                  <span className="label card-hot-label">
+                  <span className="title-container__hot label card-hot-label">
                     <FireIcon className="name-label" />
                   </span>
                 )}
               </Grid>
             </Grid>
             <Grid container className="hashtag-row">
-              <Grid item>{asset?.decentralandData?.isLAND ? <p>#LAND</p> : <p>#ESTATE</p>}</Grid>
-              <Grid item>{asset?.metaverse?.name && <p>#{asset?.metaverse?.name}</p>}</Grid>
+              <Grid item>
+                <p>#{asset?.type}</p>
+              </Grid>
+              <Grid item>
+                <p>#{asset?.metaverse?.name}</p>
+              </Grid>
             </Grid>
             <Grid container>
               <Grid item xs={24} className="properties-row">
@@ -332,11 +343,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       )}
                     </Grid>
                     <Grid item className="property-button">
-                      <ExternalLink
-                        className="marketplace-link"
-                        target={'_blank'}
-                        href={getDecentralandPlayUrl(asset?.decentralandData?.coordinates)}
-                      >
+                      <ExternalLink className="marketplace-link" target={'_blank'} href={asset?.externalUrl}>
                         <span>view in metaverse</span>
                       </ExternalLink>
                     </Grid>

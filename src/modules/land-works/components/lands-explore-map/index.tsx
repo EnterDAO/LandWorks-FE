@@ -13,6 +13,8 @@ import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import LandsExploreLandPreview from '../lands-explore-land-preview';
 import LandsExploreNavigatorInfo from '../lands-explore-navigator-info';
 
+import { getOwnerOrConsumerId } from 'modules/land-works/utils';
+
 import styles from './lands-explore-map.module.scss';
 
 interface Props {
@@ -79,11 +81,16 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
 
     if (!mapTiles || !mapTiles[id]) return;
 
+    const land = lands.find((land) => {
+      const idCoordinates = land.decentralandData?.coordinates[0].id;
+      return idCoordinates === mapTiles[id].id.replace(',', '-');
+    });
+
     setSelectedTile &&
       setSelectedTile({
         id,
         type: mapTiles[id].type || '',
-        owner: mapTiles[id].owner || '',
+        owner: getOwnerOrConsumerId(land?.decentralandData?.asset)?.toLowerCase() || mapTiles[id].owner || '',
       });
   };
 

@@ -4,10 +4,10 @@ import { toast } from 'react-toastify';
 import web3 from 'web3';
 import { getEtherscanAddressUrl, shortenAddr } from 'web3/utils';
 
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import { Button, Input, InputLabel, Modal, Typography } from 'design-system';
 import { EditIcon } from 'design-system/icons';
-import { getAddressFromENS } from 'helpers/helpers';
+import { getAddressFromENS, getENSName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 
@@ -21,14 +21,17 @@ import './index.scss';
 type Iprops = {
   operator: string;
   assetId: string;
+  metaverseRegistry?: string;
   rentId: string;
   renter: string;
-  ens?: string | null;
   isEditable: boolean;
 };
 type transactionStatus = 'loading' | 'success' | 'pending';
 
-const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEditable, ens }) => {
+const SignTransactionMessage = 'Signing transaction...';
+const UpdateTransactionMessage = 'Updating operator...';
+
+const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, rentId, renter, isEditable }) => {
   const wallet = useWallet();
   const landWorks = useLandworks();
 
@@ -38,15 +41,27 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
   const [newOperator, setNewOperator] = useState<string>('');
   const [transactionStatus, setTransactionStatus] = useState<transactionStatus>('pending');
   const [canEditOperator, setCanEditOperator] = useState(false);
+  const [ens, setEns] = useState('');
+  const [modalText, setModalText] = useState(SignTransactionMessage);
 
   const shortedOperator = shortenAddr(newOperator || operator);
 
+  useEffect(() => {
+    getENSName(operator).then((result) => {
+      result !== operator ? setEns(result) : null;
+    });
+    return () => {
+      setEns('');
+    };
+  }, []);
+
   const handleSave = async () => {
+    let scopedAddress = newOperator;
     if (landWorksContract) {
       setTransactionStatus('loading');
       try {
-        if (!web3.utils.isAddress(newOperator)) {
-          const address = await getAddressFromENS(newOperator);
+        if (!web3.utils.isAddress(scopedAddress)) {
+          const address = await getAddressFromENS(scopedAddress);
           if (!address) {
             toast.error('The new operator address is invalid.', {
               position: toast.POSITION.TOP_RIGHT,
@@ -58,9 +73,10 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
             return;
           }
           setNewOperator(address);
+          scopedAddress = address;
         }
 
-        if (newOperator?.toLowerCase() === operator?.toLowerCase()) {
+        if (scopedAddress?.toLowerCase() === operator?.toLowerCase()) {
           toast.error('New operator is the same as the current one.', {
             position: toast.POSITION.TOP_RIGHT,
             className: 'error-toast',
@@ -73,7 +89,9 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
 
         const rentArray = rentId.split('-');
         if (rentArray.length === 2) {
-          await landWorksContract.updateOperator(assetId, rentArray[1], newOperator);
+          await landWorksContract.updateOperator(assetId, metaverseRegistry || '', rentArray[1], scopedAddress, () =>
+            setModalText(UpdateTransactionMessage)
+          );
           showToastNotification(ToastType.Success, 'Operator updated successfully!');
           setTransactionStatus('success');
           setNewOperator('');
@@ -114,7 +132,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
   return (
     <div className="operator">
       <ExternalLink className="operator-input-link" target="_blank" href={getEtherscanAddressUrl(operator)}>
-        {shortedOperator || ens}
+        {ens || shortedOperator}
       </ExternalLink>
       {!canEditOperator ? (
         <></>
@@ -140,12 +158,14 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, rentId, renter, isEdi
               </Button>
             </StyledGrid>
           )}
-          {transactionStatus === 'loading' && <ModalLoader href={getEtherscanAddressUrl(wallet.account) || ''} />}
+          {transactionStatus === 'loading' && (
+            <ModalLoader text={modalText} href={getEtherscanAddressUrl(wallet.account) || ''} />
+          )}
           {transactionStatus === 'success' && (
             <ModalSuccess
               buttonText="close"
               title="Successfully Changed!"
-              description="Nice! You’ve successfully changed operator."
+              description="Nice! You've successfully changed operator."
               buttonEvent={successfully}
             />
           )}

@@ -1,10 +1,14 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { TWITTER_TEXT } from 'constants/modules';
 import { getEtherscanAddressUrl } from 'web3/utils';
 
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import { Button, Icon, Modal } from 'design-system';
-import { Spinner, SuccessStarIcon } from 'design-system/icons';
+import { Spinner, SuccessStarIcon, TwitterIcon } from 'design-system/icons';
 import { useWallet } from 'wallets/wallet';
+
+import { ShareLink } from './styled';
 
 import './index.scss';
 
@@ -15,6 +19,10 @@ interface IProps {
 
 interface ITxModal extends IProps {
   textMessage: string;
+}
+interface ISuccessModal extends IProps {
+  showShareButton: boolean;
+  listedPropertyId: string;
 }
 
 export const TxModal: React.FC<ITxModal> = ({ showModal, handleClose, textMessage }) => {
@@ -35,7 +43,12 @@ export const TxModal: React.FC<ITxModal> = ({ showModal, handleClose, textMessag
   );
 };
 
-export const SuccessModal: React.FC<IProps> = ({ showModal, handleClose }) => {
+export const SuccessModal: React.FC<ISuccessModal> = ({
+  showModal,
+  handleClose,
+  showShareButton,
+  listedPropertyId,
+}) => {
   return (
     <Modal height={600} open={showModal} handleClose={handleClose}>
       <div className="success-wrapper">
@@ -43,12 +56,28 @@ export const SuccessModal: React.FC<IProps> = ({ showModal, handleClose }) => {
         <div className="heading" style={{ fontSize: 25 }}>
           Successfully Listed!
         </div>
-        <div>Nice! You’ve successfully listed property.</div>
-        <Button variant="gradient" btnSize="medium">
+        <div>Nice! You&apos;ve successfully listed property.</div>
+        <Button
+          variant="gradient"
+          btnSize="medium"
+          onClick={(e) => {
+            e.preventDefault;
+            handleClose();
+          }}
+        >
           <Link className="link-to-properties" to="/my-properties">
             Go to my properties
           </Link>
         </Button>
+        {showShareButton && listedPropertyId.length && (
+          <ShareLink
+            href={`https://twitter.com/intent/tweet?text=${TWITTER_TEXT}&url=${window.location.origin}/property/${listedPropertyId}`}
+            target="_blank"
+          >
+            <Icon iconElement={<TwitterIcon />} iconSize="m" />
+            <span>Share on twitter</span>
+          </ShareLink>
+        )}
       </div>
     </Modal>
   );

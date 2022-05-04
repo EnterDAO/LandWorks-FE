@@ -17,9 +17,25 @@ export interface AssetOption {
 export type DecentralandNFT = {
   id: string;
   name: string;
-  isLAND: boolean;
+  image: string;
+  contractAddress: string;
+  isLAND?: boolean;
   landIds?: any[];
   coords: any[];
+};
+
+export interface CryptoVoxelXYcoords {
+  x: string;
+  y: string;
+}
+
+export type CryptoVoxelNFT = {
+  id: string;
+  name: string;
+  image: string;
+  contractAddress: string;
+  place: string;
+  formattedCoords: string;
 };
 
 export type Estate = {

@@ -51,6 +51,7 @@ const config = {
       estateRegistry: toLowerCase(process.env.REACT_APP_CONTRACT_DECENTRALAND_ESTATE_REGISTRY_ADDR),
       landRegistry: toLowerCase(process.env.REACT_APP_CONTRACT_DECENTRALAND_LAND_REGISTRY_ADDR),
     },
+    cryptoVoxelsContract: toLowerCase(process.env.REACT_APP_CONTRACT_CRYPTO_VOXELS_ADDR),
   },
   web3: {
     chainId: Number(process.env.REACT_APP_WEB3_CHAIN_ID),
@@ -85,6 +86,11 @@ const config = {
     url: String(process.env.REACT_APP_MAILCHIMP_URL),
     u: String(process.env.REACT_APP_MAILCHIMP_U),
     id: String(process.env.REACT_APP_MAILCHIMP_ID),
+  },
+  notion: {
+    apiKey: String(process.env.REACT_APP_NOTION_API_KEY),
+    baseUrl: String(process.env.REACT_APP_NOTION_BASE_URL),
+    databaseId: String(process.env.REACT_APP_NOTION_DATABASE_ID),
   },
 };
 

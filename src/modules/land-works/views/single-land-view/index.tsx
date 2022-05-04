@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import { TWITTER_TEXT } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
 import { Col, Row } from 'antd';
 
 import { Button, Grid, Icon, Modal, Typography } from 'design-system';
-import { ArrowLeftIcon, ArrowRightIcon, BackIcon } from 'design-system/icons';
+import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import EditPropertyViewNew from 'modules/land-works/components/edit-property';
+import EditProperty from 'modules/land-works/components/edit-property';
+import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 
-import ExternalLink from '../../../../components/custom/externalLink';
+import ExternalLink from '../../../../components/custom/external-link';
 import { useWallet } from '../../../../wallets/wallet';
 import { ASSET_SUBSCRIPTION, AssetEntity, fetchAdjacentDecentralandAssets, parseAsset } from '../../api';
 import LandWorkCard from '../../components/land-works-card';
@@ -26,9 +28,14 @@ import { getNowTs } from '../../../../utils';
 
 import './index.scss';
 
-interface LocationState {
+export interface LocationState {
   from: string;
   title: string;
+  tab: string;
+  previousPage?: {
+    from: string;
+    title: string;
+  };
 }
 
 const SingleLandView: React.FC = () => {
@@ -60,7 +67,7 @@ const SingleLandView: React.FC = () => {
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
-    onSubscriptionData: ({ subscriptionData }) => {
+    onSubscriptionData: async ({ subscriptionData }) => {
       if (subscriptionData.error) {
         // TODO:
       }
@@ -69,7 +76,7 @@ const SingleLandView: React.FC = () => {
         return;
       }
       disableButtons(false);
-      setAsset(parseAsset(subscriptionData.data.asset));
+      setAsset(await parseAsset(subscriptionData.data.asset));
     },
   });
 
@@ -94,7 +101,7 @@ const SingleLandView: React.FC = () => {
   };
 
   const shouldShowStake = () => {
-    return isOwner() && asset?.status === AssetStatus.LISTED;
+    return isOwner() && asset?.status === AssetStatus.LISTED && asset?.metaverse.name === 'Decentraland';
   };
 
   // Case when you do 2 in 1 Delist + Withdraw
@@ -126,10 +133,12 @@ const SingleLandView: React.FC = () => {
     try {
       await landWorksContract?.withdraw(asset.id, () => {
         setWithdrawButtonDisabled(true);
+        localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
       });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
-      history.push('/explore');
+      if (isNeedRedirect()) history.push('/explore');
     } catch (e) {
+      localStorage.removeItem('WITHDRAW_IN_PROGRESS');
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
       console.log(e);
     }
@@ -164,17 +173,19 @@ const SingleLandView: React.FC = () => {
 
     try {
       await landWorksContract?.delist(asset.id, () => {
+        isDirectWithdraw() && localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
         disableButtons(true);
       });
       showToastNotification(
         ToastType.Success,
         `Property ${isDirectWithdraw() ? 'withdrawn' : 'delisted'} successfully!`
       );
-      if (isDirectWithdraw()) {
+      if (isDirectWithdraw() && isNeedRedirect()) {
         history.push('/explore');
       }
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
+      localStorage.removeItem('WITHDRAW_IN_PROGRESS');
       console.log(e);
     }
   };
@@ -215,12 +226,19 @@ const SingleLandView: React.FC = () => {
     setShowEditModal(false);
     setOpenDelistPrompt(true);
   };
+
   useEffect(() => {
     setClaimButtonDisabled(!asset?.unclaimedRentFee?.gt(0));
   }, [asset]);
 
   const isWithdraw = () => {
     return isDirectWithdraw() || shouldShowWithdraw();
+  };
+
+  const isNeedRedirect = () => window.location.pathname === `/property/${asset.id}`;
+  const breadcrumbs = {
+    url: location.state?.previousPage?.from || location.state?.from || '/explore',
+    title: location.state?.previousPage?.title || location.state?.title || 'Explore',
   };
 
   return (
@@ -255,17 +273,33 @@ const SingleLandView: React.FC = () => {
       <Row gutter={40} className="head-nav">
         <div className="left-wrapper">
           <div className="head-breadcrumbs">
-            <Link className="button-back" to={location.state?.from || '/explore'}>
+            <Link
+              className="button-back"
+              to={{
+                pathname: breadcrumbs.url,
+                state: {
+                  tab: location.state?.tab,
+                },
+              }}
+            >
               <div className="button-icon">
                 <Icon iconSize={'m'} iconElement={<BackIcon />} />
               </div>
-              <span>Back to {location.state?.title || 'Explore'}</span>
+              <span>Back to {breadcrumbs.title}</span>
             </Link>
 
             <p className="separator" />
 
-            <Link className="button-explore" to={location.state?.from || '/explore'}>
-              {location.state?.title || 'Explore'}
+            <Link
+              className="button-explore"
+              to={{
+                pathname: breadcrumbs.url,
+                state: {
+                  tab: location.state?.tab,
+                },
+              }}
+            >
+              {breadcrumbs.title}
             </Link>
 
             <Icon iconSize={'m'} iconElement={<ArrowRightIcon />} />
@@ -275,6 +309,19 @@ const SingleLandView: React.FC = () => {
         </div>
 
         <div className="right-wrapper">
+          {isOwnerOrConsumer() && (
+            <>
+              <ShareLink
+                className="shareLink"
+                target={'_blank'}
+                href={`https://twitter.com/intent/tweet?text=${TWITTER_TEXT}&url=${window.location.origin}/property/${asset.id}`}
+              >
+                <TwitterIcon height={20} width={30} />
+                share on twitter
+              </ShareLink>
+              <span className="separator" style={{ marginRight: '15px' }} />
+            </>
+          )}
           {shouldShowDelist() &&
             (isOwner() ? (
               <Button
@@ -381,7 +428,7 @@ const SingleLandView: React.FC = () => {
         }}
       />
 
-      <SingleViewLandHistory assetId={tokenId} />
+      <SingleViewLandHistory assetId={tokenId} metaverseRegistry={asset.metaverseRegistry?.id} />
 
       {!!adjacentLands.length && (
         <Row className="nearby-section">
@@ -413,7 +460,7 @@ const SingleLandView: React.FC = () => {
 
       {showEditModal && (
         <Modal height={'90vh'} open={showEditModal} handleClose={() => setShowEditModal(false)}>
-          <EditPropertyViewNew
+          <EditProperty
             closeModal={() => setShowEditModal(false)}
             openDelistPrompt={showPrompt}
             delistText={isWithdraw() ? 'withdraw property' : 'delist property'}
@@ -432,6 +479,8 @@ const SingleLandView: React.FC = () => {
           }}
           open={showRentModal}
           availability={asset.availability}
+          metaverseAssetId={asset.metaverseAssetId}
+          metaverseRegistry={asset.metaverseRegistry?.id}
           assetId={asset.id}
           children={<></>}
           pricePerSecond={asset.pricePerSecond}

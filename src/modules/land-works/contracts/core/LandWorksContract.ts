@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import BigNumber from 'bignumber.js';
 import { AbiItem } from 'web3-utils';
 import Web3Contract, { Web3ContractAbiItem } from 'web3/web3Contract';
 
 import LandWorksABI from './abi.json';
+
+import { isDecentralandMetaverseRegistry } from '../../../../utils';
 
 export default class LandWorksContract extends Web3Contract {
   constructor(abi: AbiItem[], address: string) {
@@ -37,7 +40,7 @@ export default class LandWorksContract extends Web3Contract {
     paymentToken: string,
     pricePerSecond: BigNumber | string,
     callback: () => void = () => {}
-  ): Promise<void> {
+  ): Promise<any> {
     if (!this.account) {
       return Promise.reject();
     }
@@ -156,8 +159,9 @@ export default class LandWorksContract extends Web3Contract {
    * @param period The period (in seconds) for the rent.
    * @param value The value to be sent.
    */
-  rentDecentralandWithETH(
+  rentWithETH(
     assetId: BigNumber | string,
+    metaverseRegistry: string,
     operator: string,
     period: BigNumber,
     maxRentStart: number,
@@ -170,7 +174,7 @@ export default class LandWorksContract extends Web3Contract {
     }
 
     return this.send(
-      'rentDecentraland',
+      this.rentMethod(metaverseRegistry),
       [assetId, period.toNumber(), maxRentStart, operator, paymentToken, value],
       {
         from: this.account,
@@ -186,8 +190,9 @@ export default class LandWorksContract extends Web3Contract {
    * @param operator The operator to be set.
    * @param period The period (in seconds) for the rent.
    */
-  rentDecentralandWithERC20(
+  rentWithERC20(
     assetId: BigNumber | string,
+    metaverseRegistry: string,
     operator: string,
     period: BigNumber,
     maxRentStart: number,
@@ -199,7 +204,7 @@ export default class LandWorksContract extends Web3Contract {
       return Promise.reject();
     }
     return this.send(
-      'rentDecentraland',
+      this.rentMethod(metaverseRegistry),
       [assetId, period, maxRentStart, operator, paymentToken, value],
       {
         from: this.account,
@@ -211,11 +216,13 @@ export default class LandWorksContract extends Web3Contract {
   /**
    * Update the operator for the given rent of an asset.
    * @param assetId The target asset.
+   * @param metaverseRegistry The target metaverseRegistry
    * @param rentId The target rent.
    * @param operator The to-be-set operator.
    */
   updateOperator(
     assetId: BigNumber | string,
+    metaverseRegistry: string,
     rentId: BigNumber | string,
     operator: string,
     callback: () => void = () => {}
@@ -224,7 +231,7 @@ export default class LandWorksContract extends Web3Contract {
       return Promise.reject();
     }
     return this.send(
-      'updateOperator',
+      this.operatorMethod(metaverseRegistry),
       [assetId, rentId, operator],
       {
         from: this.account,
@@ -236,19 +243,49 @@ export default class LandWorksContract extends Web3Contract {
   /**
    * Updates the corresponding Estate/LAND operator from the given rent.
    * @param assetId The target asset id
+   * @param metaverseRegistry The asset's metaverse registry
    * @param rentId The target rent id
    */
-  updateState(assetId: BigNumber | string, rentId: BigNumber | string, callback: () => void = () => {}): Promise<void> {
+  updateState(
+    assetId: BigNumber | string,
+    metaverseRegistry: string,
+    rentId: BigNumber | string,
+    callback: () => void = () => {}
+  ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
     return this.send(
-      'updateState',
+      this.updateStateMethod(metaverseRegistry),
       [assetId, rentId],
       {
         from: this.account,
       },
       callback
     ).then();
+  }
+
+  /**
+   * Returns the rent method to be called based on metaverse registry
+   * @param metaverseRegistry
+   */
+  rentMethod(metaverseRegistry: string): string {
+    return isDecentralandMetaverseRegistry(metaverseRegistry) ? 'rentDecentraland' : 'rentWithConsumer';
+  }
+
+  /**
+   * Returns the update operator method to be called based on metaverse registry
+   * @param metaverseRegistry
+   */
+  operatorMethod(metaverseRegistry: string): string {
+    return isDecentralandMetaverseRegistry(metaverseRegistry) ? 'updateOperator' : 'updateConsumer';
+  }
+
+  /**
+   * Returns the update state method to be called based on metaverse registry
+   * @param metaverseRegistry
+   */
+  updateStateMethod(metaverseRegistry: string): string {
+    return isDecentralandMetaverseRegistry(metaverseRegistry) ? 'updateState' : 'updateAdapterState';
   }
 }

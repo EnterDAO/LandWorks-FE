@@ -1,4 +1,4 @@
-@import '../../../../styles/variables.scss';
+
 @import '../../../../styles/text.scss';
 
 .single-card-section {
@@ -13,6 +13,11 @@
     .right-wrapper {
       margin: 0 20px 20px;
 
+      .shareLink {
+        margin-top: 0;
+        margin-right: 15px;
+        display: initial;
+      }
       @media all and (min-width: 768px) {
         margin: 0;
       }

@@ -1,9 +1,9 @@
-@import '../../../../styles/variables.scss';
+
 
 .land-works-card-availability {
   display: inline-block;
-  background: $darkBlue01;
-  color: $light;
+  background: var(--theme-body-color);
+  color: var(--theme-grey900-color);
   border: 1px solid transparent;
   border-radius: 20px;
 

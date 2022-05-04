@@ -27,10 +27,10 @@ const MyLendingView: React.FC = () => {
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(wallet.isActive);
 
-  useSubscription(USER_SUBSCRIPTION, {
+  useSubscription(USER_SUBSCRIPTION(), {
     skip: wallet.account === undefined,
     variables: { id: wallet.account?.toLowerCase() },
-    onSubscriptionData: ({ subscriptionData }) => {
+    onSubscriptionData: async ({ subscriptionData }) => {
       if (subscriptionData.error) {
         // TODO:
       }
@@ -42,7 +42,7 @@ const MyLendingView: React.FC = () => {
         return;
       }
 
-      const user = parseUser(subscriptionData.data.user);
+      const user = await parseUser(subscriptionData.data.user);
       setClaimButtonDisabled(false);
       setUser(user);
       setAssets(user?.ownerAndConsumerAssets || []);
@@ -108,7 +108,7 @@ const MyLendingView: React.FC = () => {
             ) : (
               <div className="empty-state">
                 <p>You do not have any listed properties. Fill this page by adding one</p>
-                <button className="accent" onClick={() => history.push('/list')}>
+                <button className="accent" onClick={() => history.push('/explore')}>
                   List property
                 </button>
               </div>
@@ -119,7 +119,7 @@ const MyLendingView: React.FC = () => {
       {!!assets.length && (
         <Row gutter={40} className="claim-history-container">
           <Col span={24} style={{ padding: '0px' }}>
-            <ClaimHistoryTable />
+            <ClaimHistoryTable metaverse="1" />
           </Col>
         </Row>
       )}

@@ -1,9 +1,9 @@
-@import '../../../../styles/variables.scss';
+
 @import '../../../../styles/utils.scss';
 
 .wrapper {
   max-width: 406px;
-  width: 100%;
+  width: auto;
   @media all and (max-width: 760px) {
     margin-bottom: 20px;
   }
@@ -15,10 +15,16 @@
     transition: all 0.2s ease-out;
     padding: 10px;
     box-shadow: none;
-    background: $grey01;
+    background: var(--theme-modal-color);
+
+    .imageListWrapper {
+      height: 178px;
+      overflow: hidden;
+      border-radius: 10px;
+    }
 
     .details {
-      color: $grey02;
+      color: var(--theme-grey700-color);
       font-weight: 600;
       font-size: 14px;
     }

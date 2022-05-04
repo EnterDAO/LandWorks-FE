@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import { getEtherscanAddressUrl, shortenAddr } from 'web3/utils';
 
-import ExternalLink from 'components/custom/externalLink';
+import ExternalLink from 'components/custom/external-link';
 import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
 import { getENSName } from 'helpers/helpers';
@@ -33,7 +33,7 @@ export const LandsNavMobile: React.FC<INavProps> = ({ setNavOpen }) => {
         </Link>
       </Col>
       <Col span={24}>
-        <Link to="/renting" className="menu-item-mobile" onClick={() => setNavOpen(false)}>
+        <Link to="/explore" className="menu-item-mobile" onClick={() => setNavOpen(false)}>
           <span>Renting</span>
         </Link>
       </Col>

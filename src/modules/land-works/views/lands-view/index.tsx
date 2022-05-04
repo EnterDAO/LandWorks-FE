@@ -88,10 +88,10 @@ const LandsView: React.FC = () => {
     history.push({ search: searchParams.toString() });
   }, [searchQuery]);
 
-  useSubscription(USER_SUBSCRIPTION, {
+  useSubscription(USER_SUBSCRIPTION(), {
     skip: wallet.account === undefined,
     variables: { id: wallet.account?.toLowerCase() },
-    onSubscriptionData: ({ subscriptionData }) => {
+    onSubscriptionData: async ({ subscriptionData }) => {
       if (subscriptionData.error) {
         // TODO:
       }
@@ -101,7 +101,7 @@ const LandsView: React.FC = () => {
       }
 
       setClaimButtonDisabled(false);
-      setUser(parseUser(subscriptionData.data.user));
+      setUser(await parseUser(subscriptionData.data.user));
     },
   });
 
@@ -193,7 +193,7 @@ const LandsView: React.FC = () => {
               <button
                 type="button"
                 className={`button-primary list-new-property`}
-                onClick={() => history.push('/list')}
+                onClick={() => history.push('/explore')}
               >
                 <AddIcon className={`add-icon`} />
                 List New Property

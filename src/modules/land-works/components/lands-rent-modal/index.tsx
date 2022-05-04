@@ -32,14 +32,29 @@ type Props = ModalProps & {
   txHash?: string;
   availability?: AssetAvailablity;
   assetId?: string;
+  metaverseAssetId?: string;
+  metaverseRegistry?: string;
   pricePerSecond?: BigNumber;
   paymentToken?: PaymentToken;
   onSubmit: () => void;
   onCancel: () => void;
 };
 
+const SignTransactionMessage = 'Signing transaction...';
+const RentTransactionMessage = 'Renting property...';
+
 export const RentModal: React.FC<Props> = (props) => {
-  const { availability, assetId, pricePerSecond, paymentToken, onCancel, onSubmit, ...modalProps } = props;
+  const {
+    availability,
+    assetId,
+    pricePerSecond,
+    paymentToken,
+    metaverseAssetId,
+    metaverseRegistry,
+    onCancel,
+    onSubmit,
+    ...modalProps
+  } = props;
 
   // added one minute each to be able to choose if MIN & MAX
   const fixedMinStartRentDate = availability?.startRentDate || 0;
@@ -55,6 +70,7 @@ export const RentModal: React.FC<Props> = (props) => {
   const { landWorksContract } = landworks;
   const { erc20Contract } = erc20;
 
+  const [modalText, setModalText] = useState<string>(SignTransactionMessage);
   const [editedValue, setEditedValue] = useState<string>(wallet.account || '');
   const [period, setPeriod] = useState(0);
   const [endDate, setEndDate] = useState<string>();
@@ -157,40 +173,53 @@ export const RentModal: React.FC<Props> = (props) => {
   };
 
   const handleRent = async () => {
-    if (!isValidForm() || !assetId || !paymentToken) {
+    if (!isValidForm() || !assetId || !paymentToken || !metaverseRegistry) {
       return;
     }
     try {
+      metaverseAssetId && localStorage.setItem('RENT_IN_PROGRESS', metaverseAssetId);
+      metaverseAssetId && localStorage.setItem('EXIST_RENT_IN_PROGRESS', metaverseAssetId);
+
       setTransactionLoading(true);
       const bnPeriod = new BigNumber(period);
       const assetLastRentEnd = await fetchAssetLastRentEnd(assetId);
       const maxRentStart = assetLastRentEnd + HOUR_IN_SECONDS;
 
       if (paymentToken?.symbol.toLowerCase() === 'eth') {
-        await landWorksContract?.rentDecentralandWithETH(
+        await landWorksContract?.rentWithETH(
           assetId,
+          metaverseRegistry,
           editedValue,
           bnPeriod,
           maxRentStart,
           paymentToken.id,
           value,
-          onSubmit
+          () => {
+            onSubmit();
+            setModalText(RentTransactionMessage);
+          }
         );
       } else {
-        await landWorksContract?.rentDecentralandWithERC20(
+        await landWorksContract?.rentWithERC20(
           assetId,
+          metaverseRegistry,
           editedValue,
           bnPeriod,
           maxRentStart,
           paymentToken.id,
           value,
-          onSubmit
+          () => {
+            onSubmit();
+            setModalText(RentTransactionMessage);
+          }
         );
         erc20Contract?.loadAllowance(config.contracts.landworksContract);
       }
       setTransactionLoading(false);
       setSuccessTrunsaction(true);
     } catch (e) {
+      localStorage.removeItem('RENT_IN_PROGRESS');
+      localStorage.removeItem('EXIST_RENT_IN_PROGRESS');
       showToastNotification(ToastType.Error, 'There was an error while renting the property.');
       setTransactionLoading(false);
       console.log(e);
@@ -373,11 +402,11 @@ export const RentModal: React.FC<Props> = (props) => {
         <ModalSuccess
           title="Successfully Rented!"
           buttonText="go to my properties"
-          description="Nice! You’ve successfully rented this property."
+          description="Nice! You've successfully rented this property."
           buttonEvent={() => history.push('/my-properties')}
         />
       )}
-      {showLoader() && <ModalLoader href={getEtherscanAddressUrl(wallet.account) || ''} />}
+      {showLoader() && <ModalLoader text={modalText} href={getEtherscanAddressUrl(wallet.account) || ''} />}
     </Modal>
   );
 };
