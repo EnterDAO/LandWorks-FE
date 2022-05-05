@@ -99,7 +99,7 @@ const EditProperty: React.FC<Props> = (props) => {
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [showTxModal, setShowTxModal] = useState(false);
 
-  const [editTxModalMessage, setEditTxModalMessage] = useState(EditMessage);
+  const [editTxModalMessage] = useState(EditMessage);
 
   const [saveDisabled, setSaveDisabled] = useState(false);
 
