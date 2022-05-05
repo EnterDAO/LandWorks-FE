@@ -61,15 +61,18 @@ const ContractProvider: FC = (props) => {
   }, []);
 
   useEffect(() => {
-    // set accounts
-    landRegistryContract.setAccount(walletCtx.account);
-    estateRegistryContract.setAccount(walletCtx.account);
-    cryptoVoxelsContract.setAccount(walletCtx.account);
     // set providers
     landRegistryContract.setProvider(walletCtx.provider);
     estateRegistryContract.setProvider(walletCtx.provider);
     cryptoVoxelsContract.setProvider(walletCtx.provider);
-  }, [walletCtx.provider, walletCtx.account]);
+  }, [walletCtx.provider]);
+
+  useEffect(() => {
+    // set accounts
+    landRegistryContract.setAccount(walletCtx.account);
+    estateRegistryContract.setAccount(walletCtx.account);
+    cryptoVoxelsContract.setAccount(walletCtx.account);
+  }, [walletCtx.account]);
 
   const value: ContextType = {
     landRegistryContract,
