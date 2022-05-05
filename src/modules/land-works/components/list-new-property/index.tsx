@@ -10,7 +10,6 @@ import {
   FEE_PRECISION,
   MaxRentPeriodOptions,
   MinRentPeriodOptions,
-  metaverseOptions,
 } from 'constants/modules';
 import BigNumber from 'bignumber.js';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
@@ -18,7 +17,7 @@ import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 import { Box, Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import { CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
+import { BaseNFT, CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
 import {
   EstateListingCard,
   LandListingCard,
@@ -31,16 +30,13 @@ import { currencyData } from 'modules/land-works/components/lands-explore-filter
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-modal';
-import { useContractRegistry } from 'modules/land-works/providers/generic-provider';
+import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
 import { PaymentToken, fetchMetaverses, fetchTokenPayments } from '../../api';
 import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
-import { useCryptoVoxels } from '../../providers/cryptovoxels-provider';
-import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
-import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
 import { useLandworks } from '../../providers/landworks-provider';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
 
@@ -91,7 +87,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[4]); // Selected Option Value for the select menu
   const [maxFutureError, setMaxFutureError] = useState('');
 
-  const [selectedProperty, setSelectedProperty] = useState(null as DecentralandNFT | null);
+  const [selectedProperty, setSelectedProperty] = useState(null as BaseNFT | null);
   const [selectedVoxel, setSelectedVoxel] = useState(null as CryptoVoxelNFT | null);
 
   const [assetProperties, setAssetProperties] = useState<DecentralandNFT[]>([]);
@@ -120,7 +116,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [loading, setLoading] = useState(false);
   const [selectedMetaverse, setSelectedMetaverse] = useState(1);
   const [availableMetaverses, setAvailableMetaverses] = useState([]);
-  const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
   const [activeStep, setActiveStep] = useState(0);
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -280,30 +275,25 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       let isApproved = false;
       setShowApproveModal(true);
 
-      if (selectedMetaverse == 1) {
-        if (selectedProperty) {
-          switch (selectedProperty.contractAddress) {
-            case config.contracts.decentraland.landRegistry:
-              console.log('1');
-              console.log({ landRegistryContract }, config.contracts.landworksContract);
-              await landRegistryContract?.setApprovalForAll(config.contracts.landworksContract, true);
-              isApproved = await landRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
-              break;
-            case config.contracts.decentraland.estateRegistry:
-              console.log('2');
-              console.log({ estateRegistryContract, config }, config.contracts.landworksContract);
-              await estateRegistryContract?.setApprovalForAll(config.contracts.landworksContract, true);
-              isApproved = await estateRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
-              break;
-          }
-        }
-      } else {
-        if (selectedVoxel) {
-          await cryptoVoxelsContract?.setApprovalForAll(config.contracts.landworksContract, true);
-          isApproved = await cryptoVoxelsContract?.isApprovedForAll(config.contracts.landworksContract)!;
+      // REFACTOR HERE
+      let registry;
+      let contract;
+      if (selectedProperty) {
+        contract = config.contracts.landworksContract;
+        if (selectedProperty.contractAddress === config.contracts.decentraland.landRegistry) {
+          registry = landRegistryContract;
+        } else {
+          registry = estateRegistryContract;
         }
       }
-
+      if (selectedVoxel) {
+        registry = estateRegistryContract;
+        contract = config.contracts.landworksContract;
+      }
+      if (!!registry && !!contract) {
+        await registry?.setApprovalForAll(contract, true);
+        isApproved = await registry?.isApprovedForAll(contract)!;
+      }
       if (isApproved) {
         setApproveDisabled(true);
         setShowApproveModal(false);
@@ -419,13 +409,13 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       return;
     }
 
+    // REFACTOR HERE
     try {
       const lands = await landRegistryContract?.getUserData(walletCtx.account);
       const estates = await estateRegistryContract?.getUserData(walletCtx.account);
       const cryptoVoxels = await cryptoVoxelsContract?.getUserData(walletCtx.account);
       const landsForEstates = await getLandsForEstates(estates);
       const metaverses = await fetchMetaverses();
-      console.log({ metaverses });
       setAvailableMetaverses(metaverses);
       setEstateGroup(landsForEstates);
       setAssetProperties(lands);
@@ -512,20 +502,20 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     }
   };
 
-  // TODO: needs refactoring
+  // REFACTOR HERE
   const evaluateSelectedProperty = async () => {
     if (selectedProperty === null && selectedVoxel === null) {
       return;
     }
     let isApproved = false;
     setApproveDisabled(false);
-    if (selectedProperty && selectedMetaverse == 1) {
-      if (selectedProperty.isLAND) {
+    if (selectedProperty?.metaverseName === 'Decentraland') {
+      if ((selectedProperty as DecentralandNFT).isLAND) {
         isApproved = await landRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
       } else {
         isApproved = await estateRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
       }
-    } else if (selectedVoxel) {
+    } else if (selectedVoxel && selectedMetaverse == 2) {
       isApproved = await cryptoVoxelsContract?.isApprovedForAll(config.contracts.landworksContract)!;
     }
 
@@ -564,7 +554,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   }, [selectedProperty, selectedVoxel]);
 
   const onChangeMetaverse = (value: number) => {
-    setMetaverse(metaverse);
+    //setMetaverse(metaverse);
     setSelectedMetaverse(value);
   };
 
@@ -715,17 +705,22 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               <Grid item xs={12}>
                 {selectedProperty && selectedMetaverse === 1 && (
                   <>
-                    {selectedProperty.isLAND ? (
+                    {(selectedProperty as DecentralandNFT).isLAND ? (
                       <SelectedListCard
                         src={selectedProperty.image}
                         name={selectedProperty.name}
-                        coordinatesChild={<SelectedFeatureCoords asset={selectedProperty} />}
+                        coordinatesChild={<SelectedFeatureCoords asset={selectedProperty as DecentralandNFT} />}
                       />
                     ) : (
                       <SelectedListCard
                         src={selectedProperty.image}
                         name={selectedProperty.name}
-                        coordinatesChild={<SelectedFeatureCoords asset={selectedProperty} estateLands={estateGroup} />}
+                        coordinatesChild={
+                          <SelectedFeatureCoords
+                            asset={selectedProperty as DecentralandNFT}
+                            estateLands={estateGroup}
+                          />
+                        }
                       />
                     )}
                   </>
