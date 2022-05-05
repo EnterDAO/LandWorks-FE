@@ -7,14 +7,11 @@ import ErrorBoundary from 'components/custom/error-boundary';
 import { Loader } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
 import LayoutHeader from 'layout/components/layout-header';
-import EstateRegistryProvider from 'modules/land-works/providers/decentraland/estate-registry-provider';
-import LandRegistryProvider from 'modules/land-works/providers/decentraland/land-registry-provider';
-import ContractProvider from 'modules/land-works/providers/generic-provider';
+import ContractProvider from 'modules/land-works/providers/contract-provider';
 import LandWorksProvider from 'modules/land-works/providers/landworks-provider';
 import WarningProvider from 'providers/warning-provider';
 
 import NotionProvider from '../api/notion/client';
-import CryptoVoxelsProvider from '../modules/land-works/providers/cryptovoxels-provider';
 import Erc20Provider from '../modules/land-works/providers/erc20-provider';
 import { GraphClient } from '../web3/graph/client';
 
@@ -33,9 +30,6 @@ const LayoutView: React.FC = () => {
       <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <WarningProvider>
           <LandWorksProvider>
-            {/* <LandRegistryProvider>
-              <EstateRegistryProvider>
-                <CryptoVoxelsProvider> */}
             <ContractProvider>
               <Erc20Provider>
                 <ApolloProvider client={client}>
@@ -67,9 +61,6 @@ const LayoutView: React.FC = () => {
                 </ApolloProvider>
               </Erc20Provider>
             </ContractProvider>
-            {/* </CryptoVoxelsProvider>
-              </EstateRegistryProvider>
-            </LandRegistryProvider> */}
           </LandWorksProvider>
         </WarningProvider>
       </div>
