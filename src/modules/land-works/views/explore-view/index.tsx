@@ -8,6 +8,7 @@ import { AtlasTile } from 'modules/land-works/components/atlas';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
+import LandsExploreMapVoxels from 'modules/land-works/components/lands-explore-map-voxels';
 import LandsExploreSubheader from 'modules/land-works/components/lands-explore-subheader';
 import ListNewProperty from 'modules/land-works/components/list-new-property';
 import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-tile';
@@ -30,6 +31,7 @@ import {
   DECENTRALAND_METAVERSE,
   DEFAULT_LAST_RENT_END,
   DEFAULT_TOKEN_ADDRESS,
+  VOXEL_METAVERSE,
   sortColumns,
   sortDirections,
 } from 'modules/land-works/constants';
@@ -130,7 +132,6 @@ const ExploreView: React.FC = () => {
 
   const onChangeMetaverse = (index: string) => {
     setMetaverse(index);
-    index !== '1' ? setMapIsHidden(true) : null;
   };
 
   const onChangeFiltersCurrency = async (index: number) => {
@@ -170,6 +171,7 @@ const ExploreView: React.FC = () => {
 
       setLands(lands.data);
       setLoading(false);
+
       const highlights = getAllLandsCoordinates(lands.data);
       setCoordinatesHighlights(highlights);
       setPointMapCentre(highlights);
@@ -207,6 +209,7 @@ const ExploreView: React.FC = () => {
   }, [lands]);
 
   const availableLands = filterLandsByAvailability(filterLandsByQuery(lands, searchQuery));
+
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
       <LandsMapTilesProvider value={{ mapTiles, setMapTiles, selectedId, setSelectedId }}>
@@ -235,12 +238,11 @@ const ExploreView: React.FC = () => {
             />
           </div>
           <div className="content-container content-container--explore-view">
-            <div className={`list-lands-container ${mapIsHidden ? 'fullWidth' : ''}`}>
+            <div className={`list-lands-container ${mapIsHidden ? 'full-width' : ''}`}>
               <LandsExploreList
                 setSubheaderHidden={setSubheaderHidden}
                 setIsHiddenMap={hideMapHandler}
                 isHiddenMap={mapIsHidden}
-                metaverse={metaverse}
                 lastRentEnd={lastRentEnd}
                 loading={loading}
                 lands={lands}
@@ -248,21 +250,28 @@ const ExploreView: React.FC = () => {
               />
               <LayoutFooter isWrapped={false} />
             </div>
-
             {!mapIsHidden && (
-              <div
-                className={`map-list-container ${subheaderHidden ? 'map-list-container--enlarged' : ''} ${
-                  mapExpanded ? 'map-list-container--expanded' : ''
-                }`}
-              >
-                <LandsExploreMap
-                  positionX={atlasMapX}
-                  positionY={atlasMapY}
-                  expanded={mapExpanded}
-                  onClick={() => setMapExpanded(!mapExpanded)}
-                  highlights={coordinatesHighlights}
-                  lands={lands}
-                />
+              <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
+                {metaverse == VOXEL_METAVERSE && (
+                  <LandsExploreMapVoxels
+                    positionX={atlasMapX}
+                    positionY={atlasMapY}
+                    expanded={mapExpanded}
+                    onClick={() => setMapExpanded(!mapExpanded)}
+                    highlights={coordinatesHighlights}
+                    lands={lands}
+                  />
+                )}
+                {metaverse == DECENTRALAND_METAVERSE && (
+                  <LandsExploreMap
+                    positionX={atlasMapX}
+                    positionY={atlasMapY}
+                    expanded={mapExpanded}
+                    onClick={() => setMapExpanded(!mapExpanded)}
+                    highlights={coordinatesHighlights}
+                    lands={lands}
+                  />
+                )}
               </div>
             )}
             <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>

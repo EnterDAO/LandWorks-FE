@@ -1,0 +1,28 @@
+.leaflet-control-container {
+  .leaflet-left {
+    top: 10px;
+    left: auto;
+    right: 20px;
+  }
+
+  .leaflet-control-zoom-in,
+  .leaflet-control-zoom-out {
+    width: 36px !important;
+    height: 36px !important;
+    margin-bottom: 8px;
+    padding: 0 !important;
+    box-shadow: 1px 1px 20px rgba(22, 22, 34, 0.5);
+    border-radius: 8px !important;
+    background: var(--theme-grey200-color);
+    color: var(--theme-white-color);
+    font-size: 40px;
+
+    &::before {
+      border-radius: 8px !important;
+    }
+  }
+
+  .leaflet-control-zoom.leaflet-bar.leaflet-control {
+    border: none !important;
+  }
+}
