@@ -275,7 +275,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       let isApproved = false;
       setShowApproveModal(true);
 
-      // REFACTOR HERE
       let registry;
       let contract;
       if (selectedProperty) {
@@ -409,7 +408,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       return;
     }
 
-    // REFACTOR HERE
     try {
       const lands = await landRegistryContract?.getUserData(walletCtx.account);
       const estates = await estateRegistryContract?.getUserData(walletCtx.account);
@@ -502,7 +500,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     }
   };
 
-  // REFACTOR HERE
   const evaluateSelectedProperty = async () => {
     if (selectedProperty === null && selectedVoxel === null) {
       return;

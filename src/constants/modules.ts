@@ -126,8 +126,6 @@ export const sortDirections = [
   SortDirection.DESC,
 ];
 
-export const metaverseOptions = ['Decentraland'];
-
 export const TILES_URL_DECENTRALEND = 'https://api.decentraland.org/v2/tiles';
 
 export const BASE_URL_DECENTRALEND = 'https://api.decentraland.org/v1';
