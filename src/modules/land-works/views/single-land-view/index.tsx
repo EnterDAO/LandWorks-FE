@@ -431,23 +431,46 @@ const SingleLandView: React.FC = () => {
             <p className="nearby-description">{adjacentLands.length} Properties</p>
           </div>
 
-          <Grid item xs={24} className="single-lands-pagination">
-            {items.map(({ type, ...item }, index) => {
-              if (['next', 'previous'].includes(type))
-                return (
-                  <button {...item} key={index}>
-                    {type === 'previous' ? <ArrowLeftIcon /> : <ArrowRightIcon />}
-                  </button>
-                );
-            })}
-          </Grid>
-
-          <Grid item xs={24}>
-            <Grid container spacing={[15, 15]}>
-              {paginatedNearbyLands.map((land) => (
-                <LandWorkCard key={land.id} land={land} />
-              ))}
+          {paginatedNearbyLands?.length > 4 && (
+            <Grid item xs={24} className="single-lands-pagination">
+              {items.map(({ type, ...item }, index) => {
+                if (['next', 'previous'].includes(type))
+                  return (
+                    <button {...item} key={index}>
+                      {type === 'previous' ? <ArrowLeftIcon /> : <ArrowRightIcon />}
+                    </button>
+                  );
+              })}
             </Grid>
+          )}
+
+          <Grid
+            container
+            spacing={4}
+            rowSpacing={4}
+            columnSpacing={4}
+            sx={paginatedNearbyLands?.length <= 4 ? { marginTop: '35px' } : {}}
+          >
+            {paginatedNearbyLands.map((land) => (
+              <Grid item xs={3}>
+                <LandWorkCard
+                  onClick={(e) => {
+                    e.preventDefault();
+                    history.push({
+                      pathname: `/property/${land.id}`,
+                      state: {
+                        from: window.location.pathname,
+                        title: 'My properties',
+                        tab: location?.state?.tab,
+                        previousPage: { from: location?.state?.from, title: location?.state?.title },
+                      },
+                    });
+                  }}
+                  key={land.id}
+                  land={land}
+                />
+              </Grid>
+            ))}
           </Grid>
         </Grid>
       )}
