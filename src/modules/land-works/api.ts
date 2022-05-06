@@ -436,6 +436,21 @@ export type AssetEntity = {
   rents: RentEntity[];
   lastRentEnd: string;
   isAvailable: boolean;
+  additionalData?: AdditionalDecantralandData;
+};
+
+export type AdditionalDecantralandData = {
+  size: number;
+  externalUrl: string;
+  description: string;
+  tokenId: string;
+  attributes: additionalAttributes;
+};
+
+type additionalAttributes = {
+  trait_type: 'X' | 'Y' | 'Distance to District' | 'Distance to Plaza' | 'Distance to Road';
+  value: number;
+  display_type: string;
 };
 
 export type CryptoVoxelsType = {
@@ -1577,8 +1592,8 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
   liteAsset.minPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.minPeriod));
   liteAsset.maxPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.maxPeriod));
   liteAsset.maxFutureTimeTimedType = getTimeTypeStr(secondsToDuration(asset.maxFutureTime));
-
   if (isDecentralandMetaverseRegistry(asset?.metaverseRegistry?.id)) {
+    liteAsset.additionalData = await getAdditionalDecentralandData(asset.metaverseAssetId);
     liteAsset.type = asset?.decentralandData?.isLAND ? 'LAND' : 'ESTATE';
     liteAsset.name = getDecentralandAssetName(asset.decentralandData);
     liteAsset.imageUrl = getLandImageUrl(asset);
@@ -1718,4 +1733,16 @@ function sortAssetsByDescendingUsdPrice(a: AssetEntity, b: AssetEntity): number 
   } else {
     return 1;
   }
+}
+
+function getAdditionalDecentralandData(id: string): Promise<AdditionalDecantralandData> {
+  const decentralandRegistryAddress = '0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d';
+  const apiUrl = `https://api.decentraland.org/v2/contracts/${decentralandRegistryAddress}/tokens/`;
+  return fetch(`${apiUrl}${id}`)
+    .then((result) => result.json())
+    .then((data) => {
+      const { id, external_url, description, attributes } = data;
+
+      return { tokenId: id, externalUrl: external_url, description, attributes, size: 1 };
+    });
 }
