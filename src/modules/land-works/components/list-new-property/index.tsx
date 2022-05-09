@@ -121,6 +121,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     setSelectedProperty(selectedLand);
   };
 
+  const isDecentraland = selectedProperty?.metaverseName === 'Decentraland';
+  const isVoxels = selectedProperty?.metaverseName === 'Voxels';
+
   const handleMinCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMinPeriodSelected(e.target.checked);
     if (e.target.checked) {
@@ -254,7 +257,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     setTokenCost(dynamicValue!);
   };
 
-  // TODO: needs refactoring
   const handleApprove = async () => {
     if (selectedProperty === null) {
       return;
@@ -265,7 +267,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
       let registry;
       let contract;
-      if (selectedProperty as DecentralandNFT) {
+
+      if (isDecentraland) {
         contract = config.contracts.landworksContract;
         if (selectedProperty.contractAddress === config.contracts.decentraland.landRegistry) {
           registry = landRegistryContract;
@@ -273,7 +276,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           registry = estateRegistryContract;
         }
       }
-      if (selectedProperty as CryptoVoxelNFT) {
+      if (isVoxels) {
         registry = cryptoVoxelsContract;
         contract = config.contracts.landworksContract;
       }
@@ -305,7 +308,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     setPricePerSecond(pricePerSecond);
   };
 
-  // TODO: needs refactoring
   const handleConfirmListing = async () => {
     if (selectedProperty === null) {
       return;
@@ -488,13 +490,14 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     }
     let isApproved = false;
     setApproveDisabled(false);
-    if (selectedProperty?.metaverseName === 'Decentraland') {
+
+    if (isDecentraland) {
       if ((selectedProperty as DecentralandNFT).isLAND) {
         isApproved = await landRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
       } else {
         isApproved = await estateRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
       }
-    } else if ((selectedProperty as CryptoVoxelNFT) && selectedMetaverse == 2) {
+    } else if (isVoxels) {
       isApproved = await cryptoVoxelsContract?.isApprovedForAll(config.contracts.landworksContract)!;
     }
 
@@ -527,7 +530,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     getUsdPrice(paymentToken.symbol, tokenCost?.toNumber() || 0);
   }, [paymentToken, tokenCost]);
 
-  // TODO: needs refactoring
   useEffect(() => {
     evaluateSelectedProperty();
   }, [selectedProperty]);
@@ -681,7 +683,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
             </Grid>
             <Grid item xs={6} rowSpacing={5}>
               <Grid item xs={12}>
-                {selectedProperty && selectedMetaverse === 1 && (
+                {selectedProperty && isDecentraland && (
                   <>
                     {(selectedProperty as DecentralandNFT).isLAND ? (
                       <SelectedListCard
@@ -704,7 +706,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
                   </>
                 )}
 
-                {selectedProperty && selectedMetaverse === 2 && (
+                {selectedProperty && isVoxels && (
                   <>
                     {(selectedProperty as CryptoVoxelNFT) && (
                       <SelectedListCard
