@@ -1593,7 +1593,10 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
   liteAsset.maxPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.maxPeriod));
   liteAsset.maxFutureTimeTimedType = getTimeTypeStr(secondsToDuration(asset.maxFutureTime));
   if (isDecentralandMetaverseRegistry(asset?.metaverseRegistry?.id)) {
-    liteAsset.additionalData = await getAdditionalDecentralandData(asset.metaverseAssetId);
+    liteAsset.additionalData = await getAdditionalDecentralandData(
+      asset.metaverseAssetId,
+      asset?.decentralandData?.isLAND
+    );
     liteAsset.type = asset?.decentralandData?.isLAND ? 'LAND' : 'ESTATE';
     liteAsset.name = getDecentralandAssetName(asset.decentralandData);
     liteAsset.imageUrl = getLandImageUrl(asset);
@@ -1735,8 +1738,10 @@ function sortAssetsByDescendingUsdPrice(a: AssetEntity, b: AssetEntity): number 
   }
 }
 
-function getAdditionalDecentralandData(id: string): Promise<AdditionalDecantralandData> {
-  const decentralandRegistryAddress = '0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d';
+function getAdditionalDecentralandData(id: string, isLand: boolean): Promise<AdditionalDecantralandData> {
+  const decentralandRegistryAddress = isLand
+    ? '0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d'
+    : '0x959e104e1a4db6317fa58f8295f586e1a978c297';
   const apiUrl = `https://api.decentraland.org/v2/contracts/${decentralandRegistryAddress}/tokens/`;
   return fetch(`${apiUrl}${id}`)
     .then((result) => result.json())
