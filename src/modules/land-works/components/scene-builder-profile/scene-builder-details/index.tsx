@@ -25,6 +25,7 @@ const SceneBuilderDetails: FC<ISceneBuilderDetails> = ({ builder }) => {
     <CardContainer
       className="scene-builder-card"
       style={{
+        // position: 'fixed',
         padding: '20px 30px',
         height: '100%',
         display: 'flex',
