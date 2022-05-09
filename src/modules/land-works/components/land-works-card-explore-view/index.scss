@@ -132,6 +132,15 @@
     color: var(--theme-grey900-color);
   }
 
+  &-price-amount {
+    display: flex;
+    align-items: center;
+  }
+
+  &-price-crypto-icon {
+    margin-right: 0.3rem;
+  }
+
   &-price {
     font-style: normal;
     font-weight: 600;

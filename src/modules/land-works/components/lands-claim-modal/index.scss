@@ -3,20 +3,6 @@
     margin-bottom: 20px;
   }
 
-  .ant-modal-content {
-    border-radius: 10px;
-  }
-
-  .ant-modal-header {
-    padding: 22px 22px 0px 22px;
-    border-bottom: none;
-    background: var(--theme-modal-color);
-  }
-
-  .ant-modal-close {
-    top: 22px;
-  }
-
   .max-transaction-limit {
     background: var(--theme-warning-background);
     border: 1px solid var(--theme-warning-border);
@@ -32,6 +18,7 @@
   .claim-modal-footer {
     background: transparent;
     border-radius: 10px;
+    width: 100%;
     padding: 12px 20px;
     border: 1px solid var(--theme-checkbox-color);
 
