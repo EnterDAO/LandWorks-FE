@@ -55,16 +55,10 @@ interface IProps {
 const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const walletCtx = useWallet();
   const landworks = useLandworks();
-  // const estateRegistry = useEstateRegistry();
-  // const landRegistry = useLandRegistry();
-  // const cryptoVoxels = useCryptoVoxels();
   const registry = useContractRegistry();
   const history = useHistory();
 
   const { landWorksContract } = landworks;
-  // const { landRegistryContract } = landRegistry;
-  // const { estateRegistryContract } = estateRegistry;
-  // const { cryptoVoxelsContract } = cryptoVoxels;
   const { landRegistryContract, estateRegistryContract, cryptoVoxelsContract } = registry;
 
   const [minPeriod, setMinPeriod] = useState(new BigNumber(DAY_IN_SECONDS));
@@ -88,7 +82,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [maxFutureError, setMaxFutureError] = useState('');
 
   const [selectedProperty, setSelectedProperty] = useState(null as BaseNFT | null);
-  const [selectedVoxel, setSelectedVoxel] = useState(null as CryptoVoxelNFT | null);
 
   const [assetProperties, setAssetProperties] = useState<DecentralandNFT[]>([]);
   const [assetEstates, setAssetEstates] = useState<DecentralandNFT[]>([]);
@@ -124,12 +117,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
   const [listModalMessage, setListModalMessage] = useState(SignTransactionMessage);
 
-  const handlePropertyChange = (selectedLand: DecentralandNFT) => {
+  const handlePropertyChange = (selectedLand: BaseNFT) => {
     setSelectedProperty(selectedLand);
-  };
-
-  const handleVoxelPropertyChange = (selectedLand: CryptoVoxelNFT) => {
-    setSelectedVoxel(selectedLand);
   };
 
   const handleMinCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -202,7 +191,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       const optionIndex = MaxRentPeriodOptions.indexOf(optionByType!);
 
       setMaxPeriodSelectedOption(MaxRentPeriodOptions[optionIndex]);
-
       setMaxPeriod(maxInput?.multipliedBy(bigvalue!)!);
     }
   };
@@ -268,7 +256,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
   // TODO: needs refactoring
   const handleApprove = async () => {
-    if (selectedProperty === null && selectedVoxel === null) {
+    if (selectedProperty === null) {
       return;
     }
     try {
@@ -277,7 +265,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
       let registry;
       let contract;
-      if (selectedProperty) {
+      if (selectedProperty as DecentralandNFT) {
         contract = config.contracts.landworksContract;
         if (selectedProperty.contractAddress === config.contracts.decentraland.landRegistry) {
           registry = landRegistryContract;
@@ -285,8 +273,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           registry = estateRegistryContract;
         }
       }
-      if (selectedVoxel) {
-        registry = estateRegistryContract;
+      if (selectedProperty as CryptoVoxelNFT) {
+        registry = cryptoVoxelsContract;
         contract = config.contracts.landworksContract;
       }
       if (!!registry && !!contract) {
@@ -319,7 +307,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
   // TODO: needs refactoring
   const handleConfirmListing = async () => {
-    if (selectedProperty === null && selectedVoxel === null) {
+    if (selectedProperty === null) {
       return;
     }
 
@@ -327,21 +315,17 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
     let metaverseRegistry = '';
     let id = '';
-    if (selectedMetaverse === 1) {
-      if (selectedProperty) {
-        metaverseRegistry = selectedProperty?.contractAddress;
-        id = selectedProperty.id;
-      }
-    } else {
-      if (selectedVoxel) {
-        metaverseRegistry = selectedVoxel?.contractAddress;
-        id = selectedVoxel.id;
-      }
+
+    if (selectedProperty) {
+      metaverseRegistry = selectedProperty?.contractAddress;
+      id = selectedProperty.id;
     }
 
     if (!metaverseRegistry || !id) {
       return;
     }
+
+    console.log({ metaverseRegistry, id, selectedMetaverse });
 
     try {
       setShowSignModal(true);
@@ -501,7 +485,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   };
 
   const evaluateSelectedProperty = async () => {
-    if (selectedProperty === null && selectedVoxel === null) {
+    if (selectedProperty === null) {
       return;
     }
     let isApproved = false;
@@ -512,7 +496,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       } else {
         isApproved = await estateRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
       }
-    } else if (selectedVoxel && selectedMetaverse == 2) {
+    } else if ((selectedProperty as CryptoVoxelNFT) && selectedMetaverse == 2) {
       isApproved = await cryptoVoxelsContract?.isApprovedForAll(config.contracts.landworksContract)!;
     }
 
@@ -548,10 +532,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   // TODO: needs refactoring
   useEffect(() => {
     evaluateSelectedProperty();
-  }, [selectedProperty, selectedVoxel]);
+  }, [selectedProperty]);
 
   const onChangeMetaverse = (value: number) => {
-    //setMetaverse(metaverse);
     setSelectedMetaverse(value);
   };
 
@@ -623,8 +606,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
                     {cryptoVoxelParcels.map((parcel) => (
                       <Grid key={parcel.id} item xs={3} margin={'0 0 10px'}>
                         <VoxelListingCard
-                          isSelectedProperty={parcel.name === selectedVoxel?.name}
-                          handleClick={handleVoxelPropertyChange}
+                          isSelectedProperty={parcel.name === selectedProperty?.name}
+                          handleClick={handlePropertyChange}
                           key={parcel.name}
                           land={parcel}
                         />
@@ -722,12 +705,17 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
                     )}
                   </>
                 )}
-                {selectedVoxel && selectedMetaverse === 2 && (
-                  <SelectedListCard
-                    src={selectedVoxel.image}
-                    name={selectedVoxel.name}
-                    coordinatesChild={<>{selectedVoxel.place}</>}
-                  />
+
+                {selectedProperty && selectedMetaverse === 2 && (
+                  <>
+                    {(selectedProperty as CryptoVoxelNFT) && (
+                      <SelectedListCard
+                        src={selectedProperty.image}
+                        name={selectedProperty.name}
+                        coordinatesChild={<>{selectedProperty.place}</>}
+                      />
+                    )}
+                  </>
                 )}
               </Grid>
               <Grid item xs={12}>
@@ -755,7 +743,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               Found in wallet ({getPropertyCountForMetaverse()})
             </Button>
             <Button
-              disabled={selectedProperty === null && selectedVoxel === null}
+              disabled={selectedProperty === null}
               variant="secondary"
               btnSize="medium"
               onClick={() => setActiveStep(1)}

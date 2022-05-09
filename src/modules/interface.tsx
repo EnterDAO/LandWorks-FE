@@ -37,6 +37,7 @@ export interface BaseNFT {
   image: string;
   contractAddress: string;
   metaverseName: Metaverse;
+  place?: string;
 }
 
 export type Estate = {
