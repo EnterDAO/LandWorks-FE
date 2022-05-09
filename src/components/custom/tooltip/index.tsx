@@ -4,7 +4,7 @@ import cn from 'classnames';
 
 import s from './s.module.scss';
 
-type TooltipProps = {
+export type TooltipProps = {
   children: ReactNode;
   target: ReactNode;
   placement?: 'top' | 'bottom';
