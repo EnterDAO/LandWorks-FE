@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useLocalStorage } from 'react-use-storage';
 import { useSubscription } from '@apollo/client';
 import { Typography } from '@mui/material';
@@ -33,6 +34,7 @@ interface Props {
 }
 
 export const NotificationSection: React.FC = () => {
+  const location = useLocation();
   const [notifications, setNotifications] = useState<NotificationList[] | []>([]);
   const [lastLogin, setLastLogin] = useLocalStorage<number>('user_profile', 0);
   const [hasUnread, setHasUnread] = useState<boolean>(false);
@@ -77,7 +79,7 @@ export const NotificationSection: React.FC = () => {
 
   useEffect(() => {
     setAnchorEl(null);
-  }, [window.location.pathname]);
+  }, [window.location.pathname, location.state]);
 
   useEffect(() => {
     if (notifications.length) setHasUnread(!!notifications.filter((item) => +item.time >= lastLogin).length);
