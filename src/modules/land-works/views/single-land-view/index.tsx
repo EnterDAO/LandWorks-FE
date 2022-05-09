@@ -459,7 +459,7 @@ const SingleLandView: React.FC = () => {
                       pathname: `/property/${land.id}`,
                       state: {
                         from: window.location.pathname,
-                        title: 'My properties',
+                        title: 'Nearby property',
                         tab: location?.state?.tab,
                         previousPage: { from: location?.state?.from, title: location?.state?.title },
                       },
