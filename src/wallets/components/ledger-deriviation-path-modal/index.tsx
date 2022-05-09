@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React from 'react';
+import MenuItem from '@mui/material/MenuItem';
 
-import Button from 'components/antd/button';
-import Modal, { ModalProps } from 'components/antd/modal';
-import Select, { SelectOption } from 'components/antd/select';
 import Grid from 'components/custom/grid';
+import { Button, Dropdown, Modal } from 'design-system';
 import LedgerWalletConfig from 'wallets/connectors/ledger';
 import { useWallet } from 'wallets/wallet';
 
-const WEB3_LEDGER_DERIVATION_PATHS: SelectOption[] = [
+const WEB3_LEDGER_DERIVATION_PATHS = [
   {
     value: `m/44'/60'/0'`,
     label: `Ethereum - m/44'/60'/0'`,
@@ -20,7 +19,13 @@ const WEB3_LEDGER_DERIVATION_PATHS: SelectOption[] = [
   },
 ];
 
-const LedgerDerivationPathModal: React.FC<ModalProps> = (props) => {
+type Props = {
+  open: boolean;
+  onSubmit?: () => void;
+  handleClose: () => void;
+};
+
+const LedgerDerivationPathModal: React.FC<Props> = (props) => {
   const { ...modalProps } = props;
 
   const wallet = useWallet();
@@ -32,7 +37,7 @@ const LedgerDerivationPathModal: React.FC<ModalProps> = (props) => {
   }
 
   function handleConnect() {
-    modalProps.onCancel?.();
+    modalProps.handleClose?.();
 
     setTimeout(() => {
       wallet
@@ -44,15 +49,18 @@ const LedgerDerivationPathModal: React.FC<ModalProps> = (props) => {
   }
 
   return (
-    <Modal width={568} {...modalProps}>
+    <Modal {...modalProps}>
       <Grid flow="row" gap={32} align="center">
-        <Select
-          options={WEB3_LEDGER_DERIVATION_PATHS}
-          value={derivationPath}
-          onSelect={handleSelect}
-          style={{ width: '352px' }}
-        />
-        <Button type="primary" onClick={handleConnect}>
+        <Dropdown value={derivationPath} onSelect={handleSelect} style={{ width: '352px' }}>
+          {WEB3_LEDGER_DERIVATION_PATHS.map((item, key) => {
+            return (
+              <MenuItem key={key} value={item.value}>
+                {item.label}
+              </MenuItem>
+            );
+          })}
+        </Dropdown>
+        <Button variant="primary" onClick={handleConnect}>
           Connect
         </Button>
       </Grid>

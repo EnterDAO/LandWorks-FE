@@ -2,10 +2,10 @@ import React from 'react';
 import { useLocalStorage } from 'react-use-storage';
 import cn from 'classnames';
 
-import Button from 'components/antd/button';
 import Grid from 'components/custom/grid';
 import Icon from 'components/custom/icon';
 import { Text } from 'components/custom/typography';
+import { Button } from 'design-system';
 
 import s from './s.module.scss';
 
@@ -64,7 +64,7 @@ const Warn: React.FC<WarnProps> = (props) => {
         </Text>
       </Grid>
       {closable && (
-        <Button type="link" onClick={handleClose}>
+        <Button variant="accentblue" onClick={handleClose}>
           <Icon name="close" className={s.closeIcon} />
         </Button>
       )}

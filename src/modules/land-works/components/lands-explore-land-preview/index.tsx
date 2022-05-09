@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { ZERO_BIG_NUMBER } from 'web3/utils';
 
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { getTokenIconName } from 'helpers/helpers';
 import { AssetEntity } from 'modules/land-works/api';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';

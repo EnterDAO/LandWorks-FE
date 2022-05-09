@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 
 import { ReactComponent as BluePlus } from 'assets/icons/blue-plus.svg';
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { Grid } from 'design-system';
 import { getTokenIconName } from 'helpers/helpers';
 import { Option } from 'modules/interface';

@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { getTokenIconName, timestampSecondsToUTCDate } from 'helpers/helpers';
 import { getTokenPriceForDate } from 'providers/known-tokens-provider';
 

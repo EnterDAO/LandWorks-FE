@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Popover from '@mui/material/Popover';
 import cn from 'classnames';
 import { getEtherscanAddressUrl, getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
 import ExternalLink from 'components/custom/external-link';
 import Grid from 'components/custom/grid';
 import Icon from 'components/custom/icon';
+// import IconNotification from 'components/custom/icon-notification';
 import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
 import { StyledPopover } from 'design-system/Popover/Popover';
@@ -17,10 +17,12 @@ import { getENSName } from 'helpers/helpers';
 import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
 import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
+// import { useNotifications } from 'providers/notifications-provider';
 import { ReactComponent as ExternalLinkIcon } from 'resources/svg/external-link.svg';
 import { useWallet } from 'wallets/wallet';
 
 import { useErc20 } from '../../../modules/land-works/providers/erc20-provider';
+// import Notifications from '../notifications';
 import UserInfo from './UserInfo/UserInfo';
 
 import s from './s.module.scss';
@@ -35,10 +37,8 @@ import s from './s.module.scss';
 //   };
 //   const hasUnread = notificationsReadUntil ? notifications.some((n) => n.startsOn > notificationsReadUntil) : false;
 //   return (
-//     <Popover
-//       placement="bottomRight"
-//       trigger="click"
-//       noPadding
+//     <StyledPopover
+//       open
 //       content={
 //         <div className={cn('card', s.notifications)}>
 //           <div className="card-header flex">
@@ -58,7 +58,7 @@ import s from './s.module.scss';
 //       <IconNotification width={24} height={24} notificationSize={8} bubble={hasUnread} className={s.notificationIcon}>
 //         <Icon name="notification" width={24} height={24} color="inherit" />
 //       </IconNotification>
-//     </Popover>
+//     </StyledPopover>
 //   );
 // };
 
@@ -111,7 +111,7 @@ const ConnectedWallet: React.FC = () => {
   if (wallet.connecting) {
     return (
       <>
-        <Popover
+        <StyledPopover
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
@@ -153,7 +153,7 @@ const ConnectedWallet: React.FC = () => {
               </button>
             </Grid>
           </div>
-        </Popover>
+        </StyledPopover>
         <Button className={s.buttonConnecting}>Connecting...</Button>
       </>
     );
@@ -183,7 +183,7 @@ const ConnectedWallet: React.FC = () => {
         anchorEl={anchorEl}
         onClose={handleClose}
       >
-        <div className="card">
+        <div className={s.container}>
           <Grid className={s.identicon} flow="col" gap={16} align="center" justify="center">
             <Identicon address={wallet.account} width={40} height={40} />
           </Grid>
@@ -232,7 +232,7 @@ const ConnectedWallet: React.FC = () => {
 
   const TxSection = (
     <>
-      <Popover
+      <StyledPopover
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -262,7 +262,7 @@ const ConnectedWallet: React.FC = () => {
             Disconnect
           </div>
         </div>
-      </Popover>
+      </StyledPopover>
       <Button className={s.accountLink}>
         <Grid flow="col" align="center">
           <div className={s.loader}></div>
@@ -284,8 +284,8 @@ const ConnectedWallet: React.FC = () => {
       className={cn(s.hamburger, isTxInProgress ? s.loadingBackground : '')}
     >
       {/* ToDo: NotificationSection, uncomment if needed */}
-      {/* <NotificationSection /> */}
-      {/* <Divider type="vertical" style={{ minHeight: 28 }} /> */}
+      {/* <NotificationSection />
+      <Divider style={{ minHeight: 28 }} /> */}
       {isTxInProgress ? TxSection : AccountSection}
     </Grid>
   );

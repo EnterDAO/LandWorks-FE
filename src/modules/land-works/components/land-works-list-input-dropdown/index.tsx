@@ -1,8 +1,6 @@
 import { FC, useState } from 'react';
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
 
-import { Grid, Icon } from 'design-system';
+import { Box, Divider, Grid, Icon } from 'design-system';
 import { Calendar02, Currency } from 'design-system/icons';
 import { ReactComponent as DropdownIcon } from 'resources/svg/dropdown-icon.svg';
 

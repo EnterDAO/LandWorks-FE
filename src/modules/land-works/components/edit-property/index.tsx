@@ -2,16 +2,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import {
-  AtMostRentPeriodOptions,
-  DEFAULT_LIST_MAX_FUTURE_PERIOD,
-  DEFAULT_LIST_MAX_PERIOD,
-  DEFAULT_MAX_PERIOD,
-  DEFAULT_MIN_PERIOD,
-  FEE_PRECISION,
-  MaxRentPeriodOptions,
-  MinRentPeriodOptions,
-} from 'constants/modules';
 import BigNumber from 'bignumber.js';
 
 import { Box, Button, Grid, Modal, Typography } from 'design-system';
@@ -28,11 +18,22 @@ import { getTokenPrice } from 'providers/known-tokens-provider';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
-import EditFormCardSkeleton from '../land-edit-form-loader-card';
+import EditFormCardSkeleton from '../land-editing-skeleton';
 
 import { formatBigNumberInput, getTimeType, secondsToDuration } from '../../../../utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from '../../../../utils/date';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
+
+import {
+  AtMostRentPeriodOptions,
+  DEFAULT_LIST_MAX_FUTURE_PERIOD,
+  DEFAULT_LIST_MAX_PERIOD,
+  DEFAULT_MAX_PERIOD,
+  DEFAULT_MIN_PERIOD,
+  FEE_PRECISION,
+  MaxRentPeriodOptions,
+  MinRentPeriodOptions,
+} from 'modules/land-works/constants';
 
 import './index.scss';
 
@@ -465,12 +466,12 @@ const EditProperty: React.FC<Props> = (props) => {
             container
             xs={12}
             maxHeight={'50vh'}
-            overflow="scroll"
+            overflow="auto"
             columnSpacing={5}
             justifyContent="space-between"
             mt={4}
           >
-            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={470} overflow="scroll">
+            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={470} overflow="auto">
               <DropdownSection
                 defaultOpen={true}
                 variant="calendar"

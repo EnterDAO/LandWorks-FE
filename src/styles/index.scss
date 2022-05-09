@@ -1,5 +1,3 @@
-@import '~antd/dist/antd.css';
-@import '~antd/dist/antd.dark.css';
 @import '~react-toastify/dist/ReactToastify.css';
 @import '~react-loading-skeleton/dist/skeleton.css';
 @import 'flex';
@@ -9,7 +7,7 @@
 @import 'utils';
 @import 'button';
 @import 'rechart';
-@import 'inputs';
+@import 'scrollbar';
 
 html {
   block-size: 100%;
@@ -59,14 +57,6 @@ body.mobile-menu-open {
   overflow: hidden;
 }
 
-.ant-notification-notice {
-  word-break: break-word;
-
-  .ant-notification-notice-message {
-    min-height: 24px;
-  }
-}
-
 :root {
   --font-family: 'Poppins', sans-serif;
   --font-size-landing-h1: 46px;
@@ -78,44 +68,53 @@ body.mobile-menu-open {
   --font-size-p2: 14px;
   --font-size-lb1: 14px;
   --font-size-lb2: 12px;
-  --font-size-sm: 12px;
-
+  --font-size-sm: 12px;  
+  
   --theme-body-color: #161622; // grey50
   --theme-card-color: #1e1e2e;
-  --theme-overlay-color: #f9f0f8;
-  --theme-mask-color: rgba(0, 0, 0, 0.08);
-  --theme-border-color: #f2edf1; // grey100
-  --theme-icon-color: #aaafb3; // grey300
-  --theme-icon-hover-color: #060a0d; // grey900
-
-  --theme-primary-color: white;
-  --theme-secondary-color: #83767f;
-  --theme-secondary-color-rgb: 113, 121, 128; // grey500
-  --theme-default-color: #aaafb3; // grey300
-
-  --theme-card-shadow: 0px 5px 18px #f7f0f6;
-  --theme-modal-shadow: 0 0 1px rgba(6, 10, 13, 0.4), 0 16px 32px rgba(19, 32, 43, 0.4);
-  --theme-overlay-shadow: 0 0 1px rgba(0, 0, 0, 0.4), 0 32px 64px rgba(113, 121, 128, 0.32);
-
+  --theme-overlay-color: #1f1b59;
+  --theme-mask-color: rgba(32, 37, 41, 0.8);
+  --theme-border-color: #1a164f;
+  --theme-line-color: #414163;
+  --theme-icon-color: #606268;
+  --theme-icon-hover-color: #fff;
+  --theme-icon-hover-gradient: linear-gradient(135deg, #dd3dcb 15%, #ef9c92 85%);
   --theme-modal-overlay: rgba(0, 0, 0, 0.7);
-
-  --theme-input-background: #fff;
-  --theme-input-placeholder: #aaafb3;
-
+  --theme-modal-color: #27273a;
   --theme-light-color: #f8f8ff;
-
-  --theme-red-color: #ff4949; // red500
+  --theme-primary-gradient: linear-gradient(83.81deg, #ac2ccb -19.8%, #dd3dcb 22%, #ef9c92 100%);
+  --theme-separator-color: #27273a;
+  --theme-checkbox-color: #414163;
+  --theme-warning-color: #d92687;
+  --theme-warning-border: #4d2f3f;
+  --theme-warning-background: #321e29;
+  
+  --theme-primary-box-shadow: rgba(221, 61, 203, 0.6);
+  
+  --theme-primary-color: #fff;
+  --theme-secondary-color: #b3b1cf;
+  --theme-secondary-color-rgb: 113, 121, 128; // grey500
+  --theme-default-color: #b3b1cf;
+  --theme-subtle-color: #b9b9d3;
+  --theme-accent-color: #5d8ff0;
+  --theme-accent-hover-color: #7aa6fc;
+  --theme-black-color: #0b0834;
+  --theme-blackish-color: #252155;
+  --theme-pinkish-color: #fceffb;
+  --theme-brown-color: #552c49;
+  --theme-red-color: #d7606e;
   --theme-red-color-rgb: 255, 73, 73; // red500
-
-  --theme-green-color: #2ad0ca; // green500
+  --theme-green-color: #6cd27e;
   --theme-green-color-rgb: 42, 208, 202; // green500
-
+  --theme-neon-pink-color: #dd3dcb;
+  --theme-yellow-color: #dfb068;
+  
   --theme-green700-color: #007f59;
-
+  
   --theme-blue-color: #4f6ae6; // blue500
   --theme-blue-color-rgb: 79, 106, 230; // blue500
   --theme-blue400-color: #7288ea;
-
+  
   --theme-yellow-color: #cca74d; // yellow600
   --theme-yellow-color-rgb: 204, 167, 77; // yellow600
 
@@ -126,7 +125,7 @@ body.mobile-menu-open {
   --theme-grey100-color: #060a0d;
   --theme-grey200-color: #27273a;
   --theme-grey400-color: #3a3a4e;
-  --theme-grey700-color: #68687B;
+  --theme-grey700-color: #68687b;
   --theme-grey900-color: #f8f8ff;
 
   --theme-white-color: #fff;
@@ -150,92 +149,9 @@ body.mobile-menu-open {
   --theme-header-shadow: 5px 0px 20px #f1dbee;
   --theme-selection-color: #ef9c92;
 
-  --toastify-color-light: var(--theme-primary-color);
-  --toastify-color-dark: var(--theme-modal-color);
-  --toastify-color-info: #5d8ff0;
-  --toastify-color-success: #9bed7e;
-  --toastify-color-warning: #f1c40f;
-  --toastify-color-error: #ed7676;
-  --toastify-color-transparent: rgba(255, 255, 255, 0.7);
-
-  --toastify-icon-color-info: var(--toastify-color-info);
-  --toastify-icon-color-success: var(--toastify-color-success);
-  --toastify-icon-color-warning: var(--toastify-color-warning);
-  --toastify-icon-color-error: var(--toastify-color-error);
-
-  --toastify-toast-width: 320px;
-  --toastify-color-dark: var(--theme-modal-color);
-  --toastify-toast-min-height: 64px;
-  --toastify-toast-max-height: 800px;
-  --toastify-font-family: sans-serif;
-  --toastify-z-index: 9999;
-
-  --toastify-text-color-light: var(--theme-modal-color);
-  --toastify-text-color-dark: var(--theme-primary-color);
-
   --navbar-height: 107px;
   --explore-subheader: 88px;
   --explore-filters: 60px;
-}
-
-@media (max-width: 1024px) {
-  :root {
-    --font-size-landing-h1: 32px;
-    --font-size-landing-h2: 18px;
-    --font-size-h1: 24px;
-    --font-size-h2: 18px;
-    --font-size-h3: 14px;
-    --font-size-p1: 12px;
-    --font-size-p2: 11px;
-    --font-size-lb1: 11px;
-    --font-size-lb2: 9px;
-    --font-size-sm: 9px;
-  }
-}
-
-@media (max-width: 768px) {
-  :root {
-    --font-size-landing-h1: 26px;
-    --font-size-landing-h2: 16px;
-    --horizontal-padding: 24px;
-  }
-}
-
-[data-theme='dark'],
-[data-theme='light'] {
-  --theme-body-color: #161622; // grey50
-  --theme-card-color: #1e1e2e;
-  --theme-overlay-color: #1f1b59;
-  --theme-mask-color: rgba(32, 37, 41, 0.8);
-  --theme-border-color: #1a164f;
-  --theme-line-color: #414163;
-  --theme-icon-color: #606268;
-  --theme-icon-hover-color: #fff;
-  --theme-icon-hover-gradient: linear-gradient(135deg, #dd3dcb 15%, #ef9c92 85%);
-  --theme-modal-color: #27273a;
-  --theme-primary-gradient: linear-gradient(83.81deg, #ac2ccb -19.8%, #dd3dcb 22%, #ef9c92 100%);
-  --theme-separator-color: #27273a;
-  --theme-checkbox-color: #414163;
-  --theme-warning-color: #d92687;
-  --theme-warning-border: #4d2f3f;
-  --theme-warning-background: #321e29;
-  
-  --theme-primary-box-shadow: rgba(221, 61, 203, 0.6);
-
-  --theme-primary-color: #fff;
-  --theme-secondary-color: #b3b1cf;
-  --theme-default-color: #b3b1cf;
-  --theme-subtle-color: #b9b9d3;
-  --theme-accent-color: #5d8ff0;
-  --theme-accent-hover-color: #7aa6fc;
-  --theme-black-color: #0b0834;
-  --theme-blackish-color: #252155;
-  --theme-pinkish-color: #fceffb;
-  --theme-brown-color: #552c49;
-  --theme-red-color: #d7606e;
-  --theme-green-color: #6cd27e;
-  --theme-neon-pink-color: #dd3dcb;
-  --theme-yellow-color: #dfb068;
 
   --theme-card-shadow: 0px 12px 25px #161344;
   --theme-modal-shadow: 0px 12px 25px #161344;
@@ -274,6 +190,29 @@ body.mobile-menu-open {
   --toastify-text-color-dark: var(--theme-primary-color);
 }
 
+@media (max-width: 1024px) {
+  :root {
+    --font-size-landing-h1: 32px;
+    --font-size-landing-h2: 18px;
+    --font-size-h1: 24px;
+    --font-size-h2: 18px;
+    --font-size-h3: 14px;
+    --font-size-p1: 12px;
+    --font-size-p2: 11px;
+    --font-size-lb1: 11px;
+    --font-size-lb2: 9px;
+    --font-size-sm: 9px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --font-size-landing-h1: 26px;
+    --font-size-landing-h2: 16px;
+    --horizontal-padding: 24px;
+  }
+}
+
 :focus:not(:focus-visible) {
   outline: 0;
 }
@@ -290,7 +229,7 @@ button {
 
 .tag-icon {
   width: 20px !important;
-  height: 20px !important
+  height: 20px !important;
 }
 
 #notifications-root {
@@ -304,36 +243,6 @@ button {
   }
 }
 
-.ant-switch.ant-switch .ant-switch-handle::before {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.24);
-}
-
-.ant-switch.ant-switch[aria-checked='false'] {
-  background: #43484d;
-}
-
-.ant-switch.ant-switch[aria-checked='true'] {
-  background: var(--gradient-green);
-}
-
-.ant-spin .ant-spin-dot {
-  color: var(--theme-secondary-color);
-}
-
-.ant-spin .ant-spin-dot .ant-spin-dot-item {
-  background: var(--theme-secondary-color);
-}
-
-.ant-empty {
-  margin: 40px 0;
-}
-
-.ant-select-disabled {
-  .ant-select-selection-item {
-    color: var(--theme-subtle-color) !important;
-  }
-}
-
 .link-gradient:hover {
   opacity: 0.7;
 }
@@ -341,5 +250,18 @@ button {
 ul {
   ::marker {
     color: var(--theme-primary-color);
+  }
+}
+
+a {
+  text-decoration: none;
+  color: #177ddc;
+
+  &:hover {
+    color: #165996;
+  }
+
+  &:active {
+    color: #388ed3;
   }
 }
