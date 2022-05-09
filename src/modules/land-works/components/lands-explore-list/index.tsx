@@ -84,7 +84,8 @@ const LandsExploreList: FC<Props> = ({
   };
 
   const getLoadPercentageValue = () => {
-    return (lands.slice(0, slicedLands).length * 100) / lands.length;
+    const percentage = (lands.slice(0, slicedLands).length * 100) / lands.length;
+    return percentage || 0;
   };
 
   const getLandArrayIndexByIdCoordinate = (decentralandId: AtlasTile['id']) => {

@@ -546,6 +546,21 @@ export type AssetEntity = {
   rents: RentEntity[];
   lastRentEnd: string;
   isAvailable: boolean;
+  additionalData?: AdditionalDecantralandData;
+};
+
+export type AdditionalDecantralandData = {
+  size: number;
+  externalUrl: string;
+  description: string;
+  tokenId: string;
+  attributes: additionalAttributes;
+};
+
+type additionalAttributes = {
+  trait_type: 'X' | 'Y' | 'Size' | 'Distance to District' | 'Distance to Plaza' | 'Distance to Road';
+  value: number;
+  display_type: string;
 };
 
 export type CryptoVoxelsType = {
@@ -1687,8 +1702,11 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
   liteAsset.minPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.minPeriod));
   liteAsset.maxPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.maxPeriod));
   liteAsset.maxFutureTimeTimedType = getTimeTypeStr(secondsToDuration(asset.maxFutureTime));
-
   if (isDecentralandMetaverseRegistry(asset?.metaverseRegistry?.id)) {
+    liteAsset.additionalData = await getAdditionalDecentralandData(
+      asset.metaverseAssetId,
+      asset?.decentralandData?.isLAND
+    );
     liteAsset.type = asset?.decentralandData?.isLAND ? 'LAND' : 'ESTATE';
     liteAsset.name = getDecentralandAssetName(asset.decentralandData);
     liteAsset.imageUrl = getLandImageUrl(asset);
@@ -1828,4 +1846,18 @@ function sortAssetsByDescendingUsdPrice(a: AssetEntity, b: AssetEntity): number 
   } else {
     return 1;
   }
+}
+
+function getAdditionalDecentralandData(id: string, isLand: boolean): Promise<AdditionalDecantralandData> {
+  const decentralandRegistryAddress = isLand
+    ? '0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d'
+    : '0x959e104e1a4db6317fa58f8295f586e1a978c297';
+  const apiUrl = `https://api.decentraland.org/v2/contracts/${decentralandRegistryAddress}/tokens/`;
+  return fetch(`${apiUrl}${id}`)
+    .then((result) => result.json())
+    .then((data) => {
+      const { id, external_url, description, attributes, size } = data;
+
+      return { tokenId: id, externalUrl: external_url, description, attributes, size: size || 1 };
+    });
 }
