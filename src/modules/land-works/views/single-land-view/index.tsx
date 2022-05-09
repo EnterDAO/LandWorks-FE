@@ -430,7 +430,6 @@ const SingleLandView: React.FC = () => {
             <p className="nearby-heading">Nearby Properties </p>
             <p className="nearby-description">{adjacentLands.length} Properties</p>
           </div>
-
           {paginatedNearbyLands?.length > 4 && (
             <Grid item xs={24} className="single-lands-pagination">
               {items.map(({ type, ...item }, index) => {
