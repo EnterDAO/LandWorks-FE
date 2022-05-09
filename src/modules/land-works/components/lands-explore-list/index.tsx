@@ -1,6 +1,5 @@
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import useDebounce from '@rooks/use-debounce';
 
 import { Grid } from 'design-system';
@@ -26,8 +25,6 @@ import {
 } from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
 
-import { DEFAULT_SLICED_PAGE } from 'modules/land-works/constants';
-
 interface Props {
   lastRentEnd: string;
   loading: boolean;
@@ -49,7 +46,6 @@ const LandsExploreList: FC<Props> = ({
 }) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
-  const isGridPerTwo = useMediaQuery('(max-width: 1599px)');
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
   const { mapTiles } = useLandsMapTiles();
@@ -57,10 +53,10 @@ const LandsExploreList: FC<Props> = ({
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [blockAutoScroll, setBlockAutoScroll] = useState(false);
 
-  const [slicedLands, setSlicedLands] = useState(isGridPerTwo ? DEFAULT_SLICED_PAGE : 6);
+  const [slicedLands, setSlicedLands] = useState(isHiddenMap ? 18 : 6);
 
   const handleLoadMore = () => {
-    const newSlicedLands = slicedLands + (isGridPerTwo ? DEFAULT_SLICED_PAGE : 6);
+    const newSlicedLands = slicedLands + (isHiddenMap ? 18 : 6);
     sessionStorageHandler('set', 'explore-filters', 'slicedLands', newSlicedLands);
     setSlicedLands(newSlicedLands);
     const highlights = getAllLandsCoordinates(lands.slice(0, newSlicedLands));
@@ -88,7 +84,8 @@ const LandsExploreList: FC<Props> = ({
   };
 
   const getLoadPercentageValue = () => {
-    return (lands.slice(0, slicedLands).length * 100) / lands.length;
+    const percentage = (lands.slice(0, slicedLands).length * 100) / lands.length;
+    return percentage || 0;
   };
 
   const getLandArrayIndexByIdCoordinate = (decentralandId: AtlasTile['id']) => {
@@ -143,11 +140,11 @@ const LandsExploreList: FC<Props> = ({
     setSlicedLands(
       sessionStorageHandler('get', 'explore-filters', 'slicedLands')
         ? sessionStorageHandler('get', 'explore-filters', 'slicedLands')
-        : isGridPerTwo
-        ? DEFAULT_SLICED_PAGE
+        : isHiddenMap
+        ? 18
         : 6
     );
-  }, []);
+  }, [isHiddenMap]);
 
   let filteredLands = filterLandsByQuery(lands, searchQuery);
 
