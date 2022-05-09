@@ -1,24 +1,30 @@
-import { FC } from 'react';
-import { Box } from '@mui/system';
+import { FC, ReactNode } from 'react';
 
-import IconButton from '../IconButton/IconButton';
 import { CloseIcon } from '../icons';
-import { StyledBackdrop, StyledModal, modalStyles } from './modal-styles';
+import {
+  CloseIconButtonStyled,
+  ModalBoxStyled,
+  ModalTitleBoxStyled,
+  StyledBackdrop,
+  StyledModal,
+} from './modal-styles';
 
 interface ModalProps {
   open: boolean;
+  title?: ReactNode;
   className?: string;
   handleClose: () => void;
-  children?: React.ReactNode;
+  children?: ReactNode;
   accessibility?: {
     ariaLabelledby: string;
     ariaDescribedby: string;
   };
+  width?: number | string;
   height?: number | string;
 }
 
 const Modal: FC<ModalProps> = (props: ModalProps) => {
-  const { open, handleClose, children, accessibility, height, className = '' } = props;
+  const { open, title, handleClose, children, accessibility, width, height, className = '' } = props;
 
   return (
     <StyledModal
@@ -30,17 +36,19 @@ const Modal: FC<ModalProps> = (props: ModalProps) => {
       BackdropComponent={StyledBackdrop}
       style={{ height: height }}
     >
-      <Box sx={modalStyles.modalBox}>
-        <IconButton
+      <ModalBoxStyled style={{ width: width }}>
+        {!!title && <ModalTitleBoxStyled>{title}</ModalTitleBoxStyled>}
+
+        <CloseIconButtonStyled
           variant="circular"
           btnSize="small"
           icon={<CloseIcon />}
           colorVariant="light"
-          sx={modalStyles.closeIcon}
           onClick={handleClose}
         />
+
         {children}
-      </Box>
+      </ModalBoxStyled>
     </StyledModal>
   );
 };

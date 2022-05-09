@@ -10,7 +10,8 @@
 }
 
 .identicon {
-  margin: 20px 0 15px;
+  margin: 0 15px;
+  padding: 20px 0;
 }
 
 .externalLink {
@@ -37,12 +38,8 @@
   border: 1px solid red;
 }
 
-.accountLink {
-  &:global(.ant-popover-open) {
-    .dropdownArrow {
-      transform: rotate(-180deg);
-    }
-  }
+.container {
+  background: var(--theme-card-color);
 }
 
 .statusTag {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, useLocation, withRouter } from 'react-router-dom';
 
-import { LocationState } from 'modules/land-works/views/single-land-view';
+import { LocationState } from 'modules/interface';
 
 import { ReactComponent as Rocket } from '../../../../resources/svg/rocket-02.svg';
 
