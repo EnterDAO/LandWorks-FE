@@ -448,7 +448,7 @@ export type AdditionalDecantralandData = {
 };
 
 type additionalAttributes = {
-  trait_type: 'X' | 'Y' | 'Distance to District' | 'Distance to Plaza' | 'Distance to Road';
+  trait_type: 'X' | 'Y' | 'Size' | 'Distance to District' | 'Distance to Plaza' | 'Distance to Road';
   value: number;
   display_type: string;
 };
@@ -1746,8 +1746,8 @@ function getAdditionalDecentralandData(id: string, isLand: boolean): Promise<Add
   return fetch(`${apiUrl}${id}`)
     .then((result) => result.json())
     .then((data) => {
-      const { id, external_url, description, attributes } = data;
+      const { id, external_url, description, attributes, size } = data;
 
-      return { tokenId: id, externalUrl: external_url, description, attributes, size: 1 };
+      return { tokenId: id, externalUrl: external_url, description, attributes, size: size || 1 };
     });
 }
