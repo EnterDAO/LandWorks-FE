@@ -273,7 +273,7 @@ const Icon: React.FC<IconProps> = (props) => {
         width={width}
         alt=""
         height={height ?? width}
-        style={style}
+        style={{ ...style, float: 'left' }}
         src={src || getSrc()}
         {...rest}
       />

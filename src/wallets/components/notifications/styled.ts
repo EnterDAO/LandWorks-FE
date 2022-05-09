@@ -5,6 +5,7 @@ export const StyledRoot = styled(Grid)(() => ({
   justifyContent: 'center',
   minWidth: '550px',
   paddingBottom: 10,
+  background: 'var(--theme-card-color)',
 }));
 
 export const StyledTitleRow = styled(Grid)(() => ({

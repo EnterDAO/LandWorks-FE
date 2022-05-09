@@ -1,9 +1,9 @@
-import { TWITTER_TEXT } from 'constants/modules';
-
 import { Button } from 'design-system';
 import { EndTimerIcon, HourglassIcon, MessageIcon, RentingNotificationIcon } from 'design-system/icons';
 
 import { NotificationDataType } from './notificationTypes';
+
+import { TWITTER_TEXT } from 'modules/land-works/constants';
 
 export const NotificationData: NotificationDataType = {
   newRenting: {

@@ -1,15 +1,10 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import {
-  MY_PROPERTIES_TAB_STATE_ALL,
-  MY_PROPERTIES_TAB_STATE_LENT,
-  MY_PROPERTIES_TAB_STATE_RENTED,
-} from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 
 import { Box, Button, Modal } from 'design-system';
+import { LocationState } from 'modules/interface';
 import { USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
-import { LocationState } from 'modules/land-works/views/single-land-view';
 import { useWallet } from 'wallets/wallet';
 
 import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
@@ -17,6 +12,12 @@ import LandsBannerClaimRents from '../lands-banner-claim-rents';
 import { ClaimModal } from '../lands-claim-modal';
 import ListNewProperty from '../list-new-property';
 import { RootStyled, TabListStyled, TabStyled, TypographyStyled } from './styled';
+
+import {
+  MY_PROPERTIES_TAB_STATE_ALL,
+  MY_PROPERTIES_TAB_STATE_LENT,
+  MY_PROPERTIES_TAB_STATE_RENTED,
+} from 'modules/land-works/constants';
 
 interface Props {
   setTab: Dispatch<SetStateAction<string>>;
@@ -140,7 +141,7 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
           setShowClaimModal(false);
         }}
         onCancel={() => setShowClaimModal(false)}
-        visible={showClaimModal}
+        open={showClaimModal}
         rentFees={claimData?.unclaimedRentAssets}
       />
     </>

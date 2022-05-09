@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Popover from '@mui/material/Popover';
 import cn from 'classnames';
 import { getEtherscanAddressUrl, getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
@@ -75,7 +74,7 @@ const ConnectedWallet: React.FC = () => {
   if (wallet.connecting) {
     return (
       <>
-        <Popover
+        <StyledPopover
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
@@ -117,7 +116,7 @@ const ConnectedWallet: React.FC = () => {
               </button>
             </Grid>
           </div>
-        </Popover>
+        </StyledPopover>
         <Button className={s.buttonConnecting}>Connecting...</Button>
       </>
     );
@@ -147,7 +146,7 @@ const ConnectedWallet: React.FC = () => {
         anchorEl={anchorEl}
         onClose={handleClose}
       >
-        <div className="card">
+        <div className={s.container}>
           <Grid className={s.identicon} flow="col" gap={16} align="center" justify="center">
             <Identicon address={wallet.account} width={40} height={40} />
           </Grid>
@@ -196,7 +195,7 @@ const ConnectedWallet: React.FC = () => {
 
   const TxSection = (
     <>
-      <Popover
+      <StyledPopover
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -226,7 +225,7 @@ const ConnectedWallet: React.FC = () => {
             Disconnect
           </div>
         </div>
-      </Popover>
+      </StyledPopover>
       <Button className={s.accountLink}>
         <Grid flow="col" align="center">
           <div className={s.loader}></div>

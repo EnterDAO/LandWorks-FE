@@ -1,12 +1,10 @@
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { DEFAULT_SLICED_PAGE } from 'constants/modules';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import useDebounce from '@rooks/use-debounce';
 
-import { AtlasTile } from 'components/custom/Atlas/Atlas';
 import { Grid } from 'design-system';
 import { GridIcon, MapIcon } from 'design-system/icons';
+import { LocationState } from 'modules/interface';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
@@ -15,16 +13,9 @@ import LandsSearchBar from 'modules/land-works/components/lands-search';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
-import { LocationState } from 'modules/land-works/views/single-land-view';
 
-import {
-  LandsSearchBarWrapperStyled,
-  StyledButton,
-  StyledGrid,
-  StyledGridContainer,
-  StyledRow,
-  StyledText,
-} from './styled';
+import { AtlasTile } from '../atlas';
+import { LandsSearchBarWrapperStyled, StyledButton, StyledGridContainer, StyledRow, StyledText } from './styled';
 
 import {
   filterLandsByAvailability,
@@ -55,7 +46,6 @@ const LandsExploreList: FC<Props> = ({
 }) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
-  const isGridPerTwo = useMediaQuery('(max-width: 1599px)');
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
   const { mapTiles } = useLandsMapTiles();
@@ -63,10 +53,10 @@ const LandsExploreList: FC<Props> = ({
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [blockAutoScroll, setBlockAutoScroll] = useState(false);
 
-  const [slicedLands, setSlicedLands] = useState(isGridPerTwo ? DEFAULT_SLICED_PAGE : 6);
+  const [slicedLands, setSlicedLands] = useState(isHiddenMap ? 18 : 6);
 
   const handleLoadMore = () => {
-    const newSlicedLands = slicedLands + (isGridPerTwo ? DEFAULT_SLICED_PAGE : 6);
+    const newSlicedLands = slicedLands + (isHiddenMap ? 18 : 6);
     sessionStorageHandler('set', 'explore-filters', 'slicedLands', newSlicedLands);
     setSlicedLands(newSlicedLands);
     const highlights = getAllLandsCoordinates(lands.slice(0, newSlicedLands));
@@ -149,11 +139,11 @@ const LandsExploreList: FC<Props> = ({
     setSlicedLands(
       sessionStorageHandler('get', 'explore-filters', 'slicedLands')
         ? sessionStorageHandler('get', 'explore-filters', 'slicedLands')
-        : isGridPerTwo
-        ? DEFAULT_SLICED_PAGE
+        : isHiddenMap
+        ? 18
         : 6
     );
-  }, []);
+  }, [isHiddenMap]);
 
   let filteredLands = filterLandsByQuery(lands, searchQuery);
 
@@ -174,10 +164,10 @@ const LandsExploreList: FC<Props> = ({
     if (!loading && scrollPosition && filteredLands.length) {
       window.scrollTo({ top: +scrollPosition, behavior: 'smooth' });
     }
-    document.addEventListener('scroll', scroll);
+    document.addEventListener('auto', scroll);
 
     return () => {
-      document.removeEventListener('scroll', scroll);
+      document.removeEventListener('auto', scroll);
     };
   }, [loading]);
 
@@ -219,13 +209,13 @@ const LandsExploreList: FC<Props> = ({
       <StyledGridContainer container spacing={4} rowSpacing={4} columnSpacing={4}>
         {loading ? (
           [1, 2, 3, 4, 5, 6].map((i) => (
-            <StyledGrid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 4} key={i}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} xxl={isHiddenMap ? 2 : 4} key={i}>
               <LandCardSkeleton key={i} />
-            </StyledGrid>
+            </Grid>
           ))
         ) : filteredLands.length ? (
           filteredLands.slice(0, slicedLands).map((land) => (
-            <StyledGrid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 4} key={land.id}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} xxl={isHiddenMap ? 2 : 4} key={land.id}>
               <LandWorkCard
                 onMouseOver={onMouseOverCardHandler}
                 onClick={() =>
@@ -236,7 +226,7 @@ const LandsExploreList: FC<Props> = ({
                 }
                 land={land}
               />
-            </StyledGrid>
+            </Grid>
           ))
         ) : (
           <Grid item xs={12}>
