@@ -7,7 +7,7 @@ import { RangeValue } from 'rc-picker/lib/interface';
 import { ONE_ADDRESS, getEtherscanAddressUrl, getHumanValue } from 'web3/utils';
 
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import config from 'config';
 import { Button, Input, Modal, Tooltip } from 'design-system';
 import { CalendarIcon, ProfileIcon, WarningIcon } from 'design-system/icons';

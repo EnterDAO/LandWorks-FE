@@ -83,7 +83,7 @@ export const StyledTableHead = styled(TableHead)(() => ({
 export const StyledTableBody = styled(TableBody)(() => ({
   '&.MuiTableBody-root': {
     maxHeight: '280px',
-    overflowY: 'scroll',
+    overflowY: 'auto',
     width: '100%',
   },
 }));

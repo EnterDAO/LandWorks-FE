@@ -4,7 +4,7 @@ import { FC } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 
 import ErrorBoundary from 'components/custom/error-boundary';
 import LayoutView from 'layout';
@@ -29,6 +29,7 @@ const App: FC = () => {
       <StaticSprite />
       <WindowStateProvider>
         <ThemeProvider theme={appTheme}>
+          <CssBaseline />
           <GeneralContextProvider>
             <EthWeb3Provider>
               <Web3WalletProvider>

@@ -1,5 +1,6 @@
 import {
   Box,
+  Divider,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -65,6 +66,7 @@ export {
   BoxWithCopyText,
   Icon,
   Tooltip,
+  Divider,
   Dropdown,
   DropdownMenu,
   DropdownItem,
