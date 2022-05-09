@@ -325,8 +325,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       return;
     }
 
-    console.log({ metaverseRegistry, id, selectedMetaverse });
-
     try {
       setShowSignModal(true);
       const txReceipt = await landWorksContract?.list(
