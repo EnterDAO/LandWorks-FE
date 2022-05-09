@@ -1,5 +1,5 @@
 import { getCryptoVoxelsAsset } from 'helpers/helpers';
-import { AssetEntity } from 'modules/land-works/api';
+import { AssetEntity, getAvailability } from 'modules/land-works/api';
 
 import { NotificationList } from './notificationTypes';
 
@@ -11,6 +11,7 @@ export const parseRents = async (asset: any): Promise<AssetEntity[]> => {
 
   for (const asset of uniqueAsset) {
     asset.name = await getAssetName(asset);
+    asset.availability = getAvailability(asset);
   }
 
   return uniqueAsset;
@@ -40,6 +41,7 @@ export const parseNotifications = (
             time: rentStart,
             type: 'newRenting',
             landId: item.id,
+            isAvailable: item?.availability.isCurrentlyAvailable,
           });
         }
         if (rentEnd <= Date.now()) {
@@ -49,6 +51,7 @@ export const parseNotifications = (
             time: rentEnd,
             type: 'rentEnded',
             landId: item.id,
+            isAvailable: item?.availability.isCurrentlyAvailable,
           });
         }
       } else {
@@ -59,9 +62,9 @@ export const parseNotifications = (
             id: result.length,
             name: item.name,
             time: toTimestamp(halfTime),
-            countdown: countdown(+rent.end - halfTime),
             type: 'endSoon',
             landId: item.id,
+            isAvailable: item?.availability.isCurrentlyAvailable,
           });
         }
         if (rentEnd <= Date.now() && isYourRent) {
@@ -71,6 +74,7 @@ export const parseNotifications = (
             time: rentEnd,
             type: 'yourRentEnded',
             landId: item.id,
+            isAvailable: item?.availability.isCurrentlyAvailable,
           });
         }
       }

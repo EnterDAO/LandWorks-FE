@@ -59,5 +59,5 @@ export interface LocationState {
     from: string;
     title: string;
   };
-  openNewListing: boolean;
+  openClaimModal: boolean;
 }

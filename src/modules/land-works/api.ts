@@ -1737,7 +1737,7 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
   return liteAsset;
 }
 
-function getAvailability(asset: any): AssetAvailablity {
+export function getAvailability(asset: any): AssetAvailablity {
   let minAvailability = '';
   let hasMinAvailability = false;
   let minAvailabilityType = '';

@@ -7,7 +7,12 @@ import { IconWrapper, MessageRoot, StyledGrid, StyledSubtitle, StyledTypography 
 
 import { countdown } from './utils';
 
-const NotificationMessage: React.FC<{ item: NotificationList }> = ({ item }) => {
+interface INotification {
+  item: NotificationList;
+  hasUnclaimentRent: boolean;
+}
+
+const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent }) => {
   const [lastLogin] = useLocalStorage<number>('user_profile', 0);
   const history = useHistory();
   const isNewNotification = lastLogin ? item.time >= lastLogin : true;
@@ -31,9 +36,14 @@ const NotificationMessage: React.FC<{ item: NotificationList }> = ({ item }) => 
       <IconWrapper>{notification.icon}</IconWrapper>
       <StyledGrid>
         <StyledTypography fontSize={14}>{notification.title}</StyledTypography>
-        <StyledSubtitle>{notification.subtitle(item.landId, item.name, item?.countdown)}</StyledSubtitle>
+        <StyledSubtitle>{notification.subtitle(item.landId, item.name)}</StyledSubtitle>
       </StyledGrid>
-      {notification.button(history, item.landId)}
+      {notification.button({
+        history,
+        id: item.landId,
+        isAvailable: item.isAvailable,
+        hasUnclaimentRent,
+      })}
       <StyledTypography sx={{ width: 55, textAlign: 'end', color: styleHandler.color }}>
         {countdown(secondsFromNow, true)}
       </StyledTypography>

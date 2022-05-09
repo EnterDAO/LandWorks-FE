@@ -12,36 +12,34 @@ export const NotificationData: NotificationDataType = {
     subtitle: (id, name) => {
       return (
         <>
-          Claim rent for <a href={`/property/${id}`}> {name}</a>
+          <a href={`/property/${id}`}> {name}</a> was rented.
         </>
       );
     },
-    button: (history) => {
-      const redirectPath = window.location.pathname === '/explore' ? '/my-properties' : '/explore';
-      return (
-        <Button
-          onClick={() =>
-            history.push({
-              pathname: redirectPath,
-              state: {
-                openNewListing: true,
-              },
-            })
-          }
-          variant="accentblue"
-          sx={{ marginLeft: 'auto', width: '105px !important' }}
-          btnSize="xsmall"
-        >
-          LIST MORE
-        </Button>
-      );
-    },
+    button: ({ history, hasUnclaimentRent }) => (
+      <Button
+        disabled={!hasUnclaimentRent}
+        onClick={() =>
+          history.push({
+            pathname: '/my-properties',
+            state: {
+              openClaimModal: true,
+            },
+          })
+        }
+        variant="accentblue"
+        sx={{ marginLeft: 'auto', width: '105px !important' }}
+        btnSize="xsmall"
+      >
+        CLAIM
+      </Button>
+    ),
   },
   message: {
     icon: <MessageIcon />,
     title: 'New Message in Blockscan',
     subtitle: () => 'Someone send you a message',
-    button: (history) => (
+    button: () => (
       <Button variant="accentblue" sx={{ marginLeft: 'auto', width: '105px !important' }} btnSize="xsmall">
         CHAT
       </Button>
@@ -57,7 +55,7 @@ export const NotificationData: NotificationDataType = {
         </>
       );
     },
-    button: (history, id) => (
+    button: ({ id }) => (
       <Button
         onClick={() => {
           window.open(
@@ -82,8 +80,9 @@ export const NotificationData: NotificationDataType = {
         </>
       );
     },
-    button: (history, id) => (
+    button: ({ history, id, isAvailable }) => (
       <Button
+        disabled={!isAvailable}
         onClick={() => history.push(`/property/${id}`)}
         variant="accentblue"
         sx={{ marginLeft: 'auto', width: '105px !important' }}
@@ -95,16 +94,17 @@ export const NotificationData: NotificationDataType = {
   },
   endSoon: {
     icon: <HourglassIcon />,
-    title: 'Your Rent on Land Ends Soon',
-    subtitle: (id, name, countdown) => {
+    title: 'Your Rent on Land is halfway',
+    subtitle: (id, name) => {
       return (
         <>
-          Only {countdown} left on <a href={`/property/${id}`}> {name}</a> .
+          Extend rent on <a href={`/property/${id}`}> {name}</a> .
         </>
       );
     },
-    button: (history, id) => (
+    button: ({ history, id, isAvailable }) => (
       <Button
+        disabled={!isAvailable}
         onClick={() => history.push(`/property/${id}`)}
         variant="accentblue"
         sx={{ marginLeft: 'auto', width: '105px !important' }}

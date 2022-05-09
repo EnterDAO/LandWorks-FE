@@ -29,12 +29,14 @@ interface Props {
   hasUnread: boolean;
   markAllAsRead: () => void;
   notifications: Array<any>;
+  hasUnclaimentRent: boolean;
 }
 
 export const NotificationSection: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationList[] | []>([]);
   const [lastLogin, setLastLogin] = useLocalStorage<number>('user_profile', 0);
   const [hasUnread, setHasUnread] = useState<boolean>(false);
+  const [hasUnclaimentRent, setHasUnclaimentRent] = useState<boolean>(false);
 
   const wallet = useWallet();
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
@@ -47,8 +49,11 @@ export const NotificationSection: React.FC = () => {
 
   const updateUser = useDebounce(async () => {
     if (userData && userData.user) {
+      const parsedUser = await parseUser(userData.user);
       const rented = await parseRents(userData.user);
-      const listed = await (await parseUser(userData.user)).ownerAndConsumerAssets;
+
+      const listed = parsedUser?.ownerAndConsumerAssets;
+      setHasUnclaimentRent(parsedUser.hasUnclaimedRent);
       setNotifications(parseNotifications(rented, listed, wallet.account ?? ''));
     } else {
       setNotifications([]);
@@ -93,7 +98,12 @@ export const NotificationSection: React.FC = () => {
           horizontal: 'right',
         }}
       >
-        <Notifications hasUnread={hasUnread} markAllAsRead={markAllAsRead} notifications={notifications} />
+        <Notifications
+          hasUnread={hasUnread}
+          markAllAsRead={markAllAsRead}
+          notifications={notifications}
+          hasUnclaimentRent={hasUnclaimentRent}
+        />
       </StyledPopover>
       <NotificationButton onClick={handleClick}>
         <IconNotification width={24} height={24} notificationSize={9} bubble={hasUnread}>
@@ -104,7 +114,7 @@ export const NotificationSection: React.FC = () => {
   );
 };
 
-const Notifications: React.FC<Props> = ({ hasUnread, markAllAsRead, notifications }) => {
+const Notifications: React.FC<Props> = ({ hasUnread, markAllAsRead, notifications, hasUnclaimentRent }) => {
   const PAGE_SIZE = 6;
   const [pageSize, setPageSize] = useState(PAGE_SIZE);
   const [slicedNotifications, setSlicedNotification] = useState<NotificationList[] | []>(
@@ -152,7 +162,7 @@ const Notifications: React.FC<Props> = ({ hasUnread, markAllAsRead, notification
       {slicedNotifications.length ? (
         <NotificationContainer>
           {slicedNotifications.map((item) => (
-            <NotificationMessage key={item.id} item={item} />
+            <NotificationMessage key={item.id} item={item} hasUnclaimentRent={hasUnclaimentRent} />
           ))}
           <div ref={ref} />
         </NotificationContainer>

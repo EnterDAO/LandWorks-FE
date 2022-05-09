@@ -61,13 +61,13 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
   const hasMetamaskConnected = wallet.isActive && wallet.connector?.id === 'metamask';
 
   useEffect(() => {
-    if (location.state?.openNewListing) {
-      setShowListNewModal(true);
+    if (location.state?.openClaimModal) {
+      setShowClaimModal(true);
       history.push({
-        state: { openNewListing: false },
+        state: { openClaimModal: false },
       });
     }
-  }, []);
+  }, [location.state]);
 
   return (
     <>

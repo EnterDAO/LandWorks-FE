@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import useDebounce from '@rooks/use-debounce';
 import { isNull } from 'lodash';
 
 import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
-import { LocationState } from 'modules/interface';
 import { AtlasTile } from 'modules/land-works/components/atlas';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
@@ -40,8 +38,6 @@ import './explore-view.scss';
 
 const ExploreView: React.FC = () => {
   const wallet = useWallet();
-  const location = useLocation<LocationState>();
-  const history = useHistory();
 
   const sessionFilters = {
     available: sessionStorageHandler('get', 'explore-filters', 'available'),
@@ -196,12 +192,6 @@ const ExploreView: React.FC = () => {
   }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken, metaverse]);
 
   useEffect(() => {
-    if (location.state?.openNewListing) {
-      setShowListNewModal(true);
-      history.push({
-        state: { openNewListing: false },
-      });
-    }
     getPaymentTokens();
     String(metaverse) !== '1' ? setMapIsHidden(true) : setMapIsHidden(false);
   }, []);
