@@ -5,6 +5,7 @@ import { isNull } from 'lodash';
 
 import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
+import { LocationState } from 'modules/interface';
 import { AtlasTile } from 'modules/land-works/components/atlas';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
@@ -36,7 +37,6 @@ import {
 } from 'modules/land-works/constants';
 
 import './explore-view.scss';
-import { LocationState } from 'modules/interface';
 
 const ExploreView: React.FC = () => {
   const wallet = useWallet();
