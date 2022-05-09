@@ -52,3 +52,13 @@ export type ParsedTime = {
   timeValue: string | number;
   timeType: string;
 };
+
+export interface LocationState {
+  from: string;
+  title: string;
+  tab: string;
+  previousPage?: {
+    from: string;
+    title: string;
+  };
+}

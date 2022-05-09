@@ -15,9 +15,12 @@ import NotionProvider from '../api/notion/client';
 import Erc20Provider from '../modules/land-works/providers/erc20-provider';
 import { GraphClient } from '../web3/graph/client';
 
-import s from './s.module.scss';
+import classes from './layout.module.scss';
 
+const LandingView = lazy(() => import('modules/landing'));
 const LandworksView = lazy(() => import('modules/land-works'));
+const SceneBuilderView = lazy(() => import('modules/scene-builder'));
+
 const client = GraphClient._getWsClient();
 
 const LayoutView: React.FC = () => {
@@ -26,7 +29,7 @@ const LayoutView: React.FC = () => {
   const isntExploreViewRoute = location.pathname.search('/explore') === -1;
 
   return (
-    <div className={s.layout}>
+    <div className={classes.root}>
       <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <WarningProvider>
           <LandWorksProvider>
@@ -35,7 +38,7 @@ const LayoutView: React.FC = () => {
                 <ApolloProvider client={client}>
                   <NotionProvider>
                     <LayoutHeader />
-                    <main className={s.main}>
+                    <main className={classes.main}>
                       <ErrorBoundary>
                         <Suspense
                           fallback={
@@ -51,7 +54,9 @@ const LayoutView: React.FC = () => {
                           }
                         >
                           <Switch>
-                            <Route path="/" component={LandworksView} />
+                            <Route path="/" exact component={LandingView} />
+                            <Route path="/scene-builder" component={SceneBuilderView} />
+                            <Route component={LandworksView} />
                           </Switch>
                         </Suspense>
                       </ErrorBoundary>

@@ -2,15 +2,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  AtMostRentPeriodOptions,
-  DEFAULT_LIST_MAX_FUTURE_PERIOD,
-  DEFAULT_LIST_MAX_PERIOD,
-  DEFAULT_MIN_PERIOD,
-  FEE_PRECISION,
-  MaxRentPeriodOptions,
-  MinRentPeriodOptions,
-} from 'constants/modules';
 import BigNumber from 'bignumber.js';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
@@ -36,12 +27,22 @@ import { getTokenPrice } from 'providers/known-tokens-provider';
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
 import { PaymentToken, fetchMetaverses, fetchTokenPayments } from '../../api';
-import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
 import { useLandworks } from '../../providers/landworks-provider';
+import ListingCardSkeleton from '../land-listing-skeleton';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
 
 import { getTimeType, secondsToDuration, sessionStorageHandler } from 'utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from 'utils/date';
+
+import {
+  AtMostRentPeriodOptions,
+  DEFAULT_LIST_MAX_FUTURE_PERIOD,
+  DEFAULT_LIST_MAX_PERIOD,
+  DEFAULT_MIN_PERIOD,
+  FEE_PRECISION,
+  MaxRentPeriodOptions,
+  MinRentPeriodOptions,
+} from 'modules/land-works/constants';
 
 import './index.scss';
 
@@ -107,8 +108,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [usdPrice, setUsdPrice] = useState('0');
 
   const [loading, setLoading] = useState(false);
-  const [selectedMetaverse, setSelectedMetaverse] = useState(1);
   const [availableMetaverses, setAvailableMetaverses] = useState([]);
+  const [selectedMetaverse, setSelectedMetaverse] = useState(
+    +sessionStorageHandler('get', 'general', 'metaverse') || 1
+  );
   const [activeStep, setActiveStep] = useState(0);
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -571,9 +574,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
             </Grid>
 
             {loading ? (
-              <Grid width={'100%'}>
-                <EditFormCardSkeleton />
-              </Grid>
+              <ListingCardSkeleton />
             ) : (
               <Grid container flexDirection="row" wrap="wrap" className="properties">
                 {selectedMetaverse === 1 && (
@@ -621,8 +622,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
         )}
 
         {activeStep === 1 && (
-          <Grid maxHeight={'50vh'} overflow="scroll" container columnSpacing={5} justifyContent="space-between" mt={4}>
-            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={450} overflow="scroll">
+          <Grid maxHeight={'50vh'} overflow="auto" container columnSpacing={5} justifyContent="space-between" mt={4}>
+            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={450} overflow="auto">
               <DropdownSection
                 defaultOpen={true}
                 variant="calendar"
@@ -753,7 +754,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           </Grid>
         )}
         {activeStep === 1 && (
-          <Grid maxHeight={'50vh'} overflow="scroll" container justifyContent="space-between" mt={4}>
+          <Grid maxHeight={'50vh'} overflow="auto" container justifyContent="space-between" mt={4}>
             <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(0)}>
               Back
             </Button>

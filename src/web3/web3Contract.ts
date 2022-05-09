@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import * as Antd from 'antd';
 import debounce from 'lodash/debounce';
 import Web3 from 'web3';
 import { Method } from 'web3-core-method';
@@ -10,6 +9,7 @@ import { AbiItem } from 'web3-utils';
 import { getGasValue } from 'web3/utils';
 import EventEmitter from 'wolfy87-eventemitter';
 
+import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { DEFAULT_WEB3, DEFAULT_WEB3_PROVIDER, WEB3_ERROR_VALUE } from 'providers/eth-web3-provider';
 
 export type Web3ContractAbiItem = AbiItem;
@@ -239,9 +239,7 @@ class Web3Contract extends EventEmitter {
         });
 
         if ((error as any).code === -32000) {
-          Antd.notification.error({
-            message: 'Insufficient ETH to cover gas fees.',
-          });
+          showToastNotification(ToastType.Error, 'Insufficient ETH to cover gas fees.');
         }
 
         return Promise.reject(error);
