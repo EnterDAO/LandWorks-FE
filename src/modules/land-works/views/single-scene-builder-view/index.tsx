@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { useNotion } from 'api/notion/client';
@@ -22,8 +22,6 @@ interface SingleBuilderViewParams {
 }
 
 const SingleBuilderView: FC = () => {
-  const [height, setHeight] = useState(0);
-  const ref = useRef(null);
   const { getSceneProviders } = useNotion();
   const [loading, setLoading] = useState(true);
   const [selectedBuilder, setSelectedBuilder] = useState<NotionResultForProfile>();
@@ -42,18 +40,8 @@ const SingleBuilderView: FC = () => {
 
   const hasPortfolio = selectedBuilder?.portfolio[0] !== undefined;
 
-  useEffect(() => {
-    if (containerRef?.current !== null) {
-      setHeight(containerRef.current.clientHeight);
-    }
-  }, []);
-
-  const containerRef = useRef(null) as any;
-
-  console.log({ height });
-
   return (
-    <Grid className="content-container">
+    <Grid className="content-container" style={{ position: 'relative' }}>
       <BreadCrumbs>
         <Link className="button-back" to={'/scene-builder'}>
           <div className="button-icon">
@@ -72,8 +60,8 @@ const SingleBuilderView: FC = () => {
         <ProfileLoaderSkeleton />
       ) : (
         <>
-          <Grid mt="28px" container spacing={2} rowSpacing={4} columnSpacing={4}>
-            <Grid item xs={12} sm={12} md={12} lg={8} ref={containerRef}>
+          <Grid mt="18px" container spacing={2} rowSpacing={4} columnSpacing={4}>
+            <Grid item xs={12} sm={12} md={12} lg={8}>
               <SceneBuilderProfile builder={selectedBuilder!} />
             </Grid>
             <Grid item xs={12} sm={12} md={12} lg={4}>

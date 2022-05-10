@@ -27,7 +27,7 @@ const SceneBuilderDetails: FC<ISceneBuilderDetails> = ({ builder }) => {
       style={{
         // position: 'fixed',
         padding: '20px 30px',
-        height: '100%',
+        height: '550px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
