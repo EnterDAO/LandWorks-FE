@@ -42,7 +42,7 @@ const SingleBuilderView: FC = () => {
 
   return (
     <Grid className="content-container" style={{ position: 'relative' }}>
-      <BreadCrumbs>
+      <BreadCrumbs style={{ position: 'sticky', top: '147px' }}>
         <Link className="button-back" to={'/scene-builder'}>
           <div className="button-icon">
             <BackIcon style={{ width: '20px' }} />
@@ -56,25 +56,26 @@ const SingleBuilderView: FC = () => {
         <ArrowRightIcon style={{ width: '20px' }} />
         <span>{selectedBuilder?.builderName}</span>
       </BreadCrumbs>
+
       {loading ? (
         <ProfileLoaderSkeleton />
       ) : (
         <>
-          <Grid mt="18px" container spacing={2} rowSpacing={4} columnSpacing={4}>
+          <Grid mt="18px" container spacing={2} rowSpacing={4} columnSpacing={4} position="relative">
             <Grid item xs={12} sm={12} md={12} lg={8}>
               <SceneBuilderProfile builder={selectedBuilder!} />
+              {selectedBuilder && hasPortfolio && (
+                <Grid mt="28px">
+                  <Grid item xs={12}>
+                    <SceneBuilderPortfolio portfolio={selectedBuilder?.portfolio?.filter((p) => p !== undefined)} />
+                  </Grid>
+                </Grid>
+              )}
             </Grid>
             <Grid item xs={12} sm={12} md={12} lg={4}>
               <SceneBuilderDetails builder={selectedBuilder!} />
             </Grid>
           </Grid>
-          {selectedBuilder && hasPortfolio && (
-            <Grid mt="28px" container spacing={2} rowSpacing={4} columnSpacing={4}>
-              <Grid item xs={8}>
-                <SceneBuilderPortfolio portfolio={selectedBuilder?.portfolio?.filter((p) => p !== undefined)} />
-              </Grid>
-            </Grid>
-          )}
         </>
       )}
     </Grid>
