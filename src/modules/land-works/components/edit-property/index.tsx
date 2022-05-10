@@ -3,6 +3,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
+import { ONE_ADDRESS } from 'web3/utils';
 
 import { Box, Button, Grid, Modal, Typography } from 'design-system';
 import { getDecentralandDataImageUrl, getEstateImageUrl } from 'helpers/helpers';
@@ -56,6 +57,7 @@ const EditProperty: React.FC<Props> = (props) => {
   const { landWorksContract } = landworks;
 
   const [asset, setAsset] = useState<AssetEntity>({} as AssetEntity);
+  const isETH = asset?.paymentToken?.id == ONE_ADDRESS;
 
   const { tokenId } = useParams<{ tokenId: string }>();
   const [loading, setLoading] = useState(false);
@@ -87,7 +89,7 @@ const EditProperty: React.FC<Props> = (props) => {
 
   const [paymentTokens, setPaymentTokens] = useState<PaymentToken[]>([]);
   const [paymentToken, setPaymentToken] = useState<PaymentToken>({} as PaymentToken);
-  const [selectedCurrency, setSelectedCurrency] = useState(1);
+  const [selectedCurrency, setSelectedCurrency] = useState(isETH ? 1 : 2);
 
   const [tokenCost, setTokenCost] = useState(new BigNumber(0));
   const [earnings, setEarnings] = useState(ZERO_BIG_NUMBER);
@@ -463,26 +465,11 @@ const EditProperty: React.FC<Props> = (props) => {
       {loading ? (
         <EditFormCardSkeleton />
       ) : (
-        <Grid
-          container
-          xs={12}
-          direction="column"
-          alignItems="flex-start"
-          justifyContent="space-between"
-          height={'100%'}
-        >
+        <Grid container direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
           <Box fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
             Update Rent Conditions
           </Box>
-          <Grid
-            container
-            xs={12}
-            maxHeight={'50vh'}
-            overflow="auto"
-            columnSpacing={5}
-            justifyContent="space-between"
-            mt={4}
-          >
+          <Grid container maxHeight={'50vh'} overflow="auto" columnSpacing={5} justifyContent="space-between" mt={4}>
             <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={470} overflow="auto">
               <DropdownSection
                 defaultOpen={true}
@@ -609,7 +596,7 @@ const EditProperty: React.FC<Props> = (props) => {
             <Button variant="secondary" btnSize="medium" onClick={closeModal}>
               Back
             </Button>
-            <Grid direction="row" alignItems="center" justifyContent="space-between">
+            <Grid container direction="row" alignItems="center" justifyContent="space-between">
               <Button
                 disabled={false}
                 variant="tertiary"
