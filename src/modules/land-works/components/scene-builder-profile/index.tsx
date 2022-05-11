@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
@@ -14,7 +14,6 @@ interface ISceneBuilderProfile {
 }
 
 const SceneBuilderProfile: FC<ISceneBuilderProfile> = ({ builder }) => {
-  const [openDesc, setOpenDesc] = useState(false);
   const hasValue = (val: string) => {
     if (val === undefined) {
       return false;
@@ -88,7 +87,7 @@ const SceneBuilderProfile: FC<ISceneBuilderProfile> = ({ builder }) => {
         </Grid>
         <TypographyStyled variant="h5">{builder?.definition}</TypographyStyled>
         <Grid item display="flex" textAlign="left">
-          <ReadMore onExpand={() => setOpenDesc(!openDesc)}>{builder?.longDescription}</ReadMore>
+          <ReadMore>{builder?.longDescription}</ReadMore>
         </Grid>
         {hasEmail && (
           <Grid display="flex" flexDirection="column" textAlign="left" margin="20px 0 6px" width="300px">

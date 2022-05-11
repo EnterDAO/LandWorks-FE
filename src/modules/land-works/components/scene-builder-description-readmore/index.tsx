@@ -3,7 +3,6 @@ import { styled } from '@mui/system';
 
 interface Props {
   children: string;
-  onExpand: () => void;
 }
 
 const StyledSpan = styled('span')({
@@ -12,12 +11,11 @@ const StyledSpan = styled('span')({
   textDecoration: 'underline',
 });
 
-export const ReadMore: FC<Props> = ({ children, onExpand }) => {
+export const ReadMore: FC<Props> = ({ children }) => {
   const text = children;
   const [isReadMore, setIsReadMore] = useState(true);
   const toggleReadMore = () => {
     setIsReadMore(!isReadMore);
-    onExpand();
   };
   return (
     <p>
