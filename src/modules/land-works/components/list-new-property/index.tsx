@@ -124,6 +124,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     setSelectedProperty(selectedLand);
   };
 
+  useEffect(() => {
+    fetchMetaverses().then(setAvailableMetaverses);
+  }, []);
+
   const isDecentraland = selectedProperty?.metaverseName === 'Decentraland';
   const isVoxels = selectedProperty?.metaverseName === 'Voxels';
 
@@ -269,10 +273,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       setShowApproveModal(true);
 
       let registry;
-      let contract;
+      const contract = config.contracts.landworksContract;
 
       if (isDecentraland) {
-        contract = config.contracts.landworksContract;
         if (selectedProperty.contractAddress === config.contracts.decentraland.landRegistry) {
           registry = landRegistryContract;
         } else {
@@ -281,7 +284,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       }
       if (isVoxels) {
         registry = cryptoVoxelsContract;
-        contract = config.contracts.landworksContract;
       }
       if (!!registry && !!contract) {
         await registry?.setApprovalForAll(contract, true);
@@ -400,8 +402,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       const estates = await estateRegistryContract?.getUserData(walletCtx.account);
       const cryptoVoxels = await cryptoVoxelsContract?.getUserData(walletCtx.account);
       const landsForEstates = await getLandsForEstates(estates);
-      const metaverses = await fetchMetaverses();
-      setAvailableMetaverses(metaverses);
       setEstateGroup(landsForEstates);
       setAssetProperties(lands);
       setAssetEstates(estates);
