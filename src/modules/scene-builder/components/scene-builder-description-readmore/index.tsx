@@ -19,7 +19,7 @@ export const ReadMore: FC<Props> = ({ children }) => {
   };
   return (
     <p>
-      {isReadMore ? text.slice(0, 200) : text}
+      {isReadMore ? text.slice(0, 180) : text}
       <StyledSpan onClick={toggleReadMore} className="read-or-hide">
         {isReadMore ? '...read more' : ' show less'}
       </StyledSpan>
