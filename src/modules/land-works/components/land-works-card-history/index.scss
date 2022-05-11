@@ -5,6 +5,12 @@
   text-transform: uppercase;
   padding: 7px;
   width: 100px;
-
   background-color: #27273a;
+  font-weight: 600;
+}
+
+.table-button {
+  color: var(--theme-grey700-color);
+  font-weight: 600;
+  background-color: none;
 }
