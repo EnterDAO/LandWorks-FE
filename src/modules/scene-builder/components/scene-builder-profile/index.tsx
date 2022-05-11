@@ -4,6 +4,7 @@ import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
 import { Box, Grid } from 'design-system';
 
+import { ReadMore } from '../scene-builder-description-readmore';
 import { AvatarContainer, CardContainer, TypeChip, TypographyStyled } from './styled';
 
 import { NotionResultForProfile } from '../scene-builder-card/types';
@@ -28,11 +29,11 @@ const SceneBuilderProfile: FC<ISceneBuilderProfile> = ({ builder }) => {
   return (
     <CardContainer
       className="scene-builder-card"
-      style={{ minHeight: '500px' }}
       display="flex"
       flexDirection="column"
       justifyContent="space-between"
       position="absolute"
+      minHeight="550px"
     >
       <Grid height={185} width="100%" borderRadius="20px" overflow="hidden">
         <Box
@@ -58,7 +59,7 @@ const SceneBuilderProfile: FC<ISceneBuilderProfile> = ({ builder }) => {
           src={builder?.avatarPhotoLink}
         />
       </AvatarContainer>
-      <Grid padding="90px 35px 40px" position="relative">
+      <Grid padding="90px 35px 20px" position="relative">
         <Grid
           paddingTop="20px"
           width="100%"
@@ -86,7 +87,7 @@ const SceneBuilderProfile: FC<ISceneBuilderProfile> = ({ builder }) => {
         </Grid>
         <TypographyStyled variant="h5">{builder?.definition}</TypographyStyled>
         <Grid item display="flex" textAlign="left">
-          {builder?.longDescription}
+          <ReadMore>{builder?.longDescription}</ReadMore>
         </Grid>
         {hasEmail && (
           <Grid display="flex" flexDirection="column" textAlign="left" margin="20px 0 6px" width="300px">

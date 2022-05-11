@@ -4,7 +4,7 @@ import { Box, ControlledSelect, StyledSwitch, Typography } from 'design-system';
 import { fetchMetaverses } from 'modules/land-works/api';
 import { useWallet } from 'wallets/wallet';
 
-import { currencyData, landsData, sortData } from './filters-data';
+import { currencyData, sortData } from './filters-data';
 
 import { sessionStorageHandler } from 'utils';
 
@@ -28,7 +28,7 @@ const LandWorksFilters: FC<Props> = ({
   const wallet = useWallet();
   const [selectedOrder, setSelectedOrder] = useState(sessionStorageHandler('get', 'explore-filters', 'order') || 1);
   const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
-  const [metaverses, setMetaverses] = useState(landsData);
+  const [metaverses, setMetaverses] = useState([]);
 
   const [selectedCurrency, setSelectedCurrency] = useState(
     sessionStorageHandler('get', 'explore-filters', 'currency') || 0
@@ -78,6 +78,7 @@ const LandWorksFilters: FC<Props> = ({
   useEffect(() => {
     fetchMetaverses().then(setMetaverses);
   }, []);
+
   return (
     <div className={styles.root}>
       <Box className={styles.container}>
