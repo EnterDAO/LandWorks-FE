@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { Box, Grid } from 'design-system';
 import { getDecentralandNftImageUrl } from 'helpers/helpers';
-import { CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
+import { BaseNFT, CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
 
 import s from './s.module.scss';
 
@@ -21,7 +21,7 @@ interface ILandCardProps {
 
 interface ICryptoVoxel {
   land: CryptoVoxelNFT;
-  handleClick: (option: CryptoVoxelNFT) => void;
+  handleClick: (option: BaseNFT) => void;
   isSelectedProperty: boolean;
 }
 
