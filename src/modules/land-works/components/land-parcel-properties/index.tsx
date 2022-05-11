@@ -24,6 +24,11 @@ const SingleViewParcelProperties: React.FC<Props> = ({ attributes, id }) => {
     return width * depth * height * 8;
   };
 
+  const getNeighbourhoodLink = (sub: string) => {
+    const link = sub.replace(' ', '-').toLowerCase();
+    return `https://www.cryptovoxels.com/neighborhoods/${link}`;
+  };
+
   return (
     <GridStyled minHeight={288} container>
       <TypographyStyled variant="h1">Parcel Properties</TypographyStyled>
@@ -50,8 +55,8 @@ const SingleViewParcelProperties: React.FC<Props> = ({ attributes, id }) => {
               </GridItem>
               <GridItem item display="flex" flexDirection="row" xs={12}>
                 <TypographyStyled variant="h3">Neighborhood</TypographyStyled>
-                <StyledLink target="_blank" href={`https://www.cryptovoxels.com/map`}>
-                  Cryptovoxels
+                <StyledLink target="_blank" href={getNeighbourhoodLink(atr.suburb)}>
+                  {atr.suburb}
                 </StyledLink>
               </GridItem>
             </GridStyledInnerContainer>
