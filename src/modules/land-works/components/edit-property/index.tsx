@@ -596,7 +596,7 @@ const EditProperty: React.FC<Props> = (props) => {
             <Button variant="secondary" btnSize="medium" onClick={closeModal}>
               Back
             </Button>
-            <Grid container direction="row" alignItems="center" justifyContent="space-between">
+            <Grid direction="row" alignItems="center" justifyContent="space-between">
               <Button
                 disabled={false}
                 variant="tertiary"
