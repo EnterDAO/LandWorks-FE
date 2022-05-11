@@ -57,7 +57,6 @@ const EditProperty: React.FC<Props> = (props) => {
   const { landWorksContract } = landworks;
 
   const [asset, setAsset] = useState<AssetEntity>({} as AssetEntity);
-  const isETH = asset?.paymentToken?.id == ONE_ADDRESS;
 
   const { tokenId } = useParams<{ tokenId: string }>();
   const [loading, setLoading] = useState(false);
@@ -89,7 +88,7 @@ const EditProperty: React.FC<Props> = (props) => {
 
   const [paymentTokens, setPaymentTokens] = useState<PaymentToken[]>([]);
   const [paymentToken, setPaymentToken] = useState<PaymentToken>({} as PaymentToken);
-  const [selectedCurrency, setSelectedCurrency] = useState(isETH ? 1 : 2);
+  const [selectedCurrency, setSelectedCurrency] = useState(1);
 
   const [tokenCost, setTokenCost] = useState(new BigNumber(0));
   const [earnings, setEarnings] = useState(ZERO_BIG_NUMBER);
@@ -109,7 +108,7 @@ const EditProperty: React.FC<Props> = (props) => {
   useEffect(() => {
     // Pre-populate user properties
     setSelectedProperty(asset);
-
+    asset?.paymentToken?.id == ONE_ADDRESS ? setSelectedCurrency(1) : setSelectedCurrency(2);
     // Pre-populate minPeriod values
     if (asset.minPeriod) {
       const minPeriod: BigNumber = new BigNumber(asset.minPeriod);
