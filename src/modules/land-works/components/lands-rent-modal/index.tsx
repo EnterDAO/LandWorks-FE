@@ -348,16 +348,12 @@ export const RentModal: React.FC<Props> = (props) => {
                       </Grid>
                       <Grid item className="rent-price">
                         <p>Rent price</p>
-                        <span>
-                          <>
-                            <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" />{' '}
-                            <SmallAmountTooltip amount={totalPrice} /> {paymentToken?.symbol || ''}{' '}
-                          </>
-                          <>
-                            <span className="price">
-                              <SmallAmountTooltip amount={usdPrice} symbol="$" />
-                            </span>
-                          </>
+                        <span className="price-summary" style={{ display: 'flex', alignItems: 'center' }}>
+                          <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" />{' '}
+                          <SmallAmountTooltip amount={totalPrice} /> {paymentToken?.symbol || ''}{' '}
+                          <span className="price">
+                            <SmallAmountTooltip amount={usdPrice} symbol="$" />
+                          </span>
                         </span>
                       </Grid>
                     </Grid>
