@@ -43,7 +43,7 @@ const SingleBuilderView: FC = () => {
 
   return (
     <>
-      <StyledBreadcrumbsGrid style={{ position: 'sticky', top: '107px' }}>
+      <StyledBreadcrumbsGrid className="content-container">
         <BreadCrumbs>
           <Link className="button-back" to={'/scene-builder'}>
             <div className="button-icon">

@@ -1,17 +1,17 @@
 import { FC, useState } from 'react';
 import { styled } from '@mui/system';
 
-import { THEME_COLORS } from 'themes/theme-constants';
-
 interface Props {
   children: string;
   onExpand: () => void;
 }
 
 const StyledSpan = styled('span')({
-  color: THEME_COLORS.light,
+  color: 'var(--theme-light-color)',
   cursor: 'pointer',
+  textDecoration: 'underline',
 });
+
 export const ReadMore: FC<Props> = ({ children, onExpand }) => {
   const text = children;
   const [isReadMore, setIsReadMore] = useState(true);
