@@ -1,15 +1,11 @@
 import { FC, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import {
-  MY_PROPERTIES_TAB_STATE_ALL,
-  MY_PROPERTIES_TAB_STATE_LENT,
-  MY_PROPERTIES_TAB_STATE_RENTED,
-} from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import TabContext from '@mui/lab/TabContext';
 import { useMediaQuery } from '@mui/material';
 
 import { Grid } from 'design-system';
+import { LocationState } from 'modules/interface';
 import {
   AssetEntity,
   PaymentToken,
@@ -31,10 +27,14 @@ import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-p
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 import { useWallet } from 'wallets/wallet';
 
-import { LocationState } from '../single-land-view';
-
 import { isExistingLandInProgress, isNewLandTxInProgress } from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
+
+import {
+  MY_PROPERTIES_TAB_STATE_ALL,
+  MY_PROPERTIES_TAB_STATE_LENT,
+  MY_PROPERTIES_TAB_STATE_RENTED,
+} from 'modules/land-works/constants';
 
 const MyPropertiesView: FC = () => {
   const history = useHistory();

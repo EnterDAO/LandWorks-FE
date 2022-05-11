@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  DECENTRALAND_METAVERSE,
-  DEFAULT_LAST_RENT_END,
-  DEFAULT_TOKEN_ADDRESS,
-  sortColumns,
-  sortDirections,
-} from 'constants/modules';
 import useDebounce from '@rooks/use-debounce';
 import { isNull } from 'lodash';
 
-import { AtlasTile } from 'components/custom/Atlas/Atlas';
 import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
+import { AtlasTile } from 'modules/land-works/components/atlas';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
@@ -32,6 +25,14 @@ import {
 
 import { filterLandsByAvailability, filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
 import { getNowTs, sessionStorageHandler } from 'utils';
+
+import {
+  DECENTRALAND_METAVERSE,
+  DEFAULT_LAST_RENT_END,
+  DEFAULT_TOKEN_ADDRESS,
+  sortColumns,
+  sortDirections,
+} from 'modules/land-works/constants';
 
 import './explore-view.scss';
 
@@ -64,6 +65,7 @@ const ExploreView: React.FC = () => {
   const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
   const [mapExpanded, setMapExpanded] = useState(false);
   const [mapIsHidden, setMapIsHidden] = useState(false);
+  const [subheaderHidden, setSubheaderHidden] = useState(false);
 
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
@@ -73,7 +75,6 @@ const ExploreView: React.FC = () => {
   const [showCardPreview, setShowCardPreview] = useState(false);
 
   const [lastRentEnd, setLastRentEnd] = useState(sessionFilters.lastRentEnd || DEFAULT_LAST_RENT_END);
-
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState<string | null>(null);
 
@@ -213,7 +214,7 @@ const ExploreView: React.FC = () => {
             setShowCardPreview,
           }}
         >
-          <div className="content-container--explore-view--header">
+          <div style={subheaderHidden ? { top: '8px' } : {}} className="content-container--explore-view--header">
             <LandsExploreSubheader
               totalLands={lastRentEnd !== '0' ? availableLands.length : filterLandsByQuery(lands, searchQuery).length}
               hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
@@ -231,6 +232,7 @@ const ExploreView: React.FC = () => {
           <div className="content-container content-container--explore-view">
             <div className={`list-lands-container ${mapIsHidden ? 'fullWidth' : ''}`}>
               <LandsExploreList
+                setSubheaderHidden={setSubheaderHidden}
                 setIsHiddenMap={setMapIsHidden}
                 isHiddenMap={mapIsHidden}
                 metaverse={metaverse}
@@ -243,7 +245,11 @@ const ExploreView: React.FC = () => {
             </div>
 
             {!mapIsHidden && (
-              <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
+              <div
+                className={`map-list-container ${subheaderHidden ? 'map-list-container--enlarged' : ''} ${
+                  mapExpanded ? 'map-list-container--expanded' : ''
+                }`}
+              >
                 <LandsExploreMap
                   positionX={atlasMapX}
                   positionY={atlasMapY}

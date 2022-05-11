@@ -1,6 +1,7 @@
 @import 'styles/text.scss';
 
 .content-container--explore-view--header {
+  transition: 0.4s linear top;
   @media screen and (min-width: 992px) {
     position: fixed;
     top: var(--navbar-height);
@@ -51,10 +52,14 @@
     margin-bottom: var(--content-container-v-padding);
     margin-left: var(--content-container-v-padding);
     transition: left 250ms;
+    transition: 0.4s linear height;
     background-color: #662363;
 
     &--expanded {
       left: 0%;
+    }
+    &--enlarged {
+      height: calc(100vh - var(--navbar-height) - var(--explore-filters) - (var(--content-container-v-padding) * 2));
     }
 
     @media screen and (min-width: 992px) {
