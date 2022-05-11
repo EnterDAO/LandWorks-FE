@@ -40,7 +40,14 @@ export const NotificationData: NotificationDataType = {
     title: 'New Message in Blockscan',
     subtitle: () => 'Someone send you a message',
     button: () => (
-      <Button variant="accentblue" sx={{ marginLeft: 'auto', width: '105px !important' }} btnSize="xsmall">
+      <Button
+        variant="accentblue"
+        onClick={() => {
+          window.open('https://chat.blockscan.com/', '_blank');
+        }}
+        sx={{ marginLeft: 'auto', width: '105px !important' }}
+        btnSize="xsmall"
+      >
         CHAT
       </Button>
     ),

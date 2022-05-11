@@ -1,6 +1,8 @@
 import { useHistory } from 'react-router-dom';
 import { useLocalStorage } from 'react-use-storage';
 
+import { useWallet } from 'wallets/wallet';
+
 import { NotificationData } from './data';
 import { NotificationList } from './notificationTypes';
 import { IconWrapper, MessageRoot, StyledGrid, StyledSubtitle, StyledTypography } from './styled';
@@ -13,9 +15,10 @@ interface INotification {
 }
 
 const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent }) => {
-  const [lastLogin] = useLocalStorage<number>('user_profile', 0);
+  const { account } = useWallet();
+  const [userProfile] = useLocalStorage('user_profile', { [`${account}`]: { lastLogin: 0 } });
   const history = useHistory();
-  const isNewNotification = lastLogin ? item.time >= lastLogin : true;
+  const isNewNotification = userProfile ? item.time >= userProfile[`${account}`]?.lastLogin : true;
 
   const styleHandler = {
     background: isNewNotification ? 'rgba(93, 143, 240, 0.1)' : '',

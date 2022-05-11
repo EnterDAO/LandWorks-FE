@@ -29,24 +29,24 @@ import { parseNotifications, parseRents } from './utils';
 interface Props {
   hasUnread: boolean;
   markAllAsRead: () => void;
-  notifications: Array<any>;
+  notifications: Array<NotificationList>;
   hasUnclaimentRent: boolean;
 }
 
 export const NotificationSection: React.FC = () => {
   const location = useLocation();
+  const { account } = useWallet();
   const [notifications, setNotifications] = useState<NotificationList[] | []>([]);
-  const [lastLogin, setLastLogin] = useLocalStorage<number>('user_profile', 0);
+  const [userProfile, setUserProfile] = useLocalStorage('user_profile', { [`${account}`]: { lastLogin: 0 } });
   const [hasUnread, setHasUnread] = useState<boolean>(false);
   const [hasUnclaimentRent, setHasUnclaimentRent] = useState<boolean>(false);
 
-  const wallet = useWallet();
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
   const open = Boolean(anchorEl);
 
   const { data: userData } = useSubscription(USER_NOTIFICATION_SUBSCRIPTION, {
-    skip: wallet.account === undefined,
-    variables: { id: wallet.account?.toLowerCase() },
+    skip: account === undefined,
+    variables: { id: account?.toLowerCase() },
   });
 
   const updateUser = useDebounce(async () => {
@@ -56,34 +56,42 @@ export const NotificationSection: React.FC = () => {
 
       const listed = parsedUser?.ownerAndConsumerAssets;
       setHasUnclaimentRent(parsedUser.hasUnclaimedRent);
-      setNotifications(parseNotifications(rented, listed, wallet.account ?? ''));
+      const notificationsList = await parseNotifications(rented, listed, account ?? '');
+      setNotifications(notificationsList);
     } else {
       setNotifications([]);
     }
   }, 500);
 
-  useEffect(() => {
-    updateUser();
-  }, [userData]);
-
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const markAllAsRead = () => {
-    setLastLogin(Date.now());
+    updateStorageUser();
   };
+
   const handleClose = () => {
-    setLastLogin(Date.now());
+    updateStorageUser();
     setAnchorEl(null);
   };
+
+  const updateStorageUser = () => {
+    const user = JSON.parse(localStorage.getItem('user_profile') || '');
+    setUserProfile({ ...user, [`${account}`]: { ...user[`${account}`], lastLogin: Date.now() } });
+  };
+
+  useEffect(() => {
+    updateUser();
+  }, [userData]);
 
   useEffect(() => {
     setAnchorEl(null);
   }, [window.location.pathname, location.state]);
 
   useEffect(() => {
-    if (notifications.length) setHasUnread(!!notifications.filter((item) => +item.time >= lastLogin).length);
-  }, [notifications, lastLogin]);
+    if (notifications.length)
+      setHasUnread(!!notifications.filter((item) => +item?.time >= userProfile[`${account}`]?.lastLogin).length);
+  }, [notifications, userProfile]);
 
   return (
     <>
