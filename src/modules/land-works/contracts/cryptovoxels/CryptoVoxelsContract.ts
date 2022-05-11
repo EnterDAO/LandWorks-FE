@@ -38,6 +38,7 @@ export default class CryptoVoxelsContract extends ERC721Contract {
       contractAddress: this.address,
       place,
       formattedCoords,
+      metaverseName: 'Voxels',
     };
   }
 }
