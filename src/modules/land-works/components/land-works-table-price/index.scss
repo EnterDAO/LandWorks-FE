@@ -1,4 +1,15 @@
 .amount-container {
+  display: flex;
+  .amount-text {
+    display: flex;
+    align-items: center;
+    margin-right: 5px;
+
+    img {
+      margin-right: 5px;
+    }
+  }
+  
   .usd-price {
     color: var(--theme-subtle-color);
     font-weight: 500;
