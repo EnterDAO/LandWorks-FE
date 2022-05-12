@@ -109,6 +109,14 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
     }
   };
 
+  const isEstate = (id: string) => {
+    const land = highlights.find((coord) => {
+      return coord.id === id;
+    });
+    const asset = lands.find((a) => a.id == land?.landId);
+    return asset?.type.toLowerCase() === 'estate';
+  };
+
   const isInList = (x: number, y: number) => {
     return highlightedTiles.some((coord) => coord.x === x && coord.y === y);
   };
@@ -124,11 +132,13 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
   };
 
   const strokeLayer: Layer = (x, y) => {
-    return isInList(x, y) ? { color: '#ff0044', scale: 1.4 } : null;
+    const showBorder = isEstate(`${x},${y}`);
+    return isInList(x, y) ? { color: '#ff0044', scale: showBorder ? 1.4 : 1.2 } : null;
   };
 
   const fillLayer: Layer = (x, y) => {
-    return isInList(x, y) ? { color: '#ff9990', scale: 1.2 } : null;
+    const showBorder = isEstate(`${x},${y}`);
+    return isInList(x, y) ? { color: '#ff9990', scale: showBorder ? 1.2 : 1 } : null;
   };
 
   const clickedTileStrokeLayer: Layer = (x, y) => {
