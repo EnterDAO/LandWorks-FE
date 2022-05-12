@@ -49,8 +49,8 @@ const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates, pla
       <>
         {place && place.length && (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <ChipStyled label={'Island: ' + place[0]} variant="outlined" />
-            <ChipStyled label={'Suburb: ' + place[1]} variant="outlined" />
+            <ChipStyled style={{ textAlign: 'left' }} label={'Island: ' + place[0]} variant="outlined" />
+            <ChipStyled style={{ textAlign: 'left' }} label={'Suburb: ' + place[1]} variant="outlined" />
           </Box>
         )}
       </>
