@@ -17,7 +17,7 @@ export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
 }));
 
 export const ChipStyled = styled(Chip)<ChipProps>(() => ({
-  width: '100px',
+  minWidth: '100px',
   display: 'inline-block',
   margin: '0 0.25rem 0.3rem 0',
   float: 'left',

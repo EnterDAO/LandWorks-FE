@@ -23,8 +23,8 @@ const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates, pla
   const hasLessThanSix = coordsLength! > 0 && coordsLength! <= 6;
 
   const maxWidth = expand ? '22rem' : '15rem';
-
   const coords = hasMoreThanSix && expand ? coordinates : coordinates?.slice(0, 5);
+
   return (
     <RootStyled style={{ maxWidth: maxWidth }} onMouseLeave={() => setExpand(false)}>
       <TypographyStyled variant="h3">{title}</TypographyStyled>
@@ -49,9 +49,8 @@ const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates, pla
       <>
         {place && place.length && (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            {place.map((title, index) => (
-              <ChipStyled key={index} label={title} variant="outlined" />
-            ))}
+            <ChipStyled label={'Island: ' + place[0]} variant="outlined" />
+            <ChipStyled label={'Suburb: ' + place[1]} variant="outlined" />
           </Box>
         )}
       </>
