@@ -27,7 +27,7 @@ import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-p
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 import { useWallet } from 'wallets/wallet';
 
-import { isExistingLandInProgress, isNewLandTxInProgress } from 'modules/land-works/utils';
+import { filterLandsByQuery, isExistingLandInProgress, isNewLandTxInProgress } from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
 
 import { MY_PROPERTIES_TAB_STATE_LENT, MY_PROPERTIES_TAB_STATE_RENTED } from 'modules/land-works/constants';
@@ -187,6 +187,7 @@ const MyPropertiesView: FC = () => {
   }, [lands, slicedLands]);
 
   const slicedLandsInTotal = lands.slice(0, slicedLands).length;
+  const filteredLands = filterLandsByQuery(lands.slice(0, slicedLands), searchQuery);
 
   const displayNewLandLoader = () => {
     return (
@@ -234,7 +235,7 @@ const MyPropertiesView: FC = () => {
               ))
             ) : lands.length ? (
               <>
-                {lands.slice(0, slicedLands).map((land) => (
+                {filteredLands.map((land) => (
                   <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={land.id}>
                     {displayExistLandLoader() === land.metaverseAssetId ? (
                       <LandWorksLoadingCard title={existPropertyTitle()} />
