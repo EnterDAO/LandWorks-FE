@@ -3,6 +3,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
+import { ONE_ADDRESS } from 'web3/utils';
 
 import { Box, Button, Grid, Modal, Typography } from 'design-system';
 import { getDecentralandDataImageUrl, getEstateImageUrl } from 'helpers/helpers';
@@ -107,7 +108,7 @@ const EditProperty: React.FC<Props> = (props) => {
   useEffect(() => {
     // Pre-populate user properties
     setSelectedProperty(asset);
-
+    asset?.paymentToken?.id == ONE_ADDRESS ? setSelectedCurrency(1) : setSelectedCurrency(2);
     // Pre-populate minPeriod values
     if (asset.minPeriod) {
       const minPeriod: BigNumber = new BigNumber(asset.minPeriod);
@@ -463,26 +464,11 @@ const EditProperty: React.FC<Props> = (props) => {
       {loading ? (
         <EditFormCardSkeleton />
       ) : (
-        <Grid
-          container
-          xs={12}
-          direction="column"
-          alignItems="flex-start"
-          justifyContent="space-between"
-          height={'100%'}
-        >
+        <Grid container direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
           <Box fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
             Update Rent Conditions
           </Box>
-          <Grid
-            container
-            xs={12}
-            maxHeight={'50vh'}
-            overflow="auto"
-            columnSpacing={5}
-            justifyContent="space-between"
-            mt={4}
-          >
+          <Grid container maxHeight={'50vh'} overflow="auto" columnSpacing={5} justifyContent="space-between" mt={4}>
             <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={470} overflow="auto">
               <DropdownSection
                 defaultOpen={true}
