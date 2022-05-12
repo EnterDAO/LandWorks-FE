@@ -451,7 +451,7 @@ const SingleLandView: React.FC = () => {
             sx={paginatedNearbyLands?.length <= 4 ? { marginTop: '35px' } : {}}
           >
             {paginatedNearbyLands.map((land) => (
-              <Grid item xs={3}>
+              <Grid item xs={3} key={land.id}>
                 <LandWorkCard
                   onClick={(e) => {
                     e.preventDefault();
@@ -465,7 +465,6 @@ const SingleLandView: React.FC = () => {
                       },
                     });
                   }}
-                  key={land.id}
                   land={land}
                 />
               </Grid>
