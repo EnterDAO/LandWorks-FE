@@ -8,7 +8,6 @@ export const RootStyled = styled('div')(() => ({
   backgroundColor: 'var(--theme-body-color)',
   padding: '16px',
   borderRadius: '20px',
-  maxWidth: '17rem',
 }));
 
 export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
@@ -18,6 +17,7 @@ export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
 }));
 
 export const ChipStyled = styled(Chip)<ChipProps>(() => ({
+  width: '100px',
   display: 'inline-block',
   margin: '0 0.25rem 0.3rem 0',
   float: 'left',
