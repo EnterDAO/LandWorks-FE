@@ -30,11 +30,7 @@ import { useWallet } from 'wallets/wallet';
 import { isExistingLandInProgress, isNewLandTxInProgress } from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
 
-import {
-  MY_PROPERTIES_TAB_STATE_ALL,
-  MY_PROPERTIES_TAB_STATE_LENT,
-  MY_PROPERTIES_TAB_STATE_RENTED,
-} from 'modules/land-works/constants';
+import { MY_PROPERTIES_TAB_STATE_LENT, MY_PROPERTIES_TAB_STATE_RENTED } from 'modules/land-works/constants';
 
 const MyPropertiesView: FC = () => {
   const history = useHistory();
@@ -76,7 +72,7 @@ const MyPropertiesView: FC = () => {
 
   function getTabs() {
     const tab = location.state?.tab;
-    const tabsList = [MY_PROPERTIES_TAB_STATE_ALL, MY_PROPERTIES_TAB_STATE_RENTED, MY_PROPERTIES_TAB_STATE_LENT];
+    const tabsList = [MY_PROPERTIES_TAB_STATE_RENTED, MY_PROPERTIES_TAB_STATE_LENT];
     return tab && tabsList.includes(tab) ? tab : tabsList[0];
   }
 
@@ -105,10 +101,6 @@ const MyPropertiesView: FC = () => {
     } else {
       setUser({} as UserEntity);
     }
-  };
-
-  const concatOwnerAndConsumerAssetsAndRents = () => {
-    return [...rents, ...(user?.ownerAndConsumerAssets || [])];
   };
 
   const onChangeCurrencyHandler = async (value: number) => {
@@ -147,20 +139,15 @@ const MyPropertiesView: FC = () => {
   }, [metaverse, currencyId, paymentToken]);
 
   useEffect(() => {
-    if (tab === MY_PROPERTIES_TAB_STATE_ALL) setLands(concatOwnerAndConsumerAssetsAndRents());
     if (tab === MY_PROPERTIES_TAB_STATE_RENTED) {
       return setLands(rents);
     } else if (tab === MY_PROPERTIES_TAB_STATE_LENT) {
       return setLands(user?.ownerAndConsumerAssets || []);
     }
-
-    setLands(concatOwnerAndConsumerAssetsAndRents());
   }, [tab, rents]);
 
   useEffect(() => {
     if (Object.keys(user).length) {
-      // We setLands only if the tab is still MY_PROPERTIES_TAB_STATE_ALL
-      if (tab === MY_PROPERTIES_TAB_STATE_ALL) setLands(concatOwnerAndConsumerAssetsAndRents());
       if (tab === MY_PROPERTIES_TAB_STATE_RENTED) setLands(rents);
       if (tab === MY_PROPERTIES_TAB_STATE_LENT) setLands(user?.ownerAndConsumerAssets || []);
     } else {
@@ -184,7 +171,6 @@ const MyPropertiesView: FC = () => {
     if (!wallet.account || lands.length) {
       setLoading(false);
     }
-    // calculateLandsCount();
   }, [lands]);
 
   useEffect(() => {
@@ -230,7 +216,6 @@ const MyPropertiesView: FC = () => {
           <LandsMyPropertiesHeader
             setTab={setTab}
             user={user}
-            allCount={totalRents + user?.ownerAndConsumerAssets?.length || 0}
             rentedCount={totalRents}
             lentCount={user?.ownerAndConsumerAssets?.length || 0}
           />
