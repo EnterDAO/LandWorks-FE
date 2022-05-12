@@ -114,7 +114,9 @@ export const fetchBlockscanMessages = async (wallet: string): Promise<Array<any>
   const userList = JSON.parse(localStorage.getItem('user_profile') || '');
   const userProfile = userList[wallet];
   const blockscanUrl = 'https://scenes.landworks.xyz/messages/';
-  const blockscanResponse = await fetch(blockscanUrl + wallet).then((res) => res.json());
+  const blockscanResponse = await fetch(blockscanUrl + wallet)
+    .then((res) => res.json())
+    .catch(() => console.error('Fetch Blockscan message error'));
   const messageCountInStorage = +userProfile?.totalMesages || 0;
   const newMessage = {
     id: Date.now(),
