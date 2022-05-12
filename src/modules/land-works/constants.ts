@@ -136,8 +136,6 @@ export const DEFAULT_SLICED_HISTORY = 6;
 
 export const DEFAULT_TOKEN_ADDRESS = '';
 
-export const MY_PROPERTIES_TAB_STATE_ALL = 'all';
-
 export const MY_PROPERTIES_TAB_STATE_RENTED = 'rented';
 
 export const MY_PROPERTIES_TAB_STATE_LENT = 'lent';
