@@ -22,7 +22,7 @@ const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates, pla
   const hasMoreThanSix = coordsLength! > 6;
   const hasLessThanSix = coordsLength! > 0 && coordsLength! <= 6;
 
-  const maxWidth = expand ? '22rem' : '15rem';
+  const maxWidth = expand ? '400px' : '275px';
   const coords = hasMoreThanSix && expand ? coordinates : coordinates?.slice(0, 5);
 
   return (
