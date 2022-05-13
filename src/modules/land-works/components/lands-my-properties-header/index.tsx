@@ -1,8 +1,9 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 
 import { Box, Button, Modal } from 'design-system';
+import { LocationState } from 'modules/interface';
 import { USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
 import { useWallet } from 'wallets/wallet';
 
@@ -24,6 +25,8 @@ interface Props {
 const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, setTab, user }) => {
   const wallet = useWallet();
   const history = useHistory();
+  const location = useLocation<LocationState>();
+
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [showListNewModal, setShowListNewModal] = useState(false);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
@@ -51,6 +54,15 @@ const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, setTab, us
 
   useEffect(() => setClaimButtonDisabled(false), [user]);
   const hasMetamaskConnected = wallet.isActive && wallet.connector?.id === 'metamask';
+
+  useEffect(() => {
+    if (location.state?.openClaimModal) {
+      setShowClaimModal(true);
+      history.push({
+        state: { openClaimModal: false },
+      });
+    }
+  }, [location.state]);
 
   return (
     <>

@@ -9,57 +9,20 @@ import { getEtherscanAddressUrl, getEtherscanTxUrl, shortenAddr } from 'web3/uti
 import ExternalLink from 'components/custom/external-link';
 import Grid from 'components/custom/grid';
 import Icon from 'components/custom/icon';
-// import IconNotification from 'components/custom/icon-notification';
 import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
 import { StyledPopover } from 'design-system/Popover/Popover';
 import { getENSName } from 'helpers/helpers';
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
-// import { useNotifications } from 'providers/notifications-provider';
 import { ReactComponent as ExternalLinkIcon } from 'resources/svg/external-link.svg';
 import { useWallet } from 'wallets/wallet';
 
 import { useErc20 } from '../../../modules/land-works/providers/erc20-provider';
-// import Notifications from '../notifications';
+import { NotificationSection } from '../notifications';
 import UserInfo from './UserInfo/UserInfo';
 
 import s from './s.module.scss';
-
-// const NotificationSection: React.FC = () => {
-//   const { setNotificationsReadUntil, notifications, notificationsReadUntil } = useNotifications();
-
-//   const markAllAsRead = () => {
-//     if (notifications.length) {
-//       setNotificationsReadUntil(Math.max(...notifications.map((n) => n.startsOn)));
-//     }
-//   };
-//   const hasUnread = notificationsReadUntil ? notifications.some((n) => n.startsOn > notificationsReadUntil) : false;
-//   return (
-//     <StyledPopover
-//       open
-//       content={
-//         <div className={cn('card', s.notifications)}>
-//           <div className="card-header flex">
-//             <Text type="p1" weight="semibold" color="primary">
-//               Notifications
-//             </Text>
-//             {hasUnread && (
-//               <button className="link-blue ml-auto" onClick={markAllAsRead}>
-//                 Mark all as read
-//               </button>
-//             )}
-//           </div>
-//           <Notifications />
-//         </div>
-//       }
-//     >
-//       <IconNotification width={24} height={24} notificationSize={8} bubble={hasUnread} className={s.notificationIcon}>
-//         <Icon name="notification" width={24} height={24} color="inherit" />
-//       </IconNotification>
-//     </StyledPopover>
-//   );
-// };
 
 const ConnectedWallet: React.FC = () => {
   const wallet = useWallet();
@@ -272,18 +235,20 @@ const ConnectedWallet: React.FC = () => {
   );
 
   return (
-    <Grid
-      flow="col"
-      gap={20}
-      justify="center"
-      align="center"
-      className={cn(s.hamburger, isTxInProgress ? s.loadingBackground : '')}
-    >
-      {/* ToDo: NotificationSection, uncomment if needed */}
-      {/* <NotificationSection />
-      <Divider style={{ minHeight: 28 }} /> */}
-      {isTxInProgress ? TxSection : AccountSection}
-    </Grid>
+    <>
+      <NotificationSection />
+      <Grid
+        flow="col"
+        gap={20}
+        justify="center"
+        align="center"
+        className={cn(s.hamburger, isTxInProgress ? s.loadingBackground : '')}
+      >
+        {/* ToDo: NotificationSection, uncomment if needed */}
+        {/* <Divider type="vertical" style={{ minHeight: 28 }} /> */}
+        {isTxInProgress ? TxSection : AccountSection}
+      </Grid>
+    </>
   );
 };
 
