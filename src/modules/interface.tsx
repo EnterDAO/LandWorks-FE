@@ -61,4 +61,5 @@ export interface LocationState {
     from: string;
     title: string;
   };
+  openClaimModal: boolean;
 }
