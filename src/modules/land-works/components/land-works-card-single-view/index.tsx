@@ -292,9 +292,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                           {asset.minPeriodTimedType} - {asset.maxPeriodTimedType}
                         </span>
                         <span className="period-title">Max Rent Queue</span>
-                        <span className="available-period">
-                          <span className="label">{asset.maxFutureTimeTimedType}</span>
-                        </span>
+                        <span className="available-period">{asset.maxFutureTimeTimedType}</span>
                       </div>
                     )}
                     <Grid item>
