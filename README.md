@@ -10,7 +10,7 @@ The Single Page Application has a common React boilerplate structure but with a 
 
 ```shell
 $ ls src/
-desygn-system/
+design-system/
 modules/
 styles/
 ```
@@ -30,7 +30,7 @@ Folder `views/` will contain respective folder with a React index.tsx as view an
 
 ### Styling
 
-Styling has a multiple layers from different frameworks. It starts with the `./src/styles` as first layer. Indeed the `./src/styles/index.scss` contains all CSS variables (ex. var(--theme-card-color) ) used all around our codebase. Including in `styled-components`, that is also the designated best way to style a React component.
+Styling has a multiple layers from different frameworks. It starts with the `./src/styles` as first layer. Indeed the `./src/styles/index.scss` contains all CSS variables (ex. var(--theme-card-color) ) used all around our codebase. Including in `styled-components`, that is also the designated best way to style a React component based on MUI styling framework.
 
 Examples of `styled-component` approach, here:
 `./src/modules/land-works/views/scene-expert-form-view/styled.ts`
@@ -73,13 +73,62 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.
 Your app is ready to be deployed!
 
+## Architecture (per folder)
+
+### ./src/components
+
+In this components folder we catalogue the components per type. Here indeed we have subsolders like `./src/components/custom` where most of local components are stored. And `./src/components/styled`, where we store the simple MUI styled components for local project use. Previously we also had the subfolder `./src/components/antd`, but this can be eventually removed later since an imminent refactoring will be done.
+
+### ./src/modules
+Containes subfolders meant as RouterSwitch. Each subfolders will have the initial RouterSwitch component that declares the url used in the selected module. Each module will have a sort of structure like below:
+
+```shell
+$ ls src/modules/land-works 
+components/
+contracts/
+models/
+providers/
+views/
+api.ts
+index.tsx
+utils.ts
+```
+
+### ./src/providers
+
+This folder simply contains the global React providers used across the application.
+
+### ./src/resources and ./src/assets
+
+Both folder above will contains svg and other file formats used across the application. (TODO: this is something we didn't refactored, but the folders could be easily merged together.)
+
+### ./src/design-system
+
+At this folder we have our main design library shared with Metaportal project.
+
+### ./src/wallets
+
+Works in progress.
+
+### ./src/web3
+
+Works in progress.
+
+## App's Workflow
+
+The app has a classic `index.tsx` page where we run our main `App` component. Based on the current route, a RouterSwitch module gets loaded from: `./src/modules/`.
+
 ## Extra
 
 Following, some extra documentation regarding specific contexts of the codebase.
 
 ### Decentraland Map Integration
 
+For this integration present at [/explore](https://landworks.xyz/explore) with metaverse dropdown selected as Decentraland. We have this starting point that differ from each others map provider. The main component for Decentraland integration is lands-explore-map `./src/modules/land-works/components/lands-explore-map`. Please check the code, is self-explanatory.
 
+### Voxel Map Integration
+
+Works in progress.
 
 ## Learn More React
 
