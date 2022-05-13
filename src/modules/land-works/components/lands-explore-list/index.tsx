@@ -50,7 +50,7 @@ const LandsExploreList: FC<Props> = ({
   const location = useLocation<LocationState>();
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
-  const { mapTiles } = useLandsMapTiles();
+  const { mapTiles, setSelectedId } = useLandsMapTiles();
 
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [blockAutoScroll, setBlockAutoScroll] = useState(false);
@@ -69,6 +69,7 @@ const LandsExploreList: FC<Props> = ({
     const allCoords = getAllLandsCoordinates([land]);
 
     if (allCoords.length && allCoords[0]) {
+      setSelectedId && setSelectedId(land.id);
       setPointMapCentre([{ id: land.id, x: allCoords[0].x, y: allCoords[0].y }]);
       setClickedLandId && setClickedLandId(allCoords[0].x, allCoords[0].y);
 

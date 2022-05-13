@@ -5,6 +5,8 @@ import { AtlasTile } from 'modules/land-works/components/atlas';
 export type ContextProps = {
   mapTiles?: Record<string, AtlasTile> | undefined;
   setMapTiles?: Dispatch<SetStateAction<Record<string, AtlasTile>>>;
+  selectedId?: string;
+  setSelectedId?: Dispatch<SetStateAction<string>>;
 };
 
 export const LandsMapTilesContext = createContext<ContextProps>({});
