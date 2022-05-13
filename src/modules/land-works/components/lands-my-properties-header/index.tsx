@@ -13,21 +13,16 @@ import { ClaimModal } from '../lands-claim-modal';
 import ListNewProperty from '../list-new-property';
 import { RootStyled, TabListStyled, TabStyled, TypographyStyled } from './styled';
 
-import {
-  MY_PROPERTIES_TAB_STATE_ALL,
-  MY_PROPERTIES_TAB_STATE_LENT,
-  MY_PROPERTIES_TAB_STATE_RENTED,
-} from 'modules/land-works/constants';
+import { MY_PROPERTIES_TAB_STATE_LENT, MY_PROPERTIES_TAB_STATE_RENTED } from 'modules/land-works/constants';
 
 interface Props {
   setTab: Dispatch<SetStateAction<string>>;
-  allCount: number;
   rentedCount: number;
   lentCount: number;
   user?: UserEntity;
 }
 
-const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, setTab, user }) => {
+const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, setTab, user }) => {
   const wallet = useWallet();
   const history = useHistory();
   const location = useLocation<LocationState>();
@@ -84,18 +79,8 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
           <TypographyStyled variant="h1">My Properties</TypographyStyled>
         </Box>
 
-        <Box style={{ marginLeft: '19%' }}>
+        <Box style={{ marginLeft: '24%' }}>
           <TabListStyled onChange={handleChange} aria-label="Lands tabs filter">
-            <TabStyled
-              label={
-                <>
-                  <strong>
-                    All <span>{allCount}</span>
-                  </strong>
-                </>
-              }
-              value={MY_PROPERTIES_TAB_STATE_ALL}
-            />
             <TabStyled
               label={
                 <>

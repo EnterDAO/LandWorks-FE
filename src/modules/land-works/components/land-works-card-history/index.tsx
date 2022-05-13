@@ -153,7 +153,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId, 
       <RootStyled>
         <Box>
           <StyledButton
-            className={`${areAllSelected ? 'active-table-button' : ''}`}
+            className={`${areAllSelected ? 'active-table-button' : 'table-button'}`}
             onClick={() => {
               onAllSelected();
             }}
@@ -161,7 +161,10 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId, 
             All <span>{areAllSelected && totalRents}</span>
           </StyledButton>
           {showYoursSection() && (
-            <StyledButton className={`${!areAllSelected ? 'active-table-button' : ''}`} onClick={onYouSelected}>
+            <StyledButton
+              className={`${!areAllSelected ? 'active-table-button' : 'table-button'}`}
+              onClick={onYouSelected}
+            >
               Yours <span>{!areAllSelected && totalRents}</span>
             </StyledButton>
           )}

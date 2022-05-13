@@ -102,6 +102,9 @@
       .rent-price {
         text-align: initial;
         font-size: 12px;
+        .price-summary > * {
+          margin-right: 3px;
+        }
         p {
           text-transform: uppercase;
         }
@@ -112,8 +115,11 @@
           height: 15px;
           width: 15px;
         }
-        .price span {
-          color: #b9b9d3;
+        .price {
+          margin-left: 3px;
+          span {
+            color: var(--theme-subtle-color);
+          }
         }
       }
     }

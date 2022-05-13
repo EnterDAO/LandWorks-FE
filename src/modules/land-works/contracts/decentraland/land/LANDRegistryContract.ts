@@ -60,6 +60,7 @@ export default class LANDRegistryContract extends ERC721Contract {
       contractAddress: this.address,
       coords: data[1],
       isLAND: true,
+      metaverseName: 'Decentraland',
     };
   }
 }

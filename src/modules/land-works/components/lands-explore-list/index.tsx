@@ -31,6 +31,7 @@ interface Props {
   lands: AssetEntity[];
   setPointMapCentre: (lands: CoordinatesLand[]) => void;
   setIsHiddenMap: (value: boolean) => void;
+  setSubheaderHidden: (value: boolean) => void;
   isHiddenMap: boolean;
   metaverse: string;
 }
@@ -40,6 +41,7 @@ const LandsExploreList: FC<Props> = ({
   lands,
   setPointMapCentre,
   lastRentEnd,
+  setSubheaderHidden,
   setIsHiddenMap,
   isHiddenMap,
   metaverse,
@@ -48,7 +50,7 @@ const LandsExploreList: FC<Props> = ({
   const location = useLocation<LocationState>();
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
-  const { mapTiles } = useLandsMapTiles();
+  const { mapTiles, setSelectedId } = useLandsMapTiles();
 
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [blockAutoScroll, setBlockAutoScroll] = useState(false);
@@ -67,6 +69,7 @@ const LandsExploreList: FC<Props> = ({
     const allCoords = getAllLandsCoordinates([land]);
 
     if (allCoords.length && allCoords[0]) {
+      setSelectedId && setSelectedId(land.id);
       setPointMapCentre([{ id: land.id, x: allCoords[0].x, y: allCoords[0].y }]);
       setClickedLandId && setClickedLandId(allCoords[0].x, allCoords[0].y);
 
@@ -159,16 +162,19 @@ const LandsExploreList: FC<Props> = ({
   }, 500);
 
   useEffect(() => {
-    const scroll = () => saveScrollPosition();
+    const scroll = () => {
+      window.scrollY <= 10 ? setSubheaderHidden(false) : setSubheaderHidden(true);
+      saveScrollPosition();
+    };
 
     const scrollPosition = sessionStorage.getItem('scroll-position');
     if (!loading && scrollPosition && filteredLands.length) {
       window.scrollTo({ top: +scrollPosition, behavior: 'smooth' });
     }
-    document.addEventListener('auto', scroll);
+    document.addEventListener('scroll', scroll);
 
     return () => {
-      document.removeEventListener('auto', scroll);
+      document.removeEventListener('scroll', scroll);
     };
   }, [loading]);
 

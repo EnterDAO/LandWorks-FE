@@ -131,7 +131,7 @@ export const StyledButton = styled('button')(() => ({
   border: 'none',
   background: '#1e1e2e',
   borderRadius: '5px',
-  marginLeft: '5px',
+  marginRight: '5px',
   minWidth: '48px',
   minHeight: '30px',
   textTransform: 'uppercase',

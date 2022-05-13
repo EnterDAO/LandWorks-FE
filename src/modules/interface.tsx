@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AssetEntity } from './land-works/api';
 
+export type Metaverse = 'Decentraland' | 'Voxels';
 export interface Option {
   readonly label: string;
   readonly value: string | number;
@@ -14,29 +15,30 @@ export interface AssetOption {
   parcel: any[];
 }
 
-export type DecentralandNFT = {
-  id: string;
-  name: string;
-  image: string;
-  contractAddress: string;
+export interface DecentralandNFT extends BaseNFT {
   isLAND?: boolean;
   landIds?: any[];
   coords: any[];
-};
+}
 
 export interface CryptoVoxelXYcoords {
   x: string;
   y: string;
 }
 
-export type CryptoVoxelNFT = {
+export interface CryptoVoxelNFT extends BaseNFT {
+  place: string;
+  formattedCoords: string;
+}
+
+export interface BaseNFT {
   id: string;
   name: string;
   image: string;
   contractAddress: string;
-  place: string;
-  formattedCoords: string;
-};
+  metaverseName: Metaverse;
+  place?: string;
+}
 
 export type Estate = {
   id: string;

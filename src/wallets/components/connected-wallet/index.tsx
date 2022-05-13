@@ -13,8 +13,7 @@ import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
 import { StyledPopover } from 'design-system/Popover/Popover';
 import { getENSName } from 'helpers/helpers';
-import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
-import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
+import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 import { ReactComponent as ExternalLinkIcon } from 'resources/svg/external-link.svg';
 import { useWallet } from 'wallets/wallet';
@@ -29,15 +28,12 @@ const ConnectedWallet: React.FC = () => {
   const wallet = useWallet();
 
   const { landworksTxInProgress, landworksTxHash } = useLandworks();
-  const { landTxInProgress, landTxHash } = useLandRegistry();
-  const { estateTxInProgress, estateTxHash } = useEstateRegistry();
+  const { txInProgress, txHash } = useContractRegistry();
   const { erc20TxInProgress, erc20TxHash } = useErc20();
 
-  const [isTxInProgress, setIsAnyTxInProgress] = useState(
-    landworksTxInProgress || landTxInProgress || estateTxInProgress || erc20TxInProgress
-  );
+  const [isTxInProgress, setIsAnyTxInProgress] = useState(landworksTxInProgress || txInProgress || erc20TxInProgress);
 
-  const [txHash, setTxHash] = useState(landworksTxHash || landTxHash || estateTxHash || erc20TxHash);
+  const [validTxHash, setValidTxHash] = useState(landworksTxHash || txHash || erc20TxHash);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -52,16 +48,16 @@ const ConnectedWallet: React.FC = () => {
   const open = Boolean(anchorEl);
 
   useEffect(() => {
-    if (landworksTxInProgress || landTxInProgress || estateTxInProgress || erc20TxInProgress) {
+    if (landworksTxInProgress || txInProgress || erc20TxInProgress) {
       setIsAnyTxInProgress(true);
     } else {
       setIsAnyTxInProgress(false);
     }
-  }, [landworksTxInProgress, landTxInProgress, estateTxInProgress, erc20TxInProgress]);
+  }, [landworksTxInProgress, txInProgress, erc20TxInProgress]);
 
   useEffect(() => {
-    setTxHash(landworksTxHash || landTxHash || estateTxHash || erc20TxHash);
-  }, [landworksTxHash, landTxHash, estateTxHash, erc20TxHash]);
+    setValidTxHash(landworksTxHash || txHash || erc20TxHash);
+  }, [landworksTxHash, txHash, erc20TxHash]);
 
   const [ens, setEns] = useState<string>();
   useEffect(() => {
@@ -214,7 +210,7 @@ const ConnectedWallet: React.FC = () => {
             <div id={s.txStatus}>Transaction in progress</div>
             <div
               onClick={() => {
-                window.open(`${getEtherscanTxUrl(txHash)}`, '_blank')?.focus();
+                window.open(`${getEtherscanTxUrl(validTxHash)}`, '_blank')?.focus();
               }}
               id={s.txEtherscanLink}
             >

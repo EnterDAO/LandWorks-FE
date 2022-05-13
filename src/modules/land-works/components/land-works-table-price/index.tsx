@@ -45,6 +45,7 @@ const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDeci
   return (
     <span className="amount-container">
       <SmallAmountTooltip
+        className="amount-text"
         icon={<Icon style={{ width: 16, height: 16 }} name={getTokenIconName(tokenSymbol)} />}
         amount={formatedAmount}
       />

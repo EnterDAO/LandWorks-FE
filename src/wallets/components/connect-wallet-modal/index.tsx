@@ -74,7 +74,7 @@ const ConnectWalletModal: React.FC<ConnectWalletModalProps> = (props) => {
           </Grid>
         ))}
 
-        <Grid xs={12}>
+        <Grid xs={12} item>
           <Text type="p1" color="secondary" align="center">
             We do not own your private keys and cannot access your funds without your confirmation.
           </Text>

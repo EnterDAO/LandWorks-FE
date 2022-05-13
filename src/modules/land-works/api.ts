@@ -26,6 +26,7 @@ export const ASSET_SUBSCRIPTION = gql`
   subscription GetAsset($id: String) {
     asset(id: $id) {
       id
+      metaverseAssetId
       metaverse {
         name
       }
@@ -65,7 +66,6 @@ export const ASSET_SUBSCRIPTION = gql`
         }
       }
       operator
-      metaverseAssetId
     }
   }
 `;
@@ -76,6 +76,7 @@ export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
       id
       consumerTo (where: { metaverse: $metaverse ${paymentToken ? 'paymentToken : $paymentToken' : ''}}) {
         id
+        metaverseAssetId
         metaverse {
           name
         }
@@ -142,6 +143,9 @@ export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
       rents {
         asset {
           metaverseAssetId
+          metaverse {
+            name
+          }
           metaverseRegistry {
             id
           }
@@ -377,6 +381,7 @@ export const ASSET_RENTS_SUBSCRIPTION = gql`
   subscription GetAssetRents($id: String, $limit: Int, $offset: Int) {
     asset(id: $id) {
       totalRents
+      metaverseAssetId
       metaverse {
         name
       }
@@ -408,6 +413,7 @@ export const ASSET_RENTS_SUBSCRIPTION = gql`
 export const USER_ASSET_RENTS_SUBSCRIPTION = gql`
   subscription GetAssetUserRents($id: String, $renter: String) {
     asset(id: $id) {
+      metaverseAssetId
       metaverse {
         name
       }
@@ -496,6 +502,7 @@ export type Data = {
 
 export type CoordinatesLand = {
   id: string;
+  landId?: string;
   x: string;
   y: string;
 };
@@ -683,10 +690,10 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
               owner {
                 id
               }
+              metaverseAssetId
               metaverse {
                 name
               }
-              metaverseAssetId
               metaverseRegistry {
                 id
               }
@@ -791,6 +798,7 @@ export function fetchAsset(id: string): Promise<AssetEntity> {
       query GetAsset($id: String, $first: Int, $offset: Int) {
         asset(id: $id) {
           id
+          metaverseAssetId
           metaverse {
             name
           }
@@ -830,7 +838,6 @@ export function fetchAsset(id: string): Promise<AssetEntity> {
             }
           }
           operator
-          metaverseAssetId
         }
       }
     `,
@@ -959,6 +966,7 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
           id
           consumerTo {
             id
+            metaverseAssetId
             metaverse {
               name
             }
@@ -990,10 +998,10 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
           }
           assets {
             id
+            metaverseAssetId
             metaverse {
               name
             }
-            metaverseAssetId
             metaverseRegistry {
               id
             }
@@ -1023,6 +1031,9 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
           rents {
             asset {
               metaverseAssetId
+              metaverse {
+                name
+              }
               metaverseRegistry {
                 id
               }
@@ -1119,10 +1130,10 @@ export function fetchUserRentPerAsset(address: string, availableOnly = false, pa
           timestamp
           asset {
             id
+            metaverseAssetId
             metaverse {
               name
             }
-            metaverseAssetId
             metaverseRegistry {
               id
             }
@@ -1218,10 +1229,10 @@ export function fetchUserRents(address: string, availableOnly = false, metaverse
           }
           asset {
             id
+            metaverseAssetId
             metaverse {
               name
             }
-            metaverseAssetId
             metaverseRegistry {
               id
             }
@@ -1333,15 +1344,12 @@ export function fetchListedAssetsByMetaverseAndGetLastRentEndWithOrder(
           orderDirection: $orderDirection
         ) {
           id
+          metaverseAssetId
           metaverse {
             name
           }
-          metaverseAssetId
           metaverseRegistry {
             id
-          }
-          metaverse {
-            name
           }
           owner {
             id
@@ -1421,10 +1429,10 @@ export function fetchUserAssetsByRents(
           timestamp
           asset {
             id
+            metaverseAssetId
             metaverse {
               name
             }
-            metaverseAssetId
             metaverseRegistry {
               id
             }
@@ -1548,10 +1556,10 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
           orderDirection: $orderDirection
         ) {
           id
+          metaverseAssetId
           metaverse {
             name
           }
-          metaverseAssetId
           metaverseRegistry {
             id
           }
