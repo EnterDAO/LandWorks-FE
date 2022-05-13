@@ -392,6 +392,7 @@ export type Data = {
 
 export type CoordinatesLand = {
   id: string;
+  landId?: string;
   x: string;
   y: string;
 };

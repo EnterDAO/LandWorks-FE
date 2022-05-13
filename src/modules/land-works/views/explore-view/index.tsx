@@ -51,6 +51,7 @@ const ExploreView: React.FC = () => {
   const [lands, setLands] = useState<AssetEntity[]>([]);
   const [clickedLandId, setStateClickedLandId] = useState<AssetEntity['id']>('');
   const [mapTiles, setMapTiles] = useState<Record<string, AtlasTile>>({});
+  const [selectedId, setSelectedId] = useState<string>('');
   const [selectedTile, setSelectedTile] = useState<SelectedTile>({
     id: '',
     type: '',
@@ -203,7 +204,7 @@ const ExploreView: React.FC = () => {
   const availableLands = filterLandsByAvailability(filterLandsByQuery(lands, searchQuery));
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
-      <LandsMapTilesProvider value={{ mapTiles, setMapTiles }}>
+      <LandsMapTilesProvider value={{ mapTiles, setMapTiles, selectedId, setSelectedId }}>
         <LandsMapTileProvider
           value={{
             clickedLandId,
