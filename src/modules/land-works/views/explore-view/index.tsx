@@ -46,6 +46,7 @@ const ExploreView: React.FC = () => {
     owner: sessionStorageHandler('get', 'explore-filters', 'owner'),
     lastRentEnd: sessionStorageHandler('get', 'explore-filters', 'lastRentEnd'),
     metaverse: sessionStorageHandler('get', 'general', 'metaverse'),
+    mapIsHidden: sessionStorageHandler('get', 'general', 'isHiddenMap'),
   };
 
   const [lands, setLands] = useState<AssetEntity[]>([]);
@@ -65,7 +66,7 @@ const ExploreView: React.FC = () => {
 
   const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
   const [mapExpanded, setMapExpanded] = useState(false);
-  const [mapIsHidden, setMapIsHidden] = useState(false);
+  const [mapIsHidden, setMapIsHidden] = useState(sessionFilters.mapIsHidden || false);
   const [subheaderHidden, setSubheaderHidden] = useState(false);
 
   const [atlasMapX, setAtlasMapX] = useState(0);
@@ -175,6 +176,10 @@ const ExploreView: React.FC = () => {
     },
     500
   );
+  const hideMapHandler = (value: boolean) => {
+    setMapIsHidden(value);
+    sessionStorageHandler('set', 'general', 'isHiddenMap', value);
+  };
 
   useEffect(() => {
     if (wallet.account) {
@@ -194,7 +199,7 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     getPaymentTokens();
-    String(metaverse) !== '1' ? setMapIsHidden(true) : setMapIsHidden(false);
+    String(metaverse) !== '1' ? setMapIsHidden(true) : setMapIsHidden(sessionFilters.mapIsHidden || false);
   }, []);
 
   useEffect(() => {
@@ -229,12 +234,11 @@ const ExploreView: React.FC = () => {
               onChangeMetaverse={onChangeMetaverse}
             />
           </div>
-
           <div className="content-container content-container--explore-view">
             <div className={`list-lands-container ${mapIsHidden ? 'fullWidth' : ''}`}>
               <LandsExploreList
                 setSubheaderHidden={setSubheaderHidden}
-                setIsHiddenMap={setMapIsHidden}
+                setIsHiddenMap={hideMapHandler}
                 isHiddenMap={mapIsHidden}
                 metaverse={metaverse}
                 lastRentEnd={lastRentEnd}
