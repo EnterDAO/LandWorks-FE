@@ -20,7 +20,6 @@ export const ChipStyled = styled(Chip)<ChipProps>(() => ({
   minWidth: '100px',
   display: 'inline-block',
   margin: '0 0.25rem 0.3rem 0',
-  float: 'left',
   backgroundColor: 'var(--theme-modal-color)',
   color: 'var(--theme-subtle-color)',
   fontSize: '14px',
@@ -31,4 +30,16 @@ export const ChipStyled = styled(Chip)<ChipProps>(() => ({
   border: 0,
   whiteSpace: 'normal',
   textAlign: 'center',
+}));
+
+export const PlotContainer = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  '& p': {
+    color: '#fff',
+    marginRight: 10,
+    cursor: 'default',
+  },
 }));
