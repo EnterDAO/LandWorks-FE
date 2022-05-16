@@ -113,10 +113,16 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
     });
   };
 
-  const isEstate = (x: number, y: number) => {
+  const estateOnTop = (x: number, y: number) => {
     const land = getLandById(x, y);
-    const asset = lands.find((a) => a.id == land?.landId);
-    return asset?.type.toLowerCase() === 'estate';
+    const topLand = getLandById(x, y + 1);
+    return land?.landId === topLand?.landId;
+  };
+
+  const estateOnLeft = (x: number, y: number) => {
+    const land = getLandById(x, y);
+    const topLand = getLandById(x - 1, y);
+    return land?.landId === topLand?.landId;
   };
 
   const isInList = (x: number, y: number) => {
@@ -133,13 +139,13 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
   };
 
   const strokeLayer: Layer = (x, y) => {
-    const estate = isEstate(x, y);
-    return isInList(x, y) ? { color: '#ff0044', scale: estate ? 1.4 : 1.1 } : null;
+    const top = estateOnTop(x, y);
+    const left = estateOnLeft(x, y);
+    return isInList(x, y) ? { color: '#ff9990', top, left } : null;
   };
 
   const fillLayer: Layer = (x, y) => {
-    const estate = isEstate(x, y);
-    return isInList(x, y) ? { color: '#ff9990', scale: estate ? 1.2 : 0.9 } : null;
+    return isInList(x, y) ? { color: '#ff9990' } : null;
   };
 
   const clickedTileStrokeLayer: Layer = (x, y) => {
