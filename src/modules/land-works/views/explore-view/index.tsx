@@ -201,7 +201,6 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     getPaymentTokens();
-    String(metaverse) !== '1' ? setMapIsHidden(true) : setMapIsHidden(sessionFilters.mapIsHidden || false);
   }, []);
 
   useEffect(() => {
@@ -258,7 +257,6 @@ const ExploreView: React.FC = () => {
                     positionY={atlasMapY}
                     expanded={mapExpanded}
                     onClick={() => setMapExpanded(!mapExpanded)}
-                    highlights={coordinatesHighlights}
                     lands={lands}
                   />
                 )}

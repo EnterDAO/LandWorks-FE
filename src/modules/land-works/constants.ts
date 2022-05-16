@@ -145,3 +145,14 @@ export const MY_PROPERTIES_TAB_STATE_RENTED = 'rented';
 export const MY_PROPERTIES_TAB_STATE_LENT = 'lent';
 
 export const TWITTER_TEXT = `gm. Just listed my property at @landworksxyz.\n`;
+
+export type VoxelsTileType = {
+  name: string;
+  id: number;
+  description: string;
+  address: string;
+  geometry: {
+    type: string;
+    coordinates: number[];
+  };
+};
