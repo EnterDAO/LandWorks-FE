@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
 
-import { ChipStyled, RootStyled, TypographyStyled } from './styled';
+import { ChipStyled, PlotContainer, RootStyled, TypographyStyled } from './styled';
 
 type Coordinate = {
   id: string;
@@ -49,8 +49,12 @@ const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates, pla
       <>
         {place && place.length && (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <ChipStyled style={{ textAlign: 'left' }} label={'Island: ' + place[0]} variant="outlined" />
-            <ChipStyled style={{ textAlign: 'left' }} label={'Suburb: ' + place[1]} variant="outlined" />
+            <PlotContainer>
+              <p>Island:</p> <ChipStyled style={{ textAlign: 'left' }} label={place[0]} variant="outlined" />
+            </PlotContainer>
+            <PlotContainer>
+              <p>Suburb:</p> <ChipStyled style={{ textAlign: 'left' }} label={place[1]} variant="outlined" />
+            </PlotContainer>
           </Box>
         )}
       </>
