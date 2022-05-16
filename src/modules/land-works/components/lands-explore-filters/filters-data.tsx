@@ -37,7 +37,7 @@ export const landsData = [
     value: 1,
   },
   {
-    label: 'CryptoVoxels',
+    label: 'Voxels',
     value: 2,
   },
 ];

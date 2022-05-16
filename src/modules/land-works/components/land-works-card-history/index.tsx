@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { DEFAULT_SLICED_HISTORY } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { Box } from '@mui/system';
 import { uniqueId } from 'lodash';
@@ -39,6 +38,8 @@ import {
 
 import { getNowTs } from '../../../../utils';
 import { getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
+
+import { DEFAULT_SLICED_HISTORY } from 'modules/land-works/constants';
 
 import './index.scss';
 
@@ -152,7 +153,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId, 
       <RootStyled>
         <Box>
           <StyledButton
-            className={`${areAllSelected ? 'active-table-button' : ''}`}
+            className={`${areAllSelected ? 'active-table-button' : 'table-button'}`}
             onClick={() => {
               onAllSelected();
             }}
@@ -160,7 +161,10 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId, 
             All <span>{areAllSelected && totalRents}</span>
           </StyledButton>
           {showYoursSection() && (
-            <StyledButton className={`${!areAllSelected ? 'active-table-button' : ''}`} onClick={onYouSelected}>
+            <StyledButton
+              className={`${!areAllSelected ? 'active-table-button' : 'table-button'}`}
+              onClick={onYouSelected}
+            >
               Yours <span>{!areAllSelected && totalRents}</span>
             </StyledButton>
           )}
@@ -206,7 +210,7 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId, 
                 </tr>
               </tbody>
             ) : (
-              <StyledTableBody style={{ maxHeight: 260, overflowY: 'scroll' }}>
+              <StyledTableBody style={{ maxHeight: 260, overflowY: 'auto' }}>
                 {paginatedRents.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id + uniqueId()}>
                     <StyledTableCell align="left">

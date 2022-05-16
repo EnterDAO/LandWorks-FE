@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { getTokenIconName, timestampSecondsToUTCDate } from 'helpers/helpers';
 import { getTokenPriceForDate } from 'providers/known-tokens-provider';
 
@@ -45,6 +45,7 @@ const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDeci
   return (
     <span className="amount-container">
       <SmallAmountTooltip
+        className="amount-text"
         icon={<Icon style={{ width: 16, height: 16 }} name={getTokenIconName(tokenSymbol)} />}
         amount={formatedAmount}
       />

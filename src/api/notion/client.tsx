@@ -26,19 +26,42 @@ const NotionProvider: FC = (props) => {
     baseUrl: config.notion.baseUrl,
   });
 
+  const sceneProviderFilters = config.isProd
+    ? [
+        {
+          property: 'Status',
+          select: {
+            equals: 'Approved',
+          },
+        },
+      ]
+    : [
+        {
+          property: 'Status',
+          select: {
+            equals: 'Approved',
+          },
+        },
+        {
+          property: 'Status',
+          select: {
+            equals: 'Under Review',
+          },
+        },
+      ];
+
   const getSceneProviders = async function (): Promise<QueryDatabaseResponse> {
     return notion.databases.query({
       database_id: config.notion.databaseId,
       filter: {
-        or: [
-          {
-            property: 'Status',
-            select: {
-              equals: 'Approved',
-            },
-          },
-        ],
+        or: sceneProviderFilters,
       },
+      sorts: [
+        {
+          property: 'Prio',
+          direction: 'ascending',
+        },
+      ],
     });
   };
 

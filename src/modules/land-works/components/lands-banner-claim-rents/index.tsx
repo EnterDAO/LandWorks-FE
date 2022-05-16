@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { Button } from 'design-system';
 import { ReactComponent as DollarRibbonIcon } from 'resources/svg/dollar-ribbon.svg';
 
-import { RootStyled, SpanStyled } from './styled';
+import { BoxStyled, RootStyled } from './styled';
 
 interface Props {
   onButtonClick?: () => void;
@@ -17,9 +17,18 @@ const LandsBannerClaimRents: FC<Props> = ({ onButtonClick, isClaimButtonDisabled
 
   return (
     <RootStyled>
-      <DollarRibbonIcon />
-      <SpanStyled>Rents Available to Claim</SpanStyled>
-      <Button variant="accentblue" btnSize="auto" onClick={onClickHandler} disabled={isClaimButtonDisabled}>
+      <DollarRibbonIcon height={40} width={40} />
+      <BoxStyled>
+        <h3>Rents Available to Claim</h3>
+        <span>There are unclaimed rents from your listed proporties. Claim now</span>
+      </BoxStyled>
+      <Button
+        variant="primary"
+        btnSize="auto"
+        style={{ marginLeft: 'auto' }}
+        onClick={onClickHandler}
+        disabled={isClaimButtonDisabled}
+      >
         CLAIM RENTS
       </Button>
     </RootStyled>

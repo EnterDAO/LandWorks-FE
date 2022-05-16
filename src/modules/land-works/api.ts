@@ -26,6 +26,7 @@ export const ASSET_SUBSCRIPTION = gql`
   subscription GetAsset($id: String) {
     asset(id: $id) {
       id
+      metaverseAssetId
       metaverse {
         name
       }
@@ -65,7 +66,6 @@ export const ASSET_SUBSCRIPTION = gql`
         }
       }
       operator
-      metaverseAssetId
     }
   }
 `;
@@ -76,6 +76,7 @@ export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
       id
       consumerTo (where: { metaverse: $metaverse ${paymentToken ? 'paymentToken : $paymentToken' : ''}}) {
         id
+        metaverseAssetId
         metaverse {
           name
         }
@@ -142,6 +143,9 @@ export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
       rents {
         asset {
           metaverseAssetId
+          metaverse {
+            name
+          }
           metaverseRegistry {
             id
           }
@@ -155,6 +159,178 @@ export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
               y
             }
           }
+        }
+      }
+    }
+  }
+`;
+
+export const USER_CLAIM_SUBSCRIPTION = gql`
+  subscription GetUser($id: String) {
+    user(id: $id) {
+      id
+      consumerTo {
+        id
+        metaverseAssetId
+        metaverse {
+          name
+        }
+        metaverseRegistry {
+          id
+        }
+        unclaimedRentFee
+        paymentToken {
+          id
+          name
+          symbol
+          decimals
+        }
+        decentralandData {
+          id
+          metadata
+          isLAND
+          coordinates {
+            id
+            x
+            y
+          }
+        }
+      }
+      assets {
+        id
+        metaverseAssetId
+        metaverse {
+          name
+        }
+        metaverseRegistry {
+          id
+        }
+        unclaimedRentFee
+        decentralandData {
+          id
+          metadata
+          isLAND
+          coordinates {
+            id
+            x
+            y
+          }
+        }
+        paymentToken {
+          id
+          name
+          symbol
+          decimals
+        }
+      }
+    }
+  }
+`;
+
+export const USER_NOTIFICATION_SUBSCRIPTION = gql`
+  subscription GetUser($id: String) {
+    user(id: $id) {
+      id
+      consumerTo {
+        id
+        metaverseAssetId
+        metaverse {
+          name
+        }
+        metaverseRegistry {
+          id
+        }
+        unclaimedRentFee
+        paymentToken {
+          id
+          name
+          symbol
+          decimals
+        }
+      }
+      rents(where: { renter: $id }) {
+        id
+        timestamp
+        end
+        asset {
+          id
+          rents {
+            renter {
+              id
+            }
+            start
+            end
+          }
+          decentralandData {
+            id
+            metadata
+            isLAND
+            coordinates {
+              id
+              x
+              y
+            }
+          }
+          metaverse {
+            name
+          }
+          owner {
+            id
+          }
+          metaverseRegistry {
+            id
+          }
+          paymentToken {
+            id
+            name
+            symbol
+            decimals
+          }
+          metaverseAssetId
+          unclaimedRentFee
+          lastRentEnd
+          status
+          totalRents
+        }
+      }
+      assets(orderBy: timestamp, orderDirection: desc) {
+        id
+        metaverseAssetId
+        metaverseRegistry {
+          id
+        }
+        metaverse {
+          name
+        }
+        owner {
+          id
+        }
+        rents {
+          renter {
+            id
+          }
+          start
+          end
+        }
+        metaverseRegistry {
+          id
+        }
+        decentralandData {
+          id
+          metadata
+          isLAND
+          coordinates {
+            id
+            x
+            y
+          }
+        }
+        unclaimedRentFee
+        paymentToken {
+          id
+          name
+          symbol
+          decimals
         }
       }
     }
@@ -205,6 +381,7 @@ export const ASSET_RENTS_SUBSCRIPTION = gql`
   subscription GetAssetRents($id: String, $limit: Int, $offset: Int) {
     asset(id: $id) {
       totalRents
+      metaverseAssetId
       metaverse {
         name
       }
@@ -236,6 +413,7 @@ export const ASSET_RENTS_SUBSCRIPTION = gql`
 export const USER_ASSET_RENTS_SUBSCRIPTION = gql`
   subscription GetAssetUserRents($id: String, $renter: String) {
     asset(id: $id) {
+      metaverseAssetId
       metaverse {
         name
       }
@@ -324,6 +502,7 @@ export type Data = {
 
 export type CoordinatesLand = {
   id: string;
+  landId?: string;
   x: string;
   y: string;
 };
@@ -374,6 +553,26 @@ export type AssetEntity = {
   rents: RentEntity[];
   lastRentEnd: string;
   isAvailable: boolean;
+  additionalData: AdditionalDecantralandData;
+};
+
+export type AdditionalDecantralandData = {
+  size: number;
+  externalUrl: string;
+  description: string;
+  tokenId: string;
+  attributes: parsedAdditionalAttributes;
+};
+
+type TraitType = 'X' | 'Y' | 'size' | 'district' | 'plaza' | 'road';
+
+type parsedAdditionalAttributes = {
+  [key in TraitType]: number;
+};
+type additionalAttributes = {
+  trait_type: TraitType;
+  value: number;
+  display_type: string;
 };
 
 export type CryptoVoxelsType = {
@@ -385,7 +584,7 @@ export type CryptoVoxelsType = {
   background_color: string;
 };
 
-type AssetAttributes = {
+export type AssetAttributes = {
   area: number;
   width: number;
   depth: number;
@@ -496,10 +695,10 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
               owner {
                 id
               }
+              metaverseAssetId
               metaverse {
                 name
               }
-              metaverseAssetId
               metaverseRegistry {
                 id
               }
@@ -604,6 +803,7 @@ export function fetchAsset(id: string): Promise<AssetEntity> {
       query GetAsset($id: String, $first: Int, $offset: Int) {
         asset(id: $id) {
           id
+          metaverseAssetId
           metaverse {
             name
           }
@@ -643,7 +843,6 @@ export function fetchAsset(id: string): Promise<AssetEntity> {
             }
           }
           operator
-          metaverseAssetId
         }
       }
     `,
@@ -772,6 +971,7 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
           id
           consumerTo {
             id
+            metaverseAssetId
             metaverse {
               name
             }
@@ -803,10 +1003,10 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
           }
           assets {
             id
+            metaverseAssetId
             metaverse {
               name
             }
-            metaverseAssetId
             metaverseRegistry {
               id
             }
@@ -836,6 +1036,9 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
           rents {
             asset {
               metaverseAssetId
+              metaverse {
+                name
+              }
               metaverseRegistry {
                 id
               }
@@ -932,10 +1135,10 @@ export function fetchUserRentPerAsset(address: string, availableOnly = false, pa
           timestamp
           asset {
             id
+            metaverseAssetId
             metaverse {
               name
             }
-            metaverseAssetId
             metaverseRegistry {
               id
             }
@@ -1031,10 +1234,10 @@ export function fetchUserRents(address: string, availableOnly = false, metaverse
           }
           asset {
             id
+            metaverseAssetId
             metaverse {
               name
             }
-            metaverseAssetId
             metaverseRegistry {
               id
             }
@@ -1146,15 +1349,12 @@ export function fetchListedAssetsByMetaverseAndGetLastRentEndWithOrder(
           orderDirection: $orderDirection
         ) {
           id
+          metaverseAssetId
           metaverse {
             name
           }
-          metaverseAssetId
           metaverseRegistry {
             id
-          }
-          metaverse {
-            name
           }
           owner {
             id
@@ -1234,10 +1434,10 @@ export function fetchUserAssetsByRents(
           timestamp
           asset {
             id
+            metaverseAssetId
             metaverse {
               name
             }
-            metaverseAssetId
             metaverseRegistry {
               id
             }
@@ -1361,10 +1561,10 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
           orderDirection: $orderDirection
         ) {
           id
+          metaverseAssetId
           metaverse {
             name
           }
-          metaverseAssetId
           metaverseRegistry {
             id
           }
@@ -1515,8 +1715,11 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
   liteAsset.minPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.minPeriod));
   liteAsset.maxPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.maxPeriod));
   liteAsset.maxFutureTimeTimedType = getTimeTypeStr(secondsToDuration(asset.maxFutureTime));
-
   if (isDecentralandMetaverseRegistry(asset?.metaverseRegistry?.id)) {
+    liteAsset.additionalData = await getAdditionalDecentralandData(
+      asset.metaverseAssetId,
+      asset?.decentralandData?.isLAND
+    );
     liteAsset.type = asset?.decentralandData?.isLAND ? 'LAND' : 'ESTATE';
     liteAsset.name = getDecentralandAssetName(asset.decentralandData);
     liteAsset.imageUrl = getLandImageUrl(asset);
@@ -1526,7 +1729,7 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
     liteAsset.name = data.name;
     liteAsset.type = data.attributes?.title.toUpperCase();
     liteAsset.imageUrl = data.image;
-    liteAsset.attributes = asset.attributes;
+    liteAsset.attributes = data.attributes;
     liteAsset.externalUrl = getCryptoVexelsPlayUrl(asset?.metaverseAssetId);
     liteAsset.place = data?.attributes ? [data?.attributes?.island, data?.attributes?.suburb] : null;
   }
@@ -1547,7 +1750,7 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
   return liteAsset;
 }
 
-function getAvailability(asset: any): AssetAvailablity {
+export function getAvailability(asset: any): AssetAvailablity {
   let minAvailability = '';
   let hasMinAvailability = false;
   let minAvailabilityType = '';
@@ -1656,4 +1859,33 @@ function sortAssetsByDescendingUsdPrice(a: AssetEntity, b: AssetEntity): number 
   } else {
     return 1;
   }
+}
+
+function getAdditionalDecentralandData(id: string, isLand: boolean): Promise<AdditionalDecantralandData> {
+  const decentralandRegistryAddress = isLand
+    ? '0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d'
+    : '0x959e104e1a4db6317fa58f8295f586e1a978c297';
+  const apiUrl = `https://api.decentraland.org/v2/contracts/${decentralandRegistryAddress}/tokens/`;
+  return fetch(`${apiUrl}${id}`)
+    .then((result) => result.json())
+    .then((data) => {
+      const { id, external_url, description, attributes } = data;
+      const parsedAttributes = parseAdditionalAttributes(attributes);
+      return {
+        tokenId: id,
+        externalUrl: external_url,
+        description,
+        attributes: parsedAttributes,
+        size: parsedAttributes.size || 1,
+      };
+    });
+}
+
+function parseAdditionalAttributes(data: additionalAttributes[]): any {
+  const parsedAttributes: any = {};
+  data?.forEach((item) => {
+    const fixedType = String(item.trait_type.split(' ').pop()).toLowerCase();
+    parsedAttributes[fixedType] = item.value;
+  });
+  return parsedAttributes;
 }

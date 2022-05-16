@@ -1,19 +1,20 @@
 import { FC, useEffect, useState } from 'react';
-import { TILES_URL_DECENTRALEND } from 'constants/modules';
 
 import { ReactComponent as ArrowLeftIcon } from 'assets/icons/arrow-left.svg';
 import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
-import Atlas, { AtlasTile, Coord, Layer } from 'components/custom/Atlas/Atlas';
 import { Button } from 'design-system';
 import { MinusIcon, PlusIcon } from 'design-system/icons';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 
+import Atlas, { AtlasTile, Coord, Layer } from '../atlas';
 import LandsExploreLandPreview from '../lands-explore-land-preview';
 import LandsExploreNavigatorInfo from '../lands-explore-navigator-info';
 
 import { getOwnerOrConsumerId } from 'modules/land-works/utils';
+
+import { TILES_URL_DECENTRALEND } from 'modules/land-works/constants';
 
 import styles from './lands-explore-map.module.scss';
 
@@ -28,7 +29,7 @@ interface Props {
 
 const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, highlights = [], lands }) => {
   const { clickedLandId, setClickedLandId, setSelectedTile, showCardPreview } = useLandsMapTile();
-  const { mapTiles, setMapTiles } = useLandsMapTiles();
+  const { mapTiles, setMapTiles, selectedId, setSelectedId } = useLandsMapTiles();
   const [clickZoom, setClickZoom] = useState(0.5);
   const [highlightedTiles, setHighlightedTiles] = useState<Coord[]>([]);
   const [scrollZoom, setScrollZoom] = useState(0.5);
@@ -78,7 +79,6 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
 
   const onPopupAtlasHandler = (data: { x: number; y: number }) => {
     const id = `${data.x},${data.y}`;
-
     if (!mapTiles || !mapTiles[id]) return;
 
     const land = lands.find((land) => {
@@ -97,15 +97,26 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
   const onClickAtlasHandler = (x: number, y: number) => {
     if (!mapTiles) return;
 
-    const id = `${x},${y}`;
-
-    const land = highlights.find((coord) => {
-      return coord.id === id;
-    });
+    const land = getLandById(x, y);
 
     if (land) {
+      land?.landId && setSelectedId && setSelectedId(land.landId);
       setClickedLandId && setClickedLandId(x, y);
     }
+  };
+
+  const getLandById = (x: number, y: number) => {
+    const id = `${x},${y}`;
+
+    return highlights.find((coord) => {
+      return coord.id === id;
+    });
+  };
+
+  const isEstate = (x: number, y: number) => {
+    const land = getLandById(x, y);
+    const asset = lands.find((a) => a.id == land?.landId);
+    return asset?.type.toLowerCase() === 'estate';
   };
 
   const isInList = (x: number, y: number) => {
@@ -116,26 +127,29 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
     if (!clickedLandId) {
       return false;
     }
-
     const [clickX, clickY] = clickedLandId.split(',');
 
     return x === Number(clickX) && y === Number(clickY);
   };
 
   const strokeLayer: Layer = (x, y) => {
-    return isInList(x, y) ? { color: '#ff0044', scale: 1.4 } : null;
+    const estate = isEstate(x, y);
+    return isInList(x, y) ? { color: '#ff0044', scale: estate ? 1.4 : 1.1 } : null;
   };
 
   const fillLayer: Layer = (x, y) => {
-    return isInList(x, y) ? { color: '#ff9990', scale: 1.2 } : null;
+    const estate = isEstate(x, y);
+    return isInList(x, y) ? { color: '#ff9990', scale: estate ? 1.2 : 0.9 } : null;
   };
 
   const clickedTileStrokeLayer: Layer = (x, y) => {
-    return isClicked(x, y) ? { color: '#26ff00', scale: 1.9 } : null;
+    const clickedLand = getLandById(x, y);
+    return clickedLand?.landId == selectedId || isClicked(x, y) ? { color: '#26ff00', scale: 1.9 } : null;
   };
 
   const clickedTileFillLayer: Layer = (x, y) => {
-    return isClicked(x, y) ? { color: '#ff9990', scale: 1.5 } : null;
+    const clickedLand = getLandById(x, y);
+    return clickedLand?.landId == selectedId || isClicked(x, y) ? { color: '#ff9990', scale: 1.5 } : null;
   };
 
   useEffect(() => {

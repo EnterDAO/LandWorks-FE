@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row } from 'antd';
 import BigNumber from 'bignumber.js';
 
-import Button from 'components/antd/button';
-import Modal, { ModalProps } from 'components/antd/modal';
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { Text } from 'components/custom/typography';
+import { Button, Grid, Modal } from 'design-system';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { LandClaimCheckBox } from 'modules/land-works/components/land-claim-modal-checkbox';
 
@@ -15,9 +13,11 @@ import { useLandworks } from '../../providers/landworks-provider';
 
 import './index.scss';
 
-type Props = ModalProps & {
-  rentFees?: AssetEntity[];
+type Props = {
+  open: boolean;
   onSubmit: () => void;
+  onCancel: () => void;
+  rentFees?: AssetEntity[];
 };
 
 const MAX_CLAIM_SELECTED_ASSETS = 10;
@@ -26,13 +26,13 @@ export const ClaimModal: React.FC<Props> = (props) => {
   const landWorksCtx = useLandworks();
   const { landWorksContract } = landWorksCtx;
 
-  const { rentFees, onCancel, onSubmit, ...modalProps } = props;
+  const { open, onCancel, onSubmit, rentFees, ...modalProps } = props;
 
   const [assets, setAssets] = useState([] as AssetEntity[]);
   const [totalEth, setTotalEth] = useState(BigNumber.ZERO);
   const [totalUsdc, setTotalUsdc] = useState(BigNumber.ZERO);
 
-  async function claim() {
+  const claim = async () => {
     try {
       const assetIds = assets.map((a) => new BigNumber(a.id));
       await landWorksContract?.claimMultipleRentFees(assetIds, onSubmit);
@@ -41,9 +41,9 @@ export const ClaimModal: React.FC<Props> = (props) => {
       showToastNotification(ToastType.Error, 'There was an error while claiming the rent.');
       console.log(e);
     }
-  }
+  };
 
-  function calculateTotals() {
+  const calculateTotals = () => {
     let totalEth = BigNumber.ZERO;
     let totalUsdc = BigNumber.ZERO;
     for (const asset of assets) {
@@ -56,7 +56,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
 
     setTotalEth(totalEth);
     setTotalUsdc(totalUsdc);
-  }
+  };
 
   const hasReachedMaxClaimsLimit = () => {
     return assets.length > MAX_CLAIM_SELECTED_ASSETS;
@@ -79,44 +79,42 @@ export const ClaimModal: React.FC<Props> = (props) => {
   }, [assets]);
 
   return (
-    <Modal
-      width={600}
-      className="claim-modal"
-      title={<p style={{ textAlign: 'center', fontSize: '16px' }}>Claim</p>}
-      onCancel={onCancel}
-      {...modalProps}
-    >
+    <Modal className="claim-modal" handleClose={onCancel} {...modalProps} open={open} title="Claim" width={640}>
       <Text type="p1" color="secondary" align="center" className="subtitle">
         Select the properties you want to claim your rent for
       </Text>
-      <Row gutter={[10, 10]}>
+      <Grid container>
         {rentFees?.map((data) => (
-          <Col key={data.id} span={24}>
-            <LandClaimCheckBox key={data.id} onSelected={updateAssets} data={data} />
-          </Col>
+          <LandClaimCheckBox key={data.id} onSelected={updateAssets} data={data} />
         ))}
         {hasReachedMaxClaimsLimit() && (
-          <Col span={24} className="max-transaction-limit">
+          <Grid item className="max-transaction-limit">
             <p>You have reached the limit of max claims in one transaction.</p>
-          </Col>
+          </Grid>
         )}
-        <Col span={24} className="claim-modal-footer">
-          <Row>
-            <Col span={19} className="prices-container" style={{ gap: 10 }}>
+        <Grid item className="claim-modal-footer">
+          <Grid container spacing={2}>
+            <Grid item xs={10} className="prices-container" style={{ gap: 10 }}>
               <span className="total-label">Total:</span>{' '}
               <SmallAmountTooltip className="totalPrice" amount={totalEth} />
               <Icon name="png/eth" className="eth-icon" />
               <SmallAmountTooltip className="totalPrice" amount={totalUsdc} />
               <Icon name="token-usdc" className="eth-icon" />
-            </Col>
-            <Col span={5}>
-              <Button className="claim-button" disabled={isClaimDisabled()} type="primary" onClick={claim}>
+            </Grid>
+            <Grid item xs={2}>
+              <Button
+                btnSize="auto"
+                className="claim-button"
+                disabled={isClaimDisabled()}
+                variant="gradient"
+                onClick={claim}
+              >
                 Claim
               </Button>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </Modal>
   );
 };

@@ -1,3 +1,4 @@
+import { Grid } from '@mui/material';
 import { styled } from '@mui/system';
 
 export const LandsSearchBarWrapperStyled = styled('div')(() => ({
@@ -43,4 +44,11 @@ export const StyledRow = styled('div')(() => ({
 
 export const StyledText = styled('span')(() => ({
   color: 'white',
+}));
+
+export const StyledGridContainer = styled(Grid)(() => ({
+  ['@media (min-width: 2660px)']: {
+    maxWidth: '2540px',
+    margin: '0 auto',
+  },
 }));

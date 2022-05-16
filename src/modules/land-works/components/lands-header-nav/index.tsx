@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, useLocation, withRouter } from 'react-router-dom';
 
-import { LocationState } from 'modules/land-works/views/single-land-view';
+import { LocationState } from 'modules/interface';
 
 import { ReactComponent as Rocket } from '../../../../resources/svg/rocket-02.svg';
 
@@ -37,9 +37,9 @@ const LandsNav: React.FC = () => {
       <NavLink
         className="tab"
         activeClassName="selected"
-        to={{ pathname: '/scene-expert', state: { tab: location.state?.tab } }}
+        to={{ pathname: '/scene-builder', state: { tab: location.state?.tab } }}
       >
-        <div className="nav-content">Scene Expert</div>
+        <div className="nav-content">Scene Builders</div>
         <div className="active-tab"></div>
       </NavLink>
     </div>

@@ -9,6 +9,10 @@
     z-index: 1;
     background-color: var(--theme-body-color);
   }
+  @media screen and (min-width: 2660px) {
+    max-width: 2540px;
+    margin: 0 auto;
+  }
 }
 
 .content-container.content-container--explore-view {
@@ -52,11 +56,18 @@
     &--expanded {
       left: 0%;
     }
+    &--enlarged {
+      height: calc(100vh - var(--navbar-height) - var(--explore-filters) - (var(--content-container-v-padding) * 2));
+    }
 
     @media screen and (min-width: 992px) {
       display: block;
     }
   }
+    @media screen and (min-width: 2660px) {
+      max-width: 2540px;
+      margin: 0 auto;
+    }
 }
 
 .fullWidth {

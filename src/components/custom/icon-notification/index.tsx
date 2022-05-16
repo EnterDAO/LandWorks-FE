@@ -41,7 +41,7 @@ const IconNotification: React.FunctionComponent<IconBubbleProps> = (props) => {
         <circle
           cx={width - notificationSize / 2}
           cy={notificationSize / 2}
-          fill="var(--theme-red-color)"
+          fill="var(--toastify-color-info)"
           r={notificationSize / 2}
         />
       )}

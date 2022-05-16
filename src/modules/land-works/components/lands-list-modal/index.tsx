@@ -1,5 +1,5 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { TWITTER_TEXT } from 'constants/modules';
 import { getEtherscanAddressUrl } from 'web3/utils';
 
 import ExternalLink from 'components/custom/external-link';
@@ -8,6 +8,8 @@ import { Spinner, SuccessStarIcon, TwitterIcon } from 'design-system/icons';
 import { useWallet } from 'wallets/wallet';
 
 import { ShareLink } from './styled';
+
+import { TWITTER_TEXT } from 'modules/land-works/constants';
 
 import './index.scss';
 
@@ -55,8 +57,15 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
         <div className="heading" style={{ fontSize: 25 }}>
           Successfully Listed!
         </div>
-        <div>Nice! You’ve successfully listed property.</div>
-        <Button variant="gradient" btnSize="medium">
+        <div>Nice! You&apos;ve successfully listed property.</div>
+        <Button
+          variant="gradient"
+          btnSize="medium"
+          onClick={(e) => {
+            e.preventDefault;
+            handleClose();
+          }}
+        >
           <Link className="link-to-properties" to="/my-properties">
             Go to my properties
           </Link>

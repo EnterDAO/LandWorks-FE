@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { Box, Grid } from 'design-system';
 import { getDecentralandNftImageUrl } from 'helpers/helpers';
-import { CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
+import { BaseNFT, CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
 
 import s from './s.module.scss';
 
@@ -21,7 +21,7 @@ interface ILandCardProps {
 
 interface ICryptoVoxel {
   land: CryptoVoxelNFT;
-  handleClick: (option: CryptoVoxelNFT) => void;
+  handleClick: (option: BaseNFT) => void;
   isSelectedProperty: boolean;
 }
 
@@ -41,12 +41,10 @@ export const LandListingCard: React.FC<ILandCardProps> = ({ land, handleClick, i
           <Box
             component="img"
             sx={{
-              minHeight: 100,
+              objectFit: 'cover',
               width: '100%',
-              maxHeight: { xs: 110, md: 90 },
-              maxWidth: { xs: 350, md: 250 },
+              height: '100%',
             }}
-            className={s.image}
             alt="The property from the offer."
             src={getDecentralandNftImageUrl(land)}
           />
@@ -94,10 +92,9 @@ export const EstateListingCard: React.FC<IEstateCardProps> = ({
           <Box
             component="img"
             sx={{
-              minHeight: 100,
+              objectFit: 'cover',
               width: '100%',
-              maxHeight: { xs: 110, md: 90 },
-              maxWidth: { xs: 350, md: 250 },
+              height: '100%',
             }}
             className={s.image}
             alt="The property from the offer."
@@ -140,10 +137,9 @@ export const VoxelListingCard: React.FC<ICryptoVoxel> = ({ land, handleClick, is
           <Box
             component="img"
             sx={{
-              minHeight: 100,
+              objectFit: 'cover',
               width: '100%',
-              maxHeight: { xs: 110, md: 90 },
-              maxWidth: { xs: 350, md: 250 },
+              height: '100%',
             }}
             className={s.image}
             alt="The property from the offer."
@@ -155,10 +151,7 @@ export const VoxelListingCard: React.FC<ICryptoVoxel> = ({ land, handleClick, is
             <span>{land.name.toLowerCase()}</span>
           </Grid>
           <Grid textAlign="left" className={s.details}>
-            <span>{land.formattedCoords}</span>
-          </Grid>
-          <Grid textAlign="left" className={s.details}>
-            <span>Parcel {land.formattedCoords}</span>
+            <span>{land.place}</span>
           </Grid>
         </Grid>
       </Grid>

@@ -19,9 +19,9 @@ const SelectedListCard: React.FC<ISelectedListCard> = ({ src, name, coordinatesC
             <Box
               component="img"
               sx={{
-                minHeight: 100,
+                objectFit: 'cover',
                 width: '100%',
-                maxHeight: { xs: 233, md: 167 },
+                height: '100%',
               }}
               className={s.image}
               alt="The property from the offer."

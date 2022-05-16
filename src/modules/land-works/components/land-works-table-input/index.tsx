@@ -28,6 +28,9 @@ type Iprops = {
 };
 type transactionStatus = 'loading' | 'success' | 'pending';
 
+const SignTransactionMessage = 'Signing transaction...';
+const UpdateTransactionMessage = 'Updating operator...';
+
 const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, rentId, renter, isEditable }) => {
   const wallet = useWallet();
   const landWorks = useLandworks();
@@ -39,6 +42,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, re
   const [transactionStatus, setTransactionStatus] = useState<transactionStatus>('pending');
   const [canEditOperator, setCanEditOperator] = useState(false);
   const [ens, setEns] = useState('');
+  const [modalText, setModalText] = useState(SignTransactionMessage);
 
   const shortedOperator = shortenAddr(newOperator || operator);
 
@@ -85,7 +89,9 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, re
 
         const rentArray = rentId.split('-');
         if (rentArray.length === 2) {
-          await landWorksContract.updateOperator(assetId, metaverseRegistry || '', rentArray[1], scopedAddress);
+          await landWorksContract.updateOperator(assetId, metaverseRegistry || '', rentArray[1], scopedAddress, () =>
+            setModalText(UpdateTransactionMessage)
+          );
           showToastNotification(ToastType.Success, 'Operator updated successfully!');
           setTransactionStatus('success');
           setNewOperator('');
@@ -152,7 +158,9 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, re
               </Button>
             </StyledGrid>
           )}
-          {transactionStatus === 'loading' && <ModalLoader href={getEtherscanAddressUrl(wallet.account) || ''} />}
+          {transactionStatus === 'loading' && (
+            <ModalLoader text={modalText} href={getEtherscanAddressUrl(wallet.account) || ''} />
+          )}
           {transactionStatus === 'success' && (
             <ModalSuccess
               buttonText="close"

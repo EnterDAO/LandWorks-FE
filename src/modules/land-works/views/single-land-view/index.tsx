@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { TWITTER_TEXT } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
-import { Col, Row } from 'antd';
 
 import { Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import EditPropertyViewNew from 'modules/land-works/components/edit-property';
+import { LocationState } from 'modules/interface';
+import EditProperty from 'modules/land-works/components/edit-property';
+import SingleViewParcelProperties from 'modules/land-works/components/land-parcel-properties';
+import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 
 import ExternalLink from '../../../../components/custom/external-link';
 import { useWallet } from '../../../../wallets/wallet';
 import { ASSET_SUBSCRIPTION, AssetEntity, fetchAdjacentDecentralandAssets, parseAsset } from '../../api';
-import LandWorkCard from '../../components/land-works-card';
 import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
 import { RentModal } from '../../components/lands-rent-modal';
@@ -26,17 +26,9 @@ import { useLandworks } from '../../providers/landworks-provider';
 import { calculateNeighbours } from 'modules/land-works/utils';
 import { getNowTs } from '../../../../utils';
 
-import './index.scss';
+import { TWITTER_TEXT } from 'modules/land-works/constants';
 
-export interface LocationState {
-  from: string;
-  title: string;
-  tab: string;
-  previousPage?: {
-    from: string;
-    title: string;
-  };
-}
+import './index.scss';
 
 const SingleLandView: React.FC = () => {
   const wallet = useWallet();
@@ -101,7 +93,7 @@ const SingleLandView: React.FC = () => {
   };
 
   const shouldShowStake = () => {
-    return isOwner() && asset?.status === AssetStatus.LISTED;
+    return isOwner() && asset?.status === AssetStatus.LISTED && asset?.metaverse.name === 'Decentraland';
   };
 
   // Case when you do 2 in 1 Delist + Withdraw
@@ -241,6 +233,9 @@ const SingleLandView: React.FC = () => {
     title: location.state?.previousPage?.title || location.state?.title || 'Explore',
   };
 
+  const isCryptovoxel = asset?.metaverse?.name === 'Voxels';
+  const parselProperties = isCryptovoxel ? asset.attributes : asset.additionalData;
+
   return (
     <div className="content-container single-card-section">
       <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
@@ -270,7 +265,7 @@ const SingleLandView: React.FC = () => {
         </Grid>
       </Modal>
 
-      <Row gutter={40} className="head-nav">
+      <Grid container className="head-nav">
         <div className="left-wrapper">
           <div className="head-breadcrumbs">
             <Link
@@ -335,8 +330,7 @@ const SingleLandView: React.FC = () => {
             ) : (
               <LandsTooltip
                 placement="bottom"
-                trigger="hover"
-                text={
+                target={
                   <>
                     You are configured as consumer of the property. If you have staked the property in{' '}
                     <ExternalLink href="https://dao.enterdao.xyz/yield-farming">LandWorks Yield Farming</ExternalLink>,
@@ -377,8 +371,7 @@ const SingleLandView: React.FC = () => {
               shouldHaveWithdrawTooltip() ? (
                 <LandsTooltip
                   placement="bottom"
-                  trigger="hover"
-                  text="There are still active/pending rents. You will be able to withdraw your property once all rents end."
+                  target="There are still active/pending rents. You will be able to withdraw your property once all rents end."
                 >
                   <span>
                     <Button variant="tertiary" btnSize="xsmall" disabled={true}>
@@ -399,8 +392,7 @@ const SingleLandView: React.FC = () => {
             ) : (
               <LandsTooltip
                 placement="bottom"
-                trigger="hover"
-                text={
+                target={
                   <>
                     You are configured as consumer of the property. If you have staked the property in{' '}
                     <ExternalLink href="https://dao.enterdao.xyz/yield-farming">LandWorks Yield Farming</ExternalLink>,
@@ -416,7 +408,8 @@ const SingleLandView: React.FC = () => {
               </LandsTooltip>
             ))}
         </div>
-      </Row>
+      </Grid>
+
       <SingleViewLandCard
         isClaimButtonDisabled={claimButtonDisabled}
         isRentButtonDisabled={rentButtonDisabled}
@@ -428,39 +421,64 @@ const SingleLandView: React.FC = () => {
         }}
       />
 
+      {(asset.attributes || asset.additionalData) && (
+        <SingleViewParcelProperties attributes={parselProperties} id={asset?.id} />
+      )}
+
       <SingleViewLandHistory assetId={tokenId} metaverseRegistry={asset.metaverseRegistry?.id} />
 
       {!!adjacentLands.length && (
-        <Row className="nearby-section">
+        <Grid container className="nearby-section">
           <div className="nearby-title">
             <p className="nearby-heading">Nearby Properties </p>
             <p className="nearby-description">{adjacentLands.length} Properties</p>
           </div>
+          {paginatedNearbyLands?.length > 4 && (
+            <Grid item xs={24} className="single-lands-pagination">
+              {items.map(({ type, ...item }, index) => {
+                if (['next', 'previous'].includes(type))
+                  return (
+                    <button {...item} key={index}>
+                      {type === 'previous' ? <ArrowLeftIcon /> : <ArrowRightIcon />}
+                    </button>
+                  );
+              })}
+            </Grid>
+          )}
 
-          <Col span={24} className="single-lands-pagination">
-            {items.map(({ type, ...item }, index) => {
-              if (['next', 'previous'].includes(type))
-                return (
-                  <button {...item} key={index}>
-                    {type === 'previous' ? <ArrowLeftIcon /> : <ArrowRightIcon />}
-                  </button>
-                );
-            })}
-          </Col>
-
-          <Col span={24}>
-            <Row gutter={[15, 15]}>
-              {paginatedNearbyLands.map((land) => (
-                <LandWorkCard key={land.id} land={land} />
-              ))}
-            </Row>
-          </Col>
-        </Row>
+          <Grid
+            container
+            spacing={4}
+            rowSpacing={4}
+            columnSpacing={4}
+            sx={paginatedNearbyLands?.length <= 4 ? { marginTop: '35px' } : {}}
+          >
+            {paginatedNearbyLands.map((land) => (
+              <Grid item xs={3} key={land.id}>
+                <LandWorkCard
+                  onClick={(e) => {
+                    e.preventDefault();
+                    history.push({
+                      pathname: `/property/${land.id}`,
+                      state: {
+                        from: window.location.pathname,
+                        title: 'Nearby property',
+                        tab: location?.state?.tab,
+                        previousPage: { from: location?.state?.from, title: location?.state?.title },
+                      },
+                    });
+                  }}
+                  land={land}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
       )}
 
       {showEditModal && (
         <Modal height={'90vh'} open={showEditModal} handleClose={() => setShowEditModal(false)}>
-          <EditPropertyViewNew
+          <EditProperty
             closeModal={() => setShowEditModal(false)}
             openDelistPrompt={showPrompt}
             delistText={isWithdraw() ? 'withdraw property' : 'delist property'}

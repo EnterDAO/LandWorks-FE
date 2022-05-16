@@ -7,7 +7,7 @@ import { RangeValue } from 'rc-picker/lib/interface';
 import { ONE_ADDRESS, getEtherscanAddressUrl, getHumanValue } from 'web3/utils';
 
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import config from 'config';
 import { Button, Input, Modal, Tooltip } from 'design-system';
 import { CalendarIcon, ProfileIcon, WarningIcon } from 'design-system/icons';
@@ -40,6 +40,9 @@ type Props = ModalProps & {
   onCancel: () => void;
 };
 
+const SignTransactionMessage = 'Signing transaction...';
+const RentTransactionMessage = 'Renting property...';
+
 export const RentModal: React.FC<Props> = (props) => {
   const {
     availability,
@@ -67,6 +70,7 @@ export const RentModal: React.FC<Props> = (props) => {
   const { landWorksContract } = landworks;
   const { erc20Contract } = erc20;
 
+  const [modalText, setModalText] = useState<string>(SignTransactionMessage);
   const [editedValue, setEditedValue] = useState<string>(wallet.account || '');
   const [period, setPeriod] = useState(0);
   const [endDate, setEndDate] = useState<string>();
@@ -190,7 +194,10 @@ export const RentModal: React.FC<Props> = (props) => {
           maxRentStart,
           paymentToken.id,
           value,
-          onSubmit
+          () => {
+            onSubmit();
+            setModalText(RentTransactionMessage);
+          }
         );
       } else {
         await landWorksContract?.rentWithERC20(
@@ -201,7 +208,10 @@ export const RentModal: React.FC<Props> = (props) => {
           maxRentStart,
           paymentToken.id,
           value,
-          onSubmit
+          () => {
+            onSubmit();
+            setModalText(RentTransactionMessage);
+          }
         );
         erc20Contract?.loadAllowance(config.contracts.landworksContract);
       }
@@ -338,16 +348,12 @@ export const RentModal: React.FC<Props> = (props) => {
                       </Grid>
                       <Grid item className="rent-price">
                         <p>Rent price</p>
-                        <span>
-                          <>
-                            <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" />{' '}
-                            <SmallAmountTooltip amount={totalPrice} /> {paymentToken?.symbol || ''}{' '}
-                          </>
-                          <>
-                            <span className="price">
-                              <SmallAmountTooltip amount={usdPrice} symbol="$" />
-                            </span>
-                          </>
+                        <span className="price-summary" style={{ display: 'flex', alignItems: 'center' }}>
+                          <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" />{' '}
+                          <SmallAmountTooltip amount={totalPrice} /> {paymentToken?.symbol || ''}{' '}
+                          <span className="price">
+                            <SmallAmountTooltip amount={usdPrice} symbol="$" />
+                          </span>
                         </span>
                       </Grid>
                     </Grid>
@@ -392,11 +398,11 @@ export const RentModal: React.FC<Props> = (props) => {
         <ModalSuccess
           title="Successfully Rented!"
           buttonText="go to my properties"
-          description="Nice! You’ve successfully rented this property."
+          description="Nice! You've successfully rented this property."
           buttonEvent={() => history.push('/my-properties')}
         />
       )}
-      {showLoader() && <ModalLoader href={getEtherscanAddressUrl(wallet.account) || ''} />}
+      {showLoader() && <ModalLoader text={modalText} href={getEtherscanAddressUrl(wallet.account) || ''} />}
     </Modal>
   );
 };
