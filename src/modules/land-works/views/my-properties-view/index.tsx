@@ -221,7 +221,7 @@ const MyPropertiesView: FC = () => {
             lentCount={user?.ownerAndConsumerAssets?.length || 0}
           />
           <LandsMyPropertiesSubheader
-            propertiesCount={lands.length}
+            propertiesCount={filteredLands.length}
             onChangeCurrencyCallback={onChangeCurrencyHandler}
             onChangeMetaverse={onChangeMetaverse}
           />
