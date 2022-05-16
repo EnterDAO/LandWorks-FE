@@ -234,6 +234,7 @@ const SingleLandView: React.FC = () => {
   };
 
   const isCryptovoxel = asset?.metaverse?.name === 'Voxels';
+  const parselProperties = isCryptovoxel ? asset.attributes : asset.additionalData;
 
   return (
     <div className="content-container single-card-section">
@@ -420,7 +421,9 @@ const SingleLandView: React.FC = () => {
         }}
       />
 
-      {isCryptovoxel && <SingleViewParcelProperties attributes={asset?.attributes} id={asset?.id} />}
+      {(asset.attributes || asset.additionalData) && (
+        <SingleViewParcelProperties attributes={parselProperties} id={asset?.id} />
+      )}
 
       <SingleViewLandHistory assetId={tokenId} metaverseRegistry={asset.metaverseRegistry?.id} />
 

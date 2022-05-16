@@ -553,7 +553,7 @@ export type AssetEntity = {
   rents: RentEntity[];
   lastRentEnd: string;
   isAvailable: boolean;
-  additionalData?: AdditionalDecantralandData;
+  additionalData: AdditionalDecantralandData;
 };
 
 export type AdditionalDecantralandData = {
@@ -561,11 +561,16 @@ export type AdditionalDecantralandData = {
   externalUrl: string;
   description: string;
   tokenId: string;
-  attributes: additionalAttributes;
+  attributes: parsedAdditionalAttributes;
 };
 
+type TraitType = 'X' | 'Y' | 'size' | 'district' | 'plaza' | 'road';
+
+type parsedAdditionalAttributes = {
+  [key in TraitType]: number;
+};
 type additionalAttributes = {
-  trait_type: 'X' | 'Y' | 'Size' | 'Distance to District' | 'Distance to Plaza' | 'Distance to Road';
+  trait_type: TraitType;
   value: number;
   display_type: string;
 };
@@ -1864,8 +1869,23 @@ function getAdditionalDecentralandData(id: string, isLand: boolean): Promise<Add
   return fetch(`${apiUrl}${id}`)
     .then((result) => result.json())
     .then((data) => {
-      const { id, external_url, description, attributes, size } = data;
-
-      return { tokenId: id, externalUrl: external_url, description, attributes, size: size || 1 };
+      const { id, external_url, description, attributes } = data;
+      const parsedAttributes = parseAdditionalAttributes(attributes);
+      return {
+        tokenId: id,
+        externalUrl: external_url,
+        description,
+        attributes: parsedAttributes,
+        size: parsedAttributes.size || 1,
+      };
     });
+}
+
+function parseAdditionalAttributes(data: additionalAttributes[]): any {
+  const parsedAttributes: any = {};
+  data?.forEach((item) => {
+    const fixedType = String(item.trait_type.split(' ').pop()).toLowerCase();
+    parsedAttributes[fixedType] = item.value;
+  });
+  return parsedAttributes;
 }
