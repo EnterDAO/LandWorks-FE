@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { useState } from 'react';
 import { Box } from '@mui/material';
 
 import { ChipStyled, RootStyled, TypographyStyled } from './styled';
@@ -15,23 +17,40 @@ interface IEstateLandOverlay {
 }
 
 const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates, place }) => {
+  const [expand, setExpand] = useState(false);
+  const coordsLength = coordinates?.length;
+  const hasMoreThanSix = coordsLength! > 6;
+  const hasLessThanSix = coordsLength! > 0 && coordsLength! <= 6;
+
+  const maxWidth = expand ? '400px' : '275px';
+  const coords = hasMoreThanSix && expand ? coordinates : coordinates?.slice(0, 5);
+
   return (
-    <RootStyled>
+    <RootStyled style={{ maxWidth: maxWidth }} onMouseLeave={() => setExpand(false)}>
       <TypographyStyled variant="h3">{title}</TypographyStyled>
 
-      {coordinates && coordinates?.length >= 1 && (
+      {coordinates && hasLessThanSix && (
         <div>
           {coordinates.map((estateCoord: Coordinate) => (
             <ChipStyled key={estateCoord.id} label={`X: ${estateCoord.x}, Y: ${estateCoord.y}`} variant="outlined" />
           ))}
         </div>
       )}
+
+      {coordinates && hasMoreThanSix && (
+        <>
+          {coords?.map((estateCoord: Coordinate) => (
+            <ChipStyled key={estateCoord.id} label={`X: ${estateCoord.x}, Y: ${estateCoord.y}`} variant="outlined" />
+          ))}
+          <div onMouseEnter={() => setExpand(true)}>{!expand && <ChipStyled label="More..." variant="outlined" />}</div>
+        </>
+      )}
+
       <>
         {place && place.length && (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            {place.map((title, index) => (
-              <ChipStyled key={index} label={title} variant="outlined" />
-            ))}
+            <ChipStyled style={{ textAlign: 'left' }} label={'Island: ' + place[0]} variant="outlined" />
+            <ChipStyled style={{ textAlign: 'left' }} label={'Suburb: ' + place[1]} variant="outlined" />
           </Box>
         )}
       </>
