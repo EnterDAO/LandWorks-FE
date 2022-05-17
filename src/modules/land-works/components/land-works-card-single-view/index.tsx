@@ -24,7 +24,7 @@ import LandsMapOverlay from '../lands-map-overlay';
 import { StyledBox, StyledGrid } from './styled';
 
 import { getNowTs } from '../../../../utils';
-import { ZERO_BIG_NUMBER, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
+import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
 
 import './index.scss';
 
@@ -339,7 +339,11 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                     </Tooltip>
                     <Tooltip disableFocusListener placement="right" title={'Contact operator via Blockscan'}>
                       <StyledBox>
-                        <MessageIcon onClick={() => openChat(asset?.operator)} />
+                        <MessageIcon
+                          onClick={() =>
+                            openChat(asset?.operator == DEFAULT_ADDRESS ? ownerOrConsumer : asset?.operator)
+                          }
+                        />
                       </StyledBox>
                     </Tooltip>
                   </StyledGrid>

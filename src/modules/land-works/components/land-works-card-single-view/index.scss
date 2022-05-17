@@ -136,7 +136,7 @@
       color: var(--theme-accent-color);
       font-size: 14px;
       font-weight: 500;
-      width: 255px;
+      min-width: 255px;
       display: block;
     }
 
@@ -239,7 +239,7 @@
         color: rgba(93, 143, 240, 1);
         font-size: 14px;
         font-weight: 500;
-        width: 255px;
+        min-width: 255px;
         display: block;
       }
     }
