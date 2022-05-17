@@ -276,26 +276,26 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                     </ExternalLink>
                   </Grid>
                   <StyledGrid item>
-                    <StyledBox>
-                      <Tooltip
-                        open={openOwnerTooltip}
-                        PopperProps={{
-                          disablePortal: true,
-                        }}
-                        disableFocusListener
-                        disableHoverListener
-                        disableTouchListener
-                        placement="right"
-                        title={'Copied'}
-                      >
+                    <Tooltip
+                      open={openOwnerTooltip}
+                      PopperProps={{
+                        disablePortal: true,
+                      }}
+                      disableFocusListener
+                      disableHoverListener
+                      disableTouchListener
+                      placement="right"
+                      title={'Copied'}
+                    >
+                      <StyledBox>
                         <CopyIcon onClick={() => hadleTooltip(`${ens || ownerOrConsumer}`, 'owner')} />
-                      </Tooltip>
-                    </StyledBox>
-                    <StyledBox>
-                      <Tooltip disableFocusListener placement="right" title={'Contact owner via Blockscan'}>
+                      </StyledBox>
+                    </Tooltip>
+                    <Tooltip disableFocusListener placement="right" title={'Contact owner via Blockscan'}>
+                      <StyledBox>
                         <MessageIcon onClick={() => openChat(ens || ownerOrConsumer)} />
-                      </Tooltip>
-                    </StyledBox>
+                      </StyledBox>
+                    </Tooltip>
                   </StyledGrid>
                 </Grid>
                 <Grid container className="operator-container">
@@ -322,26 +322,26 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                   </Grid>
 
                   <StyledGrid item>
-                    <StyledBox>
-                      <Tooltip
-                        open={openOperatorTooltip}
-                        PopperProps={{
-                          disablePortal: true,
-                        }}
-                        disableFocusListener
-                        disableHoverListener
-                        disableTouchListener
-                        placement="right"
-                        title={'Copied'}
-                      >
+                    <Tooltip
+                      open={openOperatorTooltip}
+                      PopperProps={{
+                        disablePortal: true,
+                      }}
+                      disableFocusListener
+                      disableHoverListener
+                      disableTouchListener
+                      placement="right"
+                      title={'Copied'}
+                    >
+                      <StyledBox>
                         <CopyIcon onClick={() => hadleTooltip(`${ensOperator || asset?.operator}`, 'operator')} />
-                      </Tooltip>
-                    </StyledBox>
-                    <StyledBox>
-                      <Tooltip disableFocusListener placement="right" title={'Contact operator via Blockscan'}>
+                      </StyledBox>
+                    </Tooltip>
+                    <Tooltip disableFocusListener placement="right" title={'Contact operator via Blockscan'}>
+                      <StyledBox>
                         <MessageIcon onClick={() => openChat(asset?.operator)} />
-                      </Tooltip>
-                    </StyledBox>
+                      </StyledBox>
+                    </Tooltip>
                   </StyledGrid>
                 </Grid>
               </Grid>
