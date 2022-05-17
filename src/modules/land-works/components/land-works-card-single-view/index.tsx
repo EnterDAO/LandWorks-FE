@@ -9,6 +9,7 @@ import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import config from 'config';
 import { Button, Tooltip } from 'design-system';
+import { CopyIcon, MessageIcon } from 'design-system/icons';
 import { getENSName, getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 
@@ -20,6 +21,7 @@ import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 import SingleLandCardSkeleton from '../land-single-card-loader';
 import LandsMapOverlay from '../lands-map-overlay';
+import { StyledBox, StyledGrid } from './styled';
 
 import { getNowTs } from '../../../../utils';
 import { ZERO_BIG_NUMBER, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
@@ -53,6 +55,8 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const [countDownTimestamp, setCountDownTimestamp] = useState('0');
   const [countDownPlaceholderMessage, setCountDownPlaceholderMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [openOwnerTooltip, setOpenOwnerTooltip] = useState(false);
+  const [openOperatorTooltip, setOpenOperatorTooltip] = useState(false);
 
   const isOwnerOrConsumer = () => {
     return (
@@ -168,6 +172,21 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
 
   const ownerOrConsumer = isAssetStaked() ? asset?.consumer?.id : asset?.owner?.id;
 
+  const hadleTooltip = (address: string, type: string) => {
+    navigator.clipboard.writeText(address).then(() => {
+      type === 'owner' ? setOpenOwnerTooltip(true) : setOpenOperatorTooltip(true);
+      setTimeout(() => {
+        setOpenOwnerTooltip(false);
+        setOpenOperatorTooltip(false);
+      }, 1000);
+    });
+  };
+
+  const openChat = (address: string | undefined) => {
+    if (!address) return;
+    window.open(`https://chat.blockscan.com/index?a=${address}`, '_blank');
+  };
+
   const [ens, setEns] = useState<string>();
   const [ensOperator, setEnsOperator] = useState<string>();
 
@@ -256,6 +275,28 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       {ens && ens !== ownerOrConsumer ? ens : shortenAddr(ownerOrConsumer, 25, 4)}
                     </ExternalLink>
                   </Grid>
+                  <StyledGrid item>
+                    <StyledBox>
+                      <Tooltip
+                        open={openOwnerTooltip}
+                        PopperProps={{
+                          disablePortal: true,
+                        }}
+                        disableFocusListener
+                        disableHoverListener
+                        disableTouchListener
+                        placement="right"
+                        title={'Copied'}
+                      >
+                        <CopyIcon onClick={() => hadleTooltip(`${ens || ownerOrConsumer}`, 'owner')} />
+                      </Tooltip>
+                    </StyledBox>
+                    <StyledBox>
+                      <Tooltip disableFocusListener placement="right" title={'Contact owner via Blockscan'}>
+                        <MessageIcon onClick={() => openChat(ens || ownerOrConsumer)} />
+                      </Tooltip>
+                    </StyledBox>
+                  </StyledGrid>
                 </Grid>
                 <Grid container className="operator-container">
                   <Grid item xs={4} className="current-address">
@@ -279,6 +320,29 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                         : shortenAddr(asset?.operator, 25, 4)}
                     </ExternalLink>
                   </Grid>
+
+                  <StyledGrid item>
+                    <StyledBox>
+                      <Tooltip
+                        open={openOperatorTooltip}
+                        PopperProps={{
+                          disablePortal: true,
+                        }}
+                        disableFocusListener
+                        disableHoverListener
+                        disableTouchListener
+                        placement="right"
+                        title={'Copied'}
+                      >
+                        <CopyIcon onClick={() => hadleTooltip(`${ensOperator || asset?.operator}`, 'operator')} />
+                      </Tooltip>
+                    </StyledBox>
+                    <StyledBox>
+                      <Tooltip disableFocusListener placement="right" title={'Contact operator via Blockscan'}>
+                        <MessageIcon onClick={() => openChat(asset?.operator)} />
+                      </Tooltip>
+                    </StyledBox>
+                  </StyledGrid>
                 </Grid>
               </Grid>
 
