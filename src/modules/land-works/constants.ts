@@ -114,6 +114,7 @@ export const sortColumns = [
   'maxPeriod',
   'timestamp',
   'lastRentTimestamp',
+  'size',
 ];
 
 export const sortDirections = [
@@ -121,6 +122,7 @@ export const sortDirections = [
   SortDirection.ASC,
   SortDirection.DESC,
   SortDirection.ASC,
+  SortDirection.DESC,
   SortDirection.DESC,
   SortDirection.DESC,
   SortDirection.DESC,

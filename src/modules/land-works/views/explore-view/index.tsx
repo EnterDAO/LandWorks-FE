@@ -58,11 +58,11 @@ const ExploreView: React.FC = () => {
     type: '',
     owner: '',
   });
-
-  const [sortDir, setSortDir] = useState(sortDirections[sessionFilters.order - 1 || 0]);
-  const [sortColumn, setSortColumn] = useState(sortColumns[sessionFilters.order - 1 || 0]);
-
   const [metaverse, setMetaverse] = useState(sessionFilters.metaverse || DECENTRALAND_METAVERSE);
+  const orderFilter =
+    sessionFilters.order && sessionFilters.order[`${metaverse}`] ? sessionFilters.order[`${metaverse}`] - 1 : 0;
+  const [sortDir, setSortDir] = useState(sortDirections[orderFilter]);
+  const [sortColumn, setSortColumn] = useState(sortColumns[orderFilter]);
 
   const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
   const [mapExpanded, setMapExpanded] = useState(false);
@@ -158,17 +158,21 @@ const ExploreView: React.FC = () => {
   const getLands = useDebounce(
     async (orderColumn: string, sortDir: string, lastRentEnd: string, paymentToken: string, owner: string) => {
       setLoading(true);
+      const sortBySize = orderColumn == 'size';
 
       const lands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
         String(metaverse),
         lastRentEnd,
-        orderColumn,
+        sortBySize ? 'totalRents' : orderColumn,
         sortDir,
         paymentToken,
         owner
       );
 
-      setLands(lands.data);
+      metaverse == 1 && sortBySize
+        ? setLands(lands.data.sort((a, b) => b.additionalData.size - a.additionalData.size))
+        : setLands(lands.data);
+
       setLoading(false);
       const highlights = getAllLandsCoordinates(lands.data);
       setCoordinatesHighlights(highlights);
