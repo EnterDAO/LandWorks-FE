@@ -58,11 +58,11 @@ const ExploreView: React.FC = () => {
     type: '',
     owner: '',
   });
-
-  const [sortDir, setSortDir] = useState(sortDirections[sessionFilters.order - 1 || 0]);
-  const [sortColumn, setSortColumn] = useState(sortColumns[sessionFilters.order - 1 || 0]);
-
   const [metaverse, setMetaverse] = useState(sessionFilters.metaverse || DECENTRALAND_METAVERSE);
+  const orderFilter =
+    sessionFilters.order && sessionFilters.order[`${metaverse}`] ? sessionFilters.order[`${metaverse}`] - 1 : 0;
+  const [sortDir, setSortDir] = useState(sortDirections[orderFilter]);
+  const [sortColumn, setSortColumn] = useState(sortColumns[orderFilter]);
 
   const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
   const [mapExpanded, setMapExpanded] = useState(false);
@@ -169,7 +169,7 @@ const ExploreView: React.FC = () => {
         owner
       );
 
-      sortBySize
+      metaverse == 1 && sortBySize
         ? setLands(lands.data.sort((a, b) => b.additionalData.size - a.additionalData.size))
         : setLands(lands.data);
 
