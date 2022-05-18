@@ -158,17 +158,21 @@ const ExploreView: React.FC = () => {
   const getLands = useDebounce(
     async (orderColumn: string, sortDir: string, lastRentEnd: string, paymentToken: string, owner: string) => {
       setLoading(true);
+      const sortBySize = orderColumn == 'size';
 
       const lands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
         String(metaverse),
         lastRentEnd,
-        orderColumn,
+        sortBySize ? 'totalRents' : orderColumn,
         sortDir,
         paymentToken,
         owner
       );
 
-      setLands(lands.data);
+      sortBySize
+        ? setLands(lands.data.sort((a, b) => b.additionalData.size - a.additionalData.size))
+        : setLands(lands.data);
+
       setLoading(false);
       const highlights = getAllLandsCoordinates(lands.data);
       setCoordinatesHighlights(highlights);

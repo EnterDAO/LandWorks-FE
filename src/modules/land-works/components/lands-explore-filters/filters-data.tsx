@@ -29,6 +29,10 @@ export const sortData = [
     label: 'Recently: rented',
     value: 7,
   },
+  {
+    label: 'Size: biggest',
+    value: 8,
+  },
 ];
 
 export const landsData = [
