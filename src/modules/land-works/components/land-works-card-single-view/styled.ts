@@ -1,4 +1,4 @@
-import { Box, BoxProps, Grid, GridProps, styled } from '@mui/material';
+import { Button, ButtonProps, Grid, GridProps, styled } from '@mui/material';
 
 export const StyledGrid = styled(Grid)<GridProps>(() => ({
   display: 'flex',
@@ -7,10 +7,10 @@ export const StyledGrid = styled(Grid)<GridProps>(() => ({
   margin: 2,
 }));
 
-export const StyledBox = styled(Box)<BoxProps>(() => ({
+export const StyledButton = styled(Button)<ButtonProps>(() => ({
   marginLeft: 5,
   background: '#27273A',
-  width: 26,
+  minWidth: 26,
   height: 26,
   borderRadius: 5,
   display: 'flex',
@@ -26,5 +26,10 @@ export const StyledBox = styled(Box)<BoxProps>(() => ({
   },
   '&:hover': {
     background: '#3C3C4E',
+  },
+  '&:disabled': {
+    '& path': {
+      fill: 'gray',
+    },
   },
 }));

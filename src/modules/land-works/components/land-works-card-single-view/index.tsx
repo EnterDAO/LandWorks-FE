@@ -21,7 +21,7 @@ import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 import SingleLandCardSkeleton from '../land-single-card-loader';
 import LandsMapOverlay from '../lands-map-overlay';
-import { StyledBox, StyledGrid } from './styled';
+import { StyledButton, StyledGrid } from './styled';
 
 import { getNowTs } from '../../../../utils';
 import { DEFAULT_ADDRESS, ZERO_BIG_NUMBER, getEtherscanAddressUrl, shortenAddr } from '../../../../web3/utils';
@@ -287,14 +287,14 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       placement="right"
                       title={'Copied'}
                     >
-                      <StyledBox>
-                        <CopyIcon onClick={() => hadleTooltip(`${ens || ownerOrConsumer}`, 'owner')} />
-                      </StyledBox>
+                      <StyledButton onClick={() => hadleTooltip(`${ens || ownerOrConsumer}`, 'owner')}>
+                        <CopyIcon />
+                      </StyledButton>
                     </Tooltip>
                     <Tooltip disableFocusListener placement="right" title={'Contact owner via Blockscan'}>
-                      <StyledBox>
-                        <MessageIcon onClick={() => openChat(ens || ownerOrConsumer)} />
-                      </StyledBox>
+                      <StyledButton onClick={() => openChat(ens || ownerOrConsumer)}>
+                        <MessageIcon />
+                      </StyledButton>
                     </Tooltip>
                   </StyledGrid>
                 </Grid>
@@ -333,18 +333,17 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       placement="right"
                       title={'Copied'}
                     >
-                      <StyledBox>
-                        <CopyIcon onClick={() => hadleTooltip(`${ensOperator || asset?.operator}`, 'operator')} />
-                      </StyledBox>
+                      <StyledButton onClick={() => hadleTooltip(`${ensOperator || asset?.operator}`, 'operator')}>
+                        <CopyIcon />
+                      </StyledButton>
                     </Tooltip>
                     <Tooltip disableFocusListener placement="right" title={'Contact operator via Blockscan'}>
-                      <StyledBox>
-                        <MessageIcon
-                          onClick={() =>
-                            openChat(asset?.operator == DEFAULT_ADDRESS ? ownerOrConsumer : asset?.operator)
-                          }
-                        />
-                      </StyledBox>
+                      <StyledButton
+                        disabled={asset?.operator == DEFAULT_ADDRESS}
+                        onClick={() => openChat(asset?.operator)}
+                      >
+                        <MessageIcon />
+                      </StyledButton>
                     </Tooltip>
                   </StyledGrid>
                 </Grid>
