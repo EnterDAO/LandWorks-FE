@@ -401,12 +401,7 @@ export function getTimeTypeStr(values: ParsedDate): string {
   return `${timeValue} ${timeType}`;
 }
 
-export const sessionStorageHandler = (
-  option: 'get' | 'set',
-  key: string,
-  name: string,
-  value?: string | number | boolean
-): any => {
+export const sessionStorageHandler = (option: 'get' | 'set', key: string, name: string, value?: any): any => {
   const filters = sessionStorage.getItem(key);
   if (filters == null) {
     if (option == 'get') {

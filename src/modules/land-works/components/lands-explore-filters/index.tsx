@@ -25,10 +25,13 @@ const LandWorksFilters: FC<Props> = ({
   onChangeCurrency,
   onChangeMetaverse,
 }) => {
+  const orderFilter = sessionStorageHandler('get', 'explore-filters', 'order');
+
   const wallet = useWallet();
-  const [selectedOrder, setSelectedOrder] = useState(sessionStorageHandler('get', 'explore-filters', 'order') || 1);
   const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
+  const [selectedOrder, setSelectedOrder] = useState(1);
   const [metaverses, setMetaverses] = useState([]);
+  const voxelsSortData = sortData.slice(0, sortData.length - 1);
 
   const [selectedCurrency, setSelectedCurrency] = useState(
     sessionStorageHandler('get', 'explore-filters', 'currency') || 0
@@ -48,7 +51,10 @@ const LandWorksFilters: FC<Props> = ({
   const onChangeSortDirectionHandler = (value: number) => {
     setSelectedOrder(value);
     onChangeSortDirection(value);
-    sessionStorageHandler('set', 'explore-filters', 'order', value);
+    sessionStorageHandler('set', 'explore-filters', 'order', {
+      ...orderFilter,
+      [`${selectedMetaverse}`]: value,
+    });
   };
 
   const onChangeOwnerTogglerHandler = () => {
@@ -74,6 +80,10 @@ const LandWorksFilters: FC<Props> = ({
   useEffect(() => {
     setTimeout(() => onChangeCurrency(selectedCurrency), 0);
   }, []);
+
+  useEffect(() => {
+    setSelectedOrder(orderFilter && orderFilter[`${selectedMetaverse}`] ? orderFilter[`${selectedMetaverse}`] : 1);
+  }, [selectedMetaverse]);
 
   useEffect(() => {
     fetchMetaverses().then(setMetaverses);
@@ -119,7 +129,7 @@ const LandWorksFilters: FC<Props> = ({
             width={'12rem'}
             value={selectedOrder}
             onChange={onChangeSortDirectionHandler}
-            options={sortData}
+            options={selectedMetaverse == 1 ? sortData : voxelsSortData}
           />
         </Box>
       </Box>
