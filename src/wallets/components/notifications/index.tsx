@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useLocalStorage } from 'react-use-storage';
 import { useSubscription } from '@apollo/client';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import useDebounce from '@rooks/use-debounce';
 
 import IconNotification from 'components/custom/icon-notification';
@@ -42,6 +42,7 @@ export const NotificationSection: React.FC = () => {
   const [hasUnclaimentRent, setHasUnclaimentRent] = useState<boolean>(false);
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
+  const containerRef = React.useRef();
   const open = Boolean(anchorEl);
 
   const { data: userData } = useSubscription(USER_NOTIFICATION_SUBSCRIPTION, {
@@ -94,11 +95,12 @@ export const NotificationSection: React.FC = () => {
   }, [notifications, userProfile]);
 
   return (
-    <>
+    <Box ref={containerRef}>
       <StyledPopover
         open={open}
         onClose={handleClose}
         anchorEl={anchorEl}
+        container={containerRef.current}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -120,7 +122,7 @@ export const NotificationSection: React.FC = () => {
           <NotificationIcon />
         </IconNotification>
       </NotificationButton>
-    </>
+    </Box>
   );
 };
 
