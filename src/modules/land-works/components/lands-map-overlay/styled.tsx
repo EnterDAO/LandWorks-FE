@@ -45,3 +45,11 @@ export const PlotContainer = styled('div')(() => ({
     cursor: 'default',
   },
 }));
+
+export const StyledDiv = styled('div')(() => ({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  marginRight: '-0.23rem',
+  justifyContent: 'space-between',
+}));
