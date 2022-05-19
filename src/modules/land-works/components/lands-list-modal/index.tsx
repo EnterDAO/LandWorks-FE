@@ -57,7 +57,7 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
         <div className="heading" style={{ fontSize: 25 }}>
           Successfully Listed!
         </div>
-        <div>Nice! You&apos;ve successfully listed property.</div>
+        <div className="subheading">Nice! You&apos;ve successfully listed property.</div>
         <Button
           variant="gradient"
           btnSize="medium"
