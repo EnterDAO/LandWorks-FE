@@ -17,11 +17,13 @@ export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
 }));
 
 export const ChipStyled = styled(Chip)<ChipProps>(() => ({
-  minWidth: '115px',
+  minWidth: '100px',
   display: 'inline-block',
   margin: '0 0.25rem 0.3rem 0',
   backgroundColor: 'var(--theme-modal-color)',
   color: 'var(--theme-subtle-color)',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
   fontSize: '14px',
   fontWeight: 700,
   lineHeight: '28px',

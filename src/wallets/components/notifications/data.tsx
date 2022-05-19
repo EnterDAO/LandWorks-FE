@@ -3,7 +3,7 @@ import { EndTimerIcon, HourglassIcon, MessageIcon, RentingNotificationIcon } fro
 
 import { NotificationDataType } from './notificationTypes';
 
-import { TWITTER_TEXT } from 'modules/land-works/constants';
+import { TWITTER_PROMOTE_TEXT } from 'modules/land-works/constants';
 
 export const NotificationData: NotificationDataType = {
   newRenting: {
@@ -66,7 +66,7 @@ export const NotificationData: NotificationDataType = {
       <Button
         onClick={() => {
           window.open(
-            `https://twitter.com/intent/tweet?text=${TWITTER_TEXT}&url=${window.location.origin}/property/${id}`
+            `https://twitter.com/intent/tweet?text=${TWITTER_PROMOTE_TEXT}&url=${window.location.origin}/property/${id}`
           );
         }}
         variant="accentblue"
