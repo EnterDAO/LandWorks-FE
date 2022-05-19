@@ -33,7 +33,7 @@ const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent 
   const subtitleLength = ref.current ? ref?.current?.innerText?.length : 0;
   const animatedOptions = {
     start: 35,
-    floatRight: 50,
+    floatRight: 40,
     duration: subtitleLength / 4,
   };
   const isAnimated = subtitleLength >= animatedOptions.start;
