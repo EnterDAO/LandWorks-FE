@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
 
-import { ChipStyled, PlotContainer, RootStyled, TypographyStyled } from './styled';
+import { ChipStyled, PlotContainer, RootStyled, StyledDiv, TypographyStyled } from './styled';
 
 type Coordinate = {
   id: string;
@@ -22,7 +22,7 @@ const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates, pla
   const hasMoreThanSix = coordsLength! > 6;
   const hasLessThanSix = coordsLength! > 0 && coordsLength! <= 6;
 
-  const maxWidth = expand ? '400px' : '275px';
+  const maxWidth = expand ? '360px' : '250px';
   const coords = hasMoreThanSix && expand ? coordinates : coordinates?.slice(0, 5);
 
   return (
@@ -30,20 +30,20 @@ const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates, pla
       <TypographyStyled variant="h3">{title}</TypographyStyled>
 
       {coordinates && hasLessThanSix && (
-        <div>
+        <StyledDiv>
           {coordinates.map((estateCoord: Coordinate) => (
             <ChipStyled key={estateCoord.id} label={`X: ${estateCoord.x}, Y: ${estateCoord.y}`} variant="outlined" />
           ))}
-        </div>
+        </StyledDiv>
       )}
 
       {coordinates && hasMoreThanSix && (
-        <>
+        <StyledDiv>
           {coords?.map((estateCoord: Coordinate) => (
             <ChipStyled key={estateCoord.id} label={`X: ${estateCoord.x}, Y: ${estateCoord.y}`} variant="outlined" />
           ))}
           <div onMouseEnter={() => setExpand(true)}>{!expand && <ChipStyled label="More..." variant="outlined" />}</div>
-        </>
+        </StyledDiv>
       )}
 
       <>
