@@ -292,9 +292,14 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       </StyledButton>
                     </Tooltip>
                     <Tooltip disableFocusListener placement="right" title={'Contact owner via Blockscan'}>
-                      <StyledButton onClick={() => openChat(ens || ownerOrConsumer)}>
-                        <MessageIcon />
-                      </StyledButton>
+                      <>
+                        <StyledButton
+                          disabled={ownerOrConsumer?.toLowerCase() == wallet.account?.toLowerCase()}
+                          onClick={() => openChat(ens || ownerOrConsumer)}
+                        >
+                          <MessageIcon />
+                        </StyledButton>
+                      </>
                     </Tooltip>
                   </StyledGrid>
                 </Grid>
