@@ -17,7 +17,7 @@ export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
 }));
 
 export const ChipStyled = styled(Chip)<ChipProps>(() => ({
-  minWidth: '100px',
+  minWidth: '105px',
   display: 'inline-block',
   margin: '0 0.25rem 0.3rem 0',
   backgroundColor: 'var(--theme-modal-color)',
@@ -44,4 +44,12 @@ export const PlotContainer = styled('div')(() => ({
     marginRight: 10,
     cursor: 'default',
   },
+}));
+
+export const StyledDiv = styled('div')(() => ({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  marginRight: '-0.23rem',
+  justifyContent: 'space-between',
 }));

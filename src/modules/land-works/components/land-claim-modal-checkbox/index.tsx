@@ -16,23 +16,23 @@ interface props {
 
 export const LandClaimCheckBox: React.FC<props> = (props) => {
   const { name, unclaimedRentFee, paymentToken, metaverse } = props.data;
-
   const [checked, setChecked] = useState(false);
 
-  const onChecked = (isChecked: boolean) => {
-    setChecked(isChecked);
-    props.onSelected(isChecked, props.data);
+  const onChecked = () => {
+    props.onSelected(!checked, props.data);
+    setChecked((prev) => !prev);
   };
 
   return (
     <Grid
+      onClick={() => onChecked()}
       container
       justifyContent="flex-start"
       alignContent="flex-start"
       className={`claim-input-container ${checked ? 'checked' : ''}`}
     >
       <Grid item xs={8}>
-        <Checkbox onChange={(e) => onChecked(e.target.checked)} />
+        <Checkbox checked={checked} />
         {name} - {metaverse.name}
       </Grid>
       <Grid item xs={4} className="price">

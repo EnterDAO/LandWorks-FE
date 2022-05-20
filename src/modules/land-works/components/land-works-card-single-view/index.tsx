@@ -338,12 +338,14 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       </StyledButton>
                     </Tooltip>
                     <Tooltip disableFocusListener placement="right" title={'Contact operator via Blockscan'}>
-                      <StyledButton
-                        disabled={asset?.operator == DEFAULT_ADDRESS}
-                        onClick={() => openChat(asset?.operator)}
-                      >
-                        <MessageIcon />
-                      </StyledButton>
+                      <>
+                        <StyledButton
+                          disabled={asset?.operator == DEFAULT_ADDRESS}
+                          onClick={() => openChat(asset?.operator)}
+                        >
+                          <MessageIcon />
+                        </StyledButton>
+                      </>
                     </Tooltip>
                   </StyledGrid>
                 </Grid>
