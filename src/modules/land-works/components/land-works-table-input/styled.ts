@@ -3,7 +3,7 @@ import { Grid, GridProps, styled } from '@mui/material';
 export const StyledGrid = styled(Grid)<GridProps>(() => ({
   flexDirection: 'column',
   alignItems: 'center',
-  maxWidth: '400px',
+  width: '400px',
   '& label': {
     width: '100%',
     textAlign: 'initial',

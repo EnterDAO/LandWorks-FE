@@ -65,7 +65,7 @@ const ConnectWalletModal: React.FC<ConnectWalletModalProps> = (props) => {
         </Text>
       }
     >
-      <Grid container flexDirection="row">
+      <Grid className={s.connectWalletModal} container flexDirection="row">
         {WalletConnectors.map((connector) => (
           <Grid xs={12} item key={connector.id} sx={{ marginBottom: '0.7rem' }}>
             <button key={connector.id} className={s.button} onClick={() => handleConnectorSelect(connector)}>

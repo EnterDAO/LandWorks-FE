@@ -1,6 +1,6 @@
 .rent-modal-loader {
-  min-width: 370px;
-  min-height: 170px;
+  width: 670px;
+  height: 214px;
   display: flex;
   flex-direction: column !important;
   align-items: center !important;
@@ -10,6 +10,7 @@
     font-size: 30px;
     font-weight: bold;
     color: #f8f8f8;
+    margin-bottom: 20px;
   }
   span {
     margin-bottom: 30px;
