@@ -24,6 +24,7 @@ import {
   ActiveButton,
   PassedButton,
   RootStyled,
+  StyledBox,
   StyledButton,
   StyledPaper,
   StyledTableBody,
@@ -214,12 +215,12 @@ const SingleViewLandHistory: React.FC<SingleViewRentHistoryProps> = ({ assetId, 
                 {paginatedRents.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id + uniqueId()}>
                     <StyledTableCell align="left">
-                      <Box display="flex" alignItems="center">
+                      <StyledBox display="flex" alignItems="center">
                         <ExternalLink href={getEtherscanAddressUrl(data.renter.id)}>
                           <OperatorName id={data.renter.id} />
                         </ExternalLink>
                         {isYou(data.renter.id) && <YourLabel>You</YourLabel>}
-                      </Box>
+                      </StyledBox>
                     </StyledTableCell>
 
                     <StyledTableCell align="left">
