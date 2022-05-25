@@ -43,9 +43,12 @@ export const ModalBoxStyled = styled(Box)({
 
 export const ModalTitleBoxStyled = styled(Typography)({
   position: 'absolute',
-  left: '30px',
+  left: '0px',
   top: '30px',
+  padding: '0 30px',
   fontWeight: '900',
+  width: '100%',
+  textAlign: 'left',
 });
 
 export const CloseIconButtonStyled = styled(IconButton)({
