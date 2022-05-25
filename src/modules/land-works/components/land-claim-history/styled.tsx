@@ -87,3 +87,10 @@ export const StyledTableBody = styled(TableBody)(() => ({
     width: '100%',
   },
 }));
+export const StyledBox = styled('p')(() => ({
+  width: '125px',
+  margin: '0px',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+}));

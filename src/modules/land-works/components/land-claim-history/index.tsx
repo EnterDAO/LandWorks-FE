@@ -12,6 +12,7 @@ import LandWorksTableDate from '../land-works-table-date';
 import LandTablePrice from '../land-works-table-price';
 import {
   RootStyled,
+  StyledBox,
   StyledPaper,
   StyledTableBody,
   StyledTableCell,
@@ -116,7 +117,7 @@ const ClaimHistoryTable: React.FC<Props> = ({ metaverse }) => {
                 {paginatedClaimHistory.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id}>
                     <StyledTableCell style={{ color: THEME_COLORS.light }} align="left">
-                      {getAssetName(data.asset)}
+                      <StyledBox>{getAssetName(data.asset)}</StyledBox>
                     </StyledTableCell>
                     <StyledTableCell style={{ fontWeight: '500' }} align="left">
                       <LandTableTxHash txHash={data.txHash} firstSymbolsLength={22} />
