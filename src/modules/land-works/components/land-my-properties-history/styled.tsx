@@ -2,7 +2,7 @@ import { TableBody, TableHead, Typography, styled } from '@mui/material';
 import { Paper, PaperProps } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
-import { TypographyProps } from '@mui/system';
+import { Box, TypographyProps } from '@mui/system';
 
 export const RootStyled = styled('div')(() => ({
   backgroundColor: 'var(--theme-card-color)',
@@ -113,4 +113,12 @@ export const Title = styled(Typography)<TypographyProps>(() => ({
   color: 'var(--theme-light-color)',
   margin: '50px 0 20px 0',
   fontWeight: 700,
+}));
+
+export const StyledBox = styled(Box)(() => ({
+  width: '155px',
+  margin: '0px',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
 }));

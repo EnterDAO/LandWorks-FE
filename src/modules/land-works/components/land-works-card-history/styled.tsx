@@ -1,4 +1,4 @@
-import { TableBody, TableHead, Typography, styled } from '@mui/material';
+import { Box, TableBody, TableHead, Typography, styled } from '@mui/material';
 import { Paper, PaperProps } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
@@ -145,4 +145,8 @@ export const StyledButton = styled('button')(() => ({
     marginLeft: '5px',
     fontWeight: 'bold',
   },
+}));
+
+export const StyledBox = styled(Box)(() => ({
+  width: '110px',
 }));
