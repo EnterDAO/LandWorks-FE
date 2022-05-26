@@ -1,5 +1,7 @@
+import { find } from 'lodash';
+
 import config from 'config';
-import { CryptoVoxelXYcoords } from 'modules/interface';
+import { CryptoVoxelXYcoords, VoxelsMapCollection, VoxelsTileType } from 'modules/interface';
 
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 
@@ -126,4 +128,27 @@ export const getOwnerOrConsumerId = (asset?: AssetEntity): string | undefined =>
   }
 
   return asset?.owner?.id == config.contracts.yf.staking ? asset?.consumer?.id : asset?.owner?.id;
+};
+
+export const parceVoxelsMapAsset = async (lands: AssetEntity[], mapTiles: VoxelsTileType[] | undefined) => {
+  const collection: VoxelsMapCollection = {
+    type: 'FeatureCollection',
+    features: [],
+  };
+  await Promise.all(
+    lands.map((land) => {
+      const found = find(mapTiles, { id: Number(land.metaverseAssetId) });
+      found &&
+        collection.features.push({
+          type: 'Feature',
+          id: String(found.id),
+          geometry: {
+            type: found.geometry.type,
+            coordinates: found.geometry.coordinates,
+          },
+        });
+    })
+  );
+
+  return collection;
 };

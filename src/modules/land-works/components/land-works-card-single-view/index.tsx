@@ -354,6 +354,8 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
           {shouldShowRenterCountdown() && (
             <Grid className="countdown">
               <Grid item xs={10}>
+                {/* // eslint-disable-next-line 
+                  // @ts-ignore */}
                 <Countdown date={Number(countDownTimestamp) * 1000} zeroPadTime={3} renderer={renderCountdown} />
               </Grid>
               <Grid item>

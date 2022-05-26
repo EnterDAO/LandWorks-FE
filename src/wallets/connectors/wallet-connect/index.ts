@@ -15,6 +15,8 @@ const WalletConnectConfig: WalletConnector = {
       rpc: {
         [chainId]: config.web3.rpc.httpsUrl,
       },
+      //eslint-disable-next-line
+      //@ts-ignore
       pollingInterval: config.web3.poolingInterval,
       bridge: config.web3.wallets.walletConnect.bridge,
       qrcode: true,

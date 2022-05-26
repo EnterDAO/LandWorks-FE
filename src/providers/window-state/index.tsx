@@ -2,7 +2,7 @@ import React from 'react';
 import useWindowEventListener from '@rooks/use-window-event-listener';
 
 export type WindowStateContextType = {
-  visibilityState: VisibilityState;
+  visibilityState: DocumentVisibilityState;
   isVisible: boolean;
 };
 
@@ -18,7 +18,9 @@ export function useWindowState(): WindowStateContextType {
 const WindowStateProvider: React.FC = (props) => {
   const { children } = props;
 
-  const [visibilityState, setVisibilityState] = React.useState<VisibilityState>(window.document.visibilityState);
+  const [visibilityState, setVisibilityState] = React.useState<DocumentVisibilityState>(
+    window.document.visibilityState
+  );
 
   useWindowEventListener('visibilitychange', () => {
     setVisibilityState(window.document.visibilityState);

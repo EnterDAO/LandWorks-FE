@@ -84,19 +84,22 @@ const ExploreView: React.FC = () => {
 
   const [showListNewModal, setShowListNewModal] = useState(false);
 
-  const setClickedLandId = (x: number | string, y: number | string) => {
-    let landId = `${x},${y}`;
+  const setClickedLandId = (x: number | string, y?: number | string | undefined) => {
+    if (x && y) {
+      let landId = `${x},${y}`;
 
-    // Look for the first coordinate for land estate.
-    lands.forEach((land) => {
-      land.decentralandData?.coordinates.forEach((coord, coordIndex) => {
-        if (coordIndex > 0 && coord.id === landId.replace(',', '-')) {
-          landId = `${land.decentralandData?.coordinates[0].x},${land.decentralandData?.coordinates[0].y}`;
-        }
+      // Look for the first coordinate for land estate.
+      lands.forEach((land) => {
+        land.decentralandData?.coordinates.forEach((coord, coordIndex) => {
+          if (coordIndex > 0 && coord.id === landId.replace(',', '-')) {
+            landId = `${land.decentralandData?.coordinates[0].x},${land.decentralandData?.coordinates[0].y}`;
+          }
+        });
       });
-    });
 
-    return setStateClickedLandId(landId);
+      return setStateClickedLandId(landId);
+    }
+    if (x) setStateClickedLandId(`${x}`);
   };
 
   const setPointMapCentre = (lands: CoordinatesLand[]) => {
@@ -250,7 +253,11 @@ const ExploreView: React.FC = () => {
               <LayoutFooter isWrapped={false} />
             </div>
             {!mapIsHidden && (
-              <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
+              <div
+                className={`map-list-container ${subheaderHidden ? 'map-list-container--enlarged' : ''} ${
+                  mapExpanded ? 'map-list-container--expanded' : ''
+                }`}
+              >
                 {metaverse == VOXEL_METAVERSE && (
                   <LandsExploreMapVoxels
                     positionX={atlasMapX}

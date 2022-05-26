@@ -81,6 +81,9 @@ const LandsExploreList: FC<Props> = ({
           type: mapTiles[id].type || '',
           owner: getOwnerOrConsumerId(land?.decentralandData?.asset)?.toLowerCase() || '',
         });
+    } else if (setSelectedId && setClickedLandId) {
+      setSelectedId(land.metaverseAssetId);
+      setClickedLandId(land.metaverseAssetId);
     }
   };
 
@@ -93,11 +96,13 @@ const LandsExploreList: FC<Props> = ({
     let index = -1;
 
     lands.forEach((land, landIndex) => {
-      land.decentralandData?.coordinates.forEach((coord) => {
-        if (coord.id === decentralandId.replace(',', '-')) {
-          index = landIndex;
-        }
-      });
+      land.decentralandData
+        ? land.decentralandData?.coordinates.forEach((coord) => {
+            if (coord.id === decentralandId.replace(',', '-')) {
+              index = landIndex;
+            }
+          })
+        : (index = landIndex);
     });
 
     return index;
