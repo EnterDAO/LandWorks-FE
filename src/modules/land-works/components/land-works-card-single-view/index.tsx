@@ -285,21 +285,21 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       disableHoverListener
                       disableTouchListener
                       placement="right"
-                      title={'Copied'}
+                      title={'Copied!'}
                     >
                       <StyledButton onClick={() => hadleTooltip(`${ens || ownerOrConsumer}`, 'owner')}>
                         <CopyIcon />
                       </StyledButton>
                     </Tooltip>
                     <Tooltip disableFocusListener placement="right" title={'Contact owner via Blockscan'}>
-                      <>
+                      <div>
                         <StyledButton
                           disabled={ownerOrConsumer?.toLowerCase() == wallet.account?.toLowerCase()}
                           onClick={() => openChat(ens || ownerOrConsumer)}
                         >
                           <MessageIcon />
                         </StyledButton>
-                      </>
+                      </div>
                     </Tooltip>
                   </StyledGrid>
                 </Grid>
@@ -336,21 +336,21 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       disableHoverListener
                       disableTouchListener
                       placement="right"
-                      title={'Copied'}
+                      title={'Copied!'}
                     >
                       <StyledButton onClick={() => hadleTooltip(`${ensOperator || asset?.operator}`, 'operator')}>
                         <CopyIcon />
                       </StyledButton>
                     </Tooltip>
                     <Tooltip disableFocusListener placement="right" title={'Contact operator via Blockscan'}>
-                      <>
+                      <div>
                         <StyledButton
                           disabled={asset?.operator == DEFAULT_ADDRESS}
                           onClick={() => openChat(asset?.operator)}
                         >
                           <MessageIcon />
                         </StyledButton>
-                      </>
+                      </div>
                     </Tooltip>
                   </StyledGrid>
                 </Grid>
