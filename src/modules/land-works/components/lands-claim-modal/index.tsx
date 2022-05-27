@@ -104,7 +104,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
         <WarningContainer>
           <WarningIcon />
           <StyledWarning>
-            <h3>Synchronise Operator</h3>
+            <h3>Important</h3>
             <p>You can select only 3 rents at one claim transaction.</p>
           </StyledWarning>
           <StyledClose onClick={markAsReaded}>
