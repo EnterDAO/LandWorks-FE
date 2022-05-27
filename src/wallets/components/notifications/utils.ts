@@ -41,7 +41,7 @@ export const parseNotifications = async (
             time: rentStart,
             type: 'newRenting',
             landId: item.id,
-            isAvailable: item?.availability.isCurrentlyAvailable,
+            isAvailable: item?.isAvailable,
           });
         }
         if (rentEnd <= Date.now()) {
@@ -51,7 +51,7 @@ export const parseNotifications = async (
             time: rentEnd,
             type: 'rentEnded',
             landId: item.id,
-            isAvailable: item?.availability.isCurrentlyAvailable,
+            isAvailable: item?.isAvailable,
           });
         }
       } else {
@@ -64,7 +64,7 @@ export const parseNotifications = async (
             time: toTimestamp(halfTime),
             type: 'endSoon',
             landId: item.id,
-            isAvailable: item?.availability.isCurrentlyAvailable,
+            isAvailable: item?.isAvailable,
           });
         }
         if (rentEnd <= Date.now() && isYourRent) {
@@ -74,7 +74,7 @@ export const parseNotifications = async (
             time: rentEnd,
             type: 'yourRentEnded',
             landId: item.id,
-            isAvailable: item?.availability.isCurrentlyAvailable,
+            isAvailable: item?.isAvailable,
           });
         }
       }
