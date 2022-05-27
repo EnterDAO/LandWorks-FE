@@ -94,7 +94,9 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
                 {asset ? (
                   <SmallAmountTooltip
                     className="price-eth"
-                    amount={asset?.pricePerMagnitude ? asset?.pricePerMagnitude?.price : new BigNumber('0')}
+                    amount={
+                      rentPrice || (asset?.pricePerMagnitude ? asset?.pricePerMagnitude?.price : new BigNumber('0'))
+                    }
                   />
                 ) : (
                   <>

@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useLocalStorage } from 'react-use-storage';
 
@@ -5,7 +6,7 @@ import { useWallet } from 'wallets/wallet';
 
 import { NotificationData } from './data';
 import { NotificationList } from './notificationTypes';
-import { IconWrapper, MessageRoot, StyledGrid, StyledSubtitle, StyledTypography } from './styled';
+import { AnimatedSubtitle, IconWrapper, MessageRoot, StyledGrid, StyledSubtitle, StyledTypography } from './styled';
 
 import { countdown } from './utils';
 
@@ -18,6 +19,7 @@ const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent 
   const { account } = useWallet();
   const [userProfile] = useLocalStorage('user_profile', { [`${account}`]: { lastLogin: 0 } });
   const history = useHistory();
+  const ref = useRef<HTMLDivElement>(null);
   const isNewNotification = userProfile ? item.time >= userProfile[`${account}`]?.lastLogin : true;
 
   const styleHandler = {
@@ -27,6 +29,14 @@ const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent 
   };
   const secondsFromNow = (Date.now() - item.time) / 1000;
   const notification = NotificationData[item.type];
+
+  const subtitleLength = ref.current ? ref?.current?.innerText?.length : 0;
+  const animatedOptions = {
+    start: 35,
+    floatRight: 40,
+    duration: subtitleLength / 4,
+  };
+  const isAnimated = subtitleLength >= animatedOptions.start;
 
   return (
     <MessageRoot
@@ -39,7 +49,19 @@ const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent 
       <IconWrapper>{notification.icon}</IconWrapper>
       <StyledGrid>
         <StyledTypography fontSize={14}>{notification.title}</StyledTypography>
-        <StyledSubtitle>{notification.subtitle(item.landId, item.name)}</StyledSubtitle>
+        {isAnimated ? (
+          <AnimatedSubtitle
+            sx={{
+              animationDuration: `${animatedOptions.duration}s`,
+              float: `${subtitleLength > animatedOptions.floatRight ? 'right' : 'left'}`,
+            }}
+            ref={ref}
+          >
+            {notification.subtitle(item.landId, item.name)}
+          </AnimatedSubtitle>
+        ) : (
+          <StyledSubtitle ref={ref}>{notification.subtitle(item.landId, item.name)}</StyledSubtitle>
+        )}
       </StyledGrid>
       {notification.button({
         history,

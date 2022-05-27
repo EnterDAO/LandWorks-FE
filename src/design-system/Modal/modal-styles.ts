@@ -35,17 +35,20 @@ export const ModalBoxStyled = styled(Box)({
   maxHeight: 858,
   position: 'relative',
   background: THEME_COLORS.darkBlue03,
-  borderRadius: '10px',
+  borderRadius: '40px',
   boxShadow: '0px 0px 20px 10px rgba(0, 0, 0, 0.3)',
-  padding: '5rem 40px 40px 40px',
+  padding: '2rem 40px 40px 40px',
   textAlign: 'center',
 });
 
 export const ModalTitleBoxStyled = styled(Typography)({
   position: 'absolute',
-  left: '30px',
+  left: '0px',
   top: '30px',
+  padding: '0 30px',
   fontWeight: '900',
+  width: '100%',
+  textAlign: 'left',
 });
 
 export const CloseIconButtonStyled = styled(IconButton)({

@@ -88,7 +88,7 @@ const LandsExploreList: FC<Props> = ({
   };
 
   const getLoadPercentageValue = () => {
-    const percentage = (lands.slice(0, slicedLands).length * 100) / lands.length;
+    const percentage = (filteredLands.slice(0, slicedLands).length * 100) / filteredLands.length;
     return percentage || 0;
   };
 
@@ -120,7 +120,7 @@ const LandsExploreList: FC<Props> = ({
 
   useEffect(() => {
     setLoadPercentageValue(getLoadPercentageValue());
-  }, [lands, slicedLands]);
+  }, [lands, slicedLands, searchQuery]);
 
   useEffect(() => {
     setShowCardPreview && setShowCardPreview(false);

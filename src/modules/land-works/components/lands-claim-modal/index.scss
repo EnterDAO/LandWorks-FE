@@ -1,5 +1,8 @@
 .claim-modal {
   .subtitle {
+    padding-top: 2rem;
+    width: 65%;
+    margin: 0 auto;
     margin-bottom: 20px;
   }
 
@@ -13,18 +16,28 @@
     font-size: 12px;
     color: var(--theme-warning-color);
     margin: 5px 0 10px;
+    width: 100%;
   }
 
   .claim-modal-footer {
     background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: nowrap;
     border-radius: 10px;
+    margin-top: 10px;
     width: 100%;
-    padding: 12px 20px;
-    border: 1px solid var(--theme-checkbox-color);
 
     .prices-container {
       align-items: center;
       display: flex;
+      flex-direction: column;
+      background-color: #27273A;
+      width: 100%;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
     }
 
     .total-label {
@@ -33,6 +46,7 @@
       color: var(--theme-subtle-color);
       margin-right: 10px;
       padding-left: 20px;
+      text-transform: uppercase;
     }
 
     .total-price {
@@ -62,4 +76,5 @@
       }
     }
   }
+
 }

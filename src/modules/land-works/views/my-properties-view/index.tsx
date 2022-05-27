@@ -67,7 +67,7 @@ const MyPropertiesView: FC = () => {
   };
 
   const getLoadPercentageValue = () => {
-    return (lands.slice(0, slicedLands).length * 100) / lands.length;
+    return (filteredLands.slice(0, slicedLands).length * 100) / filteredLands.length;
   };
 
   function getTabs() {
@@ -184,7 +184,7 @@ const MyPropertiesView: FC = () => {
 
   useEffect(() => {
     setLoadPercentageValue(getLoadPercentageValue());
-  }, [lands, slicedLands]);
+  }, [lands, slicedLands, searchQuery]);
 
   const slicedLandsInTotal = lands.slice(0, slicedLands).length;
   const filteredLands = filterLandsByQuery(lands.slice(0, slicedLands), searchQuery);
@@ -221,7 +221,7 @@ const MyPropertiesView: FC = () => {
             lentCount={user?.ownerAndConsumerAssets?.length || 0}
           />
           <LandsMyPropertiesSubheader
-            propertiesCount={lands.length}
+            propertiesCount={filteredLands.length}
             onChangeCurrencyCallback={onChangeCurrencyHandler}
             onChangeMetaverse={onChangeMetaverse}
           />

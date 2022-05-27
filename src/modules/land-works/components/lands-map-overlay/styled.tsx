@@ -17,12 +17,13 @@ export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({
 }));
 
 export const ChipStyled = styled(Chip)<ChipProps>(() => ({
-  minWidth: '100px',
+  minWidth: '105px',
   display: 'inline-block',
   margin: '0 0.25rem 0.3rem 0',
-  float: 'left',
   backgroundColor: 'var(--theme-modal-color)',
   color: 'var(--theme-subtle-color)',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
   fontSize: '14px',
   fontWeight: 700,
   lineHeight: '28px',
@@ -31,4 +32,24 @@ export const ChipStyled = styled(Chip)<ChipProps>(() => ({
   border: 0,
   whiteSpace: 'normal',
   textAlign: 'center',
+}));
+
+export const PlotContainer = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  '& p': {
+    color: '#fff',
+    marginRight: 10,
+    cursor: 'default',
+  },
+}));
+
+export const StyledDiv = styled('div')(() => ({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  marginRight: '-0.23rem',
+  justifyContent: 'space-between',
 }));
