@@ -67,7 +67,7 @@ const ExploreView: React.FC = () => {
   const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
   const [mapExpanded, setMapExpanded] = useState(false);
   const [mapIsHidden, setMapIsHidden] = useState(sessionFilters.mapIsHidden || false);
-  const [subheaderHidden, setSubheaderHidden] = useState(false);
+  const [mapSize, setMapSize] = useState('small');
 
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
@@ -211,6 +211,7 @@ const ExploreView: React.FC = () => {
   }, [lands]);
 
   const availableLands = filterLandsByAvailability(filterLandsByQuery(lands, searchQuery));
+
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
       <LandsMapTilesProvider value={{ mapTiles, setMapTiles, selectedId, setSelectedId }}>
@@ -224,7 +225,7 @@ const ExploreView: React.FC = () => {
             setShowCardPreview,
           }}
         >
-          <div style={subheaderHidden ? { top: '8px' } : {}} className="content-container--explore-view--header">
+          <div className="content-container--explore-view--header">
             <LandsExploreSubheader
               totalLands={lastRentEnd !== '0' ? availableLands.length : filterLandsByQuery(lands, searchQuery).length}
               hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
@@ -241,7 +242,7 @@ const ExploreView: React.FC = () => {
           <div className="content-container content-container--explore-view">
             <div className={`list-lands-container ${mapIsHidden ? 'fullWidth' : ''}`}>
               <LandsExploreList
-                setSubheaderHidden={setSubheaderHidden}
+                setMapSize={setMapSize}
                 setIsHiddenMap={hideMapHandler}
                 isHiddenMap={mapIsHidden}
                 metaverse={metaverse}
@@ -255,8 +256,10 @@ const ExploreView: React.FC = () => {
 
             {!mapIsHidden && (
               <div
-                className={`map-list-container ${subheaderHidden ? 'map-list-container--enlarged' : ''} ${
-                  mapExpanded ? 'map-list-container--expanded' : ''
+                className={`map-list-container 
+                ${mapExpanded && 'map-list-container--expanded'} 
+                ${mapSize === 'large' && 'map-list-container--enlarged'} 
+                ${mapSize === 'medium' && 'map-list-container--middleSize'}
                 }`}
               >
                 <LandsExploreMap
