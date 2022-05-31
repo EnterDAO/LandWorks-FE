@@ -123,11 +123,11 @@ const DecentralandParcel: React.FC<DecentralandProps> = ({ atr, id }) => {
     innerContainer: { height: '160px' },
   };
   return (
-    <GridFlexed style={decentralandStyles.rootGrid}>
+    <GridFlexed gap={4} style={decentralandStyles.rootGrid}>
       <GridStyledInnerContainer
         style={decentralandStyles.innerContainer}
         item
-        xs={5.5}
+        xs={6}
         flexDirection="column"
         alignItems={'left'}
       >
@@ -151,7 +151,7 @@ const DecentralandParcel: React.FC<DecentralandProps> = ({ atr, id }) => {
       <GridStyledInnerContainer
         style={decentralandStyles.innerContainer}
         item
-        xs={5.5}
+        xs={6}
         flexDirection="column"
         alignItems={'left'}
       >
