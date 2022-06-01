@@ -8,7 +8,7 @@ import { NotificationData } from './data';
 import { NotificationList } from './notificationTypes';
 import { AnimatedSubtitle, IconWrapper, MessageRoot, StyledGrid, StyledSubtitle, StyledTypography } from './styled';
 
-import { countdown } from './utils';
+import { calculateNotificationAnimation, countdown } from './utils';
 
 interface INotification {
   item: NotificationList;
@@ -32,9 +32,8 @@ const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent 
 
   const subtitleLength = ref.current ? ref?.current?.innerText?.length : 0;
   const animatedOptions = {
-    start: 35,
-    floatRight: 40,
-    duration: subtitleLength / 4,
+    start: 38,
+    duration: subtitleLength / 6,
   };
   const isAnimated = subtitleLength >= animatedOptions.start;
 
@@ -48,17 +47,21 @@ const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent 
     >
       <IconWrapper>{notification.icon}</IconWrapper>
       <StyledGrid>
-        <StyledTypography fontSize={14}>{notification.title}</StyledTypography>
+        <StyledTypography sx={{ marginBottom: isAnimated ? '18px' : '' }} fontSize={14}>
+          {notification.title}
+        </StyledTypography>
         {isAnimated ? (
-          <AnimatedSubtitle
-            sx={{
-              animationDuration: `${animatedOptions.duration}s`,
-              float: `${subtitleLength > animatedOptions.floatRight ? 'right' : 'left'}`,
-            }}
-            ref={ref}
-          >
-            {notification.subtitle(item.landId, item.name)}
-          </AnimatedSubtitle>
+          <>
+            <AnimatedSubtitle
+              sx={{
+                animationDuration: `${animatedOptions.duration}s`,
+                animationName: `${calculateNotificationAnimation(subtitleLength)}`,
+              }}
+              ref={ref}
+            >
+              {notification.subtitle(item.landId, item.name)}
+            </AnimatedSubtitle>
+          </>
         ) : (
           <StyledSubtitle ref={ref}>{notification.subtitle(item.landId, item.name)}</StyledSubtitle>
         )}
