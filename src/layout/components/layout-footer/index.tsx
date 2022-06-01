@@ -28,10 +28,7 @@ const LayoutFooter: React.FC<Props> = ({ isWrapped = true }) => {
           <ExternalLink href="https://discord.gg/7QJvEctG2G" className={styles['social-media-container--link']}>
             <Icon name="discord" width="20" height="20" />
           </ExternalLink>
-          <ExternalLink
-            href="https://dune.xyz/1ab/EnterDAO-Landworks"
-            className={styles['social-media-container--link']}
-          >
+          <ExternalLink href="https://dune.com/rakis/LandWorks" className={styles['social-media-container--link']}>
             <Icon name="dune" width="20" height="20" />
           </ExternalLink>
           <ExternalLink
