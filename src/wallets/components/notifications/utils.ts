@@ -113,32 +113,17 @@ export const countdown = (date: number, isShorted = false) => {
 };
 
 export const fetchBlockscanMessages = async (wallet: string): Promise<Array<any>> => {
-  const userList = JSON.parse(localStorage.getItem('user_profile') || '');
-  const userProfile = userList[wallet];
   const blockscanUrl = 'https://scenes.landworks.xyz/messages/';
   const blockscanResponse = await fetch(blockscanUrl + wallet)
     .then((res) => res.json())
     .catch(() => console.error('Fetch Blockscan message error'));
-  const messageCountInStorage = +userProfile?.totalMesages || 0;
   const newMessage = {
     id: Date.now(),
     time: Date.now(),
     type: 'message',
   };
 
-  if (!messageCountInStorage && +blockscanResponse?.result) {
-    userProfile.messages = [newMessage];
-    updateProfile();
-  } else if (messageCountInStorage < blockscanResponse?.result) {
-    userProfile.messages.push(newMessage);
-    updateProfile();
-  }
-  function updateProfile() {
-    userProfile.totalMesages = blockscanResponse?.result;
-    localStorage.setItem('user_profile', JSON.stringify({ ...userList, [wallet]: userProfile }));
-  }
-
-  return userProfile?.messages || [];
+  return +blockscanResponse?.result > 0 ? [newMessage] : [];
 };
 
 export const calculateNotificationAnimation = (subtitleLength: number) => {
