@@ -1,3 +1,5 @@
+import { keyframes } from '@mui/system';
+
 import { getCryptoVoxelsAsset } from 'helpers/helpers';
 import { AssetEntity, RentEntity, getAvailability } from 'modules/land-works/api';
 
@@ -122,4 +124,25 @@ export const fetchBlockscanMessages = async (wallet: string): Promise<Array<any>
   };
 
   return +blockscanResponse?.result > 0 ? [newMessage] : [];
+};
+
+export const calculateNotificationAnimation = (subtitleLength: number) => {
+  if (subtitleLength >= 60) subtitleLength = subtitleLength + subtitleLength / 2;
+  if (subtitleLength >= 40 && subtitleLength < 60) subtitleLength = subtitleLength / 2;
+  if (subtitleLength < 40) subtitleLength = 10;
+
+  return keyframes`
+  40% {
+    left: 0;
+  }
+  60% {
+   left: -${subtitleLength}%;
+  }
+  80% {
+   left: -${subtitleLength}%;
+  }
+  100% {
+    left: 0
+  }
+`;
 };
