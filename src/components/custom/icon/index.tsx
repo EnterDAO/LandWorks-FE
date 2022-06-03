@@ -173,6 +173,7 @@ export type IconNames =
   | 'coingecko'
   | 'youtube'
   | 'medium'
+  | 'mail'
   | 'success'
   | 'polymorphs'
   | 'core-drops'

@@ -1,5 +1,5 @@
 .landing-page-wrapper {
-  padding: 165px 0 90px;
+  padding: 165px 0 140px 0;
   position: relative;
 
   @media all and (max-width: 660px) {
@@ -27,8 +27,8 @@
   }
 
   .right-blocks {
-    right: 35px;
-    top: 45px;
+    right: 0;
+    top: -107px;
 
     @media all and (max-width: 1024px) {
       svg {
@@ -47,33 +47,32 @@
 
   h2,
   h1 {
-    text-transform: uppercase;
     font-weight: 700;
     line-height: 1;
   }
 
   h2 {
+    margin-top: 20px;
     color: var(--theme-primary-color);
-    font-size: var(--font-size-landing-h2);
+    font-size: 40px;
     margin-bottom: 4px;
+    background: linear-gradient(83.81deg, #AC2CCB -19.8%, #DD3DCB 22%, #EF9C92 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    text-shadow: 0 0 5px #dd3dca42;
+    line-height: 50px;
   }
 
   h1 {
     position: relative;
     font-size: var(--font-size-landing-h1);
-    color: var(--theme-accent-color);
-    text-shadow: var(--theme-accent-shadow);
-    padding-bottom: 75px;
-
-    &:after {
-      content: '';
-      height: 32px;
-      width: 1px;
-      background: var(--theme-line-color);
-      position: absolute;
-      bottom: 22px;
-      left: 60px;
-    }
+    color: #F8F8FF;
+  }
+  p {
+    color: #B9B9D3;
+    max-width: 400px;
+    margin: 20px 0;
   }
 
   .first-pattern,
@@ -83,5 +82,9 @@
   .second-ether,
   .third-ether {
     opacity: 0;
+  }
+
+  .partners {
+    margin-top: 120px;
   }
 }

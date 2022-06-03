@@ -1,0 +1,77 @@
+import React from 'react';
+import { Link } from '@mui/material';
+
+import { ReactComponent as StayUp } from 'assets/img/StayUp.svg';
+import Icon from 'components/custom/icon';
+import { Button } from 'design-system';
+import {
+  Copyright,
+  IconsRaw,
+  LinksRaw,
+  StyledForm,
+  StyledInput,
+  StyledLink,
+  StyledRoot,
+} from 'modules/landing/components/Connect/styled';
+
+export const Connect: React.FC = () => {
+  const getYear = () => {
+    return new Date().getFullYear();
+  };
+  return (
+    <div className="content-container">
+      <StyledRoot>
+        <StayUp />
+        <h2>Receive Latest Updates</h2>
+        <p>
+          We often update LandWorks with whole new features, that’s why subcribe to be the first to receive the latest
+          updates.
+        </p>
+        <StyledForm action="https://xyz.us5.list-manage.com/subscribe/post" method="POST" target="_blank">
+          <input type="hidden" name="u" value="8746db1bbacb6ab8a19400196" />
+          <input type="hidden" name="id" value="33f89e7834" />
+          <StyledInput
+            placeholder="Enter your email"
+            type="email"
+            name="EMAIL"
+            autoCapitalize="off"
+            autoCorrect="off"
+          />
+          <Button btnSize="medium" variant="gradient" type="submit">
+            notify me
+          </Button>
+        </StyledForm>
+      </StyledRoot>
+
+      <IconsRaw>
+        <StyledLink href="/">
+          <Icon color="primary" name="mail" width="20" height="20" />
+        </StyledLink>
+        <StyledLink href="https://twitter.com/EnterDao">
+          <Icon color="primary" name="twitter" width="20" height="20" />
+        </StyledLink>
+        <StyledLink href="https://discord.gg/7QJvEctG2G">
+          <Icon color="primary" name="discord" width="20" height="20" />
+        </StyledLink>
+        <StyledLink href="https://medium.com/enterdao">
+          <Icon color="primary" name="medium" width="20" height="20" />
+        </StyledLink>
+      </IconsRaw>
+
+      <LinksRaw>
+        <Link href="https://enterdao.xyz/">EnterDAO</Link>
+
+        <Link href="/">LandWorks</Link>
+
+        <Link href="https://metaportal.gg/">MetaPortal</Link>
+
+        <Link href="https://docs.landworks.xyz/">Documentation</Link>
+      </LinksRaw>
+
+      <Copyright>
+        <Icon name="png/LandWorksLogo" width="39" height="41" />
+        <div>landworks.xyz © {getYear()}. Open-sourced.</div>
+      </Copyright>
+    </div>
+  );
+};
