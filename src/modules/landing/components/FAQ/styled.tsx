@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, styled } from '@mui/material';
+import { Grid, Typography, styled } from '@mui/material';
 import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
