@@ -1,7 +1,8 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useLocalStorage } from 'react-use-storage';
 
+import useIntersectionObserver from 'hooks/useElementOnScreen';
 import { useWallet } from 'wallets/wallet';
 
 import { NotificationData } from './data';
@@ -17,10 +18,12 @@ interface INotification {
 
 const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent }) => {
   const { account } = useWallet();
+  const [isAnimated, setIsAnimated] = useState(false);
   const [userProfile] = useLocalStorage('user_profile', { [`${account}`]: { lastLogin: 0 } });
   const history = useHistory();
   const ref = useRef<HTMLDivElement>(null);
   const isNewNotification = userProfile ? item.time >= userProfile[`${account}`]?.lastLogin : true;
+  const entry = useIntersectionObserver(ref, { freezeOnceInvisible: true });
 
   const styleHandler = {
     background: isNewNotification ? 'rgba(93, 143, 240, 0.1)' : '',
@@ -35,7 +38,10 @@ const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent 
     start: 38,
     duration: subtitleLength / 6,
   };
-  const isAnimated = subtitleLength >= animatedOptions.start;
+
+  useEffect(() => {
+    setIsAnimated(subtitleLength >= animatedOptions.start);
+  }, [entry]);
 
   return (
     <MessageRoot
@@ -47,7 +53,7 @@ const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent 
     >
       <IconWrapper>{notification.icon}</IconWrapper>
       <StyledGrid>
-        <StyledTypography sx={{ marginBottom: isAnimated ? '18px' : '' }} fontSize={14}>
+        <StyledTypography sx={{ marginBottom: isAnimated ? '20px' : '' }} fontSize={14}>
           {notification.title}
         </StyledTypography>
         {isAnimated ? (

@@ -132,10 +132,10 @@ export const calculateNotificationAnimation = (subtitleLength: number) => {
   if (subtitleLength < 40) subtitleLength = 10;
 
   return keyframes`
-  40% {
+  20% {
     left: 0;
   }
-  60% {
+  40% {
    left: -${subtitleLength}%;
   }
   80% {
