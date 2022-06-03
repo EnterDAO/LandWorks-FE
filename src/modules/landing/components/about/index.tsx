@@ -11,7 +11,7 @@ import {
   StyledSubtitle,
   StyledText,
   StyledTypography,
-} from 'modules/landing/components/About/styled';
+} from 'modules/landing/components/about/styled';
 
 import './index.scss';
 
