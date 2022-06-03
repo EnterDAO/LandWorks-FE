@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useDebounce from '@rooks/use-debounce';
 import { isNull } from 'lodash';
+import { union } from 'lodash';
 
 import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
@@ -19,6 +20,7 @@ import {
   AssetEntity,
   CoordinatesLand,
   PaymentToken,
+  fetchAllListedAssetsByConsumer,
   fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   fetchTokenPayments,
 } from '../../api';
@@ -169,10 +171,20 @@ const ExploreView: React.FC = () => {
         owner
       );
 
-      metaverse == 1 && sortBySize
-        ? setLands(lands.data.sort((a, b) => b.additionalData.size - a.additionalData.size))
-        : setLands(lands.data);
-
+      if (owner?.length) {
+        const consumer = await fetchAllListedAssetsByConsumer(
+          String(metaverse),
+          lastRentEnd,
+          sortBySize ? 'totalRents' : orderColumn,
+          sortDir,
+          paymentToken,
+          owner
+        );
+        const mergedLands = union(lands.data, consumer.data);
+        setLandsData(mergedLands, sortBySize);
+      } else {
+        setLandsData(lands.data, sortBySize);
+      }
       setLoading(false);
       const highlights = getAllLandsCoordinates(lands.data);
       setCoordinatesHighlights(highlights);
@@ -180,6 +192,13 @@ const ExploreView: React.FC = () => {
     },
     500
   );
+
+  const setLandsData = (data: AssetEntity[], sortBySize: boolean) => {
+    metaverse == 1 && sortBySize
+      ? setLands(data.sort((a, b) => b.additionalData.size - a.additionalData.size))
+      : setLands(data);
+  };
+
   const hideMapHandler = (value: boolean) => {
     setMapIsHidden(value);
     sessionStorageHandler('set', 'general', 'isHiddenMap', value);

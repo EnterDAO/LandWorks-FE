@@ -1626,6 +1626,97 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
     });
 }
 
+export function fetchAllListedAssetsByConsumer(
+  metaverse = '1',
+  lastRentEnd = '0',
+  orderColumn = 'totalRents',
+  orderDirection: string,
+  paymentTokenId: string,
+  owner?: string
+): Promise<PaginatedResult<AssetEntity>> {
+  return GraphClient.get({
+    query: gql`
+      query GetAssets(
+        $metaverse: String
+        $orderColumn: String
+        $orderDirection: String
+        $statusNot: String
+        $paymentTokenId: String
+        $owner: String
+      ) {
+        assets(
+          where: { metaverse: $metaverse,  
+          ${owner ? 'consumer: $owner' : ''}, status_not: $statusNot, 
+          ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
+          orderBy: $orderColumn
+          orderDirection: $orderDirection
+        ) {
+          id
+          metaverseAssetId
+          metaverse {
+            name
+          }
+          metaverseRegistry {
+            id
+          }
+          minPeriod
+          maxPeriod
+          maxFutureTime
+          pricePerSecond
+          paymentToken {
+            name
+            symbol
+            decimals
+          }
+          decentralandData {
+            asset {
+              owner {
+                id
+              }
+              consumer {
+                id
+                consumerTo {
+                  id
+                }
+              }
+            }
+            metadata
+            isLAND
+            coordinates {
+              id
+              x
+              y
+            }
+          }
+          lastRentEnd
+          timestamp
+          totalRents
+          status
+        }
+      }
+    `,
+    variables: {
+      lastRentEnd: lastRentEnd,
+      metaverse: metaverse,
+      orderColumn: orderColumn,
+      orderDirection: orderDirection,
+      statusNot: AssetStatus.WITHDRAWN,
+      paymentTokenId: paymentTokenId,
+      owner: owner,
+    },
+  })
+    .then(async (response) => {
+      return {
+        data: await parseAssets(response.data.assets),
+        meta: { count: response.data.assets.length },
+      };
+    })
+    .catch((e) => {
+      console.log(e);
+      return { data: [], meta: { count: 0, block: 0 } };
+    });
+}
+
 export function fetchAssetIdByTxHash(txHash: string): Promise<string> {
   return GraphClient.get({
     query: gql`
