@@ -1,7 +1,7 @@
 import 'styles/index.scss';
 
 import { FC } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { CssBaseline, ThemeProvider } from '@mui/material';
@@ -34,6 +34,8 @@ const App: FC = () => {
             <EthWeb3Provider>
               <Web3WalletProvider>
                 <KnownTokensProvider>
+                  {/* // eslint-disable-next-line 
+                  // @ts-ignore */}
                   <Router>
                     <ScrollToTop />
                     <ToastContainer theme="dark" />
@@ -51,7 +53,12 @@ const App: FC = () => {
   );
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const container = document.getElementById('root');
+
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const root = createRoot(container!); // createRoot(container!) if you use TypeScript
+
+root.render(<App />);
 
 sw.unregister();
 

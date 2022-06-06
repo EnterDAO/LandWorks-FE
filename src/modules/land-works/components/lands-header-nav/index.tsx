@@ -46,4 +46,5 @@ const LandsNav: React.FC = () => {
   );
 };
 
-export default withRouter(LandsNav);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default withRouter<any, any>(LandsNav);
