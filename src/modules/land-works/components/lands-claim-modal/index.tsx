@@ -105,7 +105,7 @@ export const ClaimModal: React.FC<Props> = (props) => {
           <WarningIcon />
           <StyledWarning>
             <h3>Important</h3>
-            <p>You can select only 3 rents at one claim transaction.</p>
+            <p>You can select only {MAX_CLAIM_SELECTED_ASSETS} rents at one claim transaction.</p>
           </StyledWarning>
           <StyledClose onClick={markAsReaded}>
             <CloseIcon />
