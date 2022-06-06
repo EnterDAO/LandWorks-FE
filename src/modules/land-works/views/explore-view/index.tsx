@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useDebounce from '@rooks/use-debounce';
-import { isNull } from 'lodash';
+import { isNull, orderBy, union } from 'lodash';
 
 import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
@@ -19,6 +19,7 @@ import {
   AssetEntity,
   CoordinatesLand,
   PaymentToken,
+  fetchAllListedAssetsByConsumer,
   fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   fetchTokenPayments,
 } from '../../api';
@@ -30,6 +31,7 @@ import {
   DECENTRALAND_METAVERSE,
   DEFAULT_LAST_RENT_END,
   DEFAULT_TOKEN_ADDRESS,
+  orderEnum,
   sortColumns,
   sortDirections,
 } from 'modules/land-works/constants';
@@ -156,7 +158,7 @@ const ExploreView: React.FC = () => {
   };
 
   const getLands = useDebounce(
-    async (orderColumn: string, sortDir: string, lastRentEnd: string, paymentToken: string, owner: string) => {
+    async (orderColumn: string, sortDir: 'asc' | 'desc', lastRentEnd: string, paymentToken: string, owner: string) => {
       setLoading(true);
       const sortBySize = orderColumn == 'size';
 
@@ -173,6 +175,23 @@ const ExploreView: React.FC = () => {
         ? setLands(lands.data.sort((a, b) => b.additionalData.size - a.additionalData.size))
         : setLands(lands.data);
 
+      if (owner?.length) {
+        const consumer = await fetchAllListedAssetsByConsumer(
+          String(metaverse),
+          lastRentEnd,
+          sortBySize ? 'totalRents' : orderColumn,
+          sortDir,
+          paymentToken,
+          owner
+        );
+        const unionArrays = union(lands.data, consumer.data);
+        const orderedLands = orderBy(unionArrays, [orderEnum[orderColumn]], [sortDir]);
+
+        setLandsData(orderedLands, sortBySize);
+      } else {
+        setLandsData(lands.data, sortBySize);
+      }
+
       setLoading(false);
       const highlights = getAllLandsCoordinates(lands.data);
       setCoordinatesHighlights(highlights);
@@ -180,6 +199,13 @@ const ExploreView: React.FC = () => {
     },
     500
   );
+
+  const setLandsData = (data: AssetEntity[], sortBySize: boolean) => {
+    metaverse == 1 && sortBySize
+      ? setLands(data.sort((a, b) => b.additionalData.size - a.additionalData.size))
+      : setLands(data);
+  };
+
   const hideMapHandler = (value: boolean) => {
     setMapIsHidden(value);
     sessionStorageHandler('set', 'general', 'isHiddenMap', value);
