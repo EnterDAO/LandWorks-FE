@@ -1615,8 +1615,18 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
     },
   })
     .then(async (response) => {
+      let parsedAssets = await parseAssets(response.data.assets);
+
+      if (orderColumn === 'pricePerSecond') {
+        if (orderDirection === 'asc') {
+          parsedAssets = parsedAssets.sort(sortAssetsByAscendingUsdPrice);
+        } else {
+          parsedAssets = parsedAssets.sort(sortAssetsByDescendingUsdPrice);
+        }
+      }
+
       return {
-        data: await parseAssets(response.data.assets),
+        data: parsedAssets,
         meta: { count: response.data.assets.length },
       };
     })

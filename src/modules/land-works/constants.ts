@@ -149,7 +149,7 @@ export const orderEnum: {
   [key: string]: string;
 } = {
   totalRents: 'totalRents',
-  pricePerSecond: 'pricePerMagnitude.price',
+  pricePerSecond: 'pricePerMagnitude.usdPrice',
   minPeriod: 'minPeriod',
   maxPeriod: 'maxPeriod',
   timestamp: 'timestamp',
