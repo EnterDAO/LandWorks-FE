@@ -13,6 +13,7 @@ import LandsSearchBar from 'modules/land-works/components/lands-search';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
+import { LocationState } from 'modules/land-works/views/single-land-view';
 
 import { AtlasTile } from '../atlas';
 import { LandsSearchBarWrapperStyled, StyledButton, StyledGridContainer, StyledRow, StyledText } from './styled';
@@ -222,7 +223,7 @@ const LandsExploreList: FC<Props> = ({
           [1, 2, 3, 4, 5, 6].map((i) => (
             <Grid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} xxl={isHiddenMap ? 2 : 4} key={i}>
               <LandCardSkeleton key={i} />
-            </Grid>
+            </StyledGrid>
           ))
         ) : filteredLands.length ? (
           filteredLands.slice(0, slicedLands).map((land) => (
@@ -237,7 +238,7 @@ const LandsExploreList: FC<Props> = ({
                 }
                 land={land}
               />
-            </Grid>
+            </StyledGrid>
           ))
         ) : (
           <Grid item xs={12}>

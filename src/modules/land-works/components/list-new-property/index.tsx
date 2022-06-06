@@ -264,8 +264,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     setTokenCost(dynamicValue!);
   };
 
+  // TODO: needs refactoring
   const handleApprove = async () => {
-    if (selectedProperty === null) {
+    if (selectedProperty === null && selectedVoxel === null) {
       return;
     }
     try {
@@ -313,8 +314,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     setPricePerSecond(pricePerSecond);
   };
 
+  // TODO: needs refactoring
   const handleConfirmListing = async () => {
-    if (selectedProperty === null) {
+    if (selectedProperty === null && selectedVoxel === null) {
       return;
     }
 
@@ -487,6 +489,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     }
   };
 
+  // TODO: needs refactoring
   const evaluateSelectedProperty = async () => {
     if (selectedProperty === null) {
       return;
@@ -533,9 +536,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     getUsdPrice(paymentToken.symbol, tokenCost?.toNumber() || 0);
   }, [paymentToken, tokenCost]);
 
+  // TODO: needs refactoring
   useEffect(() => {
     evaluateSelectedProperty();
-  }, [selectedProperty]);
+  }, [selectedProperty, selectedVoxel]);
 
   const onChangeMetaverse = (value: number) => {
     setSelectedMetaverse(value);
@@ -744,7 +748,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               Found in wallet ({getPropertyCountForMetaverse()})
             </Button>
             <Button
-              disabled={selectedProperty === null}
+              disabled={selectedProperty === null && selectedVoxel === null}
               variant="secondary"
               btnSize="medium"
               onClick={() => setActiveStep(1)}
