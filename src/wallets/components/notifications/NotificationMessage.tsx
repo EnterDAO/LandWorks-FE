@@ -1,14 +1,15 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useLocalStorage } from 'react-use-storage';
 
+import useIntersectionObserver from 'hooks/useElementOnScreen';
 import { useWallet } from 'wallets/wallet';
 
 import { NotificationData } from './data';
 import { NotificationList } from './notificationTypes';
 import { AnimatedSubtitle, IconWrapper, MessageRoot, StyledGrid, StyledSubtitle, StyledTypography } from './styled';
 
-import { countdown } from './utils';
+import { calculateNotificationAnimation, countdown } from './utils';
 
 interface INotification {
   item: NotificationList;
@@ -17,10 +18,12 @@ interface INotification {
 
 const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent }) => {
   const { account } = useWallet();
+  const [isAnimated, setIsAnimated] = useState(false);
   const [userProfile] = useLocalStorage('user_profile', { [`${account}`]: { lastLogin: 0 } });
   const history = useHistory();
   const ref = useRef<HTMLDivElement>(null);
   const isNewNotification = userProfile ? item.time >= userProfile[`${account}`]?.lastLogin : true;
+  const entry = useIntersectionObserver(ref, { freezeOnceInvisible: true });
 
   const styleHandler = {
     background: isNewNotification ? 'rgba(93, 143, 240, 0.1)' : '',
@@ -32,11 +35,13 @@ const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent 
 
   const subtitleLength = ref.current ? ref?.current?.innerText?.length : 0;
   const animatedOptions = {
-    start: 35,
-    floatRight: 40,
-    duration: subtitleLength / 4,
+    start: 38,
+    duration: subtitleLength / 6,
   };
-  const isAnimated = subtitleLength >= animatedOptions.start;
+
+  useEffect(() => {
+    setIsAnimated(subtitleLength >= animatedOptions.start);
+  }, [entry]);
 
   return (
     <MessageRoot
@@ -48,17 +53,21 @@ const NotificationMessage: React.FC<INotification> = ({ item, hasUnclaimentRent 
     >
       <IconWrapper>{notification.icon}</IconWrapper>
       <StyledGrid>
-        <StyledTypography fontSize={14}>{notification.title}</StyledTypography>
+        <StyledTypography sx={{ marginBottom: isAnimated ? '20px' : '' }} fontSize={14}>
+          {notification.title}
+        </StyledTypography>
         {isAnimated ? (
-          <AnimatedSubtitle
-            sx={{
-              animationDuration: `${animatedOptions.duration}s`,
-              float: `${subtitleLength > animatedOptions.floatRight ? 'right' : 'left'}`,
-            }}
-            ref={ref}
-          >
-            {notification.subtitle(item.landId, item.name)}
-          </AnimatedSubtitle>
+          <>
+            <AnimatedSubtitle
+              sx={{
+                animationDuration: `${animatedOptions.duration}s`,
+                animationName: `${calculateNotificationAnimation(subtitleLength)}`,
+              }}
+              ref={ref}
+            >
+              {notification.subtitle(item.landId, item.name)}
+            </AnimatedSubtitle>
+          </>
         ) : (
           <StyledSubtitle ref={ref}>{notification.subtitle(item.landId, item.name)}</StyledSubtitle>
         )}

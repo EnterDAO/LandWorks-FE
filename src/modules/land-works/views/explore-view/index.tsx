@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useDebounce from '@rooks/use-debounce';
-import { isNull } from 'lodash';
+import { isNull, orderBy, union } from 'lodash';
 
 import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
@@ -20,6 +20,7 @@ import {
   AssetEntity,
   CoordinatesLand,
   PaymentToken,
+  fetchAllListedAssetsByConsumer,
   fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   fetchTokenPayments,
 } from '../../api';
@@ -32,6 +33,7 @@ import {
   DEFAULT_LAST_RENT_END,
   DEFAULT_TOKEN_ADDRESS,
   VOXEL_METAVERSE,
+  orderEnum,
   sortColumns,
   sortDirections,
 } from 'modules/land-works/constants';
@@ -69,7 +71,7 @@ const ExploreView: React.FC = () => {
   const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
   const [mapExpanded, setMapExpanded] = useState(false);
   const [mapIsHidden, setMapIsHidden] = useState(sessionFilters.mapIsHidden || false);
-  const [subheaderHidden, setSubheaderHidden] = useState(false);
+  const [mapSize, setMapSize] = useState('small');
 
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
@@ -160,7 +162,7 @@ const ExploreView: React.FC = () => {
   };
 
   const getLands = useDebounce(
-    async (orderColumn: string, sortDir: string, lastRentEnd: string, paymentToken: string, owner: string) => {
+    async (orderColumn: string, sortDir: 'asc' | 'desc', lastRentEnd: string, paymentToken: string, owner: string) => {
       setLoading(true);
       const sortBySize = orderColumn == 'size';
 
@@ -177,6 +179,23 @@ const ExploreView: React.FC = () => {
         ? setLands(lands.data.sort((a, b) => b.additionalData.size - a.additionalData.size))
         : setLands(lands.data);
 
+      if (owner?.length) {
+        const consumer = await fetchAllListedAssetsByConsumer(
+          String(metaverse),
+          lastRentEnd,
+          sortBySize ? 'totalRents' : orderColumn,
+          sortDir,
+          paymentToken,
+          owner
+        );
+        const unionArrays = union(lands.data, consumer.data);
+        const orderedLands = orderBy(unionArrays, [orderEnum[orderColumn]], [sortDir]);
+
+        setLandsData(orderedLands, sortBySize);
+      } else {
+        setLandsData(lands.data, sortBySize);
+      }
+
       setLoading(false);
 
       const highlights = getAllLandsCoordinates(lands.data);
@@ -185,6 +204,13 @@ const ExploreView: React.FC = () => {
     },
     500
   );
+
+  const setLandsData = (data: AssetEntity[], sortBySize: boolean) => {
+    metaverse == 1 && sortBySize
+      ? setLands(data.sort((a, b) => b.additionalData.size - a.additionalData.size))
+      : setLands(data);
+  };
+
   const hideMapHandler = (value: boolean) => {
     setMapIsHidden(value);
     sessionStorageHandler('set', 'general', 'isHiddenMap', value);
@@ -229,7 +255,7 @@ const ExploreView: React.FC = () => {
             setShowCardPreview,
           }}
         >
-          <div style={subheaderHidden ? { top: '8px' } : {}} className="content-container--explore-view--header">
+          <div className="content-container--explore-view--header">
             <LandsExploreSubheader
               totalLands={lastRentEnd !== '0' ? availableLands.length : filterLandsByQuery(lands, searchQuery).length}
               hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
@@ -246,7 +272,7 @@ const ExploreView: React.FC = () => {
           <div className="content-container content-container--explore-view">
             <div className={`list-lands-container ${mapIsHidden ? 'full-width' : ''}`}>
               <LandsExploreList
-                setSubheaderHidden={setSubheaderHidden}
+                setMapSize={setMapSize}
                 setIsHiddenMap={hideMapHandler}
                 isHiddenMap={mapIsHidden}
                 lastRentEnd={lastRentEnd}
@@ -258,8 +284,10 @@ const ExploreView: React.FC = () => {
             </div>
             {!mapIsHidden && (
               <div
-                className={`map-list-container ${subheaderHidden ? 'map-list-container--enlarged' : ''} ${
-                  mapExpanded ? 'map-list-container--expanded' : ''
+                className={`map-list-container 
+                ${mapExpanded && 'map-list-container--expanded'} 
+                ${mapSize === 'large' && 'map-list-container--enlarged'} 
+                ${mapSize === 'medium' && 'map-list-container--middleSize'}
                 }`}
               >
                 {metaverse == VOXEL_METAVERSE && (

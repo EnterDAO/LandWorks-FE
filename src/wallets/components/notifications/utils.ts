@@ -1,3 +1,5 @@
+import { keyframes } from '@mui/system';
+
 import { getCryptoVoxelsAsset } from 'helpers/helpers';
 import { AssetEntity, RentEntity, getAvailability } from 'modules/land-works/api';
 
@@ -30,14 +32,15 @@ export const parseNotifications = async (
   const allAssets = [...rented, ...listed];
 
   allAssets.forEach(async (item) => {
-    const isLitedProperty = item.owner.id.toLowerCase() == account.toLowerCase();
+    const isListedProperty =
+      item.owner?.id.toLowerCase() == account.toLowerCase() || item.consumer?.id.toLowerCase() == account.toLowerCase();
     item.rents?.forEach((rent) => {
       const isYourRent = rent.renter.id.toLowerCase() == account.toLowerCase();
       const rentStart = toTimestamp(+rent.start);
       const rentEnd = toTimestamp(+rent.end);
 
       //TODO: need to be optimised
-      if (isLitedProperty) {
+      if (isListedProperty) {
         if (rentStart <= Date.now()) {
           result.push({
             id: result.length,
@@ -45,7 +48,7 @@ export const parseNotifications = async (
             time: rentStart,
             type: 'newRenting',
             landId: item.id,
-            isAvailable: item?.availability.isCurrentlyAvailable,
+            isAvailable: item?.status == 'LISTED' && !item?.availability?.isRentable,
           });
         }
         if (rentEnd <= Date.now()) {
@@ -55,7 +58,7 @@ export const parseNotifications = async (
             time: rentEnd,
             type: 'rentEnded',
             landId: item.id,
-            isAvailable: item?.availability.isCurrentlyAvailable,
+            isAvailable: item?.status == 'LISTED' && !item?.availability?.isRentable,
           });
         }
       } else {
@@ -68,7 +71,7 @@ export const parseNotifications = async (
             time: toTimestamp(halfTime),
             type: 'endSoon',
             landId: item.id,
-            isAvailable: item?.availability.isCurrentlyAvailable,
+            isAvailable: item?.status == 'LISTED' && !item?.availability?.isRentable,
           });
         }
         if (rentEnd <= Date.now() && isYourRent) {
@@ -78,7 +81,7 @@ export const parseNotifications = async (
             time: rentEnd,
             type: 'yourRentEnded',
             landId: item.id,
-            isAvailable: item?.availability.isCurrentlyAvailable,
+            isAvailable: item?.status == 'LISTED' && !item?.availability?.isRentable,
           });
         }
       }
@@ -114,31 +117,37 @@ export const countdown = (date: number, isShorted = false): string => {
   return expired;
 };
 
-export const fetchBlockscanMessages = async (wallet: string): Promise<Array<NotificationList>> => {
-  const userList = JSON.parse(localStorage.getItem('user_profile') || '');
-  const userProfile = userList[wallet];
+export const fetchBlockscanMessages = async (wallet: string): Promise<Array<any>> => {
   const blockscanUrl = 'https://scenes.landworks.xyz/messages/';
   const blockscanResponse = await fetch(blockscanUrl + wallet)
     .then((res) => res.json())
     .catch(() => console.error('Fetch Blockscan message error'));
-  const messageCountInStorage = +userProfile?.totalMesages || 0;
   const newMessage = {
     id: Date.now(),
     time: Date.now(),
     type: 'message',
   };
 
-  if (!messageCountInStorage && +blockscanResponse?.result) {
-    userProfile.messages = [newMessage];
-    updateProfile();
-  } else if (messageCountInStorage < blockscanResponse?.result) {
-    userProfile.messages.push(newMessage);
-    updateProfile();
-  }
-  function updateProfile() {
-    userProfile.totalMesages = blockscanResponse?.result;
-    localStorage.setItem('user_profile', JSON.stringify({ ...userList, [wallet]: userProfile }));
-  }
+  return +blockscanResponse?.result > 0 ? [newMessage] : [];
+};
 
-  return userProfile?.messages || [];
+export const calculateNotificationAnimation = (subtitleLength: number) => {
+  if (subtitleLength >= 60) subtitleLength = subtitleLength + subtitleLength / 2;
+  if (subtitleLength >= 40 && subtitleLength < 60) subtitleLength = subtitleLength / 2;
+  if (subtitleLength < 40) subtitleLength = 10;
+
+  return keyframes`
+  20% {
+    left: 0;
+  }
+  40% {
+   left: -${subtitleLength}%;
+  }
+  80% {
+   left: -${subtitleLength}%;
+  }
+  100% {
+    left: 0
+  }
+`;
 };

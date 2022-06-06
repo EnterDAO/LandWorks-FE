@@ -2,7 +2,6 @@
 
 .content-container--explore-view--header {
   @media screen and (min-width: 992px) {
-    position: fixed;
     top: var(--navbar-height);
     left: 0;
     right: 0;
@@ -28,7 +27,6 @@
     overflow-y: auto;
     
     @media screen and (min-width: 992px) {
-      margin-top: calc(var(--explore-subheader) + var(--explore-filters));
       width: 50%;
     }
   }
@@ -42,22 +40,25 @@
     left: 50%;
     height: calc(
       100vh - var(--navbar-height) - var(--explore-subheader) - var(--explore-filters) -
-        (var(--content-container-v-padding) * 2)
-    );
-
+      (var(--content-container-v-padding) * 2)
+      );
+      
     overflow: hidden;
     border-radius: 20px 0px 0px 20px;
+    transition: 0.2s ease all;
     margin-top: var(--content-container-v-padding);
     margin-bottom: var(--content-container-v-padding);
     margin-left: var(--content-container-v-padding);
-    transition: left 250ms;
     background-color: #662363;
 
     &--expanded {
       left: 0%;
     }
     &--enlarged {
-      height: calc(100vh - var(--navbar-height) - var(--explore-filters) - (var(--content-container-v-padding) * 2));
+      height: calc(100vh - var(--navbar-height) - (var(--content-container-v-padding) * 2));
+    }
+    &--middleSize {
+      height: calc(100vh + 80px - var(--navbar-height) - var(--explore-subheader) - var(--explore-filters) - (var(--content-container-v-padding) * 2));
     }
 
     @media screen and (min-width: 992px) {

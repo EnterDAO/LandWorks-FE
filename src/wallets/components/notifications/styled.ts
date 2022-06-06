@@ -1,21 +1,6 @@
 import { Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material';
-import { TypographyProps, keyframes } from '@mui/system';
-
-const scrollText = keyframes`
-  0% {
-    transform: translate(100%, 0);
-  }
-  40% {
-    transform: translate(0%, 0);
-  }
-  65% {
-    transform: translate(0%, 0);
-  }
-  100% {
-    transform: translate(-100%, 0);
-  }
-`;
+import { TypographyProps } from '@mui/system';
 
 export const StyledRoot = styled(Grid)(() => ({
   justifyContent: 'center',
@@ -50,16 +35,19 @@ export const AnimatedSubtitle = styled(Typography)(() => ({
   fontSize: 14,
   display: 'inline-block',
   whiteSpace: 'nowrap',
-  transform: 'translate(100%, 0)',
-  animationName: `${scrollText}`,
   animationTimingFunction: 'linear',
   animationIterationCount: 'infinite',
+  animationDelay: '1000ms',
+  position: 'absolute',
+  left: 0,
+  bottom: 0,
 }));
 
 export const StyledGrid = styled(Grid)(() => ({
   flexDirection: 'column',
   overflow: 'hidden',
   width: 280,
+  position: 'relative',
 }));
 
 export const EmptyContainer = styled(Grid)(() => ({

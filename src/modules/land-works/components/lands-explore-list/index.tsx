@@ -31,7 +31,7 @@ interface Props {
   lands: AssetEntity[];
   setPointMapCentre: (lands: CoordinatesLand[]) => void;
   setIsHiddenMap: (value: boolean) => void;
-  setSubheaderHidden: (value: boolean) => void;
+  setMapSize: (value: string) => void;
   isHiddenMap: boolean;
 }
 
@@ -40,7 +40,7 @@ const LandsExploreList: FC<Props> = ({
   lands,
   setPointMapCentre,
   lastRentEnd,
-  setSubheaderHidden,
+  setMapSize,
   setIsHiddenMap,
   isHiddenMap,
 }) => {
@@ -166,7 +166,11 @@ const LandsExploreList: FC<Props> = ({
 
   useEffect(() => {
     const scroll = () => {
-      window.scrollY <= 10 ? setSubheaderHidden(false) : setSubheaderHidden(true);
+      window.scrollY > 100
+        ? setMapSize('large')
+        : window.scrollY > 20 && window.scrollY <= 100
+        ? setMapSize('medium')
+        : setMapSize('small');
       saveScrollPosition();
     };
 

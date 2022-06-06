@@ -118,9 +118,19 @@ const VoxelParcel: React.FC<VoxelProps> = ({ atr, id }) => {
   );
 };
 const DecentralandParcel: React.FC<DecentralandProps> = ({ atr, id }) => {
+  const decentralandStyles = {
+    rootGrid: { justifyContent: 'space-around' },
+    innerContainer: { height: '160px' },
+  };
   return (
-    <GridFlexed>
-      <GridStyledInnerContainer item xs={5.5} flexDirection="column" alignItems={'left'}>
+    <GridFlexed gap={4} style={decentralandStyles.rootGrid}>
+      <GridStyledInnerContainer
+        style={decentralandStyles.innerContainer}
+        item
+        xs={6}
+        flexDirection="column"
+        alignItems={'left'}
+      >
         <TypographyStyled variant="h2">Property Details</TypographyStyled>
         <GridItem item display="flex" flexDirection="row" xs={12}>
           <TypographyStyled variant="h3">Size</TypographyStyled>
@@ -138,7 +148,13 @@ const DecentralandParcel: React.FC<DecentralandProps> = ({ atr, id }) => {
         </GridItem>
       </GridStyledInnerContainer>
 
-      <GridStyledInnerContainer item xs={5.5} flexDirection="column" alignItems={'left'}>
+      <GridStyledInnerContainer
+        style={decentralandStyles.innerContainer}
+        item
+        xs={6}
+        flexDirection="column"
+        alignItems={'left'}
+      >
         <TypographyStyled variant="h2">Location Details</TypographyStyled>
         <GridItem item display="flex" flexDirection="row" xs={12}>
           <TypographyStyled variant="h3">Distance to Plaza</TypographyStyled>

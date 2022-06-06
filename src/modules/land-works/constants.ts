@@ -148,3 +148,15 @@ export const MY_PROPERTIES_TAB_STATE_LENT = 'lent';
 
 export const TWITTER_TEXT = `gm. Just listed my property at @landworksxyz.\n`;
 export const TWITTER_PROMOTE_TEXT = `gm. My property just became available at @landworksxyz.\n`;
+
+export const orderEnum: {
+  [key: string]: string;
+} = {
+  totalRents: 'totalRents',
+  pricePerSecond: 'pricePerMagnitude.usdPrice',
+  minPeriod: 'minPeriod',
+  maxPeriod: 'maxPeriod',
+  timestamp: 'timestamp',
+  lastRentTimestamp: 'lastRentTimestamp',
+  size: 'additionalData.size',
+};
