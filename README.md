@@ -77,7 +77,7 @@ Your app is ready to be deployed!
 
 ### ./src/components
 
-In this components folder we catalogue the components per type. Here indeed we have subsolders like `./src/components/custom` where most of local components are stored. And `./src/components/styled`, where we store the simple MUI styled components for local project use. Previously we also had the subfolder `./src/components/antd`, but this can be eventually removed later since an imminent refactoring will be done.
+In this components folder we catalogue the components per type. Here indeed we have subsolders like `./src/components/custom` where most of local components are stored. And `./src/components/styled`, where we store the simple MUI styled components for local project use.
 
 ### ./src/modules
 Containes subfolders meant as RouterSwitch. Each subfolders will have the initial RouterSwitch component that declares the url used in the selected module. Each module will have a sort of structure like below:
