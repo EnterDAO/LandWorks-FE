@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { TWITTER_TEXT } from 'constants/modules';
 import { getEtherscanAddressUrl } from 'web3/utils';
 
 import ExternalLink from 'components/custom/external-link';
@@ -9,6 +8,8 @@ import { Spinner, SuccessStarIcon, TwitterIcon } from 'design-system/icons';
 import { useWallet } from 'wallets/wallet';
 
 import { ShareLink } from './styled';
+
+import { TWITTER_TEXT } from 'modules/land-works/constants';
 
 import './index.scss';
 
@@ -56,7 +57,7 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
         <div className="heading" style={{ fontSize: 25 }}>
           Successfully Listed!
         </div>
-        <div>Nice! You&apos;ve successfully listed property.</div>
+        <div className="subheading">Nice! You&apos;ve successfully listed property.</div>
         <Button
           variant="gradient"
           btnSize="medium"

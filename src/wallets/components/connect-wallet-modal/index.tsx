@@ -1,9 +1,6 @@
-import { Col, Row } from 'antd';
-
-import Modal, { ModalProps } from 'components/antd/modal';
-import Grid from 'components/custom/grid';
 import { IconWallet } from 'components/custom/icon-wallet';
 import { Text } from 'components/custom/typography';
+import { Grid, Modal } from 'design-system';
 import useMergeState from 'hooks/useMergeState';
 import { useGeneral } from 'providers/general-provider';
 import LedgerDerivationPathModal from 'wallets/components/ledger-deriviation-path-modal';
@@ -14,7 +11,11 @@ import s from './s.module.scss';
 
 import { WalletConnector } from 'wallets/types';
 
-export type ConnectWalletModalProps = ModalProps;
+export type ConnectWalletModalProps = {
+  open: boolean;
+  onSubmit?: () => void;
+  handleClose: () => void;
+};
 
 type ConnectWalletModalState = {
   showLedgerModal: boolean;
@@ -55,38 +56,35 @@ const ConnectWalletModal: React.FC<ConnectWalletModalProps> = (props) => {
   }
 
   return (
-    <Modal width={376} {...modalProps} className="sign-in-modal">
-      <Grid flow="row" gap={12}>
-        <Grid flow="row">
-          <Text type="h3" weight="bold" color="primary" align="center" style={{ marginBottom: '20px' }}>
-            Sign in with
-          </Text>
-        </Grid>
-
+    <Modal
+      {...modalProps}
+      width={376}
+      title={
+        <Text type="h3" weight="bold" color="primary">
+          Sign in with
+        </Text>
+      }
+    >
+      <Grid className={s.connectWalletModal} container flexDirection="row">
         {WalletConnectors.map((connector) => (
-          <Row key={connector.id}>
-            <Col span={24}>
-              <button key={connector.id} className={s.button} onClick={() => handleConnectorSelect(connector)}>
-                <IconWallet wallet={connector.id} style={{ maxHeight: 28 }} className={s.walletIcon} />
-              </button>
-            </Col>
-          </Row>
+          <Grid xs={12} item key={connector.id} sx={{ marginBottom: '0.7rem' }}>
+            <button key={connector.id} className={s.button} onClick={() => handleConnectorSelect(connector)}>
+              <IconWallet wallet={connector.id} style={{ maxHeight: 28 }} className={s.walletIcon} />
+            </button>
+          </Grid>
         ))}
 
-        <Grid flow="row">
+        <Grid xs={12} item>
           <Text type="p1" color="secondary" align="center">
             We do not own your private keys and cannot access your funds without your confirmation.
           </Text>
         </Grid>
       </Grid>
 
-      {state.showLedgerModal && (
-        <LedgerDerivationPathModal
-          onCancel={() => {
-            setState({ showLedgerModal: false });
-          }}
-        />
-      )}
+      <LedgerDerivationPathModal
+        open={state.showLedgerModal}
+        handleClose={() => setState({ showLedgerModal: false })}
+      />
     </Modal>
   );
 };

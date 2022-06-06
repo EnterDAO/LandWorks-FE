@@ -1,13 +1,9 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import {
-  MY_PROPERTIES_TAB_STATE_ALL,
-  MY_PROPERTIES_TAB_STATE_LENT,
-  MY_PROPERTIES_TAB_STATE_RENTED,
-} from 'constants/modules';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 
 import { Box, Button, Modal } from 'design-system';
+import { LocationState } from 'modules/interface';
 import { USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
 import { useWallet } from 'wallets/wallet';
 
@@ -17,17 +13,20 @@ import { ClaimModal } from '../lands-claim-modal';
 import ListNewProperty from '../list-new-property';
 import { RootStyled, TabListStyled, TabStyled, TypographyStyled } from './styled';
 
+import { MY_PROPERTIES_TAB_STATE_LENT, MY_PROPERTIES_TAB_STATE_RENTED } from 'modules/land-works/constants';
+
 interface Props {
   setTab: Dispatch<SetStateAction<string>>;
-  allCount: number;
   rentedCount: number;
   lentCount: number;
   user?: UserEntity;
 }
 
-const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, setTab, user }) => {
+const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, setTab, user }) => {
   const wallet = useWallet();
   const history = useHistory();
+  const location = useLocation<LocationState>();
+
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [showListNewModal, setShowListNewModal] = useState(false);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
@@ -56,6 +55,15 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
   useEffect(() => setClaimButtonDisabled(false), [user]);
   const hasMetamaskConnected = wallet.isActive && wallet.connector?.id === 'metamask';
 
+  useEffect(() => {
+    if (location.state?.openClaimModal) {
+      setShowClaimModal(true);
+      history.push({
+        state: { openClaimModal: false },
+      });
+    }
+  }, [location.state]);
+
   return (
     <>
       {claimData?.hasUnclaimedRent && (
@@ -71,18 +79,8 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
           <TypographyStyled variant="h1">My Properties</TypographyStyled>
         </Box>
 
-        <Box style={{ marginLeft: '19%' }}>
+        <Box style={{ marginLeft: '24%' }}>
           <TabListStyled onChange={handleChange} aria-label="Lands tabs filter">
-            <TabStyled
-              label={
-                <>
-                  <strong>
-                    All <span>{allCount}</span>
-                  </strong>
-                </>
-              }
-              value={MY_PROPERTIES_TAB_STATE_ALL}
-            />
             <TabStyled
               label={
                 <>
@@ -128,7 +126,7 @@ const LandsMyPropertiesHeader: FC<Props> = ({ allCount, rentedCount, lentCount, 
           setShowClaimModal(false);
         }}
         onCancel={() => setShowClaimModal(false)}
-        visible={showClaimModal}
+        open={showClaimModal}
         rentFees={claimData?.unclaimedRentAssets}
       />
     </>

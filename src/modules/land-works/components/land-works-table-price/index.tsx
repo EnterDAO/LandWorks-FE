@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { getTokenIconName, timestampSecondsToUTCDate } from 'helpers/helpers';
 import { getTokenPriceForDate } from 'providers/known-tokens-provider';
 
@@ -17,8 +17,8 @@ interface ILandTablePriceProps {
 }
 const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDecimals, weiAmount, dateTimestamp }) => {
   const coingeckoApiDateFormat = 'dd-MM-yyyy';
-  const [formatedAmount, setFormattedAmount] = useState(new BigNumber(0));
-  const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
+  const [formatedAmount, setFormattedAmount] = useState<BigNumber | null>(null);
+  const [usdPrice, setUsdPrice] = useState<BigNumber | null>(null);
 
   useEffect(() => {
     getTokenPrice();
@@ -44,12 +44,18 @@ const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDeci
 
   return (
     <span className="amount-container">
-      <SmallAmountTooltip
-        icon={<Icon style={{ width: 16, height: 16 }} name={getTokenIconName(tokenSymbol)} />}
-        amount={formatedAmount}
-      />
-      {'  '}
-      <SmallAmountTooltip className="usd-price" symbol="$" amount={usdPrice} />
+      {formatedAmount && usdPrice ? (
+        <>
+          <SmallAmountTooltip
+            className="amount-text"
+            icon={<Icon style={{ width: 16, height: 16 }} name={getTokenIconName(tokenSymbol)} />}
+            amount={formatedAmount}
+          />
+          <SmallAmountTooltip className="usd-price" symbol="$" amount={usdPrice} />
+        </>
+      ) : (
+        <span>Calculating price</span>
+      )}
     </span>
   );
 };

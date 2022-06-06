@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { useState } from 'react';
 import { Box } from '@mui/material';
 
-import { ChipStyled, RootStyled, TypographyStyled } from './styled';
+import { ChipStyled, PlotContainer, RootStyled, StyledDiv, TypographyStyled } from './styled';
 
 type Coordinate = {
   id: string;
@@ -15,23 +17,44 @@ interface IEstateLandOverlay {
 }
 
 const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates, place }) => {
+  const [expand, setExpand] = useState(false);
+  const coordsLength = coordinates?.length;
+  const hasMoreThanSix = coordsLength! > 6;
+  const hasLessThanSix = coordsLength! > 0 && coordsLength! <= 6;
+
+  const maxWidth = expand ? '360px' : '250px';
+  const coords = hasMoreThanSix && expand ? coordinates : coordinates?.slice(0, 5);
+
   return (
-    <RootStyled>
+    <RootStyled style={{ maxWidth: maxWidth }} onMouseLeave={() => setExpand(false)}>
       <TypographyStyled variant="h3">{title}</TypographyStyled>
 
-      {coordinates && coordinates?.length >= 1 && (
-        <div>
+      {coordinates && hasLessThanSix && (
+        <StyledDiv>
           {coordinates.map((estateCoord: Coordinate) => (
             <ChipStyled key={estateCoord.id} label={`X: ${estateCoord.x}, Y: ${estateCoord.y}`} variant="outlined" />
           ))}
-        </div>
+        </StyledDiv>
       )}
+
+      {coordinates && hasMoreThanSix && (
+        <StyledDiv>
+          {coords?.map((estateCoord: Coordinate) => (
+            <ChipStyled key={estateCoord.id} label={`X: ${estateCoord.x}, Y: ${estateCoord.y}`} variant="outlined" />
+          ))}
+          <div onMouseEnter={() => setExpand(true)}>{!expand && <ChipStyled label="More..." variant="outlined" />}</div>
+        </StyledDiv>
+      )}
+
       <>
         {place && place.length && (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            {place.map((title, index) => (
-              <ChipStyled key={index} label={title} variant="outlined" />
-            ))}
+            <PlotContainer>
+              <p>Island:</p> <ChipStyled style={{ textAlign: 'left' }} label={place[0]} variant="outlined" />
+            </PlotContainer>
+            <PlotContainer>
+              <p>Suburb:</p> <ChipStyled style={{ textAlign: 'left' }} label={place[1]} variant="outlined" />
+            </PlotContainer>
           </Box>
         )}
       </>

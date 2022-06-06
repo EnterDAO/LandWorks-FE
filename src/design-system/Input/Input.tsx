@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { ReactNode, useMemo, useState } from 'react';
 import InputUnstyled, { InputUnstyledProps } from '@mui/base/InputUnstyled';
 import { IconButton, InputAdornment } from '@mui/material';
 
@@ -11,13 +11,15 @@ import { THEME_COLORS } from '../../themes/theme-constants';
 
 import { PasswordStrengthEnum, PasswordStrengthTypes } from './password-strength-types';
 
-interface InputProps extends InputUnstyledProps {
+export interface InputProps extends InputUnstyledProps {
   error?: boolean;
   showPasswordStrength?: boolean;
+  startAdornment?: ReactNode;
+  endAdornment?: ReactNode;
 }
 
-const Input = React.forwardRef<HTMLDivElement, InputProps>(function Input(props, ref) {
-  const { type, showPasswordStrength, onChange, onFocus, onBlur } = props;
+const Input = React.forwardRef<HTMLDivElement, InputProps>((props, ref) => {
+  const { type, showPasswordStrength, onChange, onFocus, onBlur, startAdornment, endAdornment } = props;
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const handleClickShowPassword = () => {
@@ -42,6 +44,7 @@ const Input = React.forwardRef<HTMLDivElement, InputProps>(function Input(props,
   };
 
   let passwordIcons = null;
+
   if (type === 'password') {
     passwordIcons = useMemo(
       () => (
@@ -109,6 +112,8 @@ const Input = React.forwardRef<HTMLDivElement, InputProps>(function Input(props,
               }
             },
           })}
+        startAdornment={startAdornment}
+        endAdornment={endAdornment}
       />
       {showStrength && <PasswordStrength strength={passwordStrength} />}
     </>

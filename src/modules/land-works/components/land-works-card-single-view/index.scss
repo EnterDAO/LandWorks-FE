@@ -136,6 +136,8 @@
       color: var(--theme-accent-color);
       font-size: 14px;
       font-weight: 500;
+      min-width: 275px;
+      display: block;
     }
 
     .available-heading {
@@ -237,6 +239,8 @@
         color: rgba(93, 143, 240, 1);
         font-size: 14px;
         font-weight: 500;
+        min-width: 275px;
+        display: block;
       }
     }
   }
@@ -483,5 +487,16 @@
     color: var(--theme-subtle-color);
     font-weight: normal;
     word-wrap: break-word;
+  }
+}
+
+
+.hashtag-row {
+  margin-top: 15px;
+  p {
+    font-size: 12px;
+    color: #68687b;
+    margin-right: 8px;
+    text-transform: uppercase;
   }
 }

@@ -83,7 +83,14 @@ export const StyledTableHead = styled(TableHead)(() => ({
 export const StyledTableBody = styled(TableBody)(() => ({
   '&.MuiTableBody-root': {
     maxHeight: '280px',
-    overflowY: 'scroll',
+    overflowY: 'auto',
     width: '100%',
   },
+}));
+export const StyledBox = styled('p')(() => ({
+  width: '125px',
+  margin: '0px',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
 }));

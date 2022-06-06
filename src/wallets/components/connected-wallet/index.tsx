@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Popover from '@mui/material/Popover';
 import cn from 'classnames';
 import { getEtherscanAddressUrl, getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
@@ -14,67 +13,27 @@ import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
 import { StyledPopover } from 'design-system/Popover/Popover';
 import { getENSName } from 'helpers/helpers';
-import { useEstateRegistry } from 'modules/land-works/providers/decentraland/estate-registry-provider';
-import { useLandRegistry } from 'modules/land-works/providers/decentraland/land-registry-provider';
+import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 import { ReactComponent as ExternalLinkIcon } from 'resources/svg/external-link.svg';
 import { useWallet } from 'wallets/wallet';
 
 import { useErc20 } from '../../../modules/land-works/providers/erc20-provider';
+import { NotificationSection } from '../notifications';
 import UserInfo from './UserInfo/UserInfo';
 
 import s from './s.module.scss';
-
-// const NotificationSection: React.FC = () => {
-//   const { setNotificationsReadUntil, notifications, notificationsReadUntil } = useNotifications();
-
-//   const markAllAsRead = () => {
-//     if (notifications.length) {
-//       setNotificationsReadUntil(Math.max(...notifications.map((n) => n.startsOn)));
-//     }
-//   };
-//   const hasUnread = notificationsReadUntil ? notifications.some((n) => n.startsOn > notificationsReadUntil) : false;
-//   return (
-//     <Popover
-//       placement="bottomRight"
-//       trigger="click"
-//       noPadding
-//       content={
-//         <div className={cn('card', s.notifications)}>
-//           <div className="card-header flex">
-//             <Text type="p1" weight="semibold" color="primary">
-//               Notifications
-//             </Text>
-//             {hasUnread && (
-//               <button className="link-blue ml-auto" onClick={markAllAsRead}>
-//                 Mark all as read
-//               </button>
-//             )}
-//           </div>
-//           <Notifications />
-//         </div>
-//       }
-//     >
-//       <IconNotification width={24} height={24} notificationSize={8} bubble={hasUnread} className={s.notificationIcon}>
-//         <Icon name="notification" width={24} height={24} color="inherit" />
-//       </IconNotification>
-//     </Popover>
-//   );
-// };
 
 const ConnectedWallet: React.FC = () => {
   const wallet = useWallet();
 
   const { landworksTxInProgress, landworksTxHash } = useLandworks();
-  const { landTxInProgress, landTxHash } = useLandRegistry();
-  const { estateTxInProgress, estateTxHash } = useEstateRegistry();
+  const { txInProgress, txHash } = useContractRegistry();
   const { erc20TxInProgress, erc20TxHash } = useErc20();
 
-  const [isTxInProgress, setIsAnyTxInProgress] = useState(
-    landworksTxInProgress || landTxInProgress || estateTxInProgress || erc20TxInProgress
-  );
+  const [isTxInProgress, setIsAnyTxInProgress] = useState(landworksTxInProgress || txInProgress || erc20TxInProgress);
 
-  const [txHash, setTxHash] = useState(landworksTxHash || landTxHash || estateTxHash || erc20TxHash);
+  const [validTxHash, setValidTxHash] = useState(landworksTxHash || txHash || erc20TxHash);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -89,16 +48,16 @@ const ConnectedWallet: React.FC = () => {
   const open = Boolean(anchorEl);
 
   useEffect(() => {
-    if (landworksTxInProgress || landTxInProgress || estateTxInProgress || erc20TxInProgress) {
+    if (landworksTxInProgress || txInProgress || erc20TxInProgress) {
       setIsAnyTxInProgress(true);
     } else {
       setIsAnyTxInProgress(false);
     }
-  }, [landworksTxInProgress, landTxInProgress, estateTxInProgress, erc20TxInProgress]);
+  }, [landworksTxInProgress, txInProgress, erc20TxInProgress]);
 
   useEffect(() => {
-    setTxHash(landworksTxHash || landTxHash || estateTxHash || erc20TxHash);
-  }, [landworksTxHash, landTxHash, estateTxHash, erc20TxHash]);
+    setValidTxHash(landworksTxHash || txHash || erc20TxHash);
+  }, [landworksTxHash, txHash, erc20TxHash]);
 
   const [ens, setEns] = useState<string>();
   useEffect(() => {
@@ -111,7 +70,7 @@ const ConnectedWallet: React.FC = () => {
   if (wallet.connecting) {
     return (
       <>
-        <Popover
+        <StyledPopover
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
@@ -153,7 +112,7 @@ const ConnectedWallet: React.FC = () => {
               </button>
             </Grid>
           </div>
-        </Popover>
+        </StyledPopover>
         <Button className={s.buttonConnecting}>Connecting...</Button>
       </>
     );
@@ -183,7 +142,7 @@ const ConnectedWallet: React.FC = () => {
         anchorEl={anchorEl}
         onClose={handleClose}
       >
-        <div className="card">
+        <div className={s.container}>
           <Grid className={s.identicon} flow="col" gap={16} align="center" justify="center">
             <Identicon address={wallet.account} width={40} height={40} />
           </Grid>
@@ -232,7 +191,7 @@ const ConnectedWallet: React.FC = () => {
 
   const TxSection = (
     <>
-      <Popover
+      <StyledPopover
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -251,7 +210,7 @@ const ConnectedWallet: React.FC = () => {
             <div id={s.txStatus}>Transaction in progress</div>
             <div
               onClick={() => {
-                window.open(`${getEtherscanTxUrl(txHash)}`, '_blank')?.focus();
+                window.open(`${getEtherscanTxUrl(validTxHash)}`, '_blank')?.focus();
               }}
               id={s.txEtherscanLink}
             >
@@ -262,7 +221,7 @@ const ConnectedWallet: React.FC = () => {
             Disconnect
           </div>
         </div>
-      </Popover>
+      </StyledPopover>
       <Button className={s.accountLink}>
         <Grid flow="col" align="center">
           <div className={s.loader}></div>
@@ -276,18 +235,20 @@ const ConnectedWallet: React.FC = () => {
   );
 
   return (
-    <Grid
-      flow="col"
-      gap={20}
-      justify="center"
-      align="center"
-      className={cn(s.hamburger, isTxInProgress ? s.loadingBackground : '')}
-    >
-      {/* ToDo: NotificationSection, uncomment if needed */}
-      {/* <NotificationSection /> */}
-      {/* <Divider type="vertical" style={{ minHeight: 28 }} /> */}
-      {isTxInProgress ? TxSection : AccountSection}
-    </Grid>
+    <>
+      <NotificationSection />
+      <Grid
+        flow="col"
+        gap={20}
+        justify="center"
+        align="center"
+        className={cn(s.hamburger, isTxInProgress ? s.loadingBackground : '')}
+      >
+        {/* ToDo: NotificationSection, uncomment if needed */}
+        {/* <Divider type="vertical" style={{ minHeight: 28 }} /> */}
+        {isTxInProgress ? TxSection : AccountSection}
+      </Grid>
+    </>
   );
 };
 

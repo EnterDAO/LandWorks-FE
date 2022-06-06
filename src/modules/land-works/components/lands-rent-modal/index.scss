@@ -1,7 +1,17 @@
 .rent-modal {
   max-width: 730px;
+  margin-top: 1rem;
   position: relative;
-  top: -20px;
+
+  .title {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  &-wrapper {
+    max-height: 50vh;
+    overflow: auto;
+  }
 
   .light-text {
     display: flex;
@@ -102,6 +112,9 @@
       .rent-price {
         text-align: initial;
         font-size: 12px;
+        .price-summary > * {
+          margin-right: 3px;
+        }
         p {
           text-transform: uppercase;
         }
@@ -112,8 +125,11 @@
           height: 15px;
           width: 15px;
         }
-        .price span {
-          color: #b9b9d3;
+        .price {
+          margin-left: 3px;
+          span {
+            color: var(--theme-subtle-color);
+          }
         }
       }
     }

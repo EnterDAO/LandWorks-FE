@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { DEFAULT_SLICED_HISTORY } from 'constants/modules';
 import { Box } from '@mui/material';
 import { uniqueId } from 'lodash';
 
@@ -16,6 +15,7 @@ import {
   ActiveButton,
   PassedButton,
   RootStyled,
+  StyledBox,
   StyledPaper,
   StyledTableBody,
   StyledTableCell,
@@ -27,6 +27,8 @@ import {
 } from './styled';
 
 import { getAssetName, getNowTs } from '../../../../utils';
+
+import { DEFAULT_SLICED_HISTORY } from 'modules/land-works/constants';
 
 interface Props {
   metaverse: string;
@@ -133,10 +135,12 @@ const MyPropetiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
                 </tr>
               </tbody>
             ) : (
-              <StyledTableBody style={{ maxHeight: 260, overflowY: 'scroll' }}>
+              <StyledTableBody style={{ maxHeight: 260, overflowY: 'auto' }}>
                 {paginatedRents.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id}>
-                    <StyledTableCell align="left">{data.asset ? getAssetName(data.asset) : ''}</StyledTableCell>
+                    <StyledTableCell align="left">
+                      <StyledBox>{data.asset ? getAssetName(data.asset) : ''}</StyledBox>
+                    </StyledTableCell>
 
                     <StyledTableCell align="left">
                       <LandWorksTableDate timestamp={data.start} dateFormat={'HH:mm dd.MM.yyyy'} />

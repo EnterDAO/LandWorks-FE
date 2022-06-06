@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Typography } from 'design-system';
+
 import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
 
 import styles from './lands-explore-subheader.module.scss';
@@ -13,9 +15,9 @@ interface Props {
 const LandsExploreSubheader: React.FC<Props> = ({ totalLands, hasMetamaskConnected, handleListNew }) => {
   return (
     <div className={styles.root}>
-      <h1>
+      <Typography variant="h1">
         Explore Properties <span>Total listed {totalLands}</span>
-      </h1>
+      </Typography>
       {hasMetamaskConnected && (
         <div className={styles['add-token-wrapper']}>
           <button

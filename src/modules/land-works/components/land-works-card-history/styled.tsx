@@ -1,4 +1,4 @@
-import { TableBody, TableHead, Typography, styled } from '@mui/material';
+import { Box, TableBody, TableHead, Typography, styled } from '@mui/material';
 import { Paper, PaperProps } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
@@ -76,7 +76,7 @@ export const StyledTableHead = styled(TableHead)(() => ({
 export const StyledTableBody = styled(TableBody)(() => ({
   '&.MuiTableBody-root': {
     maxHeight: '280px',
-    overflowY: 'scroll',
+    overflowY: 'auto',
     width: '100%',
   },
 }));
@@ -131,7 +131,7 @@ export const StyledButton = styled('button')(() => ({
   border: 'none',
   background: '#1e1e2e',
   borderRadius: '5px',
-  marginLeft: '5px',
+  marginRight: '5px',
   minWidth: '48px',
   minHeight: '30px',
   textTransform: 'uppercase',
@@ -145,4 +145,8 @@ export const StyledButton = styled('button')(() => ({
     marginLeft: '5px',
     fontWeight: 'bold',
   },
+}));
+
+export const StyledBox = styled(Box)(() => ({
+  width: '110px',
 }));

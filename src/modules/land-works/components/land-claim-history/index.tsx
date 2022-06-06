@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { DEFAULT_SLICED_HISTORY } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import { Box } from '@mui/material';
 
@@ -13,6 +12,7 @@ import LandWorksTableDate from '../land-works-table-date';
 import LandTablePrice from '../land-works-table-price';
 import {
   RootStyled,
+  StyledBox,
   StyledPaper,
   StyledTableBody,
   StyledTableCell,
@@ -24,6 +24,7 @@ import {
 
 import { getAssetName } from '../../../../utils';
 
+import { DEFAULT_SLICED_HISTORY } from 'modules/land-works/constants';
 import { THEME_COLORS } from 'themes/theme-constants';
 
 interface Props {
@@ -112,11 +113,11 @@ const ClaimHistoryTable: React.FC<Props> = ({ metaverse }) => {
                 </tr>
               </tbody>
             ) : (
-              <StyledTableBody style={{ maxHeight: 260, overflowY: 'scroll' }}>
+              <StyledTableBody style={{ maxHeight: 260, overflowY: 'auto' }}>
                 {paginatedClaimHistory.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id}>
                     <StyledTableCell style={{ color: THEME_COLORS.light }} align="left">
-                      {getAssetName(data.asset)}
+                      <StyledBox>{getAssetName(data.asset)}</StyledBox>
                     </StyledTableCell>
                     <StyledTableCell style={{ fontWeight: '500' }} align="left">
                       <LandTableTxHash txHash={data.txHash} firstSymbolsLength={22} />

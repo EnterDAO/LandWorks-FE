@@ -7,7 +7,7 @@ import { RangeValue } from 'rc-picker/lib/interface';
 import { ONE_ADDRESS, getEtherscanAddressUrl, getHumanValue } from 'web3/utils';
 
 import Icon from 'components/custom/icon';
-import SmallAmountTooltip from 'components/custom/smallAmountTooltip';
+import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import config from 'config';
 import { Button, Input, Modal, Tooltip } from 'design-system';
 import { CalendarIcon, ProfileIcon, WarningIcon } from 'design-system/icons';
@@ -270,7 +270,7 @@ export const RentModal: React.FC<Props> = (props) => {
         <Grid container className="rent-modal">
           <Grid item>
             <Grid item>
-              <h1 style={{ textAlign: 'center' }}>Rent Property details</h1>
+              <h1 className="title">Rent Property details</h1>
               <Grid container direction="column">
                 <Grid item className="title-period">
                   <CalendarIcon className="profile-icon" />
@@ -290,52 +290,53 @@ export const RentModal: React.FC<Props> = (props) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid container className="operator-container">
-              <Grid item style={{ display: 'flex' }}>
-                <p className="light-text">
-                  <ProfileIcon className="profile-icon" />
-                  Configured Operator
-                  <Tooltip
-                    placement="bottom-end"
-                    title="The address that will be authorised to deploy scenes and experiences on the rented property during your renting period."
-                  >
-                    <span>
-                      <Icon name="about" className="info-icon" />
-                    </span>
-                  </Tooltip>
-                </p>
+            <Grid className="rent-modal-wrapper">
+              <Grid container className="operator-container">
+                <Grid item style={{ display: 'flex' }}>
+                  <p className="light-text">
+                    <ProfileIcon className="profile-icon" />
+                    Configured Operator
+                    <Tooltip
+                      placement="bottom-end"
+                      title="The address that will be authorised to deploy scenes and experiences on the rented property during your renting period."
+                    >
+                      <span>
+                        <Icon name="about" className="info-icon" />
+                      </span>
+                    </Tooltip>
+                  </p>
+                </Grid>
+                <Divider className="divider" />
+                <Grid item style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <p className="operator-text">Operator address</p>
+                </Grid>
+                <Grid item>
+                  <Input
+                    className="operator-input"
+                    placeholder="Operator Address"
+                    onFocus={() => setIsActiveOperatorInput(true)}
+                    onBlur={() => setIsActiveOperatorInput(false)}
+                    value={editedValue + `${isYou() && !isActiveOperatorInput ? ' (You)' : ''}`}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                {!isValidForm() && errMessage && <div className="error-wrapper">{errMessage}</div>}
+
+                <Grid item className="info-warning-container info">
+                  <WarningIcon className="warning-icon" />
+                  <div className="info-warning-text">
+                    <h3>Important info</h3>
+                    <p>
+                      In order to change the operator after you`ve already rented, you`ll need to pay a network fee.Also
+                      you will need to Synchronise the configured operator with the Metaverse once your rent becomes
+                      active. This is required so that the operator you've defined is updated in the metaverse as well.
+                    </p>
+                  </div>
+                </Grid>
               </Grid>
               <Divider className="divider" />
-              <Grid item style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <p className="operator-text">Operator address</p>
-              </Grid>
-              <Grid item>
-                <Input
-                  className="operator-input"
-                  placeholder="Operator Address"
-                  onFocus={() => setIsActiveOperatorInput(true)}
-                  onBlur={() => setIsActiveOperatorInput(false)}
-                  value={editedValue + `${isYou() && !isActiveOperatorInput ? ' (You)' : ''}`}
-                  onChange={handleChange}
-                />
-              </Grid>
-              {!isValidForm() && errMessage && <div className="error-wrapper">{errMessage}</div>}
 
-              <Grid item className="info-warning-container info">
-                <WarningIcon className="warning-icon" />
-                <div className="info-warning-text">
-                  <h3>Important info</h3>
-                  <p>
-                    In order to change the operator after you`ve already rented, you`ll need to pay a network fee.Also
-                    you will need to Synchronise the configured operator with the Metaverse once your rent becomes
-                    active. This is required so that the operator you've defined is updated in the metaverse as well.
-                  </p>
-                </div>
-              </Grid>
-            </Grid>
-            <Divider className="divider" />
-            {isValidForm() && (
-              <>
+              {isValidForm() && (
                 <Grid container className="rent-modal-footer">
                   <Grid item className="summary">
                     <p className="light-text">Summary</p>
@@ -348,16 +349,12 @@ export const RentModal: React.FC<Props> = (props) => {
                       </Grid>
                       <Grid item className="rent-price">
                         <p>Rent price</p>
-                        <span>
-                          <>
-                            <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" />{' '}
-                            <SmallAmountTooltip amount={totalPrice} /> {paymentToken?.symbol || ''}{' '}
-                          </>
-                          <>
-                            <span className="price">
-                              <SmallAmountTooltip amount={usdPrice} symbol="$" />
-                            </span>
-                          </>
+                        <span className="price-summary" style={{ display: 'flex', alignItems: 'center' }}>
+                          <Icon name={getTokenIconName(paymentToken?.symbol || '')} className="eth-icon" />{' '}
+                          <SmallAmountTooltip amount={totalPrice} /> {paymentToken?.symbol || ''}{' '}
+                          <span className="price">
+                            <SmallAmountTooltip amount={usdPrice} symbol="$" />
+                          </span>
                         </span>
                       </Grid>
                     </Grid>
@@ -370,31 +367,29 @@ export const RentModal: React.FC<Props> = (props) => {
                     </div>
                   </Grid>
                 </Grid>
-                <Grid container className="button-container">
-                  {shouldShowApproveButton() && rentDisabled && (
-                    <Button
-                      variant="gradient"
-                      className="rent-button"
-                      onClick={handleApprove}
-                      disabled={approveDisabled}
-                    >
-                      APPROVE
-                    </Button>
-                  )}
-                  <Button
-                    style={{ display: 'block' }}
-                    className="rent-button"
-                    variant="gradient"
-                    disabled={rentDisabled}
-                    onClick={handleRent}
-                  >
-                    <div className="rent-label-container">
-                      <span className="rent-label">Rent Now </span>
-                    </div>
-                  </Button>
-                </Grid>
-              </>
-            )}
+              )}
+            </Grid>
+            <Grid container className="button-container">
+              {shouldShowApproveButton() && rentDisabled && (
+                <Button
+                  variant="gradient"
+                  className="rent-button"
+                  onClick={handleApprove}
+                  disabled={approveDisabled || !isValidForm()}
+                >
+                  APPROVE
+                </Button>
+              )}
+              <Button
+                style={{ display: 'block' }}
+                className="rent-button"
+                variant="gradient"
+                disabled={rentDisabled || !isValidForm()}
+                onClick={handleRent}
+              >
+                Rent Now
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       )}

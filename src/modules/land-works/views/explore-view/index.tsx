@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  DECENTRALAND_METAVERSE,
-  DEFAULT_LAST_RENT_END,
-  DEFAULT_TOKEN_ADDRESS,
-  sortColumns,
-  sortDirections,
-} from 'constants/modules';
 import useDebounce from '@rooks/use-debounce';
-import { isNull } from 'lodash';
+import { isNull, orderBy, union } from 'lodash';
 
-import { AtlasTile } from 'components/custom/Atlas/Atlas';
 import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
+import { AtlasTile } from 'modules/land-works/components/atlas';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
@@ -26,12 +19,22 @@ import {
   AssetEntity,
   CoordinatesLand,
   PaymentToken,
+  fetchAllListedAssetsByConsumer,
   fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   fetchTokenPayments,
 } from '../../api';
 
 import { filterLandsByAvailability, filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
 import { getNowTs, sessionStorageHandler } from 'utils';
+
+import {
+  DECENTRALAND_METAVERSE,
+  DEFAULT_LAST_RENT_END,
+  DEFAULT_TOKEN_ADDRESS,
+  orderEnum,
+  sortColumns,
+  sortDirections,
+} from 'modules/land-works/constants';
 
 import './explore-view.scss';
 
@@ -45,25 +48,28 @@ const ExploreView: React.FC = () => {
     owner: sessionStorageHandler('get', 'explore-filters', 'owner'),
     lastRentEnd: sessionStorageHandler('get', 'explore-filters', 'lastRentEnd'),
     metaverse: sessionStorageHandler('get', 'general', 'metaverse'),
+    mapIsHidden: sessionStorageHandler('get', 'general', 'isHiddenMap'),
   };
 
   const [lands, setLands] = useState<AssetEntity[]>([]);
   const [clickedLandId, setStateClickedLandId] = useState<AssetEntity['id']>('');
   const [mapTiles, setMapTiles] = useState<Record<string, AtlasTile>>({});
+  const [selectedId, setSelectedId] = useState<string>('');
   const [selectedTile, setSelectedTile] = useState<SelectedTile>({
     id: '',
     type: '',
     owner: '',
   });
-
-  const [sortDir, setSortDir] = useState(sortDirections[sessionFilters.order - 1 || 0]);
-  const [sortColumn, setSortColumn] = useState(sortColumns[sessionFilters.order - 1 || 0]);
-
   const [metaverse, setMetaverse] = useState(sessionFilters.metaverse || DECENTRALAND_METAVERSE);
+  const orderFilter =
+    sessionFilters.order && sessionFilters.order[`${metaverse}`] ? sessionFilters.order[`${metaverse}`] - 1 : 0;
+  const [sortDir, setSortDir] = useState(sortDirections[orderFilter]);
+  const [sortColumn, setSortColumn] = useState(sortColumns[orderFilter]);
 
   const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
   const [mapExpanded, setMapExpanded] = useState(false);
-  const [mapIsHidden, setMapIsHidden] = useState(false);
+  const [mapIsHidden, setMapIsHidden] = useState(sessionFilters.mapIsHidden || false);
+  const [mapSize, setMapSize] = useState('small');
 
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
@@ -73,7 +79,6 @@ const ExploreView: React.FC = () => {
   const [showCardPreview, setShowCardPreview] = useState(false);
 
   const [lastRentEnd, setLastRentEnd] = useState(sessionFilters.lastRentEnd || DEFAULT_LAST_RENT_END);
-
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState<string | null>(null);
 
@@ -153,19 +158,40 @@ const ExploreView: React.FC = () => {
   };
 
   const getLands = useDebounce(
-    async (orderColumn: string, sortDir: string, lastRentEnd: string, paymentToken: string, owner: string) => {
+    async (orderColumn: string, sortDir: 'asc' | 'desc', lastRentEnd: string, paymentToken: string, owner: string) => {
       setLoading(true);
+      const sortBySize = orderColumn == 'size';
 
       const lands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
         String(metaverse),
         lastRentEnd,
-        orderColumn,
+        sortBySize ? 'totalRents' : orderColumn,
         sortDir,
         paymentToken,
         owner
       );
 
-      setLands(lands.data);
+      metaverse == 1 && sortBySize
+        ? setLands(lands.data.sort((a, b) => b.additionalData.size - a.additionalData.size))
+        : setLands(lands.data);
+
+      if (owner?.length) {
+        const consumer = await fetchAllListedAssetsByConsumer(
+          String(metaverse),
+          lastRentEnd,
+          sortBySize ? 'totalRents' : orderColumn,
+          sortDir,
+          paymentToken,
+          owner
+        );
+        const unionArrays = union(lands.data, consumer.data);
+        const orderedLands = orderBy(unionArrays, [orderEnum[orderColumn]], [sortDir]);
+
+        setLandsData(orderedLands, sortBySize);
+      } else {
+        setLandsData(lands.data, sortBySize);
+      }
+
       setLoading(false);
       const highlights = getAllLandsCoordinates(lands.data);
       setCoordinatesHighlights(highlights);
@@ -173,6 +199,17 @@ const ExploreView: React.FC = () => {
     },
     500
   );
+
+  const setLandsData = (data: AssetEntity[], sortBySize: boolean) => {
+    metaverse == 1 && sortBySize
+      ? setLands(data.sort((a, b) => b.additionalData.size - a.additionalData.size))
+      : setLands(data);
+  };
+
+  const hideMapHandler = (value: boolean) => {
+    setMapIsHidden(value);
+    sessionStorageHandler('set', 'general', 'isHiddenMap', value);
+  };
 
   useEffect(() => {
     if (wallet.account) {
@@ -192,7 +229,7 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     getPaymentTokens();
-    String(metaverse) !== '1' ? setMapIsHidden(true) : setMapIsHidden(false);
+    String(metaverse) !== '1' ? setMapIsHidden(true) : setMapIsHidden(sessionFilters.mapIsHidden || false);
   }, []);
 
   useEffect(() => {
@@ -200,9 +237,10 @@ const ExploreView: React.FC = () => {
   }, [lands]);
 
   const availableLands = filterLandsByAvailability(filterLandsByQuery(lands, searchQuery));
+
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
-      <LandsMapTilesProvider value={{ mapTiles, setMapTiles }}>
+      <LandsMapTilesProvider value={{ mapTiles, setMapTiles, selectedId, setSelectedId }}>
         <LandsMapTileProvider
           value={{
             clickedLandId,
@@ -227,11 +265,11 @@ const ExploreView: React.FC = () => {
               onChangeMetaverse={onChangeMetaverse}
             />
           </div>
-
           <div className="content-container content-container--explore-view">
             <div className={`list-lands-container ${mapIsHidden ? 'fullWidth' : ''}`}>
               <LandsExploreList
-                setIsHiddenMap={setMapIsHidden}
+                setMapSize={setMapSize}
+                setIsHiddenMap={hideMapHandler}
                 isHiddenMap={mapIsHidden}
                 metaverse={metaverse}
                 lastRentEnd={lastRentEnd}
@@ -243,7 +281,13 @@ const ExploreView: React.FC = () => {
             </div>
 
             {!mapIsHidden && (
-              <div className={`map-list-container ${mapExpanded ? 'map-list-container--expanded' : ''}`}>
+              <div
+                className={`map-list-container 
+                ${mapExpanded && 'map-list-container--expanded'} 
+                ${mapSize === 'large' && 'map-list-container--enlarged'} 
+                ${mapSize === 'medium' && 'map-list-container--middleSize'}
+                }`}
+              >
                 <LandsExploreMap
                   positionX={atlasMapX}
                   positionY={atlasMapY}

@@ -4,6 +4,7 @@
   flex-wrap: nowrap;
   margin-top: 10px;
   margin-left: 0;
+  margin-bottom: 5px;
   width: 100%;
 
   label {
@@ -19,11 +20,11 @@
     height: 3px;
     background-color: #27273a;
     margin: 0;
+    margin-bottom: 25px;
   }
 
   .input {
-    max-width: 169px;
-    min-width: 164px;
+    width: 160px;
     font-size: 14px;
 
     input {

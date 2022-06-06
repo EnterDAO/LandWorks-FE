@@ -2,23 +2,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  AtMostRentPeriodOptions,
-  DEFAULT_LIST_MAX_FUTURE_PERIOD,
-  DEFAULT_LIST_MAX_PERIOD,
-  DEFAULT_MIN_PERIOD,
-  FEE_PRECISION,
-  MaxRentPeriodOptions,
-  MinRentPeriodOptions,
-  metaverseOptions,
-} from 'constants/modules';
 import BigNumber from 'bignumber.js';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import { Box, Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import { CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
+import { BaseNFT, CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
 import {
   EstateListingCard,
   LandListingCard,
@@ -27,24 +17,32 @@ import {
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
 import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
-import { currencyData, landsData } from 'modules/land-works/components/lands-explore-filters/filters-data';
+import { currencyData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-modal';
+import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
-import { PaymentToken, fetchTokenPayments } from '../../api';
-import EditFormCardSkeleton from '../../components/land-edit-form-loader-card';
-import { useCryptoVoxels } from '../../providers/cryptovoxels-provider';
-import { useEstateRegistry } from '../../providers/decentraland/estate-registry-provider';
-import { useLandRegistry } from '../../providers/decentraland/land-registry-provider';
+import { PaymentToken, fetchMetaverses, fetchTokenPayments } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
+import ListingCardSkeleton from '../land-listing-skeleton';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
 
 import { getTimeType, secondsToDuration, sessionStorageHandler } from 'utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from 'utils/date';
+
+import {
+  AtMostRentPeriodOptions,
+  DEFAULT_LIST_MAX_FUTURE_PERIOD,
+  DEFAULT_LIST_MAX_PERIOD,
+  DEFAULT_MIN_PERIOD,
+  FEE_PRECISION,
+  MaxRentPeriodOptions,
+  MinRentPeriodOptions,
+} from 'modules/land-works/constants';
 
 import './index.scss';
 
@@ -58,15 +56,11 @@ interface IProps {
 const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const walletCtx = useWallet();
   const landworks = useLandworks();
-  const estateRegistry = useEstateRegistry();
-  const landRegistry = useLandRegistry();
-  const cryptoVoxels = useCryptoVoxels();
+  const registry = useContractRegistry();
   const history = useHistory();
 
   const { landWorksContract } = landworks;
-  const { landRegistryContract } = landRegistry;
-  const { estateRegistryContract } = estateRegistry;
-  const { cryptoVoxelsContract } = cryptoVoxels;
+  const { landRegistryContract, estateRegistryContract, cryptoVoxelsContract } = registry;
 
   const [minPeriod, setMinPeriod] = useState(new BigNumber(DAY_IN_SECONDS));
   const [isMinPeriodSelected, setMinPeriodSelected] = useState(false);
@@ -88,8 +82,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[4]); // Selected Option Value for the select menu
   const [maxFutureError, setMaxFutureError] = useState('');
 
-  const [selectedProperty, setSelectedProperty] = useState(null as DecentralandNFT | null);
-  const [selectedVoxel, setSelectedVoxel] = useState(null as CryptoVoxelNFT | null);
+  const [selectedProperty, setSelectedProperty] = useState(null as BaseNFT | null);
 
   const [assetProperties, setAssetProperties] = useState<DecentralandNFT[]>([]);
   const [assetEstates, setAssetEstates] = useState<DecentralandNFT[]>([]);
@@ -115,10 +108,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [usdPrice, setUsdPrice] = useState('0');
 
   const [loading, setLoading] = useState(false);
+  const [availableMetaverses, setAvailableMetaverses] = useState([]);
   const [selectedMetaverse, setSelectedMetaverse] = useState(
     +sessionStorageHandler('get', 'general', 'metaverse') || 1
   );
-  const [metaverse, setMetaverse] = useState(metaverseOptions[0]);
   const [activeStep, setActiveStep] = useState(0);
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -127,13 +120,16 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
   const [listModalMessage, setListModalMessage] = useState(SignTransactionMessage);
 
-  const handlePropertyChange = (selectedLand: DecentralandNFT) => {
+  const handlePropertyChange = (selectedLand: BaseNFT) => {
     setSelectedProperty(selectedLand);
   };
 
-  const handleVoxelPropertyChange = (selectedLand: CryptoVoxelNFT) => {
-    setSelectedVoxel(selectedLand);
-  };
+  useEffect(() => {
+    fetchMetaverses().then(setAvailableMetaverses);
+  }, []);
+
+  const isDecentraland = selectedProperty?.metaverseName === 'Decentraland';
+  const isVoxels = selectedProperty?.metaverseName === 'Voxels';
 
   const handleMinCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMinPeriodSelected(e.target.checked);
@@ -205,7 +201,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       const optionIndex = MaxRentPeriodOptions.indexOf(optionByType!);
 
       setMaxPeriodSelectedOption(MaxRentPeriodOptions[optionIndex]);
-
       setMaxPeriod(maxInput?.multipliedBy(bigvalue!)!);
     }
   };
@@ -269,35 +264,31 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     setTokenCost(dynamicValue!);
   };
 
-  // TODO: needs refactoring
   const handleApprove = async () => {
-    if (selectedProperty === null && selectedVoxel === null) {
+    if (selectedProperty === null) {
       return;
     }
     try {
       let isApproved = false;
       setShowApproveModal(true);
 
-      if (selectedMetaverse == 1) {
-        if (selectedProperty) {
-          switch (selectedProperty.contractAddress) {
-            case config.contracts.decentraland.landRegistry:
-              await landRegistryContract?.setApprovalForAll(config.contracts.landworksContract, true);
-              isApproved = await landRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
-              break;
-            case config.contracts.decentraland.estateRegistry:
-              await estateRegistryContract?.setApprovalForAll(config.contracts.landworksContract, true);
-              isApproved = await estateRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
-              break;
-          }
-        }
-      } else {
-        if (selectedVoxel) {
-          await cryptoVoxelsContract?.setApprovalForAll(config.contracts.landworksContract, true);
-          isApproved = await cryptoVoxelsContract?.isApprovedForAll(config.contracts.landworksContract)!;
+      let registry;
+      const contract = config.contracts.landworksContract;
+
+      if (isDecentraland) {
+        if (selectedProperty.contractAddress === config.contracts.decentraland.landRegistry) {
+          registry = landRegistryContract;
+        } else {
+          registry = estateRegistryContract;
         }
       }
-
+      if (isVoxels) {
+        registry = cryptoVoxelsContract;
+      }
+      if (!!registry && !!contract) {
+        await registry?.setApprovalForAll(contract, true);
+        isApproved = await registry?.isApprovedForAll(contract)!;
+      }
       if (isApproved) {
         setApproveDisabled(true);
         setShowApproveModal(false);
@@ -322,9 +313,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     setPricePerSecond(pricePerSecond);
   };
 
-  // TODO: needs refactoring
   const handleConfirmListing = async () => {
-    if (selectedProperty === null && selectedVoxel === null) {
+    if (selectedProperty === null) {
       return;
     }
 
@@ -332,16 +322,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
     let metaverseRegistry = '';
     let id = '';
-    if (selectedMetaverse === 1) {
-      if (selectedProperty) {
-        metaverseRegistry = selectedProperty?.contractAddress;
-        id = selectedProperty.id;
-      }
-    } else {
-      if (selectedVoxel) {
-        metaverseRegistry = selectedVoxel?.contractAddress;
-        id = selectedVoxel.id;
-      }
+
+    if (selectedProperty) {
+      metaverseRegistry = selectedProperty?.contractAddress;
+      id = selectedProperty.id;
     }
 
     if (!metaverseRegistry || !id) {
@@ -381,7 +365,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const retrieveLandIds = (estate: any) => estate.landIds.landIds;
 
-  const decodeXYForLand = (landId: BigNumber) => landRegistry?.landRegistryContract?.getTokenData(landId);
+  const decodeXYForLand = (landId: BigNumber) => landRegistryContract?.getTokenData(landId);
 
   const getLandsForEstate = async (estate: DecentralandNFT) => {
     const landIds = retrieveLandIds(estate);
@@ -414,8 +398,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     }
 
     try {
-      const lands = await landRegistry.landRegistryContract?.getUserData(walletCtx.account);
-      const estates = await estateRegistry.estateRegistryContract?.getUserData(walletCtx.account);
+      const lands = await landRegistryContract?.getUserData(walletCtx.account);
+      const estates = await estateRegistryContract?.getUserData(walletCtx.account);
       const cryptoVoxels = await cryptoVoxelsContract?.getUserData(walletCtx.account);
       const landsForEstates = await getLandsForEstates(estates);
       setEstateGroup(landsForEstates);
@@ -503,20 +487,20 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     }
   };
 
-  // TODO: needs refactoring
   const evaluateSelectedProperty = async () => {
-    if (selectedProperty === null && selectedVoxel === null) {
+    if (selectedProperty === null) {
       return;
     }
     let isApproved = false;
     setApproveDisabled(false);
-    if (selectedProperty && selectedMetaverse == 1) {
-      if (selectedProperty.isLAND) {
+
+    if (isDecentraland) {
+      if ((selectedProperty as DecentralandNFT).isLAND) {
         isApproved = await landRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
       } else {
         isApproved = await estateRegistryContract?.isApprovedForAll(config.contracts.landworksContract)!;
       }
-    } else if (selectedVoxel) {
+    } else if (isVoxels) {
       isApproved = await cryptoVoxelsContract?.isApprovedForAll(config.contracts.landworksContract)!;
     }
 
@@ -549,13 +533,11 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     getUsdPrice(paymentToken.symbol, tokenCost?.toNumber() || 0);
   }, [paymentToken, tokenCost]);
 
-  // TODO: needs refactoring
   useEffect(() => {
     evaluateSelectedProperty();
-  }, [selectedProperty, selectedVoxel]);
+  }, [selectedProperty]);
 
   const onChangeMetaverse = (value: number) => {
-    setMetaverse(metaverse);
     setSelectedMetaverse(value);
   };
 
@@ -587,14 +569,12 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
                 width={'12rem'}
                 value={selectedMetaverse}
                 onChange={onChangeMetaverse}
-                options={landsData}
+                options={availableMetaverses}
               />
             </Grid>
 
             {loading ? (
-              <Grid width={'100%'}>
-                <EditFormCardSkeleton />
-              </Grid>
+              <ListingCardSkeleton />
             ) : (
               <Grid container flexDirection="row" wrap="wrap" className="properties">
                 {selectedMetaverse === 1 && (
@@ -627,8 +607,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
                     {cryptoVoxelParcels.map((parcel) => (
                       <Grid key={parcel.id} item xs={3} margin={'0 0 10px'}>
                         <VoxelListingCard
-                          isSelectedProperty={parcel.name === selectedVoxel?.name}
-                          handleClick={handleVoxelPropertyChange}
+                          isSelectedProperty={parcel.name === selectedProperty?.name}
+                          handleClick={handlePropertyChange}
                           key={parcel.name}
                           land={parcel}
                         />
@@ -642,8 +622,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
         )}
 
         {activeStep === 1 && (
-          <Grid maxHeight={'50vh'} overflow="scroll" container columnSpacing={5} justifyContent="space-between" mt={4}>
-            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={450} overflow="scroll">
+          <Grid maxHeight={'50vh'} overflow="auto" container columnSpacing={5} justifyContent="space-between" mt={4}>
+            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={450} overflow="auto">
               <DropdownSection
                 defaultOpen={true}
                 variant="calendar"
@@ -704,29 +684,39 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
             </Grid>
             <Grid item xs={6} rowSpacing={5}>
               <Grid item xs={12}>
-                {selectedProperty && selectedMetaverse === 1 && (
+                {selectedProperty && isDecentraland && (
                   <>
-                    {selectedProperty.isLAND ? (
+                    {(selectedProperty as DecentralandNFT).isLAND ? (
                       <SelectedListCard
                         src={selectedProperty.image}
                         name={selectedProperty.name}
-                        coordinatesChild={<SelectedFeatureCoords asset={selectedProperty} />}
+                        coordinatesChild={<SelectedFeatureCoords asset={selectedProperty as DecentralandNFT} />}
                       />
                     ) : (
                       <SelectedListCard
                         src={selectedProperty.image}
                         name={selectedProperty.name}
-                        coordinatesChild={<SelectedFeatureCoords asset={selectedProperty} estateLands={estateGroup} />}
+                        coordinatesChild={
+                          <SelectedFeatureCoords
+                            asset={selectedProperty as DecentralandNFT}
+                            estateLands={estateGroup}
+                          />
+                        }
                       />
                     )}
                   </>
                 )}
-                {selectedVoxel && selectedMetaverse === 2 && (
-                  <SelectedListCard
-                    src={selectedVoxel.image}
-                    name={selectedVoxel.name}
-                    coordinatesChild={<>{selectedVoxel.place}</>}
-                  />
+
+                {selectedProperty && isVoxels && (
+                  <>
+                    {(selectedProperty as CryptoVoxelNFT) && (
+                      <SelectedListCard
+                        src={selectedProperty.image}
+                        name={selectedProperty.name}
+                        coordinatesChild={<>{selectedProperty.place}</>}
+                      />
+                    )}
+                  </>
                 )}
               </Grid>
               <Grid item xs={12}>
@@ -754,7 +744,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               Found in wallet ({getPropertyCountForMetaverse()})
             </Button>
             <Button
-              disabled={selectedProperty === null && selectedVoxel === null}
+              disabled={selectedProperty === null}
               variant="secondary"
               btnSize="medium"
               onClick={() => setActiveStep(1)}
@@ -764,7 +754,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           </Grid>
         )}
         {activeStep === 1 && (
-          <Grid maxHeight={'50vh'} overflow="scroll" container justifyContent="space-between" mt={4}>
+          <Grid maxHeight={'50vh'} overflow="auto" container justifyContent="space-between" mt={4}>
             <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(0)}>
               Back
             </Button>

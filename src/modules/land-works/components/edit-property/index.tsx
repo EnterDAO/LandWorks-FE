@@ -2,17 +2,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import {
-  AtMostRentPeriodOptions,
-  DEFAULT_LIST_MAX_FUTURE_PERIOD,
-  DEFAULT_LIST_MAX_PERIOD,
-  DEFAULT_MAX_PERIOD,
-  DEFAULT_MIN_PERIOD,
-  FEE_PRECISION,
-  MaxRentPeriodOptions,
-  MinRentPeriodOptions,
-} from 'constants/modules';
 import BigNumber from 'bignumber.js';
+import { ONE_ADDRESS } from 'web3/utils';
 
 import { Box, Button, Grid, Modal, Typography } from 'design-system';
 import { getDecentralandDataImageUrl, getEstateImageUrl } from 'helpers/helpers';
@@ -28,11 +19,23 @@ import { getTokenPrice } from 'providers/known-tokens-provider';
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
-import EditFormCardSkeleton from '../land-edit-form-loader-card';
+import EditFormCardSkeleton from '../land-editing-skeleton';
+import { TxModal } from '../lands-list-modal';
 
 import { formatBigNumberInput, getTimeType, secondsToDuration } from '../../../../utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from '../../../../utils/date';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from '../../../../web3/utils';
+
+import {
+  AtMostRentPeriodOptions,
+  DEFAULT_LIST_MAX_FUTURE_PERIOD,
+  DEFAULT_LIST_MAX_PERIOD,
+  DEFAULT_MAX_PERIOD,
+  DEFAULT_MIN_PERIOD,
+  FEE_PRECISION,
+  MaxRentPeriodOptions,
+  MinRentPeriodOptions,
+} from 'modules/land-works/constants';
 
 import './index.scss';
 
@@ -41,6 +44,8 @@ interface Props {
   closeModal: () => void;
   delistText: string;
 }
+
+const EditMessage = 'Processing...';
 
 const EditProperty: React.FC<Props> = (props) => {
   const { openDelistPrompt, closeModal, delistText } = props;
@@ -94,13 +99,16 @@ const EditProperty: React.FC<Props> = (props) => {
   const [priceError, setPriceError] = useState('');
 
   const [showWarningModal, setShowWarningModal] = useState(false);
+  const [showTxModal, setShowTxModal] = useState(false);
+
+  const [editTxModalMessage] = useState(EditMessage);
 
   const [saveDisabled, setSaveDisabled] = useState(false);
 
   useEffect(() => {
     // Pre-populate user properties
     setSelectedProperty(asset);
-
+    asset?.paymentToken?.id == ONE_ADDRESS ? setSelectedCurrency(1) : setSelectedCurrency(2);
     // Pre-populate minPeriod values
     if (asset.minPeriod) {
       const minPeriod: BigNumber = new BigNumber(asset.minPeriod);
@@ -383,10 +391,16 @@ const EditProperty: React.FC<Props> = (props) => {
         maxPeriod,
         maxFutureTime,
         paymentToken?.id || '',
-        pricePerSecond.toFixed(0)
+        pricePerSecond.toFixed(0),
+        () => {
+          setShowTxModal(true);
+        }
       );
       showToastNotification(ToastType.Success, 'Property Updated successfully!');
+      setShowTxModal(false);
+      closeModal();
     } catch (e) {
+      setShowTxModal(false);
       console.log(e);
       showToastNotification(ToastType.Error, 'There was an error while updating the property.');
     }
@@ -450,27 +464,12 @@ const EditProperty: React.FC<Props> = (props) => {
       {loading ? (
         <EditFormCardSkeleton />
       ) : (
-        <Grid
-          container
-          xs={12}
-          direction="column"
-          alignItems="flex-start"
-          justifyContent="space-between"
-          height={'100%'}
-        >
+        <Grid container direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
           <Box fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
             Update Rent Conditions
           </Box>
-          <Grid
-            container
-            xs={12}
-            maxHeight={'50vh'}
-            overflow="scroll"
-            columnSpacing={5}
-            justifyContent="space-between"
-            mt={4}
-          >
-            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={470} overflow="scroll">
+          <Grid container maxHeight={'50vh'} overflow="auto" columnSpacing={5} justifyContent="space-between" mt={4}>
+            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={470} overflow="auto">
               <DropdownSection
                 defaultOpen={true}
                 variant="calendar"
@@ -634,6 +633,14 @@ const EditProperty: React.FC<Props> = (props) => {
           </Modal>
         </Grid>
       )}
+      <TxModal
+        textMessage={editTxModalMessage}
+        showModal={showTxModal}
+        handleClose={() => {
+          closeModal();
+          setShowTxModal(false);
+        }}
+      />
     </section>
   );
 };
