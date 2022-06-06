@@ -231,14 +231,37 @@ export const USER_NOTIFICATION_SUBSCRIPTION = gql`
   subscription GetUser($id: String) {
     user(id: $id) {
       id
-      consumerTo {
+      consumerTo(orderBy: timestamp, orderDirection: desc) {
         id
         metaverseAssetId
+        metaverseRegistry {
+          id
+        }
         metaverse {
           name
         }
-        metaverseRegistry {
+        owner {
           id
+        }
+        consumer {
+          id
+        }
+        rents {
+          renter {
+            id
+          }
+          start
+          end
+        }
+        decentralandData {
+          id
+          metadata
+          isLAND
+          coordinates {
+            id
+            x
+            y
+          }
         }
         unclaimedRentFee
         paymentToken {
@@ -277,6 +300,9 @@ export const USER_NOTIFICATION_SUBSCRIPTION = gql`
           owner {
             id
           }
+          consumer {
+            id
+          }
           metaverseRegistry {
             id
           }
@@ -305,15 +331,15 @@ export const USER_NOTIFICATION_SUBSCRIPTION = gql`
         owner {
           id
         }
+        consumer {
+          id
+        }
         rents {
           renter {
             id
           }
           start
           end
-        }
-        metaverseRegistry {
-          id
         }
         decentralandData {
           id

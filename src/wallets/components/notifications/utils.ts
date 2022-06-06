@@ -28,14 +28,15 @@ export const parseNotifications = async (
   const allAssets = [...rented, ...listed];
 
   allAssets.forEach(async (item) => {
-    const isLitedProperty = item.owner.id.toLowerCase() == account.toLowerCase();
+    const isListedProperty =
+      item.owner?.id.toLowerCase() == account.toLowerCase() || item.consumer?.id.toLowerCase() == account.toLowerCase();
     item.rents?.forEach((rent) => {
       const isYourRent = rent.renter.id.toLowerCase() == account.toLowerCase();
       const rentStart = toTimestamp(+rent.start);
       const rentEnd = toTimestamp(+rent.end);
 
       //TODO: need to be optimised
-      if (isLitedProperty) {
+      if (isListedProperty) {
         if (rentStart <= Date.now()) {
           result.push({
             id: result.length,
