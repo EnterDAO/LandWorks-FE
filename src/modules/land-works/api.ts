@@ -1900,8 +1900,9 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
 }
 
 function getUpcomingRents(asset: any) {
+  const now = Date.now() / 1000;
   if (!asset.rents) return false;
-  const activeRent = asset.rents.filter((rent: any) => rent.start * 1000 < Date.now() && Date.now() < rent.end * 1000);
+  const activeRent = asset.rents.filter((rent: any) => now >= rent.start && now < rent.end);
   if (!activeRent.length) return false;
   const upcoming = asset.rents.filter((rent: any) => {
     return rent.start >= activeRent[0].end;
