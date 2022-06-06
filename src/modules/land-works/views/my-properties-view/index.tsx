@@ -171,7 +171,6 @@ const MyPropertiesView: FC = () => {
     if (!wallet.account || lands.length) {
       setLoading(false);
     }
-    // calculateLandsCount();
   }, [lands]);
 
   useEffect(() => {

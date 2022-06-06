@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { TWITTER_TEXT } from 'constants/modules';
 import { useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
 

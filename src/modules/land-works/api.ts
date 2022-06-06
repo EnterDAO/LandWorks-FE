@@ -1029,9 +1029,6 @@ export function fetchUserAssets(address: string): Promise<UserEntity> {
           }
           assets {
             id
-            metaverse {
-              name
-            }
             metaverseAssetId
             metaverse {
               name
@@ -1164,9 +1161,6 @@ export function fetchUserRentPerAsset(address: string, availableOnly = false, pa
           timestamp
           asset {
             id
-            metaverse {
-              name
-            }
             metaverseAssetId
             metaverse {
               name
@@ -1381,13 +1375,7 @@ export function fetchListedAssetsByMetaverseAndGetLastRentEndWithOrder(
           orderDirection: $orderDirection
         ) {
           id
-          metaverse {
-            name
-          }
           metaverseAssetId
-          metaverseRegistry {
-            id
-          }
           metaverse {
             name
           }
@@ -1472,9 +1460,6 @@ export function fetchUserAssetsByRents(
           timestamp
           asset {
             id
-            metaverse {
-              name
-            }
             metaverseAssetId
             metaverse {
               name
@@ -1602,9 +1587,6 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
           orderDirection: $orderDirection
         ) {
           id
-          metaverse {
-            name
-          }
           metaverseAssetId
           metaverse {
             name
