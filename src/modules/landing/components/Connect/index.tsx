@@ -3,6 +3,7 @@ import { Link } from '@mui/material';
 
 import { ReactComponent as StayUp } from 'assets/img/StayUp.svg';
 import Icon from 'components/custom/icon';
+import config from 'config';
 import { Button } from 'design-system';
 import {
   Copyright,
@@ -27,15 +28,16 @@ export const Connect: React.FC = () => {
           We often update LandWorks with whole new features, that’s why subcribe to be the first to receive the latest
           updates.
         </p>
-        <StyledForm action="https://xyz.us5.list-manage.com/subscribe/post" method="POST" target="_blank">
-          <input type="hidden" name="u" value="8746db1bbacb6ab8a19400196" />
-          <input type="hidden" name="id" value="33f89e7834" />
+        <StyledForm action={config.mailchimp.url} method="POST" target="_blank">
+          <input type="hidden" name="u" value={config.mailchimp.u} />
+          <input type="hidden" name="id" value={config.mailchimp.id} />
           <StyledInput
             placeholder="Enter your email"
             type="email"
             name="EMAIL"
             autoCapitalize="off"
             autoCorrect="off"
+            autoComplete="off"
           />
           <Button btnSize="medium" variant="gradient" type="submit">
             notify me

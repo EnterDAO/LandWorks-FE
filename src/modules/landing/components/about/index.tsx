@@ -27,7 +27,7 @@ export const About: React.FC = () => {
             <h2>There are a Lot of Opportunities</h2>
           </Grid>
           <Grid item xs={4}>
-            <StyledSubtitle>You can eather lend yours or rent a new Land that you want.</StyledSubtitle>
+            <StyledSubtitle>You can either lend yours or rent a new Land that you want.</StyledSubtitle>
           </Grid>
         </Grid>
         <Grid container justifyItems="center" marginTop={12}>
