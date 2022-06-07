@@ -33,7 +33,6 @@ interface Props {
   setIsHiddenMap: (value: boolean) => void;
   setMapSize: (value: string) => void;
   isHiddenMap: boolean;
-  metaverse: string;
 }
 
 const LandsExploreList: FC<Props> = ({
@@ -44,7 +43,6 @@ const LandsExploreList: FC<Props> = ({
   setMapSize,
   setIsHiddenMap,
   isHiddenMap,
-  metaverse,
 }) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
@@ -83,6 +81,9 @@ const LandsExploreList: FC<Props> = ({
           type: mapTiles[id].type || '',
           owner: getOwnerOrConsumerId(land?.decentralandData?.asset)?.toLowerCase() || '',
         });
+    } else if (setSelectedId && setClickedLandId) {
+      setSelectedId(land.metaverseAssetId);
+      setClickedLandId(land.metaverseAssetId);
     }
   };
 
@@ -95,11 +96,13 @@ const LandsExploreList: FC<Props> = ({
     let index = -1;
 
     lands.forEach((land, landIndex) => {
-      land.decentralandData?.coordinates.forEach((coord) => {
-        if (coord.id === decentralandId.replace(',', '-')) {
-          index = landIndex;
-        }
-      });
+      land.decentralandData
+        ? land.decentralandData?.coordinates.forEach((coord) => {
+            if (coord.id === decentralandId.replace(',', '-')) {
+              index = landIndex;
+            }
+          })
+        : (index = landIndex);
     });
 
     return index;
@@ -196,7 +199,6 @@ const LandsExploreList: FC<Props> = ({
         </Grid>
         <Grid container direction={'row'} display="flex" width={'auto'}>
           <StyledButton
-            disabled={metaverse != '1'}
             sx={{
               border: !isHiddenMap ? '1px solid white' : '1px solid transparent',
               boxShadow: !isHiddenMap ? '0 0 3px white' : 'none',
@@ -206,7 +208,6 @@ const LandsExploreList: FC<Props> = ({
             <MapIcon />
           </StyledButton>
           <StyledButton
-            disabled={metaverse != '1'}
             sx={{
               border: isHiddenMap ? '1px solid white' : '1px solid transparent',
               boxShadow: isHiddenMap ? '0 0 3px white' : 'none',

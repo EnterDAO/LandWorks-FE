@@ -7,8 +7,12 @@ import { NotificationList } from './notificationTypes';
 
 import { getDecentralandAssetName, isDecentralandMetaverseRegistry, secondsToDuration } from 'utils';
 
-export const parseRents = async (asset: any): Promise<AssetEntity[]> => {
-  const parsedAssets: AssetEntity[] = asset.rents.map((item: RentEntity) => item?.asset);
+type ParseRentsParam = {
+  rents: RentEntity[];
+};
+
+export const parseRents = async (asset: ParseRentsParam): Promise<AssetEntity[]> => {
+  const parsedAssets: AssetEntity[] = asset.rents.map((item: RentEntity) => item.asset);
   const uniqueAsset = [...new Map(parsedAssets.map((item: AssetEntity) => [item['id'], item])).values()];
 
   for (const asset of uniqueAsset) {
@@ -28,14 +32,15 @@ export const parseNotifications = async (
   const allAssets = [...rented, ...listed];
 
   allAssets.forEach(async (item) => {
-    const isLitedProperty = item.owner.id.toLowerCase() == account.toLowerCase();
+    const isListedProperty =
+      item.owner?.id.toLowerCase() == account.toLowerCase() || item.consumer?.id.toLowerCase() == account.toLowerCase();
     item.rents?.forEach((rent) => {
       const isYourRent = rent.renter.id.toLowerCase() == account.toLowerCase();
       const rentStart = toTimestamp(+rent.start);
       const rentEnd = toTimestamp(+rent.end);
 
       //TODO: need to be optimised
-      if (isLitedProperty) {
+      if (isListedProperty) {
         if (rentStart <= Date.now()) {
           result.push({
             id: result.length,
@@ -89,7 +94,7 @@ export const parseNotifications = async (
 
 const toTimestamp = (unix: number): number => unix * 1000;
 
-const getAssetName = async (asset: AssetEntity) => {
+const getAssetName = async (asset: AssetEntity): Promise<string> => {
   if (asset?.metaverseRegistry?.id && isDecentralandMetaverseRegistry(asset?.metaverseRegistry?.id)) {
     return getDecentralandAssetName(asset.decentralandData);
   } else {
@@ -98,7 +103,7 @@ const getAssetName = async (asset: AssetEntity) => {
   }
 };
 
-export const countdown = (date: number, isShorted = false) => {
+export const countdown = (date: number, isShorted = false): string => {
   const time = secondsToDuration(date);
   const sec = Math.floor(+date.toFixed(2));
 

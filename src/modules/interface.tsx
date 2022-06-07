@@ -63,3 +63,28 @@ export interface LocationState {
   };
   openClaimModal: boolean;
 }
+
+export type VoxelsTileType = {
+  name: string;
+  id: number;
+  description: string;
+  address: string;
+  geometry: {
+    type: string;
+    coordinates: number[][][];
+  };
+};
+
+export type VoxelsMapCollection = {
+  type: string;
+  features: Array<VoxelMapItem>;
+};
+
+type VoxelMapItem = {
+  type: string;
+  id: string;
+  geometry: {
+    type: string;
+    coordinates: number[][][];
+  };
+};
