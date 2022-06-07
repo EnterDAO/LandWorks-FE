@@ -585,7 +585,7 @@ export type AssetEntity = {
   operator: string;
   status: string;
   rents: RentEntity[];
-  upcomingRents: boolean;
+  hasUpcomingRents: boolean;
   lastRentEnd: string;
   isAvailable: boolean;
   additionalData: AdditionalDecantralandData;
@@ -1855,7 +1855,7 @@ export async function parseAssets(assets: any[]): Promise<AssetEntity[]> {
 
 export async function parseAsset(asset: any): Promise<AssetEntity> {
   const liteAsset: AssetEntity = { ...asset };
-  liteAsset.upcomingRents = getUpcomingRents(asset);
+  liteAsset.hasUpcomingRents = hasUpcomingRents(asset);
   liteAsset.humanPricePerSecond = getHumanValue(new BigNumber(asset.pricePerSecond), asset.paymentToken.decimals)!;
   liteAsset.paymentToken = { ...asset.paymentToken };
   liteAsset.unclaimedRentFee = getHumanValue(new BigNumber(asset.unclaimedRentFee), asset.paymentToken.decimals)!;
@@ -1888,7 +1888,7 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
 
   liteAsset.isAvailable = asset.status === AssetStatus.LISTED;
   liteAsset.availability = getAvailability(liteAsset);
-  liteAsset.isHot = asset.totalRents > 1 && liteAsset.upcomingRents;
+  liteAsset.isHot = asset.totalRents > 1 && liteAsset.hasUpcomingRents;
   const price = liteAsset.humanPricePerSecond.multipliedBy(DAY_IN_SECONDS);
   liteAsset.pricePerMagnitude = {
     price: price,
@@ -1899,7 +1899,7 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
   return liteAsset;
 }
 
-function getUpcomingRents(asset: any) {
+function hasUpcomingRents(asset: AssetEntity): boolean {
   const now = Date.now() / 1000;
   if (!asset.rents) return false;
   const activeRent = asset.rents.filter((rent: any) => now >= rent.start && now < rent.end);
