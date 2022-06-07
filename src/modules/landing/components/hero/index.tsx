@@ -1,116 +1,35 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Power1, gsap } from 'gsap';
 
+import { ReactComponent as Main } from 'assets/img/hero_main.svg';
+import { ReactComponent as Metaverse } from 'assets/img/main_metaverse.svg';
+import { ReactComponent as Partners } from 'assets/img/partners.svg';
 import { Button, Grid } from 'design-system';
-import { ReactComponent as LeftBlocks } from 'resources/svg/landing/hero-left-blocks.svg';
-import { ReactComponent as RightBlocks } from 'resources/svg/landing/hero-right-blocks.svg';
 
 import './index.scss';
 
 export const Hero: React.FC = () => {
-  const el = useRef() as React.MutableRefObject<HTMLDivElement>;
-  const tl = useRef({});
-  const q = gsap.utils.selector(el);
-
-  useEffect(() => {
-    tl.current = gsap
-      .timeline()
-      .repeat(-1)
-      .delay(2)
-      .set(q('.first-ether'), { perspective: 300 })
-      .set(q('.second-ether'), { perspective: 300 })
-      .set(q('.third-ether'), { perspective: 300 })
-      .to(q('.first-plus'), {
-        opacity: 0,
-        ease: Power1.easeOut,
-      })
-      .to(q('.first-block'), {
-        strokeWidth: 4,
-        stroke: '#5D8FF0',
-        ease: Power1.easeOut,
-      })
-      .to(q('.first-pattern'), {
-        opacity: 1,
-        ease: Power1.easeOut,
-      })
-      .to(q('.second-plus'), {
-        opacity: 0,
-        ease: Power1.easeOut,
-      })
-      .to(q('.second-block'), {
-        strokeWidth: 4,
-        stroke: '#5D8FF0',
-        ease: Power1.easeOut,
-      })
-      .to(q('.second-pattern'), {
-        opacity: 1,
-        ease: Power1.easeOut,
-      })
-      .to(q('.third-plus'), {
-        opacity: 0,
-        ease: Power1.easeOut,
-      })
-      .to(q('.third-block'), {
-        strokeWidth: 4,
-        stroke: '#5D8FF0',
-        ease: Power1.easeOut,
-      })
-      .to(q('.third-pattern'), {
-        opacity: 1,
-        ease: Power1.easeOut,
-      })
-      .to(q('.first-ether'), {
-        opacity: 1,
-        y: -70,
-        rotationY: 360,
-      })
-      .to(q('.first-ether'), {
-        opacity: 0,
-        y: -105,
-        rotationY: 360,
-      })
-      .to(q('.third-ether'), {
-        opacity: 1,
-        y: -70,
-        rotationY: 360,
-      })
-      .to(q('.third-ether'), {
-        opacity: 0,
-        y: -105,
-        rotationY: 360,
-      })
-      .to(q('.second-ether'), {
-        opacity: 1,
-        y: -70,
-        rotationY: 360,
-      })
-      .to(q('.second-ether'), {
-        opacity: 0,
-        y: -105,
-        rotationY: 360,
-      })
-      .delay(2);
-  }, []);
-
   return (
     <section className="landing-page-wrapper">
-      <LeftBlocks className="left-blocks" />
-      <div className="right-blocks" ref={el}>
-        <RightBlocks />
-      </div>
+      <Main className="right-blocks" />
       <div className="content-container">
         <Grid container>
-          <Grid item>
-            <h2>Metaverse land</h2>
-            <h1>Renting marketplace</h1>
+          <Grid item sx={{ flexDirection: 'column' }}>
+            <Metaverse />
+            <h2>Renting land</h2>
+            <h1>Never Worked so well</h1>
+            <p>
+              LandWorks is a community-owned Marketplace for renting Web3 Metaverse Land, governed by EnterDAO and ENTR
+              holders.
+            </p>
             <Link to="/explore">
               <Button variant="gradient" btnSize="small" className="button-primary">
-                Launch App
+                Explore
               </Button>
             </Link>
           </Grid>
         </Grid>
+        <Partners className="partners" />
       </div>
     </section>
   );
