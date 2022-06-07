@@ -39,6 +39,10 @@ export const ASSET_SUBSCRIPTION = gql`
       consumer {
         id
       }
+      rents {
+        start
+        end
+      }
       minPeriod
       maxPeriod
       maxFutureTime
@@ -91,6 +95,10 @@ export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
         lastRentEnd
         status
         totalRents
+        rents {
+          start
+          end
+        }
         paymentToken {
           id
           name
@@ -124,6 +132,10 @@ export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
         lastRentEnd
         status
         totalRents
+        rents {
+          start
+          end
+        }
         paymentToken {
           id
           name
@@ -577,6 +589,7 @@ export type AssetEntity = {
   operator: string;
   status: string;
   rents: RentEntity[];
+  hasUpcomingRents: boolean;
   lastRentEnd: string;
   isAvailable: boolean;
   additionalData: AdditionalDecantralandData;
@@ -1475,6 +1488,10 @@ export function fetchUserAssetsByRents(
             lastRentEnd
             status
             totalRents
+            rents {
+              start
+              end
+            }
             paymentToken {
               id
               name
@@ -1598,6 +1615,10 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
           maxPeriod
           maxFutureTime
           pricePerSecond
+          rents {
+            start
+            end
+          }
           paymentToken {
             name
             symbol
@@ -1699,6 +1720,10 @@ export function fetchAllListedAssetsByConsumer(
           maxPeriod
           maxFutureTime
           pricePerSecond
+          rents {
+            start
+            end
+          }
           paymentToken {
             name
             symbol
@@ -1834,9 +1859,9 @@ export async function parseAssets(assets: any[]): Promise<AssetEntity[]> {
 
 export async function parseAsset(asset: any): Promise<AssetEntity> {
   const liteAsset: AssetEntity = { ...asset };
+  liteAsset.hasUpcomingRents = hasUpcomingRents(asset);
   liteAsset.humanPricePerSecond = getHumanValue(new BigNumber(asset.pricePerSecond), asset.paymentToken.decimals)!;
   liteAsset.paymentToken = { ...asset.paymentToken };
-  liteAsset.isHot = asset.totalRents > 0;
   liteAsset.unclaimedRentFee = getHumanValue(new BigNumber(asset.unclaimedRentFee), asset.paymentToken.decimals)!;
   liteAsset.operator = asset.operator ?? constants.AddressZero;
   liteAsset.minPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.minPeriod));
@@ -1867,6 +1892,7 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
 
   liteAsset.isAvailable = asset.status === AssetStatus.LISTED;
   liteAsset.availability = getAvailability(liteAsset);
+  liteAsset.isHot = asset.totalRents > 1 && liteAsset.hasUpcomingRents;
   const price = liteAsset.humanPricePerSecond.multipliedBy(DAY_IN_SECONDS);
   liteAsset.pricePerMagnitude = {
     price: price,
@@ -1875,6 +1901,17 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
   };
 
   return liteAsset;
+}
+
+function hasUpcomingRents(asset: AssetEntity): boolean {
+  const now = Date.now() / 1000;
+  if (!asset.rents) return false;
+  const activeRent = asset.rents.filter((rent: any) => now >= rent.start && now < rent.end);
+  if (!activeRent.length) return false;
+  const upcoming = asset.rents.filter((rent: any) => {
+    return rent.start >= activeRent[0].end;
+  });
+  return upcoming.length ? true : false;
 }
 
 export function getAvailability(asset: any): AssetAvailablity {
