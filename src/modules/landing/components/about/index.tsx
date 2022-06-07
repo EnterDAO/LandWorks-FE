@@ -1,33 +1,81 @@
-import { Grid } from 'design-system';
-import { ReactComponent as OwnersGraphics } from 'resources/svg/landing/owners-graphics.svg';
-import { ReactComponent as RentersGraphics } from 'resources/svg/landing/renters-graphics.svg';
+import { useHistory } from 'react-router-dom';
+
+import { ReactComponent as LeftPart } from 'assets/img/about_left.svg';
+import { ReactComponent as RightPart } from 'assets/img/about_right.svg';
+import { Button, Grid } from 'design-system';
+import { BackIcon } from 'design-system/icons';
+import {
+  LandOwner,
+  Rent,
+  StyledGrid,
+  StyledSubtitle,
+  StyledText,
+  StyledTypography,
+} from 'modules/landing/components/about/styled';
 
 import './index.scss';
 
-export const About: React.FC = () => (
-  <section className="about-wrapper">
-    <div className="content-container">
-      <Grid container justifyItems="center" justifyContent="center">
-        <Grid item xs={4}>
-          <p className="description">
-            LandWorks enables <strong>renting</strong> of land in <strong>Web3 metaverse</strong> games
-          </p>
+export const About: React.FC = () => {
+  const history = useHistory();
+  const redirect = () => history.push('/explore');
+  return (
+    <section className="about-wrapper">
+      <div className="content-container">
+        <Grid container direction="column" justifyItems="center" justifyContent="center" alignItems="center">
+          <StyledText>IS IT FOR YOU?</StyledText>
+          <Grid item xs={4} textAlign="center">
+            <h2>There are a Lot of Opportunities</h2>
+          </Grid>
+          <Grid item xs={4}>
+            <StyledSubtitle>You can either lend yours or rent a new Land that you want.</StyledSubtitle>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container justifyItems="center" spacing={[32]}>
-        <Grid item sm={12} md={6} className="about-section">
-          <OwnersGraphics />
-          <h2>For land owners</h2>
-          <p>Еarn passive income on your land by turning it into a productive asset</p>
+        <Grid container justifyItems="center" marginTop={12}>
+          <StyledGrid item sm={12} md={6}>
+            <LeftPart />
+            <div>
+              <h2>
+                Are you a <LandOwner>Land Owner</LandOwner>?
+              </h2>
+              <p>Еarn passive income on your land by turning it into a productive asset.</p>
+              <Button
+                onClick={redirect}
+                sx={{ position: 'absolute', bottom: '15%' }}
+                variant="tertiary"
+                btnSize="xsmall"
+                className="button"
+              >
+                <StyledTypography>
+                  Lend now <BackIcon height={20} width={20} />
+                </StyledTypography>
+              </Button>
+            </div>
+          </StyledGrid>
+          <StyledGrid item sm={12} md={6}>
+            <RightPart />
+            <div>
+              <h2>
+                Do you search to <Rent>Rent</Rent>?
+              </h2>
+              <p>
+                Leverage the power of metaverse games by renting in-game land instead of buying and holding it
+                long-term.
+              </p>
+              <Button
+                onClick={redirect}
+                sx={{ position: 'absolute', bottom: '15%' }}
+                variant="tertiary"
+                btnSize="xsmall"
+                className="button"
+              >
+                <StyledTypography>
+                  Start renting <BackIcon height={20} width={20} />
+                </StyledTypography>
+              </Button>
+            </div>
+          </StyledGrid>
         </Grid>
-        <Grid item sm={12} md={6} className="about-section">
-          <RentersGraphics />
-          <h2>For renters</h2>
-          <p>
-            Leverage the power of metaverse games by renting in-game land instead of buying and holding it long-term
-          </p>
-        </Grid>
-      </Grid>
-    </div>
-  </section>
-);
+      </div>
+    </section>
+  );
+};

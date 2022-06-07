@@ -27,6 +27,7 @@ const LayoutView: React.FC = () => {
   const location = useLocation();
 
   const isntExploreViewRoute = location.pathname.search('/explore') === -1;
+  const isntLandingViewRoute = location.pathname.search('/') === -1;
 
   return (
     <div className={classes.root}>
@@ -61,7 +62,7 @@ const LayoutView: React.FC = () => {
                         </Suspense>
                       </ErrorBoundary>
                     </main>
-                    {isntExploreViewRoute && <LayoutFooter />}
+                    {isntExploreViewRoute && isntLandingViewRoute && <LayoutFooter />}
                   </NotionProvider>
                 </ApolloProvider>
               </Erc20Provider>
