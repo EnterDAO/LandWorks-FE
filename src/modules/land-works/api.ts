@@ -95,6 +95,10 @@ export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
         lastRentEnd
         status
         totalRents
+        rents {
+          start
+          end
+        }
         paymentToken {
           id
           name
