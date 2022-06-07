@@ -678,7 +678,7 @@ export type RentEntity = {
   renter: IdEntity;
   renterAddress: string;
   price: string;
-  asset?: AssetEntity;
+  asset: AssetEntity;
 };
 
 export type UserEntity = {

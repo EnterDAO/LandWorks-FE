@@ -42,7 +42,7 @@ const LandWorksFilters: FC<Props> = ({
   );
 
   const onChangePlaceHandler = (value: number) => {
-    sessionStorageHandler('set', 'general', 'metaverse', value);
+    sessionStorageHandler('set', 'general', 'metaverse', String(value));
     onChangeMetaverse(`${value}`);
     setSelectedMetaverse(value);
     // TODO:: some filtering here
@@ -96,7 +96,7 @@ const LandWorksFilters: FC<Props> = ({
           <Box className={styles.box} style={{ marginRight: '20px' }}>
             <ControlledSelect
               width={'12rem'}
-              value={selectedMetaverse}
+              value={Number(selectedMetaverse)}
               onChange={onChangePlaceHandler}
               options={metaverses}
             />

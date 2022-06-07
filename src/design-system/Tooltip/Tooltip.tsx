@@ -5,7 +5,8 @@ import { StyledTooltip } from './tooltip-styles';
 
 const Tooltip: FC<TooltipProps> = (props) => {
   const { children } = props;
-
+  //eslint-disable-next-line
+  //@ts-ignore
   return <StyledTooltip {...props}>{children}</StyledTooltip>;
 };
 
