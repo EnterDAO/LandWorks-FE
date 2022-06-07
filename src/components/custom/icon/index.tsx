@@ -1,6 +1,8 @@
 import React, { CSSProperties } from 'react';
 import cn from 'classnames';
 
+import Decentraland from 'assets/logos/decentraland-logo.png';
+import Voxel from 'assets/logos/voxel-logo.png';
 import addEnterSrc from 'resources/png/add-enter.png';
 import axsSrc from 'resources/png/axie.png';
 import calendar from 'resources/png/calendar.png';
@@ -184,6 +186,8 @@ export type IconNames =
   | 'png/CardLoadingSkeleton'
   | 'png/eth'
   | 'png/Github'
+  | 'png/Decentraland'
+  | 'png/Voxel'
   | 'png/hot'
   | 'png/you'
   | 'png/calendar'
@@ -249,6 +253,10 @@ const Icon: React.FC<IconProps> = (props) => {
           return eth;
         case 'png/Github':
           return Github;
+        case 'png/Decentraland':
+          return Decentraland;
+        case 'png/Voxel':
+          return Voxel;
         case 'png/hot':
           return hot;
         case 'png/you':

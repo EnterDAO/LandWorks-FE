@@ -1,10 +1,11 @@
 import { FC, useEffect, useState } from 'react';
 
 import { Box, ControlledSelect, StyledSwitch, Typography } from 'design-system';
+import { Option } from 'modules/interface';
 import { fetchMetaverses } from 'modules/land-works/api';
 import { useWallet } from 'wallets/wallet';
 
-import { currencyData, sortData } from './filters-data';
+import { addIconToMetaverse, currencyData, landsData, sortData } from './filters-data';
 
 import { sessionStorageHandler } from 'utils';
 
@@ -30,7 +31,7 @@ const LandWorksFilters: FC<Props> = ({
   const wallet = useWallet();
   const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
   const [selectedOrder, setSelectedOrder] = useState(1);
-  const [metaverses, setMetaverses] = useState([]);
+  const [metaverses, setMetaverses] = useState<Option[]>(landsData);
   const voxelsSortData = sortData.slice(0, sortData.length - 1);
 
   const [selectedCurrency, setSelectedCurrency] = useState(
@@ -86,7 +87,7 @@ const LandWorksFilters: FC<Props> = ({
   }, [selectedMetaverse]);
 
   useEffect(() => {
-    fetchMetaverses().then(setMetaverses);
+    fetchMetaverses().then((res) => setMetaverses(addIconToMetaverse(res)));
   }, []);
 
   return (
