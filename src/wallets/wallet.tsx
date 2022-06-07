@@ -10,6 +10,7 @@ import config from 'config';
 import { Loader } from 'design-system';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { getNetworkName } from 'providers/eth-web3-provider';
+import { useGeneral } from 'providers/general-provider';
 import ConnectWalletModal from 'wallets/components/connect-wallet-modal';
 import InstallMetaMaskModal from 'wallets/components/install-metamask-modal';
 import UnsupportedChainModal from 'wallets/components/unsupported-chain-modal';
@@ -70,7 +71,7 @@ export function useWallet(): Wallet {
 
 const WalletProvider: React.FC = (props) => {
   const web3React = useWeb3React();
-
+  const { setJoinPromptOpen } = useGeneral();
   const [sessionProvider, setSessionProvider, removeSessionProvider] = useSessionStorage<string | undefined>(
     'wallet_provider'
   );
@@ -138,6 +139,7 @@ const WalletProvider: React.FC = (props) => {
         connector.getProvider().then(setActiveProvider);
         setActiveConnector(walletConnector);
         setSessionProvider(walletConnector.id);
+        !sessionProvider && setJoinPromptOpen(true);
       }
 
       await web3React.activate(connector, undefined, true).then(onSuccess).catch(onError);
