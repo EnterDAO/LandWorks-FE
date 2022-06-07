@@ -1,10 +1,11 @@
 import { FC, useEffect, useState } from 'react';
 
 import { ControlledSelect, Grid } from 'design-system';
+import { Option } from 'modules/interface';
 import { fetchMetaverses } from 'modules/land-works/api';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
 
-import { currencyData, landsData } from '../lands-explore-filters/filters-data';
+import { addIconToMetaverse, currencyData, landsData } from '../lands-explore-filters/filters-data';
 import LandsSearchBar from '../lands-search';
 import { BottomBoxStyled, RootStyled } from './styled';
 
@@ -26,7 +27,7 @@ const LandsMyPropertiesSubheader: FC<Props> = ({
   const [selectedCurrency, setSelectedCurrency] = useState(
     sessionStorageHandler('get', 'my-properties-filters', 'currency') || 0
   );
-  const [metaverses, setMetaverses] = useState(landsData);
+  const [metaverses, setMetaverses] = useState<Option[]>(landsData);
 
   const onChangeCurrencyHandler = (value: number) => {
     setSelectedCurrency(value);
@@ -41,7 +42,7 @@ const LandsMyPropertiesSubheader: FC<Props> = ({
   };
 
   useEffect(() => {
-    fetchMetaverses().then(setMetaverses);
+    fetchMetaverses().then((res) => setMetaverses(addIconToMetaverse(res)));
   }, []);
 
   return (
