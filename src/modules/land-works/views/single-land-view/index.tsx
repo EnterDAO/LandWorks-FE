@@ -422,7 +422,7 @@ const SingleLandView: React.FC = () => {
       />
 
       {(asset.attributes || asset.additionalData) && (
-        <SingleViewParcelProperties attributes={parselProperties} id={asset?.id} />
+        <SingleViewParcelProperties attributes={parselProperties} id={asset?.metaverseAssetId} />
       )}
 
       <SingleViewLandHistory assetId={tokenId} metaverseRegistry={asset.metaverseRegistry?.id} />
