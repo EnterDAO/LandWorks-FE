@@ -22,6 +22,7 @@ import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-modal';
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
+import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import config from '../../../../config';
@@ -54,6 +55,7 @@ interface IProps {
 }
 
 const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
+  const { setJoinPromptOpen } = useGeneral();
   const walletCtx = useWallet();
   const landworks = useLandworks();
   const registry = useContractRegistry();
@@ -795,9 +797,11 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
             showModal={showSuccessModal}
             handleClose={() => {
               sessionStorageHandler('set', 'general', 'metaverse', selectedMetaverse);
+              localStorage.setItem('join_prompt', 'true');
               setShowSuccessModal(false);
               closeModal && closeModal();
               history.push('/my-properties');
+              setJoinPromptOpen(true);
             }}
           />
         )}

@@ -33,6 +33,7 @@ import { ReactComponent as HeartFilledIcon } from 'assets/icons/heart-filled.svg
 import { ReactComponent as HeartInCircleFilledIcon } from 'assets/icons/heart-in-circle-filled.svg';
 import { ReactComponent as HeartInCircleNotFilledIcon } from 'assets/icons/heart-in-circle-not-filled.svg';
 import { ReactComponent as HeartOutlinedIcon } from 'assets/icons/heart-outlined.svg';
+import { ReactComponent as HelpIcon } from 'assets/icons/help.svg';
 import { ReactComponent as HiIcon } from 'assets/icons/hi.svg';
 import { ReactComponent as HomeIcon } from 'assets/icons/home.svg';
 import { ReactComponent as HourglassIcon } from 'assets/icons/hourglass.svg';
@@ -81,6 +82,7 @@ import { ReactComponent as WarningIcon } from 'assets/icons/warning.svg';
 
 // One-color icons
 export {
+  HelpIcon,
   NotificationIcon,
   HourglassIcon,
   MessageIcon,

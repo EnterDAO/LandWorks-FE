@@ -160,3 +160,5 @@ export const orderEnum: {
   lastRentTimestamp: 'lastRentTimestamp',
   size: 'additionalData.size',
 };
+
+export const DISCORD_CHANNEL_URL = 'https://discord.com/invite/7QJvEctG2G';
