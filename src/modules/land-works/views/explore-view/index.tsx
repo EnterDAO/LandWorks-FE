@@ -6,6 +6,7 @@ import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
 import { AtlasTile } from 'modules/land-works/components/atlas';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
+import { statusData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
 import LandsExploreMapVoxels from 'modules/land-works/components/lands-explore-map-voxels';
@@ -83,6 +84,7 @@ const ExploreView: React.FC = () => {
   const [lastRentEnd, setLastRentEnd] = useState(sessionFilters.lastRentEnd || DEFAULT_LAST_RENT_END);
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
   const [showListNewModal, setShowListNewModal] = useState(false);
 
@@ -129,8 +131,9 @@ const ExploreView: React.FC = () => {
     }
   };
 
-  const onChangeFiltersAvailable = (value: boolean) => {
-    const newValue = value ? getNowTs().toString() : DEFAULT_LAST_RENT_END;
+  const onChangeFiltersAvailable = (value: number) => {
+    const newValue = value > 1 ? getNowTs().toString() : DEFAULT_LAST_RENT_END;
+    setStatusFilter(statusData[value - 1].filter);
     setLastRentEnd(newValue);
     sessionStorageHandler('set', 'explore-filters', 'lastRentEnd', newValue);
   };
@@ -172,7 +175,8 @@ const ExploreView: React.FC = () => {
         sortBySize ? 'totalRents' : orderColumn,
         sortDir,
         paymentToken,
-        owner
+        owner,
+        statusFilter
       );
 
       metaverse == 1 && sortBySize
@@ -186,7 +190,8 @@ const ExploreView: React.FC = () => {
           sortBySize ? 'totalRents' : orderColumn,
           sortDir,
           paymentToken,
-          owner
+          owner,
+          statusFilter
         );
         const unionArrays = union(lands.data, consumer.data);
         const orderedLands = orderBy(unionArrays, [orderEnum[orderColumn]], [sortDir]);

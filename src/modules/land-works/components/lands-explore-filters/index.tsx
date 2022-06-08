@@ -5,7 +5,7 @@ import { Option } from 'modules/interface';
 import { fetchMetaverses } from 'modules/land-works/api';
 import { useWallet } from 'wallets/wallet';
 
-import { addIconToMetaverse, currencyData, landsData, sortData } from './filters-data';
+import { addIconToMetaverse, currencyData, landsData, sortData, statusData } from './filters-data';
 
 import { sessionStorageHandler } from 'utils';
 
@@ -14,7 +14,7 @@ import styles from './lands-explore-filters.module.scss';
 interface Props {
   onChangeSortDirection: (value: number) => void;
   onChangeOwnerToggler: (value: boolean) => void;
-  onChangeAvailable: (value: boolean) => void;
+  onChangeAvailable: (value: number) => void;
   onChangeCurrency: (value: number) => void;
   onChangeMetaverse: (value: string) => void;
 }
@@ -38,9 +38,7 @@ const LandWorksFilters: FC<Props> = ({
     sessionStorageHandler('get', 'explore-filters', 'currency') || 0
   );
   const [showOnlyOwner, setShowOnlyOwner] = useState(sessionStorageHandler('get', 'explore-filters', 'owner') || false);
-  const [showOnlyAvailable, setShowOnlyAvailable] = useState(
-    sessionStorageHandler('get', 'explore-filters', 'available') || false
-  );
+  const [status, setStatus] = useState(sessionStorageHandler('get', 'explore-filters', 'available') || 1);
 
   const onChangePlaceHandler = (value: number) => {
     sessionStorageHandler('set', 'general', 'metaverse', String(value));
@@ -66,10 +64,11 @@ const LandWorksFilters: FC<Props> = ({
     onChangeOwnerToggler(showOnlyOwnerLast);
   };
 
-  const onChangeAvailableHandler = () => {
-    setShowOnlyAvailable(!showOnlyAvailable);
-    onChangeAvailable(!showOnlyAvailable);
-    sessionStorageHandler('set', 'explore-filters', 'available', !showOnlyAvailable);
+  const onChangeAvailableHandler = (value: number) => {
+    setStatus(value);
+    // setShowOnlyAvailable(!showOnlyAvailable);
+    onChangeAvailable(value);
+    sessionStorageHandler('set', 'explore-filters', 'available', value);
   };
 
   const onChangeCurrencyHandler = (value: number) => {
@@ -102,12 +101,21 @@ const LandWorksFilters: FC<Props> = ({
               options={metaverses}
             />
           </Box>
-          <Box className={styles.box}>
+          <Box className={styles.box} style={{ marginRight: '20px' }}>
             <ControlledSelect
               width={'12rem'}
               value={selectedCurrency}
               onChange={onChangeCurrencyHandler}
               options={currencyData}
+            />
+          </Box>
+          <Box className={styles.box}>
+            <ControlledSelect
+              width={'12rem'}
+              value={status}
+              onChange={onChangeAvailableHandler}
+              withCheckbox
+              options={statusData}
             />
           </Box>
         </Box>
@@ -120,12 +128,12 @@ const LandWorksFilters: FC<Props> = ({
               </Box>
             </Box>
           )}
-          <Box className={styles.box} style={{ margin: '0 20px' }}>
+          {/* <Box className={styles.box} style={{ margin: '0 20px' }}>
             <Typography>Available Only</Typography>
             <Box sx={{ marginLeft: '10px' }}>
               <StyledSwitch checked={showOnlyAvailable} onChange={onChangeAvailableHandler} />
             </Box>
-          </Box>
+          </Box> */}
           <ControlledSelect
             width={'12rem'}
             value={selectedOrder}
