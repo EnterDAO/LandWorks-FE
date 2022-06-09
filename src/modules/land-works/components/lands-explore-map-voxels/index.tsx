@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { GeoJSON, MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { GeoJSON, MapContainer, TileLayer, useMap, useMapEvent } from 'react-leaflet';
 import { Layer } from 'leaflet';
 import { find } from 'lodash';
 
@@ -143,12 +143,22 @@ const MapOptions: React.FC<MapOptionsProps> = ({ id, mapTiles }) => {
     if (id) {
       const found = find(mapTiles, { id: Number(id) });
       const coords = found?.geometry.coordinates[0];
-      const averageItem = coords ? Math.floor(coords.length / 2) : 0;
-      //eslint-disable-next-line
-      //@ts-ignore
-      coords && map.flyTo(coords[averageItem].reverse(), FLY_ZOOM);
+      const landCentre = coords ? getCentre(coords) : map.getCenter();
+      coords && map.setView(landCentre, FLY_ZOOM);
     }
   }, [id]);
 
   return null;
 };
+
+function getCentre(coords: Array<number[]>) {
+  const summary = coords.reduce(
+    (acc, current) => {
+      acc[0] = acc[0] + current[0];
+      acc[1] = acc[1] + current[1];
+      return acc;
+    },
+    [0, 0]
+  );
+  return { lng: summary[0] / coords.length, lat: summary[1] / coords.length };
+}
