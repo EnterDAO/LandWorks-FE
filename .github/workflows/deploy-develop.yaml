@@ -11,7 +11,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: Install Dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
       - name: Create .env file
         run: |
           touch .env | echo "${{ secrets.ENVIRONMENT_TESTNET }}" > .env
