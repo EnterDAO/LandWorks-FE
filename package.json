@@ -54,7 +54,7 @@
     "react-error-overlay": "6.0.9"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.10",
+    "@apollo/client": "^3.6.0",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@ethersproject/abi": "5.0.13",
