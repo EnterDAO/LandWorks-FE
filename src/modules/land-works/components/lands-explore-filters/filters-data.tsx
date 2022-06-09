@@ -74,3 +74,21 @@ export const addIconToMetaverse = (metaverses: Option[]): Option[] => {
   });
   return metaverses;
 };
+
+export const statusData = [
+  {
+    label: 'All properties',
+    value: 1,
+    filter: null,
+  },
+  {
+    label: 'Available for rent',
+    value: 2,
+    filter: 'lastRentEnd_lt',
+  },
+  {
+    label: 'Rented',
+    value: 3,
+    filter: 'lastRentEnd_gt',
+  },
+];
