@@ -74,12 +74,14 @@ export const ASSET_SUBSCRIPTION = gql`
   }
 `;
 
-export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
-  subscription GetUser($id: String, $metaverse: String, ${paymentToken ? '$paymentToken: String' : ''}) {
+export const USER_SUBSCRIPTION = gql`
+  subscription GetUser($id: String, $metaverse: String) {
     user(id: $id) {
       id
-      consumerTo (where: { metaverse: $metaverse ${paymentToken ? 'paymentToken : $paymentToken' : ''}}) {
+      consumerTo(where: { metaverse: $metaverse }) {
         id
+        timestamp
+        lastRentTimestamp
         metaverseAssetId
         metaverse {
           name
@@ -115,8 +117,10 @@ export const USER_SUBSCRIPTION = (paymentToken?: string | null) => gql`
           }
         }
       }
-      assets(where: { metaverse: $metaverse ${paymentToken ? 'paymentToken : $paymentToken' : ''}}) {
+      assets(where: { metaverse: $metaverse }) {
         id
+        timestamp
+        lastRentTimestamp
         metaverseAssetId
         metaverse {
           name
@@ -1453,19 +1457,11 @@ export function fetchListedAssetsByMetaverseAndGetLastRentEndWithOrder(
     });
 }
 
-export function fetchUserAssetsByRents(
-  address: string,
-  metaverse: string,
-  paymentToken: string | null
-): Promise<PaginatedResult<AssetEntity>> {
+export function fetchUserAssetsByRents(address: string, metaverse: string): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
     query: gql`
       query GetUserRents($id: String, $now: BigInt, $metaverse: String, $paymentToken: String) {
-        rents(
-          orderBy: end
-          orderDirection: asc
-          where: { renter: $id, metaverse: $metaverse, ${paymentToken ? 'paymentToken: $paymentToken' : ''} }
-        ) {
+        rents(orderBy: end, orderDirection: asc, where: { renter: $id, metaverse: $metaverse }) {
           id
           operator
           start
@@ -1473,6 +1469,8 @@ export function fetchUserAssetsByRents(
           timestamp
           asset {
             id
+            timestamp
+            lastRentTimestamp
             metaverseAssetId
             metaverse {
               name
@@ -1514,7 +1512,6 @@ export function fetchUserAssetsByRents(
     variables: {
       id: address.toLowerCase(),
       metaverse,
-      paymentToken,
     },
   })
     .then(async (response) => {
