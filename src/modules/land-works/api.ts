@@ -1580,7 +1580,8 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
   orderColumn = 'totalRents',
   orderDirection: string,
   paymentTokenId: string,
-  owner?: string
+  owner?: string,
+  status?: string | null
 ): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
     query: gql`
@@ -1592,9 +1593,10 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
         $statusNot: String
         $paymentTokenId: String
         $owner: String
+        $status: String
       ) {
         assets(
-          where: { metaverse: $metaverse, ${lastRentEnd != '0' ? 'lastRentEnd_lt: $lastRentEnd' : ''}, 
+          where: { metaverse: $metaverse, ${status ? `${status}: $lastRentEnd` : ''}, 
           ${owner ? 'owner: $owner' : ''}, status_not: $statusNot, 
           ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
           orderBy: $orderColumn
@@ -1656,6 +1658,7 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
       statusNot: AssetStatus.WITHDRAWN,
       paymentTokenId: paymentTokenId,
       owner: owner,
+      status: status,
     },
   })
     .then(async (response) => {
@@ -1686,7 +1689,8 @@ export function fetchAllListedAssetsByConsumer(
   orderColumn = 'totalRents',
   orderDirection: string,
   paymentTokenId: string,
-  owner?: string
+  owner?: string,
+  status?: string | null
 ): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
     query: gql`
@@ -1699,7 +1703,8 @@ export function fetchAllListedAssetsByConsumer(
         $owner: String
       ) {
         assets(
-          where: { metaverse: $metaverse,  
+          where: { metaverse: $metaverse,
+          ${status ? `${status}: $lastRentEnd` : ''}
           ${owner ? 'consumer: $owner' : ''}, status_not: $statusNot, 
           ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
           orderBy: $orderColumn
@@ -1761,6 +1766,7 @@ export function fetchAllListedAssetsByConsumer(
       statusNot: AssetStatus.WITHDRAWN,
       paymentTokenId: paymentTokenId,
       owner: owner,
+      status: status,
     },
   })
     .then(async (response) => {
