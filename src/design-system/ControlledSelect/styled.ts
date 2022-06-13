@@ -54,7 +54,7 @@ export const StyledButton = styled('button')(
     cursor: not-allowed;
   }
 
-  & .MuiCheckbox-root {
+  & .MuiRadio-root {
     display: none !important;
   }
   `
@@ -84,7 +84,7 @@ export const StyledOption = styled(OptionUnstyled)(
   list-style: none;
   padding: 8px;
   border-radius: 0.45em;
-  cursor: default;
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   align-items: center;
