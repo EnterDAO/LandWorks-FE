@@ -1,4 +1,4 @@
-import { find } from 'lodash';
+import { find, orderBy } from 'lodash';
 
 import config from 'config';
 import { CryptoVoxelXYcoords, VoxelsMapCollection, VoxelsTileType } from 'modules/interface';
@@ -6,6 +6,8 @@ import { CryptoVoxelXYcoords, VoxelsMapCollection, VoxelsTileType } from 'module
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 
 import { getNowTs } from 'utils';
+
+import { orderEnum } from './constants';
 
 export const calculateNeighbours = (coordinatesList: CoordinatesLand[]): string[] => {
   let neighbours = [] as string[];
@@ -130,7 +132,10 @@ export const getOwnerOrConsumerId = (asset?: AssetEntity): string | undefined =>
   return asset?.owner?.id == config.contracts.yf.staking ? asset?.consumer?.id : asset?.owner?.id;
 };
 
-export const parceVoxelsMapAsset = async (lands: AssetEntity[], mapTiles: VoxelsTileType[] | undefined) => {
+export const parceVoxelsMapAsset = async (
+  lands: AssetEntity[],
+  mapTiles: VoxelsTileType[] | undefined
+): Promise<VoxelsMapCollection> => {
   const collection: VoxelsMapCollection = {
     type: 'FeatureCollection',
     features: [],
@@ -151,4 +156,8 @@ export const parceVoxelsMapAsset = async (lands: AssetEntity[], mapTiles: Voxels
   );
 
   return collection;
+};
+
+export const landsOrder = (lands: AssetEntity[], orderCol: string, orderDir: 'asc' | 'desc'): AssetEntity[] => {
+  return orderBy(lands, [orderEnum[orderCol]], [orderDir]);
 };

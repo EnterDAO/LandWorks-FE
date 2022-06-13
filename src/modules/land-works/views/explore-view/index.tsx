@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useDebounce from '@rooks/use-debounce';
-import { isNull, orderBy, union } from 'lodash';
+import { isNull, union } from 'lodash';
 
 import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
@@ -26,7 +26,12 @@ import {
   fetchTokenPayments,
 } from '../../api';
 
-import { filterLandsByAvailability, filterLandsByQuery, getAllLandsCoordinates } from 'modules/land-works/utils';
+import {
+  filterLandsByAvailability,
+  filterLandsByQuery,
+  getAllLandsCoordinates,
+  landsOrder,
+} from 'modules/land-works/utils';
 import { getNowTs, sessionStorageHandler } from 'utils';
 
 import {
@@ -34,7 +39,6 @@ import {
   DEFAULT_LAST_RENT_END,
   DEFAULT_TOKEN_ADDRESS,
   VOXEL_METAVERSE,
-  orderEnum,
   sortColumns,
   sortDirections,
 } from 'modules/land-works/constants';
@@ -194,7 +198,7 @@ const ExploreView: React.FC = () => {
           statusFilter
         );
         const unionArrays = union(lands.data, consumer.data);
-        const orderedLands = orderBy(unionArrays, [orderEnum[orderColumn]], [sortDir]);
+        const orderedLands = landsOrder(unionArrays, orderColumn, sortDir);
 
         setLandsData(orderedLands, sortBySize);
       } else {

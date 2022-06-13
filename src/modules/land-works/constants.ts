@@ -119,7 +119,7 @@ export const sortColumns = [
   'size',
 ];
 
-export const sortDirections = [
+export const sortDirections: Array<'asc' | 'desc'> = [
   SortDirection.DESC,
   SortDirection.ASC,
   SortDirection.DESC,
@@ -152,7 +152,7 @@ export const TWITTER_PROMOTE_TEXT = `gm. My property just became available at @l
 export const orderEnum: {
   [key: string]: string;
 } = {
-  totalRents: 'totalRents',
+  totalRents: 'isHot',
   pricePerSecond: 'pricePerMagnitude.usdPrice',
   minPeriod: 'minPeriod',
   maxPeriod: 'maxPeriod',

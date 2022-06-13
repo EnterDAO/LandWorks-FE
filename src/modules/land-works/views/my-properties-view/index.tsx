@@ -6,15 +6,7 @@ import { useMediaQuery } from '@mui/material';
 
 import { Grid } from 'design-system';
 import { LocationState } from 'modules/interface';
-import {
-  AssetEntity,
-  PaymentToken,
-  USER_SUBSCRIPTION,
-  UserEntity,
-  fetchTokenPayments,
-  fetchUserAssetsByRents,
-  parseUser,
-} from 'modules/land-works/api';
+import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssetsByRents, parseUser } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
 import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
@@ -27,12 +19,29 @@ import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-p
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 import { useWallet } from 'wallets/wallet';
 
-import { filterLandsByQuery, isExistingLandInProgress, isNewLandTxInProgress } from 'modules/land-works/utils';
+import {
+  filterLandsByQuery,
+  isExistingLandInProgress,
+  isNewLandTxInProgress,
+  landsOrder,
+} from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
 
-import { MY_PROPERTIES_TAB_STATE_LENT, MY_PROPERTIES_TAB_STATE_RENTED } from 'modules/land-works/constants';
+import {
+  MY_PROPERTIES_TAB_STATE_LENT,
+  MY_PROPERTIES_TAB_STATE_RENTED,
+  sortColumns,
+  sortDirections,
+} from 'modules/land-works/constants';
 
 const MyPropertiesView: FC = () => {
+  const sessionFilters = {
+    order: sessionStorageHandler('get', 'my-properties-filters', 'order'),
+    metaverse: sessionStorageHandler('get', 'general', 'metaverse'),
+  };
+  const [metaverse, setMetaverse] = useState(sessionFilters.metaverse || 1);
+  const orderFilter =
+    sessionFilters.order && sessionFilters.order[`${metaverse}`] ? sessionFilters.order[`${metaverse}`] - 1 : 0;
   const history = useHistory();
   const location = useLocation<LocationState>();
   const isGridPerFour = useMediaQuery('(max-width: 1599px)');
@@ -47,15 +56,15 @@ const MyPropertiesView: FC = () => {
   const [totalRents, setTotalRents] = useState(0);
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [slicedLands, setSlicedLands] = useState(pageSize);
-  const [currencyId, setCurrencyId] = useState(sessionStorageHandler('get', 'my-properties-filters', 'currency') || 0);
-  const [metaverse, setMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
+  const [sortDir, setSortDir] = useState(sortDirections[orderFilter]);
+  const [sortColumn, setSortColumn] = useState(sortColumns[orderFilter]);
 
-  const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
-  const [paymentToken, setPaymentToken] = useState<string | null>(null);
-
-  const { data: userData } = useSubscription(USER_SUBSCRIPTION(paymentToken), {
+  const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
     skip: wallet.account === undefined,
-    variables: { id: wallet.account?.toLowerCase(), metaverse: String(metaverse), paymentToken },
+    variables: {
+      id: wallet.account?.toLowerCase(),
+      metaverse: String(metaverse),
+    },
   });
 
   function getPageSize() {
@@ -80,44 +89,31 @@ const MyPropertiesView: FC = () => {
     if (!wallet.account) return;
 
     setLoading(true);
-    const rents = await fetchUserAssetsByRents(wallet.account, String(metaverse), paymentToken);
+    const rents = await fetchUserAssetsByRents(wallet.account, String(metaverse));
     setRents(rents.data || []);
     setTotalRents(rents.meta.count);
-    setLoading(false);
-  };
-
-  const getPaymentTokens = async () => {
-    const savedToken = sessionStorageHandler('get', 'my-properties-filters', 'currency');
-    const tokens = await fetchTokenPayments();
-    savedToken && setPaymentToken(tokens[savedToken - 1].id);
-    setPaymentTokens(tokens);
   };
 
   const updateUser = async () => {
     await fetchRents();
-    setLoading(false);
     if (userData && userData.user) {
       setUser(await parseUser(userData.user));
     } else {
       setUser({} as UserEntity);
     }
   };
+  const onChangeFiltersSortDirection = (value: number) => {
+    const sortIndex = Number(value) - 1;
 
-  const onChangeCurrencyHandler = async (value: number) => {
-    let tokens: PaymentToken[] = paymentTokens;
+    setSortDir(sortDirections[sortIndex]);
+    setSortColumn(sortColumns[sortIndex]);
+    sortLands(sortColumns[sortIndex], sortDirections[sortIndex]);
+  };
 
-    if (value === 0) {
-      setCurrencyId(value);
-      return setPaymentToken(null);
-    }
-
-    if (!paymentTokens.length) {
-      tokens = await fetchTokenPayments();
-      setPaymentTokens(tokens);
-    }
-
-    setPaymentToken(tokens[value - 1].id);
-    setCurrencyId(value);
+  const sortLands = (orderCol: string, orderDir: 'asc' | 'desc') => {
+    setLands(landsOrder(lands, orderCol, orderDir));
+    setRents(landsOrder(rents, orderCol, orderDir));
+    setLoading(false);
   };
 
   const onChangeMetaverse = (value: number) => {
@@ -135,8 +131,8 @@ const MyPropertiesView: FC = () => {
   }, [userData]);
 
   useEffect(() => {
-    paymentTokens.length && fetchRents();
-  }, [metaverse, currencyId, paymentToken]);
+    fetchRents();
+  }, [metaverse]);
 
   useEffect(() => {
     if (tab === MY_PROPERTIES_TAB_STATE_RENTED) {
@@ -147,6 +143,9 @@ const MyPropertiesView: FC = () => {
   }, [tab, rents]);
 
   useEffect(() => {
+    if (rents.length && lands.length) {
+      sortLands(sortColumn, sortDir);
+    }
     if (Object.keys(user).length) {
       if (tab === MY_PROPERTIES_TAB_STATE_RENTED) setLands(rents);
       if (tab === MY_PROPERTIES_TAB_STATE_LENT) setLands(user?.ownerAndConsumerAssets || []);
@@ -171,10 +170,9 @@ const MyPropertiesView: FC = () => {
     if (!wallet.account || lands.length) {
       setLoading(false);
     }
-  }, [lands]);
+  }, [lands, rents]);
 
   useEffect(() => {
-    getPaymentTokens();
     setTimeout(() => {
       if (!wallet.account) {
         wallet.showWalletsModal();
@@ -222,7 +220,7 @@ const MyPropertiesView: FC = () => {
           />
           <LandsMyPropertiesSubheader
             propertiesCount={filteredLands.length}
-            onChangeCurrencyCallback={onChangeCurrencyHandler}
+            onChangeSortDirection={onChangeFiltersSortDirection}
             onChangeMetaverse={onChangeMetaverse}
           />
 
