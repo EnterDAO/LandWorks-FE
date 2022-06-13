@@ -115,6 +115,7 @@ const LandWorksFilters: FC<Props> = ({
               value={status}
               onChange={onChangeAvailableHandler}
               withCheckbox
+              staticPlaceholder="Status"
               options={statusData}
             />
           </Box>
