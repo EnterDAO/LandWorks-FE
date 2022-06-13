@@ -25,10 +25,11 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
     : `${land.metaverseAssetId}`;
   const isActive = clickedLandId === did;
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const isDecentraland = land.metaverse.name == 'Decentraland';
 
   const onMouseOverHandler = (e: SyntheticEvent, land: AssetEntity) => {
     if (!timeoutId && onMouseOver) {
-      setTimeoutId(setTimeout(() => onMouseOver(e, land), 500));
+      setTimeoutId(setTimeout(() => onMouseOver(e, land), isDecentraland ? 500 : 1000));
     }
   };
 
