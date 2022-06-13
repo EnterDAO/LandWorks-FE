@@ -329,9 +329,10 @@ export const RentModal: React.FC<Props> = (props) => {
                   <div className="info-warning-text">
                     <h3>Important info</h3>
                     <p>
-                      In order to change the operator after you`ve already rented, you`ll need to pay a network fee.Also
-                      you will need to Synchronise the configured operator with the Metaverse once your rent becomes
-                      active. This is required so that the operator you've defined is updated in the metaverse as well.
+                      In order to change the operator after you`ve already rented, you`ll need to pay a network fee.
+                      Also you will need to Synchronise the configured operator with the Metaverse once your rent
+                      becomes active. This is required so that the operator you've defined is updated in the metaverse
+                      as well.
                     </p>
                   </div>
                 </Grid>
