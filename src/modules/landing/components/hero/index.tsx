@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { ReactComponent as Main } from 'assets/img/hero_main.svg';
+import { ReactComponent as Background } from 'assets/img/hero_main.svg';
 import { ReactComponent as Metaverse } from 'assets/img/main_metaverse.svg';
 import { ReactComponent as Partners } from 'assets/img/partners.svg';
+//eslint-disable-next-line
+//@ts-ignore
+import Anim from 'assets/landing_animation.webm';
 import { Button, Grid } from 'design-system';
 
 import './index.scss';
@@ -11,7 +14,12 @@ import './index.scss';
 export const Hero: React.FC = () => {
   return (
     <section className="landing-page-wrapper">
-      <Main className="right-blocks" />
+      <video autoPlay loop muted className="right-blocks">
+        <source src={Anim} type="video/webm" />
+        Sorry, your browser doesn't support embedded videos.
+      </video>
+      <Background className="hero-background" />
+
       <div className="content-container">
         <Grid container>
           <Grid item sx={{ flexDirection: 'column' }}>
