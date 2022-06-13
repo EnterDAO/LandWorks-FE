@@ -1,13 +1,15 @@
 .landing-page-wrapper {
   padding: 165px 0 140px 0;
   position: relative;
+  overflow: hidden;
 
   @media all and (max-width: 660px) {
     padding: 200px 0 45px;
   }
 
   .left-blocks,
-  .right-blocks {
+  .right-blocks,
+  .hero-background {
     position: absolute;
   }
 
@@ -27,9 +29,23 @@
   }
 
   .right-blocks {
-    right: 0;
+    right: -120px;
     top: -107px;
 
+    @media all and (min-width: 1440px) {
+      top: -40px;
+    }
+
+  }
+
+  .hero-background {
+    left: 0;
+    top: -107px;
+
+    @media all and (min-width: 1450px) {
+      width: 100%;
+      
+    }
     @media all and (max-width: 1024px) {
       svg {
         width: 400px;
