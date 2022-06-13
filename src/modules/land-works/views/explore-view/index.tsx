@@ -172,6 +172,7 @@ const ExploreView: React.FC = () => {
     async (orderColumn: string, sortDir: 'asc' | 'desc', lastRentEnd: string, paymentToken: string, owner: string) => {
       setLoading(true);
       const sortBySize = orderColumn == 'size';
+      const sortByHottest = orderColumn == 'totalRents';
 
       const lands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
         String(metaverse),
@@ -182,10 +183,6 @@ const ExploreView: React.FC = () => {
         owner,
         statusFilter
       );
-
-      metaverse == 1 && sortBySize
-        ? setLands(lands.data.sort((a, b) => b.additionalData.size - a.additionalData.size))
-        : setLands(lands.data);
 
       if (owner?.length) {
         const consumer = await fetchAllListedAssetsByConsumer(
@@ -200,9 +197,9 @@ const ExploreView: React.FC = () => {
         const unionArrays = union(lands.data, consumer.data);
         const orderedLands = landsOrder(unionArrays, orderColumn, sortDir);
 
-        setLandsData(orderedLands, sortBySize);
+        setLands(orderedLands);
       } else {
-        setLandsData(lands.data, sortBySize);
+        sortByHottest || sortByHottest ? setLands(landsOrder(lands.data, orderColumn, sortDir)) : setLands(lands.data);
       }
 
       setLoading(false);
@@ -213,12 +210,6 @@ const ExploreView: React.FC = () => {
     },
     500
   );
-
-  const setLandsData = (data: AssetEntity[], sortBySize: boolean) => {
-    metaverse == 1 && sortBySize
-      ? setLands(data.sort((a, b) => b.additionalData.size - a.additionalData.size))
-      : setLands(data);
-  };
 
   const hideMapHandler = (value: boolean) => {
     setMapIsHidden(value);
