@@ -3,7 +3,7 @@ import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 import { THEME_COLORS } from '../../themes/theme-constants';
 
-const StyledTooltip = styled(Tooltip)(() => ({
+const styles = {
   tooltip: {
     background: 'linear-gradient(0deg, rgba(248, 248, 255, 0.1), rgba(248, 248, 255, 0.1)), #27273A;',
     color: THEME_COLORS.grey03,
@@ -19,7 +19,8 @@ const StyledTooltip = styled(Tooltip)(() => ({
   },
   arrow: {
     color: THEME_COLORS.light,
+    padding: '15px',
+    width: '285px',
   },
-}));
-
-export { StyledTooltip };
+};
+export { styles };
