@@ -5,7 +5,8 @@ import { Option } from 'modules/interface';
 import { fetchMetaverses } from 'modules/land-works/api';
 import { useWallet } from 'wallets/wallet';
 
-import { addIconToMetaverse, currencyData, landsData, sortData, statusData } from './filters-data';
+import { PricePopover } from '../price-popover';
+import { addIconToMetaverse, landsData, sortData, statusData } from './filters-data';
 
 import { sessionStorageHandler } from 'utils';
 
@@ -17,6 +18,7 @@ interface Props {
   onChangeAvailable: (value: number) => void;
   onChangeCurrency: (value: number) => void;
   onChangeMetaverse: (value: string) => void;
+  onChangePrice: (currencyIndex: number, minPrice: number | null, maxPrice: number | null) => void;
 }
 
 const LandWorksFilters: FC<Props> = ({
@@ -25,6 +27,7 @@ const LandWorksFilters: FC<Props> = ({
   onChangeAvailable,
   onChangeCurrency,
   onChangeMetaverse,
+  onChangePrice,
 }) => {
   const orderFilter = sessionStorageHandler('get', 'explore-filters', 'order');
 
@@ -71,10 +74,11 @@ const LandWorksFilters: FC<Props> = ({
     sessionStorageHandler('set', 'explore-filters', 'available', value);
   };
 
-  const onChangeCurrencyHandler = (value: number) => {
-    setSelectedCurrency(value);
-    onChangeCurrency(value);
-    sessionStorageHandler('set', 'explore-filters', 'currency', value);
+  const onChangeCurrencyHandler = (currency: number, minPrice: number | null, maxPrice: number | null) => {
+    setSelectedCurrency(currency);
+    onChangeCurrency(currency);
+    onChangePrice(currency, minPrice, maxPrice);
+    sessionStorageHandler('set', 'explore-filters', 'currency', currency);
   };
 
   useEffect(() => {
@@ -101,13 +105,16 @@ const LandWorksFilters: FC<Props> = ({
               options={metaverses}
             />
           </Box>
-          <Box className={styles.box} style={{ marginRight: '20px' }}>
+          {/* <Box className={styles.box} style={{ marginRight: '20px' }}>
             <ControlledSelect
               width={'12rem'}
               value={selectedCurrency}
               onChange={onChangeCurrencyHandler}
               options={currencyData}
             />
+          </Box> */}
+          <Box className={styles.box} style={{ marginRight: '20px' }}>
+            <PricePopover text="Price" onSubmit={onChangeCurrencyHandler} />
           </Box>
           <Box className={styles.box}>
             <ControlledSelect
@@ -129,12 +136,7 @@ const LandWorksFilters: FC<Props> = ({
               </Box>
             </Box>
           )}
-          {/* <Box className={styles.box} style={{ margin: '0 20px' }}>
-            <Typography>Available Only</Typography>
-            <Box sx={{ marginLeft: '10px' }}>
-              <StyledSwitch checked={showOnlyAvailable} onChange={onChangeAvailableHandler} />
-            </Box>
-          </Box> */}
+
           <ControlledSelect
             width={'12rem'}
             value={selectedOrder}
