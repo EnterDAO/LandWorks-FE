@@ -1,10 +1,10 @@
 import { ChangeEvent } from 'react';
 
-import { Grid, StyledSwitch } from 'design-system';
+import Icon from 'components/custom/icon';
+import { Grid, StyledSwitch, Tooltip } from 'design-system';
 import { Option } from 'modules/interface';
 
 import CustomDropdownInput from '../land-works-input';
-import { LandsTooltip } from '../lands-tooltip';
 
 import './index.scss';
 
@@ -101,12 +101,17 @@ const RentPeriod: React.FC<IProps> = ({
           </div>
           <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
             <span className="label">Max Rent Queue</span>
-            <LandsTooltip
-              placement="bottom"
-              target="The timestamp delta after which the protocol will not allow for the property to be rented. It is a utility to lenders so that they can enforce liquidity restrictions on the property being listed. E.g if the property is popular and rented non-stop, restrictions can be made using this configuration so that you can have your property liquid (available for withdrawal). This configuration resembles the maximum time you are willing to wait in order to withdraw your property from the protocol."
+            <Tooltip
+              disableFocusListener
+              placement="bottom-start"
+              title={
+                'The timestamp delta after which the protocol will not allow for the property to be rented. It is a utility to lenders so that they can enforce liquidity restrictions on the property being listed. E.g if the property is popular and rented non-stop, restrictions can be made using this configuration so that you can have your property liquid (available for withdrawal). This configuration resembles the maximum time you are willing to wait in order to withdraw your property from the protocol.'
+              }
             >
-              <span style={{ marginLeft: '15px' }}>in the future</span>
-            </LandsTooltip>
+              <div>
+                <Icon name="about" className="info-icon" />
+              </div>
+            </Tooltip>
           </Grid>
           <Grid mt={3}>
             <CustomDropdownInput
