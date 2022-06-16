@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import useDebounce from '@rooks/use-debounce';
-import BigNumber from 'bignumber.js';
 import { isNull, union } from 'lodash';
 import { getNonHumanValue } from 'web3/utils';
 

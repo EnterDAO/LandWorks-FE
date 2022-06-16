@@ -117,6 +117,7 @@ export const countdown = (date: number, isShorted = false): string => {
   return expired;
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const fetchBlockscanMessages = async (wallet: string): Promise<Array<any>> => {
   const blockscanUrl = 'https://scenes.landworks.xyz/messages/';
   const blockscanResponse = await fetch(blockscanUrl + wallet)
@@ -131,7 +132,7 @@ export const fetchBlockscanMessages = async (wallet: string): Promise<Array<any>
   return +blockscanResponse?.result > 0 ? [newMessage] : [];
 };
 
-export const calculateNotificationAnimation = (subtitleLength: number) => {
+export const calculateNotificationAnimation = (subtitleLength: number): string => {
   if (subtitleLength >= 60) subtitleLength = subtitleLength + subtitleLength / 2;
   if (subtitleLength >= 40 && subtitleLength < 60) subtitleLength = subtitleLength / 2;
   if (subtitleLength < 40) subtitleLength = 10;

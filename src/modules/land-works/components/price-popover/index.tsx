@@ -35,8 +35,12 @@ export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
   const [maxPrice, setMaxPrice] = useState<string | null>(null);
   const [error, setError] = useState<string>('');
 
-  const isNumber = (value: any): boolean => Number.isInteger(value);
-  const isNotNull = (value: any): boolean => value !== null;
+  function isNumber<T>(value: T): boolean {
+    return Number.isInteger(value);
+  }
+  function isNotNull<T>(value: T): boolean {
+    return value !== null;
+  }
 
   const openPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
