@@ -228,7 +228,7 @@ const ExploreView: React.FC = () => {
 
         setLands(orderedLands);
       } else {
-        sortByHottest || sortByHottest ? setLands(landsOrder(lands.data, orderColumn, sortDir)) : setLands(lands.data);
+        sortByHottest || sortBySize ? setLands(landsOrder(lands.data, orderColumn, sortDir)) : setLands(lands.data);
       }
 
       setLoading(false);
