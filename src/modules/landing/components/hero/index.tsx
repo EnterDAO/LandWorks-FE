@@ -22,7 +22,7 @@ export const Hero: React.FC = () => {
 
       <div className="content-container">
         <Grid container>
-          <Grid item sx={{ flexDirection: 'column' }}>
+          <Grid item className="left-blocks" sx={{ flexDirection: 'column' }}>
             <Metaverse />
             <h2>Renting land</h2>
             <h1>Never Worked so well</h1>

@@ -3,10 +3,9 @@ import { Box } from '@mui/material';
 
 import { ReactComponent as AdventageBg } from 'assets/img/AdventageBg.svg';
 import RentingView from 'assets/img/RentingView.png';
-import { Button, Grid, IconButton } from 'design-system';
+import { Grid, IconButton } from 'design-system';
 import { PlusIcon } from 'design-system/icons';
 import {
-  ButtonRaw,
   ImageWrapper,
   StyledBox,
   StyledRoot,
@@ -18,14 +17,6 @@ export const Advantages: React.FC = () => {
   return (
     <div className="content-container">
       <StyledRoot>
-        <ButtonRaw>
-          <Button disabled btnSize="medium" variant="secondary">
-            Why lending?
-          </Button>
-          <Button btnSize="medium" variant="secondary">
-            why renting?
-          </Button>
-        </ButtonRaw>
         <Grid container direction="column" justifyItems="center" justifyContent="center" alignItems="center">
           <StyledText>WHY RENTING?</StyledText>
           <Grid item xs={4} textAlign="center">
