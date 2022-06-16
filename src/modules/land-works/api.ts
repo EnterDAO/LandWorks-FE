@@ -1601,8 +1601,8 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
       ) {
         assets(
           where: { metaverse: $metaverse, ${status ? `${status}: $lastRentEnd` : ''},
-          ${minPrice ? 'pricePerSecond_gt: $minPrice' : ''}, 
-          ${maxPrice ? 'pricePerSecond_lt: $maxPrice' : ''}, 
+          ${minPrice ? 'pricePerSecond_gte: $minPrice' : ''}, 
+          ${maxPrice ? 'pricePerSecond_lte: $maxPrice' : ''}, 
           ${owner ? 'owner: $owner' : ''}, status_not: $statusNot, 
           ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
           orderBy: $orderColumn
@@ -1717,8 +1717,8 @@ export function fetchAllListedAssetsByConsumer(
         assets(
           where: { metaverse: $metaverse,
           ${status ? `${status}: $lastRentEnd` : ''}
-          ${minPrice ? 'pricePerSecond_gt: $minPrice' : ''}, 
-          ${maxPrice ? 'pricePerSecond_lt: $maxPrice' : ''}, 
+          ${minPrice ? 'pricePerSecond_gte: $minPrice' : ''}, 
+          ${maxPrice ? 'pricePerSecond_lte: $maxPrice' : ''}, 
           ${owner ? 'consumer: $owner' : ''}, status_not: $statusNot, 
           ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
           orderBy: $orderColumn
