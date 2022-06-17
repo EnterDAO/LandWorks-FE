@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useDebounce from '@rooks/use-debounce';
 import { isNull, union } from 'lodash';
+import { getNonHumanValue } from 'web3/utils';
 
 import { Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
@@ -33,6 +34,7 @@ import {
   landsOrder,
 } from 'modules/land-works/utils';
 import { getNowTs, sessionStorageHandler } from 'utils';
+import { DAY_IN_SECONDS } from 'utils/date';
 
 import {
   DECENTRALAND_METAVERSE,
@@ -81,6 +83,9 @@ const ExploreView: React.FC = () => {
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
 
+  const [minPrice, setMinPrice] = useState<string | undefined>();
+  const [maxPrice, setMaxPrice] = useState<string | undefined>();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [showCardPreview, setShowCardPreview] = useState(false);
@@ -123,6 +128,17 @@ const ExploreView: React.FC = () => {
     const sortIndex = Number(value) - 1;
     setSortDir(sortDirections[sortIndex]);
     setSortColumn(sortColumns[sortIndex]);
+  };
+
+  const onChangeFiltersPrice = (currencyIndex: number, minPrice: number | null, maxPrice: number | null) => {
+    minPrice ? setMinPrice(parsePriceToNonHuman(currencyIndex, minPrice)) : setMinPrice(undefined);
+    maxPrice ? setMaxPrice(parsePriceToNonHuman(currencyIndex, maxPrice)) : setMaxPrice(undefined);
+  };
+
+  const parsePriceToNonHuman = (index: number, price: number) => {
+    return getNonHumanValue(price, paymentTokens[index - 1].decimals)
+      .dividedBy(DAY_IN_SECONDS)
+      .toFixed(0);
   };
 
   const onChangeFiltersOwnerToggler = (value: boolean) => {
@@ -169,7 +185,15 @@ const ExploreView: React.FC = () => {
   };
 
   const getLands = useDebounce(
-    async (orderColumn: string, sortDir: 'asc' | 'desc', lastRentEnd: string, paymentToken: string, owner: string) => {
+    async (
+      orderColumn: string,
+      sortDir: 'asc' | 'desc',
+      lastRentEnd: string,
+      paymentToken: string,
+      minPrice: string,
+      maxPrice: string,
+      owner: string
+    ) => {
       setLoading(true);
       const sortBySize = orderColumn == 'size';
       const sortByHottest = orderColumn == 'totalRents';
@@ -180,8 +204,10 @@ const ExploreView: React.FC = () => {
         sortBySize ? 'totalRents' : orderColumn,
         sortDir,
         paymentToken,
-        owner,
-        statusFilter
+        statusFilter,
+        minPrice,
+        maxPrice,
+        owner
       );
 
       if (owner?.length) {
@@ -191,15 +217,17 @@ const ExploreView: React.FC = () => {
           sortBySize ? 'totalRents' : orderColumn,
           sortDir,
           paymentToken,
-          owner,
-          statusFilter
+          statusFilter,
+          minPrice,
+          maxPrice,
+          owner
         );
         const unionArrays = union(lands.data, consumer.data);
         const orderedLands = landsOrder(unionArrays, orderColumn, sortDir);
 
         setLands(orderedLands);
       } else {
-        sortByHottest || sortByHottest ? setLands(landsOrder(lands.data, orderColumn, sortDir)) : setLands(lands.data);
+        sortByHottest || sortBySize ? setLands(landsOrder(lands.data, orderColumn, sortDir)) : setLands(lands.data);
       }
 
       setLoading(false);
@@ -227,10 +255,10 @@ const ExploreView: React.FC = () => {
   useEffect(() => {
     if (!isNull(paymentToken)) {
       sessionStorageHandler('get', 'explore-filters', 'owner')
-        ? getLands(sortColumn, sortDir, lastRentEnd, paymentToken, wallet?.account?.toLowerCase())
-        : getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
+        ? getLands(sortColumn, sortDir, lastRentEnd, paymentToken, minPrice, maxPrice, wallet?.account?.toLowerCase())
+        : getLands(sortColumn, sortDir, lastRentEnd, paymentToken, minPrice, maxPrice);
     }
-  }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken, metaverse]);
+  }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken, metaverse, minPrice, maxPrice]);
 
   useEffect(() => {
     getPaymentTokens();
@@ -267,6 +295,7 @@ const ExploreView: React.FC = () => {
               onChangeAvailable={onChangeFiltersAvailable}
               onChangeCurrency={onChangeFiltersCurrency}
               onChangeMetaverse={onChangeMetaverse}
+              onChangePrice={onChangeFiltersPrice}
             />
           </div>
           <div className="content-container content-container--explore-view">

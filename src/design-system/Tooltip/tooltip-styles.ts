@@ -1,5 +1,4 @@
-import { styled } from '@mui/material';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { tooltipClasses } from '@mui/material/Tooltip';
 
 import { THEME_COLORS } from '../../themes/theme-constants';
 

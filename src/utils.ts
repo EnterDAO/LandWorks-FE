@@ -401,7 +401,13 @@ export function getTimeTypeStr(values: ParsedDate): string {
   return `${timeValue} ${timeType}`;
 }
 
-export const sessionStorageHandler = (option: 'get' | 'set', key: string, name: string, value?: any): any => {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export const sessionStorageHandler = (
+  option: 'get' | 'set',
+  key: string,
+  name: string,
+  value?: string | number | boolean
+): any => {
   const filters = sessionStorage.getItem(key);
   if (filters == null) {
     if (option == 'get') {

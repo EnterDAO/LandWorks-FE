@@ -1580,8 +1580,10 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
   orderColumn = 'totalRents',
   orderDirection: string,
   paymentTokenId: string,
-  owner?: string,
-  status?: string | null
+  status?: string | null,
+  minPrice?: string,
+  maxPrice?: string,
+  owner?: string
 ): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
     query: gql`
@@ -1592,11 +1594,15 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
         $orderDirection: String
         $statusNot: String
         $paymentTokenId: String
-        $owner: String
         $status: String
+        $minPrice: BigInt
+        $maxPrice: BigInt
+        $owner: String
       ) {
         assets(
-          where: { metaverse: $metaverse, ${status ? `${status}: $lastRentEnd` : ''}, 
+          where: { metaverse: $metaverse, ${status ? `${status}: $lastRentEnd` : ''},
+          ${minPrice ? 'pricePerSecond_gte: $minPrice' : ''}, 
+          ${maxPrice ? 'pricePerSecond_lte: $maxPrice' : ''}, 
           ${owner ? 'owner: $owner' : ''}, status_not: $statusNot, 
           ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
           orderBy: $orderColumn
@@ -1659,6 +1665,8 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
       paymentTokenId: paymentTokenId,
       owner: owner,
       status: status,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
     },
   })
     .then(async (response) => {
@@ -1689,8 +1697,10 @@ export function fetchAllListedAssetsByConsumer(
   orderColumn = 'totalRents',
   orderDirection: string,
   paymentTokenId: string,
-  owner?: string,
-  status?: string | null
+  status?: string | null,
+  minPrice?: string,
+  maxPrice?: string,
+  owner?: string
 ): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
     query: gql`
@@ -1700,11 +1710,15 @@ export function fetchAllListedAssetsByConsumer(
         $orderDirection: String
         $statusNot: String
         $paymentTokenId: String
+        $minPrice: BigInt
+        $maxPrice: BigInt
         $owner: String
       ) {
         assets(
           where: { metaverse: $metaverse,
           ${status ? `${status}: $lastRentEnd` : ''}
+          ${minPrice ? 'pricePerSecond_gte: $minPrice' : ''}, 
+          ${maxPrice ? 'pricePerSecond_lte: $maxPrice' : ''}, 
           ${owner ? 'consumer: $owner' : ''}, status_not: $statusNot, 
           ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
           orderBy: $orderColumn
@@ -1767,6 +1781,8 @@ export function fetchAllListedAssetsByConsumer(
       paymentTokenId: paymentTokenId,
       owner: owner,
       status: status,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
     },
   })
     .then(async (response) => {

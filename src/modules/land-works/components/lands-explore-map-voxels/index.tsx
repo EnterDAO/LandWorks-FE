@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { GeoJSON, MapContainer, TileLayer, useMap, useMapEvent } from 'react-leaflet';
+import { GeoJSON, MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { Layer } from 'leaflet';
 import { find } from 'lodash';
 
