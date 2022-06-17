@@ -13,7 +13,7 @@ import './index.scss';
 
 export const Hero: React.FC = () => {
   return (
-    <section className="landing-page-wrapper">
+    <section className="landing-page-wrapper home">
       <video autoPlay loop muted className="right-blocks">
         <source src={Anim} type="video/webm" />
         Sorry, your browser doesn't support embedded videos.
@@ -27,8 +27,8 @@ export const Hero: React.FC = () => {
             <h2>Renting land</h2>
             <h1>Never Worked so well</h1>
             <p>
-              LandWorks is a community-owned Marketplace for renting Web3 Metaverse Land, governed by EnterDAO and ENTR
-              holders.
+              LandWorks is a community-owned Marketplace for renting Web3 Metaverse Land, governed by EnterDAO and the
+              ENTR token.
             </p>
             <Link to="/explore">
               <Button variant="gradient" btnSize="small" className="button-primary">

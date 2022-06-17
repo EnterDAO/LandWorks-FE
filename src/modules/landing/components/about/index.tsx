@@ -46,7 +46,7 @@ export const About: React.FC = () => {
                 className="button"
               >
                 <StyledLink to={'/explore'}>
-                  Lend now <BackIcon height={20} width={20} />
+                  List now <BackIcon height={20} width={20} />
                 </StyledLink>
               </Button>
             </div>

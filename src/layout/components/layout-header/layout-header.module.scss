@@ -146,6 +146,7 @@
 }
 
 .nav {
+  height: 100%;
   display: flex;
   border-right: 1px solid var(--theme-border-color);
   margin-right: 20px;
@@ -162,9 +163,13 @@
 }
 
 .navLink {
+  height: 100%;
   margin-right: 30px;
   color: rgba(185, 185, 211, 1);
   font-size: 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
 
   :hover {
     color: rgb(96, 96, 114);
@@ -180,6 +185,15 @@
 
   @media (max-width: 1023px) {
     margin-right: 20px;
+  }
+  .activeTab {
+    position: absolute;
+    bottom: -12px;
+    height: 5px;
+    width: 100%;
+    border-radius: 2px 2px 0 0;
+    background: var(--theme-accent-color);
+    box-shadow: 0px 0px 7px 1px var(--theme-accent-color);
   }
 }
 
