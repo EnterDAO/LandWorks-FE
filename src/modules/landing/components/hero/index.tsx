@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { ReactComponent as Background } from 'assets/img/hero_main.svg';
-import { ReactComponent as Metaverse } from 'assets/img/main_metaverse.svg';
+import { ReactComponent as Metaverse } from 'assets/img/hero_tag.svg';
 import { ReactComponent as Partners } from 'assets/img/partners.svg';
 //eslint-disable-next-line
 //@ts-ignore

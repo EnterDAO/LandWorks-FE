@@ -1,8 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { ReactComponent as Tag } from 'assets/img/explore_tag.svg';
 import { ReactComponent as LandGroup } from 'assets/img/land_group.svg';
-import { ReactComponent as Metaverse } from 'assets/img/main_metaverse.svg';
 import { Button } from 'design-system';
 import { StyledRoot } from 'modules/landing/components/Explore/styled';
 
@@ -12,7 +12,7 @@ export const Explore: React.FC = () => {
     <div className="content-container">
       <StyledRoot>
         <div>
-          <Metaverse />
+          <Tag />
           <h1>
             Explore <br /> Our Marketplace
           </h1>
