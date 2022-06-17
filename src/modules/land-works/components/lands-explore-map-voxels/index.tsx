@@ -135,7 +135,7 @@ interface MapOptionsProps {
 }
 const MapOptions: React.FC<MapOptionsProps> = ({ id, mapTiles }) => {
   const map = useMap();
-  const FLY_ZOOM = 11;
+  const FLY_ZOOM = 9;
   map.setMaxZoom(12);
   map.setMinZoom(1);
 
