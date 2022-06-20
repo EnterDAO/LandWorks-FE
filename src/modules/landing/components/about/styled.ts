@@ -1,4 +1,5 @@
-import { Grid, Typography, styled } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Grid, styled } from '@mui/material';
 
 export const StyledText = styled('p')(() => ({
   maxWidth: 200,
@@ -53,7 +54,7 @@ export const Rent = styled('span')(() => ({
   backgroundClip: 'text',
 }));
 
-export const StyledTypography = styled(Typography)(() => ({
+export const StyledLink = styled(Link)(() => ({
   fontSize: 14,
   color: 'var(--theme-grey900-color)',
   display: 'flex',
@@ -64,5 +65,8 @@ export const StyledTypography = styled(Typography)(() => ({
     border: 'none',
     borderRadius: 25,
     transform: 'rotate(180deg)',
+  },
+  '&:hover': {
+    color: 'var(--theme-grey900-color)',
   },
 }));

@@ -13,12 +13,6 @@ export const StyledRoot = styled(Grid)(() => ({
   },
 }));
 
-export const ButtonRaw = styled(Grid)(() => ({
-  display: 'flex',
-  gap: 10,
-  marginBottom: 45,
-}));
-
 export const StyledText = styled('p')(() => ({
   maxWidth: 200,
   textDecoration: 'none',
