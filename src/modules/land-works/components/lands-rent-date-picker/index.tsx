@@ -58,7 +58,9 @@ export const RentDatePicker = (props: {
           Start Date
           <Tooltip
             placement="bottom-end"
-            title="The address that will be authorised to deploy scenes and experiences on the rented property during your renting period."
+            title="The timestamp your rent will start. If there is no active (and booked after that) rents this timestamp will be now. 
+            Otherwise the timestamp will be the earliest possible one based on the booked rents. 
+            The start of your rent is not configurable - it's the earliest possible timestamp to ensure."
           >
             <span>
               <Icon name="about" className="info-icon" />
@@ -76,7 +78,18 @@ export const RentDatePicker = (props: {
       <div className="rangeDivider" />
 
       <InputLabel>
-        <p>End Date</p>
+        <p>
+          End Date
+          <Tooltip
+            placement="bottom-end"
+            title="The time and date you wish the rent to end. This is a configurable timestamp based on the parameters set by the landlord."
+          >
+            <span>
+              <Icon name="about" className="info-icon" />
+            </span>
+          </Tooltip>
+        </p>
+
         <TextField
           style={{ fontSize: '14px' }}
           className="input date-input"
@@ -95,17 +108,7 @@ export const RentDatePicker = (props: {
       </InputLabel>
 
       <InputLabel>
-        <p>
-          End Time
-          <Tooltip
-            placement="bottom-end"
-            title="The address that will be authorised to deploy scenes and experiences on the rented property during your renting period."
-          >
-            <span>
-              <Icon name="about" className="info-icon" />
-            </span>
-          </Tooltip>
-        </p>
+        <p>End Time</p>
         <TextField
           className="input time-input"
           type="time"
