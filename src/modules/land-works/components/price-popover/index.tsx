@@ -28,19 +28,12 @@ interface IProps {
 
 export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
   const storageCurrency = sessionStorageHandler('get', 'explore-filters', 'currency');
-
+  const [disableApply, setDisableApply] = useState(true);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const [currency, setCurrency] = useState<number | null>(storageCurrency || null);
+  const [currency, setCurrency] = useState<number>(storageCurrency || 0);
   const [minPrice, setMinPrice] = useState<string | null>(null);
   const [maxPrice, setMaxPrice] = useState<string | null>(null);
   const [error, setError] = useState<string>('');
-
-  function isNumber<T>(value: T): boolean {
-    return Number.isInteger(value);
-  }
-  function isNotNull<T>(value: T): boolean {
-    return value !== null;
-  }
 
   const openPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -53,6 +46,7 @@ export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
   const handleCurrency = (event: React.MouseEvent<HTMLElement>, cur: number | null) => {
     cur !== null && setCurrency(cur);
     cur == 0 && resetPrice();
+    setDisableApply(false);
   };
 
   const onInput = (value: string, type: 'min' | 'max') => {
@@ -92,15 +86,16 @@ export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
   }, [minPrice, maxPrice]);
 
   const handleSubmit = () => {
-    if (currency !== null && onSubmit) {
+    if (onSubmit) {
       onSubmit(currency, Number(minPrice), Number(maxPrice));
       resetPrice();
       closePopover();
+      setDisableApply(true);
     }
   };
 
-  const disableInput = !isNotNull(currency) || currency == 0;
-  const applyDisabled = !isNumber(currency) || (currency !== null && currency < 1) || Boolean(error.length);
+  const disableInput = currency == 0;
+
   return (
     <div>
       <PopoverButton onClick={openPopover}>{text}</PopoverButton>
@@ -133,7 +128,9 @@ export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
                 onChange={(e) => onInput(e.target.value, 'min')}
                 type="number"
               />
-              <span>{getUsdPrice(minPrice || 0)} $</span>
+              <span style={{ color: disableInput ? 'var(--theme-grey700-color)' : 'var(--theme-grey900-color)' }}>
+                {getUsdPrice(minPrice || 0)} $
+              </span>
             </InputRow>
           </div>
           <div>
@@ -145,7 +142,9 @@ export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
                 onChange={(e) => onInput(e.target.value, 'max')}
                 type="number"
               />
-              <span>{getUsdPrice(maxPrice || 0)} $</span>
+              <span style={{ color: disableInput ? 'var(--theme-grey700-color)' : 'var(--theme-grey900-color)' }}>
+                {getUsdPrice(maxPrice || 0)} $
+              </span>
             </InputRow>
           </div>
           <ErrorText>
@@ -155,7 +154,7 @@ export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
             <Button onClick={resetPrice} btnSize="xsmall" disabled={!minPrice || !maxPrice} variant="secondary">
               Clear
             </Button>
-            <Button disabled={applyDisabled} onClick={handleSubmit} btnSize="xsmall" variant="secondary">
+            <Button disabled={disableApply} onClick={handleSubmit} btnSize="xsmall" variant="secondary">
               Apply
             </Button>
           </StyledGrid>
