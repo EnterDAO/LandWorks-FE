@@ -21,6 +21,7 @@ import styles from './layout-header.module.scss';
 const modalRoot = document.getElementById('modal-root') || document.body;
 
 const LayoutHeader: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<number>(0);
   const { navOpen, setNavOpen } = useGeneral();
   const [referenceElement, setReferenceElement] = useState<any>();
   const [popperElement, setPopperElement] = useState<any>();
@@ -73,28 +74,32 @@ const LayoutHeader: React.FC = () => {
       {isLandingPage?.isExact && (
         <nav className={styles.nav}>
           <a
-            href="#about"
-            className={styles.navLink}
+            href="#home"
+            className={styles.navLink + ' selected'}
             onClick={() => {
-              const aboutSection = document.querySelector('.about-wrapper') as HTMLElement;
+              const aboutSection = document.querySelector('.home') as HTMLElement;
               if (aboutSection !== null) {
-                window.scrollTo({ top: aboutSection.offsetTop, left: 0, behavior: 'smooth' });
+                window.scrollTo({ top: aboutSection.offsetTop - 100, left: 0, behavior: 'smooth' });
               }
+              setActiveTab(0);
             }}
           >
-            <span>About</span>
+            <div>Home</div>
+            <div className={!activeTab ? styles.activeTab : ''}></div>
           </a>
           <a
             href="#why"
             className={styles.navLink}
             onClick={() => {
-              const aboutSection = document.querySelector('.how-it-works-wrapper') as HTMLElement;
+              const aboutSection = document.querySelector('.why') as HTMLElement;
               if (aboutSection !== null) {
-                window.scrollTo({ top: aboutSection.offsetTop, left: 0, behavior: 'smooth' });
+                window.scrollTo({ top: aboutSection.offsetTop - 100, left: 0, behavior: 'smooth' });
               }
+              setActiveTab(1);
             }}
           >
             <span>Why Rent ?</span>
+            <div className={activeTab ? styles.activeTab : ''}></div>
           </a>
           <ExternalLink href="https://docs.landworks.xyz" target="_blank" className={styles.navLink}>
             <span>Docs</span>

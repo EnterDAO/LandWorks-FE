@@ -16,6 +16,9 @@ export const FAQ: React.FC = () => {
             <QuestionItem item={item} key={item.id} />
           ))}
         </QuestionList>
+        {/* <a href="https://docs.landworks.xyz" target="_blank">
+          See all FAQ
+        </a> */}
       </StyledRoot>
     </div>
   );

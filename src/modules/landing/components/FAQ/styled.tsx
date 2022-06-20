@@ -9,6 +9,9 @@ export const StyledRoot = styled(Grid)(() => ({
   justifyContent: 'center',
   flexDirection: 'column',
   alignItems: 'center',
+  '& a': {
+    fontSize: 20,
+  },
 }));
 
 export const StyledTypography = styled(Typography)(() => ({
@@ -35,6 +38,7 @@ export const StyledTypography = styled(Typography)(() => ({
 export const QuestionList = styled(Grid)(() => ({
   width: 680,
   flexDirection: 'row',
+  marginBottom: 40,
 }));
 
 export const StyledGrid = styled(Grid)(() => ({

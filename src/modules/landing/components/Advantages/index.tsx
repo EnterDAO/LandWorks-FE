@@ -3,10 +3,9 @@ import { Box } from '@mui/material';
 
 import { ReactComponent as AdventageBg } from 'assets/img/AdventageBg.svg';
 import RentingView from 'assets/img/RentingView.png';
-import { Button, Grid, IconButton } from 'design-system';
+import { Grid, IconButton } from 'design-system';
 import { PlusIcon } from 'design-system/icons';
 import {
-  ButtonRaw,
   ImageWrapper,
   StyledBox,
   StyledRoot,
@@ -16,16 +15,8 @@ import {
 
 export const Advantages: React.FC = () => {
   return (
-    <div className="content-container">
+    <div className="content-container why">
       <StyledRoot>
-        <ButtonRaw>
-          <Button disabled btnSize="medium" variant="secondary">
-            Why lending?
-          </Button>
-          <Button btnSize="medium" variant="secondary">
-            why renting?
-          </Button>
-        </ButtonRaw>
         <Grid container direction="column" justifyItems="center" justifyContent="center" alignItems="center">
           <StyledText>WHY RENTING?</StyledText>
           <Grid item xs={4} textAlign="center">
@@ -65,8 +56,8 @@ export const Advantages: React.FC = () => {
               <IconButton variant="circular" btnSize="small" colorVariant="light" icon={<PlusIcon />} />
             </StyledBox>
             <Box maxWidth="70%">
-              <h2>Governance</h2>
-              <p>You can rent a land that otherwise is unavailable to take.</p>
+              <h2>Trust-less</h2>
+              <p>Renting is fully decentralised by utilizing our audited protocol. No middleman. No hassle.</p>
             </Box>
           </Grid>
           <Grid item xs={5} display="flex" flexDirection="row" alignItems="center">
@@ -74,8 +65,8 @@ export const Advantages: React.FC = () => {
               <IconButton variant="circular" btnSize="small" colorVariant="light" icon={<PlusIcon />} />
             </StyledBox>
             <Box maxWidth="70%">
-              <h2>Renting Nearby Land</h2>
-              <p>Renters can safely rent nearby land and utilise a bigger space for experience/scene deployment.</p>
+              <h2>Flexibility</h2>
+              <p>Rent for as short as a day to host an event or as long as an year@</p>
             </Box>
           </Grid>
         </Grid>

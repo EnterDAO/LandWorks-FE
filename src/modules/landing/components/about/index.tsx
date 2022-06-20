@@ -8,9 +8,9 @@ import {
   LandOwner,
   Rent,
   StyledGrid,
+  StyledLink,
   StyledSubtitle,
   StyledText,
-  StyledTypography,
 } from 'modules/landing/components/about/styled';
 
 import './index.scss';
@@ -45,9 +45,9 @@ export const About: React.FC = () => {
                 btnSize="xsmall"
                 className="button"
               >
-                <StyledTypography>
-                  Lend now <BackIcon height={20} width={20} />
-                </StyledTypography>
+                <StyledLink to={'/explore'}>
+                  List now <BackIcon height={20} width={20} />
+                </StyledLink>
               </Button>
             </div>
           </StyledGrid>
@@ -68,9 +68,9 @@ export const About: React.FC = () => {
                 btnSize="xsmall"
                 className="button"
               >
-                <StyledTypography>
+                <StyledLink to={'/explore'}>
                   Start renting <BackIcon height={20} width={20} />
-                </StyledTypography>
+                </StyledLink>
               </Button>
             </div>
           </StyledGrid>
