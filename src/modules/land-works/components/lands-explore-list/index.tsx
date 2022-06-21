@@ -108,16 +108,6 @@ const LandsExploreList: FC<Props> = ({
     return index;
   };
 
-  const getDomLandCardByIdAndScroll = (mapLandId: string) => {
-    const landExploreCard = window.document.getElementById(`land-explore-card--${mapLandId}`);
-
-    if (landExploreCard) {
-      landExploreCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    return landExploreCard;
-  };
-
   useEffect(() => {
     setLoadPercentageValue(getLoadPercentageValue());
   }, [lands, slicedLands, searchQuery]);
@@ -126,19 +116,14 @@ const LandsExploreList: FC<Props> = ({
     setShowCardPreview && setShowCardPreview(false);
     if (!window || !clickedLandId || blockAutoScroll) return;
 
-    const isFound = getDomLandCardByIdAndScroll(clickedLandId);
+    if (searchQuery) {
+      return setShowCardPreview && setShowCardPreview(true);
+    }
 
-    if (!isFound) {
-      if (searchQuery) {
-        return setShowCardPreview && setShowCardPreview(true);
-      }
+    const index = getLandArrayIndexByIdCoordinate(clickedLandId);
 
-      const index = getLandArrayIndexByIdCoordinate(clickedLandId);
-
-      if (index !== -1) {
-        setSlicedLands(index > slicedLands ? index + 1 : slicedLands);
-        setTimeout(() => getDomLandCardByIdAndScroll(clickedLandId), 300);
-      }
+    if (index !== -1) {
+      setSlicedLands(index > slicedLands ? index + 1 : slicedLands);
     }
   }, [clickedLandId]);
 
