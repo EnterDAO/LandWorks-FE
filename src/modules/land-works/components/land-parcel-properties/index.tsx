@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { shortenAddr } from 'web3/utils';
 
 import { AdditionalDecantralandData, AssetAttributes } from 'modules/land-works/api';
 
@@ -118,10 +119,13 @@ const VoxelParcel: React.FC<VoxelProps> = ({ atr, id }) => {
   );
 };
 const DecentralandParcel: React.FC<DecentralandProps> = ({ atr, id }) => {
+  const ONE_LAND_SIZE = 256;
   const decentralandStyles = {
     rootGrid: { justifyContent: 'space-around' },
     innerContainer: { height: '160px' },
   };
+  const tokenId = id.length > 5 ? shortenAddr(id, 3, 3) : id;
+
   return (
     <GridFlexed gap={4} style={decentralandStyles.rootGrid}>
       <GridStyledInnerContainer
@@ -133,17 +137,19 @@ const DecentralandParcel: React.FC<DecentralandProps> = ({ atr, id }) => {
       >
         <TypographyStyled variant="h2">Property Details</TypographyStyled>
         <GridItem item display="flex" flexDirection="row" xs={12}>
-          <TypographyStyled variant="h3">Size</TypographyStyled>
+          <TypographyStyled variant="h3">Lands</TypographyStyled>
           <TypographyStyled variant="h4">{atr?.size}</TypographyStyled>
         </GridItem>
         <GridItem item display="flex" flexDirection="row" xs={12}>
-          <TypographyStyled variant="h3">Token ID</TypographyStyled>
-          <TypographyStyled variant="h4">#{id}</TypographyStyled>
+          <TypographyStyled variant="h3">Size</TypographyStyled>
+          <TypographyStyled variant="h4">
+            {ONE_LAND_SIZE * atr.size} m<sup>2</sup>
+          </TypographyStyled>
         </GridItem>
         <GridItem item display="flex" flexDirection="row" xs={12}>
-          <TypographyStyled variant="h3">External url</TypographyStyled>
+          <TypographyStyled variant="h3">Token ID</TypographyStyled>
           <StyledLink target="_blank" href={atr.externalUrl}>
-            market.decentraland.org
+            #{tokenId}
           </StyledLink>
         </GridItem>
       </GridStyledInnerContainer>
