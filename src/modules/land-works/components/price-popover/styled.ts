@@ -51,18 +51,19 @@ export const ButtonGroup = styled(ToggleButtonGroup)(() => ({
   width: '100%',
   justifyContent: 'space-between',
   '& .MuiToggleButtonGroup-grouped': {
-    width: 100,
+    width: 105,
     display: 'flex',
     background: 'var(--theme-card-color)',
     borderColor: 'var(--theme-card-color)',
     justifyContent: 'space-around',
     color: 'var(--theme-grey900-color)',
-    borderRadius: '4px !important',
   },
   '& .Mui-selected': {
     background: 'var(--theme-grey700-color) !important',
+    borderRadius: '4px !important',
     border: '1px solid var(--theme-grey900-color) !important',
     color: 'var(--theme-grey900-color) !important',
+    zIndex: '1',
   },
 }));
 
@@ -99,7 +100,6 @@ export const InputRow = styled('div')(() => ({
   },
   '& span': {
     width: '50%',
-    color: 'var(--theme-grey700-color)',
     textAlign: 'end',
     paddingRight: 5,
   },
