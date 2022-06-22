@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 import { styled } from '@mui/system';
 
 interface Props {
@@ -19,7 +19,14 @@ export const ReadMore: FC<Props> = ({ children }) => {
   };
   return (
     <p>
-      {isReadMore ? text.slice(0, 180) : text}
+      {isReadMore
+        ? text.slice(0, 180)
+        : text.split('/n').map((desc, index) => (
+            <Fragment key={index}>
+              <p key={index}>{desc}</p>
+              <br />
+            </Fragment>
+          ))}
       <StyledSpan onClick={toggleReadMore} className="read-or-hide">
         {isReadMore ? '...read more' : ' show less'}
       </StyledSpan>
