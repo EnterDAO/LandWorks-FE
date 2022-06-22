@@ -7,6 +7,9 @@
     padding: 200px 0 45px;
   }
 
+  .content-container {
+    position: relative;
+  }
   .right-blocks,
   .hero-background {
     position: absolute;
@@ -22,12 +25,11 @@
   }
 
   .right-blocks {
-    right: -170px;
-    top: -107px;
+    right: -255px;
+    top: -170px;
     z-index: 1;
-
-    @media all and (min-width: 1440px) {
-      top: -40px;
+    @media all and (min-width: 1450px) {
+      right: -270px;
     }
 
   }
@@ -38,7 +40,6 @@
 
     @media all and (min-width: 1450px) {
       width: 100%;
-      
     }
     @media all and (max-width: 1024px) {
       svg {
@@ -95,6 +96,9 @@
   }
 
   .partners {
-    margin-top: 120px;
+    position: relative;
+    @media all and (min-width: 1450px) {
+      left: -50px;
+    }
   }
 }
