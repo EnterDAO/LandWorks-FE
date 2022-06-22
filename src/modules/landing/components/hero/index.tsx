@@ -14,13 +14,13 @@ import './index.scss';
 export const Hero: React.FC = () => {
   return (
     <section className="landing-page-wrapper home">
-      <video autoPlay loop muted className="right-blocks">
-        <source src={Anim} type="video/webm" />
-        Sorry, your browser doesn't support embedded videos.
-      </video>
       <Background className="hero-background" />
 
       <div className="content-container">
+        <video autoPlay loop muted className="right-blocks">
+          <source src={Anim} type="video/webm" />
+          Sorry, your browser doesn't support embedded videos.
+        </video>
         <Grid container>
           <Grid item className="left-blocks" sx={{ flexDirection: 'column' }}>
             <Metaverse />

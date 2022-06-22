@@ -66,7 +66,7 @@ export const Advantages: React.FC = () => {
             </StyledBox>
             <Box maxWidth="70%">
               <h2>Flexibility</h2>
-              <p>Rent for as short as a day to host an event or as long as an year@</p>
+              <p>Rent for as short as a day to host an event or as long as an year!</p>
             </Box>
           </Grid>
         </Grid>
