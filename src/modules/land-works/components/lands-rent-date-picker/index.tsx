@@ -58,9 +58,9 @@ export const RentDatePicker = (props: {
           Start Date
           <Tooltip
             placement="bottom-end"
-            title="The timestamp your rent will start. If there is no active (and booked after that) rents this timestamp will be now. 
+            title="The timestamp your rent will start. If there is no rents for this land, this timestamp will be now. 
             Otherwise the timestamp will be the earliest possible one based on the booked rents. 
-            The start of your rent is not configurable - it's the earliest possible timestamp to ensure."
+            The start of your rent is not configurable - it's the earliest possible timestamp."
           >
             <span>
               <Icon name="about" className="info-icon" />
