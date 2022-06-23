@@ -1,10 +1,11 @@
 import { FC, useEffect, useState } from 'react';
-import { GeoJSON, MapContainer, TileLayer, useMap } from 'react-leaflet';
-import { Layer } from 'leaflet';
+import { GeoJSON, MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
+import { Icon, LatLngExpression, Layer } from 'leaflet';
 import { find } from 'lodash';
 
 import { ReactComponent as ArrowLeftIcon } from 'assets/icons/arrow-left.svg';
 import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
+import MapMarker from 'assets/img/mapMarker.png';
 import { Button } from 'design-system';
 import { VoxelsMapCollection, VoxelsTileType } from 'modules/interface';
 import { AssetEntity } from 'modules/land-works/api';
@@ -18,6 +19,10 @@ import { TILES_URL_VOXEL } from 'modules/land-works/constants';
 import './leafleft.scss';
 import styles from './lands-explore-map-voxels.module.scss';
 
+const iconPerson = new Icon({
+  iconUrl: `${MapMarker}`,
+});
+
 interface Props {
   positionX: number;
   positionY: number;
@@ -27,11 +32,13 @@ interface Props {
 }
 
 const LandsExploreMapVoxels: FC<Props> = ({ expanded, onClick, lands }) => {
-  const { setClickedLandId, clickedLandId } = useLandsMapTile();
+  const { setClickedLandId } = useLandsMapTile();
   const { selectedId } = useLandsMapTiles();
 
   const [mapTiles, setMapTiles] = useState<VoxelsTileType[]>();
   const [mapCollection, setMapCollection] = useState<VoxelsMapCollection>();
+
+  const [markerPosition, setMarkerPosition] = useState<LatLngExpression>();
 
   const fetchTiles = async (url: string = TILES_URL_VOXEL) => {
     if (!window.fetch) return {};
@@ -50,10 +57,6 @@ const LandsExploreMapVoxels: FC<Props> = ({ expanded, onClick, lands }) => {
   };
 
   const geoEachFeature = (feature: GeoJSON.Feature<GeoJSON.GeometryObject>, layer: Layer) => {
-    if (clickedLandId == feature.id || selectedId == feature.id) {
-      layer.setPopupContent('teste');
-      layer.openPopup();
-    }
     layer.on({
       mouseover: function (e) {
         const auxLayer = e.target;
@@ -75,6 +78,7 @@ const LandsExploreMapVoxels: FC<Props> = ({ expanded, onClick, lands }) => {
         });
       },
       click: function (e) {
+        setMarkerPosition(getCentre(e.target.feature.geometry.coordinates[0]));
         setClickedLandId && setClickedLandId(e.target.feature.id);
       },
     });
@@ -83,6 +87,11 @@ const LandsExploreMapVoxels: FC<Props> = ({ expanded, onClick, lands }) => {
   useEffect(() => {
     fetchTiles();
   }, []);
+
+  useEffect(() => {
+    const found = find(mapTiles, { id: Number(selectedId) });
+    if (found) setMarkerPosition(getCentre(found.geometry.coordinates[0]));
+  }, [selectedId]);
 
   useEffect(() => {
     if (lands.length && mapTiles?.length) {
@@ -98,9 +107,7 @@ const LandsExploreMapVoxels: FC<Props> = ({ expanded, onClick, lands }) => {
           attribution='&copy; <a href="https://www.cryptovoxels.com/">Voxel</a>'
           url="https://map.cryptovoxels.com/tile/?z={z}&x={x}&y={y}"
         />
-        {/* <Marker position={[-0.42, -0.3]} icon={icon}>
-          <Popup>A pretty CSS3 popup.</Popup>
-        </Marker> */}
+        {markerPosition && <Marker position={markerPosition} icon={iconPerson} />}
         {mapCollection && (
           <GeoJSON
             //eslint-disable-next-line
@@ -152,6 +159,8 @@ const MapOptions: React.FC<MapOptionsProps> = ({ id, mapTiles }) => {
 };
 
 function getCentre(coords: Array<number[]>) {
+  const LNG_CALC_MISTAKE = 0.065;
+  const LAT_CALC_MISTAKE = 0.15;
   const summary = coords.reduce(
     (acc, current) => {
       acc[0] = acc[0] + current[0];
@@ -160,5 +169,5 @@ function getCentre(coords: Array<number[]>) {
     },
     [0, 0]
   );
-  return { lng: summary[0] / coords.length, lat: summary[1] / coords.length };
+  return { lng: summary[0] / coords.length - LNG_CALC_MISTAKE, lat: summary[1] / coords.length + LAT_CALC_MISTAKE };
 }
