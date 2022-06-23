@@ -38,7 +38,6 @@ export const StyledTypography = styled(Typography)(() => ({
 export const QuestionList = styled(Grid)(() => ({
   width: 680,
   flexDirection: 'row',
-  marginBottom: 40,
 }));
 
 export const StyledGrid = styled(Grid)(() => ({

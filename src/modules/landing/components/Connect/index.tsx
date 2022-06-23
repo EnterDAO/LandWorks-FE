@@ -46,17 +46,23 @@ export const Connect: React.FC = () => {
       </StyledRoot>
 
       <IconsRaw>
-        <StyledLink href="/">
-          <Icon color="primary" name="mail" width="20" height="20" />
+        <StyledLink href="https://github.com/EnterDAO">
+          <Icon name="png/Github" width="20" height="20" />
         </StyledLink>
         <StyledLink href="https://twitter.com/EnterDao">
-          <Icon color="primary" name="twitter" width="20" height="20" />
+          <Icon name="twitter" width="20" height="20" />
         </StyledLink>
         <StyledLink href="https://discord.gg/7QJvEctG2G">
-          <Icon color="primary" name="discord" width="20" height="20" />
+          <Icon name="discord" width="20" height="20" />
+        </StyledLink>
+        <StyledLink href="https://dune.com/rakis/LandWorks">
+          <Icon name="dune" width="20" height="20" />
+        </StyledLink>
+        <StyledLink href="https://www.coingecko.com/en/coins/enterdao">
+          <Icon name="coingecko" width="20" height="20" />
         </StyledLink>
         <StyledLink href="https://medium.com/enterdao">
-          <Icon color="primary" name="medium" width="20" height="20" />
+          <Icon name="medium" width="20" height="20" />
         </StyledLink>
       </IconsRaw>
 

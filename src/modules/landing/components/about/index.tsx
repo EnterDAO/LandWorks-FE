@@ -55,12 +55,9 @@ export const About: React.FC = () => {
             <RightPart />
             <div>
               <h2>
-                Do you search to <Rent>Rent</Rent>?
+                Do you seek to <Rent>Rent</Rent>?
               </h2>
-              <p>
-                Leverage the power of metaverse games by renting in-game land instead of buying and holding it
-                long-term.
-              </p>
+              <p>Leverage the power of metaverse games by renting in-game land instead of buying.</p>
               <Button
                 onClick={redirect}
                 sx={{ position: 'absolute', bottom: '15%' }}
