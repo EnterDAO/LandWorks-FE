@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 
 import { Box, Grid, Modal } from 'design-system';
 
@@ -19,14 +19,13 @@ const SceneBuilderPortfolio: FC<ISceneBuilderPortfolio> = ({ portfolio }) => {
       </TypographyStyled>
       <Grid container spacing={2} rowSpacing={4} columnSpacing={2}>
         {portfolio.map((url) => (
-          <>
+          <Fragment key={url}>
             <Grid
               item
               xs={12}
               sm={12}
               md={12}
               lg={6}
-              key={url}
               onClick={() => {
                 setImageModal(true);
                 setImageUrl(url);
@@ -72,7 +71,7 @@ const SceneBuilderPortfolio: FC<ISceneBuilderPortfolio> = ({ portfolio }) => {
                 />
               </Modal>
             )}
-          </>
+          </Fragment>
         ))}
       </Grid>
     </>
