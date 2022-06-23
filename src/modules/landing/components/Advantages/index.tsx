@@ -47,7 +47,7 @@ export const Advantages: React.FC = () => {
             </StyledBox>
             <Box maxWidth="70%">
               <h2>Accessibility</h2>
-              <p>You can rent a land that you cannot afford otherwise.</p>
+              <p>You can rent a land that otherwise is unavailable to take.</p>
             </Box>
           </Grid>
 

@@ -1,5 +1,5 @@
 .landing-page-wrapper {
-  padding: 165px 0 140px 0;
+  padding: 90px 0 140px 0;
   position: relative;
   overflow: hidden;
 
@@ -25,9 +25,12 @@
   }
 
   .right-blocks {
-    right: -255px;
-    top: -170px;
+    right: -240px;
+    top: -110px;
     z-index: 1;
+    height: 670px;
+    width: 1050px;
+
     @media all and (min-width: 1450px) {
       right: -270px;
     }
@@ -36,7 +39,7 @@
 
   .hero-background {
     left: 0;
-    top: -107px;
+    top: -175px;
 
     @media all and (min-width: 1450px) {
       width: 100%;

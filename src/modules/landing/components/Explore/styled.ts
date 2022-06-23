@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 
 export const StyledRoot = styled('div')(() => ({
-  marginTop: 300,
+  marginTop: 190,
   marginBottom: 150,
   width: '100%',
   border: '5px solid #27273A',
