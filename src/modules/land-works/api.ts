@@ -1911,7 +1911,7 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
 
   liteAsset.isAvailable = asset.status === AssetStatus.LISTED;
   liteAsset.availability = getAvailability(liteAsset);
-  liteAsset.isHot = asset.totalRents > 1 && liteAsset.hasUpcomingRents;
+  liteAsset.isHot = asset.totalRents > 1 || liteAsset.hasUpcomingRents;
   const price = liteAsset.humanPricePerSecond.multipliedBy(DAY_IN_SECONDS);
   liteAsset.pricePerMagnitude = {
     price: price,
