@@ -45,6 +45,10 @@ const LayoutHeader: React.FC = () => {
   });
 
   useEffect(() => {
+    if (isLandingPage) setActiveTab(0);
+  }, []);
+
+  useEffect(() => {
     forceUpdate?.();
   }, [warns.length]);
 
@@ -99,11 +103,21 @@ const LayoutHeader: React.FC = () => {
             }}
           >
             <span>Why Rent ?</span>
-            <div className={activeTab ? styles.activeTab : ''}></div>
+            <div className={activeTab === 1 ? styles.activeTab : ''}></div>
           </a>
           <ExternalLink href="https://docs.landworks.xyz" target="_blank" className={styles.navLink}>
             <span>Docs</span>
           </ExternalLink>
+          <Link
+            to="/faq"
+            className={styles.navLink + ' selected'}
+            onClick={() => {
+              setActiveTab(2);
+            }}
+          >
+            <div>FAQ</div>
+            <div className={activeTab === 2 ? styles.activeTab : ''}></div>
+          </Link>
         </nav>
       )}
       {isLandingPage?.isExact ? null : <ConnectedWallet />}

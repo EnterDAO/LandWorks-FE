@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Grid, Typography, styled } from '@mui/material';
 import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
@@ -58,6 +59,19 @@ export const StyledGrid = styled(Grid)(() => ({
   '& path': {
     fill: 'var(--theme-accent-color)',
   },
+  '& span': {
+    color: 'var(--theme-subtle-color)',
+  },
+  '& li': {
+    color: 'var(--theme-subtle-color)',
+    margin: '5px 0',
+    '&::marker': {
+      color: 'var(--theme-subtle-color)',
+    },
+  },
+  '& ul': {
+    margin: '15px 0',
+  },
 }));
 
 export const Accordion = styled(MuiAccordion)(() => ({
@@ -75,4 +89,17 @@ export const AccordionSummary = styled(MuiAccordionSummary)(() => ({
 
 export const AccordionDetails = styled(MuiAccordionDetails)(() => ({
   backgroundColor: 'var(--theme-body-color)',
+}));
+
+export const StyledLink = styled(Link)(() => ({
+  marginTop: 56,
+  padding: '7px 30px',
+  background: 'var(--theme-light-color)',
+  color: 'var(--theme-body-color)',
+  borderRadius: 10,
+}));
+
+export const IconWrapper = styled('div')(() => ({
+  position: 'relative',
+  zIndex: 10,
 }));

@@ -20,6 +20,7 @@ import classes from './layout.module.scss';
 const LandingView = lazy(() => import('modules/landing'));
 const LandworksView = lazy(() => import('modules/land-works'));
 const SceneBuilderView = lazy(() => import('modules/scene-builder'));
+const FAQView = lazy(() => import('modules/faq'));
 
 const client = GraphClient._getWsClient();
 
@@ -57,6 +58,7 @@ const LayoutView: React.FC = () => {
                           <Switch>
                             <Route path="/" exact component={LandingView} />
                             <Route path="/scene-builder" component={SceneBuilderView} />
+                            <Route path="/faq" component={FAQView} />
                             <Route component={LandworksView} />
                           </Switch>
                         </Suspense>

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { questionData } from './data';
 import { QuestionItem } from './QuestionItem';
-import { QuestionList, StyledRoot, StyledTypography } from './styled';
+import { QuestionList, StyledLink, StyledRoot, StyledTypography } from './styled';
 
 export const FAQ: React.FC = () => {
   return (
@@ -16,9 +16,7 @@ export const FAQ: React.FC = () => {
             <QuestionItem item={item} key={item.id} />
           ))}
         </QuestionList>
-        {/* <a href="https://docs.landworks.xyz" target="_blank">
-          See all FAQ
-        </a> */}
+        <StyledLink to="/faq">See all FAQ</StyledLink>
       </StyledRoot>
     </div>
   );
