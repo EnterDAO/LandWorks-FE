@@ -97,6 +97,7 @@ export const StyledLink = styled(Link)(() => ({
   background: 'var(--theme-light-color)',
   color: 'var(--theme-body-color)',
   borderRadius: 10,
+  fontWeight: 'bold',
 }));
 
 export const IconWrapper = styled('div')(() => ({
