@@ -39,9 +39,9 @@ export const StyledImage = styled('img')(() => ({
   margin: '80px 0',
 }));
 
-export const StyledQuestion = styled('p')(() => ({
+export const StyledQuestion = styled('span')(() => ({
   fontSize: 18,
-  color: 'var(--theme-light-color)',
+  color: 'var(--theme-light-color) !important',
   fontWeight: 'bold',
 }));
 
