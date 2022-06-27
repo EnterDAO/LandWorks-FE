@@ -1,12 +1,17 @@
 import { FC } from 'react';
-import { TooltipProps } from '@mui/material/Tooltip';
+import TooltipUnstyled, { TooltipProps } from '@mui/material/Tooltip';
 
-import { StyledTooltip } from './tooltip-styles';
+import { styles } from './tooltip-styles';
 
 const Tooltip: FC<TooltipProps> = (props) => {
   const { children } = props;
-
-  return <StyledTooltip {...props}>{children}</StyledTooltip>;
+  //eslint-disable-next-line
+  //@ts-ignore
+  return (
+    <TooltipUnstyled componentsProps={{ tooltip: { sx: styles.tooltip }, arrow: { sx: styles.arrow } }} {...props}>
+      {children}
+    </TooltipUnstyled>
+  );
 };
 
 export default Tooltip;

@@ -42,8 +42,17 @@ const LandsNav: React.FC = () => {
         <div className="nav-content">Scene Builders</div>
         <div className="active-tab"></div>
       </NavLink>
+      <NavLink
+        className="tab"
+        activeClassName="selected"
+        to={{ pathname: '/faq', state: { tab: location.state?.tab } }}
+      >
+        <div className="nav-content">FAQ</div>
+        <div className="active-tab"></div>
+      </NavLink>
     </div>
   );
 };
 
-export default withRouter(LandsNav);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default withRouter<any, any>(LandsNav);

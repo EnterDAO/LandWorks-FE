@@ -1,12 +1,18 @@
-import { About } from 'modules/landing/components/about';
-import { Hero } from 'modules/landing/components/hero';
-import { HowItWorks } from 'modules/landing/components/how-it-works';
+import { About } from './components/about';
+import { Advantages } from './components/Advantages';
+import { Connect } from './components/Connect';
+import { Explore } from './components/Explore';
+import { FAQ } from './components/FAQ';
+import { Hero } from './components/hero';
 
 const LandingView: React.FC = () => (
   <div className="landing-wrapper">
     <Hero />
     <About />
-    <HowItWorks />
+    <Advantages />
+    <FAQ />
+    <Explore />
+    <Connect />
   </div>
 );
 

@@ -13,6 +13,7 @@ import { Button, Input, Modal, Tooltip } from 'design-system';
 import { CalendarIcon, ProfileIcon, WarningIcon } from 'design-system/icons';
 import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
+import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 import { useWallet } from 'wallets/wallet';
 
@@ -62,6 +63,7 @@ export const RentModal: React.FC<Props> = (props) => {
   const minRentPeriod = moment.unix(availability?.minRentDate || 0);
   const maxEndDate = moment.unix(availability?.maxRentDate || 0);
 
+  const { setJoinPromptOpen } = useGeneral();
   const wallet = useWallet();
   const landworks = useLandworks();
   const erc20 = useErc20();
@@ -327,9 +329,10 @@ export const RentModal: React.FC<Props> = (props) => {
                   <div className="info-warning-text">
                     <h3>Important info</h3>
                     <p>
-                      In order to change the operator after you`ve already rented, you`ll need to pay a network fee.Also
-                      you will need to Synchronise the configured operator with the Metaverse once your rent becomes
-                      active. This is required so that the operator you've defined is updated in the metaverse as well.
+                      In order to change the operator after you`ve already rented, you`ll need to pay a network fee.
+                      Also you will need to Synchronise the configured operator with the Metaverse once your rent
+                      becomes active. This is required so that the operator you've defined is updated in the metaverse
+                      as well.
                     </p>
                   </div>
                 </Grid>
@@ -398,7 +401,11 @@ export const RentModal: React.FC<Props> = (props) => {
           title="Successfully Rented!"
           buttonText="go to my properties"
           description="Nice! You've successfully rented this property."
-          buttonEvent={() => history.push('/my-properties')}
+          buttonEvent={() => {
+            setJoinPromptOpen(true);
+            localStorage.setItem('join_prompt', 'true');
+            history.push('/my-properties');
+          }}
         />
       )}
       {showLoader() && <ModalLoader text={modalText} href={getEtherscanAddressUrl(wallet.account) || ''} />}

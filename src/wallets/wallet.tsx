@@ -70,7 +70,6 @@ export function useWallet(): Wallet {
 
 const WalletProvider: React.FC = (props) => {
   const web3React = useWeb3React();
-
   const [sessionProvider, setSessionProvider, removeSessionProvider] = useSessionStorage<string | undefined>(
     'wallet_provider'
   );

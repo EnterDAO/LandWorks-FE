@@ -14,4 +14,4 @@ class ScrollToTop extends Component<any, any> {
   }
 }
 
-export default withRouter(ScrollToTop);
+export default withRouter<any, any>(ScrollToTop);

@@ -7,8 +7,12 @@ import { NotificationList } from './notificationTypes';
 
 import { getDecentralandAssetName, isDecentralandMetaverseRegistry, secondsToDuration } from 'utils';
 
-export const parseRents = async (asset: any): Promise<AssetEntity[]> => {
-  const parsedAssets: AssetEntity[] = asset.rents.map((item: RentEntity) => item?.asset);
+type ParseRentsParam = {
+  rents: RentEntity[];
+};
+
+export const parseRents = async (asset: ParseRentsParam): Promise<AssetEntity[]> => {
+  const parsedAssets: AssetEntity[] = asset.rents.map((item: RentEntity) => item.asset);
   const uniqueAsset = [...new Map(parsedAssets.map((item: AssetEntity) => [item['id'], item])).values()];
 
   for (const asset of uniqueAsset) {
@@ -90,7 +94,7 @@ export const parseNotifications = async (
 
 const toTimestamp = (unix: number): number => unix * 1000;
 
-const getAssetName = async (asset: AssetEntity) => {
+const getAssetName = async (asset: AssetEntity): Promise<string> => {
   if (asset?.metaverseRegistry?.id && isDecentralandMetaverseRegistry(asset?.metaverseRegistry?.id)) {
     return getDecentralandAssetName(asset.decentralandData);
   } else {
@@ -99,7 +103,7 @@ const getAssetName = async (asset: AssetEntity) => {
   }
 };
 
-export const countdown = (date: number, isShorted = false) => {
+export const countdown = (date: number, isShorted = false): string => {
   const time = secondsToDuration(date);
   const sec = Math.floor(+date.toFixed(2));
 
@@ -113,6 +117,7 @@ export const countdown = (date: number, isShorted = false) => {
   return expired;
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const fetchBlockscanMessages = async (wallet: string): Promise<Array<any>> => {
   const blockscanUrl = 'https://scenes.landworks.xyz/messages/';
   const blockscanResponse = await fetch(blockscanUrl + wallet)
@@ -127,7 +132,7 @@ export const fetchBlockscanMessages = async (wallet: string): Promise<Array<any>
   return +blockscanResponse?.result > 0 ? [newMessage] : [];
 };
 
-export const calculateNotificationAnimation = (subtitleLength: number) => {
+export const calculateNotificationAnimation = (subtitleLength: number): string => {
   if (subtitleLength >= 60) subtitleLength = subtitleLength + subtitleLength / 2;
   if (subtitleLength >= 40 && subtitleLength < 60) subtitleLength = subtitleLength / 2;
   if (subtitleLength < 40) subtitleLength = 10;

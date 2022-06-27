@@ -22,7 +22,7 @@ const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates, pla
   const hasMoreThanSix = coordsLength! > 6;
   const hasLessThanSix = coordsLength! > 0 && coordsLength! <= 6;
 
-  const maxWidth = expand ? '360px' : '250px';
+  const maxWidth = expand ? '410px' : '280px';
   const coords = hasMoreThanSix && expand ? coordinates : coordinates?.slice(0, 5);
 
   return (
@@ -42,7 +42,11 @@ const LandsMapOverlay: React.FC<IEstateLandOverlay> = ({ title, coordinates, pla
           {coords?.map((estateCoord: Coordinate) => (
             <ChipStyled key={estateCoord.id} label={`X: ${estateCoord.x}, Y: ${estateCoord.y}`} variant="outlined" />
           ))}
-          <div onMouseEnter={() => setExpand(true)}>{!expand && <ChipStyled label="More..." variant="outlined" />}</div>
+          {!expand && (
+            <div onMouseEnter={() => setExpand(true)}>
+              <ChipStyled label="More..." variant="outlined" />
+            </div>
+          )}
         </StyledDiv>
       )}
 

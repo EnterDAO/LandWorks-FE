@@ -1,4 +1,5 @@
 import Icon from 'components/custom/icon';
+import { Option } from 'modules/interface';
 
 export const sortData = [
   {
@@ -39,10 +40,12 @@ export const landsData = [
   {
     label: 'Decentraland',
     value: 1,
+    icon: <Icon name="png/Decentraland" width="20" height="20" />,
   },
   {
     label: 'Voxels',
     value: 2,
+    icon: <Icon name="png/Voxel" width="20" height="20" />,
   },
 ];
 
@@ -60,5 +63,32 @@ export const currencyData = [
     label: 'USDC',
     value: 2,
     icon: <Icon name="token-usdc" width="20" height="20" />,
+  },
+];
+
+export const addIconToMetaverse = (metaverses: Option[]): Option[] => {
+  metaverses.forEach((meta) => {
+    meta.label === 'Decentraland'
+      ? (meta.icon = <Icon name="png/Decentraland" width="20" height="20" />)
+      : (meta.icon = <Icon name="png/Voxel" width="20" height="20" />);
+  });
+  return metaverses;
+};
+
+export const statusData = [
+  {
+    label: 'All properties',
+    value: 1,
+    filter: null,
+  },
+  {
+    label: 'Available for rent',
+    value: 2,
+    filter: 'lastRentEnd_lt',
+  },
+  {
+    label: 'Rented',
+    value: 3,
+    filter: 'lastRentEnd_gt',
   },
 ];

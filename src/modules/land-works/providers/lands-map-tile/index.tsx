@@ -10,7 +10,7 @@ export type SelectedTile = {
 
 export type ContextProps = {
   clickedLandId: DecentralandMapId;
-  setClickedLandId?: (x: number | string, y: number | string) => void;
+  setClickedLandId?: (x: number | string, y?: number | string | undefined) => void;
   selectedTile?: SelectedTile | undefined;
   setSelectedTile?: Dispatch<SetStateAction<SelectedTile>>;
   showCardPreview?: boolean;

@@ -20,13 +20,16 @@ interface Props {
 
 const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
   const { clickedLandId } = useLandsMapTile();
-  const did = `${land.decentralandData?.coordinates[0]?.x},${land.decentralandData?.coordinates[0]?.y}`;
+  const did = land.decentralandData
+    ? `${land.decentralandData?.coordinates[0]?.x},${land.decentralandData?.coordinates[0]?.y}`
+    : `${land.metaverseAssetId}`;
   const isActive = clickedLandId === did;
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const isDecentraland = land.metaverse.name == 'Decentraland';
 
   const onMouseOverHandler = (e: SyntheticEvent, land: AssetEntity) => {
     if (!timeoutId && onMouseOver) {
-      setTimeoutId(setTimeout(() => onMouseOver(e, land), 250));
+      setTimeoutId(setTimeout(() => onMouseOver(e, land), isDecentraland ? 500 : 1000));
     }
   };
 
@@ -49,56 +52,58 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver }) => {
       id={`land-explore-card--${did}`}
       href={`/property/${land.id}`}
     >
-      <div className="land-explore-image">
-        <img className="land-explore-image-img" src={land.imageUrl} alt="land-explore-image-img" />
-      </div>
-      {land.isHot && (
-        <span className="land-explore-card-hot">
-          <HotIcon className="name-label" />
-        </span>
-      )}
-
-      <div className="land-explore-name">
-        <span title={land.name}>{land.name.toLowerCase()}</span>
-      </div>
-
-      <div className="land-explore-row start">
-        <span className="land-explore-price-crypto">
-          <SmallAmountTooltip
-            className="land-explore-price-amount"
-            amount={land.pricePerMagnitude.price}
-            icon={
-              <Icon
-                name={getTokenIconName(land.paymentToken.symbol)}
-                className="land-explore-price-crypto-icon eth-icon"
-              />
-            }
-          />
-        </span>
-
-        <span className="land-explore-price">
-          <SmallAmountTooltip symbol="$" amount={land.pricePerMagnitude.usdPrice || ZERO_BIG_NUMBER} />
-          <span>/{land.pricePerMagnitude.magnitude}</span>
-        </span>
-      </div>
-
-      <div className="land-explore-divider"></div>
-
-      <div className="land-explore-row">
-        <div>
-          <span className="land-explore-rent-label">Rent period</span>
-          <p className="land-explore-rent-value">
-            {land.minPeriodTimedType}-{land.maxPeriodTimedType}
-          </p>
+      <div style={{ pointerEvents: 'none' }}>
+        <div className="land-explore-image">
+          <img className="land-explore-image-img" src={land.imageUrl} alt="land-explore-image-img" />
         </div>
-        <div>
-          <LandCardAvailability land={land} />
-        </div>
-      </div>
+        {land.isHot && (
+          <span className="land-explore-card-hot">
+            <HotIcon className="name-label" />
+          </span>
+        )}
 
-      <div className="land-explore-row start">
-        <div className="land-explore-hashtags">
-          #{land.type} #{land.metaverse.name}
+        <div className="land-explore-name">
+          <span title={land.name}>{land.name.toLowerCase()}</span>
+        </div>
+
+        <div className="land-explore-row start">
+          <span className="land-explore-price-crypto">
+            <SmallAmountTooltip
+              className="land-explore-price-amount"
+              amount={land.pricePerMagnitude.price}
+              icon={
+                <Icon
+                  name={getTokenIconName(land.paymentToken.symbol)}
+                  className="land-explore-price-crypto-icon eth-icon"
+                />
+              }
+            />
+          </span>
+
+          <span className="land-explore-price">
+            <SmallAmountTooltip symbol="$" amount={land.pricePerMagnitude.usdPrice || ZERO_BIG_NUMBER} />
+            <span>/{land.pricePerMagnitude.magnitude}</span>
+          </span>
+        </div>
+
+        <div className="land-explore-divider"></div>
+
+        <div className="land-explore-row">
+          <div>
+            <span className="land-explore-rent-label">Rent period</span>
+            <p className="land-explore-rent-value">
+              {land.minPeriodTimedType}-{land.maxPeriodTimedType}
+            </p>
+          </div>
+          <div>
+            <LandCardAvailability land={land} />
+          </div>
+        </div>
+
+        <div className="land-explore-row start">
+          <div className="land-explore-hashtags">
+            #{land.type} #{land.metaverse.name}
+          </div>
         </div>
       </div>
     </a>

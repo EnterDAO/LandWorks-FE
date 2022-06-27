@@ -8,7 +8,7 @@ import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 import { Box, Button, ControlledSelect, Grid } from 'design-system';
 import CustomizedSteppers from 'design-system/Stepper';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import { BaseNFT, CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
+import { BaseNFT, CryptoVoxelNFT, DecentralandNFT, Option } from 'modules/interface';
 import {
   EstateListingCard,
   LandListingCard,
@@ -17,11 +17,12 @@ import {
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
 import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
-import { currencyData } from 'modules/land-works/components/lands-explore-filters/filters-data';
+import { addIconToMetaverse, currencyData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-modal';
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
+import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
 import config from '../../../../config';
@@ -54,6 +55,7 @@ interface IProps {
 }
 
 const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
+  const { setJoinPromptOpen } = useGeneral();
   const walletCtx = useWallet();
   const landworks = useLandworks();
   const registry = useContractRegistry();
@@ -108,7 +110,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [usdPrice, setUsdPrice] = useState('0');
 
   const [loading, setLoading] = useState(false);
-  const [availableMetaverses, setAvailableMetaverses] = useState([]);
+  const [availableMetaverses, setAvailableMetaverses] = useState<Option[]>([]);
   const [selectedMetaverse, setSelectedMetaverse] = useState(
     +sessionStorageHandler('get', 'general', 'metaverse') || 1
   );
@@ -125,7 +127,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   };
 
   useEffect(() => {
-    fetchMetaverses().then(setAvailableMetaverses);
+    fetchMetaverses().then((res) => setAvailableMetaverses(addIconToMetaverse(res)));
   }, []);
 
   const isDecentraland = selectedProperty?.metaverseName === 'Decentraland';
@@ -795,9 +797,11 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
             showModal={showSuccessModal}
             handleClose={() => {
               sessionStorageHandler('set', 'general', 'metaverse', selectedMetaverse);
+              localStorage.setItem('join_prompt', 'true');
               setShowSuccessModal(false);
               closeModal && closeModal();
               history.push('/my-properties');
+              setJoinPromptOpen(true);
             }}
           />
         )}
