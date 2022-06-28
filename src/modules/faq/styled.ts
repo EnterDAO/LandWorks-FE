@@ -51,3 +51,10 @@ export const AnswerPoint = styled('p')(() => ({
   marginBottom: 20,
   color: 'var(--theme-light-color)',
 }));
+
+export const Subpoints = styled('ul')(() => ({
+  paddingLeft: 50,
+  '& li': {
+    marginBottom: 10,
+  },
+}));
