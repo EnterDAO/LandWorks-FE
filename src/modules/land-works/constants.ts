@@ -162,3 +162,21 @@ export const orderEnum: {
 };
 
 export const DISCORD_CHANNEL_URL = 'https://discord.com/invite/7QJvEctG2G';
+
+export const landTypes = [
+  {
+    value: 0,
+    title: 'All',
+    desc: 'All parcels and estates.',
+  },
+  {
+    value: 1,
+    title: 'Land',
+    desc: 'A Land is the smallest possible unit (1x1) in Decentraland.',
+  },
+  {
+    value: 2,
+    title: 'Estate',
+    desc: 'An Estate is a collection of Lands (more than 1) that are grouped together.',
+  },
+];

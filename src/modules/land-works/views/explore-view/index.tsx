@@ -28,9 +28,11 @@ import {
 } from '../../api';
 
 import {
+  filterByMoreFilters,
   filterLandsByAvailability,
   filterLandsByQuery,
   getAllLandsCoordinates,
+  getMaxLandSize,
   landsOrder,
 } from 'modules/land-works/utils';
 import { getNowTs, sessionStorageHandler } from 'utils';
@@ -46,6 +48,8 @@ import {
 } from 'modules/land-works/constants';
 
 import './explore-view.scss';
+
+import { MoreFiltersType } from 'modules/land-works/components/lands-explore-filters-modal/types';
 
 const ExploreView: React.FC = () => {
   const wallet = useWallet();
@@ -94,6 +98,8 @@ const ExploreView: React.FC = () => {
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [maxLandSize, setMaxLandSize] = useState(0);
+  const [filteredLands, setFilteredLands] = useState<AssetEntity[]>([]);
 
   const [showListNewModal, setShowListNewModal] = useState(false);
 
@@ -235,9 +241,14 @@ const ExploreView: React.FC = () => {
       const highlights = getAllLandsCoordinates(lands.data);
       setCoordinatesHighlights(highlights);
       setPointMapCentre(highlights);
+      metaverse == 1 ? setMaxLandSize(getMaxLandSize(lands.data)) : null;
     },
     500
   );
+
+  const handleMoreFilter = (filters: Partial<MoreFiltersType>) => {
+    setFilteredLands(filterByMoreFilters(lands, filters));
+  };
 
   const hideMapHandler = (value: boolean) => {
     setMapIsHidden(value);
@@ -290,12 +301,14 @@ const ExploreView: React.FC = () => {
               handleListNew={() => setShowListNewModal(true)}
             />
             <LandsExploreFilters
+              handleMoreFilter={handleMoreFilter}
               onChangeSortDirection={onChangeFiltersSortDirection}
               onChangeOwnerToggler={onChangeFiltersOwnerToggler}
               onChangeAvailable={onChangeFiltersAvailable}
               onChangeCurrency={onChangeFiltersCurrency}
               onChangeMetaverse={onChangeMetaverse}
               onChangePrice={onChangeFiltersPrice}
+              maxLandSize={maxLandSize}
             />
           </div>
           <div className="content-container content-container--explore-view">
@@ -306,7 +319,7 @@ const ExploreView: React.FC = () => {
                 isHiddenMap={mapIsHidden}
                 lastRentEnd={lastRentEnd}
                 loading={loading}
-                lands={lands}
+                lands={filteredLands.length ? filteredLands : lands}
                 setPointMapCentre={setPointMapCentre}
               />
               <LayoutFooter isWrapped={false} />
