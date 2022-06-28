@@ -8,6 +8,7 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
   height: 30,
   padding: 0,
   display: 'flex',
+
   '&:active': {
     '& .MuiSwitch-thumb': {
       width: 18,
@@ -16,6 +17,7 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
       transform: 'translateX(9px)',
     },
   },
+
   '& .MuiSwitch-switchBase': {
     padding: 6,
     '&.Mui-checked': {
@@ -44,6 +46,12 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
     opacity: 1,
     backgroundColor: THEME_COLORS.grey01,
     boxSizing: 'border-box',
+  },
+  '& .Mui-disabled': {
+    color: 'var(--theme-subtle-color) !important',
+    '& + .MuiSwitch-track': {
+      opacity: '1 !important',
+    },
   },
 }));
 

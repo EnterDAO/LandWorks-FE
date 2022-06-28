@@ -9,6 +9,8 @@ import { getNowTs } from 'utils';
 
 import { orderEnum } from './constants';
 
+import { MoreFiltersType } from './components/lands-explore-filters-modal/types';
+
 export const calculateNeighbours = (coordinatesList: CoordinatesLand[]): string[] => {
   let neighbours = [] as string[];
 
@@ -160,4 +162,43 @@ export const parceVoxelsMapAsset = async (
 
 export const landsOrder = (lands: AssetEntity[], orderCol: string, orderDir: 'asc' | 'desc'): AssetEntity[] => {
   return orderBy(lands, [orderEnum[orderCol]], [orderDir]);
+};
+
+export const getMaxLandSize = (lands: AssetEntity[]): number => {
+  return Math.max(...lands.map((land) => land.additionalData.size));
+};
+
+export const filterByMoreFilters = (lands: AssetEntity[], filters: Partial<MoreFiltersType>): AssetEntity[] => {
+  const size = filters?.size;
+  const distanceToRoad = filters?.distanceToRoad;
+  const distanceToPlaza = filters?.distanceToPlaza;
+  const distanceToDistrict = filters?.distanceToDistrict;
+  const type = filters?.type;
+  return lands.filter((item) => {
+    const itemData = item.additionalData;
+    if ((size && itemData.size < size.min) || (size && itemData.size > size.max)) {
+      return false;
+    }
+    if (
+      (distanceToRoad && itemData.attributes.road && itemData.attributes.road < distanceToRoad.min) ||
+      (distanceToRoad && itemData.attributes.road && itemData.attributes.road > distanceToRoad.max)
+    ) {
+      return false;
+    }
+    if (
+      (distanceToPlaza && itemData.attributes.plaza && itemData.attributes.plaza < distanceToPlaza.min) ||
+      (distanceToPlaza && itemData.attributes.plaza && itemData.attributes.plaza > distanceToPlaza.max)
+    ) {
+      return false;
+    }
+    if (
+      (distanceToDistrict && itemData.attributes.district && itemData.attributes.district < distanceToDistrict.min) ||
+      (distanceToDistrict && itemData.attributes.district && itemData.attributes.district > distanceToDistrict.max)
+    ) {
+      return false;
+    }
+    if (type?.toLowerCase() === 'all') return true;
+    if (type?.toLowerCase() === 'land' && item.type.toLowerCase() === 'land') return true;
+    if (type?.toLowerCase() === 'estate' && item.type.toLowerCase() === 'estate') return true;
+  });
 };
