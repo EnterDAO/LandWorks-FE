@@ -1,10 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 
-import { Box, ControlledSelect, StyledSwitch, Typography } from 'design-system';
+import { Box, ControlledSelect } from 'design-system';
 import { FiltersIcon } from 'design-system/icons';
 import { Option } from 'modules/interface';
 import { fetchMetaverses } from 'modules/land-works/api';
-import { useWallet } from 'wallets/wallet';
 
 import { ExploreFiltersModal } from '../lands-explore-filters-modal';
 import { PricePopover } from '../price-popover';
@@ -17,7 +16,6 @@ import { MoreFiltersType } from '../lands-explore-filters-modal/types';
 
 interface Props {
   onChangeSortDirection: (value: number) => void;
-  onChangeOwnerToggler: (value: boolean) => void;
   onChangeAvailable: (value: number) => void;
   onChangeCurrency: (value: number) => void;
   onChangeMetaverse: (value: string) => void;
@@ -28,7 +26,6 @@ interface Props {
 
 const LandWorksFilters: FC<Props> = ({
   onChangeSortDirection,
-  onChangeOwnerToggler,
   onChangeAvailable,
   onChangeCurrency,
   onChangeMetaverse,
@@ -38,7 +35,6 @@ const LandWorksFilters: FC<Props> = ({
 }) => {
   const orderFilter = sessionStorageHandler('get', 'explore-filters', 'order');
 
-  const wallet = useWallet();
   const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
   const [openFiltersModal, setOpenFilterModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(1);
@@ -48,7 +44,6 @@ const LandWorksFilters: FC<Props> = ({
   const [selectedCurrency, setSelectedCurrency] = useState(
     sessionStorageHandler('get', 'explore-filters', 'currency') || 0
   );
-  const [showOnlyOwner, setShowOnlyOwner] = useState(sessionStorageHandler('get', 'explore-filters', 'owner') || false);
   const [status, setStatus] = useState(sessionStorageHandler('get', 'explore-filters', 'available') || 1);
 
   const onChangePlaceHandler = (value: number) => {
@@ -65,14 +60,6 @@ const LandWorksFilters: FC<Props> = ({
       ...orderFilter,
       [`${selectedMetaverse}`]: value,
     });
-  };
-
-  const onChangeOwnerTogglerHandler = () => {
-    const showOnlyOwnerLast = !showOnlyOwner;
-
-    sessionStorageHandler('set', 'explore-filters', 'owner', showOnlyOwnerLast);
-    setShowOnlyOwner(showOnlyOwnerLast);
-    onChangeOwnerToggler(showOnlyOwnerLast);
   };
 
   const onChangeAvailableHandler = (value: number) => {
@@ -128,15 +115,6 @@ const LandWorksFilters: FC<Props> = ({
           </Box>
         </Box>
         <Box className={'box'}>
-          {!!wallet.account && (
-            <Box className={'box'} style={{ marginRight: '20px' }}>
-              <Typography>Mine Only</Typography>
-              <Box sx={{ marginLeft: '10px' }}>
-                <StyledSwitch checked={showOnlyOwner} onChange={onChangeOwnerTogglerHandler} />
-              </Box>
-            </Box>
-          )}
-
           <ControlledSelect
             width={'12rem'}
             value={selectedOrder}

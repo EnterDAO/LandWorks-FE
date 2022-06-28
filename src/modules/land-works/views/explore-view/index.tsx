@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useDebounce from '@rooks/use-debounce';
-import { isNull, union } from 'lodash';
+import { isNull } from 'lodash';
 import { getNonHumanValue } from 'web3/utils';
 
 import { Modal } from 'design-system';
@@ -22,7 +22,6 @@ import {
   AssetEntity,
   CoordinatesLand,
   PaymentToken,
-  fetchAllListedAssetsByConsumer,
   fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   fetchTokenPayments,
 } from '../../api';
@@ -147,16 +146,6 @@ const ExploreView: React.FC = () => {
       .toFixed(0);
   };
 
-  const onChangeFiltersOwnerToggler = (value: boolean) => {
-    if (value) {
-      getLands(sortColumn, sortDir, lastRentEnd, paymentToken, wallet?.account?.toLowerCase());
-    } else {
-      if (!isNull(paymentToken)) {
-        getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
-      }
-    }
-  };
-
   const onChangeFiltersAvailable = (value: number) => {
     const newValue = value > 1 ? getNowTs().toString() : DEFAULT_LAST_RENT_END;
     setStatusFilter(statusData[value - 1].filter);
@@ -197,8 +186,7 @@ const ExploreView: React.FC = () => {
       lastRentEnd: string,
       paymentToken: string,
       minPrice: string,
-      maxPrice: string,
-      owner: string
+      maxPrice: string
     ) => {
       setLoading(true);
       const sortBySize = orderColumn == 'size';
@@ -212,29 +200,10 @@ const ExploreView: React.FC = () => {
         paymentToken,
         statusFilter,
         minPrice,
-        maxPrice,
-        owner
+        maxPrice
       );
 
-      if (owner?.length) {
-        const consumer = await fetchAllListedAssetsByConsumer(
-          String(metaverse),
-          lastRentEnd,
-          sortBySize ? 'totalRents' : orderColumn,
-          sortDir,
-          paymentToken,
-          statusFilter,
-          minPrice,
-          maxPrice,
-          owner
-        );
-        const unionArrays = union(lands.data, consumer.data);
-        const orderedLands = landsOrder(unionArrays, orderColumn, sortDir);
-
-        setLands(orderedLands);
-      } else {
-        sortByHottest || sortBySize ? setLands(landsOrder(lands.data, orderColumn, sortDir)) : setLands(lands.data);
-      }
+      sortByHottest || sortBySize ? setLands(landsOrder(lands.data, orderColumn, sortDir)) : setLands(lands.data);
 
       setLoading(false);
 
@@ -265,9 +234,7 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     if (!isNull(paymentToken)) {
-      sessionStorageHandler('get', 'explore-filters', 'owner')
-        ? getLands(sortColumn, sortDir, lastRentEnd, paymentToken, minPrice, maxPrice, wallet?.account?.toLowerCase())
-        : getLands(sortColumn, sortDir, lastRentEnd, paymentToken, minPrice, maxPrice);
+      getLands(sortColumn, sortDir, lastRentEnd, paymentToken, minPrice, maxPrice);
     }
   }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken, metaverse, minPrice, maxPrice]);
 
@@ -303,7 +270,6 @@ const ExploreView: React.FC = () => {
             <LandsExploreFilters
               handleMoreFilter={handleMoreFilter}
               onChangeSortDirection={onChangeFiltersSortDirection}
-              onChangeOwnerToggler={onChangeFiltersOwnerToggler}
               onChangeAvailable={onChangeFiltersAvailable}
               onChangeCurrency={onChangeFiltersCurrency}
               onChangeMetaverse={onChangeMetaverse}
