@@ -8,9 +8,13 @@ export const CanIContact: React.FC = () => {
   return (
     <>
       <span>
-        Yes. You can either send them a message via Blockscan by clicking the chat button next to the owner’s address:
+        Yes. You can either send them a message via <u>Blockscan</u> by clicking the chat button next to the owner’s
+        address:
       </span>
       <StyledImage src={ContactToOwner} />
+      <span>
+        Or you can send them a message in our Discord server in channel <u>#landlords-and-tenants</u>.
+      </span>
     </>
   );
 };
