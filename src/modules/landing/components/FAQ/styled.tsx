@@ -9,7 +9,7 @@ export const StyledRoot = styled(Grid)(() => ({
   display: 'flex',
   justifyContent: 'center',
   flexDirection: 'column',
-  alignItems: 'center',
+
   '& a': {
     fontSize: 20,
   },
