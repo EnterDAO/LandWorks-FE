@@ -163,6 +163,29 @@ export const orderEnum: {
 
 export const DISCORD_CHANNEL_URL = 'https://discord.com/invite/7QJvEctG2G';
 
+export const voxelTypes = [
+  {
+    value: 0,
+    title: 'All',
+    desc: 'All available properties in Voxels',
+  },
+  {
+    value: 1,
+    title: 'Parcels',
+    desc: 'Parcels, or plots, are buildable volumes that are at ground level.',
+  },
+  {
+    value: 2,
+    title: 'Unit',
+    desc: 'Units are appartments and tend not to be at ground level. In other words, units are usually in a tower.',
+  },
+  {
+    value: 3,
+    title: 'Inner',
+    desc: 'Turn-key parcels which come prebuilt directly form Voxels.',
+  },
+];
+
 export const landTypes = [
   {
     value: 0,

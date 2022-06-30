@@ -31,6 +31,8 @@ import {
   filterLandsByAvailability,
   filterLandsByQuery,
   getAllLandsCoordinates,
+  getMaxArea,
+  getMaxHeight,
   getMaxLandSize,
   landsOrder,
 } from 'modules/land-works/utils';
@@ -98,7 +100,10 @@ const ExploreView: React.FC = () => {
   const [paymentToken, setPaymentToken] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [maxLandSize, setMaxLandSize] = useState(0);
+  const [maxHeight, setMaxHeight] = useState(0);
+  const [maxArea, setMaxArea] = useState(0);
   const [filteredLands, setFilteredLands] = useState<AssetEntity[]>([]);
+  const [moreFilters, setMoreFilters] = useState<Partial<MoreFiltersType> | null>(null);
 
   const [showListNewModal, setShowListNewModal] = useState(false);
 
@@ -155,6 +160,7 @@ const ExploreView: React.FC = () => {
 
   const onChangeMetaverse = (index: string) => {
     setMetaverse(index);
+    setMoreFilters(null);
   };
 
   const onChangeFiltersCurrency = async (index: number) => {
@@ -210,13 +216,20 @@ const ExploreView: React.FC = () => {
       const highlights = getAllLandsCoordinates(lands.data);
       setCoordinatesHighlights(highlights);
       setPointMapCentre(highlights);
-      metaverse == 1 ? setMaxLandSize(getMaxLandSize(lands.data)) : null;
+
+      if (metaverse == 1) {
+        setMaxLandSize(getMaxLandSize(lands.data));
+      } else {
+        setMaxHeight(getMaxHeight(lands.data));
+        setMaxArea(getMaxArea(lands.data));
+      }
     },
     500
   );
 
   const handleMoreFilter = (filters: Partial<MoreFiltersType>) => {
-    setFilteredLands(filterByMoreFilters(lands, filters));
+    setMoreFilters(filters);
+    setFilteredLands(filterByMoreFilters(lands, filters, metaverse));
   };
 
   const hideMapHandler = (value: boolean) => {
@@ -244,6 +257,8 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     setLoading(false);
+    setFilteredLands(lands);
+    moreFilters && handleMoreFilter(moreFilters);
   }, [lands]);
 
   const availableLands = filterLandsByAvailability(filterLandsByQuery(lands, searchQuery));
@@ -275,6 +290,8 @@ const ExploreView: React.FC = () => {
               onChangeMetaverse={onChangeMetaverse}
               onChangePrice={onChangeFiltersPrice}
               maxLandSize={maxLandSize}
+              maxHeight={maxHeight}
+              maxArea={maxArea}
             />
           </div>
           <div className="content-container content-container--explore-view">
@@ -285,7 +302,7 @@ const ExploreView: React.FC = () => {
                 isHiddenMap={mapIsHidden}
                 lastRentEnd={lastRentEnd}
                 loading={loading}
-                lands={filteredLands.length ? filteredLands : lands}
+                lands={filteredLands || lands}
                 setPointMapCentre={setPointMapCentre}
               />
               <LayoutFooter isWrapped={false} />
