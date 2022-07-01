@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
+import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import cn from 'classnames';
@@ -30,7 +31,7 @@ const ConnectedWallet: React.FC = () => {
   const { landworksTxInProgress, landworksTxHash } = useLandworks();
   const { txInProgress, txHash } = useContractRegistry();
   const { erc20TxInProgress, erc20TxHash } = useErc20();
-
+  const containerRef = React.useRef();
   const [isTxInProgress, setIsAnyTxInProgress] = useState(landworksTxInProgress || txInProgress || erc20TxInProgress);
 
   const [validTxHash, setValidTxHash] = useState(landworksTxHash || txHash || erc20TxHash);
@@ -127,7 +128,7 @@ const ConnectedWallet: React.FC = () => {
   }
 
   const AccountSection = (
-    <>
+    <Box ref={containerRef}>
       <StyledPopover
         anchorOrigin={{
           vertical: 'bottom',
@@ -138,6 +139,7 @@ const ConnectedWallet: React.FC = () => {
           horizontal: 'right',
         }}
         open={open}
+        container={containerRef.current}
         className={s.popover}
         anchorEl={anchorEl}
         onClose={handleClose}
@@ -186,7 +188,7 @@ const ConnectedWallet: React.FC = () => {
       <Button onClick={handleClick}>
         <UserInfo open={open} address={ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 10, 3)} />
       </Button>
-    </>
+    </Box>
   );
 
   const TxSection = (

@@ -27,6 +27,7 @@ const LandsSearchBar: React.FC<SearchQuery> = ({ searchQuery, setSearchQuery, pl
           value={searchQuery}
           onInput={(e) => setSearchQuery((e.target as HTMLInputElement).value)}
           type="text"
+          autoComplete={'off'}
           id="header-search"
           placeholder={placeholder}
           name="s"
