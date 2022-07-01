@@ -9,7 +9,7 @@ export const StyledRoot = styled(Grid)(() => ({
   display: 'flex',
   justifyContent: 'center',
   flexDirection: 'column',
-
+  alignItems: 'center',
   '& a': {
     fontSize: 20,
   },
@@ -44,7 +44,6 @@ export const QuestionList = styled(Grid)(() => ({
 export const StyledGrid = styled(Grid)(() => ({
   display: 'flex',
   flexDirection: 'row',
-  alignItems: 'center',
   borderTop: `1px solid #27273A`,
   '&:last-child': {
     borderBottom: `1px solid #27273A`,
