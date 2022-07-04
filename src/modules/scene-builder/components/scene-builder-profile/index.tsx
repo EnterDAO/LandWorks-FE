@@ -59,7 +59,7 @@ const SceneBuilderProfile: FC<ISceneBuilderProfile> = ({ builder }) => {
           src={builder?.avatarPhotoLink}
         />
       </AvatarContainer>
-      <Grid padding="90px 35px 20px" position="relative">
+      <Grid padding="66px 35px 20px" position="relative">
         <Grid
           paddingTop="20px"
           width="100%"

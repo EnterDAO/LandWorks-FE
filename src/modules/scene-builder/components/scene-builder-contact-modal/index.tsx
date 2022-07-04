@@ -26,7 +26,7 @@ const BuilderContactModal: FC<BuilderContactModal> = ({ email, discord, twitter,
       <Grid display="flex" flexDirection="column" alignItems="center">
         <TypographyStyled variant="h1">Send a Message</TypographyStyled>
         <TypographyStyled variant="h2">
-          Choose method to contact the builder. The communication happens outside of LandWorks.
+          Choose how to contact the builder. The communication happens outside of LandWorks.
         </TypographyStyled>
         <Grid display="flex" width="300px" flexDirection="column" gap="15px" mt="30px">
           <Button btnSize="medium" variant="gradient">
@@ -47,7 +47,7 @@ const BuilderContactModal: FC<BuilderContactModal> = ({ email, discord, twitter,
             <Button btnSize="medium" variant="secondary">
               {/* THIS VALUE PASSED IN NEEDS TO BE A COMPLETE URL TO THE TWITTER PROFILE  */}
               <ExternalLink style={linkStyle} href={`${twitter}`}>
-                Send message in Twitter
+                Send dm on Twitter
               </ExternalLink>
             </Button>
           )}
