@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { usePopper } from 'react-popper';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import cn from 'classnames';
 
 import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
-import { Grid } from 'design-system';
+import { Button, Grid } from 'design-system';
 import LandsNav from 'modules/land-works/components/lands-header-nav';
 import { useGeneral } from 'providers/general-provider';
 import { useWarning } from 'providers/warning-provider';
@@ -22,6 +22,7 @@ const modalRoot = document.getElementById('modal-root') || document.body;
 
 const LayoutHeader: React.FC = () => {
   const [activeTab, setActiveTab] = useState<number>(0);
+  const history = useHistory();
   const { navOpen, setNavOpen } = useGeneral();
   const [referenceElement, setReferenceElement] = useState<any>();
   const [popperElement, setPopperElement] = useState<any>();
@@ -77,6 +78,7 @@ const LayoutHeader: React.FC = () => {
 
       {isLandingPage?.isExact && (
         <nav className={styles.nav}>
+          <div className={styles.divider} />
           <a
             href="#home"
             className={styles.navLink + ' selected'}
@@ -120,7 +122,18 @@ const LayoutHeader: React.FC = () => {
           </Link>
         </nav>
       )}
-      {isLandingPage?.isExact ? null : <ConnectedWallet />}
+      {isLandingPage?.isExact ? (
+        <Button
+          onClick={() => history.push('/explore')}
+          style={{ marginLeft: 'auto' }}
+          btnSize="medium"
+          variant="gradient"
+        >
+          EXPLORE
+        </Button>
+      ) : (
+        <ConnectedWallet />
+      )}
       {navOpen &&
         ReactDOM.createPortal(
           <div

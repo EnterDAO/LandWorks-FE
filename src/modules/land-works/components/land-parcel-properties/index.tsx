@@ -168,14 +168,14 @@ const DecentralandParcel: React.FC<DecentralandProps> = ({ atr, id }) => {
             {atr.attributes.plaza == 0
               ? 'Adjacent'
               : atr.attributes.plaza
-              ? `${atr.attributes.plaza} Parsels Away`
+              ? `${atr.attributes.plaza} Parcels Away`
               : '—'}
           </TypographyStyled>
         </GridItem>
         <GridItem item display="flex" flexDirection="row" xs={12}>
           <TypographyStyled variant="h3">Distance to Road</TypographyStyled>
           <TypographyStyled variant="h4">
-            {atr.attributes.road == 0 ? 'Adjacent' : atr.attributes.road ? `${atr.attributes.road} Parsels Away` : '—'}
+            {atr.attributes.road == 0 ? 'Adjacent' : atr.attributes.road ? `${atr.attributes.road} Parcels Away` : '—'}
           </TypographyStyled>
         </GridItem>
         <GridItem item display="flex" flexDirection="row" xs={12}>
@@ -184,7 +184,7 @@ const DecentralandParcel: React.FC<DecentralandProps> = ({ atr, id }) => {
             {atr.attributes.district == 0
               ? 'Adjacent'
               : atr.attributes.district
-              ? `${atr.attributes.district} Parsels Away`
+              ? `${atr.attributes.district} Parcels Away`
               : '—'}
           </TypographyStyled>
         </GridItem>
