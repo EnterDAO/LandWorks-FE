@@ -54,6 +54,7 @@ export const TypeChip = styled(Box)<BoxProps>(() => ({
   textTransform: 'uppercase',
   width: '79px',
   height: '26px',
+  lineHeight: 'initial',
   textAlign: 'center',
   padding: '4px 6px',
   backgroundColor: 'var(--theme-modal-color)',
