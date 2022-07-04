@@ -1792,7 +1792,7 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
   } else {
     const data = await getCryptoVoxelsAsset(asset.metaverseAssetId);
     liteAsset.name = data.name;
-    liteAsset.type = data.attributes?.title.toUpperCase();
+    liteAsset.type = data.attributes?.title === 'plot' ? 'Parcels' : data.attributes.title;
     liteAsset.imageUrl = data.image;
     liteAsset.attributes = data.attributes;
     liteAsset.externalUrl = getCryptoVexelsPlayUrl(asset?.metaverseAssetId);

@@ -5,7 +5,7 @@ import { FiltersIcon } from 'design-system/icons';
 import { Option } from 'modules/interface';
 import { fetchMetaverses } from 'modules/land-works/api';
 
-import { ExploreFiltersModal } from '../lands-explore-filters-modal';
+import { DecentralandFiltersModal, VoxelFiltersModal } from '../lands-explore-filters-modal';
 import { PricePopover } from '../price-popover';
 import { addIconToMetaverse, landsData, sortData, statusData } from './filters-data';
 import { StyledButton, StyledRoot } from './styled';
@@ -22,6 +22,8 @@ interface Props {
   onChangePrice: (currencyIndex: number, minPrice: number | null, maxPrice: number | null) => void;
   handleMoreFilter: (value: Partial<MoreFiltersType>) => void;
   maxLandSize: number;
+  maxHeight: number;
+  maxArea: number;
 }
 
 const LandWorksFilters: FC<Props> = ({
@@ -32,11 +34,14 @@ const LandWorksFilters: FC<Props> = ({
   onChangePrice,
   maxLandSize,
   handleMoreFilter,
+  maxHeight,
+  maxArea,
 }) => {
   const orderFilter = sessionStorageHandler('get', 'explore-filters', 'order');
 
   const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
-  const [openFiltersModal, setOpenFilterModal] = useState(false);
+  const [openDecentralandFiltersModal, setOpenDecentralandFilterModal] = useState(false);
+  const [openVoxelFiltersModal, setOpenVoxelFilterModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [metaverses, setMetaverses] = useState<Option[]>(landsData);
   const voxelsSortData = sortData.slice(0, sortData.length - 1);
@@ -121,21 +126,35 @@ const LandWorksFilters: FC<Props> = ({
             onChange={onChangeSortDirectionHandler}
             options={selectedMetaverse == 1 ? sortData : voxelsSortData}
           />
-          {selectedMetaverse == 1 && (
-            <StyledButton onClick={() => setOpenFilterModal(true)}>
-              <FiltersIcon height={20} width={20} />
-              <p>More Filters</p>
-            </StyledButton>
-          )}
+
+          <StyledButton
+            onClick={() =>
+              selectedMetaverse == 1 ? setOpenDecentralandFilterModal(true) : setOpenVoxelFilterModal(true)
+            }
+          >
+            <FiltersIcon height={20} width={20} />
+            <p>More Filters</p>
+          </StyledButton>
         </Box>
       </Box>
-      <ExploreFiltersModal
+
+      <DecentralandFiltersModal
         maxLandSize={maxLandSize}
         onCancel={() => {
-          setOpenFilterModal(false);
+          setOpenDecentralandFilterModal(false);
         }}
         handleSubmit={handleMoreFilter}
-        open={openFiltersModal}
+        open={openDecentralandFiltersModal}
+        children={<></>}
+      />
+      <VoxelFiltersModal
+        maxHeight={maxHeight}
+        maxArea={maxArea}
+        onCancel={() => {
+          setOpenVoxelFilterModal(false);
+        }}
+        handleSubmit={handleMoreFilter}
+        open={openVoxelFiltersModal}
         children={<></>}
       />
     </StyledRoot>
