@@ -5,7 +5,8 @@ import { useHistory } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
-import { Box, Button, ControlledSelect, Grid } from 'design-system';
+import { Box, Button, ControlledSelect, Grid, Typography } from 'design-system';
+import { WarningIcon } from 'design-system/icons';
 import CustomizedSteppers from 'design-system/Stepper';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { BaseNFT, CryptoVoxelNFT, DecentralandNFT, Option } from 'modules/interface';
@@ -14,7 +15,6 @@ import {
   LandListingCard,
   VoxelListingCard,
 } from 'modules/land-works/components/land-works-list-card';
-import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
 import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
 import { addIconToMetaverse, currencyData } from 'modules/land-works/components/lands-explore-filters/filters-data';
@@ -32,6 +32,7 @@ import { useLandworks } from '../../providers/landworks-provider';
 import ListingCardSkeleton from '../land-listing-skeleton';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
 
+import { parseVoxelsAsset } from 'modules/land-works/utils';
 import { getTimeType, secondsToDuration, sessionStorageHandler } from 'utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from 'utils/date';
 
@@ -43,6 +44,8 @@ import {
   FEE_PRECISION,
   MaxRentPeriodOptions,
   MinRentPeriodOptions,
+  listNotificationMessage,
+  listTypes,
 } from 'modules/land-works/constants';
 
 import './index.scss';
@@ -65,7 +68,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const { landRegistryContract, estateRegistryContract, cryptoVoxelsContract } = registry;
 
   const [minPeriod, setMinPeriod] = useState(new BigNumber(DAY_IN_SECONDS));
-  const [isMinPeriodSelected, setMinPeriodSelected] = useState(false);
+  const [isMinPeriodSelected, setMinPeriodSelected] = useState(true);
   const [minInput, setMinInput] = useState(DEFAULT_MIN_PERIOD);
   const [minPeriodType, setMinPeriodType] = useState(BigNumber.from(MinRentPeriodOptions[2].value));
   const [minPeriodSelectedOption, setMinPeriodSelectedOption] = useState(MinRentPeriodOptions[2]); // Selected Option Value for the select menu
@@ -91,9 +94,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [estateGroup, setEstateGroup] = useState<DecentralandNFT[]>([]);
   const [cryptoVoxelParcels, setCryptoVoxelParcels] = useState<CryptoVoxelNFT[]>([]);
 
-  const [showRentPeriodInput, setShowRentPeriodInput] = useState(true);
-  const [showRentCurrencyInput, setShowRentCurrencyInput] = useState(true);
-
+  const [infoMessage, setInfoMessage] = useState<string>('');
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState({} as PaymentToken);
   const [selectedCurrency, setSelectedCurrency] = useState(1);
@@ -119,6 +120,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSignModal, setShowSignModal] = useState(false);
   const [listedPropertyId, setListedPropertyId] = useState('');
+  const [landType, setLandType] = useState(0);
+
+  const [filteredVoxels, setFilteredVoxels] = useState<CryptoVoxelNFT[]>([]);
 
   const [listModalMessage, setListModalMessage] = useState(SignTransactionMessage);
 
@@ -129,6 +133,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   useEffect(() => {
     fetchMetaverses().then((res) => setAvailableMetaverses(addIconToMetaverse(res)));
   }, []);
+
+  useEffect(() => {
+    setInfoMessage(listNotificationMessage[activeStep]);
+  }, [activeStep]);
 
   const isDecentraland = selectedProperty?.metaverseName === 'Decentraland';
   const isVoxels = selectedProperty?.metaverseName === 'Voxels';
@@ -408,7 +416,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       setAssetProperties(lands);
       setAssetEstates(estates);
       if (cryptoVoxels) {
-        setCryptoVoxelParcels(cryptoVoxels);
+        const parsedVoxels = await parseVoxelsAsset(cryptoVoxels);
+        setCryptoVoxelParcels(parsedVoxels);
+        setFilteredVoxels(parsedVoxels);
       }
     } catch (e) {
       console.log(e);
@@ -543,9 +553,13 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     setSelectedMetaverse(value);
   };
 
+  const onChangeType = (value: number) => {
+    setLandType(value);
+  };
+
   const showPriceInUsd = `$${usdPrice}`;
 
-  const steps = ['Choose Property', 'Rent Specification'];
+  const steps = ['Choose Land', 'Rent Period', 'Rent Price', 'Summary'];
 
   const getPropertyCountForMetaverse = () => {
     if (selectedMetaverse === 1) {
@@ -555,24 +569,60 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     }
   };
 
+  const handleCoords = () => {
+    if (selectedProperty && isVoxels && (selectedProperty as CryptoVoxelNFT)) {
+      return <>{selectedProperty.place}</>;
+    }
+    if (selectedProperty && isDecentraland && (selectedProperty as DecentralandNFT).isLAND) {
+      return <SelectedFeatureCoords asset={selectedProperty as DecentralandNFT} />;
+    } else if (selectedProperty && isDecentraland) {
+      return <SelectedFeatureCoords asset={selectedProperty as DecentralandNFT} estateLands={estateGroup} />;
+    }
+  };
+
+  const onTypeChange = () => {
+    if (landType === 0) {
+      setFilteredVoxels(cryptoVoxelParcels);
+    }
+    if (selectedMetaverse === 2 && landType !== 0) {
+      setFilteredVoxels(
+        cryptoVoxelParcels.filter(
+          (l) => l.type?.toLowerCase() === listTypes[selectedMetaverse][landType].label.toLowerCase()
+        )
+      );
+    }
+  };
+
+  useEffect(() => {
+    onTypeChange();
+  }, [landType]);
+
   return (
     <section className="list-view">
       <Grid container direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
         <Box marginBottom="10px" fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
           List Property
         </Box>
-        <Grid container direction="row" alignItems="center" justifyContent="center" width={400} alignSelf="center">
+        <Grid container direction="row" alignItems="center" justifyContent="center" width={600} alignSelf="center">
           <CustomizedSteppers steps={steps} activeStep={activeStep} />
         </Grid>
         {activeStep === 0 && (
           <>
-            <Grid item margin={'40px 0 10px'}>
+            <Grid container margin={'40px 0 10px'}>
               <ControlledSelect
                 width={'12rem'}
                 value={selectedMetaverse}
                 onChange={onChangeMetaverse}
                 options={availableMetaverses}
               />
+              <Box style={{ marginLeft: 20 }}>
+                <ControlledSelect
+                  width={'12rem'}
+                  value={landType}
+                  onChange={onChangeType}
+                  options={listTypes[selectedMetaverse]}
+                />
+              </Box>
             </Grid>
 
             {loading ? (
@@ -581,32 +631,34 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               <Grid container flexDirection="row" wrap="wrap" className="properties">
                 {selectedMetaverse === 1 && (
                   <>
-                    {assetProperties.map((land) => (
-                      <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
-                        <LandListingCard
-                          isSelectedProperty={land.name === selectedProperty?.name}
-                          handleClick={handlePropertyChange}
-                          key={land.name}
-                          land={land}
-                        />
-                      </Grid>
-                    ))}
-                    {assetEstates.map((land) => (
-                      <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
-                        <EstateListingCard
-                          isSelectedProperty={land.name === selectedProperty?.name}
-                          handleClick={handlePropertyChange}
-                          key={land.name}
-                          land={land}
-                          landsContent={estateGroup}
-                        />
-                      </Grid>
-                    ))}
+                    {(landType === 0 || landType === 1) &&
+                      assetProperties.map((land) => (
+                        <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
+                          <LandListingCard
+                            isSelectedProperty={land.name === selectedProperty?.name}
+                            handleClick={handlePropertyChange}
+                            key={land.name}
+                            land={land}
+                          />
+                        </Grid>
+                      ))}
+                    {(landType === 0 || landType === 2) &&
+                      assetEstates.map((land) => (
+                        <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
+                          <EstateListingCard
+                            isSelectedProperty={land.name === selectedProperty?.name}
+                            handleClick={handlePropertyChange}
+                            key={land.name}
+                            land={land}
+                            landsContent={estateGroup}
+                          />
+                        </Grid>
+                      ))}
                   </>
                 )}
                 {selectedMetaverse === 2 && (
                   <>
-                    {cryptoVoxelParcels.map((parcel) => (
+                    {filteredVoxels.map((parcel) => (
                       <Grid key={parcel.id} item xs={3} margin={'0 0 10px'}>
                         <VoxelListingCard
                           isSelectedProperty={parcel.name === selectedProperty?.name}
@@ -624,16 +676,13 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
         )}
 
         {activeStep === 1 && (
-          <Grid maxHeight={'50vh'} overflow="auto" container columnSpacing={5} justifyContent="space-between" mt={4}>
-            <Grid item xs={6} flexDirection="column" className="inputSection" maxHeight={450} overflow="auto">
-              <DropdownSection
-                defaultOpen={true}
-                variant="calendar"
-                handleOpen={() => {
-                  setShowRentPeriodInput(!showRentPeriodInput);
-                }}
-              />
-              {showRentPeriodInput && (
+          <Grid maxHeight={'50vh'} overflow="auto" container columnSpacing={5} justifyContent="center" mt={4}>
+            <Grid item xs={6}>
+              <Grid container flexDirection="column" className="inputSection" maxHeight={450} overflow="auto">
+                <Box margin="15px 0" fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
+                  2. Choose rent period
+                </Box>
+                <Typography>Select the wanted rent period for this property.</Typography>
                 <RentPeriod
                   isMinPeriodSelected={isMinPeriodSelected}
                   handleMinCheckboxChange={handleMinCheckboxChange}
@@ -657,107 +706,121 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
                   minError={minError}
                   maxError={maxError}
                   atMostError={maxFutureError}
-                />
-              )}
-              <DropdownSection
-                defaultOpen={true}
-                variant="currency"
-                handleOpen={() => {
-                  setShowRentCurrencyInput(!showRentCurrencyInput);
-                }}
-              />
-              {showRentCurrencyInput && (
-                <>
-                  <RentPrice
-                    handleCostEthChange={handleCostEthChange}
-                    handleCurrencyChange={handleCurrencyChange}
-                    showPriceInUsd={showPriceInUsd}
-                    paymentToken={paymentToken}
-                    earnings={earnings}
-                    protocolFee={protocolFee}
-                    feePercentage={feePercentage}
-                    options={currencyData}
-                    optionsValue={selectedCurrency}
-                    inputValue={tokenCost.toNumber()}
-                    error={priceError}
-                  />
-                </>
-              )}
-            </Grid>
-            <Grid item xs={6} rowSpacing={5}>
-              <Grid item xs={12}>
-                {selectedProperty && isDecentraland && (
-                  <>
-                    {(selectedProperty as DecentralandNFT).isLAND ? (
-                      <SelectedListCard
-                        src={selectedProperty.image}
-                        name={selectedProperty.name}
-                        coordinatesChild={<SelectedFeatureCoords asset={selectedProperty as DecentralandNFT} />}
-                      />
-                    ) : (
-                      <SelectedListCard
-                        src={selectedProperty.image}
-                        name={selectedProperty.name}
-                        coordinatesChild={
-                          <SelectedFeatureCoords
-                            asset={selectedProperty as DecentralandNFT}
-                            estateLands={estateGroup}
-                          />
-                        }
-                      />
-                    )}
-                  </>
-                )}
-
-                {selectedProperty && isVoxels && (
-                  <>
-                    {(selectedProperty as CryptoVoxelNFT) && (
-                      <SelectedListCard
-                        src={selectedProperty.image}
-                        name={selectedProperty.name}
-                        coordinatesChild={<>{selectedProperty.place}</>}
-                      />
-                    )}
-                  </>
-                )}
-              </Grid>
-              <Grid item xs={12}>
-                <ListNewSummary
-                  minPeriodSelectedOption={minPeriodSelectedOption.label}
-                  maxPeriodSelectedOption={maxPeriodSelectedOption.label}
-                  maxFutureSelectedOption={maxFutureSelectedOption.label}
-                  minRentPeriod={minPeriod}
-                  maxRentPeriod={maxPeriod}
-                  maxFuturePeriod={maxFutureTime}
-                  rentPrice={tokenCost}
-                  paymentToken={paymentToken}
-                  feeText="There is small fee upon listing the property."
+                  withoutSwitch
                 />
               </Grid>
             </Grid>
           </Grid>
         )}
-
+        {activeStep === 2 && (
+          <Grid height="45vh" overflow="auto" container columnSpacing={5} justifyContent="center" mt={4}>
+            <Grid
+              item
+              xs={6}
+              justifyContent="center"
+              flexDirection="column"
+              className="inputSection"
+              maxHeight={450}
+              overflow="auto"
+            >
+              <Box margin="15px 0" fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
+                3. Select Rent Price
+              </Box>
+              <Typography>Select the wanted rent price for this property.</Typography>
+              <RentPrice
+                handleCostEthChange={handleCostEthChange}
+                handleCurrencyChange={handleCurrencyChange}
+                showPriceInUsd={showPriceInUsd}
+                paymentToken={paymentToken}
+                earnings={earnings}
+                protocolFee={protocolFee}
+                feePercentage={feePercentage}
+                options={currencyData}
+                optionsValue={selectedCurrency}
+                inputValue={tokenCost.toNumber()}
+                error={priceError}
+              />
+            </Grid>
+          </Grid>
+        )}
+        {activeStep === 3 && (
+          <Grid maxHeight={'50vh'} overflow="auto" container justifyContent="center" mt={4}>
+            <Box
+              margin="15px 0 30px 0"
+              fontSize="25px"
+              fontWeight={700}
+              textAlign="center"
+              width="100%"
+              color="#F8F8FF"
+            >
+              5. Listing Summary
+            </Box>
+            <Grid item xs={10}>
+              <Grid container wrap="nowrap" className="summaryWrapper" flexDirection="row">
+                {selectedProperty && (
+                  <>
+                    <SelectedListCard
+                      src={selectedProperty.image}
+                      name={selectedProperty.name}
+                      withoutInfo
+                      coordinatesChild={handleCoords()}
+                    />
+                    <ListNewSummary
+                      minPeriodSelectedOption={minPeriodSelectedOption.label}
+                      maxPeriodSelectedOption={maxPeriodSelectedOption.label}
+                      maxFutureSelectedOption={maxFutureSelectedOption.label}
+                      minRentPeriod={minPeriod}
+                      maxRentPeriod={maxPeriod}
+                      maxFuturePeriod={maxFutureTime}
+                      rentPrice={tokenCost}
+                      paymentToken={paymentToken}
+                      feeText="There is small fee upon listing the property."
+                      withoutText
+                      metaverse={availableMetaverses[selectedMetaverse - 1]}
+                      name={selectedProperty.name}
+                      coordinatesChild={handleCoords()}
+                    />
+                  </>
+                )}
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
+        {infoMessage.length ? (
+          <Grid className="warning-info">
+            <WarningIcon />
+            <Grid item>
+              <Typography variant="h4">Keep in mind</Typography>
+              <Typography variant="subtitle2">{infoMessage}</Typography>
+            </Grid>
+          </Grid>
+        ) : null}
         <hr className="divider" />
 
-        {activeStep === 0 && (
+        {activeStep < 3 && (
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
-            <Button variant="secondary" btnSize="medium">
-              Found in wallet ({getPropertyCountForMetaverse()})
-            </Button>
+            {activeStep === 0 ? (
+              <Button variant="secondary" btnSize="medium">
+                Found in wallet ({getPropertyCountForMetaverse()})
+              </Button>
+            ) : (
+              <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep((prev) => prev - 1)}>
+                Back
+              </Button>
+            )}
             <Button
               disabled={selectedProperty === null}
-              variant="secondary"
+              variant="gradient"
               btnSize="medium"
-              onClick={() => setActiveStep(1)}
+              onClick={() => setActiveStep((prev) => prev + 1)}
             >
-              Next
+              Next Step
             </Button>
           </Grid>
         )}
-        {activeStep === 1 && (
+        {activeStep === 3 && (
           <Grid maxHeight={'50vh'} overflow="auto" container justifyContent="space-between" mt={4}>
-            <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep(0)}>
+            <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep((prev) => prev - 1)}>
               Back
             </Button>
             <Grid alignItems="center" justifyContent="space-between">

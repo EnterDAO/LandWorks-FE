@@ -1,7 +1,8 @@
 import { find, orderBy } from 'lodash';
 
 import config from 'config';
-import { CryptoVoxelXYcoords, VoxelsMapCollection, VoxelsTileType } from 'modules/interface';
+import { getCryptoVoxelsAsset } from 'helpers/helpers';
+import { CryptoVoxelNFT, CryptoVoxelXYcoords, VoxelsMapCollection, VoxelsTileType } from 'modules/interface';
 
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 
@@ -241,4 +242,15 @@ const voxelsFilter = (item: AssetEntity, filters: Partial<MoreFiltersType>) => {
   }
   if (type?.toLowerCase() === 'all') return true;
   if (type?.toLowerCase() === item.type.toLowerCase()) return true;
+};
+
+export const parseVoxelsAsset = async (assets: CryptoVoxelNFT[]): Promise<CryptoVoxelNFT[]> => {
+  const parsed = await Promise.all(
+    assets.map(async (land) => {
+      const data = await getCryptoVoxelsAsset(land.id);
+      land.type = data.attributes.title === 'plot' ? 'Parcel' : data.attributes.title;
+      return land;
+    })
+  );
+  return parsed;
 };

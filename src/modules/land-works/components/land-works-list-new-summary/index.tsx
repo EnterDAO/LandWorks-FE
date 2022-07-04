@@ -6,6 +6,7 @@ import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { Grid } from 'design-system';
 import { getTokenIconName } from 'helpers/helpers';
+import { Option } from 'modules/interface';
 import { AssetEntity, PaymentToken } from 'modules/land-works/api';
 
 import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
@@ -23,6 +24,10 @@ interface IListNewSummary {
   paymentToken: PaymentToken;
   feeText: string;
   asset?: AssetEntity;
+  withoutText?: boolean;
+  metaverse?: Option;
+  coordinatesChild?: React.ReactNode;
+  name?: string;
 }
 
 const ListNewSummary: React.FC<IListNewSummary> = ({
@@ -36,6 +41,10 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   paymentToken,
   feeText,
   asset,
+  withoutText,
+  metaverse,
+  coordinatesChild,
+  name,
 }) => {
   const min = minRentPeriod?.toNumber();
   const max = maxRentPeriod?.toNumber();
@@ -63,28 +72,53 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
     } else return 0;
   };
 
+  const listingStyle = metaverse
+    ? {
+        xs: 6,
+        mb: 3,
+      }
+    : {};
+
   return (
-    <Grid className={s.wrapper} mt={4} item>
+    <Grid className={s.wrapper} mt={metaverse ? 0 : 4} item>
       <Grid className={s.card}>
+        {name && coordinatesChild && (
+          <Grid container flexDirection="column">
+            <Grid item textAlign="left" className={s.name}>
+              <span>{name}</span>
+            </Grid>
+            <Grid item className={s.title}>
+              Location: {coordinatesChild}
+            </Grid>
+            <div className={s.divider} />
+          </Grid>
+        )}
         <Grid flexDirection="column" alignContent="flex-start" textAlign="left">
           <Grid textAlign="left" className={s.name}>
-            <span>Summary</span>
+            <span>{metaverse ? 'Rent Details' : 'Summary'}</span>
           </Grid>
-          <Grid container flexDirection="row" justifyContent="space-between" textAlign="left" className={s.details}>
-            <Grid flexDirection="column" alignItems="flex-start">
+          <Grid
+            container
+            flexDirection="row"
+            justifyContent="space-between"
+            flexWrap="wrap"
+            textAlign="left"
+            className={s.details}
+          >
+            <Grid item {...listingStyle} flexDirection="column" alignItems="flex-start">
               Rent Period
               <p>
                 {getCalcByTimeSelection(min, minPeriodSelectedOption)} {minPeriodSelectedOption} - {''}
                 {getCalcByTimeSelection(max, maxPeriodSelectedOption)} {maxPeriodSelectedOption}
               </p>
             </Grid>
-            <Grid flexDirection="column" alignItems="flex-start">
+            <Grid item {...listingStyle} flexDirection="column" alignItems="flex-start">
               Available for rent{' '}
               <p>
                 {getCalcByTimeSelection(maxFuture, maxFutureSelectedOption)} {maxFutureSelectedOption}
               </p>
             </Grid>
-            <Grid flexDirection="column" alignItems="flex-start">
+            <Grid item {...listingStyle} flexDirection="column" alignItems="flex-start">
               Rent Price
               <p>
                 <Icon
@@ -105,16 +139,25 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
                 )}
               </p>
             </Grid>
+            {metaverse && (
+              <Grid item {...listingStyle} flexDirection="row" alignItems="flex-start">
+                Metaverse
+                {metaverse.icon && <p>{metaverse.icon}</p>}
+                <p style={{ marginLeft: '25px' }}>{metaverse.label}</p>
+              </Grid>
+            )}
           </Grid>
-          <Grid className={s.blueBox}>
-            <div className={s.alert}>
-              <AlertIcon style={{ width: '20px', height: '20px' }} />
-            </div>
-            <div>
-              <div>Keep in mind</div>
-              <p>{feeText}</p>
-            </div>
-          </Grid>
+          {!withoutText && (
+            <Grid className={s.blueBox}>
+              <div className={s.alert}>
+                <AlertIcon style={{ width: '20px', height: '20px' }} />
+              </div>
+              <div>
+                <div>Keep in mind</div>
+                <p>{feeText}</p>
+              </div>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </Grid>

@@ -203,3 +203,25 @@ export const landTypes = [
     desc: 'An Estate is a collection of Lands (more than 1) that are grouped together.',
   },
 ];
+
+export const listNotificationMessage = [
+  '',
+  'Once you list your property you can edit the entered rent period but you’ll have to pay a network fee.',
+  'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
+  'There is a network fee in order to list the property.',
+];
+
+export const listTypes = [
+  [],
+  [
+    { value: 0, label: 'All types' },
+    { value: 1, label: 'Land' },
+    { value: 2, label: 'Estate' },
+  ],
+  [
+    { value: 0, label: 'All types' },
+    { value: 1, label: 'Parcel' },
+    { value: 2, label: 'Unit' },
+    { value: 3, label: 'Inner' },
+  ],
+];
