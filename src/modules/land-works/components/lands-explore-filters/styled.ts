@@ -2,7 +2,7 @@ import { styled } from '@mui/material';
 
 export const StyledRoot = styled('div')(() => ({
   height: 'var(--explore-filters)',
-  padding: '10px var(--horizontal-padding) 0',
+  padding: '0 var(--horizontal-padding) 0',
   position: 'relative',
   '& .container': {
     display: 'flex',

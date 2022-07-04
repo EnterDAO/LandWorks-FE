@@ -169,39 +169,79 @@ export const getMaxLandSize = (lands: AssetEntity[]): number => {
   return Math.max(...lands.map((land) => land.additionalData.size));
 };
 
-export const filterByMoreFilters = (lands: AssetEntity[], filters: Partial<MoreFiltersType>): AssetEntity[] => {
+export const getMaxArea = (lands: AssetEntity[]): number => {
+  return Math.max(...lands.map((land) => Math.ceil(land.attributes.area)));
+};
+
+export const getMaxHeight = (lands: AssetEntity[]): number => {
+  return Math.max(...lands.map((land) => land.attributes.height));
+};
+
+export const filterByMoreFilters = (
+  lands: AssetEntity[],
+  filters: Partial<MoreFiltersType>,
+  metaverse: string
+): AssetEntity[] => {
+  return lands.filter((item) => {
+    return metaverse === '1' ? decentralandFilter(item, filters) : voxelsFilter(item, filters);
+  });
+};
+
+const decentralandFilter = (item: AssetEntity, filters: Partial<MoreFiltersType>) => {
   const size = filters?.size;
   const distanceToRoad = filters?.distanceToRoad;
   const distanceToPlaza = filters?.distanceToPlaza;
   const distanceToDistrict = filters?.distanceToDistrict;
   const type = filters?.type;
-  return lands.filter((item) => {
-    const itemData = item.additionalData;
-    if ((size && itemData.size < size.min) || (size && itemData.size > size.max)) {
-      return false;
-    }
-    if (
-      (distanceToRoad && itemData.attributes.road && itemData.attributes.road < distanceToRoad.min) ||
-      (distanceToRoad && itemData.attributes.road && itemData.attributes.road > distanceToRoad.max)
-    ) {
-      return false;
-    }
-    if (
-      (distanceToPlaza && itemData.attributes.plaza && itemData.attributes.plaza < distanceToPlaza.min) ||
-      (distanceToPlaza && itemData.attributes.plaza && itemData.attributes.plaza > distanceToPlaza.max)
-    ) {
-      return false;
-    }
-    if (
-      (distanceToDistrict && itemData.attributes.district && itemData.attributes.district < distanceToDistrict.min) ||
-      (distanceToDistrict && itemData.attributes.district && itemData.attributes.district > distanceToDistrict.max)
-    ) {
-      return false;
-    }
-    if (type?.toLowerCase() === 'all') return true;
-    if (type?.toLowerCase() === 'land' && item.type.toLowerCase() === 'land') return true;
-    if (type?.toLowerCase() === 'estate' && item.type.toLowerCase() === 'estate') return true;
-  });
+  const itemData = item.additionalData;
+
+  if ((size && itemData.size < size.min) || (size && itemData.size > size.max)) {
+    return false;
+  }
+  if (
+    (distanceToRoad && itemData.attributes.road && itemData.attributes.road < distanceToRoad.min) ||
+    (distanceToRoad && itemData.attributes.road && itemData.attributes.road > distanceToRoad.max)
+  ) {
+    return false;
+  }
+  if (
+    (distanceToPlaza && itemData.attributes.plaza && itemData.attributes.plaza < distanceToPlaza.min) ||
+    (distanceToPlaza && itemData.attributes.plaza && itemData.attributes.plaza > distanceToPlaza.max)
+  ) {
+    return false;
+  }
+  if (
+    (distanceToDistrict && itemData.attributes.district && itemData.attributes.district < distanceToDistrict.min) ||
+    (distanceToDistrict && itemData.attributes.district && itemData.attributes.district > distanceToDistrict.max)
+  ) {
+    return false;
+  }
+  if (type?.toLowerCase() === 'all') return true;
+  if (type?.toLowerCase() === item.type.toLowerCase()) return true;
+};
+
+const voxelsFilter = (item: AssetEntity, filters: Partial<MoreFiltersType>) => {
+  const type = filters.type;
+  const area = filters?.area;
+  const height = filters?.height;
+  const hasBasement = filters?.hasBasement;
+  const isWaterfront = filters?.isWaterFront;
+  const itemData = item.attributes;
+
+  if ((area && itemData.area < area.min) || (area && itemData.area > area.max)) {
+    return false;
+  }
+  if ((height && itemData.height < height.min) || (height && itemData.height > height.max)) {
+    return false;
+  }
+  if (itemData.has_basement === hasBasement) {
+    return true;
+  }
+  if (itemData.waterfront === isWaterfront) {
+    return true;
+  }
+  if (type?.toLowerCase() === 'all') return true;
+  if (type?.toLowerCase() === item.type.toLowerCase()) return true;
 };
 
 export const parseVoxelsAsset = async (assets: CryptoVoxelNFT[]): Promise<CryptoVoxelNFT[]> => {

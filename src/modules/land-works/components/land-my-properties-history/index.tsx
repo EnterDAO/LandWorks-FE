@@ -96,7 +96,7 @@ const MyPropetiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
       <RootStyled>
         {/* This wraps the table in a container that allows a better scroll  */}
         <StyledPaper>
-          <table style={{ width: '100%' }} aria-label="table">
+          <table style={{ width: '100%', borderSpacing: 0 }} aria-label="table">
             <StyledTableHead>
               <StyledTableHeaderRow>
                 <StyledTableCell align="left">Property</StyledTableCell>
