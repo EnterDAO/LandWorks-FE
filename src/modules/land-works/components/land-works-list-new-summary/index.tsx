@@ -28,7 +28,7 @@ interface IListNewSummary {
   metaverse?: Option;
   coordinatesChild?: React.ReactNode;
   name?: string;
-  isEstate: boolean;
+  isEstate?: boolean;
 }
 
 const ListNewSummary: React.FC<IListNewSummary> = ({
