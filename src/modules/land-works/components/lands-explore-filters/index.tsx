@@ -143,7 +143,10 @@ const LandWorksFilters: FC<Props> = ({
         onCancel={() => {
           setOpenDecentralandFilterModal(false);
         }}
-        handleSubmit={handleMoreFilter}
+        handleSubmit={(e) => {
+          setOpenDecentralandFilterModal(false);
+          handleMoreFilter(e);
+        }}
         open={openDecentralandFiltersModal}
         children={<></>}
       />
@@ -153,7 +156,10 @@ const LandWorksFilters: FC<Props> = ({
         onCancel={() => {
           setOpenVoxelFilterModal(false);
         }}
-        handleSubmit={handleMoreFilter}
+        handleSubmit={(e) => {
+          setOpenDecentralandFilterModal(false);
+          handleMoreFilter(e);
+        }}
         open={openVoxelFiltersModal}
         children={<></>}
       />
