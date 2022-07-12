@@ -29,7 +29,7 @@ export interface CryptoVoxelXYcoords {
 export interface CryptoVoxelNFT extends BaseNFT {
   place: string;
   formattedCoords: string;
-  type?: string
+  type?: string;
 }
 
 export interface BaseNFT {

@@ -96,7 +96,7 @@ export const FEE_PRECISION = 100_000;
 
 export const DEFAULT_PROPERTY = { label: '', value: '' };
 
-export const DEFAULT_LIST_MAX_PERIOD = new BigNumber(1);
+export const DEFAULT_LIST_MAX_PERIOD = new BigNumber(2);
 
 export const DEFAULT_LIST_MAX_FUTURE_PERIOD = new BigNumber(3);
 
