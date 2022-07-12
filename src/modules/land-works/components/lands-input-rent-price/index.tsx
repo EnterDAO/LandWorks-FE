@@ -84,7 +84,7 @@ export const RentPrice: React.FC<IProps> = ({
               <SmallAmountTooltip className="amount" amount={new BigNumber(protocolFee || '0')} />
             </span>
           </Grid>
-          <Grid className="amount-label">{feePercentage}% Protocol Fees</Grid>
+          <Grid className="amount-label">{feePercentage}% Protocol Fee</Grid>
         </Grid>
       </Grid>
     </>
