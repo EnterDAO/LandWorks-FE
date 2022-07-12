@@ -3,9 +3,12 @@ import { Slider, styled } from '@mui/material';
 import { Grid, Typography } from 'design-system';
 
 export const StyledRoot = styled('div')(() => ({
-  maxHeight: '80vh',
+  maxHeight: '75vh',
   overflow: 'auto',
   padding: '0 10px',
+  '@media (min-height: 1200px)': {
+    maxHeight: '980px',
+  },
 }));
 
 export const StyledTitle = styled(Typography)(() => ({

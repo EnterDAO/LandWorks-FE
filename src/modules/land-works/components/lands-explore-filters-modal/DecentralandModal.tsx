@@ -91,6 +91,14 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
     setIsDisabledDistanceToPlaza(true);
     setIsDisabledDistanceToRoad(true);
     setIsDisabledDistanceToDistrict(true);
+    setMaxSize(maxLandSize);
+    setMinSize(1);
+    setMinDistanceToRoad(1);
+    setMaxDistanceToRoad(MAX_DISTANCE);
+    setMinDistanceToPlaza(1);
+    setMaxDistanceToPlaza(MAX_DISTANCE);
+    setMinDistanceToDistrict(1);
+    setMaxDistanceToDistrict(MAX_DISTANCE);
   };
 
   const onSubmit = () => {
@@ -127,7 +135,7 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
 
   return (
     <Modal width={540} handleClose={onCancel} {...modalProps}>
-      <StyledTitle>All filters</StyledTitle>
+      <StyledTitle>More filters</StyledTitle>
 
       <StyledRoot>
         <StyledGrid container>
@@ -160,6 +168,10 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
             <StyledSubtitle sx={isDisableSize ? { ...disabled } : {}}>
               Size <span>For Estates only (e.g 14 Lands)</span>
             </StyledSubtitle>
+            <StyledSwitch
+              checked={!isDisableSize}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => setIsDisableSize(!checked)}
+            />
           </Grid>
           <Grid sx={isDisableSize ? { ...disabled } : {}}>
             <StyledSlider

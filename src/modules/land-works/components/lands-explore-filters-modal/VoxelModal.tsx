@@ -73,6 +73,12 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
     setIsDisabledArea(true);
     setIsDisabledHeight(true);
     setIsDisabledAdditions(true);
+    setMinArea(1);
+    setMinHeight(1);
+    setMaxArea(props.maxArea);
+    setMaxHeight(props.maxHeight);
+    setIsWaterfront(false);
+    setHasBasement(false);
   };
 
   const onSubmit = () => {
