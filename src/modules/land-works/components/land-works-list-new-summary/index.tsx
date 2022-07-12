@@ -28,6 +28,7 @@ interface IListNewSummary {
   metaverse?: Option;
   coordinatesChild?: React.ReactNode;
   name?: string;
+  isEstate?: boolean;
 }
 
 const ListNewSummary: React.FC<IListNewSummary> = ({
@@ -45,6 +46,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   metaverse,
   coordinatesChild,
   name,
+  isEstate,
 }) => {
   const min = minRentPeriod?.toNumber();
   const max = maxRentPeriod?.toNumber();
@@ -88,7 +90,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
               <span>{name}</span>
             </Grid>
             <Grid item className={s.title}>
-              Location: {coordinatesChild}
+              {isEstate ? 'Lands' : 'Location'}: {coordinatesChild}
             </Grid>
             <div className={s.divider} />
           </Grid>

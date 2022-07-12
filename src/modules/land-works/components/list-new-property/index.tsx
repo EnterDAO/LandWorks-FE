@@ -34,7 +34,7 @@ import SelectedFeatureCoords from '../land-works-selected-feature-coords';
 
 import { parseVoxelsAsset } from 'modules/land-works/utils';
 import { getTimeType, secondsToDuration, sessionStorageHandler } from 'utils';
-import { DAY_IN_SECONDS, MONTH_IN_SECONDS } from 'utils/date';
+import { DAY_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
 
 import {
   AtMostRentPeriodOptions,
@@ -67,11 +67,11 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const { landWorksContract } = landworks;
   const { landRegistryContract, estateRegistryContract, cryptoVoxelsContract } = registry;
 
-  const [minPeriod, setMinPeriod] = useState(new BigNumber(DAY_IN_SECONDS));
+  const [minPeriod, setMinPeriod] = useState(new BigNumber(WEEK_IN_SECONDS));
   const [isMinPeriodSelected, setMinPeriodSelected] = useState(true);
   const [minInput, setMinInput] = useState(DEFAULT_MIN_PERIOD);
-  const [minPeriodType, setMinPeriodType] = useState(BigNumber.from(MinRentPeriodOptions[2].value));
-  const [minPeriodSelectedOption, setMinPeriodSelectedOption] = useState(MinRentPeriodOptions[2]); // Selected Option Value for the select menu
+  const [minPeriodType, setMinPeriodType] = useState(BigNumber.from(MinRentPeriodOptions[3].value));
+  const [minPeriodSelectedOption, setMinPeriodSelectedOption] = useState(MinRentPeriodOptions[3]); // Selected Option Value for the select menu
   const [minError, setMinError] = useState('');
 
   const [maxPeriod, setMaxPeriod] = useState(DEFAULT_LIST_MAX_PERIOD.multipliedBy(MONTH_IN_SECONDS));
@@ -563,7 +563,11 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
   const getPropertyCountForMetaverse = () => {
     if (selectedMetaverse === 1) {
-      return assetProperties.length + assetEstates.length;
+      return landType === 0
+        ? assetProperties.length + assetEstates.length
+        : landType === 1
+        ? assetProperties.length
+        : assetEstates.length;
     } else {
       return cryptoVoxelParcels.length;
     }
@@ -574,7 +578,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       return <>{selectedProperty.place}</>;
     }
     if (selectedProperty && isDecentraland && (selectedProperty as DecentralandNFT).isLAND) {
-      return <SelectedFeatureCoords asset={selectedProperty as DecentralandNFT} />;
+      return <SelectedFeatureCoords asset={selectedProperty as DecentralandNFT} isListing={true} />;
     } else if (selectedProperty && isDecentraland) {
       return <SelectedFeatureCoords asset={selectedProperty as DecentralandNFT} estateLands={estateGroup} />;
     }
@@ -607,17 +611,17 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           <CustomizedSteppers steps={steps} activeStep={activeStep} />
         </Grid>
         {activeStep === 0 && (
-          <>
+          <Grid height={'calc(50vh + 105px)'} overflow="auto" display="block" container>
             <Grid container margin={'40px 0 10px'}>
               <ControlledSelect
-                width={'12rem'}
+                width={'182px'}
                 value={selectedMetaverse}
                 onChange={onChangeMetaverse}
                 options={availableMetaverses}
               />
               <Box style={{ marginLeft: 20 }}>
                 <ControlledSelect
-                  width={'12rem'}
+                  width={'182px'}
                   value={landType}
                   onChange={onChangeType}
                   options={listTypes[selectedMetaverse]}
@@ -672,13 +676,20 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
                 )}
               </Grid>
             )}
-          </>
+          </Grid>
         )}
 
         {activeStep === 1 && (
-          <Grid maxHeight={'50vh'} overflow="auto" container columnSpacing={5} justifyContent="center" mt={4}>
+          <Grid height={'50vh'} overflow="auto" container columnSpacing={5} justifyContent="center" mt={4}>
             <Grid item xs={6}>
-              <Grid container flexDirection="column" className="inputSection" maxHeight={450} overflow="auto">
+              <Grid
+                container
+                flexDirection="column"
+                className="inputSection"
+                minHeight={420}
+                maxHeight={450}
+                overflow="auto"
+              >
                 <Box margin="15px 0" fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
                   2. Choose rent period
                 </Box>
@@ -713,7 +724,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           </Grid>
         )}
         {activeStep === 2 && (
-          <Grid height="45vh" overflow="auto" container columnSpacing={5} justifyContent="center" mt={4}>
+          <Grid height={'50vh'} overflow="auto" container columnSpacing={5} justifyContent="center" mt={4}>
             <Grid
               item
               xs={6}
@@ -744,9 +755,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           </Grid>
         )}
         {activeStep === 3 && (
-          <Grid maxHeight={'50vh'} overflow="auto" container justifyContent="center" mt={4}>
+          <Grid height={'50vh'} overflow="auto" container justifyContent="center">
             <Box
-              margin="15px 0 30px 0"
+              margin="30px 0 15px 0"
               fontSize="25px"
               fontWeight={700}
               textAlign="center"
@@ -779,6 +790,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
                       metaverse={availableMetaverses[selectedMetaverse - 1]}
                       name={selectedProperty.name}
                       coordinatesChild={handleCoords()}
+                      isEstate={!(selectedProperty as DecentralandNFT).isLAND}
                     />
                   </>
                 )}
@@ -800,7 +812,18 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
         {activeStep < 3 && (
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
             {activeStep === 0 ? (
-              <Button variant="secondary" btnSize="medium">
+              <Button
+                sx={{
+                  cursor: 'default',
+                  '&:hover': {
+                    '&::before': {
+                      backgroundColor: 'var(--theme-grey200-color) !important',
+                    },
+                  },
+                }}
+                variant="secondary"
+                btnSize="medium"
+              >
                 Found in wallet ({getPropertyCountForMetaverse()})
               </Button>
             ) : (
