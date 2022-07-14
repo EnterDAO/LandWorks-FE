@@ -124,11 +124,14 @@ Following, some extra documentation regarding specific contexts of the codebase.
 
 ### Decentraland Map Integration
 
-For this integration present at [/explore](https://landworks.xyz/explore) with metaverse dropdown selected as Decentraland. We have this starting point that differ from each others map provider. The main component for Decentraland integration is lands-explore-map `./src/modules/land-works/components/lands-explore-map`. Please check the code, is self-explanatory.
+For this integration present in [/explore](https://landworks.xyz/explore) with Metaverse selected to `Decentraland`. 
+The component is [lands-explore-map](./src/modules/land-works/components/lands-explore-map).
 
-### Voxel Map Integration
+### Voxels Map Integration
 
-Works in progress.
+The integration present in [/explore](https://landworks.xyz/explore) with Metaverse selected to `Voxels`. The dependencies for loading the map are
+`leaflet`, `react-leaflet` and `Voxels API`.
+The component is [lands-explore-map-voxels](./src/modules/land-works/components/lands-explore-map).
 
 ## Learn More React
 
