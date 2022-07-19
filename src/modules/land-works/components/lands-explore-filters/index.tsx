@@ -157,7 +157,7 @@ const LandWorksFilters: FC<Props> = ({
           setOpenVoxelFilterModal(false);
         }}
         handleSubmit={(e) => {
-          setOpenDecentralandFilterModal(false);
+          setOpenVoxelFilterModal(false);
           handleMoreFilter(e);
         }}
         open={openVoxelFiltersModal}
