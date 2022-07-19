@@ -36,7 +36,7 @@ const EstateCoordinates: React.FC<{
     <>
       {isListing ? (
         <Grid className={s.details}>
-          <span>Lands: {estateLands.length}</span>
+          <span>{estateLands.length}</span>
         </Grid>
       ) : (
         <Grid className={s.details}>

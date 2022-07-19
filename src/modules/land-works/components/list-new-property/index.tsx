@@ -580,7 +580,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     if (selectedProperty && isDecentraland && (selectedProperty as DecentralandNFT).isLAND) {
       return <SelectedFeatureCoords asset={selectedProperty as DecentralandNFT} isListing={true} />;
     } else if (selectedProperty && isDecentraland) {
-      return <SelectedFeatureCoords asset={selectedProperty as DecentralandNFT} estateLands={estateGroup} />;
+      return (
+        <SelectedFeatureCoords asset={selectedProperty as DecentralandNFT} isListing={true} estateLands={estateGroup} />
+      );
     }
   };
 
@@ -611,7 +613,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           <CustomizedSteppers steps={steps} activeStep={activeStep} />
         </Grid>
         {activeStep === 0 && (
-          <Grid height={'calc(50vh + 105px)'} overflow="auto" display="block" container>
+          <Grid height={'530px'} overflow="auto" display="block" container>
             <Grid container margin={'40px 0 10px'}>
               <ControlledSelect
                 width={'182px'}
@@ -680,7 +682,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
         )}
 
         {activeStep === 1 && (
-          <Grid height={'50vh'} overflow="auto" container columnSpacing={5} justifyContent="center" mt={4}>
+          <Grid height={'420px'} overflow="auto" container columnSpacing={5} justifyContent="center" mt={4}>
             <Grid item xs={6}>
               <Grid
                 container
@@ -724,7 +726,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           </Grid>
         )}
         {activeStep === 2 && (
-          <Grid height={'50vh'} overflow="auto" container columnSpacing={5} justifyContent="center" mt={4}>
+          <Grid height={'420px'} overflow="auto" container columnSpacing={5} justifyContent="center" mt={4}>
             <Grid
               item
               xs={6}
@@ -755,7 +757,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           </Grid>
         )}
         {activeStep === 3 && (
-          <Grid height={'50vh'} overflow="auto" container justifyContent="center">
+          <Grid height={'420px'} overflow="auto" container justifyContent="center">
             <Box
               margin="30px 0 15px 0"
               fontSize="25px"

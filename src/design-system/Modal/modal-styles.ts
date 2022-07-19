@@ -39,9 +39,6 @@ export const ModalBoxStyled = styled(Box)({
   boxShadow: '0px 0px 20px 10px rgba(0, 0, 0, 0.3)',
   padding: '2rem 40px 40px 40px',
   textAlign: 'center',
-  '@media (min-height: 1100px)': {
-    maxHeight: 1100,
-  },
 });
 
 export const ModalTitleBoxStyled = styled(Typography)({
