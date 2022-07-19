@@ -34,11 +34,11 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
   const [selectedType, setSelectedType] = useState<number>(0);
   const [minSize, setMinSize] = useState<number>(1);
   const [maxSize, setMaxSize] = useState<number>(maxLandSize || 10);
-  const [minDistanceToPlaza, setMinDistanceToPlaza] = useState<number>(1);
+  const [minDistanceToPlaza, setMinDistanceToPlaza] = useState<number>(0);
   const [maxDistanceToPlaza, setMaxDistanceToPlaza] = useState<number>(MAX_DISTANCE);
-  const [minDistanceToRoad, setMinDistanceToRoad] = useState<number>(1);
+  const [minDistanceToRoad, setMinDistanceToRoad] = useState<number>(0);
   const [maxDistanceToRoad, setMaxDistanceToRoad] = useState<number>(MAX_DISTANCE);
-  const [minDistanceToDistrict, setMinDistanceToDistrict] = useState<number>(1);
+  const [minDistanceToDistrict, setMinDistanceToDistrict] = useState<number>(0);
   const [maxDistanceToDistrict, setMaxDistanceToDistrict] = useState<number>(MAX_DISTANCE);
   const [isDisableSize, setIsDisableSize] = useState(true);
   const [isDisabledDistanceToPlaza, setIsDisabledDistanceToPlaza] = useState(true);
@@ -93,11 +93,11 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
     setIsDisabledDistanceToDistrict(true);
     setMaxSize(maxLandSize);
     setMinSize(1);
-    setMinDistanceToRoad(1);
+    setMinDistanceToRoad(0);
     setMaxDistanceToRoad(MAX_DISTANCE);
-    setMinDistanceToPlaza(1);
+    setMinDistanceToPlaza(0);
     setMaxDistanceToPlaza(MAX_DISTANCE);
-    setMinDistanceToDistrict(1);
+    setMinDistanceToDistrict(0);
     setMaxDistanceToDistrict(MAX_DISTANCE);
   };
 
@@ -105,19 +105,19 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
     const obj: Partial<MoreFiltersType> = {
       type: landTypes[selectedType].title,
       size: {
-        min: minSize || 1,
+        min: minSize,
         max: maxSize || maxLandSize,
       },
       distanceToRoad: {
-        min: minDistanceToRoad || 1,
+        min: minDistanceToRoad,
         max: maxDistanceToRoad || MAX_DISTANCE,
       },
       distanceToDistrict: {
-        min: minDistanceToDistrict || 1,
+        min: minDistanceToDistrict,
         max: maxDistanceToDistrict || MAX_DISTANCE,
       },
       distanceToPlaza: {
-        min: minDistanceToPlaza || 1,
+        min: minDistanceToPlaza,
         max: maxDistanceToPlaza || MAX_DISTANCE,
       },
     };
@@ -169,6 +169,7 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
               Size <span>For Estates only (e.g 14 Lands)</span>
             </StyledSubtitle>
             <StyledSwitch
+              disabled={selectedType !== 2}
               checked={!isDisableSize}
               onChange={(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => setIsDisableSize(!checked)}
             />
@@ -217,7 +218,6 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
             <StyledSubtitle sx={isDisabledDistanceToPlaza ? { ...disabled } : {}}>Distance to Plaza</StyledSubtitle>
             <StyledSwitch
-              disabled={selectedType === 0}
               checked={!isDisabledDistanceToPlaza}
               onChange={(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
                 setIsDisabledDistanceToPlaza(!checked)
@@ -268,7 +268,6 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
             <StyledSubtitle sx={isDisabledDistanceToRoad ? { ...disabled } : {}}>Distance to Road</StyledSubtitle>
             <StyledSwitch
-              disabled={selectedType === 0}
               checked={!isDisabledDistanceToRoad}
               onChange={(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
                 setIsDisabledDistanceToRoad(!checked)
@@ -321,7 +320,6 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
               Distance to District
             </StyledSubtitle>
             <StyledSwitch
-              disabled={selectedType === 0}
               checked={!isDisabledDistanceToDistrict}
               onChange={(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
                 setIsDisabledDistanceToDistrict(!checked)
