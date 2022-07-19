@@ -90,7 +90,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
               <span>{name}</span>
             </Grid>
             <Grid item className={s.title}>
-              {isEstate ? 'Lands' : 'Location'}: {coordinatesChild}
+              {isEstate ? 'Lands : ' : 'Location : '} {coordinatesChild}
             </Grid>
             <div className={s.divider} />
           </Grid>
