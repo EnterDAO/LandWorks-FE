@@ -51,6 +51,7 @@ export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
 
   const onInput = (value: string, type: 'min' | 'max') => {
     type === 'min' ? setMinPrice(value) : setMaxPrice(value);
+    disableApply && setDisableApply(false);
   };
 
   const resetPrice = () => {
@@ -78,7 +79,7 @@ export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
       return;
     }
     if (minPrice && maxPrice && minPrice >= maxPrice) {
-      setError('invalid');
+      setError('Min should be > than Max');
       return;
     } else {
       setError('');
