@@ -194,31 +194,43 @@ const decentralandFilter = (item: AssetEntity, filters: Partial<MoreFiltersType>
   const distanceToDistrict = filters?.distanceToDistrict;
   const type = filters?.type;
   const itemData = item.additionalData;
+  const isNumber = (value: unknown) => Number.isInteger(value);
 
+  if (
+    (distanceToRoad && !isNumber(itemData.attributes.road)) ||
+    (size && !isNumber(itemData.size)) ||
+    (distanceToPlaza && !isNumber(itemData.attributes.plaza)) ||
+    (distanceToDistrict && !isNumber(itemData.attributes.district))
+  ) {
+    return false;
+  }
   if ((size && itemData.size < size.min) || (size && itemData.size > size.max)) {
     return false;
   }
+  if (distanceToRoad && isNumber(itemData.attributes.road) && isValidValue(itemData.attributes.road, distanceToRoad)) {
+    return false;
+  }
   if (
-    (distanceToRoad && itemData.attributes.road && itemData.attributes.road < distanceToRoad.min) ||
-    (distanceToRoad && itemData.attributes.road && itemData.attributes.road > distanceToRoad.max)
+    distanceToPlaza &&
+    isNumber(itemData.attributes.plaza) &&
+    isValidValue(itemData.attributes.plaza, distanceToPlaza)
   ) {
     return false;
   }
   if (
-    (distanceToPlaza && itemData.attributes.plaza && itemData.attributes.plaza < distanceToPlaza.min) ||
-    (distanceToPlaza && itemData.attributes.plaza && itemData.attributes.plaza > distanceToPlaza.max)
-  ) {
-    return false;
-  }
-  if (
-    (distanceToDistrict && itemData.attributes.district && itemData.attributes.district < distanceToDistrict.min) ||
-    (distanceToDistrict && itemData.attributes.district && itemData.attributes.district > distanceToDistrict.max)
+    distanceToDistrict &&
+    isNumber(itemData.attributes.district) &&
+    isValidValue(itemData.attributes.district, distanceToDistrict)
   ) {
     return false;
   }
   if (type?.toLowerCase() === 'all') return true;
   if (type?.toLowerCase() === item.type.toLowerCase()) return true;
+  return false;
 };
+
+const isValidValue = (value: number, minMax: { min: number; max: number }): boolean =>
+  value < minMax.min || value > minMax.max;
 
 const voxelsFilter = (item: AssetEntity, filters: Partial<MoreFiltersType>) => {
   const type = filters.type;
