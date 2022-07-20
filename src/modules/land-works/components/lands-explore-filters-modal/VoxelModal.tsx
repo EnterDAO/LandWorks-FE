@@ -111,7 +111,7 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
 
   return (
     <Modal width={540} handleClose={onCancel} {...modalProps}>
-      <StyledTitle>All filters</StyledTitle>
+      <StyledTitle>More filters</StyledTitle>
 
       <StyledRoot>
         <StyledGrid container>
@@ -244,12 +244,12 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
             />
           </Grid>
           <Grid container gap={5} mt={4} sx={isDisabledAdditions ? { ...disabled } : {}}>
-            <Grid>
-              <Checkbox checked={hasBasement} onChange={(e, checked) => setHasBasement(checked)} />
+            <Grid sx={{ cursor: 'pointer' }} onClick={() => setHasBasement(!hasBasement)}>
+              <Checkbox checked={hasBasement} />
               <span>Has basement</span>
             </Grid>
-            <Grid>
-              <Checkbox checked={isWaterFront} onChange={(e, checked) => setIsWaterfront(checked)} />
+            <Grid sx={{ cursor: 'pointer' }} onClick={() => setIsWaterfront(!isWaterFront)}>
+              <Checkbox checked={isWaterFront} />
               Is waterfront
             </Grid>
           </Grid>
