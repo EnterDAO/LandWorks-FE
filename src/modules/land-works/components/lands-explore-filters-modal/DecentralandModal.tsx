@@ -34,11 +34,11 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
   const [selectedType, setSelectedType] = useState<number>(0);
   const [minSize, setMinSize] = useState<number>(1);
   const [maxSize, setMaxSize] = useState<number>(maxLandSize || 10);
-  const [minDistanceToPlaza, setMinDistanceToPlaza] = useState<number>(0);
+  const [minDistanceToPlaza, setMinDistanceToPlaza] = useState<number>(1);
   const [maxDistanceToPlaza, setMaxDistanceToPlaza] = useState<number>(MAX_DISTANCE);
-  const [minDistanceToRoad, setMinDistanceToRoad] = useState<number>(0);
+  const [minDistanceToRoad, setMinDistanceToRoad] = useState<number>(1);
   const [maxDistanceToRoad, setMaxDistanceToRoad] = useState<number>(MAX_DISTANCE);
-  const [minDistanceToDistrict, setMinDistanceToDistrict] = useState<number>(0);
+  const [minDistanceToDistrict, setMinDistanceToDistrict] = useState<number>(1);
   const [maxDistanceToDistrict, setMaxDistanceToDistrict] = useState<number>(MAX_DISTANCE);
   const [isDisableSize, setIsDisableSize] = useState(true);
   const [isDisabledDistanceToPlaza, setIsDisabledDistanceToPlaza] = useState(true);
@@ -93,11 +93,11 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
     setIsDisabledDistanceToDistrict(true);
     setMaxSize(maxLandSize);
     setMinSize(1);
-    setMinDistanceToRoad(0);
+    setMinDistanceToRoad(1);
     setMaxDistanceToRoad(MAX_DISTANCE);
-    setMinDistanceToPlaza(0);
+    setMinDistanceToPlaza(1);
     setMaxDistanceToPlaza(MAX_DISTANCE);
-    setMinDistanceToDistrict(0);
+    setMinDistanceToDistrict(1);
     setMaxDistanceToDistrict(MAX_DISTANCE);
   };
 

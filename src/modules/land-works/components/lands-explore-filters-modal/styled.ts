@@ -7,7 +7,7 @@ export const StyledRoot = styled('div')(() => ({
   overflow: 'auto',
   padding: '0 10px',
   '@media (min-height: 1200px)': {
-    maxHeight: '980px',
+    maxHeight: '700px',
   },
 }));
 
