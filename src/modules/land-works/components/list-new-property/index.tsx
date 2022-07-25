@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useMediaQuery } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
@@ -62,6 +63,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const walletCtx = useWallet();
   const landworks = useLandworks();
   const registry = useContractRegistry();
+  const isSmallScreen = useMediaQuery('(max-height: 780px)');
+
   const history = useHistory();
 
   const { landWorksContract } = landworks;
@@ -613,7 +616,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           <CustomizedSteppers steps={steps} activeStep={activeStep} />
         </Grid>
         {activeStep === 0 && (
-          <Grid height={'530px'} overflow="auto" display="block" container>
+          <Grid height={isSmallScreen ? '460px' : '530px'} overflow="auto" display="block" container>
             <Grid container margin={'40px 0 10px'}>
               <ControlledSelect
                 width={'182px'}
@@ -682,7 +685,14 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
         )}
 
         {activeStep === 1 && (
-          <Grid height={'420px'} overflow="auto" container columnSpacing={5} justifyContent="center" mt={4}>
+          <Grid
+            height={isSmallScreen ? '355px' : '420px'}
+            overflow="auto"
+            container
+            columnSpacing={5}
+            justifyContent="center"
+            mt={4}
+          >
             <Grid item xs={6}>
               <Grid
                 container
@@ -726,7 +736,14 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           </Grid>
         )}
         {activeStep === 2 && (
-          <Grid height={'420px'} overflow="auto" container columnSpacing={5} justifyContent="center" mt={4}>
+          <Grid
+            height={isSmallScreen ? '355px' : '420px'}
+            overflow="auto"
+            container
+            columnSpacing={5}
+            justifyContent="center"
+            mt={4}
+          >
             <Grid
               item
               xs={6}
@@ -757,7 +774,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           </Grid>
         )}
         {activeStep === 3 && (
-          <Grid height={'420px'} overflow="auto" container justifyContent="center">
+          <Grid height={isSmallScreen ? '355px' : '420px'} overflow="auto" container justifyContent="center">
             <Box
               margin="30px 0 15px 0"
               fontSize="25px"
@@ -834,7 +851,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               </Button>
             )}
             <Button
-              disabled={selectedProperty === null}
+              disabled={selectedProperty === null || (activeStep === 2 && Boolean(priceError.length))}
               variant="gradient"
               btnSize="medium"
               onClick={() => setActiveStep((prev) => prev + 1)}
