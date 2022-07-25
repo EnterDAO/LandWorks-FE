@@ -27,12 +27,16 @@ interface IProps {
 }
 
 export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
-  const storageCurrency = sessionStorageHandler('get', 'explore-filters', 'currency');
+  const storage = {
+    currency: sessionStorageHandler('get', 'explore-filters', 'currency'),
+    minPrice: sessionStorageHandler('get', 'explore-filters', 'minPrice'),
+    maxPrice: sessionStorageHandler('get', 'explore-filters', 'maxPrice'),
+  };
   const [disableApply, setDisableApply] = useState(true);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const [currency, setCurrency] = useState<number>(storageCurrency || 0);
-  const [minPrice, setMinPrice] = useState<string | null>(null);
-  const [maxPrice, setMaxPrice] = useState<string | null>(null);
+  const [currency, setCurrency] = useState<number>(storage.currency || 0);
+  const [minPrice, setMinPrice] = useState<string | null>(storage.minPrice || null);
+  const [maxPrice, setMaxPrice] = useState<string | null>(storage.maxPrice || null);
   const [error, setError] = useState<string>('');
 
   const openPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -89,7 +93,8 @@ export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
   const handleSubmit = () => {
     if (onSubmit) {
       onSubmit(currency, Number(minPrice), Number(maxPrice));
-      resetPrice();
+      minPrice && sessionStorageHandler('set', 'explore-filters', 'minPrice', minPrice);
+      maxPrice && sessionStorageHandler('set', 'explore-filters', 'maxPrice', maxPrice);
       closePopover();
       setDisableApply(true);
     }
