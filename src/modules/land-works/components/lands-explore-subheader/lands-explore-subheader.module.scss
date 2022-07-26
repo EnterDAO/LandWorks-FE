@@ -3,10 +3,11 @@
 
 .root {
   display: flex;
+  padding: 40px 0;
   width: auto;
   justify-content: space-between;
   align-items: center;
-  margin: 10px var(--horizontal-padding);
+  margin: 0 var(--horizontal-padding) 15px;
   border-bottom: 2px solid var(--theme-modal-color);
   height: var(--explore-subheader);
 
@@ -15,7 +16,6 @@
     width: 100%;
     font-size: 30px;
     font-weight: 700;
-    padding-bottom: 12px;
     color: rgba(255,255,255,.85);
 
     span {

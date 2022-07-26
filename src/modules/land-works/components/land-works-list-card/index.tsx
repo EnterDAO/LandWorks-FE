@@ -106,14 +106,7 @@ export const EstateListingCard: React.FC<IEstateCardProps> = ({
             <span>{land.name.toLowerCase()}</span>
           </Grid>
           <Grid display="flex" flexWrap="wrap" flexDirection="row" className={s.details}>
-            {coords.map((co) => {
-              return (
-                <span key={`${co[0]}-${co[1]}`} style={{ marginRight: '5px' }}>
-                  X: {co[0]} Y: {co[1]}
-                  {''}
-                </span>
-              );
-            })}
+            Lands : {coords.length}
           </Grid>
         </Grid>
       </Grid>

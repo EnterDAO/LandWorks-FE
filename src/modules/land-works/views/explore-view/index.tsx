@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useDebounce from '@rooks/use-debounce';
-import { isNull, union } from 'lodash';
+import { isNull } from 'lodash';
 import { getNonHumanValue } from 'web3/utils';
 
 import { Modal } from 'design-system';
@@ -22,15 +22,18 @@ import {
   AssetEntity,
   CoordinatesLand,
   PaymentToken,
-  fetchAllListedAssetsByConsumer,
   fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   fetchTokenPayments,
 } from '../../api';
 
 import {
+  filterByMoreFilters,
   filterLandsByAvailability,
   filterLandsByQuery,
   getAllLandsCoordinates,
+  getMaxArea,
+  getMaxHeight,
+  getMaxLandSize,
   landsOrder,
 } from 'modules/land-works/utils';
 import { getNowTs, sessionStorageHandler } from 'utils';
@@ -46,6 +49,8 @@ import {
 } from 'modules/land-works/constants';
 
 import './explore-view.scss';
+
+import { MoreFiltersType } from 'modules/land-works/components/lands-explore-filters-modal/types';
 
 const ExploreView: React.FC = () => {
   const wallet = useWallet();
@@ -94,6 +99,11 @@ const ExploreView: React.FC = () => {
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [maxLandSize, setMaxLandSize] = useState(0);
+  const [maxHeight, setMaxHeight] = useState(0);
+  const [maxArea, setMaxArea] = useState(0);
+  const [filteredLands, setFilteredLands] = useState<AssetEntity[]>([]);
+  const [moreFilters, setMoreFilters] = useState<Partial<MoreFiltersType> | null>(null);
 
   const [showListNewModal, setShowListNewModal] = useState(false);
 
@@ -141,16 +151,6 @@ const ExploreView: React.FC = () => {
       .toFixed(0);
   };
 
-  const onChangeFiltersOwnerToggler = (value: boolean) => {
-    if (value) {
-      getLands(sortColumn, sortDir, lastRentEnd, paymentToken, wallet?.account?.toLowerCase());
-    } else {
-      if (!isNull(paymentToken)) {
-        getLands(sortColumn, sortDir, lastRentEnd, paymentToken);
-      }
-    }
-  };
-
   const onChangeFiltersAvailable = (value: number) => {
     const newValue = value > 1 ? getNowTs().toString() : DEFAULT_LAST_RENT_END;
     setStatusFilter(statusData[value - 1].filter);
@@ -160,6 +160,7 @@ const ExploreView: React.FC = () => {
 
   const onChangeMetaverse = (index: string) => {
     setMetaverse(index);
+    setMoreFilters(null);
   };
 
   const onChangeFiltersCurrency = async (index: number) => {
@@ -191,8 +192,7 @@ const ExploreView: React.FC = () => {
       lastRentEnd: string,
       paymentToken: string,
       minPrice: string,
-      maxPrice: string,
-      owner: string
+      maxPrice: string
     ) => {
       setLoading(true);
       const sortBySize = orderColumn == 'size';
@@ -206,38 +206,31 @@ const ExploreView: React.FC = () => {
         paymentToken,
         statusFilter,
         minPrice,
-        maxPrice,
-        owner
+        maxPrice
       );
 
-      if (owner?.length) {
-        const consumer = await fetchAllListedAssetsByConsumer(
-          String(metaverse),
-          lastRentEnd,
-          sortBySize ? 'totalRents' : orderColumn,
-          sortDir,
-          paymentToken,
-          statusFilter,
-          minPrice,
-          maxPrice,
-          owner
-        );
-        const unionArrays = union(lands.data, consumer.data);
-        const orderedLands = landsOrder(unionArrays, orderColumn, sortDir);
-
-        setLands(orderedLands);
-      } else {
-        sortByHottest || sortBySize ? setLands(landsOrder(lands.data, orderColumn, sortDir)) : setLands(lands.data);
-      }
+      sortByHottest || sortBySize ? setLands(landsOrder(lands.data, orderColumn, sortDir)) : setLands(lands.data);
 
       setLoading(false);
 
       const highlights = getAllLandsCoordinates(lands.data);
       setCoordinatesHighlights(highlights);
       setPointMapCentre(highlights);
+
+      if (metaverse == 1) {
+        setMaxLandSize(getMaxLandSize(lands.data));
+      } else {
+        setMaxHeight(getMaxHeight(lands.data));
+        setMaxArea(getMaxArea(lands.data));
+      }
     },
     500
   );
+
+  const handleMoreFilter = (filters: Partial<MoreFiltersType>) => {
+    setMoreFilters(filters);
+    setFilteredLands(filterByMoreFilters(lands, filters, metaverse));
+  };
 
   const hideMapHandler = (value: boolean) => {
     setMapIsHidden(value);
@@ -254,9 +247,7 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     if (!isNull(paymentToken)) {
-      sessionStorageHandler('get', 'explore-filters', 'owner')
-        ? getLands(sortColumn, sortDir, lastRentEnd, paymentToken, minPrice, maxPrice, wallet?.account?.toLowerCase())
-        : getLands(sortColumn, sortDir, lastRentEnd, paymentToken, minPrice, maxPrice);
+      getLands(sortColumn, sortDir, lastRentEnd, paymentToken, minPrice, maxPrice);
     }
   }, [wallet.account, sortColumn, sortDir, lastRentEnd, paymentToken, metaverse, minPrice, maxPrice]);
 
@@ -266,6 +257,8 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     setLoading(false);
+    setFilteredLands(lands);
+    moreFilters && handleMoreFilter(moreFilters);
   }, [lands]);
 
   const availableLands = filterLandsByAvailability(filterLandsByQuery(lands, searchQuery));
@@ -290,12 +283,15 @@ const ExploreView: React.FC = () => {
               handleListNew={() => setShowListNewModal(true)}
             />
             <LandsExploreFilters
+              handleMoreFilter={handleMoreFilter}
               onChangeSortDirection={onChangeFiltersSortDirection}
-              onChangeOwnerToggler={onChangeFiltersOwnerToggler}
               onChangeAvailable={onChangeFiltersAvailable}
               onChangeCurrency={onChangeFiltersCurrency}
               onChangeMetaverse={onChangeMetaverse}
               onChangePrice={onChangeFiltersPrice}
+              maxLandSize={maxLandSize}
+              maxHeight={maxHeight}
+              maxArea={maxArea}
             />
           </div>
           <div className="content-container content-container--explore-view">
@@ -306,7 +302,7 @@ const ExploreView: React.FC = () => {
                 isHiddenMap={mapIsHidden}
                 lastRentEnd={lastRentEnd}
                 loading={loading}
-                lands={lands}
+                lands={filteredLands || lands}
                 setPointMapCentre={setPointMapCentre}
               />
               <LayoutFooter isWrapped={false} />

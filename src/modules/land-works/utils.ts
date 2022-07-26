@@ -1,13 +1,16 @@
 import { find, orderBy } from 'lodash';
 
 import config from 'config';
-import { CryptoVoxelXYcoords, VoxelsMapCollection, VoxelsTileType } from 'modules/interface';
+import { getCryptoVoxelsAsset } from 'helpers/helpers';
+import { CryptoVoxelNFT, CryptoVoxelXYcoords, VoxelsMapCollection, VoxelsTileType } from 'modules/interface';
 
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 
 import { getNowTs } from 'utils';
 
 import { orderEnum } from './constants';
+
+import { MoreFiltersType } from './components/lands-explore-filters-modal/types';
 
 export const calculateNeighbours = (coordinatesList: CoordinatesLand[]): string[] => {
   let neighbours = [] as string[];
@@ -160,4 +163,106 @@ export const parceVoxelsMapAsset = async (
 
 export const landsOrder = (lands: AssetEntity[], orderCol: string, orderDir: 'asc' | 'desc'): AssetEntity[] => {
   return orderBy(lands, [orderEnum[orderCol]], [orderDir]);
+};
+
+export const getMaxLandSize = (lands: AssetEntity[]): number => {
+  return Math.max(...lands.map((land) => land.additionalData.size));
+};
+
+export const getMaxArea = (lands: AssetEntity[]): number => {
+  return Math.max(...lands.map((land) => Math.ceil(land.attributes.area)));
+};
+
+export const getMaxHeight = (lands: AssetEntity[]): number => {
+  return Math.max(...lands.map((land) => land.attributes.height));
+};
+
+export const filterByMoreFilters = (
+  lands: AssetEntity[],
+  filters: Partial<MoreFiltersType>,
+  metaverse: string
+): AssetEntity[] => {
+  return lands.filter((item) => {
+    return metaverse === '1' ? decentralandFilter(item, filters) : voxelsFilter(item, filters);
+  });
+};
+
+const decentralandFilter = (item: AssetEntity, filters: Partial<MoreFiltersType>) => {
+  const size = filters?.size;
+  const distanceToRoad = filters?.distanceToRoad;
+  const distanceToPlaza = filters?.distanceToPlaza;
+  const distanceToDistrict = filters?.distanceToDistrict;
+  const type = filters?.type;
+  const itemData = item.additionalData;
+  const isNumber = (value: unknown) => Number.isInteger(value);
+
+  if (
+    (distanceToRoad && !isNumber(itemData.attributes.road)) ||
+    (size && !isNumber(itemData.size)) ||
+    (distanceToPlaza && !isNumber(itemData.attributes.plaza)) ||
+    (distanceToDistrict && !isNumber(itemData.attributes.district))
+  ) {
+    return false;
+  }
+  if ((size && itemData.size < size.min) || (size && itemData.size > size.max)) {
+    return false;
+  }
+  if (distanceToRoad && isNumber(itemData.attributes.road) && isValidValue(itemData.attributes.road, distanceToRoad)) {
+    return false;
+  }
+  if (
+    distanceToPlaza &&
+    isNumber(itemData.attributes.plaza) &&
+    isValidValue(itemData.attributes.plaza, distanceToPlaza)
+  ) {
+    return false;
+  }
+  if (
+    distanceToDistrict &&
+    isNumber(itemData.attributes.district) &&
+    isValidValue(itemData.attributes.district, distanceToDistrict)
+  ) {
+    return false;
+  }
+  if (type?.toLowerCase() === 'all') return true;
+  if (type?.toLowerCase() === item.type.toLowerCase()) return true;
+  return false;
+};
+
+const isValidValue = (value: number, minMax: { min: number; max: number }): boolean =>
+  value < minMax.min || value > minMax.max;
+
+const voxelsFilter = (item: AssetEntity, filters: Partial<MoreFiltersType>) => {
+  const type = filters.type;
+  const area = filters?.area;
+  const height = filters?.height;
+  const hasBasement = filters?.hasBasement;
+  const isWaterfront = filters?.isWaterFront;
+  const itemData = item.attributes;
+
+  if ((area && itemData.area < area.min) || (area && itemData.area > area.max)) {
+    return false;
+  }
+  if ((height && itemData.height < height.min) || (height && itemData.height > height.max)) {
+    return false;
+  }
+  if (itemData.has_basement === hasBasement) {
+    return true;
+  }
+  if (itemData.waterfront === isWaterfront) {
+    return true;
+  }
+  if (type?.toLowerCase() === 'all') return true;
+  if (type?.toLowerCase() === item.type.toLowerCase()) return true;
+};
+
+export const parseVoxelsAsset = async (assets: CryptoVoxelNFT[]): Promise<CryptoVoxelNFT[]> => {
+  const parsed = await Promise.all(
+    assets.map(async (land) => {
+      const data = await getCryptoVoxelsAsset(land.id);
+      land.type = data.attributes.title === 'plot' ? 'Parcel' : data.attributes.title;
+      return land;
+    })
+  );
+  return parsed;
 };

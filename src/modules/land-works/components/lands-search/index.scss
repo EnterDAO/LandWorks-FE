@@ -53,10 +53,12 @@
     border: none;
     color: white;
     width: 100%;
+    font-family: var(--font-family);
   }
 
   input::placeholder {
     color: var(--theme-grey700-color);
+    font-family: var(--font-family);
   }
 
   form:-webkit-autofill,

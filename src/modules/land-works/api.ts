@@ -1691,112 +1691,6 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
     });
 }
 
-export function fetchAllListedAssetsByConsumer(
-  metaverse = '1',
-  lastRentEnd = '0',
-  orderColumn = 'totalRents',
-  orderDirection: string,
-  paymentTokenId: string,
-  status?: string | null,
-  minPrice?: string,
-  maxPrice?: string,
-  owner?: string
-): Promise<PaginatedResult<AssetEntity>> {
-  return GraphClient.get({
-    query: gql`
-      query GetAssets(
-        $metaverse: String
-        $orderColumn: String
-        $orderDirection: String
-        $statusNot: String
-        $paymentTokenId: String
-        $minPrice: BigInt
-        $maxPrice: BigInt
-        $owner: String
-      ) {
-        assets(
-          where: { metaverse: $metaverse,
-          ${status ? `${status}: $lastRentEnd` : ''}
-          ${minPrice ? 'pricePerSecond_gte: $minPrice' : ''}, 
-          ${maxPrice ? 'pricePerSecond_lte: $maxPrice' : ''}, 
-          ${owner ? 'consumer: $owner' : ''}, status_not: $statusNot, 
-          ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
-          orderBy: $orderColumn
-          orderDirection: $orderDirection
-        ) {
-          id
-          metaverseAssetId
-          metaverse {
-            name
-          }
-          metaverseRegistry {
-            id
-          }
-          minPeriod
-          maxPeriod
-          maxFutureTime
-          pricePerSecond
-          rents {
-            start
-            end
-          }
-          paymentToken {
-            name
-            symbol
-            decimals
-          }
-          decentralandData {
-            asset {
-              owner {
-                id
-              }
-              consumer {
-                id
-                consumerTo {
-                  id
-                }
-              }
-            }
-            metadata
-            isLAND
-            coordinates {
-              id
-              x
-              y
-            }
-          }
-          lastRentEnd
-          timestamp
-          totalRents
-          status
-        }
-      }
-    `,
-    variables: {
-      lastRentEnd: lastRentEnd,
-      metaverse: metaverse,
-      orderColumn: orderColumn,
-      orderDirection: orderDirection,
-      statusNot: AssetStatus.WITHDRAWN,
-      paymentTokenId: paymentTokenId,
-      owner: owner,
-      status: status,
-      minPrice: minPrice,
-      maxPrice: maxPrice,
-    },
-  })
-    .then(async (response) => {
-      return {
-        data: await parseAssets(response.data.assets),
-        meta: { count: response.data.assets.length },
-      };
-    })
-    .catch((e) => {
-      console.log(e);
-      return { data: [], meta: { count: 0, block: 0 } };
-    });
-}
-
 export function fetchAssetIdByTxHash(txHash: string): Promise<string> {
   return GraphClient.get({
     query: gql`
@@ -1898,7 +1792,7 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
   } else {
     const data = await getCryptoVoxelsAsset(asset.metaverseAssetId);
     liteAsset.name = data.name;
-    liteAsset.type = data.attributes?.title.toUpperCase();
+    liteAsset.type = data.attributes?.title === 'plot' ? 'Parcels' : data.attributes.title;
     liteAsset.imageUrl = data.image;
     liteAsset.attributes = data.attributes;
     liteAsset.externalUrl = getCryptoVexelsPlayUrl(asset?.metaverseAssetId);

@@ -96,7 +96,7 @@ export const FEE_PRECISION = 100_000;
 
 export const DEFAULT_PROPERTY = { label: '', value: '' };
 
-export const DEFAULT_LIST_MAX_PERIOD = new BigNumber(1);
+export const DEFAULT_LIST_MAX_PERIOD = new BigNumber(2);
 
 export const DEFAULT_LIST_MAX_FUTURE_PERIOD = new BigNumber(3);
 
@@ -162,3 +162,66 @@ export const orderEnum: {
 };
 
 export const DISCORD_CHANNEL_URL = 'https://discord.com/invite/7QJvEctG2G';
+
+export const voxelTypes = [
+  {
+    value: 0,
+    title: 'All',
+    desc: 'All available properties in Voxels',
+  },
+  {
+    value: 1,
+    title: 'Parcels',
+    desc: 'Parcels, or plots, are buildable volumes that are at ground level.',
+  },
+  {
+    value: 2,
+    title: 'Unit',
+    desc: 'Units are appartments and tend not to be at ground level. In other words, units are usually in a tower.',
+  },
+  {
+    value: 3,
+    title: 'Inner',
+    desc: 'Turn-key parcels which come prebuilt directly form Voxels.',
+  },
+];
+
+export const landTypes = [
+  {
+    value: 0,
+    title: 'All',
+    desc: 'All parcels and estates.',
+  },
+  {
+    value: 1,
+    title: 'Land',
+    desc: 'A Land is the smallest possible unit (1x1) in Decentraland.',
+  },
+  {
+    value: 2,
+    title: 'Estate',
+    desc: 'An Estate is a collection of Lands (more than 1) that are grouped together.',
+  },
+];
+
+export const listNotificationMessage = [
+  '',
+  'Once you list your property you can edit the entered rent period but you’ll have to pay a network fee.',
+  'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
+  'There is a network fee in order to list the property.',
+];
+
+export const listTypes = [
+  [],
+  [
+    { value: 0, label: 'All types' },
+    { value: 1, label: 'Land' },
+    { value: 2, label: 'Estate' },
+  ],
+  [
+    { value: 0, label: 'All types' },
+    { value: 1, label: 'Parcel' },
+    { value: 2, label: 'Unit' },
+    { value: 3, label: 'Inner' },
+  ],
+];

@@ -62,7 +62,8 @@ const SceneBuilderPortfolio: FC<ISceneBuilderPortfolio> = ({ portfolio }) => {
                 <Box
                   component="img"
                   sx={{
-                    width: '50vw',
+                    width: 'auto',
+                    maxHeight: '78vh',
                     borderRadius: '20px',
                     overflow: 'hidden',
                   }}

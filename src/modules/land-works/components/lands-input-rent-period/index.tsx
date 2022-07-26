@@ -31,6 +31,7 @@ interface IProps {
   minError?: string;
   maxError?: string;
   atMostError?: string;
+  withoutSwitch?: boolean;
 }
 
 const RentPeriod: React.FC<IProps> = ({
@@ -56,12 +57,15 @@ const RentPeriod: React.FC<IProps> = ({
   minError,
   maxError,
   atMostError,
+  withoutSwitch,
 }) => {
   return (
     <>
       <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
         <span className="label">Min Rent Period</span>
-        <StyledSwitch className="switch" checked={isMinPeriodSelected} onChange={handleMinCheckboxChange} />
+        {!withoutSwitch && (
+          <StyledSwitch className="switch" checked={isMinPeriodSelected} onChange={handleMinCheckboxChange} />
+        )}
       </Grid>
       {isMinPeriodSelected && (
         <>
@@ -82,7 +86,9 @@ const RentPeriod: React.FC<IProps> = ({
       )}
       <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
         <span className="label">Max Rent Period</span>
-        <StyledSwitch className="switch" checked={isMaxPeriodSelected} onChange={handleMaxCheckboxChange} />
+        {!withoutSwitch && (
+          <StyledSwitch className="switch" checked={isMaxPeriodSelected} onChange={handleMaxCheckboxChange} />
+        )}
       </Grid>
       {isMaxPeriodSelected && (
         <>
