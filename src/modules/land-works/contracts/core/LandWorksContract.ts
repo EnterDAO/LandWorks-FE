@@ -266,6 +266,32 @@ export default class LandWorksContract extends Web3Contract {
   }
 
   /**
+   * Updates the corresponding Estate/LAND/Voxel property's operator/consumer to the administrative one.
+   * Reverts if there is an active rent.
+   * @param assetId The target asset id
+   * @param metaverseRegistry The asset's metaverse registry
+   * @param callback Action to be done once transaction is submitted
+   */
+  updateAdministrativeState(
+    assetId: BigNumber | string,
+    metaverseRegistry: string,
+    callback: () => void = () => {}
+  ): Promise<void> {
+    if (!this.account) {
+      return Promise.reject();
+    }
+
+    return this.send(
+      this.updateAdministrativeStateMethod(metaverseRegistry),
+      [assetId],
+      {
+        from: this.account,
+      },
+      callback
+    ).then();
+  }
+
+  /**
    * Returns the rent method to be called based on metaverse registry
    * @param metaverseRegistry
    */
@@ -287,5 +313,14 @@ export default class LandWorksContract extends Web3Contract {
    */
   updateStateMethod(metaverseRegistry: string): string {
     return isDecentralandMetaverseRegistry(metaverseRegistry) ? 'updateState' : 'updateAdapterState';
+  }
+
+  /**
+   * Returns the update administrative state method to be called based on metaverse registry
+   */
+  updateAdministrativeStateMethod(metaverseRegistry: string): string {
+    return isDecentralandMetaverseRegistry(metaverseRegistry)
+      ? 'updateAdministrativeState'
+      : 'updateAdapterAdministrativeState';
   }
 }
