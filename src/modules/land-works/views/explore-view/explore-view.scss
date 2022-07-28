@@ -39,10 +39,6 @@
     bottom: 0;
     right: 0;
     left: 50%;
-    height: calc(
-      100vh - var(--navbar-height) - var(--explore-subheader) - var(--explore-filters) -
-      (var(--content-container-v-padding) * 2)
-      );
       
     overflow: hidden;
     border-radius: 20px 0px 0px 20px;
