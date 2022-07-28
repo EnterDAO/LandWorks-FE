@@ -1,5 +1,4 @@
 import React from 'react';
-import { Typography } from '@mui/material';
 
 import Flow from 'assets/img/process_flow.png';
 import { SectionTitle, SubTitle } from 'modules/grand-program/styled';
