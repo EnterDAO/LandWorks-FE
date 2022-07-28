@@ -7,14 +7,16 @@ import { ReactComponent as DropdownIcon } from 'resources/svg/dropdown-icon.svg'
 import { DEFAULT_TABS } from './data';
 import { ExpandButton, StyledRoot, Tab } from './styled';
 
-interface IProps {
-  tab: number;
-  setTab: (value: number) => void;
-}
-
-export const Sidebar: React.FC<IProps> = ({ tab, setTab }) => {
+export const Sidebar: React.FC = () => {
   const mobile = useMediaQuery('(max-width: 400px)');
   const [isOpen, setIsOpen] = useState(false);
+  const [tab, setTab] = useState(0);
+
+  const changeTab = (value: number) => {
+    document.getElementById(`gp-id-${value}`)?.scrollIntoView({ behavior: 'smooth' });
+    setTab(value);
+  };
+
   return (
     <StyledRoot style={{ bottom: isOpen ? '0' : '-185px' }}>
       <Grid container flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
@@ -29,7 +31,7 @@ export const Sidebar: React.FC<IProps> = ({ tab, setTab }) => {
         {DEFAULT_TABS.map((item) => (
           <Tab
             style={{ color: item.id === tab ? 'var(--theme-grey900-color)' : 'inherit' }}
-            onClick={() => setTab(item.id)}
+            onClick={() => changeTab(item.id)}
             key={item.id}
           >
             {item.icon}

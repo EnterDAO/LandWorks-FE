@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { About } from './components/About';
 import { FAQ } from './components/FAQ';
@@ -10,17 +10,11 @@ import { TermsAndConditions } from './components/TermsAndConditions';
 import { ContentWrapper, StyledContent } from './styled';
 
 const GrandProgram: React.FC = () => {
-  const [tab, setTab] = useState(0);
-
-  useEffect(() => {
-    document.getElementById(`gp-id-${tab}`)?.scrollIntoView({ behavior: 'smooth' });
-  }, [tab]);
-
   return (
     <div className="content-container">
       <Hero />
       <StyledContent>
-        <Sidebar tab={tab} setTab={setTab} />
+        <Sidebar />
         <ContentWrapper>
           <About />
           <Process />
