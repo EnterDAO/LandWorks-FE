@@ -1,4 +1,5 @@
 import React from 'react';
+import { useMediaQuery } from '@mui/material';
 
 import { Grid } from 'design-system';
 import { DiamondIcon, InteractiveIcon, OriginalityIcon, ProfileIcon } from 'design-system/icons';
@@ -7,6 +8,7 @@ import { SectionTitle, SubTitle, WithGreyBorder } from 'modules/grants-program/s
 import { ImageWrapper, TeamDescription, TeamIcon } from './styled';
 
 export const JuryAndScoring: React.FC = () => {
+  const isMobile = useMediaQuery('(max-width: 400px)');
   return (
     <div id={'gp-id-2'}>
       <SectionTitle>Jury panel and scoring</SectionTitle>
@@ -25,18 +27,7 @@ export const JuryAndScoring: React.FC = () => {
             <p>EnterDAO’s co-founder and lead of business development</p>
           </TeamDescription>
         </Grid>
-        <Grid item display="flex" alignItems={'center'} flexDirection={'row'}>
-          <TeamIcon>
-            <ImageWrapper>
-              <ProfileIcon color="#F8F8FF" />
-            </ImageWrapper>
-          </TeamIcon>
-          <TeamDescription style={{ maxWidth: 320 }}>
-            <h1>Daniel Ivanov</h1>
-            <a href="https://twitter.com/danielivanov">@danielivanov</a>
-            <p>EnterDAO’s co-founder and architect of LandWorks</p>
-          </TeamDescription>
-        </Grid>
+
         <Grid item display="flex" alignItems={'center'} flexDirection={'row'}>
           <TeamIcon>
             <ImageWrapper>
@@ -55,10 +46,22 @@ export const JuryAndScoring: React.FC = () => {
               <ProfileIcon color="#F8F8FF" />
             </ImageWrapper>
           </TeamIcon>
-          <TeamDescription style={{ maxWidth: 320 }}>
+          <TeamDescription style={{ maxWidth: 320, minWidth: isMobile ? 'auto' : 320 }}>
             <h1>Ivan Iliyanov</h1>
             <a href="https://twitter.com/vankiz_">@vankiz_</a>
             <p>LandWorks design lead</p>
+          </TeamDescription>
+        </Grid>
+        <Grid item display="flex" alignItems={'center'} flexDirection={'row'}>
+          <TeamIcon>
+            <ImageWrapper>
+              <ProfileIcon color="#F8F8FF" />
+            </ImageWrapper>
+          </TeamIcon>
+          <TeamDescription style={{ maxWidth: 320 }}>
+            <h1>Mark Ward</h1>
+            <a href="https://twitter.com/markwardbro">@markwardbro</a>
+            <p>DAO Operations Manager at Universe</p>
           </TeamDescription>
         </Grid>
       </Grid>
