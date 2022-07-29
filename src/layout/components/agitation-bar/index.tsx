@@ -20,7 +20,7 @@ export const AgitaionBar: React.FC<IProps> = ({ setShowAgitationBar }) => {
   return (
     <StyledRoot>
       <StyledTitle>Apply for our Grant Program and win up to $10,000!</StyledTitle>
-      <Button variant="primary" btnSize="xsmall" onClick={() => history.push('/grand-program')}>
+      <Button variant="primary" btnSize="xsmall" onClick={() => history.push('/grats-program')}>
         Read more
       </Button>
       <CloseIconButtonStyled

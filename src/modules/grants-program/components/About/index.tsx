@@ -11,7 +11,7 @@ import {
   SpinIcon,
   ThreeStars,
 } from 'design-system/icons';
-import { SectionTitle, SubTitle, WithGreyBorder } from 'modules/grand-program/styled';
+import { SectionTitle, SubTitle, WithGreyBorder } from 'modules/grants-program/styled';
 
 import { StyledBox, StyledGrid, StyledRoot, Tier, TiersRow } from './styled';
 
@@ -24,7 +24,10 @@ export const About: React.FC = () => {
       <Typography>
         The Open Scene Grant Program is a grant program for building Decentraland Scenes in several categories. The
         program is funded by the EnterDAO treasury and after the successful pass of the{' '}
-        <a href="/">DAO’s first governance proposal</a>. <br />
+        <a href="https://dao.enterdao.xyz/governance/proposals/1" target="_blank">
+          DAO’s first governance proposal
+        </a>
+        . <br />
         <br /> All scenes funded through the Open Scenes Grant Program will be open-sourced and available to the public
         for anyone to use. This is the first round of the program and if successful many more are coming with the goal
         of enabling existing and new users to easily generate a variety of experiences on their rented or owned land.{' '}
@@ -129,9 +132,12 @@ export const About: React.FC = () => {
           <h1>Sharded Minds themed scene</h1>
           <p>
             If you ever wanted to build something unique in Decentraland - this is your chance. Might be a place of
-            worship to pray for green candles, a sculpture to commemorate Vitalik, a representation of your favorite
-            Sharded Mind or anything else your heart desires. The only requirement is that it should be related somehow
-            to our NFT collection Sharded Minds.
+            worship to pray for green candles, a sculpture to commemorate Vitalik, a representation of your favorite{' '}
+            <a href="https://opensea.io/collection/sharded-minds" target="_blank">
+              Sharded Mind
+            </a>{' '}
+            or anything else your heart desires. The only requirement is that it should be related somehow to our NFT
+            collection Sharded Minds.
           </p>
         </StyledBox>
       </Grid>

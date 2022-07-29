@@ -118,7 +118,7 @@ const LayoutHeader: React.FC = () => {
             <div className={activeTab === 2 ? styles.activeTab : ''}></div>
           </Link>
           <Link
-            to="/grand-program"
+            to="/grants-program"
             className={styles.navLink + ' selected'}
             onClick={() => {
               setActiveTab(3);

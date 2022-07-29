@@ -9,7 +9,7 @@ import { Sidebar } from './components/sidebar';
 import { TermsAndConditions } from './components/TermsAndConditions';
 import { ContentWrapper, StyledContent } from './styled';
 
-const GrandProgram: React.FC = () => {
+const GrantsProgram: React.FC = () => {
   return (
     <div className="content-container">
       <Hero />
@@ -27,4 +27,4 @@ const GrandProgram: React.FC = () => {
   );
 };
 
-export default GrandProgram;
+export default GrantsProgram;

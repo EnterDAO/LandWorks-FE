@@ -80,4 +80,24 @@ export const faq = [
       </span>
     ),
   },
+  {
+    id: 9,
+    question: <span>How can I vote on the submissions?</span>,
+    answer: (
+      <span>
+        If you have claimed a discord role “ENTR HodLers” or “Sharded Minds” by 3-August-2022, you will be eligible to
+        vote on the grant submissions within a dedicated channel in the EnterDAO discord.
+      </span>
+    ),
+  },
+  {
+    id: 10,
+    question: <span>Can the community vote overrule the decision of the 4 jury members?</span>,
+    answer: (
+      <span>
+        No. The community vote is considered as a fifth vote for the final decision on whether or not a submission will
+        be awarded a grant. The count of the votes only determines where is a go or no-go for the particular submission.
+      </span>
+    ),
+  },
 ];

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Flow from 'assets/img/process_flow.png';
-import { SectionTitle, SubTitle } from 'modules/grand-program/styled';
+import { SectionTitle, SubTitle } from 'modules/grants-program/styled';
 
 import { NumberedList, StyledImage, StyledList, StyledTypography } from './styled';
 
@@ -47,8 +47,11 @@ export const Process: React.FC = () => {
           grant prize pool.
         </li>
         <li>
-          Each approved scene should be uploaded in the EnterDAO GitHub repository which we have created for all scenes
-          part of the program.
+          <p>
+            Each approved scene should be uploaded in the{' '}
+            <a href="https://github.com/EnterDAO/landworks-grants-program">EnterDAO GitHub</a> repository which we have
+            created for all scenes part of the program.
+          </p>
         </li>
         <li>
           All scenes will also be available in LandWorks’s scene pool later on as it is currently under development.

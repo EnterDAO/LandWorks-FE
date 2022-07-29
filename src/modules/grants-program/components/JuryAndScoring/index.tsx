@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Grid } from 'design-system';
 import { DiamondIcon, InteractiveIcon, OriginalityIcon, ProfileIcon } from 'design-system/icons';
-import { SectionTitle, SubTitle, WithGreyBorder } from 'modules/grand-program/styled';
+import { SectionTitle, SubTitle, WithGreyBorder } from 'modules/grants-program/styled';
 
 import { ImageWrapper, TeamDescription, TeamIcon } from './styled';
 
@@ -20,8 +20,8 @@ export const JuryAndScoring: React.FC = () => {
             </ImageWrapper>
           </TeamIcon>
           <TeamDescription style={{ maxWidth: 320 }}>
-            <h1>Zhivki Todorov</h1>
-            <a href="https">@zhivko</a>
+            <h1>Zhivko Todorov</h1>
+            <a href="https://twitter.com/zhivko">@zhivko</a>
             <p>EnterDAO’s co-founder and lead of business development</p>
           </TeamDescription>
         </Grid>
@@ -33,7 +33,7 @@ export const JuryAndScoring: React.FC = () => {
           </TeamIcon>
           <TeamDescription style={{ maxWidth: 320 }}>
             <h1>Daniel Ivanov</h1>
-            <a href="https">@danielivanov</a>
+            <a href="https://twitter.com/danielivanov">@danielivanov</a>
             <p>EnterDAO’s co-founder and architect of LandWorks</p>
           </TeamDescription>
         </Grid>
@@ -44,8 +44,8 @@ export const JuryAndScoring: React.FC = () => {
             </ImageWrapper>
           </TeamIcon>
           <TeamDescription style={{ maxWidth: 320 }}>
-            <h1>Radina Talonova</h1>
-            <a href="https">@radina_nt</a>
+            <h1>Radina Talanova</h1>
+            <a href="https://twitter.com/radina_nt">@radina_nt</a>
             <p>EnterDAO’s co-founder and product lead for MetaPortal</p>
           </TeamDescription>
         </Grid>
@@ -57,7 +57,7 @@ export const JuryAndScoring: React.FC = () => {
           </TeamIcon>
           <TeamDescription style={{ maxWidth: 320 }}>
             <h1>Ivan Iliyanov</h1>
-            <a href="https">@vankiz_</a>
+            <a href="https://twitter.com/vankiz_">@vankiz_</a>
             <p>LandWorks design lead</p>
           </TeamDescription>
         </Grid>

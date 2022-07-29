@@ -22,7 +22,7 @@ const LandingView = lazy(() => import('modules/landing'));
 const LandworksView = lazy(() => import('modules/land-works'));
 const SceneBuilderView = lazy(() => import('modules/scene-builder'));
 const FAQView = lazy(() => import('modules/faq'));
-const GrandProgram = lazy(() => import('modules/grand-program'));
+const GrantsProgram = lazy(() => import('modules/grants-program'));
 
 const client = GraphClient._getWsClient();
 
@@ -67,7 +67,7 @@ const LayoutView: React.FC = () => {
                             <Route path="/" exact component={LandingView} />
                             <Route path="/scene-builder" component={SceneBuilderView} />
                             <Route path="/faq" component={FAQView} />
-                            <Route exact path="/grand-program" component={GrandProgram} />
+                            <Route exact path="/grants-program" component={GrantsProgram} />
                             <Route component={LandworksView} />
                           </Switch>
                         </Suspense>

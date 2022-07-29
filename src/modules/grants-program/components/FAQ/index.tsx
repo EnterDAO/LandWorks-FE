@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { QuestionList } from 'modules/faq/styled';
-import { SectionTitle } from 'modules/grand-program/styled';
+import { SectionTitle } from 'modules/grants-program/styled';
 import { QuestionItem } from 'modules/landing/components/FAQ/QuestionItem';
 
 import { faq } from './data';
