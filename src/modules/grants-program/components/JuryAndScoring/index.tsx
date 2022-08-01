@@ -23,7 +23,7 @@ export const JuryAndScoring: React.FC = () => {
           </TeamIcon>
           <TeamDescription style={{ maxWidth: 320 }}>
             <h1>Zhivko Todorov</h1>
-            <a href="https://twitter.com/zhivko">@zhivko</a>
+            <a href="https://twitter.com/zhivkoto">@zhivkoto</a>
             <p>EnterDAO’s co-founder and lead of business development</p>
           </TeamDescription>
         </Grid>
