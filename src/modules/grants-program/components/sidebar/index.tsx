@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMediaQuery } from '@mui/material';
 
-import { Button, Grid } from 'design-system';
+import { Button, Grid, Stack } from 'design-system';
 import { ReactComponent as DropdownIcon } from 'resources/svg/dropdown-icon.svg';
 
 import { DEFAULT_TABS } from './data';
@@ -27,7 +27,7 @@ export const Sidebar: React.FC = () => {
           </ExpandButton>
         )}
       </Grid>
-      <div>
+      <Stack spacing={2}>
         {DEFAULT_TABS.map((item) => (
           <Tab
             style={{ color: item.id === tab ? 'var(--theme-grey900-color)' : 'inherit' }}
@@ -38,7 +38,7 @@ export const Sidebar: React.FC = () => {
             {item.title}
           </Tab>
         ))}
-      </div>
+      </Stack>
       <Button
         variant="gradient"
         style={{ width: 110, marginTop: 50 }}
