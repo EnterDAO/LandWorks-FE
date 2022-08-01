@@ -40,8 +40,11 @@ export const Sidebar: React.FC = () => {
         ))}
       </Stack>
       <Button
+        sx={{
+          width: '120px !important',
+          mt: 10,
+        }}
         variant="gradient"
-        style={{ width: 110, marginTop: 50 }}
         btnSize="xsmall"
         onClick={() => window.open('https://d1zs47v7suw.typeform.com/to/hs05sYCZ')}
       >
