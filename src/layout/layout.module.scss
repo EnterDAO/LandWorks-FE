@@ -2,10 +2,6 @@
   background: var(--theme-body-color);
   display: flex;
   min-height: 100vh;
-
-  @media (max-width: 768px) {
-    display: block;
-  }
 }
 
 .main {

@@ -67,15 +67,12 @@ const LayoutHeader: React.FC = () => {
           <TextLogo />
         </div>
       </Link>
-
       {!isLandingPage?.isExact && <LandsNav />}
-
       {/* {isLandingPage?.isExact && (
         <Button type="link" className={s.burger} onClick={() => setNavOpen((prevState) => !prevState)}>
           <Icon name={navOpen ? 'burger-close' : 'burger'} style={{ color: 'var(--theme-white-color)' }} />
         </Button>
       )} */}
-
       {isLandingPage?.isExact && (
         <nav className={styles.nav}>
           <div className={styles.divider} />
@@ -119,6 +116,16 @@ const LayoutHeader: React.FC = () => {
           >
             <div>FAQ</div>
             <div className={activeTab === 2 ? styles.activeTab : ''}></div>
+          </Link>
+          <Link
+            to="/grants-program"
+            className={styles.navLink + ' selected'}
+            onClick={() => {
+              setActiveTab(3);
+            }}
+          >
+            <div>Grant Program</div>
+            <div className={activeTab === 3 ? styles.activeTab : ''}></div>
           </Link>
         </nav>
       )}

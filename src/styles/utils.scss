@@ -11,6 +11,9 @@
   @media (max-width: 768px) {
     --content-container-v-padding: 24px;
   }
+  @media (max-width: 400px) {
+    padding: 0 17px
+  }
 }
 
 .hidden-mobile {

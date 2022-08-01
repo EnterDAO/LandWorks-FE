@@ -50,6 +50,14 @@ const LandsNav: React.FC = () => {
         <div className="nav-content">FAQ</div>
         <div className="active-tab"></div>
       </NavLink>
+      <NavLink
+        className="tab"
+        activeClassName="selected"
+        to={{ pathname: '/grants-program', state: { tab: location.state?.tab } }}
+      >
+        <div className="nav-content">Grant Program</div>
+        <div className="active-tab"></div>
+      </NavLink>
     </div>
   );
 };
