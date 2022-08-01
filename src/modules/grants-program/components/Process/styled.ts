@@ -60,8 +60,8 @@ export const StyledImage = styled('img')({
 });
 
 export const StyledTypography = styled(Typography)({
+  wordBreak: 'break-word',
   '@media (max-width: 400px)': {
     maxWidth: 330,
-    wordBreak: 'break-word',
   },
 });
