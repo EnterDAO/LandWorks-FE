@@ -1,70 +1,28 @@
 import React from 'react';
-import { useMediaQuery } from '@mui/material';
 
 import { Grid } from 'design-system';
 import { DiamondIcon, InteractiveIcon, OriginalityIcon, ProfileIcon } from 'design-system/icons';
 import { SectionTitle, SubTitle, WithGreyBorder } from 'modules/grants-program/styled';
 
-import { ImageWrapper, TeamDescription, TeamIcon } from './styled';
+import { teamMembers } from './data';
+import { TeamDescription, TeamMemberCard } from './styled';
 
 export const JuryAndScoring: React.FC = () => {
-  const isMobile = useMediaQuery('(max-width: 400px)');
   return (
     <div id={'gp-id-2'}>
       <SectionTitle>Jury panel and scoring</SectionTitle>
-      <SubTitle>The jury panel consists of:</SubTitle>
-      <br />
-      <Grid container display="flex" gap={6} mb={13} flexWrap="wrap">
-        <Grid item display="flex" alignItems={'center'} flexDirection={'row'}>
-          <TeamIcon>
-            <ImageWrapper>
-              <ProfileIcon color="#F8F8FF" />
-            </ImageWrapper>
-          </TeamIcon>
-          <TeamDescription style={{ maxWidth: 320 }}>
-            <h1>Zhivko Todorov</h1>
-            <a href="https://twitter.com/zhivkoto">@zhivkoto</a>
-            <p>EnterDAO’s co-founder and lead of business development</p>
-          </TeamDescription>
-        </Grid>
+      <SubTitle sx={{ mb: 8 }}>The jury panel consists of:</SubTitle>
 
-        <Grid item display="flex" alignItems={'center'} flexDirection={'row'}>
-          <TeamIcon>
-            <ImageWrapper>
-              <ProfileIcon color="#F8F8FF" />
-            </ImageWrapper>
-          </TeamIcon>
-          <TeamDescription style={{ maxWidth: 320 }}>
-            <h1>Radina Talanova</h1>
-            <a href="https://twitter.com/radina_nt">@radina_nt</a>
-            <p>EnterDAO’s co-founder and product lead for MetaPortal</p>
-          </TeamDescription>
-        </Grid>
-        <Grid item display="flex" alignItems={'center'} flexDirection={'row'}>
-          <TeamIcon>
-            <ImageWrapper>
-              <ProfileIcon color="#F8F8FF" />
-            </ImageWrapper>
-          </TeamIcon>
-          <TeamDescription style={{ maxWidth: 320, minWidth: isMobile ? 'auto' : 320 }}>
-            <h1>Ivan Iliyanov</h1>
-            <a href="https://twitter.com/vankiz_">@vankiz_</a>
-            <p>LandWorks design lead</p>
-          </TeamDescription>
-        </Grid>
-        <Grid item display="flex" alignItems={'center'} flexDirection={'row'}>
-          <TeamIcon>
-            <ImageWrapper>
-              <ProfileIcon color="#F8F8FF" />
-            </ImageWrapper>
-          </TeamIcon>
-          <TeamDescription style={{ maxWidth: 320 }}>
-            <h1>Mark Ward</h1>
-            <a href="https://twitter.com/markwardbro">@markwardbro</a>
-            <p>DAO Operations Manager at Universe</p>
-          </TeamDescription>
-        </Grid>
+      <Grid container spacing={6} mb={13}>
+        {teamMembers.map((teamMember) => {
+          return (
+            <Grid key={teamMember.fullName} item flexGrow={1} flexBasis={{ xs: '100%', xl: '50%' }}>
+              <TeamMemberCard teamMember={teamMember} />
+            </Grid>
+          );
+        })}
       </Grid>
+
       <SubTitle>The scoring will be based on several factors:</SubTitle>
       <Grid container flexDirection={'column'} rowSpacing={3} mb={26}>
         <Grid item display={'flex'} flexDirection={'row'} alignItems="center">
