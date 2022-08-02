@@ -2,7 +2,6 @@ import React from 'react';
 import { SxProps, styled } from '@mui/system';
 
 import { Box } from 'design-system';
-import { ProfileIcon } from 'design-system/icons';
 
 import { TeamMemberData } from './data';
 
@@ -12,6 +11,7 @@ export const AvatarContainer = styled('div')({
   width: 120,
   height: 120,
   flexShrink: 0,
+  padding: 3,
   borderRadius: '50%',
   background: 'linear-gradient(83.81deg, #AC2CCB -19.8%, #DD3DCB 22%, #EF9C92 100%)',
   display: 'flex',
@@ -24,18 +24,14 @@ export const AvatarContainer = styled('div')({
 });
 
 export const AvatarImg = styled('img')({
-  height: 117,
-  width: 117,
+  height: '100%',
+  width: '100%',
   borderRadius: '50%',
   border: '10px solid #161622',
   backgroundColor: '#161622',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  '@media (max-width: 400px)': {
-    width: 77,
-    height: 77,
-  },
 });
 
 export const TeamDescription = styled('div')({
