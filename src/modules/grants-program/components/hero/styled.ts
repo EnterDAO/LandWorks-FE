@@ -11,11 +11,12 @@ export const StyledRoot = styled('div')({
 });
 
 export const Image = styled('img')({
-  width: 'auto',
-  height: '540px',
+  width: '100%',
+  height: 'auto',
+  maxHeight: '540px',
 
   '@media (max-width: 400px)': {
-    height: '280px',
+    maxHeight: '280px',
   },
 });
 
