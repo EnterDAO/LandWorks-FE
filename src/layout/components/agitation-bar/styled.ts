@@ -24,6 +24,7 @@ export const CloseIconButtonStyled = styled(IconButton)({
 
 export const StyledTitle = styled('span')({
   fontSize: 14,
+  fontWeight: 600,
   color: 'var(--theme-grey900-color)',
   marginRight: 20,
 
