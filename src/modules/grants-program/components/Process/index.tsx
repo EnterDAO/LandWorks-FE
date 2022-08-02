@@ -27,7 +27,10 @@ export const Process: React.FC = () => {
         <a href="https://d1zs47v7suw.typeform.com/to/hs05sYCZ">https://d1zs47v7suw.typeform.com/to/hs05sYCZ</a>
       </StyledTypography>
       <NumberedList>
-        <li>After an application is submitted the jury panel will evaluate it and provide a go/no go decision. </li>
+        <li>
+          After an application is submitted the jury panel will evaluate it and provide a go/no go decision. This
+          includes the vote of the EnterDAO community as well.
+        </li>
         <li>
           The evaluation period will be up to 20 days and might include a discussion with the builder to further clarify
           details regarding the submission. Builders will be notified about the decision of the jury panel in any case.
