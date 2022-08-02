@@ -34,7 +34,7 @@ export const AvatarImg = styled('img')({
   justifyContent: 'center',
 });
 
-export const TeamDescription = styled('div')({
+export const Details = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   marginLeft: 20,
@@ -58,13 +58,13 @@ export const TeamMemberCard = ({ teamMember, sx }: TeamMemberCardProps) => {
       <AvatarContainer>
         <AvatarImg src={teamMember.avatarUrl} alt={teamMember.fullName} />
       </AvatarContainer>
-      <TeamDescription>
+      <Details>
         <h4>{teamMember.fullName}</h4>
         {teamMember.twitterUsername && (
           <a href={`https://twitter.com/${teamMember.twitterUsername}`}>@{teamMember.twitterUsername}</a>
         )}
         <p>{teamMember.about}</p>
-      </TeamDescription>
+      </Details>
     </Box>
   );
 };

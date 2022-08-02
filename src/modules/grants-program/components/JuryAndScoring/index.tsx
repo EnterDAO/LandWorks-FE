@@ -5,7 +5,7 @@ import { DiamondIcon, InteractiveIcon, OriginalityIcon, ProfileIcon } from 'desi
 import { SectionTitle, SubTitle, WithGreyBorder } from 'modules/grants-program/styled';
 
 import { teamMembers } from './data';
-import { TeamDescription, TeamMemberCard } from './styled';
+import { Details, TeamMemberCard } from './styled';
 
 export const JuryAndScoring: React.FC = () => {
   return (
@@ -29,28 +29,28 @@ export const JuryAndScoring: React.FC = () => {
           <WithGreyBorder>
             <DiamondIcon width={36} />
           </WithGreyBorder>
-          <TeamDescription>
-            <h1>Quality</h1>
+          <Details>
+            <h4>Quality</h4>
             <p>Professional high-quality builds would be scored higher</p>
-          </TeamDescription>
+          </Details>
         </Grid>
         <Grid item display={'flex'} flexDirection={'row'} alignItems="center">
           <WithGreyBorder>
             <InteractiveIcon width={36} />
           </WithGreyBorder>
-          <TeamDescription>
-            <h1>Interactiveness</h1>
+          <Details>
+            <h4>Interactiveness</h4>
             <p>Highly interactive scenes would be scored higher</p>
-          </TeamDescription>
+          </Details>
         </Grid>
         <Grid item display={'flex'} flexDirection={'row'} alignItems="center">
           <WithGreyBorder>
             <OriginalityIcon width={36} height={36} />
           </WithGreyBorder>
-          <TeamDescription>
-            <h1>Originality</h1>
+          <Details>
+            <h4>Originality</h4>
             <p>Original and creative scenes would be scored higher</p>
-          </TeamDescription>
+          </Details>
         </Grid>
       </Grid>
     </div>
