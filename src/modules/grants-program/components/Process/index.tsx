@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Flow from 'assets/img/process_flow.png';
+import Flow from 'assets/img/process-flow.svg';
 import { SectionTitle, SubTitle } from 'modules/grants-program/styled';
 
 import { NumberedList, StyledImage, StyledList, StyledTypography } from './styled';
