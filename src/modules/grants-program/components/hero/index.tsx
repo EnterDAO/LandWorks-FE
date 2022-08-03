@@ -7,14 +7,14 @@ import { GRADIENT_TEXT, THEME_COLORS } from 'themes/theme-constants';
 
 export const Hero = () => {
   return (
-    <Grid pb={{ xs: 12, lg: 32 }} container display="flex">
+    <Grid pt={{ xs: 4, lg: 20 }} pb={{ xs: 12, lg: 32 }} container display="flex">
       <Grid display="flex" alignItems="center" justifyContent="center" item xs={12} lg={6}>
         <Box component="img" maxWidth={540} width={1} src={heroImage} />
       </Grid>
       <Grid item xs={12} lg={6} order={{ lg: -1 }}>
         <Box maxWidth={540}>
           <Typography
-            mb={{ xs: 3, lg: 8 }}
+            mb={{ xs: 3, md: 8 }}
             variant="h1"
             sx={{ fontSize: { xs: '25px', md: '60px' }, lineHeight: { xs: '38px', md: '70px' } }}
           >
