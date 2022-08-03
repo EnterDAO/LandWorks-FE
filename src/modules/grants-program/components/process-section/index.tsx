@@ -23,14 +23,18 @@ export const ProcessSection = ({ id }: SpecificSectionProps) => {
         <SubSectionTitle>Builders would need to apply for a grant by stating:</SubSectionTitle>
 
         <StyledList>
-          <li>Categoty</li>
-          <li>Specification of the scene and what functionalities it will have</li>
-          <li>Initial design/mock up of how the scene would look like</li>
+          <li>
+            Category of choice (NFT gallery / Event Venue / Fashion Venue / Company HQ / Sharded Minds themed scene)
+          </li>
+          <li>
+            Specification and functionalities of the scene (description of your vision and how you plan to execute it)
+          </li>
+          <li>Initial design/mock up of the scene (images / models)</li>
           <li>Delivery date (estimate)</li>
-          <li>The tier and amount requested from the fund </li>
-          <li>Contact</li>
+          <li>Tier and amount requested from the fund </li>
+          <li>Email / Twitter / Discord</li>
           <li>Wallet for payout (on the Ethereum blockchain)</li>
-          <li>Their confirmation (not sure) hat their scene will be open-sourced for anyone to use</li>
+          <li>Confirmation that you have read and agree with the terms and conditions of the program.</li>
         </StyledList>
         <br />
         <StyledTypography>
