@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Typography } from '@mui/material';
 
 import { Grid } from 'design-system';
@@ -21,6 +21,71 @@ import {
 } from 'modules/grants-program/styled';
 
 import { StyledBox, StyledGrid, Tier, TiersRow } from './styled';
+
+interface CardConfig {
+  name: string;
+  Icon: typeof GalleryIcon;
+  description: string | ReactElement;
+}
+
+const categories: CardConfig[] = [
+  {
+    name: 'NFT gallery / shop',
+    Icon: GalleryIcon,
+    description: 'Enabling users to showcase and sell their tokens.',
+  },
+  {
+    name: 'Event venue for conferences / webinars / lectures / parties',
+    Icon: LectureIcon,
+    description: 'Enabling users to livestream and display content.',
+  },
+  {
+    name: 'Venue for a fashion runway show',
+    Icon: GlassesIcon,
+    description: 'Enabling users to showcase wearables.',
+  },
+  {
+    name: 'Company HQ',
+    Icon: CompanyIcon,
+    description: 'A multipurpose venue allowing brands to establish a metaverse presence.',
+  },
+  {
+    name: 'Sharded Minds themed scene',
+    Icon: SpinIcon,
+    description: (
+      <>
+        If you ever wanted to build something unique in Decentraland - this is your chance. Might be a place of worship
+        to pray for green candles, a sculpture to commemorate Vitalik, a representation of your favorite{' '}
+        <a href="https://opensea.io/collection/sharded-minds" target="_blank">
+          Sharded Mind
+        </a>{' '}
+        or anything else your heart desires. The only requirement is that it should be related somehow to our NFT
+        collection Sharded Minds.
+      </>
+    ),
+  },
+];
+
+const tiers: CardConfig[] = [
+  {
+    name: 'Tier 1',
+    Icon: FilledStar,
+    description: (
+      <>
+        up to <b>2,500 USDC + 2,500 ENTR tokens</b>
+      </>
+    ),
+  },
+  {
+    name: 'Tier 2',
+    Icon: ThreeStars,
+    description: (
+      <>
+        up to <b>10,000 USDC + 2,500 ENTR tokens</b>
+      </>
+    ),
+  },
+];
 
 export const AboutSection = ({ id }: SpecificSectionProps) => {
   return (
@@ -75,26 +140,22 @@ export const AboutSection = ({ id }: SpecificSectionProps) => {
         </Typography>
         <br />
 
-        <TiersRow>
-          <Tier>
-            <FilledStar width={36} height={36} />
-            <StyledBox>
-              <h1>Tier 1</h1>
-              <p>
-                up to <b>2,500 USDC + 2,500 ENTR tokens</b>
-              </p>
-            </StyledBox>
-          </Tier>
-          <Tier>
-            <ThreeStars width={36} height={36} />
-            <StyledBox>
-              <h1>Tier 2</h1>
-              <p>
-                up to <b>10,000 USDC + 2,500 ENTR tokens</b>
-              </p>
-            </StyledBox>
-          </Tier>
-        </TiersRow>
+        <Grid mb={{ xs: 3, md: 6 }} container spacing={{ xs: 2, md: 4 }}>
+          {tiers.map(({ name, Icon, description }) => {
+            return (
+              <Grid key={name} item display="flex" flexGrow={1} flexBasis={{ xs: '100%', xl: '50%' }}>
+                <Tier>
+                  <Icon width={36} height={36} />
+                  <StyledBox>
+                    <h1>{name}</h1>
+                    <p>{description}</p>
+                  </StyledBox>
+                </Tier>
+              </Grid>
+            );
+          })}
+        </Grid>
+
         <Typography>
           We have decided to have two tiers in order to cater to builders who are in the beginning of their building
           journeys (Tier 1) and also to more professional builders or studios (Tier 2).
@@ -103,60 +164,21 @@ export const AboutSection = ({ id }: SpecificSectionProps) => {
 
       <SubSection>
         <SubSectionTitle>Categories:</SubSectionTitle>
-        <StyledGrid container flexWrap={'wrap'} gap={5.6} mb={5.6}>
-          <Grid item display={'flex'} width="45%">
-            <WithGreyBorder>
-              <GalleryIcon width={36} height={36} />
-            </WithGreyBorder>
-            <StyledBox>
-              <h1>NFT gallery / shop</h1>
-              <p>Enabling users to showcase and sell their tokens.</p>
-            </StyledBox>
-          </Grid>
-          <Grid item display={'flex'} width="45%">
-            <WithGreyBorder>
-              <LectureIcon width={36} height={36} />
-            </WithGreyBorder>
-            <StyledBox>
-              <h1>Event venue for conferences / webinars / lectures / parties</h1>
-              <p>Enabling users to livestream and display content.</p>
-            </StyledBox>
-          </Grid>
-          <Grid item display={'flex'} width="45%">
-            <WithGreyBorder>
-              <GlassesIcon width={36} />
-            </WithGreyBorder>
-            <StyledBox>
-              <h1>Venue for a fashion runway show</h1>
-              <p>Enabling users to showcase wearables.</p>
-            </StyledBox>
-          </Grid>
-          <Grid item display={'flex'} width="45%">
-            <WithGreyBorder>
-              <CompanyIcon width={36} height={36} />
-            </WithGreyBorder>
-            <StyledBox>
-              <h1>Company HQ</h1>
-              <p>A multipurpose venue allowing brands to establish a metaverse presence.</p>
-            </StyledBox>
-          </Grid>
-        </StyledGrid>
-        <Grid item display={'flex'}>
-          <WithGreyBorder>
-            <SpinIcon width={36} height={36} />
-          </WithGreyBorder>
-          <StyledBox>
-            <h1>Sharded Minds themed scene</h1>
-            <p>
-              If you ever wanted to build something unique in Decentraland - this is your chance. Might be a place of
-              worship to pray for green candles, a sculpture to commemorate Vitalik, a representation of your favorite{' '}
-              <a href="https://opensea.io/collection/sharded-minds" target="_blank">
-                Sharded Mind
-              </a>{' '}
-              or anything else your heart desires. The only requirement is that it should be related somehow to our NFT
-              collection Sharded Minds.
-            </p>
-          </StyledBox>
+
+        <Grid container spacing={{ xs: 4, md: 8 }}>
+          {categories.map(({ name, Icon, description }) => {
+            return (
+              <Grid key={name} item display="flex" flexGrow={1} flexBasis={{ xs: '100%', xl: '50%' }}>
+                <WithGreyBorder>
+                  <Icon width={36} height={36} />
+                </WithGreyBorder>
+                <StyledBox>
+                  <h1>{name}</h1>
+                  <p>{description}</p>
+                </StyledBox>
+              </Grid>
+            );
+          })}
         </Grid>
       </SubSection>
     </Section>

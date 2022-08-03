@@ -20,18 +20,13 @@ export const Tier = styled('div')({
   flexDirection: 'row',
   alignItems: 'center',
   width: '100%',
+  '& svg': {
+    flexShrink: 0,
+    width: 56,
+    marginRight: 5,
+  },
   '& path': {
     fill: '#fff',
-  },
-  '@media (max-width: 400px)': {
-    padding: 10,
-    width: 320,
-    '& svg': {
-      minWidth: 36,
-    },
-    '& p': {
-      width: 180,
-    },
   },
 });
 
