@@ -1,10 +1,10 @@
 import React, { Suspense, lazy, useLayoutEffect, useState } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, matchPath, useRouteMatch } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 
 import ErrorBoundary from 'components/custom/error-boundary';
-import { Loader } from 'design-system';
+import { Box, Loader } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
 import LayoutHeader from 'layout/components/layout-header';
 import ContractProvider from 'modules/land-works/providers/contract-provider';
@@ -29,6 +29,7 @@ const client = GraphClient._getWsClient();
 const LayoutView: React.FC = () => {
   const [showAgitationBar, setShowAgitationBar] = useState(true);
   const location = useLocation();
+  const isGrandProgramRoute = !!matchPath(location.pathname, '/grants-program');
 
   const isntExploreViewRoute = location.pathname.search('/explore') === -1;
   const isntLandingViewRoute = location.pathname !== '/';
@@ -38,7 +39,11 @@ const LayoutView: React.FC = () => {
   }, []);
 
   return (
-    <div className={classes.root}>
+    <Box
+      className={classes.root}
+      // fixes issue when mobile content nav overlaps footer
+      pb={isGrandProgramRoute ? { xs: '77px', md: 0 } : 0}
+    >
       {showAgitationBar && <AgitaionBar setShowAgitationBar={setShowAgitationBar} />}
       <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', marginTop: showAgitationBar ? 50 : 0 }}>
         <WarningProvider>
@@ -81,7 +86,7 @@ const LayoutView: React.FC = () => {
           </LandWorksProvider>
         </WarningProvider>
       </div>
-    </div>
+    </Box>
   );
 };
 
