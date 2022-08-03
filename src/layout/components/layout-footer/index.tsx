@@ -55,9 +55,9 @@ const LayoutFooter: React.FC<Props> = ({ isWrapped = true }) => {
     <footer className={`${styles.root} ${isWrapped ? styles['root--wrapped'] : ''}`}>
       <div className={styles.container}>
         <div className={styles['social-media-container']}>
-          {socialsLinks.map((socialLink) => {
+          {socialsLinks.map((socialLink, i) => {
             return (
-              <ExternalLink href={socialLink.href} className={styles['social-media-container--link']}>
+              <ExternalLink key={i} href={socialLink.href} className={styles['social-media-container--link']}>
                 <Icon name={socialLink.icon} width="20" height="20" />
               </ExternalLink>
             );

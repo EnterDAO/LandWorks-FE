@@ -25,7 +25,7 @@ import { THEME_COLORS } from 'themes/theme-constants';
 
 import styles from './layout-header.module.scss';
 
-const grantProgramNav: NavLinkProps[] = [
+const mainNav: NavLinkProps[] = [
   {
     path: '/',
     label: 'Home',
@@ -174,8 +174,8 @@ const LayoutHeader: React.FC = () => {
             open={isMobileNavOpened}
           >
             <Stack gap={6} px={3}>
-              {grantProgramNav.map((navLink) => {
-                return <NavLink {...navLink} />;
+              {mainNav.map((navLink) => {
+                return <NavLink key={navLink.path} {...navLink} />;
               })}
             </Stack>
 
@@ -192,9 +192,10 @@ const LayoutHeader: React.FC = () => {
               </Button>
             )}
             <Box display="flex" gap={2} flexWrap="wrap">
-              {socialsLinks.map((socialLink) => {
+              {socialsLinks.map((socialLink, i) => {
                 return (
                   <Box
+                    key={i}
                     component={ExternalLink}
                     href={socialLink.href}
                     width={60}
@@ -222,8 +223,8 @@ const LayoutHeader: React.FC = () => {
         >
           <Box width={2} height={20} bgcolor={THEME_COLORS.grey01} borderRadius="1px" mx={8} />
           <Box component="nav" height={1} display="flex" gap={{ xs: 6, xl: 8 }} flexGrow={1}>
-            {grantProgramNav.map((grantProgramNavItem) => {
-              return <NavLink {...grantProgramNavItem} />;
+            {mainNav.map((mainNavLink, i) => {
+              return <NavLink key={i} {...mainNavLink} />;
             })}
           </Box>
 
