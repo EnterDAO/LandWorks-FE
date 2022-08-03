@@ -21,9 +21,9 @@ export const JuryAndScoringSection = ({ id }: SpecificSectionProps) => {
     <Section id={id}>
       <SectionTitle>Jury panel and scoring</SectionTitle>
       <SubSection>
-        <SubSectionTitle mb={{ xs: 6, lg: 8 }}>The jury panel consists of:</SubSectionTitle>
+        <SubSectionTitle mb={{ xs: 6, md: 8 }}>The jury panel consists of:</SubSectionTitle>
 
-        <Grid container spacing={6} mb={13}>
+        <Grid container spacing={{ xs: 4, md: 6 }}>
           {teamMembers.map((teamMember) => {
             return (
               <Grid key={teamMember.fullName} item flexGrow={1} flexBasis={{ xs: '100%', xl: '50%' }}>
