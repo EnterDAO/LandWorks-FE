@@ -1,25 +1,16 @@
-import React, { Component, ReactElement } from 'react';
+import React from 'react';
 
 import { Box, Button, Stack } from 'design-system';
-import { FAQIcon, FilledStar, FilledSuccess, HeartFilledIcon } from 'design-system/icons';
 
-import { AboutSection } from './components/about-section';
-import { FaqSection } from './components/faq-section';
 import { Hero } from './components/hero';
-import { JuryAndScoringSection } from './components/jury-and-scoring-section';
-import { ProcessSection } from './components/process-section';
 import { Sidebar } from './components/sidebar';
-import { SidebarNavItem } from './components/sidebar/SidebarNav';
-// import { SidebarNavItem } from './components/Sidebar/SidebarNav';
-import { TermsAndConditionsSection } from './components/terms-and-conditions';
 import { sectionsConfigs, sidebarNav } from './config';
-import { SpecificSectionProps, StyledContent } from './styled';
 
 const GrantsProgram: React.FC = () => {
   return (
-    <div className="content-container">
+    <Box py={0} className="content-container">
       <Hero />
-      <Box display="flex">
+      <Box pb={{ xs: 20, md: 22 }} display="flex">
         <Sidebar nav={sidebarNav} />
         <Stack pl={{ md: 10 }} spacing={{ xs: 10, lg: 26 }}>
           {sectionsConfigs.map(({ Component, id }) => {
@@ -37,7 +28,7 @@ const GrantsProgram: React.FC = () => {
           </Box>
         </Stack>
       </Box>
-    </div>
+    </Box>
   );
 };
 
