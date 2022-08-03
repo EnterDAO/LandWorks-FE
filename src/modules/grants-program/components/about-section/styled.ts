@@ -1,16 +1,5 @@
 import { Box, Grid, styled } from '@mui/material';
 
-export const StyledRoot = styled('div')({
-  marginBottom: 130,
-  '@media (max-width: 400px)': {
-    marginBottom: 60,
-
-    '& p': {
-      width: 340,
-    },
-  },
-});
-
 export const TiersRow = styled('div')({
   display: 'flex',
   alignItems: 'center',
@@ -44,10 +33,6 @@ export const Tier = styled('div')({
       width: 180,
     },
   },
-});
-
-export const CategoriesGrid = styled(Grid)({
-  width: '100%',
 });
 
 export const StyledBox = styled(Box)({
