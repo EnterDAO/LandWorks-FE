@@ -40,7 +40,7 @@ export const JuryAndScoringSection: FC<SpecificSectionProps> = ({ id }) => {
               <DiamondIcon width={36} />
             </WithGreyBorder>
             <Details>
-              <h1>Quality</h1>
+              <h4>Quality</h4>
               <p>Professional high-quality builds would be scored higher</p>
             </Details>
           </Grid>
@@ -49,7 +49,7 @@ export const JuryAndScoringSection: FC<SpecificSectionProps> = ({ id }) => {
               <InteractiveIcon width={36} />
             </WithGreyBorder>
             <Details>
-              <h1>Interactiveness</h1>
+              <h4>Interactiveness</h4>
               <p>Highly interactive scenes would be scored higher</p>
             </Details>
           </Grid>
@@ -58,7 +58,7 @@ export const JuryAndScoringSection: FC<SpecificSectionProps> = ({ id }) => {
               <OriginalityIcon width={36} height={36} />
             </WithGreyBorder>
             <Details>
-              <h1>Originality</h1>
+              <h4>Originality</h4>
               <p>Original and creative scenes would be scored higher</p>
             </Details>
           </Grid>
