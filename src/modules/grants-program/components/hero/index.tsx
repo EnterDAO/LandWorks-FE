@@ -13,7 +13,7 @@ export const Hero: React.FC = () => {
         <h2>Grant Program</h2>
         <Description>
           <span>
-            Bringing creators to the metaverse economy is a fundamental piece to how Landworks and EnterDAO will grow.
+            Bringing creators to the metaverse economy is a fundamental piece to the growth of LandWorks and EnterDAO.
             As we empower more artists, we will in turn grow as well and increase our reach and potential to make
             further impact.
           </span>
