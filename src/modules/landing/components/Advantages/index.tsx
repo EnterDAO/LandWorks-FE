@@ -15,7 +15,7 @@ import {
 
 export const Advantages: React.FC = () => {
   return (
-    <div className="content-container why">
+    <div id="why" className="content-container why">
       <StyledRoot>
         <Grid container direction="column" justifyItems="center" justifyContent="center" alignItems="center">
           <StyledText>WHY RENTING?</StyledText>

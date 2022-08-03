@@ -1,29 +1,34 @@
 import React from 'react';
 
-import { About } from './components/About';
-import { FAQ } from './components/FAQ';
+import { Box, Button, Stack } from 'design-system';
+
 import { Hero } from './components/hero';
-import { JuryAndScoring } from './components/JuryAndScoring';
-import { Process } from './components/Process';
 import { Sidebar } from './components/sidebar';
-import { TermsAndConditions } from './components/TermsAndConditions';
-import { ContentWrapper, StyledContent } from './styled';
+import { sectionsConfigs, sidebarNav } from './config';
 
 const GrantsProgram: React.FC = () => {
   return (
-    <div className="content-container">
+    <Box py={0} className="content-container">
       <Hero />
-      <StyledContent>
-        <Sidebar />
-        <ContentWrapper>
-          <About />
-          <Process />
-          <JuryAndScoring />
-          <FAQ />
-          <TermsAndConditions />
-        </ContentWrapper>
-      </StyledContent>
-    </div>
+      <Box pb={{ xs: 20, md: 22 }} display="flex">
+        <Sidebar nav={sidebarNav} />
+        <Stack pl={{ md: 10 }} spacing={{ xs: 10, lg: 26 }}>
+          {sectionsConfigs.map(({ Component, id }) => {
+            return <Component key={id} id={id} />;
+          })}
+
+          <Box>
+            <Button
+              variant="gradient"
+              btnSize="medium"
+              onClick={() => window.open('https://d1zs47v7suw.typeform.com/to/hs05sYCZ')}
+            >
+              Apply now
+            </Button>
+          </Box>
+        </Stack>
+      </Box>
+    </Box>
   );
 };
 

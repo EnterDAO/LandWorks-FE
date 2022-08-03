@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { SxProps, styled } from '@mui/system';
 
 import { Box } from 'design-system';
@@ -52,7 +52,7 @@ interface TeamMemberCardProps {
   sx?: SxProps;
 }
 
-export const TeamMemberCard = ({ teamMember, sx }: TeamMemberCardProps) => {
+export const TeamMemberCard: FC<TeamMemberCardProps> = ({ teamMember, sx }) => {
   return (
     <Box display="flex" alignItems="center" sx={sx}>
       <AvatarContainer>

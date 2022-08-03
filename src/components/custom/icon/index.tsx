@@ -166,6 +166,7 @@ export type IconNames =
   | 'yield-farming'
   | 'docs'
   | 'twitter'
+  | 'github'
   | 'dune'
   | 'discord'
   | 'linkedin'

@@ -2,13 +2,47 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import ExternalLink from 'components/custom/external-link';
-import Icon from 'components/custom/icon';
+import Icon, { IconNames } from 'components/custom/icon';
+import { Typography } from 'design-system';
 
 import styles from './layout-footer.module.scss';
 
 interface Props {
   isWrapped?: boolean;
 }
+
+interface SocialLink {
+  icon: IconNames;
+  href: string;
+}
+
+// TODO: move in more suitable folder
+export const socialsLinks: SocialLink[] = [
+  {
+    icon: 'github',
+    href: 'https://github.com/EnterDAO',
+  },
+  {
+    icon: 'twitter',
+    href: 'https://twitter.com/EnterDao',
+  },
+  {
+    icon: 'discord',
+    href: 'https://discord.gg/7QJvEctG2G',
+  },
+  {
+    icon: 'dune',
+    href: 'https://dune.com/rakis/LandWorks',
+  },
+  {
+    icon: 'coingecko',
+    href: 'https://www.coingecko.com/en/coins/enterdao',
+  },
+  {
+    icon: 'medium',
+    href: 'https://medium.com/enterdao',
+  },
+];
 
 const LayoutFooter: React.FC<Props> = ({ isWrapped = true }) => {
   const getYear = () => {
@@ -19,27 +53,13 @@ const LayoutFooter: React.FC<Props> = ({ isWrapped = true }) => {
     <footer className={`${styles.root} ${isWrapped ? styles['root--wrapped'] : ''}`}>
       <div className={styles.container}>
         <div className={styles['social-media-container']}>
-          <ExternalLink href="https://github.com/EnterDAO" className={styles['social-media-container--link']}>
-            <Icon name="png/Github" width="20" height="20" />
-          </ExternalLink>
-          <ExternalLink href="https://twitter.com/EnterDao" className={styles['social-media-container--link']}>
-            <Icon name="twitter" width="20" height="20" />
-          </ExternalLink>
-          <ExternalLink href="https://discord.gg/7QJvEctG2G" className={styles['social-media-container--link']}>
-            <Icon name="discord" width="20" height="20" />
-          </ExternalLink>
-          <ExternalLink href="https://dune.com/rakis/LandWorks" className={styles['social-media-container--link']}>
-            <Icon name="dune" width="20" height="20" />
-          </ExternalLink>
-          <ExternalLink
-            href="https://www.coingecko.com/en/coins/enterdao"
-            className={styles['social-media-container--link']}
-          >
-            <Icon name="coingecko" width="20" height="20" />
-          </ExternalLink>
-          <ExternalLink href="https://medium.com/enterdao" className={styles['social-media-container--link']}>
-            <Icon name="medium" width="20" height="20" />
-          </ExternalLink>
+          {socialsLinks.map((socialLink, i) => {
+            return (
+              <ExternalLink key={i} href={socialLink.href} className={styles['social-media-container--link']}>
+                <Icon name={socialLink.icon} width="20" height="20" />
+              </ExternalLink>
+            );
+          })}
         </div>
 
         <div className={styles['links-container']}>
@@ -61,8 +81,10 @@ const LayoutFooter: React.FC<Props> = ({ isWrapped = true }) => {
         </div>
 
         <div className={styles.bottom}>
-          <Icon name="png/LandWorksLogo" width="39" height="37" />
-          <div className={styles.copyrightLink}>landworks.xyz © {getYear()}. Open-sourced.</div>
+          <Icon name="png/LandWorksLogo" width="48" height="48" />
+          <Typography fontWeight={500} variant="body2">
+            landworks.xyz © {getYear()}. Open-sourced.
+          </Typography>
         </div>
       </div>
     </footer>
