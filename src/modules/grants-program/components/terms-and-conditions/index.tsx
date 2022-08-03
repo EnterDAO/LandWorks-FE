@@ -1,15 +1,15 @@
 import React from 'react';
 
-import { Button } from 'design-system';
-import { SectionTitle } from 'modules/grants-program/styled';
+import { Stack, Typography } from 'design-system';
+import { Section, SectionTitle, SpecificSectionProps } from 'modules/grants-program/styled';
 
-import { StyledList } from './styled';
+import { THEME_COLORS } from 'themes/theme-constants';
 
-export const TermsAndConditions: React.FC = () => {
+export const TermsAndConditionsSection = ({ id }: SpecificSectionProps) => {
   return (
-    <div>
-      <SectionTitle>Terms and consitions</SectionTitle>
-      <StyledList>
+    <Section id={id}>
+      <SectionTitle>Terms and conditions</SectionTitle>
+      <Typography component="ol" sx={{ pl: 4 }}>
         <li>Winners will be decided by a panel of judges on the basis of the scoring factors.</li>
         <li>All builds (including zip files) submitted by the entries will be open-sourced to the public.</li>
         <li>EnterDAO reserves the right to modify, suspend or terminate the competition without notice.</li>
@@ -19,14 +19,7 @@ export const TermsAndConditions: React.FC = () => {
           of the jury board.
         </li>
         <li>All applications in the program can be used for promotional purposes by EnterDAO.</li>
-      </StyledList>
-      <Button
-        variant="gradient"
-        btnSize="medium"
-        onClick={() => window.open('https://d1zs47v7suw.typeform.com/to/hs05sYCZ')}
-      >
-        Apply now
-      </Button>
-    </div>
+      </Typography>
+    </Section>
   );
 };
