@@ -26,7 +26,7 @@ export const Hero = () => {
           </Typography>
 
           <Typography mb={{ xs: 8, md: 12 }} fontSize={{ xs: 16, md: 'auto' }} component="p" variant="subtitle1">
-            Bringing creators to the metaverse economy is a fundamental piece to how Landworks and EnterDAO will grow.
+            Bringing creators to the metaverse economy is a fundamental piece to the growth of LandWorks and EnterDAO.
             As we empower more artists, we will in turn grow as well and increase our reach and potential to make
             further impact.
             <br />

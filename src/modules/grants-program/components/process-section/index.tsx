@@ -1,6 +1,6 @@
 import React from 'react';
 
-import flowImageSrc from 'assets/img/process_flow.png';
+import flowImageSrc from 'assets/img/process-flow.svg';
 import { Box } from 'design-system';
 import {
   Section,

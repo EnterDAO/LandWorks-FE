@@ -14,7 +14,7 @@ import {
 } from 'modules/grants-program/styled';
 
 import { teamMembers } from './data';
-import { TeamDescription, TeamMemberCard } from './styled';
+import { Details, TeamMemberCard } from './styled';
 
 export const JuryAndScoringSection = ({ id }: SpecificSectionProps) => {
   return (
@@ -41,28 +41,28 @@ export const JuryAndScoringSection = ({ id }: SpecificSectionProps) => {
             <WithGreyBorder>
               <DiamondIcon width={36} />
             </WithGreyBorder>
-            <TeamDescription>
+            <Details>
               <h1>Quality</h1>
               <p>Professional high-quality builds would be scored higher</p>
-            </TeamDescription>
+            </Details>
           </Grid>
           <Grid item display={'flex'} flexDirection={'row'} alignItems="center">
             <WithGreyBorder>
               <InteractiveIcon width={36} />
             </WithGreyBorder>
-            <TeamDescription>
+            <Details>
               <h1>Interactiveness</h1>
               <p>Highly interactive scenes would be scored higher</p>
-            </TeamDescription>
+            </Details>
           </Grid>
           <Grid item display={'flex'} flexDirection={'row'} alignItems="center">
             <WithGreyBorder>
               <OriginalityIcon width={36} height={36} />
             </WithGreyBorder>
-            <TeamDescription>
+            <Details>
               <h1>Originality</h1>
               <p>Original and creative scenes would be scored higher</p>
-            </TeamDescription>
+            </Details>
           </Grid>
         </Stack>
       </SubSection>

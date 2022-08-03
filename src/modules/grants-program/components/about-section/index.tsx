@@ -96,7 +96,7 @@ export const AboutSection = ({ id }: SpecificSectionProps) => {
         <SubSectionTitle>What?</SubSectionTitle>
         <Typography>
           The Open Scene Grant Program is a grant program for building Decentraland Scenes in several categories. The
-          program is funded by the EnterDAO treasury and after the successful pass of the{' '}
+          program is funded by the EnterDAO treasury after the successful pass of the{' '}
           <a href="https://dao.enterdao.xyz/governance/proposals/1" target="_blank">
             DAO’s first governance proposal
           </a>
@@ -117,7 +117,7 @@ export const AboutSection = ({ id }: SpecificSectionProps) => {
           limited knowledge of development, or have specific specializations. In such, it prevents many creators from
           experimenting with various use cases and slows down the growth and development of the metaverse.Our renting
           platform, LandWorks, provides an easy and affordable means of accessing metaverse land, however the
-          availability of quality scenes/buildings are not widespread, transparent, or accessible. That’s what we aim to
+          availability of quality scenes/buildings is not widespread, transparent, or accessible. That’s what we aim to
           solve with this Open Scene Grant Program - the generated builds/assets will allow for anyone to have access to
           quality Decentraland scenes for their event/gallery/show and at the same time allow for builders to amaze
           everyone with their creativity. Creators will have less hesitance with experimenting across various use cases,
@@ -129,10 +129,9 @@ export const AboutSection = ({ id }: SpecificSectionProps) => {
         <SubSectionTitle>How?</SubSectionTitle>
 
         <Typography>
-          For this first round of the grant program the grant pool will be 50,000 USDC + 50,000 ENTR (vested over 50
-          weeks) given in 1:1 ratio. That would mean that whatever sum you get in USDC, it will be matched in ENTR
-          tokens. The idea for the vested ENTR is for builders to have vested interest in the DAO and its protocols over
-          time.
+          For this first round of the grant program the grant pool will be{' '}
+          <b>50,000 USDC + 50,000 ENTR given in 1:1 ratio.</b> That would mean that whatever sum you get in USDC, it
+          will be matched in ENTR tokens.
         </Typography>
         <br />
         <Typography>
