@@ -5,13 +5,13 @@
   background-color: transparent;
   border: none;
   color: var(--theme-grey700-color);
-  display: flex;
+  display: none;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
 
-  @media (max-width: 768px) {
-    display: none;
+  @media (min-width: 992px) {
+    display: flex;
   }
 
   .divider {

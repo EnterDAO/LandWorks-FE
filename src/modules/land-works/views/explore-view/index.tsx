@@ -261,6 +261,10 @@ const ExploreView: React.FC = () => {
     moreFilters && handleMoreFilter(moreFilters);
   }, [lands]);
 
+  const agitationBarStatus = sessionStorage.getItem('showAgitationBar')
+    ? 'calc(100vh - var(--navbar-height) - var(--explore-subheader) - var(--explore-filters) - var(--content-container-v-padding) * 2)'
+    : 'calc(100vh - var(--navbar-height) - var(--explore-subheader) - var(--explore-filters) - var(--content-container-v-padding) * 2 - 50px) ';
+
   const availableLands = filterLandsByAvailability(filterLandsByQuery(lands, searchQuery));
 
   return (
@@ -309,6 +313,7 @@ const ExploreView: React.FC = () => {
             </div>
             {!mapIsHidden && (
               <div
+                style={{ height: agitationBarStatus }}
                 className={`map-list-container 
                 ${mapExpanded && 'map-list-container--expanded'} 
                 ${mapSize === 'large' && 'map-list-container--enlarged'} 

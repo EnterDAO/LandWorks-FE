@@ -84,6 +84,9 @@ export const Accordion = styled(MuiAccordion)(() => ({
 
 export const AccordionSummary = styled(MuiAccordionSummary)(() => ({
   backgroundColor: 'var(--theme-body-color)',
+  '& span': {
+    color: 'var(--theme-grey900-color)',
+  },
 }));
 
 export const AccordionDetails = styled(MuiAccordionDetails)(() => ({
