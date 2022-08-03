@@ -45,7 +45,15 @@ const LayoutView: React.FC = () => {
       pb={isGrandProgramRoute ? { xs: '77px', md: 0 } : 0}
     >
       {showAgitationBar && <AgitaionBar setShowAgitationBar={setShowAgitationBar} />}
-      <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', marginTop: showAgitationBar ? 50 : 0 }}>
+      <div
+        style={{
+          width: '100%',
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          marginTop: showAgitationBar ? 50 : 0,
+        }}
+      >
         <WarningProvider>
           <LandWorksProvider>
             <ContractProvider>
