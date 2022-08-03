@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import { Box, Button, Typography } from 'design-system';
 
 import { SidebarProps } from './Sidebar';
 import { SidebarNav } from './SidebarNav';
 
-export const DesktopSidebar = ({ nav }: SidebarProps) => {
+export const DesktopSidebar: FC<SidebarProps> = ({ nav }) => {
   return (
     <Box
       flex="0 0 201px"

@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import { QuestionList } from 'modules/faq/styled';
-import { Section, SectionTitle, SectionTitleOld, SpecificSectionProps } from 'modules/grants-program/styled';
+import { Section, SectionTitle, SpecificSectionProps } from 'modules/grants-program/styled';
 import { QuestionItem } from 'modules/landing/components/FAQ/QuestionItem';
 
 import { faq } from './data';
 
-export const FaqSection = ({ id }: SpecificSectionProps) => {
+export const FaqSection: FC<SpecificSectionProps> = ({ id }) => {
   return (
     <Section id={id}>
       <SectionTitle>Frequently Asked Questions</SectionTitle>

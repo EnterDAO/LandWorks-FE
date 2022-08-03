@@ -1,20 +1,18 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import flowImageSrc from 'assets/img/process-flow.svg';
 import { Box } from 'design-system';
 import {
   Section,
   SectionTitle,
-  SectionTitleOld,
   SpecificSectionProps,
   SubSection,
   SubSectionTitle,
-  SubTitle,
 } from 'modules/grants-program/styled';
 
-import { NumberedList, StyledImage, StyledList, StyledTypography } from './styled';
+import { NumberedList, StyledList, StyledTypography } from './styled';
 
-export const ProcessSection = ({ id }: SpecificSectionProps) => {
+export const ProcessSection: FC<SpecificSectionProps> = ({ id }) => {
   return (
     <Section id={id}>
       <SectionTitle>Process</SectionTitle>

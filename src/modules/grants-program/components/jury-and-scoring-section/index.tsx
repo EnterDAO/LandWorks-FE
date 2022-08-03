@@ -1,22 +1,20 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import { Grid, Stack } from 'design-system';
-import { DiamondIcon, InteractiveIcon, OriginalityIcon, ProfileIcon } from 'design-system/icons';
+import { DiamondIcon, InteractiveIcon, OriginalityIcon } from 'design-system/icons';
 import {
   Section,
   SectionTitle,
-  SectionTitleOld,
   SpecificSectionProps,
   SubSection,
   SubSectionTitle,
-  SubTitle,
   WithGreyBorder,
 } from 'modules/grants-program/styled';
 
 import { teamMembers } from './data';
 import { Details, TeamMemberCard } from './styled';
 
-export const JuryAndScoringSection = ({ id }: SpecificSectionProps) => {
+export const JuryAndScoringSection: FC<SpecificSectionProps> = ({ id }) => {
   return (
     <Section id={id}>
       <SectionTitle>Jury panel and scoring</SectionTitle>

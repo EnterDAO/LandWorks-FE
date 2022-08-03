@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { FC, ReactElement } from 'react';
 import { Typography } from '@mui/material';
 
 import { Grid } from 'design-system';
@@ -20,7 +20,7 @@ import {
   WithGreyBorder,
 } from 'modules/grants-program/styled';
 
-import { StyledBox, StyledGrid, Tier, TiersRow } from './styled';
+import { StyledBox, Tier } from './styled';
 
 interface CardConfig {
   name: string;
@@ -87,7 +87,7 @@ const tiers: CardConfig[] = [
   },
 ];
 
-export const AboutSection = ({ id }: SpecificSectionProps) => {
+export const AboutSection: FC<SpecificSectionProps> = ({ id }) => {
   return (
     <Section id={id}>
       <SectionTitle>About</SectionTitle>

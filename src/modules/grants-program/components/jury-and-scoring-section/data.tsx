@@ -43,11 +43,3 @@ export const teamMembers: TeamMemberData[] = [
     avatarUrl: avatarEnterdao,
   },
 ];
-
-interface ScoringFactorData {
-  name: string;
-  description: string;
-  icon: '';
-}
-
-// export const scoringFactors =

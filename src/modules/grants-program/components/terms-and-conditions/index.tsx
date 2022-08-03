@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-import { Stack, Typography } from 'design-system';
+import { Typography } from 'design-system';
 import { Section, SectionTitle, SpecificSectionProps } from 'modules/grants-program/styled';
 
-import { THEME_COLORS } from 'themes/theme-constants';
-
-export const TermsAndConditionsSection = ({ id }: SpecificSectionProps) => {
+export const TermsAndConditionsSection: FC<SpecificSectionProps> = ({ id }: SpecificSectionProps) => {
   return (
     <Section id={id}>
       <SectionTitle>Terms and conditions</SectionTitle>

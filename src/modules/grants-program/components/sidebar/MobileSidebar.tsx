@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Collapse } from '@mui/material';
 
 import { Box, Typography } from 'design-system';
@@ -14,7 +14,7 @@ interface ExpandButtonProps {
   isActive?: boolean;
 }
 
-const ExpandButton = ({ isActive, onClick }: ExpandButtonProps) => {
+const ExpandButton: FC<ExpandButtonProps> = ({ isActive, onClick }) => {
   return (
     <Box
       component="button"
@@ -41,7 +41,7 @@ const ExpandButton = ({ isActive, onClick }: ExpandButtonProps) => {
   );
 };
 
-export const MobileSidebar = ({ nav }: SidebarProps) => {
+export const MobileSidebar: FC<SidebarProps> = ({ nav }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleIsOpen = () => {

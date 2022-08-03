@@ -5,8 +5,6 @@ import ExternalLink from 'components/custom/external-link';
 import Icon, { IconNames } from 'components/custom/icon';
 import { Typography } from 'design-system';
 
-import { THEME_COLORS } from 'themes/theme-constants';
-
 import styles from './layout-footer.module.scss';
 
 interface Props {

@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useLayoutEffect, useState } from 'react';
-import { Route, Switch, matchPath, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, matchPath } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 

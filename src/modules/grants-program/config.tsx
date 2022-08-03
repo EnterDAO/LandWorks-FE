@@ -1,18 +1,15 @@
-import React, { Component, ReactElement } from 'react';
+import React, { FC, ReactElement } from 'react';
 
-import { Box, Button, Stack } from 'design-system';
 import { FAQIcon, FilledStar, FilledSuccess, HeartFilledIcon } from 'design-system/icons';
 
 import { AboutSection } from './components/about-section';
 import { FaqSection } from './components/faq-section';
-import { Hero } from './components/hero';
 import { JuryAndScoringSection } from './components/jury-and-scoring-section';
 import { ProcessSection } from './components/process-section';
-import { Sidebar } from './components/sidebar';
 import { SidebarNavItem } from './components/sidebar/SidebarNav';
 // import { SidebarNavItem } from './components/Sidebar/SidebarNav';
 import { TermsAndConditionsSection } from './components/terms-and-conditions';
-import { SpecificSectionProps, StyledContent } from './styled';
+import { SpecificSectionProps } from './styled';
 
 interface SectionConfig {
   id: string;
@@ -20,7 +17,7 @@ interface SectionConfig {
     label: string;
     icon: ReactElement;
   };
-  Component: (props: SpecificSectionProps) => JSX.Element;
+  Component: FC<SpecificSectionProps>;
 }
 
 export const sectionsConfigs: SectionConfig[] = [

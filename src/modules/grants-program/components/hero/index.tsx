@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import heroImage from 'assets/img/grandProgramHero.png';
 import { Box, Button, Grid, Typography } from 'design-system';
 
 import { GRADIENT_TEXT, THEME_COLORS } from 'themes/theme-constants';
 
-export const Hero = () => {
+export const Hero: FC = () => {
   return (
     <Grid pt={{ xs: 4, lg: 20 }} pb={{ xs: 12, lg: 32 }} container display="flex">
       <Grid display="flex" alignItems="center" justifyContent="center" item xs={12} lg={6}>

@@ -1,9 +1,7 @@
-import React, { MouseEvent, ReactElement, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { Collapse, useMediaQuery } from '@mui/material';
+import React, { FC, ReactElement } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { Box, Icon, Stack, Typography } from 'design-system';
-import { ReactComponent as DropdownIcon } from 'resources/svg/dropdown-icon.svg';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
@@ -17,7 +15,7 @@ interface SidebarNavProps {
   items: SidebarNavItem[];
 }
 
-export const SidebarNav = ({ items }: SidebarNavProps) => {
+export const SidebarNav: FC<SidebarNavProps> = ({ items }) => {
   const location = useLocation();
 
   return (

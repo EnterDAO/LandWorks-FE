@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
+import { FC } from 'react';
 import { TypographyProps } from '@mui/material';
 import { styled } from '@mui/system';
 
-import { Box, Typography } from 'design-system';
+import { Typography } from 'design-system';
 
 export const StyledContent = styled('div')({
   marginTop: 160,
@@ -56,7 +56,7 @@ export const Section = styled('section')(({ theme }) => {
   };
 });
 
-export const SectionTitle = ({ children }: { children: ReactNode }) => {
+export const SectionTitle: FC = ({ children }) => {
   return (
     <Typography component="h2" sx={{ mb: { xs: 8, md: 13 }, typography: { xs: 'h3', md: 'h1' } }}>
       {children}

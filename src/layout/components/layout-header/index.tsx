@@ -1,18 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
-import { usePopper } from 'react-popper';
-import { Link, matchPath, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { Drawer } from '@mui/material';
 import { styled } from '@mui/system';
-import cn from 'classnames';
 
 import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
-import { Box, Button, Grid, Stack, Typography } from 'design-system';
-import LandsNav from 'modules/land-works/components/lands-header-nav';
-import { useGeneral } from 'providers/general-provider';
-import { useWarning } from 'providers/warning-provider';
+import { Box, Button, Stack, Typography } from 'design-system';
 import ConnectedWallet from 'wallets/components/connected-wallet';
 import { useWallet } from 'wallets/wallet';
 
