@@ -6,7 +6,7 @@ import { styled } from '@mui/system';
 
 import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
-import { Box, Button, Stack, Typography  } from 'design-system';
+import { Box, Button, Stack, Typography } from 'design-system';
 import ConnectedWallet from 'wallets/components/connected-wallet';
 import { useWallet } from 'wallets/wallet';
 
