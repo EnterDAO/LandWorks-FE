@@ -9,7 +9,7 @@ import typographyStyles from 'themes/typography-styles';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
-interface HeaderNavLinkProps extends ComponentProps<typeof StyledNavLink> {
+export interface HeaderNavLinkProps extends Pick<ComponentProps<typeof StyledNavLink>, 'to' | 'exact'> {
   label: string;
   external?: boolean;
   Icon?: React.FunctionComponent<
@@ -47,47 +47,45 @@ const HeaderNavLinkRoot = styled('a')({
   },
 });
 
-const HeaderNavLink = forwardRef<HTMLAnchorElement, HeaderNavLinkProps>(
-  ({ Icon, label, external, exact, to, ...otherProps }, ref) => {
-    let linkProps = {};
+const HeaderNavLink = forwardRef<HTMLAnchorElement, HeaderNavLinkProps>(({ Icon, label, external, exact, to }, ref) => {
+  let linkProps = {};
 
-    if (external && typeof to === 'string') {
-      linkProps = {
-        href: to,
-        target: '_blank',
-        rel: 'noopener noreferrer',
-      };
-    } else {
-      linkProps = {
-        to,
-        exact,
-        as: StyledNavLink,
-        isActive: (match, location) => {
-          if (!match) {
-            return false;
-          }
+  if (external && typeof to === 'string') {
+    linkProps = {
+      href: to,
+      target: '_blank',
+      rel: 'noopener noreferrer',
+    };
+  } else {
+    linkProps = {
+      to,
+      exact,
+      as: StyledNavLink,
+      isActive: (match, location) => {
+        if (!match) {
+          return false;
+        }
 
-          if (exact) {
-            return typeof to === 'string' ? to.includes(location.hash) : (to.hash || '') === location.hash;
-          }
+        if (exact) {
+          return typeof to === 'string' ? to.includes(location.hash) : (to.hash || '') === location.hash;
+        }
 
-          return true;
-        },
-      } as Pick<NavLinkProps, 'isActive' | 'to' | 'exact'>;
-    }
-
-    return (
-      <HeaderNavLinkRoot ref={ref} {...otherProps} {...linkProps}>
-        {Icon && (
-          <Box width={20} height={20} mr="12px">
-            <Icon />
-          </Box>
-        )}
-
-        {label}
-      </HeaderNavLinkRoot>
-    );
+        return true;
+      },
+    } as Pick<NavLinkProps, 'isActive' | 'to' | 'exact'>;
   }
-);
+
+  return (
+    <HeaderNavLinkRoot ref={ref} {...linkProps}>
+      {Icon && (
+        <Box width={20} height={20} mr="12px">
+          <Icon />
+        </Box>
+      )}
+
+      {label}
+    </HeaderNavLinkRoot>
+  );
+});
 
 export default HeaderNavLink;
