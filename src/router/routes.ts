@@ -4,9 +4,9 @@ export const routes = {
   home: '/',
   docs: '/docs',
   faq: '/faq',
-  sceneBuilders: '/scene-builder',
-  sceneBuildersJoin: '/scene-builder/join',
-  sceneBuildersBuilder: '/scene-builder/builder/:builderName',
+  sceneBuilder: '/scene-builder',
+  sceneBuilderJoin: '/scene-builder/join',
+  sceneBuilderBuilder: '/scene-builder/builder/:builderName',
   grantsProgram: '/grants-program',
 
   explore: '/explore',
@@ -15,7 +15,7 @@ export const routes = {
 };
 
 export const getSceneBuilderBuilderPath = (builderName: string) => {
-  return generatePath(routes.sceneBuildersBuilder, {
+  return generatePath(routes.sceneBuilderBuilder, {
     builderName,
   });
 };
