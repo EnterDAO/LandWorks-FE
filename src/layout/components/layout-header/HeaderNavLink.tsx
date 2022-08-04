@@ -19,7 +19,7 @@ export interface HeaderNavLinkProps extends Pick<ComponentProps<typeof StyledNav
   >;
 }
 
-const HeaderNavLinkRoot = styled('a')({
+const HeaderNavLinkRoot = styled('a')(({ theme }) => ({
   position: 'relative',
   display: 'flex',
   alignItems: 'center',
@@ -28,6 +28,7 @@ const HeaderNavLinkRoot = styled('a')({
   transition: 'all 0.2s',
   ':after': {
     content: '""',
+    display: 'none',
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -38,6 +39,9 @@ const HeaderNavLinkRoot = styled('a')({
     opacity: 0,
     transition: 'all 0.2s',
     borderRadius: '2px 2px 0 0',
+    [theme.breakpoints.up('lg')]: {
+      display: 'block',
+    },
   },
   '&.active:after': {
     opacity: 1,
@@ -45,7 +49,7 @@ const HeaderNavLinkRoot = styled('a')({
   '&.active, :hover, :active': {
     color: THEME_COLORS.light,
   },
-});
+}));
 
 const HeaderNavLink = forwardRef<HTMLAnchorElement, HeaderNavLinkProps>(({ Icon, label, external, exact, to }, ref) => {
   let linkProps = {};
