@@ -1,6 +1,5 @@
 import React, { Suspense, lazy, useLayoutEffect, useState } from 'react';
-import { Route, Switch, matchPath } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 
 import ErrorBoundary from 'components/custom/error-boundary';
@@ -10,6 +9,7 @@ import LayoutHeader from 'layout/components/layout-header';
 import ContractProvider from 'modules/land-works/providers/contract-provider';
 import LandWorksProvider from 'modules/land-works/providers/landworks-provider';
 import WarningProvider from 'providers/warning-provider';
+import { routes } from 'router/routes';
 
 import NotionProvider from '../api/notion/client';
 import Erc20Provider from '../modules/land-works/providers/erc20-provider';
@@ -28,11 +28,14 @@ const client = GraphClient._getWsClient();
 
 const LayoutView: React.FC = () => {
   const [showAgitationBar, setShowAgitationBar] = useState(true);
-  const location = useLocation();
-  const isGrandProgramRoute = !!matchPath(location.pathname, '/grants-program');
+  const isGrandProgramRoute = useRouteMatch({
+    path: routes.grantsProgram,
+  });
 
-  const isntExploreViewRoute = location.pathname.search('/explore') === -1;
-  const isntLandingViewRoute = location.pathname !== '/';
+  const isRouteHasFooter = useRouteMatch({
+    path: [routes.explore, routes.home, routes.faq],
+    exact: true,
+  });
 
   useLayoutEffect(() => {
     setShowAgitationBar(Boolean(!sessionStorage.getItem('showAgitationBar')));
@@ -41,7 +44,7 @@ const LayoutView: React.FC = () => {
   return (
     <Box
       className={classes.root}
-      // fixes issue when mobile content nav overlaps footer
+      // fixes issue when mobile content nav on grants page overlaps footer
       pb={isGrandProgramRoute ? { xs: '77px', md: 0 } : 0}
     >
       {showAgitationBar && <AgitaionBar setShowAgitationBar={setShowAgitationBar} />}
@@ -77,16 +80,16 @@ const LayoutView: React.FC = () => {
                           }
                         >
                           <Switch>
-                            <Route path="/" exact component={LandingView} />
-                            <Route path="/scene-builder" component={SceneBuilderView} />
-                            <Route path="/faq" component={FAQView} />
-                            <Route exact path="/grants-program" component={GrantsProgram} />
+                            <Route path={routes.home} exact component={LandingView} />
+                            <Route path={routes.sceneBuilder} component={SceneBuilderView} />
+                            <Route path={routes.faq} component={FAQView} />
+                            <Route path={routes.grantsProgram} component={GrantsProgram} />
                             <Route component={LandworksView} />
                           </Switch>
                         </Suspense>
                       </ErrorBoundary>
                     </main>
-                    {isntExploreViewRoute && isntLandingViewRoute && <LayoutFooter />}
+                    {!isRouteHasFooter && <LayoutFooter />}
                   </NotionProvider>
                 </ApolloProvider>
               </Erc20Provider>
