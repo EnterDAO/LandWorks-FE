@@ -5,6 +5,7 @@ import { Grid, Icon } from 'design-system';
 import { ArrowRightIcon, BackIcon } from 'design-system/icons';
 import { LocationState } from 'modules/interface';
 import SceneBuildersForm from 'modules/scene-builder/components/land-works-scene-builders-form';
+import { routes } from 'router/routes';
 
 import { BreadCrumbs, Separator } from './styled';
 
@@ -14,7 +15,7 @@ const SceneBuilderFormView: FC = () => {
   return (
     <Grid className="content-container">
       <BreadCrumbs>
-        <Link className="button-back" to={location.state?.from || '/scene-builder'}>
+        <Link className="button-back" to={location.state?.from || routes.sceneBuilder}>
           <div className="button-icon">
             <Icon iconSize={'m'} iconElement={<BackIcon />} />
           </div>
@@ -23,7 +24,7 @@ const SceneBuilderFormView: FC = () => {
 
         <Separator />
 
-        <Link className="button-explore" to={location.state?.from || '/scene-builder'}>
+        <Link className="button-explore" to={location.state?.from || routes.sceneBuilder}>
           <span>{location.state?.title || 'Scene Builder'}</span>
         </Link>
 

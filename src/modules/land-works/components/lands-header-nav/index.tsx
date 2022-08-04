@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, useLocation, withRouter } from 'react-router-dom';
 
 import { LocationState } from 'modules/interface';
+import { routes } from 'router/routes';
 
 import { ReactComponent as Rocket } from '../../../../resources/svg/rocket-02.svg';
 
@@ -16,7 +17,7 @@ const LandsNav: React.FC = () => {
         className="tab"
         exact
         activeClassName="selected"
-        to={{ pathname: '/explore', state: { tab: location.state?.tab } }}
+        to={{ pathname: routes.explore, state: { tab: location.state?.tab } }}
       >
         <div className="nav-content">
           <Rocket className="icon" />

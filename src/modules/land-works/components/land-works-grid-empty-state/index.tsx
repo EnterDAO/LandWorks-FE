@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Box, Button, Modal } from 'design-system';
 import ListNewProperty from 'modules/land-works/components/list-new-property';
 import { ReactComponent as EmptyStateAsset } from 'resources/svg/empty-state.svg';
+import { routes } from 'router/routes';
 
 import { CrossIconStyled, RootStyled, TypographyStyled } from './styled';
 
@@ -22,7 +23,7 @@ const LandsWorksGridEmptyState: FC = () => {
             variant="secondary"
             btnSize="medium"
             sx={{ marginRight: '20px' }}
-            onClick={() => history.push('/explore')}
+            onClick={() => history.push(routes.explore)}
           >
             Explore
           </Button>

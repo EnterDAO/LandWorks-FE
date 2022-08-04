@@ -8,6 +8,7 @@ import { ReactComponent as Partners } from 'assets/img/partners.svg';
 //@ts-ignore
 import Anim from 'assets/landing_animation.webm';
 import { Button, Grid } from 'design-system';
+import { routes } from 'router/routes';
 
 import './index.scss';
 
@@ -30,7 +31,7 @@ export const Hero: React.FC = () => {
               LandWorks is a community-owned Marketplace for renting Web3 Metaverse Land, governed by EnterDAO and the
               ENTR token.
             </p>
-            <Link to="/explore">
+            <Link to={routes.explore}>
               <Button variant="gradient" btnSize="small" className="button-primary">
                 Explore
               </Button>

@@ -14,6 +14,7 @@ import {
   StyledLink,
   StyledRoot,
 } from 'modules/landing/components/Connect/styled';
+import { routes } from 'router/routes';
 
 export const Connect: React.FC = () => {
   const getYear = () => {
@@ -69,7 +70,7 @@ export const Connect: React.FC = () => {
       <LinksRaw>
         <Link href="https://enterdao.xyz/">EnterDAO</Link>
 
-        <Link href="/">LandWorks</Link>
+        <Link href={routes.home}>LandWorks</Link>
 
         <Link href="https://metaportal.gg/">MetaPortal</Link>
 

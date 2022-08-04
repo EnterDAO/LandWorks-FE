@@ -3,6 +3,7 @@ import { isMobile } from 'react-device-detect';
 import { Route, Switch } from 'react-router-dom';
 
 import { useWarning } from 'providers/warning-provider';
+import { routes } from 'router/routes';
 
 const ExploreView = lazy(() => import('./views/explore-view'));
 const MyPropertiesView = lazy(() => import('./views/my-properties-view'));
@@ -29,9 +30,9 @@ const LandworksView: React.FC = () => {
 
   return (
     <Switch>
-      <Route path="/property/:tokenId" exact component={SingleLand} />
-      <Route path="/explore" exact component={ExploreView} />
-      <Route path="/my-properties" exact component={MyPropertiesView} />
+      <Route path={routes.explore} exact component={ExploreView} />
+      <Route path={routes.property} component={SingleLand} />
+      <Route path={routes.myProperties} component={MyPropertiesView} />
     </Switch>
   );
 };

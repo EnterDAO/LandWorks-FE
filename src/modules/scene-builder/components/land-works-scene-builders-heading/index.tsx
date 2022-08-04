@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Box, Button, Grid } from 'design-system';
+import { routes } from 'router/routes';
 
 import landingImage from './assets/scene-expert-landing.png';
 import { TypographyStyled } from './styled';
@@ -30,7 +31,7 @@ const SceneBuilderHeading: React.FC<Props> = (props: Props) => {
             btnSize="medium"
             onClick={() =>
               history.push({
-                pathname: '/scene-builder/join-builders',
+                pathname: routes.sceneBuilderJoin,
                 state: { from: window.location.pathname, title: 'Scene Builder' },
               })
             }
