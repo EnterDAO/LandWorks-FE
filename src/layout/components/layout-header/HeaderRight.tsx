@@ -20,8 +20,8 @@ const HeaderRight: FC = () => {
         <Button
           sx={{
             width: { xs: '100% !important', lg: 'auto' },
-            minWidth: { lg: '150px !important', xl: 'auto' },
-            height: { lg: '42px !important', xl: 'auto' },
+            minWidth: { lg: '150px !important', xl: '200px !important' },
+            height: { lg: '42px !important', xl: '52px !important' },
           }}
           onClick={() => history.push(routes.explore)}
           btnSize="medium"
