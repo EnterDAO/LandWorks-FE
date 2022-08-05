@@ -15,6 +15,7 @@ import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
+import { routes } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
 import { AssetAvailablity, PaymentToken, fetchAssetLastRentEnd } from '../../api';
@@ -404,7 +405,7 @@ export const RentModal: React.FC<Props> = (props) => {
           buttonEvent={() => {
             setJoinPromptOpen(true);
             localStorage.setItem('join_prompt', 'true');
-            history.push('/my-properties');
+            history.push(routes.myProperties);
           }}
         />
       )}

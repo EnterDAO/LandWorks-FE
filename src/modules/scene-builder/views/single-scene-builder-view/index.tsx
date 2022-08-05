@@ -10,6 +10,7 @@ import SceneBuilderProfile from 'modules/scene-builder/components/scene-builder-
 import ProfileLoaderSkeleton from 'modules/scene-builder/components/scene-builder-profile/card-loader-skeleton';
 import SceneBuilderDetails from 'modules/scene-builder/components/scene-builder-profile/scene-builder-details';
 import SceneBuilderPortfolio from 'modules/scene-builder/components/scene-builder-profile/scene-builder-portfolio';
+import { routes } from 'router/routes';
 
 import { BreadCrumbs, Separator } from '../scene-builder-form-view/styled';
 import { StyledBreadcrumbsGrid } from './styled';
@@ -45,14 +46,14 @@ const SingleBuilderView: FC = () => {
     <>
       <StyledBreadcrumbsGrid className="content-container">
         <BreadCrumbs>
-          <Link className="button-back" to={'/scene-builder'}>
+          <Link className="button-back" to={routes.sceneBuilder}>
             <div className="button-icon">
               <BackIcon style={{ width: '20px' }} />
             </div>
             <span>Back to {'Scene Builders'}</span>
           </Link>
           <Separator />
-          <Link className="button-explore" to={'/scene-builder'}>
+          <Link className="button-explore" to={routes.sceneBuilder}>
             <span>{'Builders'}</span>
           </Link>
           <ArrowRightIcon style={{ width: '20px' }} />
