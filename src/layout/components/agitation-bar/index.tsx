@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import { Button } from 'design-system';
 import { CloseIcon } from 'design-system/icons';
+import { routes } from 'router/routes';
 
 import { CloseIconButtonStyled, StyledRoot, StyledTitle } from './styled';
 
@@ -20,7 +21,7 @@ export const AgitaionBar: React.FC<IProps> = ({ setShowAgitationBar }) => {
   return (
     <StyledRoot>
       <StyledTitle>Apply for our Grant Program and win up to $10,000!</StyledTitle>
-      <Button variant="primary" btnSize="xsmall" onClick={() => history.push('/grants-program')}>
+      <Button variant="primary" btnSize="xsmall" onClick={() => history.push(routes.grantsProgram)}>
         Read more
       </Button>
       <CloseIconButtonStyled

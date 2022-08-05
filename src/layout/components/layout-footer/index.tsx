@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import ExternalLink from 'components/custom/external-link';
 import Icon, { IconNames } from 'components/custom/icon';
 import { Typography } from 'design-system';
+import { routes } from 'router/routes';
 
 import styles from './layout-footer.module.scss';
 
@@ -67,7 +68,7 @@ const LayoutFooter: React.FC<Props> = ({ isWrapped = true }) => {
             EnterDAO
           </ExternalLink>
 
-          <Link to="/" className={styles.linkAnchor}>
+          <Link to={routes.home} className={styles.linkAnchor}>
             LandWorks
           </Link>
 

@@ -25,6 +25,7 @@ import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
+import { routes } from 'router/routes';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
@@ -905,7 +906,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               localStorage.setItem('join_prompt', 'true');
               setShowSuccessModal(false);
               closeModal && closeModal();
-              history.push('/my-properties');
+              history.push(routes.myProperties);
               setJoinPromptOpen(true);
             }}
           />

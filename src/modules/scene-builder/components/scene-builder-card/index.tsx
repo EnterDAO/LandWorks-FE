@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { Box, Grid } from 'design-system';
 import { LocationIcon } from 'design-system/icons';
+import { getSceneBuilderBuilderPath } from 'router/routes';
 
 import { AvatarContainer, CardContainer, DividerStyled, TypeChip, TypographyStyled } from './styled';
 
@@ -16,7 +17,7 @@ interface ISceneBuilderCard {
 
 const SceneBuilderCard: FC<ISceneBuilderCard> = ({ builder }) => {
   return (
-    <Link to={`/scene-builder/${builder.builderName}`}>
+    <Link to={getSceneBuilderBuilderPath(builder.builderName)}>
       <CardContainer className="scene-builder-card">
         <Grid height="133px" width="100%" borderRadius="20px" overflow="hidden">
           <Box
