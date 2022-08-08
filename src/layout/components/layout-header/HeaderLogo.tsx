@@ -1,20 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { FC } from 'react';
 
 import Icon from 'components/custom/icon';
 import StyledNavLink from 'components/styled/nav-link';
 import { Box } from 'design-system';
+import useHasUserEnteredApp from 'hooks/useHasUserEnteredApp';
 import { routes } from 'router/routes';
 
 import { ReactComponent as TextLogo } from '../../../resources/svg/landWorks-logo.svg';
-import { useIsLandingMode } from './HeaderNav';
 
 const HeaderLogo: FC = () => {
-  const isUserEnteredApp = useIsLandingMode();
+  const hasUserEnteredApp = useHasUserEnteredApp();
 
   return (
     <StyledNavLink
-      to={isUserEnteredApp ? routes.explore : routes.home}
+      to={hasUserEnteredApp ? routes.explore : routes.home}
       sx={{
         display: 'inline-flex',
         alignItems: 'center',
