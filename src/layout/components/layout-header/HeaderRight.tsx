@@ -3,18 +3,17 @@ import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Box, Button } from 'design-system';
+import useHasUserEnteredApp from 'hooks/useHasUserEnteredApp';
 import { routes } from 'router/routes';
 import ConnectedWallet from 'wallets/components/connected-wallet';
 
-import { useIsLandingMode } from './HeaderNav';
-
 const HeaderRight: FC = () => {
   const history = useHistory();
-  const isUserEnteredApp = useIsLandingMode();
+  const hasUserEnteredApp = useHasUserEnteredApp();
 
   return (
     <Box display="flex">
-      {isUserEnteredApp ? (
+      {hasUserEnteredApp ? (
         <ConnectedWallet />
       ) : (
         <Button
