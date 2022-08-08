@@ -396,7 +396,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
   const getLandsForEstates = async (estates: DecentralandNFT[]) => {
     let allLandsForEstates: DecentralandNFT[] = [];
-    const values = await Promise.allSettled(estates.map((e: DecentralandNFT) => getLandsForEstate(e)));
+    const values = await Promise.allSettled(
+      estates.filter((e) => e.size > 0).map((e: DecentralandNFT) => getLandsForEstate(e))
+    );
     values.forEach((v) => {
       if (v.status === 'fulfilled') {
         allLandsForEstates = [...allLandsForEstates, ...v.value];

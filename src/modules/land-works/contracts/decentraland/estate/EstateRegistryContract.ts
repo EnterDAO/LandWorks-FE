@@ -52,6 +52,7 @@ export default class EstateRegistryContract extends ERC721Contract {
       landIds: estateData,
       isLAND: false,
       metaverseName: 'Decentraland',
+      size: estateData.estateSize.toNumber(),
     };
   }
 
