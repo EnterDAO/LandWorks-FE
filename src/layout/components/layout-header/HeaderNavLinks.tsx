@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { FC, useEffect, useRef } from 'react';
-import { matchPath, useRouteMatch } from 'react-router-dom';
+import React, { FC } from 'react';
 
 import { Box } from 'design-system';
+import useHasUserEnteredApp from 'hooks/useHasUserEnteredApp';
 import { routes } from 'router/routes';
 
 import { ReactComponent as Rocket } from '../../../resources/svg/rocket-02.svg';
@@ -66,32 +65,9 @@ const appNav: HeaderNavLinkProps[] = [
   },
 ];
 
-export const useIsLandingMode = () => {
-  const isExploreRoute = !!useRouteMatch({
-    path: routes.explore,
-  });
-  const isHomeRoute = !!useRouteMatch({
-    path: routes.home,
-    exact: true,
-  });
-
-  const isLendingModeRef = useRef(isExploreRoute);
-
-  useEffect(() => {
-    if (isExploreRoute) {
-      isLendingModeRef.current = true;
-    } else if (isHomeRoute) {
-      isLendingModeRef.current = false;
-    }
-  }, [isExploreRoute, isHomeRoute]);
-
-  return (isExploreRoute || isLendingModeRef.current) && !isHomeRoute;
-};
-
-const HeaderNav: FC = () => {
-  const isLandingMode = useIsLandingMode();
-
-  const nav = isLandingMode ? appNav : landingNav;
+const HeaderNavLinks: FC = () => {
+  const hasUserEnteredApp = useHasUserEnteredApp();
+  const nav = hasUserEnteredApp ? appNav : landingNav;
 
   return (
     <Box
@@ -110,4 +86,4 @@ const HeaderNav: FC = () => {
   );
 };
 
-export default HeaderNav;
+export default HeaderNavLinks;
