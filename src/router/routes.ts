@@ -14,7 +14,7 @@ export const routes = {
   property: '/property/:tokenId',
 };
 
-export const getSceneBuilderBuilderPath = (builderName: string) => {
+export const getSceneBuilderBuilderPath = (builderName: string): string => {
   return generatePath(routes.sceneBuilderBuilder, {
     builderName,
   });
