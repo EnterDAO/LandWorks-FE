@@ -396,9 +396,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
   const getLandsForEstates = async (estates: DecentralandNFT[]) => {
     let allLandsForEstates: DecentralandNFT[] = [];
-    const values = await Promise.allSettled(
-      estates.filter((e) => e.size > 0).map((e: DecentralandNFT) => getLandsForEstate(e))
-    );
+    const values = await Promise.allSettled(estates.map((e: DecentralandNFT) => getLandsForEstate(e)));
     values.forEach((v) => {
       if (v.status === 'fulfilled') {
         allLandsForEstates = [...allLandsForEstates, ...v.value];
@@ -415,7 +413,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
     try {
       const lands = await landRegistryContract?.getUserData(walletCtx.account);
-      const estates = await estateRegistryContract?.getUserData(walletCtx.account);
+      const estates = (await estateRegistryContract?.getUserData(walletCtx.account)).filter(
+        (e: DecentralandNFT) => e.size > 0
+      );
       const cryptoVoxels = await cryptoVoxelsContract?.getUserData(walletCtx.account);
       const landsForEstates = await getLandsForEstates(estates);
       setEstateGroup(landsForEstates);
