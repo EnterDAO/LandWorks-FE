@@ -1,12 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+//eslint-disable-next-line
+//@ts-ignore
+import animationVideoHvc from 'assets/home-hero-animation.mov';
+//eslint-disable-next-line
+//@ts-ignore         
+import animationVideoWebm from 'assets/home-hero-animation.webm';
 import { ReactComponent as Background } from 'assets/img/hero_main.svg';
 import { ReactComponent as Metaverse } from 'assets/img/hero_tag.svg';
 import { ReactComponent as Partners } from 'assets/img/partners.svg';
-//eslint-disable-next-line
-//@ts-ignore
-import Anim from 'assets/landing_animation.webm';
 import { Button, Grid } from 'design-system';
 import { routes } from 'router/routes';
 
@@ -18,8 +21,9 @@ export const Hero: React.FC = () => {
       <Background className="hero-background" />
 
       <div className="content-container">
-        <video autoPlay loop muted className="right-blocks">
-          <source src={Anim} type="video/webm" />
+        <video autoPlay loop muted playsInline className="right-blocks">
+          <source src={animationVideoHvc} type="video/mp4;codecs=hvc1" />
+          <source src={animationVideoWebm} type="video/webm" />
           Sorry, your browser doesn't support embedded videos.
         </video>
         <Grid container>
