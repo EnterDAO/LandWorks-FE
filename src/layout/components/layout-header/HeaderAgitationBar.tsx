@@ -21,10 +21,16 @@ export const HeaderAgitaionBar: FC = () => {
 
   return (
     <Collapse unmountOnExit mountOnEnter in={show}>
-      <Box bgcolor={THEME_COLORS.accentBlue} display="flex" py={{ xs: 3, lg: 2 }} gap={2} px={{ xs: 3, lg: 15 }}>
+      <Box
+        display="flex"
+        alignItems="center"
+        gap={2}
+        py={{ xs: 3, lg: 2 }}
+        px={{ xs: 3, lg: 15 }}
+        bgcolor={THEME_COLORS.accentBlue}
+      >
         <Typography
           variant="button"
-          alignSelf="center"
           component="p"
           fontSize={{ xs: 12, lg: 14 }}
           lineHeight={{ xs: '18px', lg: '21px' }}
