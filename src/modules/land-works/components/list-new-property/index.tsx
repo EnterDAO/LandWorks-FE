@@ -413,7 +413,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
     try {
       const lands = await landRegistryContract?.getUserData(walletCtx.account);
-      const estates = await estateRegistryContract?.getUserData(walletCtx.account);
+      const estates = (await estateRegistryContract?.getUserData(walletCtx.account)).filter(
+        (e: DecentralandNFT) => e.size > 0
+      );
       const cryptoVoxels = await cryptoVoxelsContract?.getUserData(walletCtx.account);
       const landsForEstates = await getLandsForEstates(estates);
       setEstateGroup(landsForEstates);

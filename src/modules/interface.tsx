@@ -19,6 +19,7 @@ export interface DecentralandNFT extends BaseNFT {
   isLAND?: boolean;
   landIds?: any[];
   coords: any[];
+  size: number;
 }
 
 export interface CryptoVoxelXYcoords {
