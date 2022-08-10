@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Grid, Stack } from 'design-system';
+import { Grid, Stack, Typography } from 'design-system';
 import { DiamondIcon, InteractiveIcon, OriginalityIcon } from 'design-system/icons';
 import {
   Section,
@@ -13,6 +13,8 @@ import {
 
 import { teamMembers } from './data';
 import { Details, TeamMemberCard } from './styled';
+
+import { THEME_COLORS } from 'themes/theme-constants';
 
 export const JuryAndScoringSection: FC<SpecificSectionProps> = ({ id }) => {
   return (
@@ -63,6 +65,24 @@ export const JuryAndScoringSection: FC<SpecificSectionProps> = ({ id }) => {
             </Details>
           </Grid>
         </Stack>
+      </SubSection>
+      <SubSection>
+        <SubSectionTitle>Additional guidelines (not mandatory):</SubSectionTitle>
+        <Typography
+          component="ul"
+          sx={{
+            pl: 4,
+            '& ::marker': {
+              color: 'inherit',
+            },
+          }}
+        >
+          <li>Common sized scenes (1x1, 1x2, 2x2) are welcomed as more users would be able to utilize them.</li>
+          <li>Any availability for customization is welcomed (text placeholders, image placeholders).</li>
+          <li>
+            The more details you provide in you application - the better. Contexts of the build, sizing, variables, etc.
+          </li>
+        </Typography>
       </SubSection>
     </Section>
   );
