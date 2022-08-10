@@ -14,8 +14,6 @@ import {
 import { teamMembers } from './data';
 import { Details, TeamMemberCard } from './styled';
 
-import { THEME_COLORS } from 'themes/theme-constants';
-
 export const JuryAndScoringSection: FC<SpecificSectionProps> = ({ id }) => {
   return (
     <Section id={id}>
