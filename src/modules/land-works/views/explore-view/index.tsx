@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useDebounce from '@rooks/use-debounce';
+import classNames from 'classnames';
 import { isNull } from 'lodash';
 import { getNonHumanValue } from 'web3/utils';
 
-import { Modal } from 'design-system';
+import { Box, Button, Icon, Modal, Stack } from 'design-system';
+import { ArrowLeftIcon, ArrowRightIcon, MapIcon, MinusIcon, PlusThinIcon, ViewAllIcon } from 'design-system/icons';
 import LayoutFooter from 'layout/components/layout-footer';
 import { AtlasTile } from 'modules/land-works/components/atlas';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
@@ -25,6 +27,8 @@ import {
   fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   fetchTokenPayments,
 } from '../../api';
+import ExploreMap from './ExploreMap';
+import ToggleMapVisibilityButton from './ToggleMapVisibilityButton';
 
 import {
   filterByMoreFilters,
@@ -47,6 +51,7 @@ import {
   sortColumns,
   sortDirections,
 } from 'modules/land-works/constants';
+import { THEME_COLORS } from 'themes/theme-constants';
 
 import './explore-view.scss';
 
@@ -81,9 +86,7 @@ const ExploreView: React.FC = () => {
   const [sortColumn, setSortColumn] = useState(sortColumns[orderFilter]);
 
   const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
-  const [mapExpanded, setMapExpanded] = useState(false);
   const [mapIsHidden, setMapIsHidden] = useState(sessionFilters.mapIsHidden || false);
-  const [mapSize, setMapSize] = useState('small');
 
   const [atlasMapX, setAtlasMapX] = useState(0);
   const [atlasMapY, setAtlasMapY] = useState(0);
@@ -261,10 +264,6 @@ const ExploreView: React.FC = () => {
     moreFilters && handleMoreFilter(moreFilters);
   }, [lands]);
 
-  const agitationBarStatus = sessionStorage.getItem('showAgitationBar')
-    ? 'calc(100vh - var(--navbar-height) - var(--explore-subheader) - var(--explore-filters) - var(--content-container-v-padding) * 2)'
-    : 'calc(100vh - var(--navbar-height) - var(--explore-subheader) - var(--explore-filters) - var(--content-container-v-padding) * 2 - 50px) ';
-
   const availableLands = filterLandsByAvailability(filterLandsByQuery(lands, searchQuery));
 
   return (
@@ -298,53 +297,35 @@ const ExploreView: React.FC = () => {
               maxArea={maxArea}
             />
           </div>
-          <div className="content-container content-container--explore-view">
-            <div className={`list-lands-container ${mapIsHidden ? 'full-width' : ''}`}>
-              <LandsExploreList
-                setMapSize={setMapSize}
-                setIsHiddenMap={hideMapHandler}
-                isHiddenMap={mapIsHidden}
-                lastRentEnd={lastRentEnd}
-                loading={loading}
-                lands={filteredLands || lands}
-                setPointMapCentre={setPointMapCentre}
-              />
-              <LayoutFooter isWrapped={false} />
-            </div>
-            {!mapIsHidden && (
-              <div
-                style={{ height: agitationBarStatus }}
-                className={`map-list-container 
-                ${mapExpanded && 'map-list-container--expanded'} 
-                ${mapSize === 'large' && 'map-list-container--enlarged'} 
-                ${mapSize === 'medium' && 'map-list-container--middleSize'}
-                }`}
-              >
-                {metaverse == VOXEL_METAVERSE && (
-                  <LandsExploreMapVoxels
-                    positionX={atlasMapX}
-                    positionY={atlasMapY}
-                    expanded={mapExpanded}
-                    onClick={() => setMapExpanded(!mapExpanded)}
-                    lands={lands}
-                  />
-                )}
-                {metaverse == DECENTRALAND_METAVERSE && (
-                  <LandsExploreMap
-                    positionX={atlasMapX}
-                    positionY={atlasMapY}
-                    expanded={mapExpanded}
-                    onClick={() => setMapExpanded(!mapExpanded)}
-                    highlights={coordinatesHighlights}
-                    lands={lands}
-                  />
-                )}
+          <Box position="relative">
+            <div className="content-container content-container--explore-view">
+              <div className={`list-lands-container ${mapIsHidden ? 'full-width' : ''}`}>
+                <LandsExploreList
+                  isMapVisible={!mapIsHidden}
+                  lastRentEnd={lastRentEnd}
+                  loading={loading}
+                  lands={filteredLands || lands}
+                  setPointMapCentre={setPointMapCentre}
+                />
+                <LayoutFooter isWrapped={false} />
               </div>
-            )}
+            </div>
+
+            <ExploreMap
+              type={metaverse}
+              positionX={atlasMapX}
+              positionY={atlasMapY}
+              highlights={coordinatesHighlights}
+              lands={lands}
+              isMapVisible={!mapIsHidden}
+              onHideMap={() => hideMapHandler(true)}
+              onShowMap={() => hideMapHandler(false)}
+            />
+
             <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
               <ListNewProperty />
             </Modal>
-          </div>
+          </Box>
         </LandsMapTileProvider>
       </LandsMapTilesProvider>
     </LandsSearchQueryProvider>
