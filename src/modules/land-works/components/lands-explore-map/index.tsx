@@ -1,9 +1,8 @@
 import { FC, useEffect, useState } from 'react';
 
-import { ReactComponent as ArrowLeftIcon } from 'assets/icons/arrow-left.svg';
-import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
-import { Button } from 'design-system';
-import { MinusIcon, PlusIcon } from 'design-system/icons';
+import { Button, Icon, Stack } from 'design-system';
+import { MinusIcon, PlusThinIcon, ViewAllIcon } from 'design-system/icons';
+import { LandsExploreMapBaseProps } from 'modules/interface';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
@@ -13,26 +12,21 @@ import LandsExploreLandPreview from '../lands-explore-land-preview';
 import LandsExploreNavigatorInfo from '../lands-explore-navigator-info';
 
 import { getOwnerOrConsumerId } from 'modules/land-works/utils';
+import { inverseLerp, lerp } from 'utils';
 
 import { TILES_URL_DECENTRALEND } from 'modules/land-works/constants';
 
 import styles from './lands-explore-map.module.scss';
 
-interface Props {
-  positionX: number;
-  positionY: number;
-  expanded: boolean;
-  onClick?: () => void;
-  highlights?: CoordinatesLand[];
-  lands: AssetEntity[];
-}
+type LandExploreMap = LandsExploreMapBaseProps;
 
-const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, highlights = [], lands }) => {
+const MIN_ZOOM = 0.5;
+const MAX_ZOOM = 3;
+
+const LandsExploreMap: FC<LandExploreMap> = ({ positionX, positionY, onZoom, zoom = 0, highlights = [], lands }) => {
   const { clickedLandId, setClickedLandId, setSelectedTile, showCardPreview } = useLandsMapTile();
   const { mapTiles, setMapTiles, selectedId, setSelectedId } = useLandsMapTiles();
-  const [clickZoom, setClickZoom] = useState(0.5);
   const [highlightedTiles, setHighlightedTiles] = useState<Coord[]>([]);
-  const [scrollZoom, setScrollZoom] = useState(0.5);
 
   const fetchTiles = async (url: string = TILES_URL_DECENTRALEND) => {
     if (!window.fetch) return {};
@@ -42,39 +36,10 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
     setMapTiles && setMapTiles(json.data as Record<string, AtlasTile>);
   };
 
-  const onClickToggleSizeHandler = () => {
-    onClick && onClick();
-  };
-
-  const onClickPlusHandler = () => {
-    let zoom = clickZoom;
-
-    if (scrollZoom !== clickZoom) {
-      zoom = scrollZoom;
-    }
-
-    if (zoom < 3) {
-      setClickZoom(zoom + 0.5);
-      setScrollZoom(zoom + 0.5);
-    }
-  };
-
-  const onClickMinusHandler = () => {
-    let zoom = clickZoom;
-
-    if (scrollZoom !== clickZoom) {
-      zoom = scrollZoom;
-    }
-
-    if (zoom < 3 && zoom > 0.5) {
-      setClickZoom(zoom - 0.5);
-      setScrollZoom(zoom - 0.5);
-    }
-  };
-
   const onChangeAtlasHandler = (data: { zoom: number }) => {
-    setClickZoom(data.zoom);
-    setScrollZoom(data.zoom);
+    if (onZoom) {
+      onZoom(inverseLerp(MIN_ZOOM, MAX_ZOOM, data.zoom));
+    }
   };
 
   const onPopupAtlasHandler = (data: { x: number; y: number }) => {
@@ -177,7 +142,7 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
         tiles={mapTiles}
         x={positionX}
         y={positionY}
-        zoom={clickZoom}
+        zoom={lerp(MIN_ZOOM, MAX_ZOOM, zoom)}
         layers={[strokeLayer, fillLayer, clickedTileStrokeLayer, clickedTileFillLayer]}
         onChange={onChangeAtlasHandler}
         onPopup={onPopupAtlasHandler}
@@ -187,21 +152,6 @@ const LandsExploreMap: FC<Props> = ({ positionX, positionY, expanded, onClick, h
       <LandsExploreNavigatorInfo />
 
       {showCardPreview && <LandsExploreLandPreview lands={lands} />}
-
-      <div className={styles['expand-control']}>
-        <Button variant="secondary" type="button" onClick={onClickToggleSizeHandler}>
-          {expanded ? <ArrowRightIcon /> : <ArrowLeftIcon />}
-        </Button>
-      </div>
-
-      <div className={styles['zoom-control']}>
-        <Button variant="secondary" type="button" onClick={onClickPlusHandler} disabled={clickZoom > 2.8}>
-          <PlusIcon />
-        </Button>
-        <Button variant="secondary" type="button" onClick={onClickMinusHandler} disabled={clickZoom <= 0.5}>
-          <MinusIcon />
-        </Button>
-      </div>
     </div>
   );
 };
