@@ -1,6 +1,8 @@
 import { ReactComponent as AlertIcon } from 'assets/icons/alert.svg';
 import { ReactComponent as ArrowDownIcon } from 'assets/icons/arrow-down.svg';
+import { ReactComponent as ArrowLeft2Icon } from 'assets/icons/arrow-left-2.svg';
 import { ReactComponent as ArrowLeftIcon } from 'assets/icons/arrow-left.svg';
+import { ReactComponent as ArrowRight2Icon } from 'assets/icons/arrow-right-2.svg';
 import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
 import { ReactComponent as ArrowUpIcon } from 'assets/icons/arrow-up.svg';
 import { ReactComponent as BackIcon } from 'assets/icons/back.svg';
@@ -35,6 +37,7 @@ import { ReactComponent as FolderIcon } from 'assets/icons/folder.svg';
 import { ReactComponent as GalleryIcon } from 'assets/icons/gallery.svg';
 import { ReactComponent as GamesIcon } from 'assets/icons/games.svg';
 import { ReactComponent as GlassesIcon } from 'assets/icons/glasses.svg';
+import { ReactComponent as GridBigIcon } from 'assets/icons/grid-big.svg';
 import { ReactComponent as GridIcon } from 'assets/icons/grid.svg';
 import { ReactComponent as HeartFilledIcon } from 'assets/icons/heart-filled.svg';
 import { ReactComponent as HeartInCircleFilledIcon } from 'assets/icons/heart-in-circle-filled.svg';
@@ -61,6 +64,7 @@ import { ReactComponent as NoConnectionIcon } from 'assets/icons/no-connection.s
 import { ReactComponent as NotVisibleIcon } from 'assets/icons/not-visible.svg';
 import { ReactComponent as NotificationIcon } from 'assets/icons/notification.svg';
 import { ReactComponent as OriginalityIcon } from 'assets/icons/originality.svg';
+import { ReactComponent as PlusThinIcon } from 'assets/icons/plus-thin.svg';
 import { ReactComponent as PlusIcon } from 'assets/icons/plus.svg';
 import { ReactComponent as PostBoxIcon } from 'assets/icons/postbox.svg';
 import { ReactComponent as ProfileIcon02 } from 'assets/icons/profile-01.svg';
@@ -87,6 +91,7 @@ import { ReactComponent as TwitterIcon } from 'assets/icons/twitter.svg';
 import { ReactComponent as UpdateIcon } from 'assets/icons/update.svg';
 import { ReactComponent as UploadIcon } from 'assets/icons/upload.svg';
 import { ReactComponent as UploadingIcon } from 'assets/icons/uploading.svg';
+import { ReactComponent as ViewAllIcon } from 'assets/icons/view-all.svg';
 import { ReactComponent as VisibleIcon } from 'assets/icons/visible.svg';
 import { ReactComponent as WalletIcon } from 'assets/icons/wallet.svg';
 import { ReactComponent as WarningIcon } from 'assets/icons/warning.svg';
@@ -114,9 +119,12 @@ export {
   SuccessStarIcon,
   ArrowDownIcon,
   GridIcon,
+  GridBigIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
   ArrowUpIcon,
+  ArrowLeft2Icon,
+  ArrowRight2Icon,
   BackIcon,
   BlueCheckIcon,
   BlueDollarIcon,
@@ -161,12 +169,14 @@ export {
   SettingsIcon,
   LogoutIcon,
   PlusIcon,
+  PlusThinIcon,
   Currency,
   Calendar02,
   BluePlus,
   Spinner,
   SpinnerSecondary,
   ThreeStars,
+  ViewAllIcon,
 };
 // Multi-color icons
 export {
