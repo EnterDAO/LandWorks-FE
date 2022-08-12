@@ -105,6 +105,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
             borderRadius={isMapMaximized ? 0 : '20px 0 0 20px'}
             height={1}
             width={1}
+            zIndex={0}
             bgcolor="#662363"
           >
             <MapComponent {...mapProps} zoom={zoom} onZoom={handleZoom} />
