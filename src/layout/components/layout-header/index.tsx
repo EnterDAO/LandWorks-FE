@@ -2,6 +2,7 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from '@mui/material';
 
 import { Box } from 'design-system';
+import { useHeader } from 'providers/header-provider';
 
 import { HeaderAgitaionBar } from './HeaderAgitationBar';
 import HeaderDesktopNav from './HeaderDesktopNav';
@@ -11,28 +12,11 @@ import HeaderMobileNav from './HeaderMobileNav';
 import { THEME_COLORS } from 'themes/theme-constants';
 
 const LayoutHeader: FC = () => {
-  const headerContainerElRef = useRef<HTMLDivElement | null>(null);
   const isDesktop = useMediaQuery('(min-width: 992px)');
-  const [headerHeight, setHeaderHeight] = useState(0);
-
-  useEffect(() => {
-    if (!headerContainerElRef.current || !window.ResizeObserver || isDesktop) {
-      return;
-    }
-
-    const resizeObserver = new ResizeObserver(([entry]) => {
-      setHeaderHeight(entry.contentRect.height);
-    });
-
-    resizeObserver.observe(headerContainerElRef.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [isDesktop]);
+  const header = useHeader();
 
   return (
-    <Box ref={headerContainerElRef} position="sticky" top={0} left={0} width={1} zIndex={999}>
+    <Box component="header" ref={header.ref} position="sticky" top={0} left={0} width={1} zIndex={999}>
       <HeaderAgitaionBar />
       <Box bgcolor={THEME_COLORS.darkBlue01} px={{ xs: 3, lg: 15 }}>
         <Box
@@ -40,11 +24,11 @@ const LayoutHeader: FC = () => {
           alignItems="center"
           height={{ xs: 70, lg: 80 }}
           justifyContent="space-between"
-          boxShadow={{ lg: `0 2px 0 ${THEME_COLORS.grey01}` }}
+          boxShadow={{ lg: `inset 0 -2px 0 ${THEME_COLORS.grey01}` }}
         >
           <HeaderLogo />
 
-          {isDesktop ? <HeaderDesktopNav /> : <HeaderMobileNav offsetTop={headerHeight} />}
+          {isDesktop ? <HeaderDesktopNav /> : <HeaderMobileNav />}
         </Box>
       </Box>
     </Box>
