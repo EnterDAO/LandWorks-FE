@@ -2,6 +2,8 @@
 @import '../../../../styles/utils.scss';
 
 .land-explore {
+  $card: &-card;
+
   &-card {
     display: block;
     position: relative;
@@ -22,6 +24,61 @@
       box-shadow: 0px 5px 18px rgba(255, 255, 255, 0.3);
       border: 2px solid var(--theme-primary-color);
     }
+
+    &__info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    &__name-and-address {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+    }
+
+    &__name {
+      width: 100%;
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--theme-primary-color);
+      text-transform: capitalize;
+      line-height: 27px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    &__address {
+      font-size: 12px;
+      line-height: 18px;
+      font-weight: 600;
+      color: var(--theme-subtle-color);
+    }
+
+    &__price {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    &__hashtags {
+      font-style: normal;
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 18px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: #68687b;
+    }
+
+    &__rent {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
 
   &-image {
@@ -29,6 +86,7 @@
     border-radius: 10px;
     overflow: hidden;
     height: 160px;
+    margin-bottom: 15px;
 
     &-img {
       position: absolute;
@@ -42,18 +100,6 @@
     }
   }
 
-  &-name {
-    font-size: 18px;
-    font-weight: bold;
-    color: var(--theme-primary-color);
-    text-transform: capitalize;
-    line-height: 27px;
-    margin-top: 15px;
-    margin-bottom: 20px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
 
   // &-ranking-row {
   //   margin-bottom: 12px;
@@ -79,14 +125,11 @@
 
   &-divider {
     border: 1px solid #27273a;
-    margin: 16px;
+    margin: 15px 0;
   }
 
   &-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 16px;
+    margin-top: 15px;
 
     &.start {
       justify-content: flex-start;
@@ -95,16 +138,6 @@
     &.end {
       justify-content: flex-end;
     }
-  }
-
-  &-hashtags {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 18px;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: #68687b;
   }
 
   &-card-hot {
@@ -138,6 +171,8 @@
   }
 
   &-price-crypto-icon {
+    width: 15px;
+    height: 15px;;
     margin-right: 0.3rem;
   }
 
@@ -147,7 +182,6 @@
     font-size: 12px;
     line-height: 18px;
     color: var(--theme-subtle-color);
-    margin: 0 5px;
   }
 
   &-rent-label,
@@ -170,6 +204,53 @@
     .info-icon {
       width: 16px;
       height: 16px;
+    }
+  }
+
+  // layout compact
+
+  $root: &;
+
+  &-card--layout-compact {
+    padding: 10px;  
+    border-radius: 10px;
+
+    #{$root}-image {
+      height: 100px;
+      margin-bottom: 10px;
+    }
+
+    #{$root}-divider {
+      margin: 10px 0;
+    }
+
+    #{$root}-row {
+      margin-top: 10px;
+    }
+  }
+
+  &-card--layout-compact &-card {
+    &__info {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    &__name-and-address {
+      gap: 0;
+    }
+
+    &__name {
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    &__price {
+      flex-direction: row;
+      gap: 5px;
+    }
+
+    &__hashtags {
+      display: none;
     }
   }
 }
