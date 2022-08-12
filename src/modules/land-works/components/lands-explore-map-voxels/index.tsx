@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { GeoJSON, MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
+import { GeoJSON, MapContainer, Marker, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import { Icon, LatLngExpression, Layer } from 'leaflet';
 import { find } from 'lodash';
 
@@ -7,12 +7,13 @@ import { ReactComponent as ArrowLeftIcon } from 'assets/icons/arrow-left.svg';
 import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
 import MapMarker from 'assets/img/mapMarker.png';
 import { Button } from 'design-system';
-import { VoxelsMapCollection, VoxelsTileType } from 'modules/interface';
+import { LandsExploreMapBaseProps, VoxelsMapCollection, VoxelsTileType } from 'modules/interface';
 import { AssetEntity } from 'modules/land-works/api';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 
 import { parceVoxelsMapAsset } from 'modules/land-works/utils';
+import { inverseLerp, lerp } from 'utils';
 
 import { TILES_URL_VOXEL } from 'modules/land-works/constants';
 
@@ -23,15 +24,12 @@ const iconPerson = new Icon({
   iconUrl: `${MapMarker}`,
 });
 
-interface Props {
-  positionX: number;
-  positionY: number;
-  expanded: boolean;
-  onClick?: () => void;
-  lands: AssetEntity[];
-}
+type LandsExploreMapVoxelsProps = LandsExploreMapBaseProps;
 
-const LandsExploreMapVoxels: FC<Props> = ({ expanded, onClick, lands }) => {
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 12;
+
+const LandsExploreMapVoxels: FC<LandsExploreMapVoxelsProps> = ({ zoom = 0.5, onZoom, lands }) => {
   const { setClickedLandId } = useLandsMapTile();
   const { selectedId } = useLandsMapTiles();
 
@@ -46,10 +44,6 @@ const LandsExploreMapVoxels: FC<Props> = ({ expanded, onClick, lands }) => {
     const json = await resp.json();
 
     setMapTiles && setMapTiles(json.parcels);
-  };
-
-  const onClickToggleSizeHandler = () => {
-    onClick && onClick();
   };
 
   const getLandData = () => {
@@ -101,8 +95,15 @@ const LandsExploreMapVoxels: FC<Props> = ({ expanded, onClick, lands }) => {
 
   return (
     <div className={styles.root}>
-      <MapContainer center={[-0.0054, 0.0132]} zoom={8} className={styles['leaflet-container']}>
-        <MapOptions id={selectedId} mapTiles={mapTiles} />
+      <MapContainer
+        center={[-0.0054, 0.0132]}
+        minZoom={MIN_ZOOM}
+        maxZoom={MAX_ZOOM}
+        zoomControl={false}
+        zoom={lerp(MIN_ZOOM, MAX_ZOOM, zoom)}
+        className={styles['leaflet-container']}
+      >
+        <MapOptions id={selectedId} zoom={zoom} onZoom={onZoom} mapTiles={mapTiles} />
         <TileLayer
           attribution='&copy; <a href="https://www.cryptovoxels.com/">Voxel</a>'
           url="https://map.cryptovoxels.com/tile/?z={z}&x={x}&y={y}"
@@ -124,12 +125,6 @@ const LandsExploreMapVoxels: FC<Props> = ({ expanded, onClick, lands }) => {
           />
         )}
       </MapContainer>
-
-      <div className={styles['expand-control']}>
-        <Button variant="secondary" type="button" onClick={onClickToggleSizeHandler}>
-          {expanded ? <ArrowRightIcon /> : <ArrowLeftIcon />}
-        </Button>
-      </div>
     </div>
   );
 };
@@ -139,19 +134,37 @@ export default LandsExploreMapVoxels;
 interface MapOptionsProps {
   id: string | undefined;
   mapTiles: VoxelsTileType[] | undefined;
+  onZoom?: (zoom: number) => void;
+  zoom?: number;
 }
-const MapOptions: React.FC<MapOptionsProps> = ({ id, mapTiles }) => {
-  const map = useMap();
-  const FLY_ZOOM = 9;
-  map.setMaxZoom(12);
-  map.setMinZoom(1);
+
+const FLY_ZOOM = 9;
+
+const MapOptions: React.FC<MapOptionsProps> = ({ id, mapTiles, zoom = 0.5, onZoom }) => {
+  const map = useMapEvents({
+    zoom: () => {
+      if (onZoom) {
+        console.log('zoom', map.getZoom());
+        onZoom(inverseLerp(MIN_ZOOM, MAX_ZOOM, map.getZoom()));
+      }
+    },
+  });
 
   useEffect(() => {
-    if (id) {
-      const found = find(mapTiles, { id: Number(id) });
-      const coords = found?.geometry.coordinates[0];
-      const landCentre = coords ? getCentre(coords) : map.getCenter();
-      coords && map.setView(landCentre, FLY_ZOOM);
+    map.setZoom(lerp(MIN_ZOOM, MAX_ZOOM, zoom));
+  }, [map, zoom]);
+
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+
+    const foundTile = find(mapTiles, { id: Number(id) });
+    const coords = foundTile?.geometry.coordinates[0];
+    const landCentre = coords ? getCentre(coords) : map.getCenter();
+
+    if (coords) {
+      map.setView(landCentre, FLY_ZOOM);
     }
   }, [id]);
 
