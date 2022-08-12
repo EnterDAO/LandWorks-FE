@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AssetEntity } from './land-works/api';
+import { AssetEntity, CoordinatesLand } from './land-works/api';
 
 export type Metaverse = 'Decentraland' | 'Voxels';
 export interface Option {
@@ -90,3 +90,12 @@ type VoxelMapItem = {
     coordinates: number[][][];
   };
 };
+
+export interface LandsExploreMapBaseProps {
+  positionX: number;
+  positionY: number;
+  zoom?: number;
+  onZoom?: (zoom: number) => void;
+  lands: AssetEntity[];
+  highlights?: CoordinatesLand[];
+}
