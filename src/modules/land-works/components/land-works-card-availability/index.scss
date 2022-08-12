@@ -1,7 +1,8 @@
 
 
 .land-works-card-availability {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   background: var(--theme-body-color);
   color: var(--theme-grey900-color);
   border: 1px solid transparent;
@@ -16,14 +17,14 @@
 
   &::before {
     content: '';
-    display: inline-block;
+    display: inline-flex;
     width: 8px;
     height: 8px;
     border-radius: 8px;
     margin-right: 7px;
   }
 
-  &--available {
+  &--status-available {
     border-color: #6cd27e;
 
     &::before {
@@ -31,7 +32,7 @@
     }
   }
 
-  &--rented {
+  &--status-rented {
     border-color: #d7606e;
 
     &::before {
@@ -39,12 +40,27 @@
     }
   }
 
-  &--delisted {
+  &--status-delisted {
     color: var(--theme-subtle-color);
     border-color: var(--theme-subtle-color);
 
     &::before {
       background-color: var(--theme-subtle-color);
     }
+  }
+
+  &--layout-compact {
+    border: none;
+    padding: 0;
+
+    &::before {
+      margin-right: 0;
+      width: 12px;
+      height: 12px;;
+    }
+  }
+
+  &--layout-compact &__label {
+    display: none;
   }
 }
