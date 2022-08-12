@@ -1,18 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useDebounce from '@rooks/use-debounce';
-import classNames from 'classnames';
 import { isNull } from 'lodash';
 import { getNonHumanValue } from 'web3/utils';
 
-import { Box, Button, Icon, Modal, Stack } from 'design-system';
-import { ArrowLeftIcon, ArrowRightIcon, MapIcon, MinusIcon, PlusThinIcon, ViewAllIcon } from 'design-system/icons';
+import { Box, Modal } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
 import { AtlasTile } from 'modules/land-works/components/atlas';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
 import { statusData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
-import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
-import LandsExploreMapVoxels from 'modules/land-works/components/lands-explore-map-voxels';
 import LandsExploreSubheader from 'modules/land-works/components/lands-explore-subheader';
 import ListNewProperty from 'modules/land-works/components/list-new-property';
 import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-tile';
@@ -28,7 +24,6 @@ import {
   fetchTokenPayments,
 } from '../../api';
 import ExploreMap from './ExploreMap';
-import ToggleMapVisibilityButton from './ToggleMapVisibilityButton';
 
 import {
   filterByMoreFilters,
@@ -47,11 +42,9 @@ import {
   DECENTRALAND_METAVERSE,
   DEFAULT_LAST_RENT_END,
   DEFAULT_TOKEN_ADDRESS,
-  VOXEL_METAVERSE,
   sortColumns,
   sortDirections,
 } from 'modules/land-works/constants';
-import { THEME_COLORS } from 'themes/theme-constants';
 
 import './explore-view.scss';
 

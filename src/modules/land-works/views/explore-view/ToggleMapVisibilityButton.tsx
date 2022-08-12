@@ -1,13 +1,8 @@
-import React from 'react';
-import { SxProps, styled } from '@mui/system';
+import React, { FC } from 'react';
+import { styled } from '@mui/system';
 
 import { Button, Icon } from 'design-system';
 import { ArrowLeft2Icon, ArrowRight2Icon, MapIcon } from 'design-system/icons';
-
-interface ToggleMapVisibilityButtonProps {
-  onClick?: () => void;
-  active?: boolean;
-}
 
 const ToggleMapVisibilityButtonRoot = styled(Button)({
   position: 'absolute',
@@ -25,7 +20,12 @@ const ToggleMapVisibilityButtonRoot = styled(Button)({
   },
 });
 
-const ToggleMapVisibilityButton = ({ onClick, active }: ToggleMapVisibilityButtonProps) => {
+interface ToggleMapVisibilityButtonProps {
+  onClick?: () => void;
+  active?: boolean;
+}
+
+const ToggleMapVisibilityButton: FC<ToggleMapVisibilityButtonProps> = ({ onClick, active }) => {
   return (
     <ToggleMapVisibilityButtonRoot
       sx={[

@@ -1,14 +1,10 @@
 import { FC, useEffect, useState } from 'react';
-import { GeoJSON, MapContainer, Marker, TileLayer, useMap, useMapEvents } from 'react-leaflet';
+import { GeoJSON, MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
 import { Icon, LatLngExpression, Layer } from 'leaflet';
 import { find } from 'lodash';
 
-import { ReactComponent as ArrowLeftIcon } from 'assets/icons/arrow-left.svg';
-import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
 import MapMarker from 'assets/img/mapMarker.png';
-import { Button } from 'design-system';
 import { LandsExploreMapBaseProps, VoxelsMapCollection, VoxelsTileType } from 'modules/interface';
-import { AssetEntity } from 'modules/land-works/api';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 

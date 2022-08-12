@@ -1,9 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 
-import { Button, Icon, Stack } from 'design-system';
-import { MinusIcon, PlusThinIcon, ViewAllIcon } from 'design-system/icons';
 import { LandsExploreMapBaseProps } from 'modules/interface';
-import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 

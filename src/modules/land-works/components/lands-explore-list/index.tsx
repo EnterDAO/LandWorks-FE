@@ -3,7 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import useDebounce from '@rooks/use-debounce';
 
 import { Box, Grid, Icon } from 'design-system';
-import { GridBigIcon, GridIcon, MapIcon } from 'design-system/icons';
+import { GridBigIcon, GridIcon } from 'design-system/icons';
 import { LocationState } from 'modules/interface';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
@@ -15,14 +15,7 @@ import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
 
 import { AtlasTile } from '../atlas';
-import {
-  LandsSearchBarWrapperStyled,
-  StyledButton,
-  StyledGridContainer,
-  StyledGridItem,
-  StyledRow,
-  StyledText,
-} from './styled';
+import { LandsSearchBarWrapperStyled, StyledButton, StyledRow, StyledText } from './styled';
 
 import {
   filterLandsByAvailability,

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC } from 'react';
 import { useMediaQuery } from '@mui/material';
 
 import { Box } from 'design-system';

@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';

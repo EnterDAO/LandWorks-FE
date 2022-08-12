@@ -1,14 +1,4 @@
-import React, {
-  FC,
-  RefObject,
-  createContext,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { FC, RefObject, createContext, useContext, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 export interface HeaderContextValue {
   height: number;
@@ -18,7 +8,7 @@ export interface HeaderContextValue {
 
 const HeaderContext = createContext<HeaderContextValue | null>(null);
 
-export const useHeader = () => {
+export const useHeader = (): HeaderContextValue => {
   const context = useContext(HeaderContext);
 
   if (context === null) {
