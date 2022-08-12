@@ -8,6 +8,7 @@ import LayoutFooter from 'layout/components/layout-footer';
 import LayoutHeader from 'layout/components/layout-header';
 import ContractProvider from 'modules/land-works/providers/contract-provider';
 import LandWorksProvider from 'modules/land-works/providers/landworks-provider';
+import HeaderProvider from 'providers/header-provider';
 import WarningProvider from 'providers/warning-provider';
 import { routes } from 'router/routes';
 
@@ -55,33 +56,35 @@ const LayoutView: React.FC = () => {
               <Erc20Provider>
                 <ApolloProvider client={client}>
                   <NotionProvider>
-                    <LayoutHeader />
-                    <main className={classes.main}>
-                      <ErrorBoundary>
-                        <Suspense
-                          fallback={
-                            <Loader
-                              sx={{
-                                position: 'fixed',
-                                top: '50%',
-                                left: '50%',
-                                zoom: '0.5',
-                                transform: 'translate(-50%, -50%)',
-                              }}
-                            />
-                          }
-                        >
-                          <Switch>
-                            <Route path={routes.home} exact component={LandingView} />
-                            <Route path={routes.sceneBuilder} component={SceneBuilderView} />
-                            <Route path={routes.faq} component={FAQView} />
-                            <Route path={routes.grantsProgram} component={GrantsProgram} />
-                            <Route component={LandworksView} />
-                          </Switch>
-                        </Suspense>
-                      </ErrorBoundary>
-                    </main>
-                    {!isRouteHasFooter && <LayoutFooter />}
+                    <HeaderProvider>
+                      <LayoutHeader />
+                      <main className={classes.main}>
+                        <ErrorBoundary>
+                          <Suspense
+                            fallback={
+                              <Loader
+                                sx={{
+                                  position: 'fixed',
+                                  top: '50%',
+                                  left: '50%',
+                                  zoom: '0.5',
+                                  transform: 'translate(-50%, -50%)',
+                                }}
+                              />
+                            }
+                          >
+                            <Switch>
+                              <Route path={routes.home} exact component={LandingView} />
+                              <Route path={routes.sceneBuilder} component={SceneBuilderView} />
+                              <Route path={routes.faq} component={FAQView} />
+                              <Route path={routes.grantsProgram} component={GrantsProgram} />
+                              <Route component={LandworksView} />
+                            </Switch>
+                          </Suspense>
+                        </ErrorBoundary>
+                      </main>
+                      {!isRouteHasFooter && <LayoutFooter />}
+                    </HeaderProvider>
                   </NotionProvider>
                 </ApolloProvider>
               </Erc20Provider>
