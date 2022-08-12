@@ -421,3 +421,14 @@ export const sessionStorageHandler = (
     ? JSON.parse(filters)[name]
     : sessionStorage.setItem(key, JSON.stringify({ ...JSON.parse(filters), [`${name}`]: value }));
 };
+
+export const lerp = (a: number, b: number, amount: number) => {
+  amount = amount < 0 ? 0 : amount;
+  amount = amount > 1 ? 1 : amount;
+
+  return a + (b - a) * amount;
+};
+
+export const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+
+export const inverseLerp = (a: number, b: number, value: number) => clamp((value - a) / (b - a));
