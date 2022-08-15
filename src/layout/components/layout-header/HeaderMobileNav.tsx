@@ -1,8 +1,9 @@
-import React, { forwardRef, useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
 import { Box, Stack } from 'design-system';
+import { useHeader } from 'providers/header-provider';
 
 import { ReactComponent as BurgerCloseIcon } from '../../../resources/svg/menu-close.svg';
 import { ReactComponent as BurgerIcon } from '../../../resources/svg/menu.svg';
@@ -13,12 +14,9 @@ import HeaderRight from './HeaderRight';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
-interface HeaderMobileNavProps {
-  offsetTop: number;
-}
-
-const HeaderMobileNav = forwardRef<HTMLDivElement, HeaderMobileNavProps>(({ offsetTop }, ref) => {
+const HeaderMobileNav: FC = () => {
   const [open, setOpen] = useState(false);
+  const header = useHeader();
 
   const toggleOpen = () => setOpen((prevOpen) => !prevOpen);
 
@@ -40,7 +38,7 @@ const HeaderMobileNav = forwardRef<HTMLDivElement, HeaderMobileNavProps>(({ offs
       </Box>
 
       <HeaderMobileNavDrawer open={open} onClose={toggleOpen}>
-        <Stack ref={ref} display="flex" flexDirection="column" pt={`${offsetTop + 60}px`} gap={12} px={3} pb={12}>
+        <Stack display="flex" flexDirection="column" pt={`${header.height + 60}px`} gap={12} px={3} pb={12}>
           <HeaderNavLinks />
 
           <HeaderRight />
@@ -69,6 +67,6 @@ const HeaderMobileNav = forwardRef<HTMLDivElement, HeaderMobileNavProps>(({ offs
       </HeaderMobileNavDrawer>
     </Box>
   );
-});
+};
 
 export default HeaderMobileNav;
