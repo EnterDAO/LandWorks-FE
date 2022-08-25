@@ -10,7 +10,7 @@ import { useWallet } from 'wallets/wallet';
 
 import { ShareLink } from './styled';
 
-import { TWITTER_TEXT } from 'modules/land-works/constants';
+import { twitterListText } from '../../utils';
 
 import './index.scss';
 
@@ -25,6 +25,7 @@ interface ITxModal extends IProps {
 interface ISuccessModal extends IProps {
   showShareButton: boolean;
   listedPropertyId: string;
+  metaverseRegistry: string;
 }
 
 export const TxModal: React.FC<ITxModal> = ({ showModal, handleClose, textMessage }) => {
@@ -50,6 +51,7 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
   handleClose,
   showShareButton,
   listedPropertyId,
+  metaverseRegistry,
 }) => {
   return (
     <Modal height={600} open={showModal} handleClose={handleClose}>
@@ -73,7 +75,9 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
         </Button>
         {showShareButton && listedPropertyId.length && (
           <ShareLink
-            href={`https://twitter.com/intent/tweet?text=${TWITTER_TEXT}&url=${window.location.origin}/property/${listedPropertyId}`}
+            href={`https://twitter.com/intent/tweet?text=${twitterListText(metaverseRegistry)}&url=${
+              window.location.origin
+            }/property/${listedPropertyId}`}
             target="_blank"
           >
             <Icon iconElement={<TwitterIcon />} iconSize="m" />

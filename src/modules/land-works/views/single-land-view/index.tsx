@@ -24,10 +24,8 @@ import { LandsTooltip } from '../../components/lands-tooltip';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 
-import { calculateNeighbours } from 'modules/land-works/utils';
+import { calculateNeighbours, twitterListText } from 'modules/land-works/utils';
 import { getNowTs } from '../../../../utils';
-
-import { TWITTER_TEXT } from 'modules/land-works/constants';
 
 import './index.scss';
 
@@ -310,7 +308,9 @@ const SingleLandView: React.FC = () => {
               <ShareLink
                 className="shareLink"
                 target={'_blank'}
-                href={`https://twitter.com/intent/tweet?text=${TWITTER_TEXT}&url=${window.location.origin}/property/${asset.id}`}
+                href={`https://twitter.com/intent/tweet?text=${twitterListText(asset.metaverseRegistry?.id)}&url=${
+                  window.location.origin
+                }/property/${asset.id}`}
               >
                 <TwitterIcon height={20} width={30} />
                 share on twitter

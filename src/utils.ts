@@ -188,6 +188,10 @@ export function isDecentralandMetaverseRegistry(registry: string): boolean {
   );
 }
 
+export function isVoxelsRegistry(registry: string): boolean {
+  return registry === config.contracts.cryptoVoxelsContract.toLowerCase();
+}
+
 /**
  * Used for parseCSV() below
  */

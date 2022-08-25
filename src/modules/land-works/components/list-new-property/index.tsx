@@ -901,6 +901,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
         {showSuccessModal && (
           <SuccessModal
             listedPropertyId={listedPropertyId}
+            metaverseRegistry={selectedProperty?.contractAddress || ''}
             showShareButton={true}
             showModal={showSuccessModal}
             handleClose={() => {

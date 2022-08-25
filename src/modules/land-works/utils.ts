@@ -6,7 +6,7 @@ import { CryptoVoxelNFT, CryptoVoxelXYcoords, VoxelsMapCollection, VoxelsTileTyp
 
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 
-import { getNowTs } from 'utils';
+import { getNowTs, isDecentralandMetaverseRegistry, isVoxelsRegistry } from 'utils';
 
 import { orderEnum } from './constants';
 
@@ -265,4 +265,17 @@ export const parseVoxelsAsset = async (assets: CryptoVoxelNFT[]): Promise<Crypto
     })
   );
   return parsed;
+};
+
+export const twitterListText = function (metaverseRegistry?: string): string {
+  let metaverseTwitterHandle = '';
+  if (metaverseRegistry) {
+    if (isDecentralandMetaverseRegistry(metaverseRegistry)) {
+      metaverseTwitterHandle = '@decentraland';
+    } else if (isVoxelsRegistry(metaverseRegistry)) {
+      metaverseTwitterHandle = '@cryptovoxels';
+    }
+  }
+
+  return `gm. Just listed my ${metaverseTwitterHandle} property at @landworksxyz.\n`;
 };
