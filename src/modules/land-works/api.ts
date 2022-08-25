@@ -92,6 +92,12 @@ export const USER_SUBSCRIPTION = gql`
         minPeriod
         maxPeriod
         maxFutureTime
+        owner {
+          id
+        }
+        consumer {
+          id
+        }
         unclaimedRentFee
         pricePerSecond
         lastRentEnd
@@ -131,6 +137,12 @@ export const USER_SUBSCRIPTION = gql`
         minPeriod
         maxPeriod
         maxFutureTime
+        owner {
+          id
+        }
+        consumer {
+          id
+        }
         unclaimedRentFee
         pricePerSecond
         lastRentEnd
@@ -578,7 +590,7 @@ export type AssetEntity = {
   pricePerMagnitude: PricePerMagnitude;
   unclaimedRentFee: BigNumber;
   paymentToken: PaymentToken;
-  consumer?: IdEntity;
+  consumer: IdEntity;
   availability: AssetAvailablity;
   attributes: AssetAttributes;
   isHot: boolean;
@@ -1481,6 +1493,12 @@ export function fetchUserAssetsByRents(address: string, metaverse: string): Prom
             minPeriod
             maxPeriod
             maxFutureTime
+            owner {
+              id
+            }
+            consumer {
+              id
+            }
             unclaimedRentFee
             pricePerSecond
             lastRentEnd
@@ -1614,6 +1632,12 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
             name
           }
           metaverseRegistry {
+            id
+          }
+          owner {
+            id
+          }
+          consumer {
             id
           }
           minPeriod

@@ -7,6 +7,7 @@ import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { getTokenIconName } from 'helpers/helpers';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 
+import config from '../../../../config';
 import { AssetEntity } from '../../api';
 import LandCardAvailability from '../land-works-card-availability';
 import { ReactComponent as HotIcon } from './assets/hot.svg';
@@ -44,7 +45,11 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, layout = '
     }
   };
 
-  const ownerWalletAddress = land.decentralandData?.asset.owner.id;
+  const isAssetStaked = () => {
+    return land.owner.id == config.contracts.yf.staking;
+  };
+
+  const ownerOrConsumer = isAssetStaked() ? land.consumer?.id : land.owner.id;
 
   return (
     <a
@@ -73,11 +78,9 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, layout = '
             <p className="land-explore-card__name" title={land.name}>
               {land.name.toLowerCase()}
             </p>
-            {!!ownerWalletAddress && (
-              <p className="land-explore-card__address" title={ownerWalletAddress}>
-                BY {shortenString(ownerWalletAddress)}
-              </p>
-            )}
+            <p className="land-explore-card__address" title={ownerOrConsumer}>
+              BY {shortenString(ownerOrConsumer)}
+            </p>
           </div>
 
           <div className="land-explore-card__price">
