@@ -12,7 +12,7 @@ const ToggleMapVisibilityButtonRoot = styled(Button)({
   justifyContent: 'center',
   alignItems: 'center',
   zIndex: 1,
-  top: 132,
+  marginTop: 132,
   transition: 'non2e',
   '& > span': {
     display: 'inline-flex',
