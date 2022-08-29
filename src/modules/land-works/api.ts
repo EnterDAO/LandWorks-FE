@@ -1387,12 +1387,13 @@ export async function parseUser(user: any): Promise<UserEntity> {
 }
 
 export async function parseAssets(assets: any[]): Promise<AssetEntity[]> {
-  const result = [] as AssetEntity[];
+  const promises = [];
 
   for (const asset of assets) {
-    result.push(await parseAsset(asset));
+    promises.push(parseAsset(asset));
   }
-  return result;
+
+  return Promise.all(promises);
 }
 
 export async function parseAsset(asset: any): Promise<AssetEntity> {
