@@ -230,6 +230,11 @@
   }
 
   &-card--layout-compact &-card {
+    &-hot {
+      top: 5px;
+      left: 5px;
+    }
+
     &__info {
       flex-direction: column;
       align-items: flex-start;
