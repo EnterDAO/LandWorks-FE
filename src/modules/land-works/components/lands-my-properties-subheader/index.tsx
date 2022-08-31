@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 
-import { ControlledSelect, Grid } from 'design-system';
+import { Box, ControlledSelect, Grid } from 'design-system';
 import { Option } from 'modules/interface';
 import { fetchMetaverses } from 'modules/land-works/api';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
@@ -51,36 +51,30 @@ const LandsMyPropertiesSubheader: FC<Props> = ({ propertiesCount = 0, onChangeSo
   }, []);
 
   return (
-    <RootStyled>
-      <Grid container spacing={2} justifyContent={'space-between'}>
+    <Box mb={6}>
+      <Grid mb={7} container spacing={2} justifyContent={'space-between'}>
         <Grid item xs={12} lg={6} sx={{ display: 'flex', alignItems: 'center' }}>
           <Grid container spacing={2} sx={{ justifyContent: 'flex-start' }}>
             <Grid item xs={6} lg={4}>
-              <ControlledSelect
-                value={selectedMetaverse}
-                onChange={onChangeMetaverseHandler}
-                width={'12rem'}
-                options={metaverses}
-              />
+              <ControlledSelect value={selectedMetaverse} onChange={onChangeMetaverseHandler} options={metaverses} />
             </Grid>
             <Grid item xs={6} md={6} lg={4}>
               <ControlledSelect
                 value={selectedOrder}
                 onChange={onChangeSortDirectionHandler}
-                width={'12rem'}
                 options={selectedMetaverse == 1 ? sortData : voxelsSortData}
               />
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} lg={4}>
           <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search for land..." />
         </Grid>
       </Grid>
       <BottomBoxStyled>
         Listed <strong>{propertiesCount} properties</strong>
       </BottomBoxStyled>
-    </RootStyled>
+    </Box>
   );
 };
 
