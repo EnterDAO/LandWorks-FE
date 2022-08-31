@@ -2,7 +2,7 @@ import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import useDebounce from '@rooks/use-debounce';
 
-import { Box, Grid, Icon } from 'design-system';
+import { Box, Icon, Stack, Typography } from 'design-system';
 import { GridBigIcon, GridIcon } from 'design-system/icons';
 import { LocationState } from 'modules/interface';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
@@ -13,9 +13,10 @@ import LandsSearchBar from 'modules/land-works/components/lands-search';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
+import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import { AtlasTile } from '../atlas';
-import { LandsSearchBarWrapperStyled, StyledButton, StyledRow, StyledText } from './styled';
+import { StyledButton, StyledRow } from './styled';
 
 import {
   filterLandsByAvailability,
@@ -24,6 +25,8 @@ import {
   getOwnerOrConsumerId,
 } from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
+
+import { THEME_COLORS } from 'themes/theme-constants';
 
 interface Props {
   lastRentEnd: string;
@@ -36,6 +39,7 @@ interface Props {
 const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRentEnd, isMapVisible }) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
+  const stickyOffset = useStickyOffset();
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
   const { mapTiles, setSelectedId } = useLandsMapTiles();
@@ -162,23 +166,36 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
       onMouseMove={() => setBlockAutoScroll(true)}
       onMouseOut={() => setTimeout(() => setBlockAutoScroll(false), 350)}
     >
-      <LandsSearchBarWrapperStyled>
-        <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search by name" />
-      </LandsSearchBarWrapperStyled>
-      <StyledRow>
-        <Grid>
-          Listed <StyledText>{filteredLands.length} properties</StyledText>
-        </Grid>
-        <Grid container direction={'row'} display="flex" width={'auto'}>
-          <StyledButton isActive={cardsSize === 'normal'} onClick={() => setCardsSize('normal')}>
-            <Icon iconElement={<GridIcon />} iconSize="s" />
-          </StyledButton>
+      <Box
+        position="sticky"
+        top={stickyOffset.offsets.filter + stickyOffset.offsets.header}
+        zIndex={2}
+        px={4}
+        mx={-4}
+        bgcolor="var(--theme-body-color)"
+        pb={4}
+      >
+        <Box mb={4}>
+          <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search by name" />
+        </Box>
+        <StyledRow>
+          <Typography variant="body2">
+            Listed{' '}
+            <Typography component="span" variant="inherit" color={THEME_COLORS.light}>
+              {filteredLands.length} properties
+            </Typography>
+          </Typography>
+          <Stack direction="row" spacing={2}>
+            <StyledButton isActive={cardsSize === 'normal'} onClick={() => setCardsSize('normal')}>
+              <Icon iconElement={<GridIcon />} iconSize="xs" />
+            </StyledButton>
 
-          <StyledButton isActive={cardsSize === 'compact'} onClick={() => setCardsSize('compact')}>
-            <Icon iconElement={<GridBigIcon />} iconSize="s" />
-          </StyledButton>
-        </Grid>
-      </StyledRow>
+            <StyledButton isActive={cardsSize === 'compact'} onClick={() => setCardsSize('compact')}>
+              <Icon iconElement={<GridBigIcon />} iconSize="xs" />
+            </StyledButton>
+          </Stack>
+        </StyledRow>
+      </Box>
       <Box
         display="grid"
         gap={4}

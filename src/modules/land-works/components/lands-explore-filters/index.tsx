@@ -4,11 +4,12 @@ import { Box, ControlledSelect } from 'design-system';
 import { FiltersIcon } from 'design-system/icons';
 import { Option } from 'modules/interface';
 import { fetchMetaverses } from 'modules/land-works/api';
+import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import { DecentralandFiltersModal, VoxelFiltersModal } from '../lands-explore-filters-modal';
 import { PricePopover } from '../price-popover';
 import { addIconToMetaverse, landsData, sortData, statusData } from './filters-data';
-import { StyledButton, StyledRoot } from './styled';
+import { StyledButton } from './styled';
 
 import { sessionStorageHandler } from 'utils';
 
@@ -37,6 +38,7 @@ const LandWorksFilters: FC<Props> = ({
   maxHeight,
   maxArea,
 }) => {
+  const stickyOffset = useStickyOffset();
   const orderFilter = sessionStorageHandler('get', 'explore-filters', 'order');
 
   const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
@@ -94,34 +96,36 @@ const LandWorksFilters: FC<Props> = ({
   }, []);
 
   return (
-    <StyledRoot>
-      <Box className={'container'}>
-        <Box className={'box'}>
-          <Box className={'box'} style={{ marginRight: '20px' }}>
-            <ControlledSelect
-              width={'12rem'}
-              value={Number(selectedMetaverse)}
-              onChange={onChangePlaceHandler}
-              options={metaverses}
-            />
-          </Box>
-          <Box className={'box'} style={{ marginRight: '20px' }}>
-            <PricePopover text="Price" onSubmit={onChangeCurrencyHandler} />
-          </Box>
-          <Box className={'box'}>
-            <ControlledSelect
-              width={'12rem'}
-              value={status}
-              onChange={onChangeAvailableHandler}
-              withCheckbox
-              staticPlaceholder="Status"
-              options={statusData}
-            />
-          </Box>
-        </Box>
-        <Box className={'box'}>
+    <Box
+      position="sticky"
+      zIndex={1}
+      top={stickyOffset.offsets.header}
+      bgcolor="var(--theme-body-color)"
+      px="var(--horizontal-padding)"
+      ref={stickyOffset.register('filter')}
+    >
+      <Box py={3} display="flex" justifyContent="space-between" flexWrap="wrap" gap={3}>
+        <Box display="flex" flexWrap="wrap" gap={3}>
           <ControlledSelect
-            width={'12rem'}
+            width={'18.75rem'}
+            value={Number(selectedMetaverse)}
+            onChange={onChangePlaceHandler}
+            options={metaverses}
+          />
+
+          <PricePopover text="Price" onSubmit={onChangeCurrencyHandler} />
+          <ControlledSelect
+            width="9.375rem"
+            value={status}
+            onChange={onChangeAvailableHandler}
+            withCheckbox
+            staticPlaceholder="Status"
+            options={statusData}
+          />
+        </Box>
+        <Box display="flex" flexWrap="wrap" gap={3}>
+          <ControlledSelect
+            width="12.5rem"
             value={selectedOrder}
             onChange={onChangeSortDirectionHandler}
             options={selectedMetaverse == 1 ? sortData : voxelsSortData}
@@ -163,7 +167,7 @@ const LandWorksFilters: FC<Props> = ({
         open={openVoxelFiltersModal}
         children={<></>}
       />
-    </StyledRoot>
+    </Box>
   );
 };
 
