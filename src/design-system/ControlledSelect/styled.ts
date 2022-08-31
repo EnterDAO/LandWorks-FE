@@ -30,11 +30,11 @@ export const StyledButton = styled('button')(
   font-family: ${THEME_FONT_FAMILY};
   font-size: 0.875rem;
   box-sizing: border-box;
-  min-height: calc(1.5em + 22px);
+  height: 3.125rem;
   background: ${THEME_COLORS.grey01};
   border: 1px solid ${THEME_COLORS.grey01};
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 10px 20px;
   text-align: left;
   line-height: 1.5;
   width: 100%;
