@@ -3,6 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import TabContext from '@mui/lab/TabContext';
 import { useMediaQuery } from '@mui/material';
+import { Box } from '@mui/system';
 
 import { Grid } from 'design-system';
 import { LocationState } from 'modules/interface';
@@ -212,7 +213,7 @@ const MyPropertiesView: FC = () => {
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
       <TabContext value={tab}>
-        <div className="content-container">
+        <Box px="var(--horizontal-padding)" pb="var(--content-container-v-padding)">
           <LandsMyPropertiesHeader
             setTab={setTab}
             user={user}
@@ -283,7 +284,7 @@ const MyPropertiesView: FC = () => {
 
           {tab === MY_PROPERTIES_TAB_STATE_LENT && <ClaimHistoryTable metaverse={metaverse} />}
           {tab === MY_PROPERTIES_TAB_STATE_RENTED && <MyPropetiesHistoryTable metaverse={metaverse} />}
-        </div>
+        </Box>
       </TabContext>
     </LandsSearchQueryProvider>
   );
