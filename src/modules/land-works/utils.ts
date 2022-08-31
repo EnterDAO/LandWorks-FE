@@ -277,5 +277,5 @@ export const twitterListText = function (metaverseRegistry?: string): string {
     }
   }
 
-  return `gm. Just listed my ${metaverseTwitterHandle} property at @landworksxyz.\n`;
+  return `gm. Just listed my ${metaverseTwitterHandle} property on @landworksxyz.\n`;
 };
