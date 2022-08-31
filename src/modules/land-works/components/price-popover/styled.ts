@@ -8,11 +8,11 @@ export const PopoverButton = styled('button')(
   width: 12rem;
   font-size: 0.875rem;
   box-sizing: border-box;
-  min-height: calc(1.5em + 22px);
+  height: 3.125rem;
   background: var(--theme-grey200-color);
   border: 1px solid var(--theme-grey200-color);
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 10px 20px;
   text-align: left;
   line-height: 1.5;
   color: var(--theme-grey900-color);
@@ -30,7 +30,6 @@ export const PopoverButton = styled('button')(
   & .Mui-disabled {
     cursor: not-allowed;
   }
-
   `
 );
 
