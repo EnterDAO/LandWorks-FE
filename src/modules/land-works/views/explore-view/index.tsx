@@ -289,7 +289,7 @@ const ExploreView: React.FC = () => {
             maxArea={maxArea}
           />
           <Box position="relative">
-            <div className="content-container content-container--explore-view">
+            <Box className="content-container content-container--explore-view" maxWidth="none !important">
               <div className={`list-lands-container ${mapIsHidden ? 'full-width' : ''}`}>
                 <LandsExploreList
                   isMapVisible={!mapIsHidden}
@@ -300,7 +300,7 @@ const ExploreView: React.FC = () => {
                 />
                 <LayoutFooter isWrapped={false} />
               </div>
-            </div>
+            </Box>
 
             <ExploreMap
               type={metaverse}
