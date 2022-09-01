@@ -10,11 +10,13 @@ export const LandsSearchBarWrapperStyled = styled('div')(() => ({
 export const StyledButton = styled('button', { shouldForwardProp: (propName) => propName !== 'isActive' })<{
   isActive?: boolean;
 }>(({ isActive }) => ({
-  padding: '10px',
   background: 'var(--theme-grey200-color)',
   display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: 34,
+  width: 34,
   borderRadius: '10px',
-  margin: '0 5px',
   color: '#b9b9d3',
   cursor: 'pointer',
   border: isActive ? '1px solid white' : '1px solid transparent',
@@ -38,7 +40,6 @@ export const StyledButton = styled('button', { shouldForwardProp: (propName) => 
 export const StyledRow = styled('div')(() => ({
   display: 'flex',
   flexDirection: 'row',
-  marginBottom: '20px',
   alignItems: 'center',
   justifyContent: 'space-between',
 }));

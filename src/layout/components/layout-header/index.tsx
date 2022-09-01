@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { useMediaQuery } from '@mui/material';
 
 import { Box } from 'design-system';
-import { useHeader } from 'providers/header-provider';
+import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import { HeaderAgitaionBar } from './HeaderAgitationBar';
 import HeaderDesktopNav from './HeaderDesktopNav';
@@ -13,10 +13,18 @@ import { THEME_COLORS } from 'themes/theme-constants';
 
 const LayoutHeader: FC = () => {
   const isDesktop = useMediaQuery('(min-width: 992px)');
-  const header = useHeader();
+  const stickyOffset = useStickyOffset();
 
   return (
-    <Box component="header" ref={header.ref} position="sticky" top={0} left={0} width={1} zIndex={999}>
+    <Box
+      component="header"
+      ref={stickyOffset.register('header')}
+      position="sticky"
+      top={0}
+      left={0}
+      width={1}
+      zIndex={999}
+    >
       <HeaderAgitaionBar />
       <Box bgcolor={THEME_COLORS.darkBlue01} px={{ xs: 3, lg: 15 }}>
         <Box

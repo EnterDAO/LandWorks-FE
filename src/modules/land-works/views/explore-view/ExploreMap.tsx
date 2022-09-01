@@ -5,7 +5,7 @@ import { MinusIcon, PlusThinIcon, ViewAllIcon } from 'design-system/icons';
 import { LandsExploreMapBaseProps } from 'modules/interface';
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
 import LandsExploreMapVoxels from 'modules/land-works/components/lands-explore-map-voxels';
-import { useHeader } from 'providers/header-provider';
+import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import MapControlButton from './MapControlButton';
 import ToggleMapVisibilityButton from './ToggleMapVisibilityButton';
@@ -22,7 +22,7 @@ interface ExploreMapProps extends Omit<LandsExploreMapBaseProps, 'zoom' | 'onZoo
 const ZOOM_STEP = 0.2;
 
 const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHideMap, ...mapProps }) => {
-  const header = useHeader();
+  const stickyOffset = useStickyOffset();
   const [zoom, setZoom] = useState(0.5);
   const [isMapMaximized, setIsMapMaximized] = useState(false);
 
@@ -56,6 +56,8 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
 
   const MapComponent = type === VOXEL_METAVERSE ? LandsExploreMapVoxels : LandsExploreMap;
 
+  const mapOffsetTop = stickyOffset.offsets.filter + stickyOffset.offsets.header;
+
   return (
     <Box
       display={{
@@ -66,6 +68,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
       top={0}
       position="absolute"
       height={1}
+      zIndex={1}
       sx={
         isMapVisible
           ? {
@@ -85,14 +88,14 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
           isMapMaximized
             ? {
                 top: 0,
-                pt: header.height + 'px',
+                pt: stickyOffset.offsets.header + 'px',
                 position: 'fixed',
                 height: 1,
               }
             : {
-                top: header.height + 25 + 'px',
+                top: mapOffsetTop + 'px',
                 position: 'sticky',
-                maxHeight: `calc(100vh - ${header.height + 25}px)`,
+                maxHeight: `calc(100vh - ${mapOffsetTop}px)`,
                 pb: 5,
               }
         }
