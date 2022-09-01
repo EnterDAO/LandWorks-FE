@@ -1,7 +1,6 @@
 import { styled } from '@mui/material';
 
 export const StyledRoot = styled('div')(() => ({
-  height: 'var(--explore-filters)',
   padding: '0 var(--horizontal-padding) 0',
   position: 'relative',
   '& .container': {
@@ -18,11 +17,10 @@ export const StyledRoot = styled('div')(() => ({
 
 export const StyledButton = styled('button')(
   () => `
-  width: 12rem;
-  margin-left: 20px;
+  width: 12.5rem;
   font-size: 0.875rem;
   box-sizing: border-box;
-  min-height: calc(1.5em + 22px);
+  height: 3.125rem;
   background: var(--theme-grey200-color);
   border: 1px solid var(--theme-grey200-color);
   border-radius: 10px;

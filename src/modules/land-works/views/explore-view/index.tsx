@@ -272,26 +272,24 @@ const ExploreView: React.FC = () => {
             setShowCardPreview,
           }}
         >
-          <div className="content-container--explore-view--header">
-            <LandsExploreSubheader
-              totalLands={lastRentEnd !== '0' ? availableLands.length : filterLandsByQuery(lands, searchQuery).length}
-              hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
-              handleListNew={() => setShowListNewModal(true)}
-            />
-            <LandsExploreFilters
-              handleMoreFilter={handleMoreFilter}
-              onChangeSortDirection={onChangeFiltersSortDirection}
-              onChangeAvailable={onChangeFiltersAvailable}
-              onChangeCurrency={onChangeFiltersCurrency}
-              onChangeMetaverse={onChangeMetaverse}
-              onChangePrice={onChangeFiltersPrice}
-              maxLandSize={maxLandSize}
-              maxHeight={maxHeight}
-              maxArea={maxArea}
-            />
-          </div>
+          <LandsExploreSubheader
+            totalLands={lastRentEnd !== '0' ? availableLands.length : filterLandsByQuery(lands, searchQuery).length}
+            hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
+            handleListNew={() => setShowListNewModal(true)}
+          />
+          <LandsExploreFilters
+            handleMoreFilter={handleMoreFilter}
+            onChangeSortDirection={onChangeFiltersSortDirection}
+            onChangeAvailable={onChangeFiltersAvailable}
+            onChangeCurrency={onChangeFiltersCurrency}
+            onChangeMetaverse={onChangeMetaverse}
+            onChangePrice={onChangeFiltersPrice}
+            maxLandSize={maxLandSize}
+            maxHeight={maxHeight}
+            maxArea={maxArea}
+          />
           <Box position="relative">
-            <div className="content-container content-container--explore-view">
+            <Box className="content-container content-container--explore-view" maxWidth="none !important">
               <div className={`list-lands-container ${mapIsHidden ? 'full-width' : ''}`}>
                 <LandsExploreList
                   isMapVisible={!mapIsHidden}
@@ -302,7 +300,7 @@ const ExploreView: React.FC = () => {
                 />
                 <LayoutFooter isWrapped={false} />
               </div>
-            </div>
+            </Box>
 
             <ExploreMap
               type={metaverse}

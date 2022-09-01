@@ -3,7 +3,7 @@ import React, { FC, useState } from 'react';
 import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
 import { Box, Stack } from 'design-system';
-import { useHeader } from 'providers/header-provider';
+import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import { ReactComponent as BurgerCloseIcon } from '../../../resources/svg/menu-close.svg';
 import { ReactComponent as BurgerIcon } from '../../../resources/svg/menu.svg';
@@ -16,7 +16,7 @@ import { THEME_COLORS } from 'themes/theme-constants';
 
 const HeaderMobileNav: FC = () => {
   const [open, setOpen] = useState(false);
-  const header = useHeader();
+  const stickyOffset = useStickyOffset();
 
   const toggleOpen = () => setOpen((prevOpen) => !prevOpen);
 
@@ -38,7 +38,14 @@ const HeaderMobileNav: FC = () => {
       </Box>
 
       <HeaderMobileNavDrawer open={open} onClose={toggleOpen}>
-        <Stack display="flex" flexDirection="column" pt={`${header.height + 60}px`} gap={12} px={3} pb={12}>
+        <Stack
+          display="flex"
+          flexDirection="column"
+          pt={`${stickyOffset.offsets.header + 60}px`}
+          gap={12}
+          px={3}
+          pb={12}
+        >
           <HeaderNavLinks />
 
           <HeaderRight />

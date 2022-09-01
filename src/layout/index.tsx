@@ -8,7 +8,7 @@ import LayoutFooter from 'layout/components/layout-footer';
 import LayoutHeader from 'layout/components/layout-header';
 import ContractProvider from 'modules/land-works/providers/contract-provider';
 import LandWorksProvider from 'modules/land-works/providers/landworks-provider';
-import HeaderProvider from 'providers/header-provider';
+import StickyOffsetProvider from 'providers/sticky-offset-provider';
 import WarningProvider from 'providers/warning-provider';
 import { routes } from 'router/routes';
 
@@ -56,7 +56,7 @@ const LayoutView: React.FC = () => {
               <Erc20Provider>
                 <ApolloProvider client={client}>
                   <NotionProvider>
-                    <HeaderProvider>
+                    <StickyOffsetProvider>
                       <LayoutHeader />
                       <main className={classes.main}>
                         <ErrorBoundary>
@@ -84,7 +84,7 @@ const LayoutView: React.FC = () => {
                         </ErrorBoundary>
                       </main>
                       {!isRouteHasFooter && <LayoutFooter />}
-                    </HeaderProvider>
+                    </StickyOffsetProvider>
                   </NotionProvider>
                 </ApolloProvider>
               </Erc20Provider>
