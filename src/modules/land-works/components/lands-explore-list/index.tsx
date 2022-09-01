@@ -48,10 +48,11 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [blockAutoScroll, setBlockAutoScroll] = useState(false);
 
-  const [slicedLands, setSlicedLands] = useState(isMapVisible ? 6 : 18);
+  const numberOfCardsPerLoad = isMapVisible ? (cardsSize === 'compact' ? 10 : 6) : 18;
+  const [slicedLands, setSlicedLands] = useState(numberOfCardsPerLoad);
 
   const handleLoadMore = () => {
-    const newSlicedLands = slicedLands + (isMapVisible ? 6 : 18);
+    const newSlicedLands = slicedLands + numberOfCardsPerLoad;
     sessionStorageHandler('set', 'explore-filters', 'slicedLands', newSlicedLands);
     setSlicedLands(newSlicedLands);
     const highlights = getAllLandsCoordinates(lands.slice(0, newSlicedLands));
@@ -123,14 +124,10 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   }, [clickedLandId]);
 
   useEffect(() => {
-    setSlicedLands(
-      sessionStorageHandler('get', 'explore-filters', 'slicedLands')
-        ? sessionStorageHandler('get', 'explore-filters', 'slicedLands')
-        : isMapVisible
-        ? 6
-        : 18
-    );
-  }, [isMapVisible]);
+    const storedNumberOfLoadedCards = sessionStorageHandler('get', 'explore-filters', 'slicedLands');
+
+    setSlicedLands(storedNumberOfLoadedCards ? storedNumberOfLoadedCards : numberOfCardsPerLoad);
+  }, [numberOfCardsPerLoad]);
 
   let filteredLands = filterLandsByQuery(lands, searchQuery);
 
@@ -202,7 +199,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
         gridTemplateColumns={`repeat(auto-fill, minmax(${cardsSize === 'compact' ? 190 : 300}px, 1fr))`}
       >
         {loading &&
-          Array.from({ length: 6 }, (_, i) => {
+          Array.from({ length: numberOfCardsPerLoad }, (_, i) => {
             return <LandCardSkeleton key={i} />;
           })}
 
