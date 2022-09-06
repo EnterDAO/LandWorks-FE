@@ -14,6 +14,7 @@ import Identicon from 'components/custom/identicon';
 import { Text } from 'components/custom/typography';
 import { StyledPopover } from 'design-system/Popover/Popover';
 import { getENSName } from 'helpers/helpers';
+import HeaderActionButton from 'layout/components/layout-header/HeaderActionButton';
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 import { ReactComponent as ExternalLinkIcon } from 'resources/svg/external-link.svg';
@@ -121,9 +122,7 @@ const ConnectedWallet: React.FC = () => {
 
   if (!wallet.isActive) {
     return !isMobile ? (
-      <button type="button" className={`button-primary ${s.signBtnDesktop}`} onClick={() => wallet.showWalletsModal()}>
-        <span>Connect Wallet</span>
-      </button>
+      <HeaderActionButton onClick={() => wallet.showWalletsModal()}>Connect Wallet</HeaderActionButton>
     ) : null;
   }
 
