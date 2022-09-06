@@ -632,7 +632,10 @@ export type CryptoVoxelsType = {
   name: string;
   image: string;
   description: string;
-  attributes: AssetAttributes;
+  attributes: Omit<AssetAttributes, 'has_basement' | 'waterfront'> & {
+    has_basement: 'yes' | 'no';
+    waterfront: 'yes' | 'no';
+  };
   external_url: string;
   background_color: string;
 };
@@ -1420,7 +1423,11 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
     liteAsset.name = data.name;
     liteAsset.type = data.attributes?.title === 'plot' ? 'Parcels' : data.attributes.title;
     liteAsset.imageUrl = data.image;
-    liteAsset.attributes = data.attributes;
+    liteAsset.attributes = {
+      ...data.attributes,
+      has_basement: data.attributes.has_basement === 'yes',
+      waterfront: data.attributes.waterfront === 'yes',
+    };
     liteAsset.externalUrl = getCryptoVexelsPlayUrl(asset?.metaverseAssetId);
     liteAsset.place = data?.attributes ? [data?.attributes?.island, data?.attributes?.suburb] : null;
   }
