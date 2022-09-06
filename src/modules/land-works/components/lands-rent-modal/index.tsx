@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Divider, Grid, ModalProps } from '@mui/material';
+import { Divider, Grid } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import moment, { Moment } from 'moment';
 import { RangeValue } from 'rc-picker/lib/interface';
@@ -11,6 +11,7 @@ import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import config from 'config';
 import { Button, Input, Modal, Tooltip } from 'design-system';
 import { CalendarIcon, ProfileIcon, WarningIcon } from 'design-system/icons';
+import { ModalProps } from 'design-system/Modal/Modal';
 import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { useGeneral } from 'providers/general-provider';
@@ -30,7 +31,7 @@ import { HOUR_IN_SECONDS } from '../../../../utils/date';
 
 import './index.scss';
 
-type Props = ModalProps & {
+type Props = Omit<ModalProps, 'handleClose'> & {
   txHash?: string;
   availability?: AssetAvailablity;
   assetId?: string;
