@@ -5,6 +5,8 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { CssBaseline, ThemeProvider } from '@mui/material';
+import { QueryParamProvider } from 'use-query-params';
+import { ReactRouter5Adapter } from 'use-query-params/adapters/react-router-5';
 
 import ErrorBoundary from 'components/custom/error-boundary';
 import LayoutView from 'layout';
@@ -37,11 +39,13 @@ const App: FC = () => {
                   {/* // eslint-disable-next-line 
                   // @ts-ignore */}
                   <Router>
-                    <ScrollToTop />
-                    <ToastContainer theme="dark" />
-                    <NotificationsProvider>
-                      <LayoutView />
-                    </NotificationsProvider>
+                    <QueryParamProvider adapter={ReactRouter5Adapter}>
+                      <ScrollToTop />
+                      <ToastContainer theme="dark" />
+                      <NotificationsProvider>
+                        <LayoutView />
+                      </NotificationsProvider>
+                    </QueryParamProvider>
                   </Router>
                 </KnownTokensProvider>
               </Web3WalletProvider>
