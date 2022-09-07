@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ToggleButton } from '@mui/material';
 import BigNumber from 'bignumber.js';
+import { NumberParam, QueryParamConfig, decodeNumber, encodeNumber, useQueryParams } from 'use-query-params';
 
 import { Button } from 'design-system';
 import { getTokenPrice } from 'providers/known-tokens-provider';
@@ -17,8 +18,6 @@ import {
   Subtitle,
 } from './styled';
 
-import { sessionStorageHandler } from 'utils';
-
 import './styles.scss';
 
 interface IProps {
@@ -26,17 +25,32 @@ interface IProps {
   onSubmit?: (currency: number, minValue: number | null, maxValue: number | null) => void;
 }
 
-export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
-  const storage = {
-    currency: sessionStorageHandler('get', 'explore-filters', 'currency'),
-    minPrice: sessionStorageHandler('get', 'explore-filters', 'minPrice'),
-    maxPrice: sessionStorageHandler('get', 'explore-filters', 'maxPrice'),
-  };
+const CurrencyParam: QueryParamConfig<number, number> = {
+  encode: encodeNumber,
+  decode: (value) => {
+    const num = decodeNumber(value);
+    const currencyConfig = currencyData.find(({ value }) => value === num) || currencyData[0];
+
+    return currencyConfig.value;
+  },
+};
+
+export const usePriceQueryParams = () => {
+  return useQueryParams({
+    currency: CurrencyParam,
+    minPrice: NumberParam,
+    maxPrice: NumberParam,
+  });
+};
+
+export const PricePopover: React.FC<IProps> = ({ text }) => {
   const [disableApply, setDisableApply] = useState(true);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const [currency, setCurrency] = useState<number>(storage.currency || 0);
-  const [minPrice, setMinPrice] = useState<string | null>(storage.minPrice || null);
-  const [maxPrice, setMaxPrice] = useState<string | null>(storage.maxPrice || null);
+
+  const [priceParams, setPriceParams] = usePriceQueryParams();
+  const [currency, setCurrency] = useState<number>(priceParams.currency);
+  const [minPrice, setMinPrice] = useState<string | number | null>(priceParams.minPrice || null);
+  const [maxPrice, setMaxPrice] = useState<string | number | null>(priceParams.maxPrice || null);
   const [error, setError] = useState<string>('');
 
   const openPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -91,13 +105,14 @@ export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
   }, [minPrice, maxPrice]);
 
   const handleSubmit = () => {
-    if (onSubmit) {
-      onSubmit(currency, Number(minPrice), Number(maxPrice));
-      minPrice && sessionStorageHandler('set', 'explore-filters', 'minPrice', minPrice);
-      maxPrice && sessionStorageHandler('set', 'explore-filters', 'maxPrice', maxPrice);
-      closePopover();
-      setDisableApply(true);
-    }
+    setPriceParams({
+      currency,
+      minPrice: minPrice ? +minPrice : null,
+      maxPrice: maxPrice ? +maxPrice : null,
+    });
+
+    closePopover();
+    setDisableApply(true);
   };
 
   const disableInput = currency == 0;
