@@ -1,4 +1,5 @@
 import { FC, ReactNode } from 'react';
+import { SxProps } from '@mui/system';
 
 import { CloseIcon } from '../icons';
 import {
@@ -9,7 +10,9 @@ import {
   StyledModal,
 } from './modal-styles';
 
-interface ModalProps {
+// import { SxProps, Sx } from '@mui/system';
+
+export interface ModalProps {
   open: boolean;
   title?: ReactNode;
   className?: string;
@@ -21,10 +24,11 @@ interface ModalProps {
   };
   width?: number | string;
   height?: number | string;
+  sx?: SxProps;
 }
 
 const Modal: FC<ModalProps> = (props: ModalProps) => {
-  const { open, title, handleClose, children, accessibility, width, height, className = '' } = props;
+  const { open, title, handleClose, children, accessibility, width, height, className = '', sx } = props;
 
   return (
     <StyledModal
@@ -36,7 +40,7 @@ const Modal: FC<ModalProps> = (props: ModalProps) => {
       BackdropComponent={StyledBackdrop}
       style={{ height: height }}
     >
-      <ModalBoxStyled style={{ width: width }}>
+      <ModalBoxStyled sx={sx} style={{ width: width }}>
         {!!title && <ModalTitleBoxStyled>{title}</ModalTitleBoxStyled>}
 
         <CloseIconButtonStyled

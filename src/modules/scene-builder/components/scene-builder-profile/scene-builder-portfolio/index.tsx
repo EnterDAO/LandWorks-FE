@@ -58,14 +58,13 @@ const SceneBuilderPortfolio: FC<ISceneBuilderPortfolio> = ({ portfolio }) => {
               </StyledImageContainer>
             </Grid>
             {imageModal && (
-              <Modal height="90%" open={true} handleClose={() => setImageModal(false)}>
+              <Modal open={true} sx={{ height: 1 }} handleClose={() => setImageModal(false)}>
                 <Box
                   component="img"
                   sx={{
                     width: 'auto',
-                    maxHeight: '78vh',
+                    height: 1,
                     borderRadius: '20px',
-                    overflow: 'hidden',
                   }}
                   alt="Scene builder portfolio."
                   src={imageUrl}
