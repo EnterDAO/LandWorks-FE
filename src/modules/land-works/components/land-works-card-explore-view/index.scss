@@ -37,10 +37,10 @@
       flex-direction: column;
       gap: 2px;
       overflow: hidden;
+      width: 100%;
     }
 
     &__name {
-      width: 100%;
       font-size: 18px;
       font-weight: bold;
       color: var(--theme-primary-color);
