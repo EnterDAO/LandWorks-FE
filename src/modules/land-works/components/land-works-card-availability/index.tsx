@@ -19,6 +19,7 @@ const LandCardAvailability: FC<Props> = ({ land, layout }) => {
 
   return (
     <p
+      title={status}
       className={classNames(
         'land-works-card-availability',
         `land-works-card-availability--status-${status}`,

@@ -95,11 +95,17 @@ export const AccordionDetails = styled(MuiAccordionDetails)(() => ({
 
 export const StyledLink = styled(Link)(() => ({
   marginTop: 56,
-  padding: '7px 30px',
+  padding: '5px 30px',
   background: 'var(--theme-light-color)',
   color: 'var(--theme-body-color)',
   borderRadius: 10,
   fontWeight: 'bold',
+  height: 34,
+  display: 'inline-flex',
+  alignItems: 'center',
+  fontSize: '14px !important',
+  textTransform: 'uppercase',
+  minWidth: 142,
 }));
 
 export const IconWrapper = styled('div')(() => ({
