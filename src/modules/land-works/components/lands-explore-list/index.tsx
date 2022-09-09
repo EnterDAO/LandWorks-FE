@@ -1,9 +1,11 @@
-import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { FC, MouseEvent, SyntheticEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import useDebounce from '@rooks/use-debounce';
 
+import CardsGrid from 'components/custom/cards-grid';
 import { Box, Icon, Stack, Typography } from 'design-system';
 import { GridBigIcon, GridIcon } from 'design-system/icons';
+import useGetIsMounted from 'hooks/useGetIsMounted';
 import { LocationState } from 'modules/interface';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
@@ -42,7 +44,9 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   const stickyOffset = useStickyOffset();
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
-  const { mapTiles, setSelectedId } = useLandsMapTiles();
+  const { mapTiles, selectedId, setSelectedId } = useLandsMapTiles();
+  const getIsMounted = useGetIsMounted();
+  const timeoutIdRef = useRef<number>();
 
   const [cardsSize, setCardsSize] = useState<'compact' | 'normal'>('normal');
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
@@ -59,28 +63,63 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
     setPointMapCentre(highlights);
   };
 
-  const onMouseOverCardHandler = (e: SyntheticEvent, land: AssetEntity) => {
-    const allCoords = getAllLandsCoordinates([land]);
+  const setActiveLand = useCallback(
+    (land: AssetEntity) => {
+      const [landCoords] = getAllLandsCoordinates([land]);
 
-    if (allCoords.length && allCoords[0]) {
-      setSelectedId && setSelectedId(land.id);
-      setPointMapCentre([{ id: land.id, x: allCoords[0].x, y: allCoords[0].y }]);
-      setClickedLandId && setClickedLandId(allCoords[0].x, allCoords[0].y);
+      if (landCoords) {
+        setPointMapCentre([{ id: land.id, x: landCoords.x, y: landCoords.y }]);
 
-      const id = `${allCoords[0].x},${allCoords[0].y}`;
+        if (setSelectedId) {
+          setSelectedId(land.id);
+        }
 
-      if (!mapTiles || !mapTiles[id]) return;
+        if (setClickedLandId) {
+          setClickedLandId(landCoords.x, landCoords.y);
+        }
 
-      setSelectedTile &&
-        setSelectedTile({
-          id,
-          type: mapTiles[id].type || '',
-          owner: getOwnerOrConsumerId(land?.decentralandData?.asset)?.toLowerCase() || '',
-        });
-    } else if (setSelectedId && setClickedLandId) {
-      setSelectedId(land.metaverseAssetId);
-      setClickedLandId(land.metaverseAssetId);
+        const id = `${landCoords.x},${landCoords.y}`;
+
+        if (mapTiles && mapTiles[id] && setSelectedTile) {
+          setSelectedTile({
+            id,
+            type: mapTiles[id].type || '',
+            owner: getOwnerOrConsumerId(land?.decentralandData?.asset)?.toLowerCase() || '',
+          });
+        }
+      } else if (setSelectedId && setClickedLandId) {
+        setSelectedId(land.metaverseAssetId);
+        setClickedLandId(land.metaverseAssetId);
+      }
+    },
+    [mapTiles]
+  );
+
+  const handleCardMouseOver = (e: MouseEvent<HTMLAnchorElement>, land: AssetEntity) => {
+    window.clearTimeout(timeoutIdRef.current);
+
+    if (selectedId) {
+      timeoutIdRef.current = window.setTimeout(() => {
+        if (getIsMounted()) {
+          setActiveLand(land);
+        }
+      }, 500);
+    } else {
+      setActiveLand(land);
     }
+  };
+
+  const handleCardMouseOut = () => {
+    window.clearTimeout(timeoutIdRef.current);
+  };
+
+  const getCardClickHandler = (land: AssetEntity) => {
+    return () => {
+      history.push({
+        pathname: `/property/${land.id}`,
+        state: { from: window.location.pathname, title: 'Explore', tab: location.state?.tab },
+      });
+    };
   };
 
   const getLoadPercentageValue = () => {
@@ -193,11 +232,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
           </Stack>
         </StyledRow>
       </Box>
-      <Box
-        display="grid"
-        gap={4}
-        gridTemplateColumns={`repeat(auto-fill, minmax(${cardsSize === 'compact' ? 190 : 300}px, 1fr))`}
-      >
+      <CardsGrid layout={cardsSize}>
         {loading &&
           Array.from({ length: numberOfCardsPerLoad }, (_, i) => {
             return <LandCardSkeleton key={i} />;
@@ -205,21 +240,19 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
 
         {!loading &&
           filteredLands.length > 0 &&
-          filteredLands.slice(0, slicedLands).map((land) => (
-            <LandWorkCard
-              key={land.id}
-              layout={cardsSize}
-              onMouseOver={onMouseOverCardHandler}
-              onClick={() =>
-                history.push({
-                  pathname: `/property/${land.id}`,
-                  state: { from: window.location.pathname, title: 'Explore', tab: location.state?.tab },
-                })
-              }
-              land={land}
-            />
-          ))}
-      </Box>
+          filteredLands
+            .slice(0, slicedLands)
+            .map((land) => (
+              <LandWorkCard
+                key={land.id}
+                layout={cardsSize}
+                onMouseOver={handleCardMouseOver}
+                onMouseOut={handleCardMouseOut}
+                onClick={getCardClickHandler(land)}
+                land={land}
+              />
+            ))}
+      </CardsGrid>
       {!loading && filteredLands.length === 0 && <p>No properties are currently listed</p>}
       <LoadMoreLands
         textToDisplay={`List ${slicedLandsInTotal} of ${filteredLands.length}`}

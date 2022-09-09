@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, { MouseEvent, SyntheticEvent, useState } from 'react';
 import classNames from 'classnames';
 import { ZERO_BIG_NUMBER } from 'web3/utils';
 
@@ -19,47 +19,34 @@ import './index.scss';
 interface Props {
   land: AssetEntity;
   layout?: 'normal' | 'compact';
-  onClick?: (e: SyntheticEvent, land: AssetEntity) => void;
-  onMouseOver?: (e: SyntheticEvent, land: AssetEntity) => void;
+  onClick?: (e: MouseEvent<HTMLAnchorElement>, land: AssetEntity) => void;
+  onMouseOver?: (e: MouseEvent<HTMLAnchorElement>, land: AssetEntity) => void;
+  onMouseOut?: (e: MouseEvent<HTMLAnchorElement>, land: AssetEntity) => void;
 }
 
-const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, layout = 'normal' }) => {
+const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, onMouseOut, layout = 'normal' }) => {
   const { clickedLandId } = useLandsMapTile();
   const did = land.decentralandData
     ? `${land.decentralandData?.coordinates[0]?.x},${land.decentralandData?.coordinates[0]?.y}`
-    : `${land.metaverseAssetId}`;
+    : land.metaverseAssetId;
   const isActive = clickedLandId === did;
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
-  const isDecentraland = land.metaverse.name == 'Decentraland';
+  const isStaked = land.owner.id == config.contracts.yf.staking;
+  const ownerOrConsumer = isStaked ? land.consumer?.id : land.owner.id;
 
-  const onMouseOverHandler = (e: SyntheticEvent, land: AssetEntity) => {
-    if (!timeoutId && onMouseOver) {
-      setTimeoutId(setTimeout(() => onMouseOver(e, land), isDecentraland ? 500 : 1000));
+  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    if (onClick) {
+      onClick(e, land);
     }
   };
-
-  const onMouseOutHandler = () => {
-    if (timeoutId) {
-      setTimeoutId(null);
-      clearTimeout(timeoutId);
-    }
-  };
-
-  const isAssetStaked = () => {
-    return land.owner.id == config.contracts.yf.staking;
-  };
-
-  const ownerOrConsumer = isAssetStaked() ? land.consumer?.id : land.owner.id;
 
   return (
     <a
       className={classNames('land-explore-card', `land-explore-card--layout-${layout}`, isActive && 'active')}
-      onClick={(e) => {
-        e.preventDefault();
-        !!onClick && onClick(e, land);
-      }}
-      onMouseOver={(e) => onMouseOverHandler(e, land)}
-      onMouseOut={() => onMouseOutHandler()}
+      onClick={handleClick}
+      onMouseOver={(e) => onMouseOver && onMouseOver(e, land)}
+      onMouseOut={(e) => onMouseOut && onMouseOut(e, land)}
       id={`land-explore-card--${did}`}
       href={`/property/${land.id}`}
     >
