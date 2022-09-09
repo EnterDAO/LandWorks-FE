@@ -267,7 +267,7 @@ const ExploreView: React.FC = () => {
           />
           <Box position="relative">
             <Box className="content-container content-container--explore-view" maxWidth="none !important">
-              <div className={`list-lands-container ${isMapVisible ? '' : 'full-width'}`}>
+              <Box width={{ lg: isMapVisible ? 0.5 : 1 }} pr={{ lg: isMapVisible ? 2 : 0 }}>
                 <LandsExploreList
                   isMapVisible={isMapVisible}
                   lastRentEnd={lastRentEnd}
@@ -276,7 +276,7 @@ const ExploreView: React.FC = () => {
                   setPointMapCentre={setPointMapCentre}
                 />
                 <LayoutFooter isWrapped={false} />
-              </div>
+              </Box>
             </Box>
 
             <ExploreMap
