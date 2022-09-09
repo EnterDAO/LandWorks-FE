@@ -224,3 +224,9 @@ export const listTypes = [
     { value: 3, label: 'Inner' },
   ],
 ];
+
+export enum RentStatus {
+  All = 0,
+  Available = 1,
+  Rented = 2,
+}

@@ -102,3 +102,8 @@ export const getAddressFromENS = async (ens: string) => {
 export const getCryptoVoxelsAsset = async (id: string): Promise<CryptoVoxelsType> => {
   return await fetch(`https://www.cryptovoxels.com/p/${id}`).then((result) => result.json());
 };
+
+export const isSomeEnum =
+  <T>(e: T) =>
+  (token: any): token is T[keyof T] =>
+    Object.values(e).includes(token as T[keyof T]);

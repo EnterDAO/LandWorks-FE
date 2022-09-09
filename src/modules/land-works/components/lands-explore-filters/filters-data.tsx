@@ -1,6 +1,8 @@
 import Icon from 'components/custom/icon';
 import { Option } from 'modules/interface';
 
+import { RentStatus } from 'modules/land-works/constants';
+
 export const sortData = [
   {
     label: 'Hottest first',
@@ -78,17 +80,17 @@ export const addIconToMetaverse = (metaverses: Option[]): Option[] => {
 export const statusData = [
   {
     label: 'All properties',
-    value: 1,
+    value: RentStatus.All,
     filter: null,
   },
   {
     label: 'Available for rent',
-    value: 2,
+    value: RentStatus.Available,
     filter: 'lastRentEnd_lt',
   },
   {
     label: 'Rented',
-    value: 3,
+    value: RentStatus.Rented,
     filter: 'lastRentEnd_gt',
   },
 ];
