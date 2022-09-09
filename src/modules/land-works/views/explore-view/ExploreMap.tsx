@@ -72,7 +72,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
       sx={
         isMapVisible
           ? {
-              pl: isMapMaximized ? 0 : 5,
+              pl: isMapMaximized ? 0 : 3,
               width: isMapMaximized ? 1 : 0.5,
             }
           : {
