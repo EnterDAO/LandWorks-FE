@@ -8,7 +8,8 @@ import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import { DecentralandFiltersModal, VoxelFiltersModal } from '../lands-explore-filters-modal';
 import { PricePopover } from '../price-popover';
-import { addIconToMetaverse, landsData, sortData, statusData } from './filters-data';
+import { addIconToMetaverse, landsData, sortData } from './filters-data';
+import RentStatusSelect from './rent-status-select';
 import { StyledButton } from './styled';
 
 import { sessionStorageHandler } from 'utils';
@@ -17,10 +18,7 @@ import { MoreFiltersType } from '../lands-explore-filters-modal/types';
 
 interface Props {
   onChangeSortDirection: (value: number) => void;
-  onChangeAvailable: (value: number) => void;
-  onChangeCurrency: (value: number) => void;
   onChangeMetaverse: (value: string) => void;
-  onChangePrice: (currencyIndex: number, minPrice: number | null, maxPrice: number | null) => void;
   handleMoreFilter: (value: Partial<MoreFiltersType>) => void;
   maxLandSize: number;
   maxHeight: number;
@@ -29,10 +27,7 @@ interface Props {
 
 const LandWorksFilters: FC<Props> = ({
   onChangeSortDirection,
-  onChangeAvailable,
-  onChangeCurrency,
   onChangeMetaverse,
-  onChangePrice,
   maxLandSize,
   handleMoreFilter,
   maxHeight,
@@ -47,11 +42,6 @@ const LandWorksFilters: FC<Props> = ({
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [metaverses, setMetaverses] = useState<Option[]>(landsData);
   const voxelsSortData = sortData.slice(0, sortData.length - 1);
-
-  const [selectedCurrency, setSelectedCurrency] = useState(
-    sessionStorageHandler('get', 'explore-filters', 'currency') || 0
-  );
-  const [status, setStatus] = useState(sessionStorageHandler('get', 'explore-filters', 'available') || 1);
 
   const onChangePlaceHandler = (value: number) => {
     sessionStorageHandler('set', 'general', 'metaverse', String(value));
@@ -69,24 +59,6 @@ const LandWorksFilters: FC<Props> = ({
     });
   };
 
-  const onChangeAvailableHandler = (value: number) => {
-    setStatus(value);
-    // setShowOnlyAvailable(!showOnlyAvailable);
-    onChangeAvailable(value);
-    sessionStorageHandler('set', 'explore-filters', 'available', value);
-  };
-
-  const onChangeCurrencyHandler = (currency: number, minPrice: number | null, maxPrice: number | null) => {
-    setSelectedCurrency(currency);
-    onChangeCurrency(currency);
-    onChangePrice(currency, minPrice, maxPrice);
-    sessionStorageHandler('set', 'explore-filters', 'currency', currency);
-  };
-
-  useEffect(() => {
-    setTimeout(() => onChangeCurrency(selectedCurrency), 0);
-  }, []);
-
   useEffect(() => {
     setSelectedOrder(orderFilter && orderFilter[`${selectedMetaverse}`] ? orderFilter[`${selectedMetaverse}`] : 1);
   }, [selectedMetaverse]);
@@ -98,7 +70,7 @@ const LandWorksFilters: FC<Props> = ({
   return (
     <Box
       position="sticky"
-      zIndex={1}
+      zIndex={2}
       top={stickyOffset.offsets.header}
       bgcolor="var(--theme-body-color)"
       px="var(--horizontal-padding)"
@@ -113,15 +85,9 @@ const LandWorksFilters: FC<Props> = ({
             options={metaverses}
           />
 
-          <PricePopover text="Price" onSubmit={onChangeCurrencyHandler} />
-          <ControlledSelect
-            width="9.375rem"
-            value={status}
-            onChange={onChangeAvailableHandler}
-            withCheckbox
-            staticPlaceholder="Status"
-            options={statusData}
-          />
+          <PricePopover text="Price" />
+
+          <RentStatusSelect />
         </Box>
         <Box display="flex" flexWrap="wrap" gap={3}>
           <ControlledSelect
