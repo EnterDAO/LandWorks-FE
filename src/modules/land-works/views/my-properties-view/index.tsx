@@ -1,11 +1,11 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import TabContext from '@mui/lab/TabContext';
 import { useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Grid } from 'design-system';
+import CardsGrid from 'components/custom/cards-grid';
 import { LocationState } from 'modules/interface';
 import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssetsByRents, parseUser } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
@@ -189,19 +189,16 @@ const MyPropertiesView: FC = () => {
   const slicedLandsInTotal = lands.slice(0, slicedLands).length;
   const filteredLands = filterLandsByQuery(lands.slice(0, slicedLands), searchQuery);
 
-  const displayNewLandLoader = () => {
-    return (
-      isNewLandTxInProgress(lands, loading, 'LISTING_IN_PROGRESS') ||
-      isNewLandTxInProgress(lands, loading, 'RENT_IN_PROGRESS')
-    );
-  };
-
-  const displayExistLandLoader = () => {
-    return (
-      isExistingLandInProgress(lands, loading, 'WITHDRAW_IN_PROGRESS') ||
-      isExistingLandInProgress(lands, loading, 'EXIST_RENT_IN_PROGRESS')
-    );
-  };
+  const { displayNewLandLoader, displayExistLandLoader } = useMemo(() => {
+    return {
+      displayNewLandLoader:
+        isNewLandTxInProgress(lands, loading, 'LISTING_IN_PROGRESS') ||
+        isNewLandTxInProgress(lands, loading, 'RENT_IN_PROGRESS'),
+      displayExistLandLoader:
+        isExistingLandInProgress(lands, loading, 'WITHDRAW_IN_PROGRESS') ||
+        isExistingLandInProgress(lands, loading, 'EXIST_RENT_IN_PROGRESS'),
+    };
+  }, [lands, loading]);
 
   const newPropertyTitle = () => {
     return localStorage.getItem('LISTING_IN_PROGRESS') ? 'Listing' : 'Renting';
@@ -225,53 +222,38 @@ const MyPropertiesView: FC = () => {
             onChangeSortDirection={onChangeFiltersSortDirection}
             onChangeMetaverse={onChangeMetaverse}
           />
-
-          <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
-            {loading ? (
-              [1, 2, 3, 4].map((i) => (
-                <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={i}>
-                  <LandCardSkeleton key={i} />
-                </Grid>
-              ))
-            ) : lands.length ? (
-              <>
-                {filteredLands.map((land) => (
-                  <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={land.id}>
-                    {displayExistLandLoader() === land.metaverseAssetId ? (
-                      <LandWorksLoadingCard title={existPropertyTitle()} />
-                    ) : (
-                      <LandWorkCard
-                        land={land}
-                        onClick={() =>
-                          history.push({
-                            pathname: `/property/${land.id}`,
-                            state: { from: window.location.pathname, title: 'My properties', tab },
-                          })
-                        }
-                      />
-                    )}
-                  </Grid>
-                ))}
-                {displayNewLandLoader() && (
-                  <Grid item xs={12} sm={6} md={6} lg={4} xl={3}>
-                    <LandWorksLoadingCard title={newPropertyTitle()} />
-                  </Grid>
-                )}
-              </>
-            ) : (
-              <>
-                {displayNewLandLoader() ? (
-                  <Grid item xs={12} sm={6} md={6} lg={4} xl={3}>
-                    <LandWorksLoadingCard title={newPropertyTitle()} />
-                  </Grid>
-                ) : (
-                  <Grid item xs={12}>
-                    <LandsWorksGridEmptyState />
-                  </Grid>
-                )}
-              </>
+          <Box display="flex" justifyContent="center">
+            {(loading || !!filteredLands.length) && (
+              <CardsGrid>
+                {loading
+                  ? Array.from({ length: 6 }).map((_, i) => {
+                      return <LandCardSkeleton key={i} />;
+                    })
+                  : filteredLands.map((land) => {
+                      return displayExistLandLoader === land.metaverseAssetId ? (
+                        <LandWorksLoadingCard title={existPropertyTitle()} />
+                      ) : (
+                        <LandWorkCard
+                          land={land}
+                          onClick={() =>
+                            history.push({
+                              pathname: `/property/${land.id}`,
+                              state: { from: window.location.pathname, title: 'My properties', tab },
+                            })
+                          }
+                        />
+                      );
+                    })}
+              </CardsGrid>
             )}
-          </Grid>
+
+            {!loading &&
+              (displayNewLandLoader ? (
+                <LandWorksLoadingCard title={newPropertyTitle()} />
+              ) : (
+                !lands.length && <LandsWorksGridEmptyState />
+              ))}
+          </Box>
 
           {lands.length > pageSize && (
             <LoadMoreLands
