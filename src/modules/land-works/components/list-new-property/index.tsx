@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
-import { Box, Button, ControlledSelect, Grid, Typography } from 'design-system';
+import landNotFoundImageSrc from 'assets/land-not-found.svg';
+import { Box, Button, ControlledSelect, Grid, Stack, Typography } from 'design-system';
 import { WarningIcon } from 'design-system/icons';
 import CustomizedSteppers from 'design-system/Stepper';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
@@ -14,6 +15,7 @@ import { BaseNFT, CryptoVoxelNFT, DecentralandNFT, Option } from 'modules/interf
 import {
   EstateListingCard,
   LandListingCard,
+  ListingCard,
   VoxelListingCard,
 } from 'modules/land-works/components/land-works-list-card';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
@@ -605,9 +607,21 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     }
   };
 
+  const filteredDecentralandProperties = useMemo(() => {
+    if (landType === 1) {
+      return assetProperties;
+    } else if (landType === 2) {
+      return assetEstates;
+    }
+
+    return [...assetProperties, ...assetEstates];
+  }, [landType, assetProperties, assetEstates]);
+
   useEffect(() => {
     onTypeChange();
   }, [landType]);
+
+  const properties = selectedMetaverse === 1 ? filteredDecentralandProperties : filteredVoxels;
 
   return (
     <section className="list-view">
@@ -619,72 +633,53 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           <CustomizedSteppers steps={steps} activeStep={activeStep} />
         </Grid>
         {activeStep === 0 && (
-          <Grid height={isSmallScreen ? '460px' : '530px'} overflow="auto" display="block" container>
-            <Grid container margin={'40px 0 10px'}>
+          <Stack height={isSmallScreen ? '460px' : '530px'} width={1} overflow="auto">
+            <Box display="flex" gap={4} margin="40px 0 10px">
               <ControlledSelect
-                width={'182px'}
+                width="182px"
                 value={selectedMetaverse}
                 onChange={onChangeMetaverse}
                 options={availableMetaverses}
               />
-              <Box style={{ marginLeft: 20 }}>
+              <Box>
                 <ControlledSelect
-                  width={'182px'}
+                  width="182px"
                   value={landType}
                   onChange={onChangeType}
                   options={listTypes[selectedMetaverse]}
                 />
               </Box>
-            </Grid>
+            </Box>
 
-            {loading ? (
-              <ListingCardSkeleton />
-            ) : (
-              <Grid container flexDirection="row" wrap="wrap" className="properties">
-                {selectedMetaverse === 1 && (
-                  <>
-                    {(landType === 0 || landType === 1) &&
-                      assetProperties.map((land) => (
-                        <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
-                          <LandListingCard
-                            isSelectedProperty={land.name === selectedProperty?.name}
-                            handleClick={handlePropertyChange}
-                            key={land.name}
-                            land={land}
-                          />
-                        </Grid>
-                      ))}
-                    {(landType === 0 || landType === 2) &&
-                      assetEstates.map((land) => (
-                        <Grid key={land.id} item xs={3} margin={'0 0 10px'}>
-                          <EstateListingCard
-                            isSelectedProperty={land.name === selectedProperty?.name}
-                            handleClick={handlePropertyChange}
-                            key={land.name}
-                            land={land}
-                            landsContent={estateGroup}
-                          />
-                        </Grid>
-                      ))}
-                  </>
-                )}
-                {selectedMetaverse === 2 && (
-                  <>
-                    {filteredVoxels.map((parcel) => (
-                      <Grid key={parcel.id} item xs={3} margin={'0 0 10px'}>
-                        <VoxelListingCard
-                          isSelectedProperty={parcel.name === selectedProperty?.name}
-                          handleClick={handlePropertyChange}
-                          key={parcel.name}
-                          land={parcel}
+            {loading && <ListingCardSkeleton />}
+
+            {!loading &&
+              (properties.length > 0 ? (
+                <Grid container className="properties">
+                  {properties.map((property) => {
+                    return (
+                      <Grid key={property.id} item xs={3} margin="0 0 10px">
+                        <ListingCard
+                          selected={property.name === selectedProperty?.name}
+                          onClick={handlePropertyChange}
+                          property={property}
+                          estateLands={estateGroup}
                         />
                       </Grid>
-                    ))}
-                  </>
-                )}
-              </Grid>
-            )}
-          </Grid>
+                    );
+                  })}
+                </Grid>
+              ) : (
+                <Stack flexGrow={1} justifyContent="center" alignItems="center">
+                  <Box component="img" src={landNotFoundImageSrc} width={170} mb={5} />
+                  <Typography variant="h1" component="p" mb={2}>
+                    Land not found
+                  </Typography>
+
+                  <Typography variant="subtitle2">It seems that you don’t have any land in your wallet.</Typography>
+                </Stack>
+              ))}
+          </Stack>
         )}
 
         {activeStep === 1 && (
