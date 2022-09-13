@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
+import { lastDayOfDecade } from 'date-fns';
 
 import { Box, Grid } from 'design-system';
 import { getDecentralandNftImageUrl } from 'helpers/helpers';
@@ -149,5 +150,24 @@ export const VoxelListingCard: React.FC<ICryptoVoxel> = ({ land, handleClick, is
         </Grid>
       </Grid>
     </Grid>
+  );
+};
+
+interface ListingCardProps {
+  property: DecentralandNFT | CryptoVoxelNFT;
+  onClick: (land: BaseNFT) => void;
+  selected?: boolean;
+  estateLands: DecentralandNFT[];
+}
+
+export const ListingCard: FC<ListingCardProps> = ({ property, onClick, selected = false, estateLands }) => {
+  if (property.metaverseName === 'Voxels') {
+    return <VoxelListingCard land={property} handleClick={onClick} isSelectedProperty={selected} />;
+  }
+
+  const DecentralandCard = property.isLAND ? LandListingCard : EstateListingCard;
+
+  return (
+    <DecentralandCard land={property} handleClick={onClick} isSelectedProperty={selected} landsContent={estateLands} />
   );
 };
