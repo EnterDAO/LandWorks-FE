@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
 import BigNumber from 'bignumber.js';
@@ -12,12 +12,7 @@ import { WarningIcon } from 'design-system/icons';
 import CustomizedSteppers from 'design-system/Stepper';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { BaseNFT, CryptoVoxelNFT, DecentralandNFT, Option } from 'modules/interface';
-import {
-  EstateListingCard,
-  LandListingCard,
-  ListingCard,
-  VoxelListingCard,
-} from 'modules/land-works/components/land-works-list-card';
+import { ListingCard } from 'modules/land-works/components/land-works-list-card';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
 import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
 import { addIconToMetaverse, currencyData } from 'modules/land-works/components/lands-explore-filters/filters-data';

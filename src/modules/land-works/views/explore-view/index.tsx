@@ -1,18 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import useDebounce from '@rooks/use-debounce';
-import { isNull } from 'lodash';
-import {
-  BooleanParam,
-  QueryParamConfig,
-  decodeNumber,
-  encodeNumber,
-  useQueryParam,
-  withDefault,
-} from 'use-query-params';
+import { BooleanParam, useQueryParam, withDefault } from 'use-query-params';
 import { getNonHumanValue } from 'web3/utils';
 
 import { Box, Modal } from 'design-system';
-import { isSomeEnum } from 'helpers/helpers';
 import LayoutFooter from 'layout/components/layout-footer';
 import { AtlasTile } from 'modules/land-works/components/atlas';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';

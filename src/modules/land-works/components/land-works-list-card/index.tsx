@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react';
-import { lastDayOfDecade } from 'date-fns';
 
 import { Box, Grid } from 'design-system';
 import { getDecentralandNftImageUrl } from 'helpers/helpers';
