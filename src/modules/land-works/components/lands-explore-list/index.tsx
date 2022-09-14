@@ -38,7 +38,7 @@ interface Props {
   isMapVisible: boolean;
 }
 
-const NUMBER_OF_CARDS_PER_LOAD = 8;
+const NUMBER_OF_CARDS_PER_LOAD = 18;
 
 const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRentEnd, isMapVisible }) => {
   const history = useHistory();
