@@ -789,7 +789,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               5. Listing Summary
             </Box>
             <Grid item xs={10}>
-              <Grid container wrap="nowrap" className="summaryWrapper" flexDirection="row">
+              <Grid container wrap="nowrap" p="8px" className="summaryWrapper" flexDirection="row">
                 {selectedProperty && (
                   <>
                     <SelectedListCard
