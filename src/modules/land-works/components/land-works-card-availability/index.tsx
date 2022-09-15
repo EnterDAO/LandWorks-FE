@@ -14,7 +14,7 @@ const LandCardAvailability: FC<Props> = ({ land, layout }) => {
   let status = 'delisted';
 
   if (land.isAvailable) {
-    status = land.availability.isCurrentlyAvailable ? 'available' : 'rented';
+    status = land.availability.isCurrentlyAvailable ? 'Available' : 'Rented';
   }
 
   return (
