@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 
-import { Box, Button, Grid, Modal, Typography } from 'design-system';
+import { Box, Button, Modal, Typography } from 'design-system';
 import { LocationState } from 'modules/interface';
 import { USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
 import { useWallet } from 'wallets/wallet';
@@ -11,7 +11,7 @@ import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
 import LandsBannerClaimRents from '../lands-banner-claim-rents';
 import { ClaimModal } from '../lands-claim-modal';
 import ListNewProperty from '../list-new-property';
-import { RootStyled, TabListStyled, TabStyled, TypographyStyled } from './styled';
+import { TabListStyled, TabStyled } from './styled';
 
 import { MY_PROPERTIES_TAB_STATE_LENT, MY_PROPERTIES_TAB_STATE_RENTED } from 'modules/land-works/constants';
 import { THEME_COLORS } from 'themes/theme-constants';

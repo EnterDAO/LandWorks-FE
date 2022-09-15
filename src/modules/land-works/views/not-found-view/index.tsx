@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import notFoundImage from 'assets/404.png';
@@ -8,7 +8,7 @@ import { routes } from 'router/routes';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
-const NotFoundView = () => {
+const NotFoundView: FC = () => {
   const stickyOffset = useStickyOffset();
   const history = useHistory();
 
