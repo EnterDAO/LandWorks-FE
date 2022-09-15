@@ -53,7 +53,7 @@ import './explore-view.scss';
 
 import { MoreFiltersType } from 'modules/land-works/components/lands-explore-filters-modal/types';
 
-const IsMapVisibleParam = withDefault(BooleanParam, false);
+const IsMapVisibleParam = withDefault(BooleanParam, true);
 
 const parsePriceToNonHuman = (price: number, decimals = 0) => {
   return getNonHumanValue(price, decimals).dividedBy(DAY_IN_SECONDS).toFixed(0);

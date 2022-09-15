@@ -38,6 +38,8 @@ interface Props {
   isMapVisible: boolean;
 }
 
+const NUMBER_OF_CARDS_PER_LOAD = 18;
+
 const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRentEnd, isMapVisible }) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
@@ -52,11 +54,18 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [blockAutoScroll, setBlockAutoScroll] = useState(false);
 
-  const numberOfCardsPerLoad = isMapVisible ? (cardsSize === 'compact' ? 10 : 6) : 18;
-  const [slicedLands, setSlicedLands] = useState(numberOfCardsPerLoad);
+  const [slicedLands, setSlicedLands] = useState(() => {
+    const storedSlicedLands = sessionStorageHandler('get', 'explore-filters', 'slicedLands');
+
+    if (storedSlicedLands) {
+      return storedSlicedLands;
+    }
+
+    return isMapVisible ? (cardsSize === 'compact' ? 10 : 6) : 18;
+  });
 
   const handleLoadMore = () => {
-    const newSlicedLands = slicedLands + numberOfCardsPerLoad;
+    const newSlicedLands = slicedLands + NUMBER_OF_CARDS_PER_LOAD;
     sessionStorageHandler('set', 'explore-filters', 'slicedLands', newSlicedLands);
     setSlicedLands(newSlicedLands);
     const highlights = getAllLandsCoordinates(lands.slice(0, newSlicedLands));
@@ -162,12 +171,6 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
     }
   }, [clickedLandId]);
 
-  useEffect(() => {
-    const storedNumberOfLoadedCards = sessionStorageHandler('get', 'explore-filters', 'slicedLands');
-
-    setSlicedLands(storedNumberOfLoadedCards ? storedNumberOfLoadedCards : numberOfCardsPerLoad);
-  }, [numberOfCardsPerLoad]);
-
   let filteredLands = filterLandsByQuery(lands, searchQuery);
 
   if (lastRentEnd !== '0') {
@@ -234,7 +237,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
       </Box>
       <CardsGrid layout={cardsSize}>
         {loading &&
-          Array.from({ length: numberOfCardsPerLoad }, (_, i) => {
+          Array.from({ length: slicedLands }, (_, i) => {
             return <LandCardSkeleton key={i} />;
           })}
 
