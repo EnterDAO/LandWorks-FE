@@ -16,6 +16,7 @@ export interface AssetOption {
 }
 
 export interface DecentralandNFT extends BaseNFT {
+  metaverseName: 'Decentraland';
   isLAND?: boolean;
   landIds?: any[];
   coords: any[];
@@ -28,6 +29,7 @@ export interface CryptoVoxelXYcoords {
 }
 
 export interface CryptoVoxelNFT extends BaseNFT {
+  metaverseName: 'Voxels';
   place: string;
   formattedCoords: string;
   type?: string;

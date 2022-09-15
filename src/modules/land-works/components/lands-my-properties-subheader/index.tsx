@@ -7,7 +7,7 @@ import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-q
 
 import { addIconToMetaverse, landsData, sortData } from '../lands-explore-filters/filters-data';
 import LandsSearchBar from '../lands-search';
-import { BottomBoxStyled, RootStyled } from './styled';
+import { BottomBoxStyled } from './styled';
 
 import { sessionStorageHandler } from 'utils';
 

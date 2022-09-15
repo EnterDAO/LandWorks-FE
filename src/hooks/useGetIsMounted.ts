@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-const useGetIsMounted = () => {
+const useGetIsMounted = (): (() => boolean) => {
   const isMounted = useRef(false);
 
   useEffect(() => {
