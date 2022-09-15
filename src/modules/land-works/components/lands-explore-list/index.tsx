@@ -1,4 +1,4 @@
-import { FC, MouseEvent, SyntheticEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import useDebounce from '@rooks/use-debounce';
 

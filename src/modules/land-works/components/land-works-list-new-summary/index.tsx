@@ -2,14 +2,19 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 
 import { ReactComponent as AlertIcon } from 'assets/icons/warning.svg';
+import promotionalSceneTooltipThumbnail from 'assets/img/promotional-scene-tooltip-thumbnail.jpg';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
-import { Grid } from 'design-system';
+import { Tooltip } from 'design-system';
+import { Box, Grid, Typography } from 'design-system';
+import { CopyIcon } from 'design-system/icons';
 import { getTokenIconName } from 'helpers/helpers';
 import { Option } from 'modules/interface';
 import { AssetEntity, PaymentToken } from 'modules/land-works/api';
 
 import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
+
+import { THEME_COLORS } from 'themes/theme-constants';
 
 import s from './s.module.scss';
 
@@ -74,13 +79,6 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
     } else return 0;
   };
 
-  const listingStyle = metaverse
-    ? {
-        xs: 6,
-        mb: 3,
-      }
-    : {};
-
   return (
     <Grid className={s.wrapper} mt={metaverse ? 0 : 4} item>
       <Grid className={s.card}>
@@ -96,31 +94,24 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
           </Grid>
         )}
         <Grid flexDirection="column" alignContent="flex-start" textAlign="left">
-          <Grid textAlign="left" className={s.name}>
+          <Grid textAlign="left" className={s.subtitle}>
             <span>{metaverse ? 'Rent Details' : 'Summary'}</span>
           </Grid>
-          <Grid
-            container
-            flexDirection="row"
-            justifyContent="space-between"
-            flexWrap="wrap"
-            textAlign="left"
-            className={s.details}
-          >
-            <Grid item {...listingStyle} flexDirection="column" alignItems="flex-start">
+          <Grid container textAlign="left" spacing={3} className={s.details}>
+            <Grid item xs={6} display="flex" flexDirection="column">
               Rent Period
               <p>
                 {getCalcByTimeSelection(min, minPeriodSelectedOption)} {minPeriodSelectedOption} - {''}
                 {getCalcByTimeSelection(max, maxPeriodSelectedOption)} {maxPeriodSelectedOption}
               </p>
             </Grid>
-            <Grid item {...listingStyle} flexDirection="column" alignItems="flex-start">
+            <Grid item xs={6} display="flex" flexDirection="column">
               Available for rent{' '}
               <p>
                 {getCalcByTimeSelection(maxFuture, maxFutureSelectedOption)} {maxFutureSelectedOption}
               </p>
             </Grid>
-            <Grid item {...listingStyle} flexDirection="column" alignItems="flex-start">
+            <Grid item xs={6} display="flex" flexDirection="column">
               Rent Price
               <p>
                 <Icon
@@ -142,10 +133,45 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
               </p>
             </Grid>
             {metaverse && (
-              <Grid item {...listingStyle} flexDirection="row" alignItems="flex-start">
+              <Grid item xs={6} display="flex" flexDirection="column">
                 Metaverse
-                {metaverse.icon && <p>{metaverse.icon}</p>}
-                <p style={{ marginLeft: '25px' }}>{metaverse.label}</p>
+                <Box component="p" display="flex" alignItems="center">
+                  {metaverse.icon && (
+                    <Box display="inline-flex" mr={1} sx={{ img: { width: 15, height: 15 } }}>
+                      {metaverse.icon}
+                    </Box>
+                  )}
+                  {metaverse.label}
+                </Box>
+              </Grid>
+            )}
+            {metaverse?.value == 1 && (
+              <Grid item xs={12} display="flex" flexDirection="column">
+                <Typography variant="inherit" component="span" display="inline-flex" alignItems="center" gap="4px">
+                  SCENE
+                  <Tooltip
+                    arrow
+                    title={
+                      <Box display="flex" gap={2}>
+                        <Box borderRadius="10px" src={promotionalSceneTooltipThumbnail} component="img" width={170} />
+                        <Box>
+                          <Typography mb={1} fontWeight={400} variant="body2" color={THEME_COLORS.darkBlue01}>
+                            Promotional Scene
+                          </Typography>
+                          <Typography fontWeight={400} variant="body2">
+                            A “For Rent” scene with an embedded link will be deployed on the property. The scene boosts
+                            chances for rent.
+                          </Typography>
+                        </Box>
+                      </Box>
+                    }
+                  >
+                    <Box display="inline-flex" alignItems="center" justifyContent="center">
+                      <Icon style={{ marginLeft: 0 }} name="about" className="info-icon" />
+                    </Box>
+                  </Tooltip>
+                </Typography>
+                <p>LandWorks Promotional Scene</p>
               </Grid>
             )}
           </Grid>

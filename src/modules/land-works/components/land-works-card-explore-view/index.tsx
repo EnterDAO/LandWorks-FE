@@ -1,4 +1,4 @@
-import React, { MouseEvent, SyntheticEvent, useState } from 'react';
+import React, { MouseEvent } from 'react';
 import classNames from 'classnames';
 import { ZERO_BIG_NUMBER } from 'web3/utils';
 
