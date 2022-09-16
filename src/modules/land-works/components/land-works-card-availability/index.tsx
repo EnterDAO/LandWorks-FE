@@ -11,7 +11,7 @@ interface Props {
 }
 
 const LandCardAvailability: FC<Props> = ({ land, layout }) => {
-  let status = 'delisted';
+  let status = 'Delisted';
 
   if (land.isAvailable) {
     status = land.availability.isCurrentlyAvailable ? 'Available' : 'Rented';
@@ -22,7 +22,7 @@ const LandCardAvailability: FC<Props> = ({ land, layout }) => {
       title={status}
       className={classNames(
         'land-works-card-availability',
-        `land-works-card-availability--status-${status}`,
+        `land-works-card-availability--status-${status.toLowerCase()}`,
         `land-works-card-availability--layout-${layout}`
       )}
     >
