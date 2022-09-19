@@ -12,7 +12,7 @@ import { useRentStatusQueryParam } from 'modules/land-works/components/lands-exp
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
 import LandsExploreSubheader from 'modules/land-works/components/lands-explore-subheader';
 import ListNewProperty from 'modules/land-works/components/list-new-property';
-import { usePriceQueryParams } from 'modules/land-works/components/price-popover';
+import usePriceQueryParams from 'modules/land-works/components/price-popover/usePriceQueryParams';
 import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-tile';
 import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
@@ -227,6 +227,10 @@ const ExploreView: React.FC = () => {
   );
 
   useEffect(() => {
+    if (!paymentToken) {
+      return;
+    }
+
     getLands(metaverse, sortColumn, sortDir, lastRentEnd, paymentToken, priceParams.minPrice, priceParams.maxPrice);
   }, [sortColumn, sortDir, lastRentEnd, paymentToken, metaverse, priceParams.minPrice, priceParams.maxPrice]);
 

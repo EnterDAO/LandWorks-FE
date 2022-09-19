@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ToggleButton } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { NumberParam, QueryParamConfig, decodeNumber, encodeNumber, useQueryParams } from 'use-query-params';
 
 import { Button } from 'design-system';
 import { getTokenPrice } from 'providers/known-tokens-provider';
@@ -17,6 +16,7 @@ import {
   StyledTypography,
   Subtitle,
 } from './styled';
+import usePriceQueryParams from './usePriceQueryParams';
 
 import './styles.scss';
 
@@ -24,24 +24,6 @@ interface IProps {
   text: string;
   onSubmit?: (currency: number, minValue: number | null, maxValue: number | null) => void;
 }
-
-const CurrencyParam: QueryParamConfig<number, number> = {
-  encode: encodeNumber,
-  decode: (value) => {
-    const num = decodeNumber(value);
-    const currencyConfig = currencyData.find(({ value }) => value === num) || currencyData[0];
-
-    return currencyConfig.value;
-  },
-};
-
-export const usePriceQueryParams = () => {
-  return useQueryParams({
-    currency: CurrencyParam,
-    minPrice: NumberParam,
-    maxPrice: NumberParam,
-  });
-};
 
 export const PricePopover: React.FC<IProps> = ({ text }) => {
   const [disableApply, setDisableApply] = useState(true);
@@ -107,8 +89,8 @@ export const PricePopover: React.FC<IProps> = ({ text }) => {
   const handleSubmit = () => {
     setPriceParams({
       currency,
-      minPrice: minPrice ? +minPrice : null,
-      maxPrice: maxPrice ? +maxPrice : null,
+      minPrice: minPrice ? +minPrice : undefined,
+      maxPrice: maxPrice ? +maxPrice : undefined,
     });
 
     closePopover();
