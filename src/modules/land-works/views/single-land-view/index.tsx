@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
+import { isAdministrativeOperatorAddress, isNullAddress } from 'web3/utils';
 
-import { Button, Grid, Icon, Modal, Typography } from 'design-system';
+import { Box, Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
@@ -12,6 +13,7 @@ import EditProperty from 'modules/land-works/components/edit-property';
 import SingleViewParcelProperties from 'modules/land-works/components/land-parcel-properties';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
+import PromoSceneRedeployment from 'modules/land-works/components/promo-scene-redeployment/PromoSceneRedeployment';
 import { routes } from 'router/routes';
 
 import ExternalLink from '../../../../components/custom/external-link';
@@ -233,7 +235,14 @@ const SingleLandView: React.FC = () => {
   };
 
   const isCryptovoxel = asset?.metaverse?.name === 'Voxels';
+  const isDecentraland = asset?.metaverse?.name === 'Decentraland';
   const parselProperties = isCryptovoxel ? asset.attributes : asset.additionalData;
+  const isPromoSceneDeploymentAvailable =
+    isDecentraland &&
+    asset.isAvailable &&
+    isOwner() &&
+    !isNullAddress(asset.operator) &&
+    !isAdministrativeOperatorAddress(asset.operator);
 
   return (
     <div className="content-container single-card-section">
@@ -421,6 +430,12 @@ const SingleLandView: React.FC = () => {
           disableButtons(true);
         }}
       />
+
+      {!!asset.id && !!asset.metaverseRegistry?.id && isPromoSceneDeploymentAvailable && (
+        <Box maxWidth={1000} my={12} mx="auto">
+          <PromoSceneRedeployment assetId={asset.id} metaverseRegistryId={asset.metaverseRegistry.id} />
+        </Box>
+      )}
 
       {(asset.attributes || asset.additionalData) && (
         <SingleViewParcelProperties attributes={parselProperties} id={asset?.metaverseAssetId} />
