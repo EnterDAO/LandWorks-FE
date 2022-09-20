@@ -25,7 +25,6 @@ const LayoutHeader: FC = () => {
       width={1}
       zIndex={999}
     >
-      <HeaderAgitaionBar />
       <Box bgcolor={THEME_COLORS.darkBlue01} px={{ xs: 3, lg: 15 }}>
         <Box
           display="flex"
