@@ -56,6 +56,15 @@ export const MAX_UINT_256 = new BigNumber(2).pow(256).minus(1);
 export const ZERO_BIG_NUMBER = new BigNumber(0);
 export const DEFAULT_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const ONE_ADDRESS = '0x0000000000000000000000000000000000000001'; // In LandWorks, ETH is set as this address for payments.
+export const ADMINISTRATIVE_OPERATOR_ADDRESS = '0x40c6a0abb1ed3caa6a56d5de3410af2e6088ea23';
+
+export const isNullAddress = (address: string) => {
+  return DEFAULT_ADDRESS === address.toLowerCase();
+};
+
+export const isAdministrativeOperatorAddress = (address: string) => {
+  return ADMINISTRATIVE_OPERATOR_ADDRESS === address.toLowerCase();
+};
 
 export function getEtherscanTxUrl(txHash?: string, chainId = config.web3.chainId): string | undefined {
   if (txHash) {
