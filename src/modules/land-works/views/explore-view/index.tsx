@@ -227,10 +227,6 @@ const ExploreView: React.FC = () => {
   );
 
   useEffect(() => {
-    if (!paymentToken) {
-      return;
-    }
-
     getLands(metaverse, sortColumn, sortDir, lastRentEnd, paymentToken, priceParams.minPrice, priceParams.maxPrice);
   }, [sortColumn, sortDir, lastRentEnd, paymentToken, metaverse, priceParams.minPrice, priceParams.maxPrice]);
 
