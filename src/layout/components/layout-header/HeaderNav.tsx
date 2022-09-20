@@ -66,7 +66,7 @@ const appNav: HeaderNavLinkProps[] = [
   },
 ];
 
-export const useIsLandingMode = () => {
+export const useIsAppMode = () => {
   const isExploreRoute = !!useRouteMatch({
     path: routes.explore,
   });
@@ -75,23 +75,23 @@ export const useIsLandingMode = () => {
     exact: true,
   });
 
-  const isLendingModeRef = useRef(isExploreRoute);
+  const isAppModeRef = useRef(isExploreRoute);
 
   useEffect(() => {
     if (isExploreRoute) {
-      isLendingModeRef.current = true;
+      isAppModeRef.current = true;
     } else if (isHomeRoute) {
-      isLendingModeRef.current = false;
+      isAppModeRef.current = false;
     }
   }, [isExploreRoute, isHomeRoute]);
 
-  return (isExploreRoute || isLendingModeRef.current) && !isHomeRoute;
+  return (isExploreRoute || isAppModeRef.current) && !isHomeRoute;
 };
 
 const HeaderNav: FC = () => {
-  const isLandingMode = useIsLandingMode();
+  const isAppMode = useIsAppMode();
 
-  const nav = isLandingMode ? appNav : landingNav;
+  const nav = isAppMode ? appNav : landingNav;
 
   return (
     <Box
