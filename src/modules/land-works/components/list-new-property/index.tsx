@@ -776,7 +776,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               width="100%"
               color="#F8F8FF"
             >
-              5. Listing Summary
+              4. Listing Summary
             </Box>
             <Grid item xs={10}>
               <Grid container wrap="nowrap" p="8px" className="summaryWrapper" flexDirection="row">
