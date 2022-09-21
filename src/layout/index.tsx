@@ -10,10 +10,11 @@ import ContractProvider from 'modules/land-works/providers/contract-provider';
 import LandWorksProvider from 'modules/land-works/providers/landworks-provider';
 import StickyOffsetProvider from 'providers/sticky-offset-provider';
 import WarningProvider from 'providers/warning-provider';
-import { routes } from 'router/routes';
+import { APP_ROUTES, LANDING_ROUTES } from 'router/routes';
 
 import NotionProvider from '../api/notion/client';
 import Erc20Provider from '../modules/land-works/providers/erc20-provider';
+import NotFoundView from '../modules/land-works/views/not-found-view';
 import { GraphClient } from '../web3/graph/client';
 
 import classes from './layout.module.scss';
@@ -28,11 +29,11 @@ const client = GraphClient._getWsClient();
 
 const LayoutView: React.FC = () => {
   const isGrandProgramRoute = useRouteMatch({
-    path: routes.grantsProgram,
+    path: [APP_ROUTES.grantsProgram, LANDING_ROUTES.grantsProgram],
   });
 
   const isRouteHasFooter = useRouteMatch({
-    path: [routes.explore, routes.home, routes.faq],
+    path: [LANDING_ROUTES.home, LANDING_ROUTES.faq, APP_ROUTES.explore, APP_ROUTES.faq],
     exact: true,
   });
 
@@ -74,11 +75,18 @@ const LayoutView: React.FC = () => {
                             }
                           >
                             <Switch>
-                              <Route path={routes.home} exact component={LandingView} />
-                              <Route path={routes.sceneBuilder} component={SceneBuilderView} />
-                              <Route path={routes.faq} component={FAQView} />
-                              <Route path={routes.grantsProgram} component={GrantsProgram} />
-                              <Route component={LandworksView} />
+                              <Route path={LANDING_ROUTES.home} exact component={LandingView} />
+                              <Route
+                                path={[LANDING_ROUTES.sceneBuilder, APP_ROUTES.sceneBuilder]}
+                                component={SceneBuilderView}
+                              />
+                              <Route path={[LANDING_ROUTES.faq, APP_ROUTES.faq]} component={FAQView} />
+                              <Route
+                                path={[LANDING_ROUTES.grantsProgram, APP_ROUTES.grantsProgram]}
+                                component={GrantsProgram}
+                              />
+                              <Route path={APP_ROUTES.explore} component={LandworksView} />
+                              <Route path="*" component={NotFoundView} />
                             </Switch>
                           </Suspense>
                         </ErrorBoundary>

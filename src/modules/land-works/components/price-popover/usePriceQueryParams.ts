@@ -1,7 +1,5 @@
 import { QueryParamConfig, decodeNumber, encodeNumber, useQueryParams } from 'use-query-params';
 
-import { Button } from 'design-system';
-
 import { currencyData } from '../lands-explore-filters/filters-data';
 
 import { sessionStorageHandler } from 'utils';

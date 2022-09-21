@@ -1,21 +1,20 @@
 import React, { FC } from 'react';
 
 import { Box } from 'design-system';
-import useHasUserEnteredApp from 'hooks/useHasUserEnteredApp';
-import { routes } from 'router/routes';
+import { APP_ROUTES, LANDING_ROUTES, useIsAppRoute } from 'router/routes';
 
 import { ReactComponent as Rocket } from '../../../resources/svg/rocket-02.svg';
 import HeaderNavLink, { HeaderNavLinkProps } from './HeaderNavLink';
 
 const landingNav: HeaderNavLinkProps[] = [
   {
-    to: routes.home,
+    to: LANDING_ROUTES.home,
     label: 'Home',
     exact: true,
   },
   {
     to: {
-      pathname: routes.home,
+      pathname: LANDING_ROUTES.home,
       hash: '#why',
     },
     label: 'Why Rent?',
@@ -27,47 +26,47 @@ const landingNav: HeaderNavLinkProps[] = [
     external: true,
   },
   {
-    to: routes.faq,
+    to: LANDING_ROUTES.faq,
     label: 'FAQ',
   },
   {
-    to: routes.sceneBuilder,
+    to: LANDING_ROUTES.sceneBuilder,
     label: 'Scene Builder',
   },
   {
-    to: routes.grantsProgram,
+    to: LANDING_ROUTES.grantsProgram,
     label: 'Grant Program',
   },
 ];
 
 const appNav: HeaderNavLinkProps[] = [
   {
-    to: routes.explore,
+    to: APP_ROUTES.explore,
     label: 'Explore',
     Icon: Rocket,
     exact: true,
   },
   {
-    to: routes.myProperties,
+    to: APP_ROUTES.myProperties,
     label: 'My properties',
   },
   {
-    to: routes.sceneBuilder,
+    to: APP_ROUTES.sceneBuilder,
     label: 'Scene Builder',
   },
   {
-    to: routes.faq,
+    to: APP_ROUTES.faq,
     label: 'FAQ',
   },
   {
-    to: routes.grantsProgram,
+    to: APP_ROUTES.grantsProgram,
     label: 'Grant Program',
   },
 ];
 
 const HeaderNavLinks: FC = () => {
-  const hasUserEnteredApp = useHasUserEnteredApp();
-  const nav = hasUserEnteredApp ? appNav : landingNav;
+  const isAppRoute = useIsAppRoute();
+  const nav = isAppRoute ? appNav : landingNav;
 
   return (
     <Box

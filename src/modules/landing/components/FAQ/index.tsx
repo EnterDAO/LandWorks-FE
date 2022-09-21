@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { routes } from 'router/routes';
+import { LANDING_ROUTES } from 'router/routes';
 
 import { questionData } from './data';
 import { QuestionItem } from './QuestionItem';
@@ -18,7 +18,7 @@ export const FAQ: React.FC = () => {
             <QuestionItem item={item} key={item.id} />
           ))}
         </QuestionList>
-        <StyledLink to={routes.faq}>See all FAQ</StyledLink>
+        <StyledLink to={LANDING_ROUTES.faq}>See all FAQ</StyledLink>
       </StyledRoot>
     </div>
   );

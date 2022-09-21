@@ -7,7 +7,6 @@ import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { Tooltip } from 'design-system';
 import { Box, Grid, Typography } from 'design-system';
-import { CopyIcon } from 'design-system/icons';
 import { getTokenIconName } from 'helpers/helpers';
 import { Option } from 'modules/interface';
 import { AssetEntity, PaymentToken } from 'modules/land-works/api';

@@ -12,13 +12,14 @@ import {
   StyledSubtitle,
   StyledText,
 } from 'modules/landing/components/about/styled';
-import { routes } from 'router/routes';
+import { APP_ROUTES } from 'router/routes';
 
 import './index.scss';
 
 export const About: React.FC = () => {
   const history = useHistory();
-  const redirect = () => history.push(routes.explore);
+  const redirect = () => history.push(APP_ROUTES.explore);
+
   return (
     <section className="about-wrapper">
       <div className="content-container">
@@ -46,7 +47,7 @@ export const About: React.FC = () => {
                 btnSize="xsmall"
                 className="button"
               >
-                <StyledLink to={routes.explore}>
+                <StyledLink to={APP_ROUTES.explore}>
                   List now <BackIcon height={20} width={20} />
                 </StyledLink>
               </Button>
@@ -66,7 +67,7 @@ export const About: React.FC = () => {
                 btnSize="xsmall"
                 className="button"
               >
-                <StyledLink to={routes.explore}>
+                <StyledLink to={APP_ROUTES.explore}>
                   Start renting <BackIcon height={20} width={20} />
                 </StyledLink>
               </Button>

@@ -10,7 +10,7 @@ import SceneBuilderProfile from 'modules/scene-builder/components/scene-builder-
 import ProfileLoaderSkeleton from 'modules/scene-builder/components/scene-builder-profile/card-loader-skeleton';
 import SceneBuilderDetails from 'modules/scene-builder/components/scene-builder-profile/scene-builder-details';
 import SceneBuilderPortfolio from 'modules/scene-builder/components/scene-builder-profile/scene-builder-portfolio';
-import { routes } from 'router/routes';
+import { APP_ROUTES, LANDING_ROUTES, useIsAppRoute } from 'router/routes';
 
 import { BreadCrumbs, Separator } from '../scene-builder-form-view/styled';
 import { StyledBreadcrumbsGrid } from './styled';
@@ -29,6 +29,8 @@ const SingleBuilderView: FC = () => {
   const [selectedBuilder, setSelectedBuilder] = useState<NotionResultForProfile>();
   const builderFromParam = useParams() as SingleBuilderViewParams;
   const { builderName } = builderFromParam;
+  const isAppRoute = useIsAppRoute();
+  const sceneBuilderRoute = isAppRoute ? APP_ROUTES.sceneBuilder : LANDING_ROUTES.sceneBuilder;
 
   useEffect(() => {
     (async () => {
@@ -46,14 +48,14 @@ const SingleBuilderView: FC = () => {
     <>
       <StyledBreadcrumbsGrid className="content-container">
         <BreadCrumbs>
-          <Link className="button-back" to={routes.sceneBuilder}>
+          <Link className="button-back" to={sceneBuilderRoute}>
             <div className="button-icon">
               <BackIcon style={{ width: '20px' }} />
             </div>
             <span>Back to {'Scene Builders'}</span>
           </Link>
           <Separator />
-          <Link className="button-explore" to={routes.sceneBuilder}>
+          <Link className="button-explore" to={sceneBuilderRoute}>
             <span>{'Builders'}</span>
           </Link>
           <ArrowRightIcon style={{ width: '20px' }} />
