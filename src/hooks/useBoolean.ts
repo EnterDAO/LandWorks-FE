@@ -2,7 +2,17 @@ import { useMemo, useState } from 'react';
 
 import useGetIsMounted from './useGetIsMounted';
 
-const useBoolean = (defaultValue?: boolean) => {
+interface UseBooleanReturn {
+  value: boolean;
+  setValue: React.Dispatch<React.SetStateAction<boolean>>;
+  setTrue: () => void;
+  setFalse: () => void;
+  toggle: () => void;
+  setSafeTrue: () => void;
+  setSafeFalse: () => void;
+}
+
+const useBoolean = (defaultValue?: boolean): UseBooleanReturn => {
   const [value, setValue] = useState(!!defaultValue);
   const getIsMounted = useGetIsMounted();
 

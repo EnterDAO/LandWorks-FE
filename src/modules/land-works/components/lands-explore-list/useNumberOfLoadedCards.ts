@@ -7,7 +7,9 @@ const getStoredNumberOfLoadedCardsOrDefault = (defaultValue: number): number => 
 };
 
 // TODO: reworked it using useSessionStorage hook
-const useNumberOfLoadedCards = (initialNumberOfCards: number) => {
+const useNumberOfLoadedCards = (
+  initialNumberOfCards: number
+): [number, React.Dispatch<React.SetStateAction<number>>] => {
   const [numberOfLoadedCards, setNumberOfLoadedCards] = useState(() => {
     return getStoredNumberOfLoadedCardsOrDefault(initialNumberOfCards);
   });
@@ -24,7 +26,7 @@ const useNumberOfLoadedCards = (initialNumberOfCards: number) => {
     );
   }, [initialNumberOfCards]);
 
-  return [numberOfLoadedCards, setNumberOfLoadedCards] as const;
+  return [numberOfLoadedCards, setNumberOfLoadedCards];
 };
 
 export default useNumberOfLoadedCards;

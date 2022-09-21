@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import thumbnailSrc from 'assets/img/promotional-scene-thumbnail.jpg';
-import { Box, Button, Loader, Typography } from 'design-system';
+import { Box, Button, Typography } from 'design-system';
 import useBoolean from 'hooks/useBoolean';
-import { AssetEntity } from 'modules/land-works/api';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 
 import PromoSceneRedeploymentConfirmModal from './PromoSceneRedeploymentConfirmModal';
@@ -14,7 +13,7 @@ interface PromoSceneRedeploymentProps {
   metaverseRegistryId: string;
 }
 
-const PromoSceneRedeployment = ({ assetId, metaverseRegistryId }: PromoSceneRedeploymentProps) => {
+const PromoSceneRedeployment: FC<PromoSceneRedeploymentProps> = ({ assetId, metaverseRegistryId }) => {
   const landworks = useLandworks();
 
   const { value: isRedeploying, setTrue: startRedeploying, setSafeFalse: stopRedeploying } = useBoolean();
