@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useQuery, useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
-import { isNullAddress } from 'web3/utils';
 
 import { Box, Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-system/icons';

@@ -18,7 +18,7 @@ const RedeploySceneConfirmModal: FC<RedeploySceneConfirmModalProps> = ({ onClose
       <Typography mb={7} mx="auto" maxWidth={600}>
         LandWork's promotional scene can be seen all over Decentraland on the plots which are available for rent on the
         platform. The scene has an embedded link which allows interested users to easily rent the property. By
-        redeploying the scene, LandWorks will remove the scene of the last tenant and redeploy the promotional one
+        redeploying the scene, LandWorks will remove the scene of the last tenant and redeploy the promotional one,
         boosting the visibility of your property.
       </Typography>
 

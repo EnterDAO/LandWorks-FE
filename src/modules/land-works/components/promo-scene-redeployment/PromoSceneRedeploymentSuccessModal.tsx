@@ -14,7 +14,7 @@ const PromoSceneRedeploymentSuccessModal: FC<PromoSceneRedeploymentSuccessModalP
         Success
       </Typography>
       <Typography mb={8} mx="auto" maxWidth={600}>
-        The promotional scene will be on visible on the property in a couple of minutes.
+        The promotional scene will be visible throughout the whole property in a couple of minutes.
       </Typography>
 
       <Button variant="gradient" btnSize="medium" onClick={onClose}>
