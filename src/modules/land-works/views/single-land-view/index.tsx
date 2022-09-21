@@ -245,7 +245,7 @@ const SingleLandView: React.FC = () => {
   const isDecentraland = asset?.metaverse?.name === 'Decentraland';
   const parselProperties = isCryptovoxel ? asset.attributes : asset.additionalData;
   const isPromoSceneDeploymentAvailable =
-    isDecentraland && asset.isAvailable && isOwner() && !isNullAddress(asset.operator) && !isAdministrativeOperator;
+    isDecentraland && asset.availability?.isCurrentlyAvailable && isOwner() && !isAdministrativeOperator;
 
   return (
     <div className="content-container single-card-section">
