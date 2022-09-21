@@ -234,6 +234,7 @@ const MyPropertiesView: FC = () => {
                         <LandWorksLoadingCard title={existPropertyTitle()} />
                       ) : (
                         <LandWorkCard
+                          key={land.id}
                           land={land}
                           onClick={() =>
                             history.push({
