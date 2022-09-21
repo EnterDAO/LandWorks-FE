@@ -2,7 +2,7 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 
 import { ReactComponent as AlertIcon } from 'assets/icons/warning.svg';
-import promotionalSceneTooltipThumbnail from 'assets/img/promotional-scene-tooltip-thumbnail.jpg';
+import promotionalSceneTooltipThumbnail from 'assets/img/promotional-scene-thumbnail.jpg';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { Tooltip } from 'design-system';

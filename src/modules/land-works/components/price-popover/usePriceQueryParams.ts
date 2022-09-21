@@ -1,4 +1,11 @@
-import { QueryParamConfig, decodeNumber, encodeNumber, useQueryParams } from 'use-query-params';
+import {
+  DecodedValueMap,
+  QueryParamConfig,
+  SetQuery,
+  decodeNumber,
+  encodeNumber,
+  useQueryParams,
+} from 'use-query-params';
 
 import { currencyData } from '../lands-explore-filters/filters-data';
 
@@ -67,12 +74,14 @@ const getPriceLimitParamConfig = (queryKey: string): QueryParamConfig<number, nu
 const MinPriceParam = getPriceLimitParamConfig(MIN_PRICE_QUERY_PARAM_KEY);
 const MaxPriceParam = getPriceLimitParamConfig(MAX_PRICE_QUERY_PARAM_KEY);
 
-const usePriceQueryParams = () => {
-  return useQueryParams({
-    [CURRENCY_QUERY_PARAM_KEY]: CurrencyParam,
-    [MIN_PRICE_QUERY_PARAM_KEY]: MinPriceParam,
-    [MAX_PRICE_QUERY_PARAM_KEY]: MaxPriceParam,
-  });
+const paramConfigMap = {
+  [CURRENCY_QUERY_PARAM_KEY]: CurrencyParam,
+  [MIN_PRICE_QUERY_PARAM_KEY]: MinPriceParam,
+  [MAX_PRICE_QUERY_PARAM_KEY]: MaxPriceParam,
+};
+
+const usePriceQueryParams = (): [DecodedValueMap<typeof paramConfigMap>, SetQuery<typeof paramConfigMap>] => {
+  return useQueryParams(paramConfigMap);
 };
 
 export default usePriceQueryParams;
