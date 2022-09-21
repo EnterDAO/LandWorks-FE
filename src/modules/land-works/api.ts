@@ -509,17 +509,19 @@ export type APIOverviewData = {
   administrativeOperator: string;
 };
 
+export const OVERVIEW = gql`
+  query GetOverview {
+    overview(id: "OVERVIEW") {
+      totalListings
+      totalRents
+      administrativeOperator
+    }
+  }
+`;
+
 export function fetchOverviewData(): Promise<APIOverviewData> {
   return GraphClient.get({
-    query: gql`
-      query GetOverview {
-        overview(id: "OVERVIEW") {
-          totalListings
-          totalRents
-          administrativeOperator
-        }
-      }
-    `,
+    query: OVERVIEW,
   })
     .then((result) => {
       return {

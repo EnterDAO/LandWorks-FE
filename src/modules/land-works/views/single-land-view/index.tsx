@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { useSubscription } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
-import { isAdministrativeOperatorAddress, isNullAddress } from 'web3/utils';
+import { isNullAddress } from 'web3/utils';
 
 import { Box, Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-system/icons';
@@ -18,7 +18,7 @@ import { routes } from 'router/routes';
 
 import ExternalLink from '../../../../components/custom/external-link';
 import { useWallet } from '../../../../wallets/wallet';
-import { ASSET_SUBSCRIPTION, AssetEntity, fetchAdjacentDecentralandAssets, parseAsset } from '../../api';
+import { ASSET_SUBSCRIPTION, AssetEntity, OVERVIEW, fetchAdjacentDecentralandAssets, parseAsset } from '../../api';
 import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
 import { RentModal } from '../../components/lands-rent-modal';
@@ -30,6 +30,12 @@ import { calculateNeighbours, twitterListText } from 'modules/land-works/utils';
 import { getNowTs } from '../../../../utils';
 
 import './index.scss';
+
+const useIsAdministrativeOperator = (address: string) => {
+  const { data } = useQuery<{ overview: { administrativeOperator: string } }>(OVERVIEW);
+
+  return data?.overview.administrativeOperator.toLowerCase() === address.toLowerCase();
+};
 
 const SingleLandView: React.FC = () => {
   const wallet = useWallet();
@@ -57,6 +63,7 @@ const SingleLandView: React.FC = () => {
   const [page, setPage] = useState(1);
 
   const [showEditModal, setShowEditModal] = useState(false);
+  const isAdministrativeOperator = useIsAdministrativeOperator(asset.operator || '');
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
@@ -238,11 +245,7 @@ const SingleLandView: React.FC = () => {
   const isDecentraland = asset?.metaverse?.name === 'Decentraland';
   const parselProperties = isCryptovoxel ? asset.attributes : asset.additionalData;
   const isPromoSceneDeploymentAvailable =
-    isDecentraland &&
-    asset.isAvailable &&
-    isOwner() &&
-    !isNullAddress(asset.operator) &&
-    !isAdministrativeOperatorAddress(asset.operator);
+    isDecentraland && asset.isAvailable && isOwner() && !isNullAddress(asset.operator) && !isAdministrativeOperator;
 
   return (
     <div className="content-container single-card-section">
