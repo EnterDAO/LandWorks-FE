@@ -44,7 +44,7 @@ const LandWorksFilters: FC<Props> = ({
   const voxelsSortData = sortData.slice(0, sortData.length - 1);
 
   const onChangePlaceHandler = (value: number) => {
-    sessionStorageHandler('set', 'general', 'metaverse', String(value));
+    sessionStorageHandler('set', 'general', 'metaverse', value);
     onChangeMetaverse(`${value}`);
     setSelectedMetaverse(value);
     // TODO:: some filtering here
