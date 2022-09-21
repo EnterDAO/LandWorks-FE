@@ -49,10 +49,15 @@ const ClaimHistoryTable: React.FC<Props> = ({ metaverse }) => {
         // TODO:
       }
 
-      const claimHistory = subscriptionData.data?.user?.claimHistory?.map((history: ClaimHistory) => ({
-        ...history,
-        key: history.id,
-      }));
+      let claimHistory = [];
+
+      if (subscriptionData.data.user) {
+        claimHistory = subscriptionData.data.user.claimHistory?.map((history: ClaimHistory) => ({
+          ...history,
+          key: history.id,
+        }));
+      }
+
       setClaimHistory(claimHistory);
       setPaginatedClaimHistory(claimHistory.slice(0, DEFAULT_SLICED_HISTORY));
       setTotalClaims(claimHistory?.length || 0);

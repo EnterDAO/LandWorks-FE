@@ -101,7 +101,15 @@ const MyPropertiesView: FC = () => {
     if (userData && userData.user) {
       setUser(await parseUser(userData.user));
     } else {
-      setUser({} as UserEntity);
+      setUser({
+        id: '',
+        hasUnclaimedRent: false,
+        assets: [],
+        consumerTo: [],
+        rents: [],
+        unclaimedRentAssets: [],
+        ownerAndConsumerAssets: [],
+      } as UserEntity);
     }
   };
   const onChangeFiltersSortDirection = (value: number) => {
@@ -145,9 +153,7 @@ const MyPropertiesView: FC = () => {
   }, [tab, rents]);
 
   useEffect(() => {
-    if (rents.length && lands.length) {
-      sortLands(sortColumn, sortDir);
-    }
+    sortLands(sortColumn, sortDir);
     if (Object.keys(user).length) {
       if (tab === MY_PROPERTIES_TAB_STATE_RENTED) setLands(rents);
       if (tab === MY_PROPERTIES_TAB_STATE_LENT) setLands(user?.ownerAndConsumerAssets || []);
