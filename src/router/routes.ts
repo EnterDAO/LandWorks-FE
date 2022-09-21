@@ -14,13 +14,13 @@ export const APP_ROOT_ROUTE = '/app';
 
 export const APP_ROUTES = {
   explore: APP_ROOT_ROUTE,
-  myProperties: `${APP_ROOT_ROUTE}/my-properties`,
-  property: `${APP_ROOT_ROUTE}/property/:tokenId`,
-  faq: `${APP_ROOT_ROUTE}/faq`,
-  sceneBuilder: `${APP_ROOT_ROUTE}${LANDING_ROUTES.sceneBuilder}`,
-  sceneBuilderJoin: `${APP_ROOT_ROUTE}${LANDING_ROUTES.sceneBuilderJoin}`,
-  sceneBuilderBuilder: `${APP_ROOT_ROUTE}${LANDING_ROUTES.sceneBuilderBuilder}`,
-  grantsProgram: `${APP_ROOT_ROUTE}${LANDING_ROUTES.grantsProgram}`,
+  myProperties: APP_ROOT_ROUTE + '/my-properties',
+  property: APP_ROOT_ROUTE + '/property/:tokenId',
+  faq: APP_ROOT_ROUTE + LANDING_ROUTES.faq,
+  sceneBuilder: APP_ROOT_ROUTE + LANDING_ROUTES.sceneBuilder,
+  sceneBuilderJoin: APP_ROOT_ROUTE + LANDING_ROUTES.sceneBuilderJoin,
+  sceneBuilderBuilder: APP_ROOT_ROUTE + LANDING_ROUTES.sceneBuilderBuilder,
+  grantsProgram: APP_ROOT_ROUTE + LANDING_ROUTES.grantsProgram,
 };
 
 export const useIsAppRoute = (): boolean => !!useRouteMatch(APP_ROOT_ROUTE);
