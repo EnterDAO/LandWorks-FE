@@ -27,7 +27,6 @@ import {
   getAllLandsCoordinates,
   getOwnerOrConsumerId,
 } from 'modules/land-works/utils';
-import { sessionStorageHandler } from 'utils';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 

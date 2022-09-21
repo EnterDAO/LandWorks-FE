@@ -37,9 +37,8 @@ const PropertyRentStatusParam: QueryParamConfig<number, RentStatus> = {
   },
 };
 
-export const useRentStatusQueryParam = () => {
-  return useQueryParam(STATUS_QUERY_PARAM_KEY, PropertyRentStatusParam, {});
-};
+export const useRentStatusQueryParam = (): [RentStatus, (newValue: number) => void] =>
+  useQueryParam(STATUS_QUERY_PARAM_KEY, PropertyRentStatusParam);
 
 const RentStatusSelect: FC = () => {
   const [rentStatus, setRentStatus] = useRentStatusQueryParam();
