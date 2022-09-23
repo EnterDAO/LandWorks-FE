@@ -1,6 +1,6 @@
-import { generatePath } from 'react-router-dom';
+import { generatePath, useRouteMatch } from 'react-router-dom';
 
-export const routes = {
+export const LANDING_ROUTES = {
   home: '/',
   docs: '/docs',
   faq: '/faq',
@@ -8,14 +8,26 @@ export const routes = {
   sceneBuilderJoin: '/scene-builder/join',
   sceneBuilderBuilder: '/scene-builder/builder/:builderName',
   grantsProgram: '/grants-program',
-
-  explore: '/explore',
-  myProperties: '/my-properties',
-  property: '/property/:tokenId',
 };
 
-export const getSceneBuilderBuilderPath = (builderName: string): string => {
-  return generatePath(routes.sceneBuilderBuilder, {
+export const APP_ROOT_ROUTE = '/app';
+
+export const APP_ROUTES = {
+  explore: APP_ROOT_ROUTE,
+  myProperties: APP_ROOT_ROUTE + '/my-properties',
+  property: APP_ROOT_ROUTE + '/property/:tokenId',
+  faq: APP_ROOT_ROUTE + LANDING_ROUTES.faq,
+  sceneBuilder: APP_ROOT_ROUTE + LANDING_ROUTES.sceneBuilder,
+  sceneBuilderJoin: APP_ROOT_ROUTE + LANDING_ROUTES.sceneBuilderJoin,
+  sceneBuilderBuilder: APP_ROOT_ROUTE + LANDING_ROUTES.sceneBuilderBuilder,
+  grantsProgram: APP_ROOT_ROUTE + LANDING_ROUTES.grantsProgram,
+};
+
+export const useIsAppRoute = (): boolean => !!useRouteMatch(APP_ROOT_ROUTE);
+export const useSceneBuilderBuilderPath = (builderName: string): string => {
+  const isAppRoute = useIsAppRoute();
+
+  return generatePath(isAppRoute ? APP_ROUTES.sceneBuilderBuilder : LANDING_ROUTES.sceneBuilderBuilder, {
     builderName,
   });
 };

@@ -3,9 +3,7 @@ import { isMobile } from 'react-device-detect';
 import { Route, Switch } from 'react-router-dom';
 
 import { useWarning } from 'providers/warning-provider';
-import { routes } from 'router/routes';
-
-import NotFoundView from './views/not-found-view';
+import { APP_ROUTES } from 'router/routes';
 
 const ExploreView = lazy(() => import('./views/explore-view'));
 const MyPropertiesView = lazy(() => import('./views/my-properties-view'));
@@ -32,10 +30,9 @@ const LandworksView: React.FC = () => {
 
   return (
     <Switch>
-      <Route path={routes.explore} exact component={ExploreView} />
-      <Route path={routes.property} component={SingleLand} />
-      <Route path={routes.myProperties} component={MyPropertiesView} />
-      <Route path="*" component={NotFoundView} />
+      <Route path={APP_ROUTES.explore} exact component={ExploreView} />
+      <Route path={APP_ROUTES.property} component={SingleLand} />
+      <Route path={APP_ROUTES.myProperties} component={MyPropertiesView} />
     </Switch>
   );
 };

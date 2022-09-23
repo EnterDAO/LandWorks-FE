@@ -13,7 +13,7 @@ import SingleViewParcelProperties from 'modules/land-works/components/land-parce
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 import PromoSceneRedeployment from 'modules/land-works/components/promo-scene-redeployment/PromoSceneRedeployment';
-import { routes } from 'router/routes';
+import { APP_ROUTES } from 'router/routes';
 
 import ExternalLink from '../../../../components/custom/external-link';
 import { useWallet } from '../../../../wallets/wallet';
@@ -71,7 +71,7 @@ const SingleLandView: React.FC = () => {
         // TODO:
       }
       if (subscriptionData.data.asset === null) {
-        history.push(routes.explore);
+        history.push(APP_ROUTES.explore);
         return;
       }
       disableButtons(false);
@@ -135,7 +135,7 @@ const SingleLandView: React.FC = () => {
         localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
       });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
-      if (isNeedRedirect()) history.push(routes.explore);
+      if (isNeedRedirect()) history.push(APP_ROUTES.explore);
     } catch (e) {
       localStorage.removeItem('WITHDRAW_IN_PROGRESS');
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
@@ -180,7 +180,7 @@ const SingleLandView: React.FC = () => {
         `Property ${isDirectWithdraw() ? 'withdrawn' : 'delisted'} successfully!`
       );
       if (isDirectWithdraw() && isNeedRedirect()) {
-        history.push(routes.explore);
+        history.push(APP_ROUTES.explore);
       }
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
@@ -236,7 +236,7 @@ const SingleLandView: React.FC = () => {
 
   const isNeedRedirect = () => window.location.pathname === `/property/${asset.id}`;
   const breadcrumbs = {
-    url: location.state?.previousPage?.from || location.state?.from || routes.explore,
+    url: location.state?.previousPage?.from || location.state?.from || APP_ROUTES.explore,
     title: location.state?.previousPage?.title || location.state?.title || 'Explore',
   };
 

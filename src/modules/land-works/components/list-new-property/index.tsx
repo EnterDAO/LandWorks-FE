@@ -22,7 +22,7 @@ import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
-import { routes } from 'router/routes';
+import { APP_ROUTES } from 'router/routes';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
@@ -776,7 +776,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               width="100%"
               color="#F8F8FF"
             >
-              5. Listing Summary
+              4. Listing Summary
             </Box>
             <Grid item xs={10}>
               <Grid container wrap="nowrap" p="8px" className="summaryWrapper" flexDirection="row">
@@ -899,7 +899,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               localStorage.setItem('join_prompt', 'true');
               setShowSuccessModal(false);
               closeModal && closeModal();
-              history.push(routes.myProperties);
+              history.push(APP_ROUTES.myProperties);
               setJoinPromptOpen(true);
             }}
           />

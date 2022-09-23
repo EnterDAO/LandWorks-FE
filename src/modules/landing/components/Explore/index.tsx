@@ -5,7 +5,7 @@ import { ReactComponent as Tag } from 'assets/img/explore_tag.svg';
 import { ReactComponent as LandGroup } from 'assets/img/land_group.svg';
 import { Button } from 'design-system';
 import { StyledRoot } from 'modules/landing/components/Explore/styled';
-import { routes } from 'router/routes';
+import { APP_ROUTES } from 'router/routes';
 
 export const Explore: React.FC = () => {
   const history = useHistory();
@@ -18,7 +18,7 @@ export const Explore: React.FC = () => {
             Explore <br /> Our Marketplace
           </h1>
           <p>Rent a land or list your property for renting - we make it easy for you.</p>
-          <Button onClick={() => history.push(routes.explore)} btnSize="small" variant="gradient">
+          <Button onClick={() => history.push(APP_ROUTES.explore)} btnSize="small" variant="gradient">
             Explore
           </Button>
         </div>

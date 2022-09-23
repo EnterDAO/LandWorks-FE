@@ -1,12 +1,14 @@
 import React from 'react';
 
-import { routes } from 'router/routes';
+import { APP_ROUTES, LANDING_ROUTES, useIsAppRoute } from 'router/routes';
 
 export const CanIHire: React.FC = () => {
+  const isAppRoute = useIsAppRoute();
+
   return (
     <span>
       Yes! Visit our{' '}
-      <a href={routes.sceneBuilder} target="_blank">
+      <a href={isAppRoute ? APP_ROUTES.sceneBuilder : LANDING_ROUTES.sceneBuilder} target="_blank">
         Scene Builders
       </a>{' '}
       page to explore some of the best studios and individuals who are building metaverse projects.

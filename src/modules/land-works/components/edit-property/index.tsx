@@ -15,7 +15,7 @@ import { currencyData } from 'modules/land-works/components/lands-explore-filter
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { getTokenPrice } from 'providers/known-tokens-provider';
-import { routes } from 'router/routes';
+import { APP_ROUTES } from 'router/routes';
 
 import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, PaymentToken, fetchAsset, fetchTokenPayments, parseAsset } from '../../api';
@@ -437,7 +437,7 @@ const EditProperty: React.FC<Props> = (props) => {
     setLoading(true);
     const asset = await fetchAsset(tokenId);
     if (!asset) {
-      history.push(routes.explore);
+      history.push(APP_ROUTES.explore);
       return;
     }
     setAsset(await parseAsset(asset));

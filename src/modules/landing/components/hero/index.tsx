@@ -11,7 +11,7 @@ import { ReactComponent as Background } from 'assets/img/hero_main.svg';
 import { ReactComponent as Metaverse } from 'assets/img/hero_tag.svg';
 import { ReactComponent as Partners } from 'assets/img/partners.svg';
 import { Button, Grid } from 'design-system';
-import { routes } from 'router/routes';
+import { APP_ROUTES } from 'router/routes';
 
 import './index.scss';
 
@@ -35,7 +35,7 @@ export const Hero: React.FC = () => {
               LandWorks is a community-owned Marketplace for renting Web3 Metaverse Land, governed by EnterDAO and the
               ENTR token.
             </p>
-            <Link to={routes.explore}>
+            <Link to={APP_ROUTES.explore}>
               <Button variant="gradient" btnSize="small" className="button-primary">
                 Explore
               </Button>

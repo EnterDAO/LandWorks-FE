@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Box, Button, Grid } from 'design-system';
-import { routes } from 'router/routes';
+import { APP_ROUTES, LANDING_ROUTES, useIsAppRoute } from 'router/routes';
 
 import landingImage from './assets/scene-expert-landing.png';
 import { TypographyStyled } from './styled';
@@ -14,6 +14,7 @@ interface Props {
 const SceneBuilderHeading: React.FC<Props> = (props: Props) => {
   const { navigateToBuilders } = props;
   const history = useHistory();
+  const isAppRoute = useIsAppRoute();
 
   return (
     <Grid display="flex" flexDirection="column" alignItems="center" justifyContent="space-around" height="80vh">
@@ -31,7 +32,7 @@ const SceneBuilderHeading: React.FC<Props> = (props: Props) => {
             btnSize="medium"
             onClick={() =>
               history.push({
-                pathname: routes.sceneBuilderJoin,
+                pathname: isAppRoute ? APP_ROUTES.sceneBuilderJoin : LANDING_ROUTES.sceneBuilderJoin,
                 state: { from: window.location.pathname, title: 'Scene Builder' },
               })
             }

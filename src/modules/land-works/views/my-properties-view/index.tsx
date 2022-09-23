@@ -18,7 +18,7 @@ import LoadMoreLands from 'modules/land-works/components/lands-explore-load-more
 import LandsMyPropertiesHeader from 'modules/land-works/components/lands-my-properties-header';
 import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-properties-subheader';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
-import { routes } from 'router/routes';
+import { APP_ROUTES } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
 import {
@@ -170,7 +170,7 @@ const MyPropertiesView: FC = () => {
 
   useEffect(() => {
     if (wallet.disconnecting) {
-      history.push(routes.explore);
+      history.push(APP_ROUTES.explore);
     }
   }, [wallet.disconnecting]);
 
