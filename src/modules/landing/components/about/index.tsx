@@ -2,7 +2,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ReactComponent as LeftPart } from 'assets/img/about_left.svg';
 import { ReactComponent as RightPart } from 'assets/img/about_right.svg';
-import { Button, Grid } from 'design-system';
+import { Box, Button, Grid, Typography } from 'design-system';
 import { BackIcon } from 'design-system/icons';
 import {
   LandOwner,
@@ -19,20 +19,21 @@ import './index.scss';
 export const About: React.FC = () => {
   const history = useHistory();
   const redirect = () => history.push(routes.explore);
+
   return (
-    <section className="about-wrapper">
-      <div className="content-container">
-        <Grid container direction="column" justifyItems="center" justifyContent="center" alignItems="center">
-          <StyledText>IS IT FOR YOU?</StyledText>
-          <Grid item xs={4} textAlign="center">
-            <h2>There are a Lot of Opportunities</h2>
-          </Grid>
-          <Grid item xs={4}>
-            <StyledSubtitle>You can either lend yours or rent a new Land that you want.</StyledSubtitle>
-          </Grid>
-        </Grid>
+    <Box position="relative" pt={{ xs: 10, xl: 18 }} pb={{ xs: 10, xl: 21 }} className="about-wrapper">
+      <Box className="content-container">
+        <Box textAlign="center" mb={10}>
+          <Typography variant="body2" color="var(--theme-accent-color)" mb={2}>
+            IS IT FOR YOU?
+          </Typography>
+          <Typography variant="h2" mb={2}>
+            There are a Lot of Opportunities
+          </Typography>
+          <Typography>You can either lend yours or rent a new Land that you want.</Typography>
+        </Box>
         <Grid container justifyItems="center" marginTop={12}>
-          <StyledGrid item sm={12} md={6}>
+          <StyledGrid item xs={12} md={6}>
             <LeftPart />
             <div>
               <h2>
@@ -52,7 +53,7 @@ export const About: React.FC = () => {
               </Button>
             </div>
           </StyledGrid>
-          <StyledGrid item sm={12} md={6}>
+          <StyledGrid item xs={12} md={6}>
             <RightPart />
             <div>
               <h2>
@@ -73,7 +74,7 @@ export const About: React.FC = () => {
             </div>
           </StyledGrid>
         </Grid>
-      </div>
-    </section>
+      </Box>
+    </Box>
   );
 };
