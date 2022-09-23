@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
+import { Box } from 'design-system';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import { About } from './components/about';
@@ -39,14 +40,14 @@ const LandingView: React.FC = () => {
   }, [location.hash]);
 
   return (
-    <div ref={containerElRef} className="landing-wrapper">
+    <Box ref={containerElRef} overflow="hidden">
       <Hero />
       <About />
       <Advantages />
       <FAQ />
       <Explore />
       <Connect />
-    </div>
+    </Box>
   );
 };
 
