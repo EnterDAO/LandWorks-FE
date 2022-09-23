@@ -13,7 +13,7 @@ import SingleViewParcelProperties from 'modules/land-works/components/land-parce
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 import PromoSceneRedeployment from 'modules/land-works/components/promo-scene-redeployment/PromoSceneRedeployment';
-import { APP_ROUTES } from 'router/routes';
+import { APP_ROUTES, getPropertyPath } from 'router/routes';
 
 import ExternalLink from '../../../../components/custom/external-link';
 import { useWallet } from '../../../../wallets/wallet';
@@ -477,7 +477,7 @@ const SingleLandView: React.FC = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     history.push({
-                      pathname: `/property/${land.id}`,
+                      pathname: getPropertyPath(land.id),
                       state: {
                         from: window.location.pathname,
                         title: 'Nearby property',

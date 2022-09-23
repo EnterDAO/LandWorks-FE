@@ -16,6 +16,7 @@ import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
+import { getPropertyPath } from 'router/routes';
 
 import { AtlasTile } from '../atlas';
 import { StyledButton, StyledRow } from './styled';
@@ -118,7 +119,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   const getCardClickHandler = (land: AssetEntity) => {
     return () => {
       history.push({
-        pathname: `/property/${land.id}`,
+        pathname: getPropertyPath(land.id),
         state: { from: window.location.pathname, title: 'Explore', tab: location.state?.tab },
       });
     };

@@ -31,3 +31,9 @@ export const useSceneBuilderBuilderPath = (builderName: string): string => {
     builderName,
   });
 };
+
+export const getPropertyPath = (propertyId: string): string => {
+  return generatePath(APP_ROUTES.property, {
+    tokenId: propertyId,
+  });
+};
