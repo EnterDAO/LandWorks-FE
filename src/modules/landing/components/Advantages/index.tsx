@@ -1,9 +1,11 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import { ReactComponent as AdventageBg } from 'assets/img/AdventageBg.svg';
+import blurredLightsImgSrc from 'assets/img/advantages-blurred-lights.png';
+import exploreScreenImgSrc from 'assets/img/advantages-explore-screen.png';
+import { ReactComponent as CirclePlusIcon } from 'assets/img/circle-plus-icon.svg';
 import RentingView from 'assets/img/RentingView.png';
-import { Grid, IconButton } from 'design-system';
+import { Grid, IconButton, Typography } from 'design-system';
 import { PlusIcon } from 'design-system/icons';
 import {
   ImageWrapper,
@@ -13,64 +15,92 @@ import {
   StyledText,
 } from 'modules/landing/components/Advantages/styled';
 
+import { THEME_COLORS } from 'themes/theme-constants';
+
+interface CardProps {
+  title: string;
+  subtitle: string;
+}
+
+const cards = [
+  {
+    title: 'Affordability',
+    description: 'You can rent a land that you cannot afford otherwise.',
+  },
+  {
+    title: 'Accessibility',
+    description: 'You can rent a land that otherwise is unavailable to take.',
+  },
+  {
+    title: 'Trust-less',
+    description: 'Renting is fully decentralised by utilizing our audited protocol. No middleman. No hassle.',
+  },
+  {
+    title: 'Flexibility',
+    description: 'Rent for as short as a day to host an event or as long as an year!',
+  },
+];
+
 export const Advantages: React.FC = () => {
   return (
-    <div id="why" className="content-container why">
-      <StyledRoot>
-        <Grid container direction="column" justifyItems="center" justifyContent="center" alignItems="center">
-          <StyledText>WHY RENTING?</StyledText>
-          <Grid item xs={4} textAlign="center">
-            <h2>Advantages of Renting</h2>
-          </Grid>
-          <Grid item xs={4}>
-            <StyledSubtitle>Everything leads to renting...</StyledSubtitle>
-          </Grid>
-        </Grid>
-        <ImageWrapper>
-          <AdventageBg />
-          <img src={RentingView} alt="" />
-        </ImageWrapper>
+    <Box id="why" className="content-container why" py={{ xs: 10, lg: 20 }}>
+      <Box textAlign="center">
+        <Typography variant="body2" color="var(--theme-accent-color)" mb={2}>
+          IS IT FOR YOU?
+        </Typography>
+        <Typography variant="h2" mb={2}>
+          There are a Lot of Opportunities
+        </Typography>
+        <Typography>You can either lend yours or rent a new Land that you want.</Typography>
+      </Box>
 
-        <Grid container rowSpacing={10} justifyContent="space-around">
-          <Grid item xs={5} display="flex" flexDirection="row" alignItems="center">
-            <StyledBox>
-              <IconButton variant="circular" btnSize="small" colorVariant="light" icon={<PlusIcon />} />
-            </StyledBox>
-            <Box maxWidth="70%">
-              <h2>Affordability</h2>
-              <p>You can rent a land that you cannot afford otherwise.</p>
-            </Box>
-          </Grid>
-          <Grid item xs={5} display="flex" flexDirection="row" alignItems="center">
-            <StyledBox>
-              <IconButton variant="circular" btnSize="small" colorVariant="light" icon={<PlusIcon />} />
-            </StyledBox>
-            <Box maxWidth="70%">
-              <h2>Accessibility</h2>
-              <p>You can rent a land that otherwise is unavailable to take.</p>
-            </Box>
-          </Grid>
+      <Box position="relative" display="flex" justifyContent="center" alignItems="center" pt={16} pb={28}>
+        <Box position="absolute" width={1} height={1} display="flex" alignItems="center" justifyContent="center">
+          <img src={blurredLightsImgSrc} width={2596} height={1798} style={{ width: '100%', height: 'auto' }} />
+        </Box>
+        <Box
+          border="5px solid #27273A"
+          borderRadius="30px"
+          overflow="hidden"
+          display="flex"
+          sx={{ filter: 'drop-shadow(0px 0px 80px #040D1E)' }}
+        >
+          <img
+            src={exploreScreenImgSrc}
+            width={1482}
+            height={1086}
+            style={{ width: '100%', height: 'auto', maxWidth: 740 }}
+          />
+        </Box>
+      </Box>
 
-          <Grid item xs={5} display="flex" flexDirection="row" alignItems="center">
-            <StyledBox>
-              <IconButton variant="circular" btnSize="small" colorVariant="light" icon={<PlusIcon />} />
-            </StyledBox>
-            <Box maxWidth="70%">
-              <h2>Trust-less</h2>
-              <p>Renting is fully decentralised by utilizing our audited protocol. No middleman. No hassle.</p>
-            </Box>
-          </Grid>
-          <Grid item xs={5} display="flex" flexDirection="row" alignItems="center">
-            <StyledBox>
-              <IconButton variant="circular" btnSize="small" colorVariant="light" icon={<PlusIcon />} />
-            </StyledBox>
-            <Box maxWidth="70%">
-              <h2>Flexibility</h2>
-              <p>Rent for as short as a day to host an event or as long as an year!</p>
-            </Box>
-          </Grid>
-        </Grid>
-      </StyledRoot>
-    </div>
+      <Grid container spacing={{ xs: 5, lg: 8 }} justifyContent="space-around">
+        {cards.map(({ title, description }) => {
+          return (
+            <Grid item xs={12} lg={6} display="flex" gap={3}>
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                flexShrink={0}
+                borderRadius="15px"
+                border="2px solid #27273A"
+                width={{ xs: 60, lg: 80 }}
+                height={{ xs: 60, lg: 80 }}
+                color={THEME_COLORS.light}
+              >
+                <CirclePlusIcon />
+              </Box>
+              <Box>
+                <Typography variant="h4" component="p" mb={1}>
+                  {title}
+                </Typography>
+                <Typography>{description}</Typography>
+              </Box>
+            </Grid>
+          );
+        })}
+      </Grid>
+    </Box>
   );
 };
