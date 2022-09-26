@@ -29,6 +29,8 @@ const appTheme = createTheme({
       md: 768,
       lg: 992,
       xl: 1230,
+      '2xl': 1440,
+      '3xl': 1600,
     },
   },
 });

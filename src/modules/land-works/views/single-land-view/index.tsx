@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { useSubscription } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
 
-import { Button, Grid, Icon, Modal, Typography } from 'design-system';
+import { Box, Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
@@ -12,11 +12,12 @@ import EditProperty from 'modules/land-works/components/edit-property';
 import SingleViewParcelProperties from 'modules/land-works/components/land-parcel-properties';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
-import { routes } from 'router/routes';
+import PromoSceneRedeployment from 'modules/land-works/components/promo-scene-redeployment/PromoSceneRedeployment';
+import { APP_ROUTES, getPropertyPath } from 'router/routes';
 
 import ExternalLink from '../../../../components/custom/external-link';
 import { useWallet } from '../../../../wallets/wallet';
-import { ASSET_SUBSCRIPTION, AssetEntity, fetchAdjacentDecentralandAssets, parseAsset } from '../../api';
+import { ASSET_SUBSCRIPTION, AssetEntity, OVERVIEW, fetchAdjacentDecentralandAssets, parseAsset } from '../../api';
 import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
 import { RentModal } from '../../components/lands-rent-modal';
@@ -24,12 +25,16 @@ import { LandsTooltip } from '../../components/lands-tooltip';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 
-import { calculateNeighbours } from 'modules/land-works/utils';
+import { calculateNeighbours, twitterListText } from 'modules/land-works/utils';
 import { getNowTs } from '../../../../utils';
 
-import { TWITTER_TEXT } from 'modules/land-works/constants';
-
 import './index.scss';
+
+const useIsAdministrativeOperator = (address: string) => {
+  const { data } = useQuery<{ overview: { administrativeOperator: string } }>(OVERVIEW);
+
+  return data?.overview.administrativeOperator.toLowerCase() === address.toLowerCase();
+};
 
 const SingleLandView: React.FC = () => {
   const wallet = useWallet();
@@ -57,6 +62,7 @@ const SingleLandView: React.FC = () => {
   const [page, setPage] = useState(1);
 
   const [showEditModal, setShowEditModal] = useState(false);
+  const isAdministrativeOperator = useIsAdministrativeOperator(asset.operator || '');
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
@@ -65,7 +71,7 @@ const SingleLandView: React.FC = () => {
         // TODO:
       }
       if (subscriptionData.data.asset === null) {
-        history.push(routes.explore);
+        history.push(APP_ROUTES.explore);
         return;
       }
       disableButtons(false);
@@ -129,7 +135,7 @@ const SingleLandView: React.FC = () => {
         localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
       });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
-      if (isNeedRedirect()) history.push(routes.explore);
+      if (isNeedRedirect()) history.push(APP_ROUTES.explore);
     } catch (e) {
       localStorage.removeItem('WITHDRAW_IN_PROGRESS');
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
@@ -174,7 +180,7 @@ const SingleLandView: React.FC = () => {
         `Property ${isDirectWithdraw() ? 'withdrawn' : 'delisted'} successfully!`
       );
       if (isDirectWithdraw() && isNeedRedirect()) {
-        history.push(routes.explore);
+        history.push(APP_ROUTES.explore);
       }
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
@@ -230,12 +236,15 @@ const SingleLandView: React.FC = () => {
 
   const isNeedRedirect = () => window.location.pathname === `/property/${asset.id}`;
   const breadcrumbs = {
-    url: location.state?.previousPage?.from || location.state?.from || routes.explore,
+    url: location.state?.previousPage?.from || location.state?.from || APP_ROUTES.explore,
     title: location.state?.previousPage?.title || location.state?.title || 'Explore',
   };
 
   const isCryptovoxel = asset?.metaverse?.name === 'Voxels';
+  const isDecentraland = asset?.metaverse?.name === 'Decentraland';
   const parselProperties = isCryptovoxel ? asset.attributes : asset.additionalData;
+  const isPromoSceneDeploymentAvailable =
+    isDecentraland && asset.availability?.isCurrentlyAvailable && isOwnerOrConsumer() && !isAdministrativeOperator;
 
   return (
     <div className="content-container single-card-section">
@@ -310,7 +319,9 @@ const SingleLandView: React.FC = () => {
               <ShareLink
                 className="shareLink"
                 target={'_blank'}
-                href={`https://twitter.com/intent/tweet?text=${TWITTER_TEXT}&url=${window.location.origin}/property/${asset.id}`}
+                href={`https://twitter.com/intent/tweet?text=${twitterListText(asset.metaverseRegistry?.id)}&url=${
+                  window.location.origin
+                }/property/${asset.id}`}
               >
                 <TwitterIcon height={20} width={30} />
                 share on twitter
@@ -422,6 +433,12 @@ const SingleLandView: React.FC = () => {
         }}
       />
 
+      {!!asset.id && !!asset.metaverseRegistry?.id && isPromoSceneDeploymentAvailable && (
+        <Box maxWidth={1000} my={12} mx="auto">
+          <PromoSceneRedeployment assetId={asset.id} metaverseRegistryId={asset.metaverseRegistry.id} />
+        </Box>
+      )}
+
       {(asset.attributes || asset.additionalData) && (
         <SingleViewParcelProperties attributes={parselProperties} id={asset?.metaverseAssetId} />
       )}
@@ -460,7 +477,7 @@ const SingleLandView: React.FC = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     history.push({
-                      pathname: `/property/${land.id}`,
+                      pathname: getPropertyPath(land.id),
                       state: {
                         from: window.location.pathname,
                         title: 'Nearby property',

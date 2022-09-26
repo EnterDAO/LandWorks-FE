@@ -57,6 +57,10 @@ export const ZERO_BIG_NUMBER = new BigNumber(0);
 export const DEFAULT_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const ONE_ADDRESS = '0x0000000000000000000000000000000000000001'; // In LandWorks, ETH is set as this address for payments.
 
+export const isNullAddress = (address: string): boolean => {
+  return DEFAULT_ADDRESS === address.toLowerCase();
+};
+
 export function getEtherscanTxUrl(txHash?: string, chainId = config.web3.chainId): string | undefined {
   if (txHash) {
     switch (chainId) {

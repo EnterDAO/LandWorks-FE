@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AssetEntity } from './land-works/api';
+import { AssetEntity, CoordinatesLand } from './land-works/api';
 
 export type Metaverse = 'Decentraland' | 'Voxels';
 export interface Option {
@@ -16,6 +16,7 @@ export interface AssetOption {
 }
 
 export interface DecentralandNFT extends BaseNFT {
+  metaverseName: 'Decentraland';
   isLAND?: boolean;
   landIds?: any[];
   coords: any[];
@@ -28,6 +29,7 @@ export interface CryptoVoxelXYcoords {
 }
 
 export interface CryptoVoxelNFT extends BaseNFT {
+  metaverseName: 'Voxels';
   place: string;
   formattedCoords: string;
   type?: string;
@@ -90,3 +92,12 @@ type VoxelMapItem = {
     coordinates: number[][][];
   };
 };
+
+export interface LandsExploreMapBaseProps {
+  positionX: number;
+  positionY: number;
+  zoom?: number;
+  onZoom?: (zoom: number) => void;
+  lands: AssetEntity[];
+  highlights?: CoordinatesLand[];
+}

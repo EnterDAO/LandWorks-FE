@@ -1,10 +1,11 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import TabContext from '@mui/lab/TabContext';
 import { useMediaQuery } from '@mui/material';
+import { Box } from '@mui/system';
 
-import { Grid } from 'design-system';
+import CardsGrid from 'components/custom/cards-grid';
 import { LocationState } from 'modules/interface';
 import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssetsByRents, parseUser } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
@@ -17,7 +18,7 @@ import LoadMoreLands from 'modules/land-works/components/lands-explore-load-more
 import LandsMyPropertiesHeader from 'modules/land-works/components/lands-my-properties-header';
 import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-properties-subheader';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
-import { routes } from 'router/routes';
+import { APP_ROUTES, getPropertyPath } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
 import {
@@ -100,7 +101,15 @@ const MyPropertiesView: FC = () => {
     if (userData && userData.user) {
       setUser(await parseUser(userData.user));
     } else {
-      setUser({} as UserEntity);
+      setUser({
+        id: '',
+        hasUnclaimedRent: false,
+        assets: [],
+        consumerTo: [],
+        rents: [],
+        unclaimedRentAssets: [],
+        ownerAndConsumerAssets: [],
+      } as UserEntity);
     }
   };
   const onChangeFiltersSortDirection = (value: number) => {
@@ -144,9 +153,7 @@ const MyPropertiesView: FC = () => {
   }, [tab, rents]);
 
   useEffect(() => {
-    if (rents.length && lands.length) {
-      sortLands(sortColumn, sortDir);
-    }
+    sortLands(sortColumn, sortDir);
     if (Object.keys(user).length) {
       if (tab === MY_PROPERTIES_TAB_STATE_RENTED) setLands(rents);
       if (tab === MY_PROPERTIES_TAB_STATE_LENT) setLands(user?.ownerAndConsumerAssets || []);
@@ -163,7 +170,7 @@ const MyPropertiesView: FC = () => {
 
   useEffect(() => {
     if (wallet.disconnecting) {
-      history.push(routes.explore);
+      history.push(APP_ROUTES.explore);
     }
   }, [wallet.disconnecting]);
 
@@ -188,19 +195,16 @@ const MyPropertiesView: FC = () => {
   const slicedLandsInTotal = lands.slice(0, slicedLands).length;
   const filteredLands = filterLandsByQuery(lands.slice(0, slicedLands), searchQuery);
 
-  const displayNewLandLoader = () => {
-    return (
-      isNewLandTxInProgress(lands, loading, 'LISTING_IN_PROGRESS') ||
-      isNewLandTxInProgress(lands, loading, 'RENT_IN_PROGRESS')
-    );
-  };
-
-  const displayExistLandLoader = () => {
-    return (
-      isExistingLandInProgress(lands, loading, 'WITHDRAW_IN_PROGRESS') ||
-      isExistingLandInProgress(lands, loading, 'EXIST_RENT_IN_PROGRESS')
-    );
-  };
+  const { displayNewLandLoader, displayExistLandLoader } = useMemo(() => {
+    return {
+      displayNewLandLoader:
+        isNewLandTxInProgress(lands, loading, 'LISTING_IN_PROGRESS') ||
+        isNewLandTxInProgress(lands, loading, 'RENT_IN_PROGRESS'),
+      displayExistLandLoader:
+        isExistingLandInProgress(lands, loading, 'WITHDRAW_IN_PROGRESS') ||
+        isExistingLandInProgress(lands, loading, 'EXIST_RENT_IN_PROGRESS'),
+    };
+  }, [lands, loading]);
 
   const newPropertyTitle = () => {
     return localStorage.getItem('LISTING_IN_PROGRESS') ? 'Listing' : 'Renting';
@@ -212,7 +216,7 @@ const MyPropertiesView: FC = () => {
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
       <TabContext value={tab}>
-        <div className="content-container">
+        <Box px="var(--horizontal-padding)" pb="var(--content-container-v-padding)">
           <LandsMyPropertiesHeader
             setTab={setTab}
             user={user}
@@ -224,53 +228,39 @@ const MyPropertiesView: FC = () => {
             onChangeSortDirection={onChangeFiltersSortDirection}
             onChangeMetaverse={onChangeMetaverse}
           />
-
-          <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
-            {loading ? (
-              [1, 2, 3, 4].map((i) => (
-                <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={i}>
-                  <LandCardSkeleton key={i} />
-                </Grid>
-              ))
-            ) : lands.length ? (
-              <>
-                {filteredLands.map((land) => (
-                  <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={land.id}>
-                    {displayExistLandLoader() === land.metaverseAssetId ? (
-                      <LandWorksLoadingCard title={existPropertyTitle()} />
-                    ) : (
-                      <LandWorkCard
-                        land={land}
-                        onClick={() =>
-                          history.push({
-                            pathname: `/property/${land.id}`,
-                            state: { from: window.location.pathname, title: 'My properties', tab },
-                          })
-                        }
-                      />
-                    )}
-                  </Grid>
-                ))}
-                {displayNewLandLoader() && (
-                  <Grid item xs={12} sm={6} md={6} lg={4} xl={3}>
-                    <LandWorksLoadingCard title={newPropertyTitle()} />
-                  </Grid>
-                )}
-              </>
-            ) : (
-              <>
-                {displayNewLandLoader() ? (
-                  <Grid item xs={12} sm={6} md={6} lg={4} xl={3}>
-                    <LandWorksLoadingCard title={newPropertyTitle()} />
-                  </Grid>
-                ) : (
-                  <Grid item xs={12}>
-                    <LandsWorksGridEmptyState />
-                  </Grid>
-                )}
-              </>
+          <Box display="flex" justifyContent="center">
+            {(loading || !!filteredLands.length) && (
+              <CardsGrid>
+                {loading
+                  ? Array.from({ length: 6 }).map((_, i) => {
+                      return <LandCardSkeleton key={i} />;
+                    })
+                  : filteredLands.map((land) => {
+                      return displayExistLandLoader === land.metaverseAssetId ? (
+                        <LandWorksLoadingCard title={existPropertyTitle()} />
+                      ) : (
+                        <LandWorkCard
+                          key={land.id}
+                          land={land}
+                          onClick={() =>
+                            history.push({
+                              pathname: getPropertyPath(land.id),
+                              state: { from: window.location.pathname, title: 'My properties', tab },
+                            })
+                          }
+                        />
+                      );
+                    })}
+              </CardsGrid>
             )}
-          </Grid>
+
+            {!loading &&
+              (displayNewLandLoader ? (
+                <LandWorksLoadingCard title={newPropertyTitle()} />
+              ) : (
+                !lands.length && <LandsWorksGridEmptyState />
+              ))}
+          </Box>
 
           {lands.length > pageSize && (
             <LoadMoreLands
@@ -283,7 +273,7 @@ const MyPropertiesView: FC = () => {
 
           {tab === MY_PROPERTIES_TAB_STATE_LENT && <ClaimHistoryTable metaverse={metaverse} />}
           {tab === MY_PROPERTIES_TAB_STATE_RENTED && <MyPropetiesHistoryTable metaverse={metaverse} />}
-        </div>
+        </Box>
       </TabContext>
     </LandsSearchQueryProvider>
   );

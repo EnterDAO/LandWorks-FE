@@ -16,10 +16,14 @@ interface ButtonProps extends ButtonUnstyledProps {
 type ButtonRef = HTMLButtonElement;
 
 const Button = (props: ButtonProps, ref: Ref<ButtonRef>) => {
-  const { variant, children, disabled, btnSize, iconLeft, iconRight, sx } = props;
+  const { variant, children, disabled, className, btnSize, iconLeft, iconRight, sx } = props;
 
   const btnClassNames: string[] = [variant];
   let iconSize: 'm' | 'xs' = 'm';
+
+  if (className) {
+    btnClassNames.push(className);
+  }
 
   if (variant === 'tertiary' && btnSize === 'small') {
     btnClassNames.push('tertiary-small');

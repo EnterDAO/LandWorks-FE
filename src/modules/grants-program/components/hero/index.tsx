@@ -31,17 +31,20 @@ export const Hero: FC = () => {
             further impact.
             <br />
             <br />
+            That’s why we are introducing the first iteration of LandWork’s Open Scene Grant Program.
+            <br />
+            <br />
             <Typography fontWeight={700} color={THEME_COLORS.light} variant="inherit" component="span">
-              That’s why we are introducing the first iteration of LandWork’s Open Scene Grant Program.
+              We’ve concluded the grant program by awarding more than $50K. Check out the winning scenes!
             </Typography>
           </Typography>
 
           <Button
-            onClick={() => window.open('https://d1zs47v7suw.typeform.com/to/hs05sYCZ')}
+            onClick={() => window.open('https://github.com/EnterDAO/landworks-grants-program', '_blank')}
             variant="gradient"
             btnSize="medium"
           >
-            Apply now
+            Browse scenes
           </Button>
         </Box>
       </Grid>

@@ -3,17 +3,14 @@ import React, { FC } from 'react';
 import Icon from 'components/custom/icon';
 import StyledNavLink from 'components/styled/nav-link';
 import { Box } from 'design-system';
-import useHasUserEnteredApp from 'hooks/useHasUserEnteredApp';
-import { routes } from 'router/routes';
+import { LANDING_ROUTES } from 'router/routes';
 
 import { ReactComponent as TextLogo } from '../../../resources/svg/landWorks-logo.svg';
 
 const HeaderLogo: FC = () => {
-  const hasUserEnteredApp = useHasUserEnteredApp();
-
   return (
     <StyledNavLink
-      to={hasUserEnteredApp ? routes.explore : routes.home}
+      to={LANDING_ROUTES.home}
       sx={{
         display: 'inline-flex',
         alignItems: 'center',

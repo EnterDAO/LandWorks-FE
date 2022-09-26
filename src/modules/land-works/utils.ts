@@ -1,4 +1,4 @@
-import { find, orderBy } from 'lodash';
+import { find, isUndefined, orderBy } from 'lodash';
 
 import config from 'config';
 import { getCryptoVoxelsAsset } from 'helpers/helpers';
@@ -6,7 +6,7 @@ import { CryptoVoxelNFT, CryptoVoxelXYcoords, VoxelsMapCollection, VoxelsTileTyp
 
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
 
-import { getNowTs } from 'utils';
+import { getNowTs, isDecentralandMetaverseRegistry, isVoxelsRegistry } from 'utils';
 
 import { orderEnum } from './constants';
 
@@ -187,73 +187,47 @@ export const filterByMoreFilters = (
   });
 };
 
-const decentralandFilter = (item: AssetEntity, filters: Partial<MoreFiltersType>) => {
-  const size = filters?.size;
-  const distanceToRoad = filters?.distanceToRoad;
-  const distanceToPlaza = filters?.distanceToPlaza;
-  const distanceToDistrict = filters?.distanceToDistrict;
-  const type = filters?.type;
-  const itemData = item.additionalData;
-  const isNumber = (value: unknown) => Number.isInteger(value);
+const isBetween = (value: number, minMax: { min: number; max: number }): boolean =>
+  minMax.min <= value && value <= minMax.max;
 
-  if (
-    (distanceToRoad && !isNumber(itemData.attributes.road)) ||
-    (size && !isNumber(itemData.size)) ||
-    (distanceToPlaza && !isNumber(itemData.attributes.plaza)) ||
-    (distanceToDistrict && !isNumber(itemData.attributes.district))
-  ) {
-    return false;
-  }
-  if ((size && itemData.size < size.min) || (size && itemData.size > size.max)) {
-    return false;
-  }
-  if (distanceToRoad && isNumber(itemData.attributes.road) && isValidValue(itemData.attributes.road, distanceToRoad)) {
-    return false;
-  }
-  if (
-    distanceToPlaza &&
-    isNumber(itemData.attributes.plaza) &&
-    isValidValue(itemData.attributes.plaza, distanceToPlaza)
-  ) {
-    return false;
-  }
-  if (
-    distanceToDistrict &&
-    isNumber(itemData.attributes.district) &&
-    isValidValue(itemData.attributes.district, distanceToDistrict)
-  ) {
-    return false;
-  }
-  if (type?.toLowerCase() === 'all') return true;
-  if (type?.toLowerCase() === item.type.toLowerCase()) return true;
-  return false;
+const isFilteredByBetween = (value: number | undefined, minMax?: { min: number; max: number }) => {
+  return isUndefined(minMax) || isUndefined(value) || isBetween(value, minMax);
 };
 
-const isValidValue = (value: number, minMax: { min: number; max: number }): boolean =>
-  value < minMax.min || value > minMax.max;
+const decentralandFilter = (item: AssetEntity, filters: Partial<MoreFiltersType>) => {
+  const { size, distanceToRoad, distanceToPlaza, distanceToDistrict } = filters;
+  const type = filters.type?.toLowerCase();
+  const itemAttributes = item.additionalData;
+
+  const isFilteredByType = type === 'all' || type === item.type.toLowerCase();
+  const isFilteredBySize = isFilteredByBetween(itemAttributes.size, size);
+  const isFilteredByDistanceToRoad = isFilteredByBetween(itemAttributes.attributes.road, distanceToRoad);
+  const isFilteredByDistanceToPlaza = isFilteredByBetween(itemAttributes.attributes.plaza, distanceToPlaza);
+  const isFilteredByDistanceToDistrict = isFilteredByBetween(itemAttributes.attributes.district, distanceToDistrict);
+
+  return (
+    isFilteredByType &&
+    isFilteredBySize &&
+    isFilteredByDistanceToRoad &&
+    isFilteredByDistanceToPlaza &&
+    isFilteredByDistanceToDistrict
+  );
+};
 
 const voxelsFilter = (item: AssetEntity, filters: Partial<MoreFiltersType>) => {
-  const type = filters.type;
-  const area = filters?.area;
-  const height = filters?.height;
-  const hasBasement = filters?.hasBasement;
-  const isWaterfront = filters?.isWaterFront;
-  const itemData = item.attributes;
+  const { area, height, hasBasement, isWaterFront } = filters;
+  const type = filters.type?.toLowerCase();
+  const itemAttributes = item.attributes;
 
-  if ((area && itemData.area < area.min) || (area && itemData.area > area.max)) {
-    return false;
-  }
-  if ((height && itemData.height < height.min) || (height && itemData.height > height.max)) {
-    return false;
-  }
-  if (itemData.has_basement === hasBasement) {
-    return true;
-  }
-  if (itemData.waterfront === isWaterfront) {
-    return true;
-  }
-  if (type?.toLowerCase() === 'all') return true;
-  if (type?.toLowerCase() === item.type.toLowerCase()) return true;
+  const isFilteredByType = type === 'all' || type === item.type.toLowerCase();
+  const isFilteredByHeight = isFilteredByBetween(itemAttributes.height, height);
+  const isFilteredByArea = isFilteredByBetween(itemAttributes.area, area);
+  const isFilteredByIsWaterfront = typeof isWaterFront === 'undefined' || itemAttributes.waterfront === isWaterFront;
+  const isFilteredByHasBasement = typeof hasBasement === 'undefined' || itemAttributes.has_basement === hasBasement;
+
+  return (
+    isFilteredByType && isFilteredByHeight && isFilteredByArea && isFilteredByIsWaterfront && isFilteredByHasBasement
+  );
 };
 
 export const parseVoxelsAsset = async (assets: CryptoVoxelNFT[]): Promise<CryptoVoxelNFT[]> => {
@@ -265,4 +239,17 @@ export const parseVoxelsAsset = async (assets: CryptoVoxelNFT[]): Promise<Crypto
     })
   );
   return parsed;
+};
+
+export const twitterListText = function (metaverseRegistry?: string): string {
+  let metaverseTwitterHandle = '';
+  if (metaverseRegistry) {
+    if (isDecentralandMetaverseRegistry(metaverseRegistry)) {
+      metaverseTwitterHandle = '@decentraland';
+    } else if (isVoxelsRegistry(metaverseRegistry)) {
+      metaverseTwitterHandle = '@cryptovoxels';
+    }
+  }
+
+  return `gm. Just listed my ${metaverseTwitterHandle} property on @landworksxyz.\n`;
 };

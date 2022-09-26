@@ -8,7 +8,7 @@ export const RootStyled = styled(Box)(() => ({
   background: 'rgba(93, 143, 240, 0.2)',
   padding: '18px 20px',
   borderRadius: '10px',
-  marginBottom: '25px',
+  marginTop: 15,
 }));
 
 export const TitleStyled = styled('div')(() => ({}));

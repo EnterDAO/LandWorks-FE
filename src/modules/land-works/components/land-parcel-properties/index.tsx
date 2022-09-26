@@ -82,7 +82,7 @@ const VoxelParcel: React.FC<VoxelProps> = ({ atr, id }) => {
         <TypographyStyled variant="h2">Parcel Size</TypographyStyled>
         <GridItem item display="flex" flexDirection="row" xs={12}>
           <TypographyStyled variant="h3">Area</TypographyStyled>
-          <TypographyStyled variant="h4">{atr?.area}m²</TypographyStyled>
+          <TypographyStyled variant="h4">{atr?.area.toFixed(0)}m²</TypographyStyled>
         </GridItem>
         <GridItem item display="flex" flexDirection="row" xs={12}>
           <TypographyStyled variant="h3">Size</TypographyStyled>

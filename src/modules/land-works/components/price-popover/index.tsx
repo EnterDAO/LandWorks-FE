@@ -16,8 +16,7 @@ import {
   StyledTypography,
   Subtitle,
 } from './styled';
-
-import { sessionStorageHandler } from 'utils';
+import usePriceQueryParams from './usePriceQueryParams';
 
 import './styles.scss';
 
@@ -26,17 +25,14 @@ interface IProps {
   onSubmit?: (currency: number, minValue: number | null, maxValue: number | null) => void;
 }
 
-export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
-  const storage = {
-    currency: sessionStorageHandler('get', 'explore-filters', 'currency'),
-    minPrice: sessionStorageHandler('get', 'explore-filters', 'minPrice'),
-    maxPrice: sessionStorageHandler('get', 'explore-filters', 'maxPrice'),
-  };
+export const PricePopover: React.FC<IProps> = ({ text }) => {
   const [disableApply, setDisableApply] = useState(true);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const [currency, setCurrency] = useState<number>(storage.currency || 0);
-  const [minPrice, setMinPrice] = useState<string | null>(storage.minPrice || null);
-  const [maxPrice, setMaxPrice] = useState<string | null>(storage.maxPrice || null);
+
+  const [priceParams, setPriceParams] = usePriceQueryParams();
+  const [currency, setCurrency] = useState<number>(priceParams.currency);
+  const [minPrice, setMinPrice] = useState<string | number | null>(priceParams.minPrice || null);
+  const [maxPrice, setMaxPrice] = useState<string | number | null>(priceParams.maxPrice || null);
   const [error, setError] = useState<string>('');
 
   const openPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -91,13 +87,14 @@ export const PricePopover: React.FC<IProps> = ({ text, onSubmit }) => {
   }, [minPrice, maxPrice]);
 
   const handleSubmit = () => {
-    if (onSubmit) {
-      onSubmit(currency, Number(minPrice), Number(maxPrice));
-      minPrice && sessionStorageHandler('set', 'explore-filters', 'minPrice', minPrice);
-      maxPrice && sessionStorageHandler('set', 'explore-filters', 'maxPrice', maxPrice);
-      closePopover();
-      setDisableApply(true);
-    }
+    setPriceParams({
+      currency,
+      minPrice: minPrice ? +minPrice : undefined,
+      maxPrice: maxPrice ? +maxPrice : undefined,
+    });
+
+    closePopover();
+    setDisableApply(true);
   };
 
   const disableInput = currency == 0;

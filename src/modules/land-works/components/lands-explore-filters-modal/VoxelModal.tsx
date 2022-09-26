@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ModalProps, SliderThumb, Typography } from '@mui/material';
+import { SliderThumb, Typography } from '@mui/material';
 
 import { Button, Checkbox, Grid, Input, Modal, RadioButton, StyledSwitch } from 'design-system';
+import { ModalProps } from 'design-system/Modal/Modal';
 
 import {
   ButtonRow,
@@ -22,7 +23,7 @@ const disabled = {
   pointerEvents: 'none',
 };
 
-type Props = ModalProps & {
+type Props = Omit<ModalProps, 'handleClose'> & {
   handleSubmit: (value: Partial<MoreFiltersType>) => void;
   onCancel: () => void;
   maxHeight: number;

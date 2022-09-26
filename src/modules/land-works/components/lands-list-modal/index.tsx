@@ -5,12 +5,12 @@ import { getEtherscanAddressUrl } from 'web3/utils';
 import ExternalLink from 'components/custom/external-link';
 import { Button, Icon, Modal } from 'design-system';
 import { Spinner, SuccessStarIcon, TwitterIcon } from 'design-system/icons';
-import { routes } from 'router/routes';
+import { APP_ROUTES } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
 import { ShareLink } from './styled';
 
-import { TWITTER_TEXT } from 'modules/land-works/constants';
+import { twitterListText } from '../../utils';
 
 import './index.scss';
 
@@ -25,6 +25,7 @@ interface ITxModal extends IProps {
 interface ISuccessModal extends IProps {
   showShareButton: boolean;
   listedPropertyId: string;
+  metaverseRegistry: string;
 }
 
 export const TxModal: React.FC<ITxModal> = ({ showModal, handleClose, textMessage }) => {
@@ -50,6 +51,7 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
   handleClose,
   showShareButton,
   listedPropertyId,
+  metaverseRegistry,
 }) => {
   return (
     <Modal height={600} open={showModal} handleClose={handleClose}>
@@ -67,13 +69,15 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
             handleClose();
           }}
         >
-          <Link className="link-to-properties" to={routes.myProperties}>
+          <Link className="link-to-properties" to={APP_ROUTES.myProperties}>
             Go to my properties
           </Link>
         </Button>
         {showShareButton && listedPropertyId.length && (
           <ShareLink
-            href={`https://twitter.com/intent/tweet?text=${TWITTER_TEXT}&url=${window.location.origin}/property/${listedPropertyId}`}
+            href={`https://twitter.com/intent/tweet?text=${twitterListText(metaverseRegistry)}&url=${
+              window.location.origin
+            }/property/${listedPropertyId}`}
             target="_blank"
           >
             <Icon iconElement={<TwitterIcon />} iconSize="m" />

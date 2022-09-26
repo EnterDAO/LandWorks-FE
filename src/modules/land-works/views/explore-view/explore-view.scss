@@ -1,6 +1,8 @@
 @import 'styles/text.scss';
 
 .content-container--explore-view--header {
+  margin-bottom: 15px;
+
   @media screen and (min-width: 992px) {
     top: var(--navbar-height);
     left: 0;
@@ -10,7 +12,7 @@
   }
   @media screen and (min-width: 2660px) {
     max-width: 2540px;
-    margin: 0 auto;
+    margin: 0 auto 15px auto;
   }
 }
 
@@ -18,15 +20,12 @@
   z-index: 0;
   position: relative;
   max-width: none;
-  overflow: hidden;
-  padding-top: 15px;
-  
+  padding-top: 0;
+
   .list-lands-container {
     width: 100%;
     height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    
+
     @media screen and (min-width: 992px) {
       width: 50%;
     }
@@ -39,7 +38,7 @@
     bottom: 0;
     right: 0;
     left: 50%;
-      
+
     overflow: hidden;
     border-radius: 20px 0px 0px 20px;
     transition: 0.2s ease all;

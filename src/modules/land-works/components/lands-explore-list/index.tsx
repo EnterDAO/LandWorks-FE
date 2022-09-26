@@ -1,9 +1,11 @@
-import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { FC, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import useDebounce from '@rooks/use-debounce';
 
-import { Grid } from 'design-system';
-import { GridIcon, MapIcon } from 'design-system/icons';
+import CardsGrid from 'components/custom/cards-grid';
+import { Box, Icon, Stack, Typography } from 'design-system';
+import { GridBigIcon, GridIcon } from 'design-system/icons';
+import useGetIsMounted from 'hooks/useGetIsMounted';
 import { LocationState } from 'modules/interface';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
@@ -13,9 +15,12 @@ import LandsSearchBar from 'modules/land-works/components/lands-search';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
+import { useStickyOffset } from 'providers/sticky-offset-provider';
+import { getPropertyPath } from 'router/routes';
 
 import { AtlasTile } from '../atlas';
-import { LandsSearchBarWrapperStyled, StyledButton, StyledGridContainer, StyledRow, StyledText } from './styled';
+import { StyledButton, StyledRow } from './styled';
+import useNumberOfLoadedCards from './useNumberOfLoadedCards';
 
 import {
   filterLandsByAvailability,
@@ -23,72 +28,105 @@ import {
   getAllLandsCoordinates,
   getOwnerOrConsumerId,
 } from 'modules/land-works/utils';
-import { sessionStorageHandler } from 'utils';
+
+import { THEME_COLORS } from 'themes/theme-constants';
 
 interface Props {
   lastRentEnd: string;
   loading: boolean;
   lands: AssetEntity[];
   setPointMapCentre: (lands: CoordinatesLand[]) => void;
-  setIsHiddenMap: (value: boolean) => void;
-  setMapSize: (value: string) => void;
-  isHiddenMap: boolean;
+  isMapVisible: boolean;
 }
 
-const LandsExploreList: FC<Props> = ({
-  loading,
-  lands,
-  setPointMapCentre,
-  lastRentEnd,
-  setMapSize,
-  setIsHiddenMap,
-  isHiddenMap,
-}) => {
+const NUMBER_OF_CARDS_PER_LOAD = 18;
+
+const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRentEnd, isMapVisible }) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
+  const stickyOffset = useStickyOffset();
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
-  const { mapTiles, setSelectedId } = useLandsMapTiles();
+  const { mapTiles, selectedId, setSelectedId } = useLandsMapTiles();
+  const getIsMounted = useGetIsMounted();
+  const timeoutIdRef = useRef<number>();
 
+  const [cardsSize, setCardsSize] = useState<'compact' | 'normal'>('normal');
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
   const [blockAutoScroll, setBlockAutoScroll] = useState(false);
 
-  const [slicedLands, setSlicedLands] = useState(isHiddenMap ? 18 : 6);
+  const initialNumberOfCards = isMapVisible ? (cardsSize === 'compact' ? 10 : 6) : 18;
+  const [numberOfLoadedCards, setNumberOfLoadedCards] = useNumberOfLoadedCards(initialNumberOfCards);
 
   const handleLoadMore = () => {
-    const newSlicedLands = slicedLands + (isHiddenMap ? 18 : 6);
-    sessionStorageHandler('set', 'explore-filters', 'slicedLands', newSlicedLands);
-    setSlicedLands(newSlicedLands);
+    const newSlicedLands = numberOfLoadedCards + NUMBER_OF_CARDS_PER_LOAD;
     const highlights = getAllLandsCoordinates(lands.slice(0, newSlicedLands));
+
+    setNumberOfLoadedCards(newSlicedLands);
     setPointMapCentre(highlights);
   };
 
-  const onMouseOverCardHandler = (e: SyntheticEvent, land: AssetEntity) => {
-    const allCoords = getAllLandsCoordinates([land]);
+  const setActiveLand = useCallback(
+    (land: AssetEntity) => {
+      const [landCoords] = getAllLandsCoordinates([land]);
 
-    if (allCoords.length && allCoords[0]) {
-      setSelectedId && setSelectedId(land.id);
-      setPointMapCentre([{ id: land.id, x: allCoords[0].x, y: allCoords[0].y }]);
-      setClickedLandId && setClickedLandId(allCoords[0].x, allCoords[0].y);
+      if (landCoords) {
+        setPointMapCentre([{ id: land.id, x: landCoords.x, y: landCoords.y }]);
 
-      const id = `${allCoords[0].x},${allCoords[0].y}`;
+        if (setSelectedId) {
+          setSelectedId(land.id);
+        }
 
-      if (!mapTiles || !mapTiles[id]) return;
+        if (setClickedLandId) {
+          setClickedLandId(landCoords.x, landCoords.y);
+        }
 
-      setSelectedTile &&
-        setSelectedTile({
-          id,
-          type: mapTiles[id].type || '',
-          owner: getOwnerOrConsumerId(land?.decentralandData?.asset)?.toLowerCase() || '',
-        });
-    } else if (setSelectedId && setClickedLandId) {
-      setSelectedId(land.metaverseAssetId);
-      setClickedLandId(land.metaverseAssetId);
+        const id = `${landCoords.x},${landCoords.y}`;
+
+        if (mapTiles && mapTiles[id] && setSelectedTile) {
+          setSelectedTile({
+            id,
+            type: mapTiles[id].type || '',
+            owner: getOwnerOrConsumerId(land?.decentralandData?.asset)?.toLowerCase() || '',
+          });
+        }
+      } else if (setSelectedId && setClickedLandId) {
+        setSelectedId(land.metaverseAssetId);
+        setClickedLandId(land.metaverseAssetId);
+      }
+    },
+    [mapTiles]
+  );
+
+  const handleCardMouseOver = (e: MouseEvent<HTMLAnchorElement>, land: AssetEntity) => {
+    window.clearTimeout(timeoutIdRef.current);
+
+    if (selectedId) {
+      timeoutIdRef.current = window.setTimeout(() => {
+        if (getIsMounted()) {
+          setActiveLand(land);
+        }
+      }, 500);
+    } else {
+      setActiveLand(land);
     }
   };
 
+  const handleCardMouseOut = () => {
+    window.clearTimeout(timeoutIdRef.current);
+  };
+
+  const getCardClickHandler = (land: AssetEntity) => {
+    return () => {
+      history.push({
+        pathname: getPropertyPath(land.id),
+        state: { from: window.location.pathname, title: 'Explore', tab: location.state?.tab },
+      });
+    };
+  };
+
   const getLoadPercentageValue = () => {
-    const percentage = (filteredLands.slice(0, slicedLands).length * 100) / filteredLands.length;
+    const percentage = (filteredLands.slice(0, numberOfLoadedCards).length * 100) / filteredLands.length;
     return percentage || 0;
   };
 
@@ -110,7 +148,7 @@ const LandsExploreList: FC<Props> = ({
 
   useEffect(() => {
     setLoadPercentageValue(getLoadPercentageValue());
-  }, [lands, slicedLands, searchQuery]);
+  }, [lands, numberOfLoadedCards, searchQuery]);
 
   useEffect(() => {
     setShowCardPreview && setShowCardPreview(false);
@@ -123,19 +161,9 @@ const LandsExploreList: FC<Props> = ({
     const index = getLandArrayIndexByIdCoordinate(clickedLandId);
 
     if (index !== -1) {
-      setSlicedLands(index > slicedLands ? index + 1 : slicedLands);
+      setNumberOfLoadedCards(index > numberOfLoadedCards ? index + 1 : numberOfLoadedCards);
     }
   }, [clickedLandId]);
-
-  useEffect(() => {
-    setSlicedLands(
-      sessionStorageHandler('get', 'explore-filters', 'slicedLands')
-        ? sessionStorageHandler('get', 'explore-filters', 'slicedLands')
-        : isHiddenMap
-        ? 18
-        : 6
-    );
-  }, [isHiddenMap]);
 
   let filteredLands = filterLandsByQuery(lands, searchQuery);
 
@@ -143,7 +171,7 @@ const LandsExploreList: FC<Props> = ({
     filteredLands = filterLandsByAvailability(filteredLands);
   }
 
-  const slicedLandsInTotal = filteredLands.slice(0, slicedLands).length;
+  const slicedLandsInTotal = filteredLands.slice(0, numberOfLoadedCards).length;
 
   const saveScrollPosition = useDebounce(() => {
     if (filteredLands) sessionStorage.setItem('scroll-position', String(window.scrollY));
@@ -151,15 +179,11 @@ const LandsExploreList: FC<Props> = ({
 
   useEffect(() => {
     const scroll = () => {
-      window.scrollY > 100
-        ? setMapSize('large')
-        : window.scrollY > 20 && window.scrollY <= 100
-        ? setMapSize('medium')
-        : setMapSize('small');
       saveScrollPosition();
     };
 
     const scrollPosition = sessionStorage.getItem('scroll-position');
+
     if (!loading && scrollPosition && filteredLands.length) {
       window.scrollTo({ top: +scrollPosition, behavior: 'smooth' });
     }
@@ -175,62 +199,58 @@ const LandsExploreList: FC<Props> = ({
       onMouseMove={() => setBlockAutoScroll(true)}
       onMouseOut={() => setTimeout(() => setBlockAutoScroll(false), 350)}
     >
-      <LandsSearchBarWrapperStyled>
-        <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search by name" />
-      </LandsSearchBarWrapperStyled>
-      <StyledRow>
-        <Grid>
-          Listed <StyledText>{filteredLands.length} properties</StyledText>
-        </Grid>
-        <Grid container direction={'row'} display="flex" width={'auto'}>
-          <StyledButton
-            sx={{
-              border: !isHiddenMap ? '1px solid white' : '1px solid transparent',
-              boxShadow: !isHiddenMap ? '0 0 3px white' : 'none',
-            }}
-            onClick={() => setIsHiddenMap(false)}
-          >
-            <MapIcon />
-          </StyledButton>
-          <StyledButton
-            sx={{
-              border: isHiddenMap ? '1px solid white' : '1px solid transparent',
-              boxShadow: isHiddenMap ? '0 0 3px white' : 'none',
-            }}
-            onClick={() => setIsHiddenMap(true)}
-          >
-            <GridIcon />
-          </StyledButton>
-        </Grid>
-      </StyledRow>
-      <StyledGridContainer container spacing={4} rowSpacing={4} columnSpacing={4}>
-        {loading ? (
-          [1, 2, 3, 4, 5, 6].map((i) => (
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} xxl={isHiddenMap ? 2 : 4} key={i}>
-              <LandCardSkeleton key={i} />
-            </Grid>
-          ))
-        ) : filteredLands.length ? (
-          filteredLands.slice(0, slicedLands).map((land) => (
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={isHiddenMap ? 3 : 6} xxl={isHiddenMap ? 2 : 4} key={land.id}>
+      <Box
+        position="sticky"
+        top={stickyOffset.offsets.filter + stickyOffset.offsets.header}
+        zIndex={2}
+        px={4}
+        mx={-4}
+        bgcolor="var(--theme-body-color)"
+        pb={4}
+      >
+        <Box mb={4}>
+          <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search by name" />
+        </Box>
+        <StyledRow>
+          <Typography variant="body2">
+            Listed{' '}
+            <Typography component="span" variant="inherit" color={THEME_COLORS.light}>
+              {filteredLands.length} properties
+            </Typography>
+          </Typography>
+          <Stack direction="row" spacing={2}>
+            <StyledButton isActive={cardsSize === 'normal'} onClick={() => setCardsSize('normal')}>
+              <Icon iconElement={<GridIcon />} iconSize="xs" />
+            </StyledButton>
+
+            <StyledButton isActive={cardsSize === 'compact'} onClick={() => setCardsSize('compact')}>
+              <Icon iconElement={<GridBigIcon />} iconSize="xs" />
+            </StyledButton>
+          </Stack>
+        </StyledRow>
+      </Box>
+      <CardsGrid layout={cardsSize}>
+        {loading &&
+          Array.from({ length: initialNumberOfCards }, (_, i) => {
+            return <LandCardSkeleton key={i} />;
+          })}
+
+        {!loading &&
+          filteredLands.length > 0 &&
+          filteredLands
+            .slice(0, numberOfLoadedCards)
+            .map((land) => (
               <LandWorkCard
-                onMouseOver={onMouseOverCardHandler}
-                onClick={() =>
-                  history.push({
-                    pathname: `/property/${land.id}`,
-                    state: { from: window.location.pathname, title: 'Explore', tab: location.state?.tab },
-                  })
-                }
+                key={land.id}
+                layout={cardsSize}
+                onMouseOver={handleCardMouseOver}
+                onMouseOut={handleCardMouseOut}
+                onClick={getCardClickHandler(land)}
                 land={land}
               />
-            </Grid>
-          ))
-        ) : (
-          <Grid item xs={12}>
-            <p>No properties are currently listed</p>
-          </Grid>
-        )}
-      </StyledGridContainer>
+            ))}
+      </CardsGrid>
+      {!loading && filteredLands.length === 0 && <p>No properties are currently listed</p>}
       <LoadMoreLands
         textToDisplay={`List ${slicedLandsInTotal} of ${filteredLands.length}`}
         handleLoadMore={handleLoadMore}

@@ -92,6 +92,12 @@ export const USER_SUBSCRIPTION = gql`
         minPeriod
         maxPeriod
         maxFutureTime
+        owner {
+          id
+        }
+        consumer {
+          id
+        }
         unclaimedRentFee
         pricePerSecond
         lastRentEnd
@@ -131,6 +137,12 @@ export const USER_SUBSCRIPTION = gql`
         minPeriod
         maxPeriod
         maxFutureTime
+        owner {
+          id
+        }
+        consumer {
+          id
+        }
         unclaimedRentFee
         pricePerSecond
         lastRentEnd
@@ -484,8 +496,6 @@ export const USER_ASSET_RENTS_SUBSCRIPTION = gql`
   }
 `;
 
-export type getNftMetaType = (id: string | number) => Promise<any>;
-
 type PaginatedResult<T extends Record<string, any>> = {
   data: T[];
   meta: {
@@ -499,17 +509,19 @@ export type APIOverviewData = {
   administrativeOperator: string;
 };
 
+export const OVERVIEW = gql`
+  query GetOverview {
+    overview(id: "OVERVIEW") {
+      totalListings
+      totalRents
+      administrativeOperator
+    }
+  }
+`;
+
 export function fetchOverviewData(): Promise<APIOverviewData> {
   return GraphClient.get({
-    query: gql`
-      query GetOverview {
-        overview(id: "OVERVIEW") {
-          totalListings
-          totalRents
-          administrativeOperator
-        }
-      }
-    `,
+    query: OVERVIEW,
   })
     .then((result) => {
       return {
@@ -578,7 +590,7 @@ export type AssetEntity = {
   pricePerMagnitude: PricePerMagnitude;
   unclaimedRentFee: BigNumber;
   paymentToken: PaymentToken;
-  consumer?: IdEntity;
+  consumer: IdEntity;
   availability: AssetAvailablity;
   attributes: AssetAttributes;
   isHot: boolean;
@@ -622,7 +634,10 @@ export type CryptoVoxelsType = {
   name: string;
   image: string;
   description: string;
-  attributes: AssetAttributes;
+  attributes: Omit<AssetAttributes, 'has_basement' | 'waterfront'> & {
+    has_basement: 'yes' | 'no';
+    waterfront: 'yes' | 'no';
+  };
   external_url: string;
   background_color: string;
 };
@@ -903,70 +918,6 @@ export function fetchAsset(id: string): Promise<AssetEntity> {
 }
 
 /**
- * Gets the rents by chunks for a given asset, ordered by `end` in descending order.
- * @param id The id of the asset
- * @param renter The address of the renter
- * @param page Which page to load. Default 1
- * @param limit How many items per page. Default 5
- */
-export function fetchAssetUserRents(
-  id: string,
-  renter: string,
-  page = 1,
-  limit = 5
-): Promise<PaginatedResult<RentEntity>> {
-  return GraphClient.get({
-    query: gql`
-      query GetAssetUserRents($id: String, $renter: String) {
-        asset(id: $id) {
-          rents(where: { renter: $renter }, orderBy: end, orderDirection: desc) {
-            id
-            renter {
-              id
-            }
-            start
-            operator
-            end
-            txHash
-            timestamp
-            fee
-            paymentToken {
-              id
-              name
-              symbol
-              decimals
-            }
-          }
-        }
-      }
-    `,
-    variables: {
-      id: id,
-      renter: renter,
-    },
-  })
-    .then(async (response) => {
-      // Paginate the result
-      const paginatedRents = response.data.asset.rents.slice(limit * (page - 1), limit * page);
-
-      const result: PaginatedResult<RentEntity> = {
-        data: paginatedRents.map((item: any) => ({
-          ...item,
-          renterAddress: item.renter.id,
-          price: item.fee,
-        })),
-        meta: { count: response.data.asset.rents.length },
-      };
-
-      return result;
-    })
-    .catch((e) => {
-      console.log(e);
-      return { data: [], meta: { count: 0 } };
-    });
-}
-
-/**
  * Gets the last rent end for an asset.
  * Returns the current time in seconds:
  * if the last rent is less than now
@@ -999,116 +950,6 @@ export function fetchAssetLastRentEnd(asset: string): Promise<number> {
     .catch((e) => {
       console.log(e);
       return getNowTs();
-    });
-}
-
-/**
- * Gets all the assets and consumerTo assets for a given user.
- * @param address The address of the user
- */
-export function fetchUserAssets(address: string): Promise<UserEntity> {
-  return GraphClient.get({
-    query: gql`
-      query GetUser($id: String) {
-        user(id: $id) {
-          id
-          consumerTo {
-            id
-            metaverseAssetId
-            metaverse {
-              name
-            }
-            metaverseRegistry {
-              id
-            }
-            minPeriod
-            maxPeriod
-            maxFutureTime
-            unclaimedRentFee
-            pricePerSecond
-            lastRentEnd
-            status
-            paymentToken {
-              id
-              name
-              symbol
-              decimals
-            }
-            decentralandData {
-              metadata
-              isLAND
-              coordinates {
-                id
-                x
-                y
-              }
-            }
-          }
-          assets {
-            id
-            metaverseAssetId
-            metaverse {
-              name
-            }
-            metaverseRegistry {
-              id
-            }
-            minPeriod
-            maxPeriod
-            maxFutureTime
-            unclaimedRentFee
-            pricePerSecond
-            lastRentEnd
-            status
-            paymentToken {
-              id
-              name
-              symbol
-              decimals
-            }
-            decentralandData {
-              metadata
-              isLAND
-              coordinates {
-                id
-                x
-                y
-              }
-            }
-          }
-          rents {
-            asset {
-              metaverseAssetId
-              metaverse {
-                name
-              }
-              metaverseRegistry {
-                id
-              }
-              decentralandData {
-                metadata
-                isLAND
-                coordinates {
-                  id
-                  x
-                  y
-                }
-              }
-            }
-          }
-        }
-      }
-    `,
-    variables: {
-      id: address.toLowerCase(),
-    },
-  })
-    .then(async (response) => {
-      return await parseUser(response.data.user);
-    })
-    .catch((e) => {
-      console.log(e);
-      return {} as UserEntity;
     });
 }
 
@@ -1153,101 +994,6 @@ export function fetchUserFirstRentByTimestamp(
     .catch((e) => {
       console.log(e);
       return {} as RentEntity;
-    });
-}
-
-/**
- * Gets user's rents from GraphQL. Filters out only the last rent for an asset.
- * TODO: Can be optimised, query should be done in the reverse order.
- * @param address The address of the user
- * @param page Which page to load. Default 1
- * @param limit How many items per page. Default 6
- */
-export function fetchUserRentPerAsset(address: string, availableOnly = false, page = 1, limit = 6): Promise<any> {
-  const now = getNowTs();
-  return GraphClient.get({
-    query: gql`
-      query GetUserRents($id: String, $now: BigInt) {
-        rents(orderBy: end, orderDirection: asc, where: {renter: $id, ${
-          availableOnly ? 'start_lte: $now, end_gt: $now' : ''
-        }}) {
-          id
-          operator
-          start
-          end
-          timestamp
-          asset {
-            id
-            metaverseAssetId
-            metaverse {
-              name
-            }
-            metaverseRegistry {
-              id
-            }
-            decentralandData {
-              id
-              metadata
-              isLAND
-              coordinates {
-                id
-                x
-                y
-              }
-            }
-          }
-        }
-      }
-    `,
-    variables: {
-      id: address.toLowerCase(),
-      now: now,
-    },
-  })
-    .then(async (response) => {
-      // Filter out rents for the same asset
-      if (!response?.data?.rents) {
-        return {
-          data: [],
-          meta: { count: 0 },
-        };
-      }
-      const groupedRents = response.data.rents.reduce(
-        (entryMap: Map<string, any[]>, e: any) => entryMap.set(e.asset.id, [...(entryMap.get(e.asset.id) || []), e]),
-        new Map()
-      );
-      const now = getNowTs();
-      const filteredRents = [] as RentEntity[];
-      // TODO: optimise search for target rent
-      for (const [, rents] of groupedRents) {
-        if (rents.length == 1) {
-          filteredRents.push(rents[0]);
-        } else {
-          let rent = rents.find((r: RentEntity) => Number(r.start) <= now && now < Number(r.end));
-          if (!rent) {
-            rent = rents.find((r: RentEntity) => now < Number(r.start));
-          }
-          if (!rent) {
-            rent = rents[rents.length - 1];
-          }
-          filteredRents.push(rent!);
-        }
-      }
-
-      const paginatedRents = filteredRents
-        .sort((a, b) => Number(b.end) - Number(a.end))
-        .slice(limit * (page - 1), limit * page);
-      return {
-        data: paginatedRents.map((element: any) => ({
-          ...element,
-          name: getDecentralandAssetName(element.asset.decentralandData),
-        })),
-        meta: { count: filteredRents.length },
-      };
-    })
-    .catch((e) => {
-      console.log(e);
-      return {} as UserEntity;
     });
 }
 
@@ -1355,108 +1101,6 @@ export function fetchAssetRentByTimestamp(assetId: string, timestamp: number): P
     });
 }
 
-/**
- * Gets Listed Assets by metaverse id, and lt (less than) than the last rent end (if provided)
- * excluding those with status WITHDRAWN,
- * ordered by a given column in ascending/descending order
- * @param page Which page to load. Default 1
- * @param limit How many items per page. Default 6
- * @param metaverse The target metaverse id. Default '1', which is considered Decentraland
- * @param lastRentEnd A timestamp (in seconds), which will be used to query assets with lastRentEnd greater than the given.
- * @param orderColumn The name of the order column
- * @param orderDirection asc or desc
- * Default '0'. Used to determined Availability of assets
- */
-export function fetchListedAssetsByMetaverseAndGetLastRentEndWithOrder(
-  page = 1,
-  limit = 6,
-  metaverse = '1',
-  lastRentEnd = '0',
-  orderColumn = 'totalRents',
-  orderDirection: string
-): Promise<PaginatedResult<AssetEntity>> {
-  return GraphClient.get({
-    query: gql`
-      query GetAssets(
-        $metaverse: String
-        $lastRentEnd: String
-        $orderColumn: String
-        $orderDirection: String
-        $statusNot: String
-      ) {
-        assets(
-          where: { metaverse: $metaverse, ${
-            lastRentEnd != '0' ? 'lastRentEnd_lt: $lastRentEnd' : ''
-          }, status_not: $statusNot }
-          orderBy: $orderColumn
-          orderDirection: $orderDirection
-        ) {
-          id
-          metaverseAssetId
-          metaverse {
-            name
-          }
-          metaverseRegistry {
-            id
-          }
-          owner {
-            id
-          }
-          minPeriod
-          maxPeriod
-          maxFutureTime
-          pricePerSecond
-          paymentToken {
-            name
-            symbol
-            decimals
-          }
-          decentralandData {
-            metadata
-            isLAND
-            coordinates {
-              id
-              x
-              y
-            }
-          }
-          lastRentEnd
-          totalRents
-          status
-        }
-      }
-    `,
-    variables: {
-      lastRentEnd: lastRentEnd,
-      metaverse: metaverse,
-      orderColumn: orderColumn,
-      orderDirection: orderDirection,
-      statusNot: AssetStatus.WITHDRAWN,
-    },
-  })
-    .then(async (response) => {
-      // Paginate the result
-      let parsedAssets = await parseAssets(response.data.assets);
-      if (orderColumn === 'pricePerSecond') {
-        if (orderDirection === 'asc') {
-          parsedAssets = parsedAssets.sort(sortAssetsByAscendingUsdPrice);
-        } else {
-          parsedAssets = parsedAssets.sort(sortAssetsByDescendingUsdPrice);
-        }
-      }
-      const paginatedAssets = parsedAssets.slice(limit * (page - 1), limit * page);
-
-      return {
-        data: await parseAssets(paginatedAssets),
-        meta: { count: response.data.assets.length },
-      };
-    })
-    .catch((e) => {
-      console.log(e);
-      return { data: [], meta: { count: 0, block: 0 } };
-    });
-}
-
 export function fetchUserAssetsByRents(address: string, metaverse: string): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
     query: gql`
@@ -1481,6 +1125,12 @@ export function fetchUserAssetsByRents(address: string, metaverse: string): Prom
             minPeriod
             maxPeriod
             maxFutureTime
+            owner {
+              id
+            }
+            consumer {
+              id
+            }
             unclaimedRentFee
             pricePerSecond
             lastRentEnd
@@ -1616,6 +1266,12 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
           metaverseRegistry {
             id
           }
+          owner {
+            id
+          }
+          consumer {
+            id
+          }
           minPeriod
           maxPeriod
           maxFutureTime
@@ -1691,32 +1347,6 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
     });
 }
 
-export function fetchAssetIdByTxHash(txHash: string): Promise<string> {
-  return GraphClient.get({
-    query: gql`
-      query GetAssetByTxHash($txHash: String) {
-        assets(where: { txHash: $txHash }) {
-          id
-        }
-      }
-    `,
-    variables: {
-      txHash: txHash,
-    },
-  })
-    .then(async (response) => {
-      const assets = response.data.assets;
-      if (assets.length > 0) {
-        return assets[0].id;
-      }
-      return '';
-    })
-    .catch((e) => {
-      console.log(e);
-      return '';
-    });
-}
-
 export function parseAssetRents(asset: any): PaginatedResult<RentEntity> {
   const result: PaginatedResult<RentEntity> = {
     data: (asset.rents ?? []).map((item: any) => ({
@@ -1762,12 +1392,13 @@ export async function parseUser(user: any): Promise<UserEntity> {
 }
 
 export async function parseAssets(assets: any[]): Promise<AssetEntity[]> {
-  const result = [] as AssetEntity[];
+  const promises = [];
 
   for (const asset of assets) {
-    result.push(await parseAsset(asset));
+    promises.push(parseAsset(asset));
   }
-  return result;
+
+  return Promise.all(promises);
 }
 
 export async function parseAsset(asset: any): Promise<AssetEntity> {
@@ -1794,7 +1425,11 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
     liteAsset.name = data.name;
     liteAsset.type = data.attributes?.title === 'plot' ? 'Parcels' : data.attributes.title;
     liteAsset.imageUrl = data.image;
-    liteAsset.attributes = data.attributes;
+    liteAsset.attributes = {
+      ...data.attributes,
+      has_basement: data.attributes.has_basement === 'yes',
+      waterfront: data.attributes.waterfront === 'yes',
+    };
     liteAsset.externalUrl = getCryptoVexelsPlayUrl(asset?.metaverseAssetId);
     liteAsset.place = data?.attributes ? [data?.attributes?.island, data?.attributes?.suburb] : null;
   }

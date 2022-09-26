@@ -188,6 +188,10 @@ export function isDecentralandMetaverseRegistry(registry: string): boolean {
   );
 }
 
+export function isVoxelsRegistry(registry: string): boolean {
+  return registry === config.contracts.cryptoVoxelsContract.toLowerCase();
+}
+
 /**
  * Used for parseCSV() below
  */
@@ -421,3 +425,14 @@ export const sessionStorageHandler = (
     ? JSON.parse(filters)[name]
     : sessionStorage.setItem(key, JSON.stringify({ ...JSON.parse(filters), [`${name}`]: value }));
 };
+
+export const lerp = (a: number, b: number, amount: number): number => {
+  amount = amount < 0 ? 0 : amount;
+  amount = amount > 1 ? 1 : amount;
+
+  return a + (b - a) * amount;
+};
+
+export const clamp = (value: number, min = 0, max = 1): number => Math.min(max, Math.max(min, value));
+
+export const inverseLerp = (a: number, b: number, value: number): number => clamp((value - a) / (b - a));

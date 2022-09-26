@@ -1,6 +1,6 @@
 import { Button } from 'design-system';
 import { EndTimerIcon, HourglassIcon, MessageIcon, RentingNotificationIcon } from 'design-system/icons';
-import { routes } from 'router/routes';
+import { APP_ROUTES, getPropertyPath } from 'router/routes';
 
 import { NotificationDataType } from './notificationTypes';
 
@@ -13,7 +13,7 @@ export const NotificationData: NotificationDataType = {
     subtitle: (id, name) => {
       return (
         <>
-          <a href={`/property/${id}`}> {name}</a> was rented.
+          <a href={getPropertyPath(id)}> {name}</a> was rented.
         </>
       );
     },
@@ -22,7 +22,7 @@ export const NotificationData: NotificationDataType = {
         disabled={!hasUnclaimentRent}
         onClick={() =>
           history.push({
-            pathname: routes.myProperties,
+            pathname: APP_ROUTES.myProperties,
             state: {
               openClaimModal: true,
             },
@@ -59,7 +59,7 @@ export const NotificationData: NotificationDataType = {
     subtitle: (id, name) => {
       return (
         <>
-          Rent on <a href={`/property/${id}`}> {name}</a> has ended.
+          Rent on <a href={getPropertyPath(id)}> {name}</a> has ended.
         </>
       );
     },
@@ -84,14 +84,14 @@ export const NotificationData: NotificationDataType = {
     subtitle: (id, name) => {
       return (
         <>
-          Rent on <a href={`/property/${id}`}> {name}</a> has ended.
+          Rent on <a href={getPropertyPath(id)}> {name}</a> has ended.
         </>
       );
     },
     button: ({ history, id, isAvailable }) => (
       <Button
         disabled={!isAvailable}
-        onClick={() => history.push(`/property/${id}`)}
+        onClick={() => history.push(getPropertyPath(id))}
         variant="accentblue"
         sx={{ marginLeft: 'auto', width: '105px !important' }}
         btnSize="xsmall"
@@ -106,14 +106,14 @@ export const NotificationData: NotificationDataType = {
     subtitle: (id, name) => {
       return (
         <>
-          Extend rent on <a href={`/property/${id}`}> {name}</a> .
+          Extend rent on <a href={getPropertyPath(id)}> {name}</a> .
         </>
       );
     },
     button: ({ history, id, isAvailable }) => (
       <Button
         disabled={!isAvailable}
-        onClick={() => history.push(`/property/${id}`)}
+        onClick={() => history.push(getPropertyPath(id))}
         variant="accentblue"
         sx={{ marginLeft: 'auto', width: '105px !important' }}
         btnSize="xsmall"

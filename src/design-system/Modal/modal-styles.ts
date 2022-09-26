@@ -15,8 +15,10 @@ const StyledModal = styled(ModalUnstyled)({
   bottom: '0',
   left: '0',
   display: 'flex',
+  overflow: 'auto',
   alignItems: 'center',
   justifyContent: 'center',
+  padding: 20,
   background: `rgba(${THEME_COLORS.darkBlue02}, 0.4)`,
 });
 
@@ -32,6 +34,7 @@ const StyledBackdrop = styled('div')({
 
 export const ModalBoxStyled = styled(Box)({
   width: 'auto',
+  margin: 'auto',
   maxHeight: 858,
   position: 'relative',
   background: THEME_COLORS.darkBlue03,
