@@ -35,7 +35,7 @@ export const Hero: FC = () => {
             <br />
             <br />
             <Typography fontWeight={700} color={THEME_COLORS.light} variant="inherit" component="span">
-              We’ve concluded the grant program by awarding more than $50K. Check the winning scenes.
+              We’ve concluded the grant program by awarding more than $50K. Check out the winning scenes!
             </Typography>
           </Typography>
 
