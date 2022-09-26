@@ -1,25 +1,61 @@
+import { ReactNode } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ReactComponent as LeftPart } from 'assets/img/about_left.svg';
-import { ReactComponent as RightPart } from 'assets/img/about_right.svg';
-import { Box, Button, Grid, Typography } from 'design-system';
+import listImgSrc from 'assets/img/about_left.svg';
+import rentImgSrc from 'assets/img/about_right.svg';
+import { Box, Button, Grid, Stack, Typography } from 'design-system';
 import { BackIcon } from 'design-system/icons';
-import {
-  LandOwner,
-  Rent,
-  StyledGrid,
-  StyledLink,
-  StyledSubtitle,
-  StyledText,
-} from 'modules/landing/components/about/styled';
+import { LandOwner, Rent } from 'modules/landing/components/about/styled';
 import { routes } from 'router/routes';
 
-import './index.scss';
+interface CardProps {
+  title: ReactNode;
+  description: ReactNode;
+  actionButtonLabel: string;
+  background?: string;
+  to: string;
+}
+
+const Card = ({ title, description, actionButtonLabel, background, to }: CardProps) => {
+  const history = useHistory();
+
+  return (
+    <Stack
+      minHeight={{ xs: 220, xl: 300 }}
+      border={`3px solid #27273A`}
+      sx={{
+        backgroundColor: { xs: '#1E1E2E', xl: 'none' },
+        backgroundImage: { xs: 'unset', xl: `url(${background})` },
+        backgroundSize: 'cover',
+      }}
+      p={4}
+      py={{ xl: 12 }}
+      width={1}
+      borderRadius="20px"
+    >
+      <Typography variant="h2" mb={2}>
+        {title}
+      </Typography>
+      <Typography variant="body1" maxWidth={350} mb="auto">
+        {description}
+      </Typography>
+
+      <Button
+        onClick={() => history.push(to)}
+        variant="tertiary"
+        btnSize="xsmall"
+        sx={{ mt: 6, alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center' }}
+      >
+        {actionButtonLabel}{' '}
+        <Box display="inline-flex" sx={{ transform: 'translateY(4px) rotate(180deg)' }}>
+          <BackIcon height={20} width={20} />
+        </Box>
+      </Button>
+    </Stack>
+  );
+};
 
 export const About: React.FC = () => {
-  const history = useHistory();
-  const redirect = () => history.push(routes.explore);
-
   return (
     <Box position="relative" pt={{ xs: 10, xl: 18 }} pb={{ xs: 10, xl: 21 }} className="about-wrapper">
       <Box className="content-container">
@@ -32,47 +68,33 @@ export const About: React.FC = () => {
           </Typography>
           <Typography>You can either lend yours or rent a new Land that you want.</Typography>
         </Box>
-        <Grid container justifyItems="center" marginTop={12}>
-          <StyledGrid item xs={12} md={6}>
-            <LeftPart />
-            <div>
-              <h2>
-                Are you a <LandOwner>Land Owner</LandOwner>?
-              </h2>
-              <p>Еarn passive income on your land by turning it into a productive asset.</p>
-              <Button
-                onClick={redirect}
-                sx={{ position: 'absolute', bottom: '15%' }}
-                variant="tertiary"
-                btnSize="xsmall"
-                className="button"
-              >
-                <StyledLink to={routes.explore}>
-                  List now <BackIcon height={20} width={20} />
-                </StyledLink>
-              </Button>
-            </div>
-          </StyledGrid>
-          <StyledGrid item xs={12} md={6}>
-            <RightPart />
-            <div>
-              <h2>
-                Do you seek to <Rent>Rent</Rent>?
-              </h2>
-              <p>Leverage the power of metaverse games by renting in-game land instead of buying.</p>
-              <Button
-                onClick={redirect}
-                sx={{ position: 'absolute', bottom: '15%' }}
-                variant="tertiary"
-                btnSize="xsmall"
-                className="button"
-              >
-                <StyledLink to={routes.explore}>
-                  Start renting <BackIcon height={20} width={20} />
-                </StyledLink>
-              </Button>
-            </div>
-          </StyledGrid>
+        <Grid container rowSpacing={3} columnSpacing={8}>
+          <Grid item xs={12} lg={6} display="flex">
+            <Card
+              title={
+                <>
+                  Are you a <LandOwner>Land Owner</LandOwner>?
+                </>
+              }
+              description="Earn passive income on your land by turning it into a productive asset."
+              actionButtonLabel="List now"
+              to={routes.explore}
+              background={listImgSrc}
+            />
+          </Grid>
+          <Grid item xs={12} lg={6} display="flex">
+            <Card
+              title={
+                <>
+                  Do you seek to <Rent>Rent</Rent>?
+                </>
+              }
+              description="Leverage the power of metaverse games by renting in-game land instead of buying."
+              actionButtonLabel="Start renting"
+              to={routes.explore}
+              background={rentImgSrc}
+            />
+          </Grid>
         </Grid>
       </Box>
     </Box>
