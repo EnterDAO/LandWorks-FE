@@ -1,10 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ReactComponent as Tag } from 'assets/img/explore_tag.svg';
 import { ReactComponent as LandGroup } from 'assets/img/land_group.svg';
-import { Box, Button, Grid, Typography } from 'design-system';
-import { StyledRoot } from 'modules/landing/components/Explore/styled';
+import { ReactComponent as TrianglesIcon } from 'assets/img/triangles-icon.svg';
+import AdaptiveTypography from 'components/custom/adaptive-typography';
+import Chip from 'components/custom/chip';
+import { Box, Button, Stack, Typography } from 'design-system';
 import { routes } from 'router/routes';
 
 export const Explore: React.FC = () => {
@@ -20,24 +21,24 @@ export const Explore: React.FC = () => {
         bgcolor="#1E1E2E"
         borderRadius="50px"
       >
-        <Box
+        <Stack
           order={{ xs: 1, lg: 0 }}
-          p={{ xs: '0 20px 40px 20px', lg: '70px', xl: '120px 0px 0px 140px' }}
+          textAlign={{ sm: 'center', lg: 'left' }}
+          alignItems={{ xs: 'flex-start', sm: 'center', lg: 'flex-start' }}
+          p={{ xs: '0 20px 40px 20px', sm: '0 0 100px 0', lg: '70px', xl: '0 0 0 140px' }}
           flexShrink={0}
         >
-          <Box mb={2}>
-            <Tag />
-          </Box>
-          <Typography variant="h1" component="h2" mb={2}>
+          <Chip icon={<TrianglesIcon />}>METAVERSE LAND MARKETPLACE</Chip>
+          <AdaptiveTypography variant="h1" component="h2" mt={2} mb={2}>
             Explore <br /> Our Marketplace
-          </Typography>
+          </AdaptiveTypography>
           <Typography maxWidth={300} mb={9}>
             Rent a land or list your property for renting - we make it easy for you.
           </Typography>
           <Button onClick={() => history.push(routes.explore)} btnSize="medium" variant="gradient">
             Explore
           </Button>
-        </Box>
+        </Stack>
         <Box maxWidth={600} order={{ xs: 0, lg: 1 }} sx={{ svg: { width: 1, height: 'auto' } }}>
           <LandGroup />
         </Box>
