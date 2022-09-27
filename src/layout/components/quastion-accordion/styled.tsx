@@ -1,45 +1,7 @@
-import { Link } from 'react-router-dom';
-import { Grid, Typography, styled } from '@mui/material';
+import { Grid, styled } from '@mui/material';
 import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
-
-export const StyledRoot = styled(Grid)(() => ({
-  marginTop: 150,
-  display: 'flex',
-  justifyContent: 'center',
-  flexDirection: 'column',
-  alignItems: 'center',
-  '& a': {
-    fontSize: 20,
-  },
-}));
-
-export const StyledTypography = styled(Typography)(() => ({
-  fontWeight: 'bold',
-  color: 'var(--theme-grey900-color)',
-  margin: '15px 0',
-  fontSize: 40,
-  lineHeight: '60px',
-  maxWidth: 360,
-  textAlign: 'center',
-  marginBottom: 80,
-
-  '& span': {
-    fontWeight: 'bold',
-    fontSize: 'inherit',
-    background: 'linear-gradient(83.81deg, #AC2CCB -19.8%, #DD3DCB 22%, #EF9C92 100%)',
-    webkitBackgroundClip: 'text',
-    '-webkit-text-fill-color': 'transparent',
-    backgroundClip: 'text',
-    textShadow: '0 0 30px #dd3dcb78',
-  },
-}));
-
-export const QuestionList = styled(Grid)(() => ({
-  width: 680,
-  flexDirection: 'row',
-}));
 
 export const StyledGrid = styled(Grid)(() => ({
   display: 'flex',
@@ -91,21 +53,6 @@ export const AccordionSummary = styled(MuiAccordionSummary)(() => ({
 
 export const AccordionDetails = styled(MuiAccordionDetails)(() => ({
   backgroundColor: 'var(--theme-body-color)',
-}));
-
-export const StyledLink = styled(Link)(() => ({
-  marginTop: 56,
-  padding: '5px 30px',
-  background: 'var(--theme-light-color)',
-  color: 'var(--theme-body-color)',
-  borderRadius: 10,
-  fontWeight: 'bold',
-  height: 34,
-  display: 'inline-flex',
-  alignItems: 'center',
-  fontSize: '14px !important',
-  textTransform: 'uppercase',
-  minWidth: 142,
 }));
 
 export const IconWrapper = styled('div')(() => ({
