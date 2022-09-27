@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 //eslint-disable-next-line
 //@ts-ignore
@@ -8,14 +8,15 @@ import animationVideoHvc from 'assets/home-hero-animation.mov';
 //@ts-ignore         
 import animationVideoWebm from 'assets/home-hero-animation.webm';
 import { ReactComponent as DecentralandLogo } from 'assets/img/decentraland-logo.svg';
-import { ReactComponent as Background } from 'assets/img/hero_main.svg';
 import backgroundImgSrc from 'assets/img/hero_main.svg';
-import { ReactComponent as Metaverse } from 'assets/img/hero_tag.svg';
-import { ReactComponent as Partners } from 'assets/img/partners.svg';
 import { ReactComponent as QuantStampLogo } from 'assets/img/quantstamp-logo.svg';
 import { ReactComponent as QuantStamp } from 'assets/img/quantstamp.svg';
+import { ReactComponent as TrianglesIcon } from 'assets/img/triangles-icon.svg';
 import { ReactComponent as VoxelsLogo } from 'assets/img/voxels-logo.svg';
+import AdaptiveTypography from 'components/custom/adaptive-typography';
+import Chip from 'components/custom/chip';
 import { Box, Button, Grid, Typography } from 'design-system';
+import { useStickyOffset } from 'providers/sticky-offset-provider';
 import { routes } from 'router/routes';
 
 import { GRADIENT_TEXT } from 'themes/theme-constants';
@@ -23,10 +24,17 @@ import { GRADIENT_TEXT } from 'themes/theme-constants';
 import './index.scss';
 
 export const Hero: React.FC = () => {
+  const stickyOffset = useStickyOffset();
   const history = useHistory();
 
   return (
-    <Box pt={{ xs: '95px', xl: '195px' }} pb={{ xs: 10, xl: '95px' }} position="relative">
+    <Box
+      p={{ xs: '95px 0 50px', lg: 10 }}
+      position="relative"
+      display="flex"
+      alignItems="center"
+      minHeight={{ lg: `calc(100vh - ${stickyOffset.offsets.header}px)` }}
+    >
       <Box
         component="img"
         src={backgroundImgSrc}
@@ -39,18 +47,18 @@ export const Hero: React.FC = () => {
         margin="auto"
         sx={{ objectFit: 'cover', pointerEvents: 'none' }}
       />
-      <Box className="content-container" py={0}>
-        <Grid container mb={15}>
-          <Grid item xs={12} lg={4} xl={5}>
-            <Metaverse />
+      <Box position="relative" className="content-container" py={0}>
+        <Grid container position="relative" mb={15}>
+          <Grid item xs={12} lg={6}>
+            <Chip icon={<TrianglesIcon />}>METAVERSE LAND RENTING MARKETPLACE</Chip>
 
-            <Typography variant="h1" mt={4} mb={2}>
+            <AdaptiveTypography variant="h1" mt={4} mb={2}>
               <Typography variant="inherit" component="span" sx={GRADIENT_TEXT} mb="4px">
                 Renting Land
               </Typography>
               <br />
               Never Worked so well
-            </Typography>
+            </AdaptiveTypography>
 
             <Typography maxWidth={410} mb={12}>
               LandWorks is a community-owned Marketplace for renting Web3 Metaverse Land, governed by EnterDAO and the
@@ -61,7 +69,7 @@ export const Hero: React.FC = () => {
               Explore
             </Button>
           </Grid>
-          <Grid item display={{ xs: 'none', lg: 'block' }} lg={8} xl={7} position="relative">
+          <Grid item display={{ xs: 'none', lg: 'block' }} lg={8} xl={7} position="absolute" right={0} top={0}>
             <Box
               component="video"
               autoPlay
@@ -69,13 +77,8 @@ export const Hero: React.FC = () => {
               loop
               muted
               playsInline
-              position="absolute"
-              top={0}
-              right={0}
-              bottom={0}
-              left={0}
               sx={{
-                transform: 'translate(19%, -10%)',
+                transform: 'translate(27%, -10%)',
               }}
             >
               <source src={animationVideoHvc} type="video/mp4;codecs=hvc1" />
@@ -89,14 +92,26 @@ export const Hero: React.FC = () => {
             <Box display={{ xs: 'none', md: 'block' }}>
               <QuantStamp />
             </Box>
-            <Box display="flex" columnGap={2} flexWrap="wrap" flexDirection={{ xs: 'row', sm: 'column' }}>
-              <Typography mb={3}>Audited by</Typography>
+            <Box
+              display="flex"
+              columnGap={2}
+              rowGap={3}
+              alignItems={{ xs: 'center', sm: 'flex-start' }}
+              flexDirection={{ xs: 'row', sm: 'column' }}
+            >
+              <Typography>Audited by</Typography>
               <QuantStampLogo />
             </Box>
           </Box>
 
-          <Box display="flex" columnGap={2} flexWrap="wrap" flexDirection={{ xs: 'row', sm: 'column' }}>
-            <Typography mb={3}>Supported Metaverses</Typography>
+          <Box
+            display="flex"
+            columnGap={2}
+            rowGap={3}
+            alignItems={{ xs: 'center', sm: 'flex-start' }}
+            flexDirection={{ xs: 'row', sm: 'column' }}
+          >
+            <Typography flexBasis={{ xs: 'min-content', sm: 'auto' }}>Supported Metaverses</Typography>
             <Box display="flex" gap={{ xs: 4, sm: 8 }}>
               <VoxelsLogo height={31} />
               <DecentralandLogo />
