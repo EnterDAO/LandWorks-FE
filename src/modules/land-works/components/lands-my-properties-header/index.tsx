@@ -112,7 +112,7 @@ const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, setTab, us
               label={
                 <>
                   <strong>
-                    Lent <span>{lentCount}</span>
+                    Listed <span>{lentCount}</span>
                   </strong>
                 </>
               }
