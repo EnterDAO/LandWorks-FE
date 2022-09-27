@@ -15,7 +15,7 @@ export const FAQ: React.FC = () => {
 
   return (
     <Stack alignItems="center" py={{ xs: 10, lg: 20 }} className="content-container">
-      <AdaptiveTypography textAlign="center" variant="h1" component="h2" mb={{ xs: 10, lg: 12 }}>
+      <AdaptiveTypography textAlign="center" variant="h1" component="h2" mb={{ xs: 10, xl: 18 }}>
         Frequently Asked
         <br />
         <Typography variant="inherit" sx={GRADIENT_TEXT}>

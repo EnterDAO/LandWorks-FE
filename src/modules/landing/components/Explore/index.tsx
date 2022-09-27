@@ -29,7 +29,7 @@ export const Explore: React.FC = () => {
           flexShrink={0}
         >
           <Chip icon={<TrianglesIcon />}>METAVERSE LAND MARKETPLACE</Chip>
-          <AdaptiveTypography variant="h1" component="h2" mt={2} mb={2}>
+          <AdaptiveTypography variant="h1" component="h2" mt={{ xs: 4, lg: 2 }} mb={2}>
             Explore <br /> Our Marketplace
           </AdaptiveTypography>
           <Typography maxWidth={300} mb={9}>

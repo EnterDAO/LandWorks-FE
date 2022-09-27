@@ -41,7 +41,14 @@ export const Advantages: React.FC = () => {
         <Typography>You can either lend yours or rent a new Land that you want.</Typography>
       </Box>
 
-      <Box position="relative" display="flex" justifyContent="center" alignItems="center" pt={16} pb={28}>
+      <Box
+        position="relative"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        pt={{ xs: 8, sm: 16 }}
+        pb={{ xs: 8, sm: 28 }}
+      >
         <Box position="absolute" width={1} height={1} display="flex" alignItems="center" justifyContent="center">
           <img src={blurredLightsImgSrc} width={2596} height={1798} style={{ width: '100%', height: 'auto' }} />
         </Box>
@@ -61,7 +68,7 @@ export const Advantages: React.FC = () => {
         </Box>
       </Box>
 
-      <Grid container spacing={{ xs: 5, lg: 8 }} justifyContent="space-around">
+      <Grid container rowSpacing={{ xs: 5, lg: 8 }} columnSpacing={18} justifyContent="space-around">
         {cards.map(({ title, description }) => {
           return (
             <Grid item xs={12} lg={6} display="flex" gap={3}>

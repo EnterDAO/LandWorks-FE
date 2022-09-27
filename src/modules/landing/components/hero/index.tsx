@@ -48,11 +48,11 @@ export const Hero: React.FC = () => {
         sx={{ objectFit: 'cover', pointerEvents: 'none' }}
       />
       <Box position="relative" className="content-container" py={0}>
-        <Grid container position="relative" mb={15}>
+        <Grid container position="relative" mb={{ xs: 12, xl: 15 }}>
           <Grid item xs={12} lg={6}>
             <Chip icon={<TrianglesIcon />}>METAVERSE LAND RENTING MARKETPLACE</Chip>
 
-            <AdaptiveTypography variant="h1" mt={4} mb={2}>
+            <AdaptiveTypography variant="h1" mt={4} mb={{ xs: 3, xl: 2 }}>
               <Typography variant="inherit" component="span" sx={GRADIENT_TEXT} mb="4px">
                 Renting Land
               </Typography>
@@ -60,7 +60,7 @@ export const Hero: React.FC = () => {
               Never Worked so well
             </AdaptiveTypography>
 
-            <Typography maxWidth={410} mb={12}>
+            <Typography maxWidth={410} mb={{ xs: 6, xl: 12 }}>
               LandWorks is a community-owned Marketplace for renting Web3 Metaverse Land, governed by EnterDAO and the
               ENTR token.
             </Typography>
