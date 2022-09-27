@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 
 import ExternalLink from 'components/custom/external-link';
 import Icon, { IconNames } from 'components/custom/icon';
-import { Typography } from 'design-system';
+import { Box, Typography } from 'design-system';
 import { routes } from 'router/routes';
 
 import styles from './layout-footer.module.scss';
@@ -45,47 +45,67 @@ export const socialsLinks: SocialLink[] = [
   },
 ];
 
-const LayoutFooter: React.FC<Props> = ({ isWrapped = true }) => {
-  const getYear = () => {
-    return new Date().getFullYear();
-  };
+export const FooterSocialList: FC = () => {
+  return (
+    <div className={styles['social-media-container']}>
+      {socialsLinks.map((socialLink, i) => {
+        return (
+          <ExternalLink key={i} href={socialLink.href} className={styles['social-media-container--link']}>
+            <Icon name={socialLink.icon} width="20" height="20" />
+          </ExternalLink>
+        );
+      })}
+    </div>
+  );
+};
 
+export const FooterNav: FC = () => {
+  return (
+    <div className={styles['links-container']}>
+      <ExternalLink href="https://enterdao.xyz/" className={styles.linkAnchor}>
+        EnterDAO
+      </ExternalLink>
+
+      <Link to={routes.home} className={styles.linkAnchor}>
+        LandWorks
+      </Link>
+
+      <ExternalLink href="https://metaportal.gg/" className={styles.linkAnchor}>
+        MetaPortal
+      </ExternalLink>
+
+      <ExternalLink href="https://docs.landworks.xyz/" className={styles.linkAnchor}>
+        Documentation
+      </ExternalLink>
+    </div>
+  );
+};
+
+export const Copyright: FC = () => {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <Typography fontWeight={500} variant="body2">
+      landworks.xyz © {currentYear}. Open-sourced.
+    </Typography>
+  );
+};
+
+const LayoutFooter: React.FC<Props> = ({ isWrapped = true }) => {
   return (
     <footer className={`${styles.root} ${isWrapped ? styles['root--wrapped'] : ''}`}>
       <div className={styles.container}>
-        <div className={styles['social-media-container']}>
-          {socialsLinks.map((socialLink, i) => {
-            return (
-              <ExternalLink key={i} href={socialLink.href} className={styles['social-media-container--link']}>
-                <Icon name={socialLink.icon} width="20" height="20" />
-              </ExternalLink>
-            );
-          })}
-        </div>
+        <Box mb={{ xs: 10, md: 8 }}>
+          <FooterSocialList />
+        </Box>
 
-        <div className={styles['links-container']}>
-          <ExternalLink href="https://enterdao.xyz/" className={styles.linkAnchor}>
-            EnterDAO
-          </ExternalLink>
-
-          <Link to={routes.home} className={styles.linkAnchor}>
-            LandWorks
-          </Link>
-
-          <ExternalLink href="https://metaportal.gg/" className={styles.linkAnchor}>
-            MetaPortal
-          </ExternalLink>
-
-          <ExternalLink href="https://docs.landworks.xyz/" className={styles.linkAnchor}>
-            Documentation
-          </ExternalLink>
-        </div>
+        <Box mb={10}>
+          <FooterNav />
+        </Box>
 
         <div className={styles.bottom}>
           <Icon name="png/LandWorksLogo" width="48" height="48" />
-          <Typography fontWeight={500} variant="body2">
-            landworks.xyz © {getYear()}. Open-sourced.
-          </Typography>
+          <Copyright />
         </div>
       </div>
     </footer>
