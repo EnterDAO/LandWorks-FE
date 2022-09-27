@@ -552,6 +552,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     evaluateSelectedProperty();
   }, [selectedProperty]);
 
+  useEffect(() => {
+    setSelectedProperty(null);
+  }, [selectedMetaverse]);
+
   const onChangeMetaverse = (value: number) => {
     setSelectedMetaverse(value);
   };
