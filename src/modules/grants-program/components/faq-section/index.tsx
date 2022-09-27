@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { QuestionList } from 'modules/faq/styled';
 import { Section, SectionTitle, SpecificSectionProps } from 'modules/grants-program/styled';
-import { QuestionItem } from 'modules/landing/components/FAQ/QuestionItem';
+import { QuestionItem } from 'modules/landing/components/faq/QuestionItem';
 
 import { faq } from './data';
 

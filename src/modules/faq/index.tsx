@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Connect } from 'modules/landing/components/Connect';
-import { QuestionItem } from 'modules/landing/components/FAQ/QuestionItem';
+import { Connect } from 'modules/landing/components/connect';
+import { QuestionItem } from 'modules/landing/components/faq/QuestionItem';
 
 import { faq } from './data';
 import { QuestionList, StyledSubtitle, StyledTitle } from './styled';

@@ -5,10 +5,10 @@ import { Box } from 'design-system';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import { About } from './components/about';
-import { Advantages } from './components/Advantages';
-import { Connect } from './components/Connect';
-import { Explore } from './components/Explore';
-import { FAQ } from './components/FAQ';
+import { Advantages } from './components/advantages';
+import { Connect } from './components/connect';
+import { Explore } from './components/explore';
+import { FAQ } from './components/faq';
 import Footer from './components/footer';
 import { Hero } from './components/hero';
 

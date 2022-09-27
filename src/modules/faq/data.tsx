@@ -1,4 +1,4 @@
-import { IQuestion } from 'modules/landing/components/FAQ/data';
+import { IQuestion } from 'modules/landing/components/faq/data';
 
 import { CanIContact } from './components/CanIContact';
 import { CanIHave } from './components/CanIHave';
