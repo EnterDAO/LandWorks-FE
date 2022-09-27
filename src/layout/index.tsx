@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 
 import ErrorBoundary from 'components/custom/error-boundary';
@@ -86,6 +86,7 @@ const LayoutView: React.FC = () => {
                                 component={GrantsProgram}
                               />
                               <Route path={APP_ROUTES.explore} component={LandworksView} />
+                              <Redirect from={LANDING_ROUTES.property} to={APP_ROUTES.property} />
                               <Route path="*" component={NotFoundView} />
                             </Switch>
                           </Suspense>

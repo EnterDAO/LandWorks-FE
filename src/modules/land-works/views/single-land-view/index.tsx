@@ -321,7 +321,7 @@ const SingleLandView: React.FC = () => {
                 target={'_blank'}
                 href={`https://twitter.com/intent/tweet?text=${twitterListText(asset.metaverseRegistry?.id)}&url=${
                   window.location.origin
-                }/app/property/${asset.id}`}
+                }/${getPropertyPath(asset.id)}`}
               >
                 <TwitterIcon height={20} width={30} />
                 share on twitter
