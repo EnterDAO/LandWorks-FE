@@ -4,23 +4,10 @@ import { Box } from '@mui/material';
 import blurredLightsImgSrc from 'assets/img/advantages-blurred-lights.png';
 import exploreScreenImgSrc from 'assets/img/advantages-explore-screen.png';
 import { ReactComponent as CirclePlusIcon } from 'assets/img/circle-plus-icon.svg';
-import RentingView from 'assets/img/RentingView.png';
-import { Grid, IconButton, Typography } from 'design-system';
-import { PlusIcon } from 'design-system/icons';
-import {
-  ImageWrapper,
-  StyledBox,
-  StyledRoot,
-  StyledSubtitle,
-  StyledText,
-} from 'modules/landing/components/Advantages/styled';
+import AdaptiveTypography from 'components/custom/adaptive-typography';
+import { Grid, Typography } from 'design-system';
 
 import { THEME_COLORS } from 'themes/theme-constants';
-
-interface CardProps {
-  title: string;
-  subtitle: string;
-}
 
 const cards = [
   {
@@ -48,9 +35,9 @@ export const Advantages: React.FC = () => {
         <Typography variant="body2" color="var(--theme-accent-color)" mb={2}>
           IS IT FOR YOU?
         </Typography>
-        <Typography variant="h2" mb={2}>
+        <AdaptiveTypography variant="h2" mb={2}>
           There are a Lot of Opportunities
-        </Typography>
+        </AdaptiveTypography>
         <Typography>You can either lend yours or rent a new Land that you want.</Typography>
       </Box>
 
