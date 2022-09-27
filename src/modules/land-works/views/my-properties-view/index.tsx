@@ -1,12 +1,11 @@
 import { FC, useEffect, useMemo, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import TabContext from '@mui/lab/TabContext';
 import { useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 
 import CardsGrid from 'components/custom/cards-grid';
-import { LocationState } from 'modules/interface';
 import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssetsByRents, parseUser } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
@@ -30,13 +29,18 @@ import {
 import { sessionStorageHandler } from 'utils';
 
 import {
-  MY_PROPERTIES_TAB_STATE_LENT,
+  MY_PROPERTIES_TAB_STATE_LISTED,
   MY_PROPERTIES_TAB_STATE_RENTED,
   sortColumns,
   sortDirections,
 } from 'modules/land-works/constants';
 
 const MyPropertiesView: FC = () => {
+  const { tab = MY_PROPERTIES_TAB_STATE_RENTED } = useParams<{ tab?: string }>();
+  const activeTab = [MY_PROPERTIES_TAB_STATE_RENTED, MY_PROPERTIES_TAB_STATE_LISTED].includes(tab)
+    ? tab
+    : MY_PROPERTIES_TAB_STATE_RENTED;
+
   const sessionFilters = {
     order: sessionStorageHandler('get', 'my-properties-filters', 'order'),
     metaverse: sessionStorageHandler('get', 'general', 'metaverse'),
@@ -45,11 +49,9 @@ const MyPropertiesView: FC = () => {
   const orderFilter =
     sessionFilters.order && sessionFilters.order[`${metaverse}`] ? sessionFilters.order[`${metaverse}`] - 1 : 0;
   const history = useHistory();
-  const location = useLocation<LocationState>();
   const isGridPerFour = useMediaQuery('(max-width: 1599px)');
   const wallet = useWallet();
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState(getTabs());
   const [searchQuery, setSearchQuery] = useState('');
   const [pageSize] = useState(getPageSize());
   const [user, setUser] = useState({} as UserEntity);
@@ -80,12 +82,6 @@ const MyPropertiesView: FC = () => {
   const getLoadPercentageValue = () => {
     return (filteredLands.slice(0, slicedLands).length * 100) / filteredLands.length;
   };
-
-  function getTabs() {
-    const tab = location.state?.tab;
-    const tabsList = [MY_PROPERTIES_TAB_STATE_RENTED, MY_PROPERTIES_TAB_STATE_LENT];
-    return tab && tabsList.includes(tab) ? tab : tabsList[0];
-  }
 
   const fetchRents = async () => {
     if (!wallet.account) return;
@@ -146,9 +142,9 @@ const MyPropertiesView: FC = () => {
 
   useEffect(() => {
     if (tab === MY_PROPERTIES_TAB_STATE_RENTED) {
-      return setLands(rents);
-    } else if (tab === MY_PROPERTIES_TAB_STATE_LENT) {
-      return setLands(user?.ownerAndConsumerAssets || []);
+      setLands(rents);
+    } else if (tab === MY_PROPERTIES_TAB_STATE_LISTED) {
+      setLands(user?.ownerAndConsumerAssets || []);
     }
   }, [tab, rents]);
 
@@ -156,7 +152,7 @@ const MyPropertiesView: FC = () => {
     sortLands(sortColumn, sortDir);
     if (Object.keys(user).length) {
       if (tab === MY_PROPERTIES_TAB_STATE_RENTED) setLands(rents);
-      if (tab === MY_PROPERTIES_TAB_STATE_LENT) setLands(user?.ownerAndConsumerAssets || []);
+      if (tab === MY_PROPERTIES_TAB_STATE_LISTED) setLands(user?.ownerAndConsumerAssets || []);
     } else {
       removeLands();
     }
@@ -215,10 +211,9 @@ const MyPropertiesView: FC = () => {
 
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
-      <TabContext value={tab}>
+      <TabContext value={activeTab}>
         <Box px="var(--horizontal-padding)" pb="var(--content-container-v-padding)">
           <LandsMyPropertiesHeader
-            setTab={setTab}
             user={user}
             rentedCount={totalRents}
             lentCount={user?.ownerAndConsumerAssets?.length || 0}
@@ -271,7 +266,7 @@ const MyPropertiesView: FC = () => {
             />
           )}
 
-          {tab === MY_PROPERTIES_TAB_STATE_LENT && <ClaimHistoryTable metaverse={metaverse} />}
+          {tab === MY_PROPERTIES_TAB_STATE_LISTED && <ClaimHistoryTable metaverse={metaverse} />}
           {tab === MY_PROPERTIES_TAB_STATE_RENTED && <MyPropetiesHistoryTable metaverse={metaverse} />}
         </Box>
       </TabContext>

@@ -144,7 +144,7 @@ export const DEFAULT_TOKEN_ADDRESS = '';
 
 export const MY_PROPERTIES_TAB_STATE_RENTED = 'rented';
 
-export const MY_PROPERTIES_TAB_STATE_LENT = 'lent';
+export const MY_PROPERTIES_TAB_STATE_LISTED = 'listed';
 
 export const TWITTER_PROMOTE_TEXT = `gm. My property just became available on @landworksxyz.\n`;
 

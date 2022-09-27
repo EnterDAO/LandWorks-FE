@@ -1,10 +1,11 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 
 import { Box, Button, Modal, Typography } from 'design-system';
 import { LocationState } from 'modules/interface';
 import { USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
+import { MyPropertiesPageTab, getMyPropertiesPath } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
 import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
@@ -13,17 +14,16 @@ import { ClaimModal } from '../lands-claim-modal';
 import ListNewProperty from '../list-new-property';
 import { TabListStyled, TabStyled } from './styled';
 
-import { MY_PROPERTIES_TAB_STATE_LENT, MY_PROPERTIES_TAB_STATE_RENTED } from 'modules/land-works/constants';
+import { MY_PROPERTIES_TAB_STATE_LISTED, MY_PROPERTIES_TAB_STATE_RENTED } from 'modules/land-works/constants';
 import { THEME_COLORS } from 'themes/theme-constants';
 
 interface Props {
-  setTab: Dispatch<SetStateAction<string>>;
   rentedCount: number;
   lentCount: number;
   user?: UserEntity;
 }
 
-const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, setTab, user }) => {
+const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, user }) => {
   const wallet = useWallet();
   const history = useHistory();
   const location = useLocation<LocationState>();
@@ -32,9 +32,8 @@ const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, setTab, us
   const [showListNewModal, setShowListNewModal] = useState(false);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    history.push({ state: { tab: newValue } });
-    setTab(newValue);
+  const handleChange = (event: React.SyntheticEvent, tab: string) => {
+    history.push(getMyPropertiesPath(tab as MyPropertiesPageTab));
   };
   const [claimData, setClaimData] = useState<UserEntity>();
 
@@ -116,7 +115,7 @@ const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, setTab, us
                   </strong>
                 </>
               }
-              value={MY_PROPERTIES_TAB_STATE_LENT}
+              value={MY_PROPERTIES_TAB_STATE_LISTED}
             />
           </TabListStyled>
         </Box>
