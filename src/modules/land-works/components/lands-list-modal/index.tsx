@@ -77,7 +77,7 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
           <ShareLink
             href={`https://twitter.com/intent/tweet?text=${twitterListText(metaverseRegistry)}&url=${
               window.location.origin
-            }/property/${listedPropertyId}`}
+            }/app/property/${listedPropertyId}`}
             target="_blank"
           >
             <Icon iconElement={<TwitterIcon />} iconSize="m" />

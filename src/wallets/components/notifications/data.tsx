@@ -67,7 +67,7 @@ export const NotificationData: NotificationDataType = {
       <Button
         onClick={() => {
           window.open(
-            `https://twitter.com/intent/tweet?text=${TWITTER_PROMOTE_TEXT}&url=${window.location.origin}/property/${id}`
+            `https://twitter.com/intent/tweet?text=${TWITTER_PROMOTE_TEXT}&url=${window.location.origin}/app/property/${id}`
           );
         }}
         variant="accentblue"
