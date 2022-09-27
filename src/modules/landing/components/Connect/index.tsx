@@ -1,34 +1,28 @@
 import React from 'react';
-import { Link } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 
-import { ReactComponent as StayUp } from 'assets/img/StayUp.svg';
-import Icon from 'components/custom/icon';
+import { ReactComponent as NewsIcon } from 'assets/img/news-icon.svg';
+import Chip from 'components/custom/chip';
 import config from 'config';
-import { Button } from 'design-system';
-import {
-  Copyright,
-  IconsRaw,
-  LinksRaw,
-  StyledForm,
-  StyledInput,
-  StyledLink,
-  StyledRoot,
-} from 'modules/landing/components/Connect/styled';
-import { routes } from 'router/routes';
+import { Box, Button, Icon, Typography } from 'design-system';
+import { ArrowRightIcon } from 'design-system/icons';
+import { StyledForm, StyledInput } from 'modules/landing/components/Connect/styled';
 
 export const Connect: React.FC = () => {
-  const getYear = () => {
-    return new Date().getFullYear();
-  };
+  const isTable = useMediaQuery('(min-width: 768px)');
+
   return (
-    <div className="content-container">
-      <StyledRoot>
-        <StayUp />
-        <h2>Receive Latest Updates</h2>
-        <p>
+    <Box pt={{ xs: 10, xl: 20 }} pb={{ xs: 20, md: 8 }} className="content-container">
+      <Box maxWidth={550} mx="auto">
+        <Chip icon={<NewsIcon />}>STAY UP TO DATE</Chip>
+        <Typography variant="h4" component="p" mt={4} mb={1}>
+          Receive Latest Updates
+        </Typography>
+        <Typography mb={6}>
           We often update LandWorks with whole new features, that’s why subcribe to be the first to receive the latest
           updates.
-        </p>
+        </Typography>
+
         <StyledForm action={config.mailchimp.url} method="POST" target="_blank">
           <input type="hidden" name="u" value={config.mailchimp.u} />
           <input type="hidden" name="id" value={config.mailchimp.id} />
@@ -40,47 +34,31 @@ export const Connect: React.FC = () => {
             autoCorrect="off"
             autoComplete="off"
           />
-          <Button btnSize="medium" variant="gradient" type="submit">
-            notify me
-          </Button>
+          {isTable ? (
+            <Button btnSize="medium" variant="gradient" type="submit">
+              notify me
+            </Button>
+          ) : (
+            <Button
+              sx={{
+                minWidth: '52px !important',
+                p: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                span: {
+                  display: 'flex',
+                },
+              }}
+              btnSize="medium"
+              variant="gradient"
+              type="submit"
+            >
+              <Icon iconElement={<ArrowRightIcon />} iconSize="m" />
+            </Button>
+          )}
         </StyledForm>
-      </StyledRoot>
-
-      <IconsRaw>
-        <StyledLink href="https://github.com/EnterDAO">
-          <Icon name="png/Github" width="20" height="20" />
-        </StyledLink>
-        <StyledLink href="https://twitter.com/EnterDao">
-          <Icon name="twitter" width="20" height="20" />
-        </StyledLink>
-        <StyledLink href="https://discord.gg/7QJvEctG2G">
-          <Icon name="discord" width="20" height="20" />
-        </StyledLink>
-        <StyledLink href="https://dune.com/rakis/LandWorks">
-          <Icon name="dune" width="20" height="20" />
-        </StyledLink>
-        <StyledLink href="https://www.coingecko.com/en/coins/enterdao">
-          <Icon name="coingecko" width="20" height="20" />
-        </StyledLink>
-        <StyledLink href="https://medium.com/enterdao">
-          <Icon name="medium" width="20" height="20" />
-        </StyledLink>
-      </IconsRaw>
-
-      <LinksRaw>
-        <Link href="https://enterdao.xyz/">EnterDAO</Link>
-
-        <Link href={routes.home}>LandWorks</Link>
-
-        <Link href="https://metaportal.gg/">MetaPortal</Link>
-
-        <Link href="https://docs.landworks.xyz/">Documentation</Link>
-      </LinksRaw>
-
-      <Copyright>
-        <Icon name="png/LandWorksLogo" width="39" height="41" />
-        <div>landworks.xyz © {getYear()}. Open-sourced.</div>
-      </Copyright>
-    </div>
+      </Box>
+    </Box>
   );
 };
