@@ -1,7 +1,8 @@
 import React from 'react';
 
+import { Connect } from 'layout/components/connect';
+import Footer from 'layout/components/footer';
 import QuestionAccordion from 'layout/components/quastion-accordion/QuestionAccordion';
-import { Connect } from 'modules/landing/components/connect';
 
 import { faq } from './data';
 import { QuestionList, StyledSubtitle, StyledTitle } from './styled';
@@ -19,6 +20,7 @@ const FAQView: React.FC = () => {
         ))}
       </QuestionList>
       <Connect />
+      <Footer />
     </div>
   );
 };

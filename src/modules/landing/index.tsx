@@ -4,12 +4,12 @@ import { useLocation } from 'react-router-dom';
 import { Box } from 'design-system';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 
+import { Connect } from '../../layout/components/connect';
+import Footer from '../../layout/components/footer';
 import { About } from './components/about';
 import { Advantages } from './components/advantages';
-import { Connect } from './components/connect';
 import { Explore } from './components/explore';
 import { FAQ } from './components/faq';
-import Footer from './components/footer';
 import { Hero } from './components/hero';
 
 const LandingView: React.FC = () => {

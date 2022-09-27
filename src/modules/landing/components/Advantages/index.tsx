@@ -71,7 +71,7 @@ export const Advantages: React.FC = () => {
       <Grid container rowSpacing={{ xs: 5, lg: 8 }} columnSpacing={18} justifyContent="space-around">
         {cards.map(({ title, description }) => {
           return (
-            <Grid item xs={12} lg={6} display="flex" gap={3}>
+            <Grid key={title} item xs={12} lg={6} display="flex" gap={3}>
               <Box
                 display="flex"
                 justifyContent="center"

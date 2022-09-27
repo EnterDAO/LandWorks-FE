@@ -6,7 +6,7 @@ import Chip from 'components/custom/chip';
 import config from 'config';
 import { Box, Button, Icon, Typography } from 'design-system';
 import { ArrowRightIcon } from 'design-system/icons';
-import { StyledForm, StyledInput } from 'modules/landing/components/connect/styled';
+import { StyledForm, StyledInput } from 'layout/components/connect/styled';
 
 export const Connect: React.FC = () => {
   const isTable = useMediaQuery('(min-width: 768px)');
