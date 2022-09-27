@@ -32,11 +32,15 @@ export const QuestionList = styled(Grid)(() => ({
   margin: '90px auto',
 }));
 
-export const StyledImage = styled('img')(() => ({
+export const StyledImage = styled('img')(({ theme }) => ({
   height: 'auto',
-  width: 680,
-  transform: 'scale(1.3)',
-  margin: '80px 0',
+  width: 'calc(100% + 53px)',
+  margin: '80px -10px 80px -43px',
+
+  [theme.breakpoints.up('md')]: {
+    width: 'calc(100% + 80px)',
+    margin: '80px -10px 80px -70px',
+  },
 }));
 
 export const StyledQuestion = styled('span')(() => ({

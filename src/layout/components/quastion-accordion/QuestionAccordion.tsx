@@ -19,9 +19,9 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({ question }) => {
   const [open, setOpen] = useState(false);
   return (
     <StyledGrid item>
-      <IconWrapper onClick={() => setOpen(!open)}>{open ? <MinusIcon /> : <PlusIcon />}</IconWrapper>
       <Accordion disableGutters elevation={0} square expanded={open} onChange={() => setOpen(!open)}>
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+          <IconWrapper onClick={() => setOpen(!open)}>{open ? <MinusIcon /> : <PlusIcon />}</IconWrapper>
           <Typography>{question.question}</Typography>
         </AccordionSummary>
         <AccordionDetails>{question.answer}</AccordionDetails>
