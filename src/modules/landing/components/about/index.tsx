@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import listImgSrc from 'assets/img/about_left.svg';
 import rentImgSrc from 'assets/img/about_right.svg';
+import AdaptiveTypography from 'components/custom/adaptive-typography';
 import { Box, Button, Grid, Stack, Typography } from 'design-system';
 import { BackIcon } from 'design-system/icons';
 import { LandOwner, Rent } from 'modules/landing/components/about/styled';
@@ -24,8 +25,8 @@ const Card = ({ title, description, actionButtonLabel, background, to }: CardPro
       minHeight={{ xs: 220, xl: 300 }}
       border={`3px solid #27273A`}
       sx={{
-        backgroundColor: { xs: '#1E1E2E', xl: 'none' },
-        backgroundImage: { xs: 'unset', xl: `url(${background})` },
+        backgroundColor: '#1E1E2E',
+        backgroundImage: { xl: `url(${background})` },
         backgroundSize: 'cover',
       }}
       p={4}
@@ -33,9 +34,9 @@ const Card = ({ title, description, actionButtonLabel, background, to }: CardPro
       width={1}
       borderRadius="20px"
     >
-      <Typography variant="h2" mb={2}>
+      <AdaptiveTypography variant="h3" mb={2}>
         {title}
-      </Typography>
+      </AdaptiveTypography>
       <Typography variant="body1" maxWidth={350} mb="auto">
         {description}
       </Typography>
@@ -58,18 +59,18 @@ const Card = ({ title, description, actionButtonLabel, background, to }: CardPro
 export const About: React.FC = () => {
   return (
     <Box position="relative" pt={{ xs: 10, xl: 18 }} pb={{ xs: 10, xl: 21 }} className="about-wrapper">
-      <Box className="content-container">
+      <Box py={0} className="content-container">
         <Box textAlign="center" mb={10}>
           <Typography variant="body2" color="var(--theme-accent-color)" mb={2}>
             IS IT FOR YOU?
           </Typography>
-          <Typography variant="h2" mb={2}>
+          <AdaptiveTypography variant="h2" mb={2}>
             There are a Lot of Opportunities
-          </Typography>
+          </AdaptiveTypography>
           <Typography>You can either lend yours or rent a new Land that you want.</Typography>
         </Box>
         <Grid container rowSpacing={3} columnSpacing={8}>
-          <Grid item xs={12} lg={6} display="flex">
+          <Grid item xs={12} md={6} display="flex">
             <Card
               title={
                 <>
@@ -82,7 +83,7 @@ export const About: React.FC = () => {
               background={listImgSrc}
             />
           </Grid>
-          <Grid item xs={12} lg={6} display="flex">
+          <Grid item xs={12} md={6} display="flex">
             <Card
               title={
                 <>
