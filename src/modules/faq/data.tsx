@@ -1,4 +1,4 @@
-import { IQuestion } from 'modules/landing/components/faq/data';
+import { QuestionData } from 'layout/components/quastion-accordion/QuestionAccordion';
 
 import { CanIContact } from './components/CanIContact';
 import { CanIHave } from './components/CanIHave';
@@ -16,7 +16,7 @@ import { WhyError } from './components/WhyError';
 import { WhyHaveToPay } from './components/WhyHaveToPay';
 import { StyledQuestion } from './styled';
 
-export const faq: IQuestion[] = [
+export const faq: QuestionData[] = [
   {
     id: 0,
     question: <StyledQuestion>What is Landworks?</StyledQuestion>,

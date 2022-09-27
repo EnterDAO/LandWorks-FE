@@ -3,10 +3,10 @@ import { useHistory } from 'react-router-dom';
 
 import AdaptiveTypography from 'components/custom/adaptive-typography';
 import { Box, Button, Stack, Typography } from 'design-system';
+import QuestionAccordion from 'layout/components/quastion-accordion/QuestionAccordion';
 import { LANDING_ROUTES } from 'router/routes';
 
 import { questionData } from './data';
-import { QuestionItem } from './QuestionItem';
 
 import { GRADIENT_TEXT } from 'themes/theme-constants';
 
@@ -23,8 +23,8 @@ export const FAQ: React.FC = () => {
         </Typography>
       </AdaptiveTypography>
       <Box maxWidth={680} mb={10}>
-        {questionData.map((item) => (
-          <QuestionItem item={item} key={item.id} />
+        {questionData.map((question) => (
+          <QuestionAccordion question={question} key={question.id} />
         ))}
       </Box>
       <Button onClick={() => history.push(LANDING_ROUTES.faq)} variant="primary" btnSize="small">

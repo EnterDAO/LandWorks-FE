@@ -1,7 +1,7 @@
 import React from 'react';
 
+import QuestionAccordion from 'layout/components/quastion-accordion/QuestionAccordion';
 import { Connect } from 'modules/landing/components/connect';
-import { QuestionItem } from 'modules/landing/components/faq/QuestionItem';
 
 import { faq } from './data';
 import { QuestionList, StyledSubtitle, StyledTitle } from './styled';
@@ -14,8 +14,8 @@ const FAQView: React.FC = () => {
       </StyledTitle>
       <StyledSubtitle>You can see here the most frequently asked question about LandWorks.</StyledSubtitle>
       <QuestionList>
-        {faq.map((item) => (
-          <QuestionItem item={item} key={item.id} />
+        {faq.map((question) => (
+          <QuestionAccordion question={question} key={question.id} />
         ))}
       </QuestionList>
       <Connect />

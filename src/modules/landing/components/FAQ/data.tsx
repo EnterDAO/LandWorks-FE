@@ -1,10 +1,6 @@
-export interface IQuestion {
-  id: number;
-  question: React.ReactNode;
-  answer: React.ReactNode;
-}
+import { QuestionData } from 'layout/components/quastion-accordion/QuestionAccordion';
 
-export const questionData: IQuestion[] = [
+export const questionData: QuestionData[] = [
   {
     id: 1,
     question: <span>What is LandWorks?</span>,
