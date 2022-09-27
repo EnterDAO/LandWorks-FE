@@ -1,6 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import AdaptiveTypography from 'components/custom/adaptive-typography';
 import { Box, Button, Stack, Typography } from 'design-system';
 import { routes } from 'router/routes';
 
@@ -14,13 +15,13 @@ export const FAQ: React.FC = () => {
 
   return (
     <Stack alignItems="center" py={{ xs: 10, lg: 20 }} className="content-container">
-      <Typography textAlign="center" variant="h1" component="h2" mb={{ xs: 10, lg: 12 }}>
+      <AdaptiveTypography textAlign="center" variant="h1" component="h2" mb={{ xs: 10, lg: 12 }}>
         Frequently Asked
         <br />
         <Typography variant="inherit" sx={GRADIENT_TEXT}>
           Questions
         </Typography>
-      </Typography>
+      </AdaptiveTypography>
       <Box maxWidth={680} mb={10}>
         {questionData.map((item) => (
           <QuestionItem item={item} key={item.id} />
