@@ -26,7 +26,7 @@ const NotFoundView: FC = () => {
       <Box component="img" width={1} maxWidth={600} src={notFoundImage} />
 
       <Typography mb={2} variant="h1">
-        Error 404 ... Can’t find a page to land!
+        Error 404 ... Can't find a page to land!
       </Typography>
 
       <Typography mb={6} color={THEME_COLORS.light} variant="subtitle1">

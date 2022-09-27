@@ -8,6 +8,7 @@ export const LANDING_ROUTES = {
   sceneBuilderJoin: '/scene-builder/join',
   sceneBuilderBuilder: '/scene-builder/builder/:builderName',
   grantsProgram: '/grants-program',
+  property: '/property/:tokenId',
 };
 
 export const APP_ROOT_ROUTE = '/app';
