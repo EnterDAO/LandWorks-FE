@@ -5,7 +5,7 @@ import { getEtherscanAddressUrl } from 'web3/utils';
 import ExternalLink from 'components/custom/external-link';
 import { Button, Icon, Modal } from 'design-system';
 import { Spinner, SuccessStarIcon, TwitterIcon } from 'design-system/icons';
-import { APP_ROUTES } from 'router/routes';
+import { APP_ROUTES, getPropertyPath } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
 import { ShareLink } from './styled';
@@ -77,7 +77,7 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
           <ShareLink
             href={`https://twitter.com/intent/tweet?text=${twitterListText(metaverseRegistry)}&url=${
               window.location.origin
-            }/property/${listedPropertyId}`}
+            }/${getPropertyPath(listedPropertyId)}`}
             target="_blank"
           >
             <Icon iconElement={<TwitterIcon />} iconSize="m" />

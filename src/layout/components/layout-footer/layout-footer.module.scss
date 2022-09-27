@@ -35,7 +35,6 @@
 }
 
 .social-media-container {
-  margin-bottom: 50px;
   gap: 10px;
 
   &--link {
@@ -69,10 +68,6 @@
       opacity: 0.1
     }
   }
-
-  @media (min-width: 768px) {
-    margin-bottom: 40px;
-  }
 }
 
 .links-container {
@@ -82,7 +77,6 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  margin-bottom: 50px;
 
   a {
     color: var(--theme-grey900-color);

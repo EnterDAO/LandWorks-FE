@@ -1,13 +1,15 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
+import { Box } from 'design-system';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 
+import { Connect } from '../../layout/components/connect';
+import Footer from '../../layout/components/footer';
 import { About } from './components/about';
-import { Advantages } from './components/Advantages';
-import { Connect } from './components/Connect';
-import { Explore } from './components/Explore';
-import { FAQ } from './components/FAQ';
+import { Advantages } from './components/advantages';
+import { Explore } from './components/explore';
+import { FAQ } from './components/faq';
 import { Hero } from './components/hero';
 
 const LandingView: React.FC = () => {
@@ -39,14 +41,15 @@ const LandingView: React.FC = () => {
   }, [location.hash]);
 
   return (
-    <div ref={containerElRef} className="landing-wrapper">
+    <Box ref={containerElRef} overflow="hidden">
       <Hero />
       <About />
       <Advantages />
       <FAQ />
       <Explore />
       <Connect />
-    </div>
+      <Footer />
+    </Box>
   );
 };
 

@@ -2,14 +2,22 @@ import React, { FC } from 'react';
 
 import heroImage from 'assets/img/grandProgramHero.png';
 import { Box, Button, Grid, Typography } from 'design-system';
+import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import { GRADIENT_TEXT, THEME_COLORS } from 'themes/theme-constants';
 
 export const Hero: FC = () => {
+  const stickyOffset = useStickyOffset();
+
   return (
-    <Grid pt={{ xs: 4, lg: 20 }} pb={{ xs: 12, lg: 32 }} container display="flex">
+    <Grid
+      container
+      p={{ xs: '20px 0 60px 0', lg: '50px 0' }}
+      minHeight={`calc(100vh - ${stickyOffset.offsets.header}px)`}
+      alignItems="center"
+    >
       <Grid display="flex" alignItems="center" justifyContent="center" item xs={12} lg={6}>
-        <Box component="img" maxWidth={540} width={1} src={heroImage} />
+        <Box component="img" maxWidth={540} width={1} src={heroImage} sx={{ transform: { lg: 'scale(1.35)' } }} />
       </Grid>
       <Grid item xs={12} lg={6} order={{ lg: -1 }}>
         <Box maxWidth={540}>
