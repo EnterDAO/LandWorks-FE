@@ -17,7 +17,7 @@ import AdaptiveTypography from 'components/custom/adaptive-typography';
 import Chip from 'components/custom/chip';
 import { Box, Button, Grid, Typography } from 'design-system';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
-import { routes } from 'router/routes';
+import { APP_ROUTES } from 'router/routes';
 
 import { GRADIENT_TEXT } from 'themes/theme-constants';
 
@@ -65,7 +65,7 @@ export const Hero: React.FC = () => {
               ENTR token.
             </Typography>
 
-            <Button variant="gradient" btnSize="medium" onClick={() => history.push(routes.explore)}>
+            <Button variant="gradient" btnSize="medium" onClick={() => history.push(APP_ROUTES.explore)}>
               Explore
             </Button>
           </Grid>

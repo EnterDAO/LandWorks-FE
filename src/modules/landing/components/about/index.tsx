@@ -7,7 +7,7 @@ import AdaptiveTypography from 'components/custom/adaptive-typography';
 import { Box, Button, Grid, Stack, Typography } from 'design-system';
 import { BackIcon } from 'design-system/icons';
 import { LandOwner, Rent } from 'modules/landing/components/about/styled';
-import { routes } from 'router/routes';
+import { APP_ROUTES } from 'router/routes';
 
 interface CardProps {
   title: ReactNode;
@@ -79,7 +79,7 @@ export const About: React.FC = () => {
               }
               description="Earn passive income on your land by turning it into a productive asset."
               actionButtonLabel="List now"
-              to={routes.explore}
+              to={APP_ROUTES.explore}
               background={listImgSrc}
             />
           </Grid>
@@ -92,7 +92,7 @@ export const About: React.FC = () => {
               }
               description="Leverage the power of metaverse games by renting in-game land instead of buying."
               actionButtonLabel="Start renting"
-              to={routes.explore}
+              to={APP_ROUTES.explore}
               background={rentImgSrc}
             />
           </Grid>

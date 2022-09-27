@@ -6,7 +6,7 @@ import { ReactComponent as TrianglesIcon } from 'assets/img/triangles-icon.svg';
 import AdaptiveTypography from 'components/custom/adaptive-typography';
 import Chip from 'components/custom/chip';
 import { Box, Button, Stack, Typography } from 'design-system';
-import { routes } from 'router/routes';
+import { APP_ROUTES } from 'router/routes';
 
 export const Explore: React.FC = () => {
   const history = useHistory();
@@ -35,7 +35,7 @@ export const Explore: React.FC = () => {
           <Typography maxWidth={300} mb={9}>
             Rent a land or list your property for renting - we make it easy for you.
           </Typography>
-          <Button onClick={() => history.push(routes.explore)} btnSize="medium" variant="gradient">
+          <Button onClick={() => history.push(APP_ROUTES.explore)} btnSize="medium" variant="gradient">
             Explore
           </Button>
         </Stack>

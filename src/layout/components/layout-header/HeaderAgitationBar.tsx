@@ -4,7 +4,7 @@ import { Collapse } from '@mui/material';
 
 import { Box, Button, IconButton, Typography } from 'design-system';
 import { CloseIcon } from 'design-system/icons';
-import { routes } from 'router/routes';
+import { LANDING_ROUTES } from 'router/routes';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
@@ -44,7 +44,7 @@ export const HeaderAgitaionBar: FC = () => {
           }}
           variant="primary"
           btnSize="xsmall"
-          onClick={() => history.push(routes.grantsProgram)}
+          onClick={() => history.push(LANDING_ROUTES.grantsProgram)}
         >
           Read more
         </Button>

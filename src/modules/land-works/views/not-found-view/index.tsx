@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import notFoundImage from 'assets/404.png';
 import { Box, Button, Stack, Typography } from 'design-system';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
-import { routes } from 'router/routes';
+import { APP_ROUTES } from 'router/routes';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
@@ -33,7 +33,7 @@ const NotFoundView: FC = () => {
         Sorry, there is no sign of land here. Travel back to explore page?
       </Typography>
 
-      <Button onClick={() => history.push(routes.explore)} variant="gradient" btnSize="medium">
+      <Button onClick={() => history.push(APP_ROUTES.explore)} variant="gradient" btnSize="medium">
         Explore now
       </Button>
     </Stack>

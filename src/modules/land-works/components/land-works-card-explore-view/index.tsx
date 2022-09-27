@@ -6,6 +6,7 @@ import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { getTokenIconName } from 'helpers/helpers';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
+import { getPropertyPath } from 'router/routes';
 
 import config from '../../../../config';
 import { AssetEntity } from '../../api';
@@ -48,7 +49,7 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, onMouseOut
       onMouseOver={(e) => onMouseOver && onMouseOver(e, land)}
       onMouseOut={(e) => onMouseOut && onMouseOut(e, land)}
       id={`land-explore-card--${did}`}
-      href={`/property/${land.id}`}
+      href={getPropertyPath(land.id)}
     >
       <div>
         <div className="land-explore-image">

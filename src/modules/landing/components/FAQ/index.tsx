@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import AdaptiveTypography from 'components/custom/adaptive-typography';
 import { Box, Button, Stack, Typography } from 'design-system';
-import { routes } from 'router/routes';
+import { LANDING_ROUTES } from 'router/routes';
 
 import { questionData } from './data';
 import { QuestionItem } from './QuestionItem';
@@ -27,7 +27,7 @@ export const FAQ: React.FC = () => {
           <QuestionItem item={item} key={item.id} />
         ))}
       </Box>
-      <Button onClick={() => history.push(routes.faq)} variant="primary" btnSize="small">
+      <Button onClick={() => history.push(LANDING_ROUTES.faq)} variant="primary" btnSize="small">
         See all FAQ
       </Button>
     </Stack>

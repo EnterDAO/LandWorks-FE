@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ExternalLink from 'components/custom/external-link';
 import Icon, { IconNames } from 'components/custom/icon';
 import { Box, Typography } from 'design-system';
-import { routes } from 'router/routes';
+import { LANDING_ROUTES } from 'router/routes';
 
 import styles from './layout-footer.module.scss';
 
@@ -66,7 +66,7 @@ export const FooterNav: FC = () => {
         EnterDAO
       </ExternalLink>
 
-      <Link to={routes.home} className={styles.linkAnchor}>
+      <Link to={LANDING_ROUTES.home} className={styles.linkAnchor}>
         LandWorks
       </Link>
 

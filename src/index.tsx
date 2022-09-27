@@ -36,8 +36,6 @@ const App: FC = () => {
             <EthWeb3Provider>
               <Web3WalletProvider>
                 <KnownTokensProvider>
-                  {/* // eslint-disable-next-line 
-                  // @ts-ignore */}
                   <Router>
                     <QueryParamProvider adapter={ReactRouter5Adapter}>
                       <ScrollToTop />
