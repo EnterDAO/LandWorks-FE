@@ -1,4 +1,4 @@
-import { generatePath, useRouteMatch } from 'react-router-dom';
+import { generatePath, useParams, useRouteMatch } from 'react-router-dom';
 
 export const LANDING_ROUTES = {
   home: '/',
@@ -15,7 +15,7 @@ export const APP_ROOT_ROUTE = '/app';
 
 export const APP_ROUTES = {
   explore: APP_ROOT_ROUTE,
-  myProperties: APP_ROOT_ROUTE + '/my-properties',
+  myProperties: APP_ROOT_ROUTE + '/my-properties/:tab?',
   property: APP_ROOT_ROUTE + '/property/:tokenId',
   faq: APP_ROOT_ROUTE + LANDING_ROUTES.faq,
   sceneBuilder: APP_ROOT_ROUTE + LANDING_ROUTES.sceneBuilder,
@@ -36,5 +36,26 @@ export const useSceneBuilderBuilderPath = (builderName: string): string => {
 export const getPropertyPath = (propertyId: string): string => {
   return generatePath(APP_ROUTES.property, {
     tokenId: propertyId,
+  });
+};
+
+export const MY_PROPERTIES_ROUTE_TABS = {
+  rented: 'rented',
+  listed: 'listed',
+} as const;
+
+export type MyPropertiesRouteTabsKey = keyof typeof MY_PROPERTIES_ROUTE_TABS;
+export type MyPropertiesRouteTabsValue = typeof MY_PROPERTIES_ROUTE_TABS[MyPropertiesRouteTabsKey];
+
+export const useMyPropertiesRouteTab = (): MyPropertiesRouteTabsValue => {
+  const { tab = MY_PROPERTIES_ROUTE_TABS.rented } = useParams<{ tab?: MyPropertiesRouteTabsValue }>();
+  const activeTab = Object.values(MY_PROPERTIES_ROUTE_TABS).includes(tab) ? tab : MY_PROPERTIES_ROUTE_TABS.rented;
+
+  return activeTab;
+};
+
+export const getMyPropertiesPath = (tab?: MyPropertiesRouteTabsValue): string => {
+  return generatePath(APP_ROUTES.myProperties, {
+    tab,
   });
 };

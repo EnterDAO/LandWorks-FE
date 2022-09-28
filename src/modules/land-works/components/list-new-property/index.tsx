@@ -22,7 +22,7 @@ import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
-import { APP_ROUTES } from 'router/routes';
+import { APP_ROUTES, MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath } from 'router/routes';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
@@ -552,6 +552,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
     evaluateSelectedProperty();
   }, [selectedProperty]);
 
+  useEffect(() => {
+    setSelectedProperty(null);
+  }, [selectedMetaverse]);
+
   const onChangeMetaverse = (value: number) => {
     setSelectedMetaverse(value);
   };
@@ -899,7 +903,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               localStorage.setItem('join_prompt', 'true');
               setShowSuccessModal(false);
               closeModal && closeModal();
-              history.push(APP_ROUTES.myProperties);
+              history.push(getMyPropertiesPath(MY_PROPERTIES_ROUTE_TABS.listed));
               setJoinPromptOpen(true);
             }}
           />

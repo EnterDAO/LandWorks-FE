@@ -5,7 +5,7 @@ import { getEtherscanAddressUrl } from 'web3/utils';
 import ExternalLink from 'components/custom/external-link';
 import { Button, Icon, Modal } from 'design-system';
 import { Spinner, SuccessStarIcon, TwitterIcon } from 'design-system/icons';
-import { APP_ROUTES, getPropertyPath } from 'router/routes';
+import { MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath, getPropertyPath } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
 import { ShareLink } from './styled';
@@ -69,7 +69,7 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
             handleClose();
           }}
         >
-          <Link className="link-to-properties" to={APP_ROUTES.myProperties}>
+          <Link className="link-to-properties" to={getMyPropertiesPath(MY_PROPERTIES_ROUTE_TABS.listed)}>
             Go to my properties
           </Link>
         </Button>

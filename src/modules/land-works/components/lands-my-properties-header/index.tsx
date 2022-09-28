@@ -1,10 +1,11 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 
-import { Box, Button, Modal, Typography } from 'design-system';
+import { Box, Button, Grid, Modal, Typography } from 'design-system';
 import { LocationState } from 'modules/interface';
 import { USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
+import { MY_PROPERTIES_ROUTE_TABS, MyPropertiesRouteTabsValue, getMyPropertiesPath } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
 import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
@@ -13,17 +14,15 @@ import { ClaimModal } from '../lands-claim-modal';
 import ListNewProperty from '../list-new-property';
 import { TabListStyled, TabStyled } from './styled';
 
-import { MY_PROPERTIES_TAB_STATE_LENT, MY_PROPERTIES_TAB_STATE_RENTED } from 'modules/land-works/constants';
 import { THEME_COLORS } from 'themes/theme-constants';
 
 interface Props {
-  setTab: Dispatch<SetStateAction<string>>;
   rentedCount: number;
   lentCount: number;
-  user?: UserEntity;
+  user?: UserEntity | null;
 }
 
-const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, setTab, user }) => {
+const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, user }) => {
   const wallet = useWallet();
   const history = useHistory();
   const location = useLocation<LocationState>();
@@ -32,16 +31,16 @@ const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, setTab, us
   const [showListNewModal, setShowListNewModal] = useState(false);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    history.push({ state: { tab: newValue } });
-    setTab(newValue);
-  };
   const [claimData, setClaimData] = useState<UserEntity>();
 
   const { data: userClaimData } = useSubscription(USER_CLAIM_SUBSCRIPTION, {
     skip: wallet.account === undefined,
     variables: { id: wallet.account?.toLowerCase() },
   });
+
+  const handleChange = (event: React.SyntheticEvent, tab: string) => {
+    history.push(getMyPropertiesPath(tab as MyPropertiesRouteTabsValue));
+  };
 
   useEffect(() => {
     if (userClaimData && userClaimData.user) {
@@ -75,28 +74,22 @@ const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, setTab, us
           />
         </Box>
       )}
-      <Box
-        display="flex"
+      <Grid
+        container
         minHeight="var(--explore-subheader)"
-        gap={4}
+        spacing={4}
+        py={2}
         mb={3}
-        flexWrap="wrap"
         alignItems="center"
         boxShadow={`inset 0 -2px 0 ${THEME_COLORS.grey01}`}
       >
-        <Box flexGrow={1} order={1}>
+        <Grid item xs={12} lg={4}>
           <Typography component="h1" variant="h3">
             My Properties
           </Typography>
-        </Box>
+        </Grid>
 
-        <Box
-          flexGrow={1}
-          flexBasis={{ xs: '100%', lg: 'auto' }}
-          order={{ xs: 3, lg: 2 }}
-          display="flex"
-          justifyContent={{ lg: 'center' }}
-        >
+        <Grid item xs={6} lg={4} display="flex" justifyContent={{ lg: 'center' }}>
           <TabListStyled onChange={handleChange} aria-label="Lands tabs filter">
             <TabStyled
               label={
@@ -106,22 +99,22 @@ const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, setTab, us
                   </strong>
                 </>
               }
-              value={MY_PROPERTIES_TAB_STATE_RENTED}
+              value={MY_PROPERTIES_ROUTE_TABS.rented}
             />
             <TabStyled
               label={
                 <>
                   <strong>
-                    Lent <span>{lentCount}</span>
+                    Listed <span>{lentCount}</span>
                   </strong>
                 </>
               }
-              value={MY_PROPERTIES_TAB_STATE_LENT}
+              value={MY_PROPERTIES_ROUTE_TABS.listed}
             />
           </TabListStyled>
-        </Box>
+        </Grid>
         {hasMetamaskConnected && (
-          <Box flexGrow={1} order={{ xs: 2, lg: 3 }} display="flex" justifyContent="flex-end">
+          <Grid item xs={6} lg={4} display="flex" justifyContent="flex-end">
             <Button
               btnSize="medium"
               variant="gradient"
@@ -131,9 +124,9 @@ const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, setTab, us
               <AddIcon style={{ marginRight: '10px' }} />
               List New Property
             </Button>
-          </Box>
+          </Grid>
         )}
-      </Box>
+      </Grid>
 
       <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
         <ListNewProperty closeModal={() => setShowListNewModal(false)} />
