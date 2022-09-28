@@ -3,6 +3,7 @@ import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useQuery, useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
 
+import { ReactComponent as GradientStarIcon } from 'assets/icons/gradient-star.svg';
 import { Box, Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
@@ -24,6 +25,7 @@ import { RentModal } from '../../components/lands-rent-modal';
 import { LandsTooltip } from '../../components/lands-tooltip';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
+import FeedbackButton from './FeedbackButton';
 
 import { calculateNeighbours, twitterListText } from 'modules/land-works/utils';
 import { getNowTs } from '../../../../utils';
@@ -64,6 +66,9 @@ const SingleLandView: React.FC = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const isAdministrativeOperator = useIsAdministrativeOperator(asset.operator || '');
 
+  const isTenant = wallet.account && wallet.account.toLowerCase() === asset.operator?.toLowerCase();
+  const hasRentPassed = getNowTs() > Number(asset.lastRentEnd);
+
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
     onSubscriptionData: async ({ subscriptionData }) => {
@@ -81,10 +86,6 @@ const SingleLandView: React.FC = () => {
 
   const shouldShowWithdraw = () => {
     return isOwnerOrConsumer() && asset?.status === AssetStatus.DELISTED;
-  };
-
-  const shouldHaveWithdrawTooltip = () => {
-    return Number(asset?.lastRentEnd) > getNowTs();
   };
 
   const isOwnerOrConsumer = () => {
@@ -109,7 +110,7 @@ const SingleLandView: React.FC = () => {
   };
 
   const assetIsReadyForWithdraw = () => {
-    return asset?.status === AssetStatus.LISTED && getNowTs() > Number(asset.lastRentEnd);
+    return asset?.status === AssetStatus.LISTED && hasRentPassed;
   };
 
   const shouldShowEditButton = () => {
@@ -246,6 +247,8 @@ const SingleLandView: React.FC = () => {
   const isPromoSceneDeploymentAvailable =
     isDecentraland && asset.availability?.isCurrentlyAvailable && isOwnerOrConsumer() && !isAdministrativeOperator;
 
+  const hasFeedbackButton = isTenant && !isOwner() && !hasRentPassed;
+
   return (
     <div className="content-container single-card-section">
       <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
@@ -314,6 +317,8 @@ const SingleLandView: React.FC = () => {
         </div>
 
         <div className="right-wrapper">
+          {hasFeedbackButton && <FeedbackButton />}
+
           {isOwnerOrConsumer() && (
             <>
               <ShareLink
@@ -380,7 +385,7 @@ const SingleLandView: React.FC = () => {
           )}
           {shouldShowWithdraw() &&
             (isOwner() ? (
-              shouldHaveWithdrawTooltip() ? (
+              !hasRentPassed ? (
                 <LandsTooltip
                   placement="bottom"
                   target="There are still active/pending rents. You will be able to withdraw your property once all rents end."
