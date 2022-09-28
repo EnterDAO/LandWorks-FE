@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import { Box } from 'design-system';
-import { APP_ROUTES, LANDING_ROUTES, useIsAppRoute } from 'router/routes';
+import { APP_ROUTES, LANDING_ROUTES, getMyPropertiesPath, useIsAppRoute } from 'router/routes';
 
 import { ReactComponent as Rocket } from '../../../resources/svg/rocket-02.svg';
 import HeaderNavLink, { HeaderNavLinkProps } from './HeaderNavLink';
@@ -47,7 +47,7 @@ const appNav: HeaderNavLinkProps[] = [
     exact: true,
   },
   {
-    to: APP_ROUTES.myProperties,
+    to: getMyPropertiesPath(),
     label: 'My properties',
   },
   {
