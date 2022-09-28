@@ -142,10 +142,6 @@ export const DEFAULT_SLICED_HISTORY = 6;
 
 export const DEFAULT_TOKEN_ADDRESS = '';
 
-export const MY_PROPERTIES_TAB_STATE_RENTED = 'rented';
-
-export const MY_PROPERTIES_TAB_STATE_LISTED = 'listed';
-
 export const TWITTER_PROMOTE_TEXT = `gm. My property just became available on @landworksxyz.\n`;
 
 export const orderEnum: {

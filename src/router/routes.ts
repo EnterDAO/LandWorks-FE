@@ -1,4 +1,4 @@
-import { generatePath, useRouteMatch } from 'react-router-dom';
+import { generatePath, useParams, useRouteMatch } from 'react-router-dom';
 
 export const LANDING_ROUTES = {
   home: '/',
@@ -39,9 +39,22 @@ export const getPropertyPath = (propertyId: string): string => {
   });
 };
 
-export type MyPropertiesPageTab = 'rented' | 'listed';
+export const MY_PROPERTIES_ROUTE_TABS = {
+  rented: 'rented',
+  listed: 'listed',
+} as const;
 
-export const getMyPropertiesPath = (tab?: MyPropertiesPageTab): string => {
+export type MyPropertiesRouteTabsKey = keyof typeof MY_PROPERTIES_ROUTE_TABS;
+export type MyPropertiesRouteTabsValue = typeof MY_PROPERTIES_ROUTE_TABS[MyPropertiesRouteTabsKey];
+
+export const useMyPropertiesRouteTab = (): MyPropertiesRouteTabsValue => {
+  const { tab = MY_PROPERTIES_ROUTE_TABS.rented } = useParams<{ tab?: MyPropertiesRouteTabsValue }>();
+  const activeTab = Object.values(MY_PROPERTIES_ROUTE_TABS).includes(tab) ? tab : MY_PROPERTIES_ROUTE_TABS.rented;
+
+  return activeTab;
+};
+
+export const getMyPropertiesPath = (tab?: MyPropertiesRouteTabsValue): string => {
   return generatePath(APP_ROUTES.myProperties, {
     tab,
   });
