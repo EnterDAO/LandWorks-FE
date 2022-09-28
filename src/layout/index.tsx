@@ -75,6 +75,9 @@ const LayoutView: React.FC = () => {
                             }
                           >
                             <Switch>
+                              <Redirect from={LANDING_ROUTES.property} to={APP_ROUTES.property} />
+                              <Redirect from={LANDING_ROUTES.myProperties} to={APP_ROUTES.myProperties} />
+
                               <Route path={LANDING_ROUTES.home} exact component={LandingView} />
                               <Route
                                 path={[LANDING_ROUTES.sceneBuilder, APP_ROUTES.sceneBuilder]}
@@ -86,7 +89,6 @@ const LayoutView: React.FC = () => {
                                 component={GrantsProgram}
                               />
                               <Route path={APP_ROUTES.explore} component={LandworksView} />
-                              <Redirect from={LANDING_ROUTES.property} to={APP_ROUTES.property} />
                               <Route path="*" component={NotFoundView} />
                             </Switch>
                           </Suspense>

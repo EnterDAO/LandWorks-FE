@@ -6,6 +6,7 @@ export const LANDING_ROUTES = {
   faq: '/faq',
   sceneBuilder: '/scene-builder',
   sceneBuilderJoin: '/scene-builder/join',
+  myProperties: '/my-properties/:tab?',
   sceneBuilderBuilder: '/scene-builder/builder/:builderName',
   grantsProgram: '/grants-program',
   property: '/property/:tokenId',
@@ -15,8 +16,8 @@ export const APP_ROOT_ROUTE = '/app';
 
 export const APP_ROUTES = {
   explore: APP_ROOT_ROUTE,
-  myProperties: APP_ROOT_ROUTE + '/my-properties/:tab?',
-  property: APP_ROOT_ROUTE + '/property/:tokenId',
+  myProperties: APP_ROOT_ROUTE + LANDING_ROUTES.myProperties,
+  property: APP_ROOT_ROUTE + LANDING_ROUTES.property,
   faq: APP_ROOT_ROUTE + LANDING_ROUTES.faq,
   sceneBuilder: APP_ROOT_ROUTE + LANDING_ROUTES.sceneBuilder,
   sceneBuilderJoin: APP_ROOT_ROUTE + LANDING_ROUTES.sceneBuilderJoin,
