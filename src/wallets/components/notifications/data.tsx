@@ -1,6 +1,6 @@
 import { Button } from 'design-system';
 import { EndTimerIcon, HourglassIcon, MessageIcon, RentingNotificationIcon } from 'design-system/icons';
-import { APP_ROUTES, getPropertyPath } from 'router/routes';
+import { getMyPropertiesPath, getPropertyPath } from 'router/routes';
 
 import { NotificationDataType } from './notificationTypes';
 
@@ -22,7 +22,7 @@ export const NotificationData: NotificationDataType = {
         disabled={!hasUnclaimentRent}
         onClick={() =>
           history.push({
-            pathname: APP_ROUTES.myProperties,
+            pathname: getMyPropertiesPath(),
             state: {
               openClaimModal: true,
             },

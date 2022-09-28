@@ -22,7 +22,7 @@ import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
-import { APP_ROUTES, MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath } from 'router/routes';
+import { MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath } from 'router/routes';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
