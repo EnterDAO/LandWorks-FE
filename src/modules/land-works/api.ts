@@ -753,6 +753,9 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
               owner {
                 id
               }
+              consumer {
+                id
+              }
               metaverseAssetId
               metaverse {
                 name
