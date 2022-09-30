@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useQuery, useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
 
-import { ReactComponent as GradientStarIcon } from 'assets/icons/gradient-star.svg';
 import { Box, Button, Grid, Icon, Modal, Typography } from 'design-system';
 import { ArrowLeftIcon, ArrowRightIcon, BackIcon, TwitterIcon } from 'design-system/icons';
 import { timestampSecondsToDate } from 'helpers/helpers';
@@ -18,7 +17,15 @@ import { APP_ROUTES, getPropertyPath } from 'router/routes';
 
 import ExternalLink from '../../../../components/custom/external-link';
 import { useWallet } from '../../../../wallets/wallet';
-import { ASSET_SUBSCRIPTION, AssetEntity, OVERVIEW, fetchAdjacentDecentralandAssets, parseAsset } from '../../api';
+import {
+  ASSET_RENT_BY_TIMESTAMP,
+  ASSET_SUBSCRIPTION,
+  AssetEntity,
+  OVERVIEW,
+  RentEntity,
+  fetchAdjacentDecentralandAssets,
+  parseAsset,
+} from '../../api';
 import SingleViewLandHistory from '../../components/land-works-card-history';
 import SingleViewLandCard from '../../components/land-works-card-single-view';
 import { RentModal } from '../../components/lands-rent-modal';
@@ -38,6 +45,19 @@ const useIsAdministrativeOperator = (address: string) => {
   return data?.overview.administrativeOperator.toLowerCase() === address.toLowerCase();
 };
 
+const useAssetLastRent = (assetId?: string) => {
+  const variables = useMemo(() => {
+    return {
+      timestamp: getNowTs(),
+      assetId,
+    };
+  }, [assetId]);
+
+  const { data } = useQuery<{ rents: RentEntity[] }>(ASSET_RENT_BY_TIMESTAMP, { variables, skip: !assetId });
+
+  return data ? data.rents[0] : undefined;
+};
+
 const SingleLandView: React.FC = () => {
   const wallet = useWallet();
 
@@ -47,7 +67,6 @@ const SingleLandView: React.FC = () => {
   const location = useLocation<LocationState>();
   const { tokenId } = useParams<{ tokenId: string }>();
   const [asset, setAsset] = useState({} as AssetEntity);
-
   const [adjacentLands, setAdjacentLands] = useState([] as AssetEntity[]);
   const [paginatedNearbyLands, setPaginatedNearbyLands] = useState([] as AssetEntity[]);
   const [itemsOnPage] = useState(4);
@@ -64,10 +83,24 @@ const SingleLandView: React.FC = () => {
   const [page, setPage] = useState(1);
 
   const [showEditModal, setShowEditModal] = useState(false);
+
+  const assetLastRent = useAssetLastRent(asset.id);
   const isAdministrativeOperator = useIsAdministrativeOperator(asset.operator || '');
 
-  const isTenant = wallet.account && wallet.account.toLowerCase() === asset.operator?.toLowerCase();
-  const hasRentPassed = getNowTs() > Number(asset.lastRentEnd);
+  const isOwner = wallet.account && wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase();
+  const isConsumer = wallet.account && wallet.account.toLowerCase() === asset?.consumer?.id.toLowerCase();
+  const isOwnerOrConsumer = isOwner || isConsumer;
+  const isRenter =
+    assetLastRent && wallet.account && assetLastRent.renter.id.toLowerCase() === wallet.account.toLowerCase();
+  const isCryptovoxel = asset?.metaverse?.name === 'Voxels';
+  const isDecentraland = asset?.metaverse?.name === 'Decentraland';
+  const isPromoSceneDeploymentAvailable =
+    isDecentraland && asset.availability?.isCurrentlyAvailable && isOwnerOrConsumer && !isAdministrativeOperator;
+
+  const hasRentPassed = getNowTs() >= Number(asset.lastRentEnd);
+  const hasFeedbackButton = isRenter && !isOwner && !hasRentPassed;
+
+  const parselProperties = isCryptovoxel ? asset.attributes : asset.additionalData;
 
   useSubscription(ASSET_SUBSCRIPTION, {
     variables: { id: tokenId },
@@ -85,28 +118,20 @@ const SingleLandView: React.FC = () => {
   });
 
   const shouldShowWithdraw = () => {
-    return isOwnerOrConsumer() && asset?.status === AssetStatus.DELISTED;
-  };
-
-  const isOwnerOrConsumer = () => {
-    return (
-      wallet.account &&
-      (wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase() ||
-        wallet.account.toLowerCase() === asset?.consumer?.id.toLowerCase())
-    );
+    return isOwnerOrConsumer && asset?.status === AssetStatus.DELISTED;
   };
 
   const shouldShowDelist = () => {
-    return isOwnerOrConsumer() && asset?.status === AssetStatus.LISTED;
+    return isOwnerOrConsumer && asset?.status === AssetStatus.LISTED;
   };
 
   const shouldShowStake = () => {
-    return isOwner() && asset?.status === AssetStatus.LISTED && asset?.metaverse.name === 'Decentraland';
+    return isOwner && asset?.status === AssetStatus.LISTED && asset?.metaverse.name === 'Decentraland';
   };
 
   // Case when you do 2 in 1 Delist + Withdraw
   const isDirectWithdraw = () => {
-    return isOwner() && assetIsReadyForWithdraw();
+    return isOwner && assetIsReadyForWithdraw();
   };
 
   const assetIsReadyForWithdraw = () => {
@@ -122,12 +147,8 @@ const SingleLandView: React.FC = () => {
     );
   };
 
-  const isOwner = () => {
-    return wallet.account && wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase();
-  };
-
   const handleWithdraw = async () => {
-    if (!asset.id || !isOwner()) {
+    if (!asset.id || !isOwner) {
       return;
     }
     try {
@@ -241,14 +262,6 @@ const SingleLandView: React.FC = () => {
     title: location.state?.previousPage?.title || location.state?.title || 'Explore',
   };
 
-  const isCryptovoxel = asset?.metaverse?.name === 'Voxels';
-  const isDecentraland = asset?.metaverse?.name === 'Decentraland';
-  const parselProperties = isCryptovoxel ? asset.attributes : asset.additionalData;
-  const isPromoSceneDeploymentAvailable =
-    isDecentraland && asset.availability?.isCurrentlyAvailable && isOwnerOrConsumer() && !isAdministrativeOperator;
-
-  const hasFeedbackButton = isTenant && !isOwner() && !hasRentPassed;
-
   return (
     <div className="content-container single-card-section">
       <Modal height={'100%'} handleClose={() => setOpenDelistPrompt(false)} open={openDelistPrompt}>
@@ -319,7 +332,7 @@ const SingleLandView: React.FC = () => {
         <div className="right-wrapper">
           {hasFeedbackButton && <FeedbackButton />}
 
-          {isOwnerOrConsumer() && (
+          {isOwnerOrConsumer && (
             <>
               <ShareLink
                 className="shareLink"
@@ -335,7 +348,7 @@ const SingleLandView: React.FC = () => {
             </>
           )}
           {shouldShowDelist() &&
-            (isOwner() ? (
+            (isOwner ? (
               <Button
                 variant="tertiary"
                 btnSize="xsmall"
@@ -384,7 +397,7 @@ const SingleLandView: React.FC = () => {
             </Button>
           )}
           {shouldShowWithdraw() &&
-            (isOwner() ? (
+            (isOwner ? (
               !hasRentPassed ? (
                 <LandsTooltip
                   placement="bottom"

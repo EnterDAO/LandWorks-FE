@@ -1057,30 +1057,32 @@ export function fetchUserRents(address: string, availableOnly = false, metaverse
     });
 }
 
+export const ASSET_RENT_BY_TIMESTAMP = gql`
+  query GetAssetRentByTimestamp($assetId: String, $timestamp: BigInt) {
+    rents(where: { start_lte: $timestamp, end_gt: $timestamp, asset: $assetId }) {
+      id
+      renter {
+        id
+      }
+      start
+      operator
+      end
+      txHash
+      timestamp
+      fee
+      paymentToken {
+        id
+        name
+        symbol
+        decimals
+      }
+    }
+  }
+`;
+
 export function fetchAssetRentByTimestamp(assetId: string, timestamp: number): Promise<RentEntity> {
   return GraphClient.get({
-    query: gql`
-      query GetAssetRentByTimestamp($assetId: String, $timestamp: BigInt) {
-        rents(where: { start_lte: $timestamp, end_gt: $timestamp, asset: $assetId }) {
-          id
-          renter {
-            id
-          }
-          start
-          operator
-          end
-          txHash
-          timestamp
-          fee
-          paymentToken {
-            id
-            name
-            symbol
-            decimals
-          }
-        }
-      }
-    `,
+    query: ASSET_RENT_BY_TIMESTAMP,
     variables: {
       assetId: assetId,
       timestamp: timestamp,
