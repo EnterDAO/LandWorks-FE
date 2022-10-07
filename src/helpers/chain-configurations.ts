@@ -23,6 +23,18 @@ export const mainnetConfig: AddEthereumChainParameter = {
   blockExplorerUrls: ['https://etherscan.io'],
 };
 
+const goerliConfig: AddEthereumChainParameter = {
+  chainId: `0x${Number(5).toString(16)}`,
+  chainName: 'Ethereum Testnet Goerli',
+  nativeCurrency: {
+    name: 'Ether',
+    symbol: 'ETH',
+    decimals: 18,
+  },
+  rpcUrls: [`https://goerli.infura.io/v3/${process.env.REACT_APP_WEB3_RPC_WSS_URL}`],
+  blockExplorerUrls: ['https://goerli.etherscan.io'],
+};
+
 const rinkebyConfig: AddEthereumChainParameter = {
   chainId: `0x${Number(4).toString(16)}`,
   chainName: 'Ethereum Testnet Rinkeby',
@@ -37,5 +49,6 @@ const rinkebyConfig: AddEthereumChainParameter = {
 
 export const networks = {
   mainnet: mainnetConfig,
+  goerli: goerliConfig,
   rinkeby: rinkebyConfig,
 };
