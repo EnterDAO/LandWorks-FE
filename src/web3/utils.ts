@@ -68,6 +68,8 @@ export function getEtherscanTxUrl(txHash?: string, chainId = config.web3.chainId
         return `https://etherscan.io/tx/${txHash}`;
       case 4:
         return `https://rinkeby.etherscan.io/tx/${txHash}`;
+      case 5:
+        return `https://goerli.etherscan.io/tx/${txHash}`;
       case 42:
         return `https://kovan.etherscan.io/tx/${txHash}`;
       default:
@@ -84,6 +86,8 @@ export function getEtherscanAddressUrl(address?: string, chainId = config.web3.c
         return `https://etherscan.io/address/${address}`;
       case 4:
         return `https://rinkeby.etherscan.io/address/${address}`;
+      case 5:
+        return `https://goerli.etherscan.io/address/${address}`;
       case 42:
         return `https://kovan.etherscan.io/address/${address}`;
       default:
@@ -104,6 +108,8 @@ export function getEtherscanABIUrl(
         return `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${apiKey}`;
       case 4:
         return `https://api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${apiKey}`;
+      case 5:
+        return `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${apiKey}`;
       case 42:
         return `https://api-kovan.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${apiKey}`;
       default:

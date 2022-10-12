@@ -1,12 +1,11 @@
 import { FC, useEffect, useMemo, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import TabContext from '@mui/lab/TabContext';
 import { useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 
 import CardsGrid from 'components/custom/cards-grid';
-import { LocationState } from 'modules/interface';
 import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssetsByRents, parseUser } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
@@ -18,7 +17,7 @@ import LoadMoreLands from 'modules/land-works/components/lands-explore-load-more
 import LandsMyPropertiesHeader from 'modules/land-works/components/lands-my-properties-header';
 import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-properties-subheader';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
-import { APP_ROUTES, getPropertyPath } from 'router/routes';
+import { APP_ROUTES, MY_PROPERTIES_ROUTE_TABS, getPropertyPath, useMyPropertiesRouteTab } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
 import {
@@ -29,14 +28,10 @@ import {
 } from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
 
-import {
-  MY_PROPERTIES_TAB_STATE_LENT,
-  MY_PROPERTIES_TAB_STATE_RENTED,
-  sortColumns,
-  sortDirections,
-} from 'modules/land-works/constants';
+import { sortColumns, sortDirections } from 'modules/land-works/constants';
 
 const MyPropertiesView: FC = () => {
+  const tab = useMyPropertiesRouteTab();
   const sessionFilters = {
     order: sessionStorageHandler('get', 'my-properties-filters', 'order'),
     metaverse: sessionStorageHandler('get', 'general', 'metaverse'),
@@ -45,11 +40,9 @@ const MyPropertiesView: FC = () => {
   const orderFilter =
     sessionFilters.order && sessionFilters.order[`${metaverse}`] ? sessionFilters.order[`${metaverse}`] - 1 : 0;
   const history = useHistory();
-  const location = useLocation<LocationState>();
   const isGridPerFour = useMediaQuery('(max-width: 1599px)');
   const wallet = useWallet();
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState(getTabs());
   const [searchQuery, setSearchQuery] = useState('');
   const [pageSize] = useState(getPageSize());
   const [user, setUser] = useState({} as UserEntity);
@@ -80,12 +73,6 @@ const MyPropertiesView: FC = () => {
   const getLoadPercentageValue = () => {
     return (filteredLands.slice(0, slicedLands).length * 100) / filteredLands.length;
   };
-
-  function getTabs() {
-    const tab = location.state?.tab;
-    const tabsList = [MY_PROPERTIES_TAB_STATE_RENTED, MY_PROPERTIES_TAB_STATE_LENT];
-    return tab && tabsList.includes(tab) ? tab : tabsList[0];
-  }
 
   const fetchRents = async () => {
     if (!wallet.account) return;
@@ -145,18 +132,18 @@ const MyPropertiesView: FC = () => {
   }, [metaverse]);
 
   useEffect(() => {
-    if (tab === MY_PROPERTIES_TAB_STATE_RENTED) {
-      return setLands(rents);
-    } else if (tab === MY_PROPERTIES_TAB_STATE_LENT) {
-      return setLands(user?.ownerAndConsumerAssets || []);
+    if (tab === MY_PROPERTIES_ROUTE_TABS.rented) {
+      setLands(rents);
+    } else if (tab === MY_PROPERTIES_ROUTE_TABS.listed) {
+      setLands(user?.ownerAndConsumerAssets || []);
     }
   }, [tab, rents]);
 
   useEffect(() => {
     sortLands(sortColumn, sortDir);
     if (Object.keys(user).length) {
-      if (tab === MY_PROPERTIES_TAB_STATE_RENTED) setLands(rents);
-      if (tab === MY_PROPERTIES_TAB_STATE_LENT) setLands(user?.ownerAndConsumerAssets || []);
+      if (tab === MY_PROPERTIES_ROUTE_TABS.rented) setLands(rents);
+      if (tab === MY_PROPERTIES_ROUTE_TABS.listed) setLands(user?.ownerAndConsumerAssets || []);
     } else {
       removeLands();
     }
@@ -218,7 +205,6 @@ const MyPropertiesView: FC = () => {
       <TabContext value={tab}>
         <Box px="var(--horizontal-padding)" pb="var(--content-container-v-padding)">
           <LandsMyPropertiesHeader
-            setTab={setTab}
             user={user}
             rentedCount={totalRents}
             lentCount={user?.ownerAndConsumerAssets?.length || 0}
@@ -271,8 +257,8 @@ const MyPropertiesView: FC = () => {
             />
           )}
 
-          {tab === MY_PROPERTIES_TAB_STATE_LENT && <ClaimHistoryTable metaverse={metaverse} />}
-          {tab === MY_PROPERTIES_TAB_STATE_RENTED && <MyPropetiesHistoryTable metaverse={metaverse} />}
+          {tab === MY_PROPERTIES_ROUTE_TABS.listed && <ClaimHistoryTable metaverse={metaverse} />}
+          {tab === MY_PROPERTIES_ROUTE_TABS.rented && <MyPropetiesHistoryTable metaverse={metaverse} />}
         </Box>
       </TabContext>
     </LandsSearchQueryProvider>
