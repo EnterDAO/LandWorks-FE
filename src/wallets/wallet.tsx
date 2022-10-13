@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSessionStorage } from 'react-use-storage';
 import { Web3Provider } from '@ethersproject/providers';
+import splitbee from '@splitbee/web';
 import { UnsupportedChainIdError, Web3ReactProvider, useWeb3React } from '@web3-react/core';
 import { NoEthereumProviderError } from '@web3-react/injected-connector';
 
@@ -146,7 +147,7 @@ const WalletProvider: React.FC = (props) => {
     [web3React, connectingRef, setConnecting, setSessionProvider, disconnect]
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     (async () => {
       if (sessionProvider) {
         const walletConnector = WalletConnectors.find((c) => c.id === sessionProvider);
@@ -159,6 +160,12 @@ const WalletProvider: React.FC = (props) => {
       setInitialized(true);
     })();
   }, []);
+
+  useEffect(() => {
+    const { account } = web3React;
+
+    splitbee.user.set({ account });
+  }, [web3React.account]);
 
   const value = React.useMemo<Wallet>(
     () => ({
