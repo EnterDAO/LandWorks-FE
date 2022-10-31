@@ -20,7 +20,7 @@ const LandsBannerClaimRents: FC<Props> = ({ onButtonClick, isClaimButtonDisabled
       <DollarRibbonIcon height={40} width={40} />
       <BoxStyled>
         <h3>Rents Available to Claim</h3>
-        <span>There are unclaimed rents from your listed proporties. Claim now</span>
+        <span>There are unclaimed rents from your listed properties. Claim now</span>
       </BoxStyled>
       <Button
         variant="primary"
