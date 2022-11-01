@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
+import splitbee from '@splitbee/web';
 
 import { Box } from 'design-system';
 import { APP_ROUTES, useIsAppRoute } from 'router/routes';
@@ -16,7 +17,14 @@ const HeaderRight: FC = () => {
       {isAppRoute ? (
         <ConnectedWallet />
       ) : (
-        <HeaderActionButton onClick={() => history.push(APP_ROUTES.explore)}>EXPLORE</HeaderActionButton>
+        <HeaderActionButton
+          onClick={() => {
+            splitbee.track('Explore button click');
+            history.push(APP_ROUTES.explore);
+          }}
+        >
+          EXPLORE
+        </HeaderActionButton>
       )}
     </Box>
   );
