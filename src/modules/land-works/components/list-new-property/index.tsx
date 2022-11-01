@@ -6,8 +6,10 @@ import { useMediaQuery } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
+import listingAdImgSrc from 'assets/img/listing-ad.jpg';
 import landNotFoundImageSrc from 'assets/land-not-found.svg';
-import { Box, Button, ControlledSelect, Grid, Stack, Typography } from 'design-system';
+import Image from 'components/custom/image';
+import { Box, Button, Checkbox, ControlledSelect, Grid, Stack, Typography } from 'design-system';
 import { WarningIcon } from 'design-system/icons';
 import CustomizedSteppers from 'design-system/Stepper';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
@@ -46,6 +48,7 @@ import {
   listNotificationMessage,
   listTypes,
 } from 'modules/land-works/constants';
+import { THEME_COLORS } from 'themes/theme-constants';
 
 import './index.scss';
 
@@ -122,6 +125,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [showSignModal, setShowSignModal] = useState(false);
   const [listedPropertyId, setListedPropertyId] = useState('');
   const [landType, setLandType] = useState(0);
+  const [isLandProvidedForAdvertisement, setIsLandProvidedForAdvertisement] = useState(true);
 
   const [filteredVoxels, setFilteredVoxels] = useState<CryptoVoxelNFT[]>([]);
 
@@ -566,7 +570,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
   const showPriceInUsd = `$${usdPrice}`;
 
-  const steps = ['Choose Land', 'Rent Period', 'Rent Price', 'Summary'];
+  const steps = ['Choose Land', 'Rent Period', 'Rent Price', 'Advertise', 'Summary'];
 
   const getPropertyCountForMetaverse = () => {
     if (selectedMetaverse === 1) {
@@ -771,6 +775,57 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           </Grid>
         )}
         {activeStep === 3 && (
+          <Stack width={1} maxWidth={670} mx="auto">
+            <Box mb={10} mt={8} fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
+              4. Advertise
+            </Box>
+            <Grid container spacing={5}>
+              <Grid item xs={6}>
+                <Image
+                  width={640}
+                  height={480}
+                  src={listingAdImgSrc}
+                  sx={{
+                    width: 1,
+                    borderRadius: '8px',
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6} display="flex" alignItems="center">
+                <Typography component="p" color={THEME_COLORS.grey03} variant="caption" textAlign="left">
+                  We have partnered up with {'{placeholder}'} to allow for ads to be shown on your property until
+                  someone rents it. By allowing your plot to be used for ads, you will be rewarded additionally for each
+                  unique view that the ad gets. Rewards can be claimed every month.
+                  <br />
+                  <br />
+                  Think of it like providing your plot to the ads company until someone actually rents it!
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Typography
+              variant="button"
+              component="label"
+              display="flex"
+              alignItems="center"
+              minHeight={45}
+              borderRadius="10px"
+              bgcolor="rgba(93, 143, 240, 0.12)"
+              p="12px"
+              mt={8}
+              sx={{
+                cursor: 'pointer',
+              }}
+            >
+              <Checkbox
+                value={isLandProvidedForAdvertisement}
+                onChange={(e, value) => setIsLandProvidedForAdvertisement(value)}
+              />
+              Provide land for advertising purposes until it gets rented.
+            </Typography>
+          </Stack>
+        )}
+        {activeStep === 4 && (
           <Grid height={isSmallScreen ? '355px' : '420px'} overflow="auto" container justifyContent="center">
             <Box
               margin="30px 0 15px 0"
