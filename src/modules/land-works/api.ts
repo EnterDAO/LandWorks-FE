@@ -1284,9 +1284,9 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
       ) {
         assets(
           where: { metaverse: $metaverse, ${status ? `${status}: $lastRentEnd` : ''},
-          ${minPrice ? 'pricePerSecond_gte: $minPrice' : ''}, 
-          ${maxPrice ? 'pricePerSecond_lte: $maxPrice' : ''}, 
-          ${owner ? 'owner: $owner' : ''}, status_not: $statusNot, 
+          ${minPrice ? 'pricePerSecond_gte: $minPrice' : ''},
+          ${maxPrice ? 'pricePerSecond_lte: $maxPrice' : ''},
+          ${owner ? 'owner: $owner' : ''}, status_not: $statusNot,
           ${paymentTokenId.length > 0 ? 'paymentToken: $paymentTokenId' : ''}  }
           orderBy: $orderColumn
           orderDirection: $orderDirection
@@ -1428,6 +1428,9 @@ export async function parseUser(user: any): Promise<UserEntity> {
 }
 
 async function parseRents(rents: AssetEntity[]) {
+  if (!rents) {
+    return;
+  }
   const groupedRents = rents.reduce(
     (entryMap: Map<string, any[]>, e: any) => entryMap.set(e.asset.id, [...(entryMap.get(e.asset.id) || []), e]),
     new Map()

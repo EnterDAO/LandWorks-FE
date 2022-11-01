@@ -89,12 +89,6 @@ const MyPropertiesView: FC = () => {
     }[tab];
   }, [tab, user]);
 
-  console.log({
-    tabLands,
-    user,
-    tab,
-  });
-
   const sortedLands = landsOrder(tabLands, sortColumn, sortDir);
 
   const handleLoadMore = () => {
