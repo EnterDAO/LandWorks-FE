@@ -215,14 +215,16 @@ const MyPropertiesView: FC = () => {
           <Stack>
             {(isLoading || !!filteredLands.length) && (
               <CardsGrid>
-                {isLoading
-                  ? Array.from({ length: 6 }).map((_, i) => {
-                      return <LandCardSkeleton key={i} />;
-                    })
-                  : filteredLands.map((land) => {
+                {isLoading ? (
+                  Array.from({ length: 6 }).map((_, i) => {
+                    return <LandCardSkeleton key={i} />;
+                  })
+                ) : (
+                  <>
+                    {filteredLands.map((land) => {
                       if (landIdInWithdraw === land.metaverseAssetId) {
                         return <LandWorksLoadingCard key={land.metaverseAssetId} title="Withdraw" />;
-                      } else if (existLandIdRentInProgress && land.metaverseAssetId) {
+                      } else if (existLandIdRentInProgress === land.metaverseAssetId) {
                         return <LandWorksLoadingCard key={land.metaverseAssetId} title="Renting" />;
                       } else {
                         return (
@@ -239,9 +241,10 @@ const MyPropertiesView: FC = () => {
                         );
                       }
                     })}
-
-                {isRentingInProgress && <LandWorksLoadingCard title="Renting" />}
-                {isListingInProgress && <LandWorksLoadingCard title="Listing" />}
+                    {isRentingInProgress && <LandWorksLoadingCard title="Renting" />}
+                    {isListingInProgress && <LandWorksLoadingCard title="Listing" />}
+                  </>
+                )}
               </CardsGrid>
             )}
 
