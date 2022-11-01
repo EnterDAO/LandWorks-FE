@@ -213,7 +213,7 @@ const MyPropertiesView: FC = () => {
             onChangeMetaverse={onChangeMetaverse}
           />
           <Stack>
-            {(isLoading || !!filteredLands.length) && (
+            {(isLoading || !!filteredLands.length || isRentingInProgress || isListingInProgress) && (
               <CardsGrid>
                 {isLoading ? (
                   Array.from({ length: 6 }).map((_, i) => {
@@ -248,7 +248,9 @@ const MyPropertiesView: FC = () => {
               </CardsGrid>
             )}
 
-            {!isLoading && !tabLands.length && <LandsWorksGridEmptyState />}
+            {!isLoading && !tabLands.length && !isRentingInProgress && !isListingInProgress && (
+              <LandsWorksGridEmptyState />
+            )}
           </Stack>
 
           {tabLands.length > pageSize && (
