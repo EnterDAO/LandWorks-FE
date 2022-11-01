@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
+import splitbee from '@splitbee/web';
 
 import { Box, Button, Grid, Modal, Typography } from 'design-system';
 import { LocationState } from 'modules/interface';
@@ -119,7 +120,11 @@ const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, user }) =>
               btnSize="medium"
               variant="gradient"
               sx={{ marginLeft: 'auto', alignItems: 'center' }}
-              onClick={() => setShowListNewModal(true)}
+              onClick={() => {
+                setShowListNewModal(true);
+
+                splitbee.track('List new property button click');
+              }}
             >
               <AddIcon style={{ marginRight: '10px' }} />
               List New Property

@@ -83,25 +83,36 @@ export const filterLandsByAvailability = (lands: AssetEntity[]): AssetEntity[] =
   });
 };
 
-export const isNewLandTxInProgress = (lands: AssetEntity[], loadingLands: boolean, method: string): boolean => {
+export const isNewLandTxInProgress = (lands: AssetEntity[], method: string): boolean => {
   const idOfLandInProgress = localStorage.getItem(method);
-  const landInProgressExists = idOfLandInProgress && idOfLandInProgress.length > 0;
-  const landExistsInLands = lands.find((l) => l.metaverseAssetId === idOfLandInProgress);
-  const shouldDisplayLandCard = !!(landInProgressExists && !landExistsInLands);
-  // should lands still be loading, we don't want to assume the land in progress was loaded into
-  // lands, since lands could be an empty array until everything is loaded
-  if (loadingLands) {
+
+  if (!idOfLandInProgress) {
     return false;
   }
-  // display the land card since we know lands did load and the land progress was not found in lands
-  if (shouldDisplayLandCard) {
-    return true;
-  } else {
-    // remove the item from local storage since it does exist in lands now
-    // and return false since we know the item exists in lands now
+
+  const landExistsInLands = lands.find((land) => land.metaverseAssetId === idOfLandInProgress);
+
+  if (landExistsInLands) {
     localStorage.removeItem(method);
+
     return false;
   }
+
+  return true;
+  // // should lands still be loading, we don't want to assume the land in progress was loaded into
+  // // lands, since lands could be an empty array until everything is loaded
+  // if (loadingLands) {
+  //   return false;
+  // }
+  // // display the land card since we know lands did load and the land progress was not found in lands
+  // if (shouldDisplayLandCard) {
+  //   return true;
+  // } else {
+  //   // remove the item from local storage since it does exist in lands now
+  //   // and return false since we know the item exists in lands now
+  //   localStorage.removeItem(method);
+  //   return false;
+  // }
 };
 
 export const isExistingLandInProgress = (
@@ -125,6 +136,28 @@ export const isExistingLandInProgress = (
     localStorage.removeItem(method);
   }
   return false;
+};
+
+export const getExistingLandIdInProgress = (lands: AssetEntity[], method: string): string | undefined => {
+  const idOfLandInProgress = localStorage.getItem(method);
+
+  if (!idOfLandInProgress) {
+    return;
+  }
+
+  const landExistsInLands = lands.find((land) => land.metaverseAssetId === idOfLandInProgress);
+
+  if (landExistsInLands) {
+    if (getNowTs() <= +landExistsInLands.lastRentEnd) {
+      localStorage.removeItem(method);
+    }
+
+    return landExistsInLands.metaverseAssetId;
+  } else {
+    if (lands.length) {
+      localStorage.removeItem(method);
+    }
+  }
 };
 
 export const getOwnerOrConsumerId = (asset?: AssetEntity): string | undefined => {

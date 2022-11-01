@@ -256,7 +256,7 @@ const SingleLandView: React.FC = () => {
     return isDirectWithdraw() || shouldShowWithdraw();
   };
 
-  const isNeedRedirect = () => window.location.pathname === `/property/${asset.id}`;
+  const isNeedRedirect = () => window.location.pathname === getPropertyPath(asset.id);
   const breadcrumbs = {
     url: location.state?.previousPage?.from || location.state?.from || APP_ROUTES.explore,
     title: location.state?.previousPage?.title || location.state?.title || 'Explore',
