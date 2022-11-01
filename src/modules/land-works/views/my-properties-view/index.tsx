@@ -1,12 +1,12 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
 import TabContext from '@mui/lab/TabContext';
-import { useMediaQuery } from '@mui/material';
+import { Stack, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 
 import CardsGrid from 'components/custom/cards-grid';
-import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssetsByRents, parseUser } from 'modules/land-works/api';
+import { AssetEntity, USER_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
 import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
@@ -22,13 +22,23 @@ import { useWallet } from 'wallets/wallet';
 
 import {
   filterLandsByQuery,
-  isExistingLandInProgress,
+  getExistingLandIdInProgress,
   isNewLandTxInProgress,
   landsOrder,
 } from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
 
 import { sortColumns, sortDirections } from 'modules/land-works/constants';
+
+const initialUser: UserEntity = {
+  id: '',
+  hasUnclaimedRent: false,
+  assets: [],
+  consumerTo: [],
+  rents: [],
+  unclaimedRentAssets: [],
+  ownerAndConsumerAssets: [],
+};
 
 const MyPropertiesView: FC = () => {
   const tab = useMyPropertiesRouteTab();
@@ -42,116 +52,105 @@ const MyPropertiesView: FC = () => {
   const history = useHistory();
   const isGridPerFour = useMediaQuery('(max-width: 1599px)');
   const wallet = useWallet();
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [pageSize] = useState(getPageSize());
-  const [user, setUser] = useState({} as UserEntity);
-  const [lands, setLands] = useState<AssetEntity[]>([]);
-  const [rents, setRents] = useState<AssetEntity[]>([]);
-  const [totalRents, setTotalRents] = useState(0);
-  const [loadPercentageValue, setLoadPercentageValue] = useState(0);
+  const [user, setUser] = useState<UserEntity | null>(null);
   const [slicedLands, setSlicedLands] = useState(pageSize);
   const [sortDir, setSortDir] = useState(sortDirections[orderFilter]);
   const [sortColumn, setSortColumn] = useState(sortColumns[orderFilter]);
 
-  const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
-    skip: wallet.account === undefined,
+  const { data: rawUserData, loading } = useSubscription<{ user: UserEntity }>(USER_SUBSCRIPTION, {
+    skip: !wallet.account,
     variables: {
       id: wallet.account?.toLowerCase(),
       metaverse: String(metaverse),
     },
   });
 
+  const isParseUserLoadingRef = useRef(loading);
+  const isLoading = !!wallet.account && (loading || isParseUserLoadingRef.current);
+
+  useEffect(() => {
+    if (loading) {
+      isParseUserLoadingRef.current = true;
+    }
+  }, [loading]);
+
   function getPageSize() {
     return isGridPerFour ? 4 : 8;
   }
+
+  const tabLands: AssetEntity[] = useMemo(() => {
+    const { rents = [], ownerAndConsumerAssets = [] } = user || {};
+
+    return {
+      [MY_PROPERTIES_ROUTE_TABS.rented]: rents,
+      [MY_PROPERTIES_ROUTE_TABS.listed]: ownerAndConsumerAssets,
+    }[tab];
+  }, [tab, user]);
+
+  console.log({
+    tabLands,
+    user,
+    tab,
+  });
+
+  const sortedLands = landsOrder(tabLands, sortColumn, sortDir);
 
   const handleLoadMore = () => {
     setSlicedLands(slicedLands + getPageSize());
   };
 
-  const getLoadPercentageValue = () => {
-    return (filteredLands.slice(0, slicedLands).length * 100) / filteredLands.length;
-  };
-
-  const fetchRents = async () => {
-    if (!wallet.account) return;
-
-    setLoading(true);
-    const rents = await fetchUserAssetsByRents(wallet.account, String(metaverse));
-    setRents(rents.data || []);
-    setTotalRents(rents.meta.count);
-  };
-
-  const updateUser = async () => {
-    await fetchRents();
-    if (userData && userData.user) {
-      setUser(await parseUser(userData.user));
-    } else {
-      setUser({
-        id: '',
-        hasUnclaimedRent: false,
-        assets: [],
-        consumerTo: [],
-        rents: [],
-        unclaimedRentAssets: [],
-        ownerAndConsumerAssets: [],
-      } as UserEntity);
+  useEffect(() => {
+    if (!rawUserData) {
+      return;
     }
-  };
+
+    let isCancelled = false;
+
+    const { user } = rawUserData;
+
+    if (user) {
+      parseUser(user)
+        .then((parsedUserData) => {
+          if (!isCancelled) {
+            setUser(parsedUserData);
+
+            isParseUserLoadingRef.current = false;
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+          if (!isCancelled) {
+            setUser(initialUser);
+
+            isParseUserLoadingRef.current = false;
+          }
+        });
+    } else {
+      setUser(initialUser);
+      isParseUserLoadingRef.current = false;
+    }
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [rawUserData]);
+
   const onChangeFiltersSortDirection = (value: number) => {
     const sortIndex = Number(value) - 1;
 
     setSortDir(sortDirections[sortIndex]);
     setSortColumn(sortColumns[sortIndex]);
-    sortLands(sortColumns[sortIndex], sortDirections[sortIndex]);
-  };
-
-  const sortLands = (orderCol: string, orderDir: 'asc' | 'desc') => {
-    setLands(landsOrder(lands, orderCol, orderDir));
-    setRents(landsOrder(rents, orderCol, orderDir));
-    setLoading(false);
   };
 
   const onChangeMetaverse = (value: number) => {
     setMetaverse(value);
   };
 
-  const removeLands = () => {
-    setLands([]);
-    setRents([]);
-    setTotalRents(0);
-  };
-
-  useEffect(() => {
-    updateUser();
-  }, [userData]);
-
-  useEffect(() => {
-    fetchRents();
-  }, [metaverse]);
-
-  useEffect(() => {
-    if (tab === MY_PROPERTIES_ROUTE_TABS.rented) {
-      setLands(rents);
-    } else if (tab === MY_PROPERTIES_ROUTE_TABS.listed) {
-      setLands(user?.ownerAndConsumerAssets || []);
-    }
-  }, [tab, rents]);
-
-  useEffect(() => {
-    sortLands(sortColumn, sortDir);
-    if (Object.keys(user).length) {
-      if (tab === MY_PROPERTIES_ROUTE_TABS.rented) setLands(rents);
-      if (tab === MY_PROPERTIES_ROUTE_TABS.listed) setLands(user?.ownerAndConsumerAssets || []);
-    } else {
-      removeLands();
-    }
-  }, [user]);
-
   useEffect(() => {
     if (!wallet.account) {
-      removeLands();
+      setUser(initialUser);
     }
   }, [wallet.account]);
 
@@ -162,43 +161,42 @@ const MyPropertiesView: FC = () => {
   }, [wallet.disconnecting]);
 
   useEffect(() => {
-    if (!wallet.account || lands.length) {
-      setLoading(false);
-    }
-  }, [lands, rents]);
-
-  useEffect(() => {
-    setTimeout(() => {
+    const timeoutId = window.setTimeout(() => {
       if (!wallet.account) {
         wallet.showWalletsModal();
       }
     }, 500);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
   }, []);
 
-  useEffect(() => {
-    setLoadPercentageValue(getLoadPercentageValue());
-  }, [lands, slicedLands, searchQuery]);
+  const slicedLandsInTotal = sortedLands.slice(0, slicedLands).length;
+  const filteredLands = filterLandsByQuery(sortedLands.slice(0, slicedLands), searchQuery);
+  const loadPercentageValue = (filteredLands.slice(0, slicedLands).length * 100) / filteredLands.length;
 
-  const slicedLandsInTotal = lands.slice(0, slicedLands).length;
-  const filteredLands = filterLandsByQuery(lands.slice(0, slicedLands), searchQuery);
+  const { isRentingInProgress, isListingInProgress, landIdInWithdraw, existLandIdRentInProgress } = useMemo(() => {
+    const isListingInProgress =
+      tab === MY_PROPERTIES_ROUTE_TABS.listed && isNewLandTxInProgress(tabLands, 'LISTING_IN_PROGRESS');
+    const isRentingInProgress =
+      tab === MY_PROPERTIES_ROUTE_TABS.rented && isNewLandTxInProgress(tabLands, 'RENT_IN_PROGRESS');
+    const landIdInWithdraw =
+      tab === MY_PROPERTIES_ROUTE_TABS.listed
+        ? getExistingLandIdInProgress(tabLands, 'WITHDRAW_IN_PROGRESS')
+        : undefined;
+    const existLandIdRentInProgress =
+      tab === MY_PROPERTIES_ROUTE_TABS.rented
+        ? getExistingLandIdInProgress(tabLands, 'EXIST_RENT_IN_PROGRESS')
+        : undefined;
 
-  const { displayNewLandLoader, displayExistLandLoader } = useMemo(() => {
     return {
-      displayNewLandLoader:
-        isNewLandTxInProgress(lands, loading, 'LISTING_IN_PROGRESS') ||
-        isNewLandTxInProgress(lands, loading, 'RENT_IN_PROGRESS'),
-      displayExistLandLoader:
-        isExistingLandInProgress(lands, loading, 'WITHDRAW_IN_PROGRESS') ||
-        isExistingLandInProgress(lands, loading, 'EXIST_RENT_IN_PROGRESS'),
+      isListingInProgress,
+      isRentingInProgress,
+      landIdInWithdraw,
+      existLandIdRentInProgress,
     };
-  }, [lands, loading]);
-
-  const newPropertyTitle = () => {
-    return localStorage.getItem('LISTING_IN_PROGRESS') ? 'Listing' : 'Renting';
-  };
-  const existPropertyTitle = () => {
-    return localStorage.getItem('WITHDRAW_IN_PROGRESS') ? 'Withdraw' : 'Renting';
-  };
+  }, [tabLands, tab, isLoading]);
 
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
@@ -206,7 +204,7 @@ const MyPropertiesView: FC = () => {
         <Box px="var(--horizontal-padding)" pb="var(--content-container-v-padding)">
           <LandsMyPropertiesHeader
             user={user}
-            rentedCount={totalRents}
+            rentedCount={user?.rents?.length || 0}
             lentCount={user?.ownerAndConsumerAssets?.length || 0}
           />
           <LandsMyPropertiesSubheader
@@ -214,46 +212,48 @@ const MyPropertiesView: FC = () => {
             onChangeSortDirection={onChangeFiltersSortDirection}
             onChangeMetaverse={onChangeMetaverse}
           />
-          <Box display="flex" justifyContent="center">
-            {(loading || !!filteredLands.length) && (
+          <Stack>
+            {(isLoading || !!filteredLands.length) && (
               <CardsGrid>
-                {loading
+                {isLoading
                   ? Array.from({ length: 6 }).map((_, i) => {
                       return <LandCardSkeleton key={i} />;
                     })
                   : filteredLands.map((land) => {
-                      return displayExistLandLoader === land.metaverseAssetId ? (
-                        <LandWorksLoadingCard title={existPropertyTitle()} />
-                      ) : (
-                        <LandWorkCard
-                          key={land.id}
-                          land={land}
-                          onClick={() =>
-                            history.push({
-                              pathname: getPropertyPath(land.id),
-                              state: { from: window.location.pathname, title: 'My properties', tab },
-                            })
-                          }
-                        />
-                      );
+                      if (landIdInWithdraw === land.metaverseAssetId) {
+                        return <LandWorksLoadingCard key={land.metaverseAssetId} title="Withdraw" />;
+                      } else if (existLandIdRentInProgress && land.metaverseAssetId) {
+                        return <LandWorksLoadingCard key={land.metaverseAssetId} title="Renting" />;
+                      } else {
+                        return (
+                          <LandWorkCard
+                            key={land.id}
+                            land={land}
+                            onClick={() =>
+                              history.push({
+                                pathname: getPropertyPath(land.id),
+                                state: { from: window.location.pathname, title: 'My properties', tab },
+                              })
+                            }
+                          />
+                        );
+                      }
                     })}
+
+                {isRentingInProgress && <LandWorksLoadingCard title="Renting" />}
+                {isListingInProgress && <LandWorksLoadingCard title="Listing" />}
               </CardsGrid>
             )}
 
-            {!loading &&
-              (displayNewLandLoader ? (
-                <LandWorksLoadingCard title={newPropertyTitle()} />
-              ) : (
-                !lands.length && <LandsWorksGridEmptyState />
-              ))}
-          </Box>
+            {!isLoading && !tabLands.length && <LandsWorksGridEmptyState />}
+          </Stack>
 
-          {lands.length > pageSize && (
+          {tabLands.length > pageSize && (
             <LoadMoreLands
-              textToDisplay={`List ${slicedLandsInTotal} of ${lands.length}`}
+              textToDisplay={`List ${slicedLandsInTotal} of ${tabLands.length}`}
               handleLoadMore={handleLoadMore}
               percentageValue={loadPercentageValue}
-              disabled={slicedLandsInTotal === lands.length}
+              disabled={slicedLandsInTotal === tabLands.length}
             />
           )}
 
