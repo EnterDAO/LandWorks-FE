@@ -34,7 +34,7 @@ interface InfoAlertProps extends Omit<ComponentPropsWithoutRef<typeof InfoAlertR
 const InfoAlert: FC<InfoAlertProps> = ({ icon, title, description, action, ...otherProps }) => {
   return (
     <InfoAlertRoot {...otherProps}>
-      <Box flexShrink={0} color="primary.main">
+      <Box flexShrink={0} display="flex" color="var(--theme-blue-color)">
         {icon || <AlertTriangleIcon />}
       </Box>
 
