@@ -5,9 +5,9 @@ import BigNumber from 'bignumber.js';
 import TokenIcon from 'components/custom/token-icon';
 import { Button, Checkbox, Stack, Typography } from 'design-system';
 
-import { useClaimRewards } from './ClaimRewardsModal';
 import ClaimRewardsModalEmpty from './ClaimRewardsModalEmpty';
 import ClaimRewardsModalTotal from './ClaimRewardsModalTotal';
+import { useClaimRewards } from './ClaimRewardsProvider';
 
 import { formatBigNumber } from 'utils';
 

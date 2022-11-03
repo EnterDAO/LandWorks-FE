@@ -3,9 +3,9 @@ import BigNumber from 'bignumber.js';
 
 import { Box, Button, Stack, Typography } from 'design-system';
 
-import { useClaimRewards } from './ClaimRewardsModal';
 import ClaimRewardsModalEmpty from './ClaimRewardsModalEmpty';
 import ClaimRewardsModalTotal from './ClaimRewardsModalTotal';
+import { useClaimRewards } from './ClaimRewardsProvider';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
