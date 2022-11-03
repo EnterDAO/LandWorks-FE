@@ -1,17 +1,14 @@
-import { FC, useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-import { useSubscription } from '@apollo/client';
+import { FC, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import splitbee from '@splitbee/web';
 
-import { Box, Button, Grid, Modal, Typography } from 'design-system';
-import { LocationState } from 'modules/interface';
-import { USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
+import { Button, Grid, Modal, Typography } from 'design-system';
+import { UserEntity } from 'modules/land-works/api';
 import { MY_PROPERTIES_ROUTE_TABS, MyPropertiesRouteTabsValue, getMyPropertiesPath } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
 import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
-import LandsBannerClaimRents from '../lands-banner-claim-rents';
-import { ClaimModal } from '../lands-claim-modal';
+import LandClaimRentsAlert from '../land-claim-rents-alert';
 import ListNewProperty from '../list-new-property';
 import { TabListStyled, TabStyled } from './styled';
 
@@ -23,58 +20,22 @@ interface Props {
   user?: UserEntity | null;
 }
 
-const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, user }) => {
+const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount }) => {
   const wallet = useWallet();
   const history = useHistory();
-  const location = useLocation<LocationState>();
 
-  const [showClaimModal, setShowClaimModal] = useState(false);
   const [showListNewModal, setShowListNewModal] = useState(false);
-  const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
-
-  const [claimData, setClaimData] = useState<UserEntity>();
-
-  const { data: userClaimData } = useSubscription(USER_CLAIM_SUBSCRIPTION, {
-    skip: wallet.account === undefined,
-    variables: { id: wallet.account?.toLowerCase() },
-  });
 
   const handleChange = (event: React.SyntheticEvent, tab: string) => {
     history.push(getMyPropertiesPath(tab as MyPropertiesRouteTabsValue));
   };
 
-  useEffect(() => {
-    if (userClaimData && userClaimData.user) {
-      parseUser(userClaimData.user).then((result) => {
-        setClaimData(result);
-      });
-    } else {
-      setClaimData({} as UserEntity);
-    }
-  }, [userClaimData]);
-
-  useEffect(() => setClaimButtonDisabled(false), [user]);
   const hasMetamaskConnected = wallet.isActive && wallet.connector?.id === 'metamask';
-
-  useEffect(() => {
-    if (location.state?.openClaimModal) {
-      setShowClaimModal(true);
-      history.push({
-        state: { openClaimModal: false },
-      });
-    }
-  }, [location.state]);
 
   return (
     <>
-      {claimData?.hasUnclaimedRent && (
-        <Box>
-          <LandsBannerClaimRents
-            onButtonClick={() => setShowClaimModal(true)}
-            isClaimButtonDisabled={claimButtonDisabled}
-          />
-        </Box>
-      )}
+      <LandClaimRentsAlert />
+
       <Grid
         container
         minHeight="var(--explore-subheader)"
@@ -136,16 +97,6 @@ const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, user }) =>
       <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
         <ListNewProperty closeModal={() => setShowListNewModal(false)} />
       </Modal>
-
-      <ClaimModal
-        onSubmit={() => {
-          setClaimButtonDisabled(true);
-          setShowClaimModal(false);
-        }}
-        onCancel={() => setShowClaimModal(false)}
-        open={showClaimModal}
-        rentFees={claimData?.unclaimedRentAssets}
-      />
     </>
   );
 };
