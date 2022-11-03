@@ -11,8 +11,8 @@ export const StyledTitle = styled(Typography)(() => ({
   '& span': {
     color: 'var(--theme-primary-color)',
     background: 'linear-gradient(83.81deg, #AC2CCB -19.8%, #DD3DCB 22%, #EF9C92 100%)',
-    '-webkit-background-clip': 'text',
-    '-webkit-text-fill-color': 'transparent',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
     backgroundClip: 'text',
     textShadow: '0 0 5px #dd3dca42',
     lineHeight: '50px',
