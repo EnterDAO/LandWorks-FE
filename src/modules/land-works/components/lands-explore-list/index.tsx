@@ -46,7 +46,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   const location = useLocation<LocationState>();
   const stickyOffset = useStickyOffset();
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
-  const { searchQuery, setSearchQuery } = useLandsSearchQuery();
+  const { searchQuery } = useLandsSearchQuery();
   const { mapTiles, selectedId, setSelectedId } = useLandsMapTiles();
   const getIsMounted = useGetIsMounted();
   const timeoutIdRef = useRef<number>();
@@ -208,9 +208,6 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
         py={4}
         bgcolor="var(--theme-body-color)"
       >
-        {/* <Box mb={4}>
-          <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search by name" />
-        </Box> */}
         <StyledRow>
           <Typography variant="body2" color="#B9B9D3">
             Listed{' '}
