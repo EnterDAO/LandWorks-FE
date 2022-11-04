@@ -205,14 +205,14 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
         zIndex={2}
         px={4}
         mx={-4}
+        py={4}
         bgcolor="var(--theme-body-color)"
-        pb={4}
       >
-        <Box mb={4}>
+        {/* <Box mb={4}>
           <LandsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search by name" />
-        </Box>
+        </Box> */}
         <StyledRow>
-          <Typography variant="body2">
+          <Typography variant="body2" color="#B9B9D3">
             Listed{' '}
             <Typography component="span" variant="inherit" color={THEME_COLORS.light}>
               {filteredLands.length} properties
@@ -220,11 +220,11 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
           </Typography>
           <Stack direction="row" spacing={2}>
             <StyledButton isActive={cardsSize === 'normal'} onClick={() => setCardsSize('normal')}>
-              <Icon iconElement={<GridIcon />} iconSize="xs" />
+              <Icon iconElement={<GridIcon />} iconSize="m" />
             </StyledButton>
 
             <StyledButton isActive={cardsSize === 'compact'} onClick={() => setCardsSize('compact')}>
-              <Icon iconElement={<GridBigIcon />} iconSize="xs" />
+              <Icon iconElement={<GridBigIcon />} iconSize="m" />
             </StyledButton>
           </Stack>
         </StyledRow>

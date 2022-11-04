@@ -32,7 +32,7 @@ export const StyledButton = styled('button')(
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  
+
   p {
     margin-left: 10px;
   }
