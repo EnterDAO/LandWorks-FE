@@ -3,8 +3,10 @@ import { styled } from '@mui/system';
 
 import { Typography } from 'design-system';
 
-export const PopoverButton = styled('button')(
-  () => `
+export const PopoverButton = styled('button', { shouldForwardProp: (propName) => propName !== 'isActive' })<{
+  isActive?: boolean;
+}>(
+  ({ isActive }) => `
   width: 100%;
   min-width: 200px;
   font-size: 0.875rem;
@@ -17,10 +19,11 @@ export const PopoverButton = styled('button')(
   text-align: left;
   line-height: 1.5;
   color: var(--theme-grey900-color);
+  border-color: ${isActive ? 'var(--theme-light-color)' : 'transparent'};
+  box-shadow: ${isActive ? '0 0 4px var(--theme-light-color)' : ''};
 
   &:hover {
     background: var(--theme-grey700-color);
-    border-color: var(--theme-grey700-color);
   }
 
   &::after {

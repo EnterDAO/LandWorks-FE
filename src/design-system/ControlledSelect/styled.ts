@@ -43,7 +43,6 @@ export const StyledButton = styled('button')(
 
   &:hover {
     background: ${THEME_COLORS.grey02};
-    border-color: ${THEME_COLORS.grey02};
   }
 
   &::after {

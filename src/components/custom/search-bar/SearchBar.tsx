@@ -48,14 +48,21 @@ const SearchBar = ({ onChange, value, placeholder }: SearchBarProps) => {
       <Box
         position="absolute"
         width={1}
-        top={0}
+        top={-5}
         right={0}
+        py={1}
         overflow="hidden"
         borderRadius="10px"
         sx={{ pointerEvents: open ? 'all' : 'none' }}
       >
         <Slide in={open} direction="left" timeout={300}>
-          <Box borderRadius="10px" bgcolor="var(--theme-modal-color)" pr="52px">
+          <Box
+            borderRadius="10px"
+            bgcolor="var(--theme-modal-color)"
+            // hides glowing effect of the elements that placed under search bar when it's opened
+            boxShadow="0 -5px var(--theme-body-color), 0 5px var(--theme-body-color)"
+            pr="52px"
+          >
             <LandsSearchBar
               inputRef={inputRef}
               searchQuery={value}

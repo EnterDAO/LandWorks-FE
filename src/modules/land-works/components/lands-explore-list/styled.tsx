@@ -19,7 +19,7 @@ export const StyledButton = styled('button', { shouldForwardProp: (propName) => 
   borderRadius: '10px',
   color: isActive ? 'var(--theme-light-color)' : '#b9b9d3',
   cursor: 'pointer',
-  border: '2px solid transparent',
+  border: '1px solid transparent',
   borderColor: isActive ? 'var(--theme-light-color)' : 'transparent',
   boxShadow: isActive ? '0 0 4px white' : 'none',
   '&:hover': {

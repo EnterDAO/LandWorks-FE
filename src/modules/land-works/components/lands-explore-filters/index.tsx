@@ -1,9 +1,10 @@
 import { FC, useEffect, useState } from 'react';
-import { Collapse } from '@mui/material';
+import { Collapse, Zoom } from '@mui/material';
 
+import { ReactComponent as RoundPlusIcon } from 'assets/icons/round-plus.svg';
 import SearchBar from 'components/custom/search-bar';
 import { Box, ControlledSelect, Divider, Typography } from 'design-system';
-import { FiltersIcon, SearchIcon } from 'design-system/icons';
+import { FiltersIcon, PlusIcon, SearchIcon } from 'design-system/icons';
 import { Option } from 'modules/interface';
 import { fetchMetaverses } from 'modules/land-works/api';
 import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
@@ -40,6 +41,7 @@ const LandWorksFilters: FC<Props> = ({
   const stickyOffset = useStickyOffset();
   const orderFilter = sessionStorageHandler('get', 'explore-filters', 'order');
   const { searchQuery, setSearchQuery } = useLandsSearchQuery();
+  const [isMetaverseFiltersActive, setIsMetaverseFiltersActive] = useState(false);
 
   const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
   const [openDecentralandFiltersModal, setOpenDecentralandFilterModal] = useState(false);
@@ -118,6 +120,7 @@ const LandWorksFilters: FC<Props> = ({
 
           <Box display="flex" flexWrap="wrap" gap="12px">
             <StyledButton
+              isActive={isMetaverseFiltersActive}
               sx={{
                 width: 52,
               }}
@@ -126,6 +129,11 @@ const LandWorksFilters: FC<Props> = ({
               }
             >
               <FiltersIcon height={24} width={24} />
+              <Zoom in={isMetaverseFiltersActive}>
+                <Box position="absolute" top={-5} right={-5}>
+                  <RoundPlusIcon width={16} height={16} />
+                </Box>
+              </Zoom>
             </StyledButton>
 
             <Divider sx={{ borderColor: '#27273A' }} orientation="vertical" />
@@ -139,10 +147,12 @@ const LandWorksFilters: FC<Props> = ({
               }}
               handleSubmit={(e) => {
                 setOpenDecentralandFilterModal(false);
+                const values = Object.values(e);
+
+                setIsMetaverseFiltersActive(values.length > 1 || !values.includes('All'));
                 handleMoreFilter(e);
               }}
               open={openDecentralandFiltersModal}
-              children={<></>}
             />
             <VoxelFiltersModal
               maxHeight={maxHeight}
@@ -155,7 +165,6 @@ const LandWorksFilters: FC<Props> = ({
                 handleMoreFilter(e);
               }}
               open={openVoxelFiltersModal}
-              children={<></>}
             />
           </Box>
         </Box>
