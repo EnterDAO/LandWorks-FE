@@ -880,7 +880,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
         ) : null}
         <hr className="divider" />
 
-        {activeStep < 3 && (
+        {activeStep < 4 && (
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
             {activeStep === 0 ? (
               <Button
@@ -912,7 +912,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
             </Button>
           </Grid>
         )}
-        {activeStep === 3 && (
+        {activeStep === 4 && (
           <Grid maxHeight={'50vh'} overflow="auto" container justifyContent="space-between" mt={4}>
             <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep((prev) => prev - 1)}>
               Back
