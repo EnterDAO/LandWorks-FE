@@ -18,7 +18,7 @@ const MyPropertiesViewHeader: FC<MyPropertiesViewHeaderProps> = ({ tabs }) => {
   const activeTabId = useMyPropertiesRouteTab();
   const history = useHistory();
 
-  const handleTabChange = (event: any, tabId: string) => {
+  const handleTabChange = (event: unknown, tabId: string) => {
     history.replace({
       pathname: getMyPropertiesPath(tabId as MyPropertiesRouteTabsValue),
       search: history.location.search,

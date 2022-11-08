@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { FC, useCallback } from 'react';
 import { NumberParam, useQueryParam } from 'use-query-params';
 
 import { ControlledSelect } from 'design-system';
@@ -8,7 +8,7 @@ import { sessionStorageHandler } from 'utils';
 
 const SORT_QUERY_PARAM_KEY = 's';
 
-export const useSortQueryParam = () => {
+export const useSortQueryParam = (): readonly [number, (value: number) => void] => {
   const [sort, setSort] = useQueryParam(SORT_QUERY_PARAM_KEY, NumberParam);
   const storedSort = sessionStorageHandler('get', 'my-properties-filter', 'sort');
   const actualSort: number = sort || storedSort;
@@ -25,7 +25,7 @@ export const useSortQueryParam = () => {
   return [validSort, actualSetSort] as const;
 };
 
-const SortSelect = () => {
+const SortSelect: FC = () => {
   const [sort, setSort] = useSortQueryParam();
 
   return <ControlledSelect width="200px" value={sort} onChange={setSort} options={sortData} />;

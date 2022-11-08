@@ -23,7 +23,6 @@ import {
   StyledTableHead,
   StyledTableHeaderRow,
   StyledTableRow,
-  Title,
   UpcomingButton,
 } from './styled';
 

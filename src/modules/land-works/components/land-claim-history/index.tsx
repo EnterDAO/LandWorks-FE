@@ -20,7 +20,6 @@ import {
   StyledTableHead,
   StyledTableHeaderRow,
   StyledTableRow,
-  TypographyStyled,
 } from './styled';
 
 import { getAssetName } from '../../../../utils';

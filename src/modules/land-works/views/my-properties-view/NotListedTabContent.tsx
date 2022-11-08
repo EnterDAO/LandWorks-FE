@@ -4,7 +4,7 @@ import LandsWorksGridEmptyState from 'modules/land-works/components/land-works-g
 
 import { TabContentProps } from '.';
 
-const NotListedTabContent: FC<TabContentProps> = ({ assets, filteredAssets }) => {
+const NotListedTabContent: FC<TabContentProps> = () => {
   // TODO: add ui
   return <LandsWorksGridEmptyState />;
 };

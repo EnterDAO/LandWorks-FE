@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSubscription } from '@apollo/client';
 
+import { DecentralandNFT } from 'modules/interface';
 import { AssetEntity, USER_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 
@@ -14,7 +15,7 @@ const initialUser: UserEntity = {
   ownerAndConsumerAssets: [],
 };
 
-const useGetAccountNonListedAssetsQuery = (account: string, metaverse: string | number) => {
+const useGetAccountNonListedAssetsQuery = (account: string) => {
   const registry = useContractRegistry();
 
   const fetchAssets = useCallback(async () => {
@@ -24,8 +25,8 @@ const useGetAccountNonListedAssetsQuery = (account: string, metaverse: string | 
 
     const { landRegistryContract, estateRegistryContract, cryptoVoxelsContract } = registry;
 
-    const lands = await registry.landRegistryContract?.getUserData(account);
-    const estates = (await registry.estateRegistryContract?.getUserData(account)).filter((e: any) => e.size > 0);
+    const lands = await landRegistryContract?.getUserData(account);
+    const estates = (await estateRegistryContract?.getUserData(account)).filter((e: DecentralandNFT) => e.size > 0);
     const cryptoVoxels = await cryptoVoxelsContract?.getUserData(account);
 
     console.log('account non listed', lands, estates, cryptoVoxels);
@@ -36,7 +37,17 @@ const useGetAccountNonListedAssetsQuery = (account: string, metaverse: string | 
   }, [fetchAssets]);
 };
 
-const useGetAccountAssetsQuery = (account: string, metaverse: string | number) => {
+const useGetAccountAssetsQuery = (
+  account: string,
+  metaverse: string | number
+): {
+  isLoading: boolean;
+  data: {
+    listed: AssetEntity[];
+    rented: AssetEntity[];
+    notListed: AssetEntity[];
+  };
+} => {
   const [user, setUser] = useState<UserEntity | null>(null);
 
   const { data: rawUserData, loading } = useSubscription<{ user: UserEntity }>(USER_SUBSCRIPTION, {
@@ -50,7 +61,7 @@ const useGetAccountAssetsQuery = (account: string, metaverse: string | number) =
   const isParseUserLoadingRef = useRef(loading);
   const isLoading = !!account && (loading || isParseUserLoadingRef.current);
 
-  useGetAccountNonListedAssetsQuery(account, metaverse);
+  useGetAccountNonListedAssetsQuery(account);
 
   useEffect(() => {
     if (loading) {
