@@ -19,7 +19,7 @@ function CustomSelect(props: SelectUnstyledProps<number>) {
 
 interface ControlledSelectProps {
   onChange: (value: number) => void;
-  value: number;
+  value?: number;
   options: Option[];
   width?: string;
   disabled?: boolean;

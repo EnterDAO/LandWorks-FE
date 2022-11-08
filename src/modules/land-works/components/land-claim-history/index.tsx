@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSubscription } from '@apollo/client';
 import { Box } from '@mui/material';
 
+import { Typography } from 'design-system';
 import { EmptyIcon } from 'design-system/icons';
 import useIntersectionObserver from 'hooks/useElementOnScreen';
 import { ClaimHistory, USER_CLAIM_HISTORY_SUBSCRIPTION } from 'modules/land-works/api';
@@ -28,7 +29,7 @@ import { DEFAULT_SLICED_HISTORY } from 'modules/land-works/constants';
 import { THEME_COLORS } from 'themes/theme-constants';
 
 interface Props {
-  metaverse: string;
+  metaverse: string | number;
 }
 
 const ClaimHistoryTable: React.FC<Props> = ({ metaverse }) => {
@@ -72,10 +73,10 @@ const ClaimHistoryTable: React.FC<Props> = ({ metaverse }) => {
   }, [entry]);
 
   return (
-    <Box style={{ margin: '200px 0' }}>
-      <Box>
-        <TypographyStyled variant="h1">Claim History</TypographyStyled>
-      </Box>
+    <Box>
+      <Typography variant="h2" mb={4}>
+        Claim History
+      </Typography>
       <RootStyled>
         {' '}
         {/* This wraps the table in a container that allows a better scroll  */}
