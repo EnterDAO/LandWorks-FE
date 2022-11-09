@@ -15,8 +15,11 @@ export const StyledRoot = styled('div')(() => ({
   },
 }));
 
-export const StyledButton = styled('button')(
-  () => `
+export const StyledButton = styled('button', { shouldForwardProp: (propName) => propName !== 'isActive' })<{
+  isActive?: boolean;
+}>(
+  ({ isActive }) => `
+  position: relative;
   width: 12.5rem;
   font-size: 0.875rem;
   box-sizing: border-box;
@@ -32,19 +35,19 @@ export const StyledButton = styled('button')(
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  
+  border-color: ${isActive ? 'var(--theme-light-color)' : 'var(--theme-grey200-color)'};
+  box-shadow: ${isActive ? '0 0 4px var(--theme-light-color)' : 'none'};
+
   p {
     margin-left: 10px;
   }
 
   &:hover {
     background: var(--theme-grey700-color);
-    border-color: var(--theme-grey700-color);
   }
 
   & .Mui-disabled {
     cursor: not-allowed;
   }
-
   `
 );
