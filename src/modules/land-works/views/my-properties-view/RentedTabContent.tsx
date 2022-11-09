@@ -11,14 +11,14 @@ import { TabContentProps } from '.';
 
 import { getExistingLandIdInProgress, isNewLandTxInProgress } from 'modules/land-works/utils';
 
-const RentedTabContent: FC<TabContentProps> = ({ assets, filteredAssets }) => {
+const RentedTabContent: FC<TabContentProps> = ({ assets, totalAssets }) => {
   const history = useHistory();
   const isRentingInProgress = isNewLandTxInProgress(assets, 'RENT_IN_PROGRESS');
   const existLandIdRentInProgress = getExistingLandIdInProgress(assets, 'EXIST_RENT_IN_PROGRESS');
 
-  return assets.length > 0 || isRentingInProgress ? (
+  return totalAssets > 0 || isRentingInProgress ? (
     <CardsGrid>
-      {filteredAssets.map((asset) => {
+      {assets.map((asset) => {
         if (existLandIdRentInProgress === asset.metaverseAssetId) {
           return <LandWorksLoadingCard key={asset.metaverseAssetId} title="Renting" />;
         } else {

@@ -4,6 +4,7 @@ import splitbee from '@splitbee/web';
 
 import CardsGrid from 'components/custom/cards-grid';
 import Container from 'components/custom/container';
+import { useSearchBar } from 'components/custom/search-bar/SearchBar';
 import { Box, Button, Modal, Typography } from 'design-system';
 import { AssetEntity } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
@@ -21,9 +22,11 @@ import RentedTabContent from './RentedTabContent';
 import useGetAccountAssetsQuery from './useGetAccountAssetsQuery';
 import useSortAssets from './useSortAssets';
 
+import { filterLandsByQuery } from 'modules/land-works/utils';
+
 export interface TabContentProps {
+  totalAssets: number;
   assets: AssetEntity[];
-  filteredAssets: AssetEntity[];
 }
 
 const MyPropertiesView: FC = () => {
@@ -32,6 +35,7 @@ const MyPropertiesView: FC = () => {
   const wallet = useWallet();
   const [showListNewModal, setShowListNewModal] = useState(false);
   const [metaverse] = useMetaverseQueryParam();
+  const [search] = useSearchBar();
   const { data: accountAssets, isLoading } = useGetAccountAssetsQuery(wallet.account || '', metaverse);
   const isMetamaskConnected = wallet.isActive && wallet.connector?.id === 'metamask';
 
@@ -81,13 +85,14 @@ const MyPropertiesView: FC = () => {
         assets: accountAssets.rented,
         Component: RentedTabContent,
       },
-      {
-        id: MY_PROPERTIES_ROUTE_TABS.notListed,
-        label: 'Not listed',
-        labelEnd: accountAssets.notListed.length,
-        assets: accountAssets.notListed,
-        Component: NotListedTabContent,
-      },
+      // TODO: return when design for the not listed cards will be ready
+      // {
+      //   id: MY_PROPERTIES_ROUTE_TABS.notListed,
+      //   label: 'Not listed',
+      //   labelEnd: accountAssets.notListed.length,
+      //   assets: accountAssets.notListed,
+      //   Component: NotListedTabContent,
+      // },
     ];
   }, [accountAssets]);
 
@@ -96,9 +101,9 @@ const MyPropertiesView: FC = () => {
   const isRentedTab = activeTab.id === MY_PROPERTIES_ROUTE_TABS.rented;
   const isListedTab = activeTab.id === MY_PROPERTIES_ROUTE_TABS.listed;
 
-  const sortedAssets = useSortAssets(activeTab.assets);
-  // TODO: add filtering by search query
-  const filteredAssets = sortedAssets;
+  const filteredAssets = filterLandsByQuery(activeTab.assets, search);
+  const sortedAssets = useSortAssets(filteredAssets);
+
   const TabContent = activeTab.Component;
 
   return (
@@ -109,7 +114,7 @@ const MyPropertiesView: FC = () => {
 
       <Container sx={{ pb: 24 }}>
         <MyPropertiesViewHeader tabs={tabs} />
-        <Box display="flex" alignItems="center" justifyContent="space-between" py="18px">
+        <Box display="flex" minHeight={90} alignItems="center" justifyContent="space-between" py="18px">
           <Typography variant="body2" color="var(--theme-light-color)">
             <Typography variant="inherit" component="span" color="var(--theme-subtle-color)">
               Listed
@@ -138,7 +143,7 @@ const MyPropertiesView: FC = () => {
               })}
             </CardsGrid>
           ) : (
-            <TabContent assets={filteredAssets} filteredAssets={filteredAssets} />
+            <TabContent totalAssets={activeTab.assets.length} assets={sortedAssets} />
           )}
         </Box>
 

@@ -1,10 +1,9 @@
 import { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import SearchBar from 'components/custom/search-bar';
 import { Tab, Tabs } from 'components/styled/tab';
 import { Box, Divider, Typography } from 'design-system';
-import { SearchIcon } from 'design-system/icons';
-import { StyledButton } from 'modules/land-works/components/lands-explore-filters/styled';
 import { MyPropertiesRouteTabsValue, getMyPropertiesPath, useMyPropertiesRouteTab } from 'router/routes';
 
 import MetaverseSelect from './MetaverseSelect';
@@ -26,7 +25,7 @@ const MyPropertiesViewHeader: FC<MyPropertiesViewHeaderProps> = ({ tabs }) => {
   };
 
   return (
-    <Box py={4} width={1} boxShadow="inset 0 -2px var(--theme-modal-color)">
+    <Box py="18px" width={1} boxShadow="inset 0 -2px var(--theme-modal-color)">
       <Box position="relative" gap="12px" display="flex" flexWrap="wrap">
         <Typography
           variant="h2"
@@ -148,13 +147,7 @@ const MyPropertiesViewHeader: FC<MyPropertiesViewHeaderProps> = ({ tabs }) => {
             orientation="vertical"
           />
 
-          <StyledButton
-            sx={{
-              width: 52,
-            }}
-          >
-            <SearchIcon height={24} width={24} />
-          </StyledButton>
+          <SearchBar />
         </Box>
       </Box>
     </Box>

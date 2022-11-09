@@ -1,17 +1,15 @@
 import { FC, useEffect, useState } from 'react';
-import { Collapse, Zoom } from '@mui/material';
+import { Zoom } from '@mui/material';
 
 import { ReactComponent as RoundPlusIcon } from 'assets/icons/round-plus.svg';
 import SearchBar from 'components/custom/search-bar';
 import { Box, ControlledSelect, Divider, Typography } from 'design-system';
-import { FiltersIcon, PlusIcon, SearchIcon } from 'design-system/icons';
+import { FiltersIcon } from 'design-system/icons';
 import { Option } from 'modules/interface';
 import { fetchMetaverses } from 'modules/land-works/api';
-import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import { DecentralandFiltersModal, VoxelFiltersModal } from '../lands-explore-filters-modal';
-import LandsSearchBar from '../lands-search';
 import { PricePopover } from '../price-popover';
 import { addIconToMetaverse, landsData, sortData } from './filters-data';
 import RentStatusSelect from './rent-status-select';
@@ -40,7 +38,6 @@ const LandWorksFilters: FC<Props> = ({
 }) => {
   const stickyOffset = useStickyOffset();
   const orderFilter = sessionStorageHandler('get', 'explore-filters', 'order');
-  const { searchQuery, setSearchQuery } = useLandsSearchQuery();
   const [isMetaverseFiltersActive, setIsMetaverseFiltersActive] = useState(false);
 
   const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
@@ -83,7 +80,7 @@ const LandWorksFilters: FC<Props> = ({
       px="var(--horizontal-padding)"
       ref={stickyOffset.register('filter')}
     >
-      <Box py={4} width={1} boxShadow="inset 0 -2px var(--theme-modal-color)">
+      <Box py="18px" width={1} boxShadow="inset 0 -2px var(--theme-modal-color)">
         <Box position="relative" gap="12px" display="flex" flexWrap="wrap">
           <Typography variant="h2" component="h1" mr="auto">
             Explore
@@ -138,7 +135,7 @@ const LandWorksFilters: FC<Props> = ({
 
             <Divider sx={{ borderColor: '#27273A' }} orientation="vertical" />
 
-            <SearchBar placeholder="Search for land or owner..." onChange={setSearchQuery} value={searchQuery} />
+            <SearchBar placeholder="Search for land or owner..." />
 
             <DecentralandFiltersModal
               maxLandSize={maxLandSize}

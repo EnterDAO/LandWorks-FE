@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { Box, Slide } from '@mui/material';
+import { StringParam, useQueryParam } from 'use-query-params';
 
 import { ReactComponent as RoundClose } from 'assets/icons/round-close.svg';
 import { SearchIcon } from 'design-system/icons';
@@ -8,14 +9,19 @@ import LandsSearchBar from 'modules/land-works/components/lands-search';
 import { StyledButton } from './SearchBar.styles';
 
 interface SearchBarProps {
-  onChange: (value: string) => void;
-  value?: string;
   placeholder?: string;
 }
 
-const SearchBar = ({ onChange, value, placeholder }: SearchBarProps) => {
+export const useSearchBar = (): readonly [string, (value: string | null | undefined) => void] => {
+  const [search, setSearch] = useQueryParam('s', StringParam);
+
+  return [search || '', setSearch];
+};
+
+const SearchBar: FC<SearchBarProps> = ({ placeholder }: SearchBarProps) => {
+  const [search, setSearch] = useSearchBar();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(!!search);
 
   useEffect(() => {
     if (open) {
@@ -35,9 +41,7 @@ const SearchBar = ({ onChange, value, placeholder }: SearchBarProps) => {
     setOpen((prevOpen) => {
       const nextOpen = !prevOpen;
 
-      if (onChange) {
-        onChange('');
-      }
+      setSearch(undefined);
 
       return nextOpen;
     });
@@ -65,8 +69,8 @@ const SearchBar = ({ onChange, value, placeholder }: SearchBarProps) => {
           >
             <LandsSearchBar
               inputRef={inputRef}
-              searchQuery={value}
-              setSearchQuery={onChange}
+              searchQuery={search}
+              setSearchQuery={setSearch}
               placeholder={placeholder}
             />
           </Box>
