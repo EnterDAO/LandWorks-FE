@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js';
 import { constants } from 'ethers';
 import { getWeb3Token } from 'web3/token';
 
+import config from 'config';
 import { getCryptoVoxelsAsset, getLandImageUrl } from 'helpers/helpers';
 import { getUsdPrice } from 'providers/known-tokens-provider';
 
@@ -1686,7 +1687,7 @@ export function createAssetAdvertisement(args: {
   owner: string;
   chainId: number;
 }> {
-  return fetch('https://backend.landworks.xyz/scene', {
+  return fetch(`${config.backend.apiUrl}/scene`, {
     method: 'POST',
     body: JSON.stringify(args),
     headers: {
