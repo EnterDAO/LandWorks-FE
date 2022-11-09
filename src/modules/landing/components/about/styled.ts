@@ -49,8 +49,8 @@ export const LandOwner = styled('span')(() => ({
 export const Rent = styled('span')(() => ({
   fontSize: 'inherit',
   background: 'linear-gradient(83.81deg, #AC2CCB -19.8%, #DD3DCB 22%, #EF9C92 100%)',
-  '-webkit-background-clip': 'text',
-  '-webkit-text-fill-color': 'transparent',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
 }));
 

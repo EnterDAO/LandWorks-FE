@@ -41,7 +41,7 @@ const Modal: FC<ModalProps> = (props: ModalProps) => {
       style={{ height: height }}
     >
       <ModalBoxStyled sx={sx} style={{ width: width }}>
-        {!!title && <ModalTitleBoxStyled>{title}</ModalTitleBoxStyled>}
+        {!!title && <ModalTitleBoxStyled as="div">{title}</ModalTitleBoxStyled>}
 
         <CloseIconButtonStyled
           variant="circular"

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Countdown, { CountdownTimeDelta, zeroPad } from 'react-countdown';
 import Grid from '@mui/material/Grid';
+import splitbee from '@splitbee/web';
 import BigNumber from 'bignumber.js';
 
 import ExternalLink from 'components/custom/external-link';
@@ -119,6 +120,10 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   };
 
   const handleRent = async () => {
+    splitbee.track('Rent button click', {
+      assetId: asset?.id,
+    });
+
     if (!wallet.isActive) {
       wallet.showWalletsModal();
     } else {
