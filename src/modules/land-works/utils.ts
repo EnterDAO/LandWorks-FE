@@ -216,7 +216,7 @@ export const filterByMoreFilters = (
   metaverse: string
 ): AssetEntity[] => {
   return lands.filter((item) => {
-    return metaverse === '1' ? decentralandFilter(item, filters) : voxelsFilter(item, filters);
+    return +metaverse === 1 ? decentralandFilter(item, filters) : voxelsFilter(item, filters);
   });
 };
 

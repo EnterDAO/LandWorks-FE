@@ -251,11 +251,6 @@ const ExploreView: React.FC = () => {
             setShowCardPreview,
           }}
         >
-          <LandsExploreSubheader
-            totalLands={lastRentEnd !== '0' ? availableLands.length : filterLandsByQuery(lands, searchQuery).length}
-            hasMetamaskConnected={wallet.isActive && wallet.connector?.id === 'metamask'}
-            handleListNew={() => setShowListNewModal(true)}
-          />
           <LandsExploreFilters
             handleMoreFilter={setMoreFilters}
             onChangeSortDirection={onChangeFiltersSortDirection}
