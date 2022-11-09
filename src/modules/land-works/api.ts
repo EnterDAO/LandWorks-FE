@@ -4,6 +4,7 @@
 import { gql } from '@apollo/client';
 import BigNumber from 'bignumber.js';
 import { constants } from 'ethers';
+import { getWeb3Token } from 'web3/token';
 
 import { getCryptoVoxelsAsset, getLandImageUrl } from 'helpers/helpers';
 import { getUsdPrice } from 'providers/known-tokens-provider';
@@ -1605,4 +1606,26 @@ function parseAdditionalAttributes(data: additionalAttributes[]): any {
     parsedAttributes[fixedType] = item.value;
   });
   return parsedAttributes;
+}
+
+export function createAssetAdvertisement(args: {
+  metaverseRegistry: string;
+  metaverseAssetId: string;
+  hasAgreedForAds: boolean;
+}): Promise<{
+  id: number;
+  hasAgreedForAds: boolean;
+  metaverseRegistry: string;
+  metaverseAssetId: string;
+  owner: string;
+  chainId: number;
+}> {
+  return fetch('https://backend.landworks.xyz/scene', {
+    method: 'POST',
+    body: JSON.stringify(args),
+    headers: {
+      Authorization: `Bearer ${getWeb3Token()}`,
+      'Content-Type': 'application/json',
+    },
+  }).then((res) => res.json());
 }

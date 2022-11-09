@@ -4,6 +4,7 @@ import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
 import BigNumber from 'bignumber.js';
+import { refreshWeb3Token } from 'web3/token';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import listingAdImgSrc from 'assets/img/listing-ad.jpg';
@@ -28,7 +29,7 @@ import { MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath } from 'router/routes';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
-import { PaymentToken, fetchMetaverses, fetchTokenPayments } from '../../api';
+import { PaymentToken, createAssetAdvertisement, fetchMetaverses, fetchTokenPayments } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
 import ListingCardSkeleton from '../land-listing-skeleton';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
@@ -58,6 +59,10 @@ const MineTransactionMessage = 'Listing property...';
 interface IProps {
   closeModal?: () => void;
 }
+
+const getDefaultIsAdvertisementActive = () => !!localStorage.getItem('default-listing-modal-ads');
+const setDefaultIsAdvertisementActive = (isActive: boolean) =>
+  localStorage.setItem('default-listing-modal-ads', isActive ? '1' : '');
 
 const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const { setJoinPromptOpen } = useGeneral();
@@ -125,7 +130,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [showSignModal, setShowSignModal] = useState(false);
   const [listedPropertyId, setListedPropertyId] = useState('');
   const [landType, setLandType] = useState(0);
-  const [isLandProvidedForAdvertisement, setIsLandProvidedForAdvertisement] = useState(true);
+  const [isLandProvidedForAdvertisement, setIsLandProvidedForAdvertisement] = useState(getDefaultIsAdvertisementActive);
 
   const [filteredVoxels, setFilteredVoxels] = useState<CryptoVoxelNFT[]>([]);
 
@@ -362,7 +367,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           setListModalMessage(MineTransactionMessage);
         }
       );
+
       localStorage.setItem('LISTING_IN_PROGRESS', id);
+
       setListedPropertyId(txReceipt.events['List'].returnValues[0]);
 
       setShowApproveModal(false);
@@ -374,6 +381,18 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
       setListDisabled(false);
       showToastNotification(ToastType.Error, 'There was an error while listing the property.');
       console.log(e);
+
+      return;
+    }
+
+    try {
+      await createAssetAdvertisement({
+        hasAgreedForAds: isLandProvidedForAdvertisement,
+        metaverseRegistry: selectedProperty!.contractAddress,
+        metaverseAssetId: selectedProperty!.id,
+      });
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -537,6 +556,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   };
 
   useEffect(() => {
+    setDefaultIsAdvertisementActive(isLandProvidedForAdvertisement);
+  }, [isLandProvidedForAdvertisement]);
+
+  useEffect(() => {
     setLoading(true);
     getUserNfts();
     getPaymentTokens();
@@ -623,6 +646,24 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   useEffect(() => {
     onTypeChange();
   }, [landType]);
+
+  const handleNextButtonClick = async () => {
+    if (activeStep === 3) {
+      try {
+        await refreshWeb3Token(walletCtx?.account || '', walletCtx.provider);
+
+        setActiveStep((prev) => prev + 1);
+      } catch (e) {
+        if (e instanceof Error) {
+          showToastNotification(ToastType.Error, e.message);
+        }
+
+        console.error(e);
+      }
+    } else {
+      setActiveStep((prev) => prev + 1);
+    }
+  };
 
   const properties = selectedMetaverse === 1 ? filteredDecentralandProperties : filteredVoxels;
 
@@ -818,7 +859,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               }}
             >
               <Checkbox
-                value={isLandProvidedForAdvertisement}
+                checked={isLandProvidedForAdvertisement}
                 onChange={(e, value) => setIsLandProvidedForAdvertisement(value)}
               />
               Provide land for advertising purposes until it gets rented.
@@ -906,7 +947,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               disabled={selectedProperty === null || (activeStep === 2 && Boolean(priceError.length))}
               variant="gradient"
               btnSize="medium"
-              onClick={() => setActiveStep((prev) => prev + 1)}
+              onClick={handleNextButtonClick}
             >
               Next Step
             </Button>
