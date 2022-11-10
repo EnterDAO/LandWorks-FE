@@ -1,6 +1,5 @@
 import { Ref } from 'react';
 
-import { ReactComponent as CloseIcon } from 'resources/svg/close.svg';
 import { ReactComponent as SearchIcon } from 'resources/svg/searchbar.svg';
 
 import './index.scss';

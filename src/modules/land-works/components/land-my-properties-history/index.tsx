@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { uniqueId } from 'lodash';
 
+import { Typography } from 'design-system';
 import { EmptyIcon } from 'design-system/icons';
 import useIntersectionObserver from 'hooks/useElementOnScreen';
 import { RentEntity, fetchUserRents } from 'modules/land-works/api';
@@ -22,7 +23,6 @@ import {
   StyledTableHead,
   StyledTableHeaderRow,
   StyledTableRow,
-  Title,
   UpcomingButton,
 } from './styled';
 
@@ -31,7 +31,7 @@ import { getAssetName, getNowTs } from '../../../../utils';
 import { DEFAULT_SLICED_HISTORY } from 'modules/land-works/constants';
 
 interface Props {
-  metaverse: string;
+  metaverse: string | number;
 }
 
 const MyPropetiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
@@ -91,8 +91,10 @@ const MyPropetiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
   };
 
   return (
-    <Box style={{ margin: '200px 0' }}>
-      <Title>Rent History</Title>
+    <Box>
+      <Typography variant="h2" mb={4}>
+        Rent History
+      </Typography>
       <RootStyled>
         {/* This wraps the table in a container that allows a better scroll  */}
         <StyledPaper>

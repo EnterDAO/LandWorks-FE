@@ -860,16 +860,18 @@ export function fetchTokenPayments(): Promise<PaymentToken[]> {
     });
 }
 
+export const GET_METAVERSES_QUERY = gql`
+  {
+    metaverses {
+      id
+      name
+    }
+  }
+`;
+
 export function fetchMetaverses() {
   return GraphClient.get({
-    query: gql`
-      {
-        metaverses {
-          id
-          name
-        }
-      }
-    `,
+    query: GET_METAVERSES_QUERY,
   })
     .then(async (response) => {
       return response.data.metaverses.map((meta: any) => {
@@ -1028,7 +1030,7 @@ export function fetchUserFirstRentByTimestamp(
     });
 }
 
-export function fetchUserRents(address: string, availableOnly = false, metaverse: string): Promise<any> {
+export function fetchUserRents(address: string, availableOnly = false, metaverse: string | number): Promise<any> {
   const now = getNowTs();
   return GraphClient.get({
     query: gql`

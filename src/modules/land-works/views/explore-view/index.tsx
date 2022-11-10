@@ -10,13 +10,11 @@ import LandsExploreFilters from 'modules/land-works/components/lands-explore-fil
 import { statusData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import { useRentStatusQueryParam } from 'modules/land-works/components/lands-explore-filters/rent-status-select';
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
-import LandsExploreSubheader from 'modules/land-works/components/lands-explore-subheader';
 import ListNewProperty from 'modules/land-works/components/list-new-property';
 import usePriceQueryParams from 'modules/land-works/components/price-popover/usePriceQueryParams';
 import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-tile';
 import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
-import { useWallet } from 'wallets/wallet';
 
 import {
   AssetEntity,
@@ -29,8 +27,6 @@ import ExploreMap from './ExploreMap';
 
 import {
   filterByMoreFilters,
-  filterLandsByAvailability,
-  filterLandsByQuery,
   getAllLandsCoordinates,
   getMaxArea,
   getMaxHeight,
@@ -80,8 +76,6 @@ const usePaymentTokens = () => {
 };
 
 const ExploreView: React.FC = () => {
-  const wallet = useWallet();
-
   const sessionFilters = {
     order: sessionStorageHandler('get', 'explore-filters', 'order'),
     owner: sessionStorageHandler('get', 'explore-filters', 'owner'),
@@ -137,7 +131,7 @@ const ExploreView: React.FC = () => {
 
   const [showListNewModal, setShowListNewModal] = useState(false);
 
-  const availableLands = filterLandsByAvailability(filterLandsByQuery(lands, searchQuery));
+  // const availableLands = filterLandsByAvailability(filterLandsByQuery(lands, searchQuery));
 
   const setClickedLandId = (x: number | string, y?: number | string | undefined) => {
     if (x && y) {
