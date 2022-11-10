@@ -97,6 +97,7 @@ const LandWorksFilters: FC<Props> = ({
               order: 1,
               '& > *': {
                 flex: '1 1 200px',
+                minWidth: 200,
               },
               '@media (min-width: 1260px)': {
                 width: 'auto',

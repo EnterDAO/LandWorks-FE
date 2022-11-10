@@ -92,6 +92,9 @@ const config = {
     baseUrl: String(process.env.REACT_APP_NOTION_BASE_URL),
     databaseId: String(process.env.REACT_APP_NOTION_DATABASE_ID),
   },
+  backend: {
+    apiUrl: process.env.REACT_APP_LANDWORKS_API_URL,
+  },
 };
 
 export const ENTR_MARKET_LINK = `https://app.sushi.com/swap?inputCurrency=${config.tokens.usdc}&outputCurrency=${config.tokens.entr}`;

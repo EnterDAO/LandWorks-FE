@@ -38,7 +38,6 @@ export const StyledButton = styled('button')(
   text-align: left;
   line-height: 1.5;
   width: 100%;
-  min-width: 200px;
   color: ${THEME_COLORS.light};
 
   &:hover {
