@@ -124,5 +124,6 @@ export const StyledOption = styled(OptionUnstyled)(
 );
 
 export const StyledPopper = styled(PopperUnstyled)`
-  z-index: 1;
+  position: relative;
+  z-index: 2;
 `;

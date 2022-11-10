@@ -4,10 +4,14 @@ import { Box, Typography } from 'design-system';
 import { ReactComponent as CrossIcon } from 'resources/svg/cross.svg';
 
 export const RootStyled = styled(Box)(() => ({
-  display: 'block',
+  display: 'flex',
+  flexDirection: 'column',
+  alignSelf: 'center',
+  alignItems: 'center',
+  justifyContent: 'center',
   width: '100%',
   textAlign: 'center',
-  paddingTop: '60px',
+  height: '100%',
 }));
 
 export const TypographyStyled = styled(Typography)<TypographyProps>(() => ({

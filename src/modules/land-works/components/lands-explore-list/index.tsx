@@ -3,6 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import useDebounce from '@rooks/use-debounce';
 
 import CardsGrid from 'components/custom/cards-grid';
+import { useSearchBar } from 'components/custom/search-bar/SearchBar';
 import { Box, Icon, Stack, Typography } from 'design-system';
 import { GridBigIcon, GridIcon } from 'design-system/icons';
 import useGetIsMounted from 'hooks/useGetIsMounted';
@@ -11,10 +12,8 @@ import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import LoadMoreLands from 'modules/land-works/components/lands-explore-load-more';
-import LandsSearchBar from 'modules/land-works/components/lands-search';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
-import { useLandsSearchQuery } from 'modules/land-works/providers/lands-search-query';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 import { getPropertyPath } from 'router/routes';
 
@@ -46,7 +45,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   const location = useLocation<LocationState>();
   const stickyOffset = useStickyOffset();
   const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
-  const { searchQuery } = useLandsSearchQuery();
+  const [searchQuery] = useSearchBar();
   const { mapTiles, selectedId, setSelectedId } = useLandsMapTiles();
   const getIsMounted = useGetIsMounted();
   const timeoutIdRef = useRef<number>();
