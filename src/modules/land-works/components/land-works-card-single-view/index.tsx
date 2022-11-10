@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Countdown, { CountdownTimeDelta, zeroPad } from 'react-countdown';
 import Grid from '@mui/material/Grid';
 import splitbee from '@splitbee/web';
@@ -9,7 +9,7 @@ import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import config from 'config';
-import { Box, Button, Stack, StyledSwitch, Tooltip, Typography } from 'design-system';
+import { Box, Button, Stack, Tooltip, Typography } from 'design-system';
 import { CopyIcon, MessageIcon } from 'design-system/icons';
 import { getENSName, getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
@@ -22,8 +22,7 @@ import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
 import SingleLandCardSkeleton from '../land-single-card-loader';
 import LandsMapOverlay from '../lands-map-overlay';
-import DisableAdsModal from './DisableAdsModal';
-import EnableAdsModal from './EnableAdsModal';
+import AdsToggle from './AdsToggle';
 import { StyledButton } from './styled';
 
 import { getNowTs } from '../../../../utils';
@@ -62,9 +61,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const [loading, setLoading] = useState(true);
   const [openOwnerTooltip, setOpenOwnerTooltip] = useState(false);
   const [openOperatorTooltip, setOpenOperatorTooltip] = useState(false);
-  const [isAdvertisementAllowed, setIsAdvertisementAllowed] = useState(false);
-  const [isAllowAdvertiseModalOpen, setIsAllowAdvertiseModalOpen] = useState(false);
-  const [isDisableAdvertiseModalOpen, setIsDisableAdvertiseModalOpen] = useState(false);
 
   const isOwnerOrConsumer = () => {
     return (
@@ -220,123 +216,102 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
       });
   }, [asset]);
 
-  const handleAllowAdvertisingSwitchChange = () => {
-    if (isAdvertisementAllowed) {
-      setIsDisableAdvertiseModalOpen(true);
-    } else {
-      setIsAllowAdvertiseModalOpen(true);
+  const isOwner = wallet.account && wallet.account?.toLowerCase() === asset?.owner?.id.toLowerCase();
+
+  const details = useMemo(() => {
+    const _details = [
+      {
+        label: 'Owned by',
+        content: (
+          <Box display="flex" alignItems="center">
+            <ExternalLink href={getEtherscanAddressUrl(ownerOrConsumer)} className="land-owner-address">
+              {ens && ens !== ownerOrConsumer ? ens : shortenAddr(ownerOrConsumer, 25, 4)}
+            </ExternalLink>
+
+            <Box display="flex">
+              <Tooltip
+                open={openOwnerTooltip}
+                PopperProps={{
+                  disablePortal: true,
+                }}
+                disableFocusListener
+                disableHoverListener
+                disableTouchListener
+                placement="right"
+                title={'Copied!'}
+              >
+                <StyledButton onClick={() => hadleTooltip(`${ens || ownerOrConsumer}`, 'owner')}>
+                  <CopyIcon />
+                </StyledButton>
+              </Tooltip>
+              <Tooltip disableFocusListener placement="right" title={'Contact owner via Blockscan'}>
+                <div>
+                  <StyledButton
+                    disabled={ownerOrConsumer?.toLowerCase() == wallet.account?.toLowerCase()}
+                    onClick={() => openChat(ens || ownerOrConsumer)}
+                  >
+                    <MessageIcon />
+                  </StyledButton>
+                </div>
+              </Tooltip>
+            </Box>
+          </Box>
+        ),
+      },
+      {
+        label: 'Current Operator',
+        tooltip: 'The operator currently set and authorised to deploy scenes and experiences in the metaverse.',
+        content: (
+          <Box display="flex" alignItems="center">
+            <ExternalLink href={getEtherscanAddressUrl(asset?.operator)} className="land-operator-address">
+              {ensOperator && ensOperator !== asset?.operator ? ensOperator : shortenAddr(asset?.operator, 25, 4)}
+            </ExternalLink>
+            <Box display="flex">
+              <Tooltip
+                open={openOperatorTooltip}
+                PopperProps={{
+                  disablePortal: true,
+                }}
+                disableFocusListener
+                disableHoverListener
+                disableTouchListener
+                placement="right"
+                title={'Copied!'}
+              >
+                <StyledButton onClick={() => hadleTooltip(`${ensOperator || asset?.operator}`, 'operator')}>
+                  <CopyIcon />
+                </StyledButton>
+              </Tooltip>
+              <Tooltip disableFocusListener placement="right" title={'Contact operator via Blockscan'}>
+                <div>
+                  <StyledButton disabled={asset?.operator == DEFAULT_ADDRESS} onClick={() => openChat(asset?.operator)}>
+                    <MessageIcon />
+                  </StyledButton>
+                </div>
+              </Tooltip>
+            </Box>
+          </Box>
+        ),
+      },
+    ];
+
+    const isDecentraland = asset?.metaverse?.name === 'Decentraland';
+
+    if (isOwner && isDecentraland) {
+      _details.push({
+        label: 'Allow advertising',
+        tooltip: 'tooltip',
+        content: <AdsToggle asset={asset} />,
+      });
     }
-  };
 
-  const details = [
-    {
-      label: 'Owned by',
-      content: (
-        <Box display="flex" alignItems="center">
-          <ExternalLink href={getEtherscanAddressUrl(ownerOrConsumer)} className="land-owner-address">
-            {ens && ens !== ownerOrConsumer ? ens : shortenAddr(ownerOrConsumer, 25, 4)}
-          </ExternalLink>
-
-          <Box display="flex">
-            <Tooltip
-              open={openOwnerTooltip}
-              PopperProps={{
-                disablePortal: true,
-              }}
-              disableFocusListener
-              disableHoverListener
-              disableTouchListener
-              placement="right"
-              title={'Copied!'}
-            >
-              <StyledButton onClick={() => hadleTooltip(`${ens || ownerOrConsumer}`, 'owner')}>
-                <CopyIcon />
-              </StyledButton>
-            </Tooltip>
-            <Tooltip disableFocusListener placement="right" title={'Contact owner via Blockscan'}>
-              <div>
-                <StyledButton
-                  disabled={ownerOrConsumer?.toLowerCase() == wallet.account?.toLowerCase()}
-                  onClick={() => openChat(ens || ownerOrConsumer)}
-                >
-                  <MessageIcon />
-                </StyledButton>
-              </div>
-            </Tooltip>
-          </Box>
-        </Box>
-      ),
-    },
-    {
-      label: 'Current Operator',
-      tooltip: 'The operator currently set and authorised to deploy scenes and experiences in the metaverse.',
-      content: (
-        <Box display="flex" alignItems="center">
-          <ExternalLink href={getEtherscanAddressUrl(asset?.operator)} className="land-operator-address">
-            {ensOperator && ensOperator !== asset?.operator ? ensOperator : shortenAddr(asset?.operator, 25, 4)}
-          </ExternalLink>
-          <Box display="flex">
-            <Tooltip
-              open={openOperatorTooltip}
-              PopperProps={{
-                disablePortal: true,
-              }}
-              disableFocusListener
-              disableHoverListener
-              disableTouchListener
-              placement="right"
-              title={'Copied!'}
-            >
-              <StyledButton onClick={() => hadleTooltip(`${ensOperator || asset?.operator}`, 'operator')}>
-                <CopyIcon />
-              </StyledButton>
-            </Tooltip>
-            <Tooltip disableFocusListener placement="right" title={'Contact operator via Blockscan'}>
-              <div>
-                <StyledButton disabled={asset?.operator == DEFAULT_ADDRESS} onClick={() => openChat(asset?.operator)}>
-                  <MessageIcon />
-                </StyledButton>
-              </div>
-            </Tooltip>
-          </Box>
-        </Box>
-      ),
-    },
-    {
-      label: 'Allow advertising',
-      tooltip: 'tooltip',
-      content: (
-        <StyledSwitch
-          checked={isAdvertisementAllowed}
-          sx={{ '& .MuiSwitch-track': { bgcolor: THEME_COLORS.grey02 } }}
-          onChange={handleAllowAdvertisingSwitchChange}
-        />
-      ),
-    },
-  ];
+    return _details;
+  }, [ens, ownerOrConsumer, openOperatorTooltip, wallet?.account, isOwner, asset]);
 
   const hashtags = [asset?.type, asset?.metaverse?.name];
 
   return (
     <>
-      <EnableAdsModal
-        open={isAllowAdvertiseModalOpen}
-        onClose={() => setIsAllowAdvertiseModalOpen(false)}
-        onConfirm={() => {
-          setIsAllowAdvertiseModalOpen(false);
-          setIsAdvertisementAllowed(true);
-        }}
-      />
-
-      <DisableAdsModal
-        open={isDisableAdvertiseModalOpen}
-        onClose={() => setIsDisableAdvertiseModalOpen(false)}
-        onConfirm={() => {
-          setIsDisableAdvertiseModalOpen(false);
-          setIsAdvertisementAllowed(false);
-        }}
-      />
-
       <Grid container justifyContent="space-between" className="single-land-card-container">
         {loading ? (
           <SingleLandCardSkeleton />
@@ -353,7 +328,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
               </div>
             </Grid>
 
-            <Grid xs={12} md={6} item className="properties-container">
+            <Grid xs={12} md={6} item display="flex" flexDirection="column" className="properties-container">
               <Grid container className="head-container">
                 <Grid item className="title-container">
                   <span className="title-container__text" title={asset?.name?.toLowerCase()}>
@@ -395,7 +370,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                 })}
               </Box>
 
-              <Stack spacing={4} mt={6}>
+              <Stack spacing={4} mt={6} mb="auto">
                 {details.map((detail) => {
                   return (
                     <Box display="flex" alignItems="center" flexWrap="wrap" minHeight={30} columnGap={6}>

@@ -10,9 +10,10 @@ interface DisableAdsModalProps {
   open?: boolean;
   onClose: () => void;
   onConfirm?: () => void;
+  actionDisabled?: boolean;
 }
 
-const DisableAdsModal: FC<DisableAdsModalProps> = ({ open = false, onClose, onConfirm }) => {
+const DisableAdsModal: FC<DisableAdsModalProps> = ({ open = false, actionDisabled, onClose, onConfirm }) => {
   return (
     <Modal height="100%" handleClose={onClose} open={open}>
       <Stack width={625}>
@@ -44,11 +45,11 @@ const DisableAdsModal: FC<DisableAdsModalProps> = ({ open = false, onClose, onCo
           </Box>
         </Box>
         <Box display="flex" justifyContent="space-between" mt={16}>
-          <Button variant="secondary" btnSize="medium" onClick={onClose}>
+          <Button disabled={actionDisabled} variant="secondary" btnSize="medium" onClick={onClose}>
             Back
           </Button>
 
-          <Button variant="gradient" btnSize="medium" onClick={onConfirm}>
+          <Button disabled={actionDisabled} variant="gradient" btnSize="medium" onClick={onConfirm}>
             Turn off
           </Button>
         </Box>

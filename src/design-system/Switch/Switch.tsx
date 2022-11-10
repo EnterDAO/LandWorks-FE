@@ -38,7 +38,7 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
     height: 30,
     borderRadius: 50,
     opacity: 1,
-    backgroundColor: THEME_COLORS.grey01,
+    backgroundColor: THEME_COLORS.grey02,
     boxSizing: 'border-box',
   },
   '& .Mui-disabled': {
