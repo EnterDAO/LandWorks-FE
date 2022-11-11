@@ -4,9 +4,10 @@ import useDebounce from '@rooks/use-debounce';
 
 import CardsGrid from 'components/custom/cards-grid';
 import { useSearchBar } from 'components/custom/search-bar/SearchBar';
-import { Box, Icon, Stack, Typography } from 'design-system';
+import { Box, Divider, Icon, Stack, Typography } from 'design-system';
 import { GridBigIcon, GridIcon } from 'design-system/icons';
 import useGetIsMounted from 'hooks/useGetIsMounted';
+import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
 import { LocationState } from 'modules/interface';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
@@ -14,11 +15,12 @@ import LandWorkCard from 'modules/land-works/components/land-works-card-explore-
 import LoadMoreLands from 'modules/land-works/components/lands-explore-load-more';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
+import { useListingModal } from 'providers/listing-modal-provider';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 import { getPropertyPath } from 'router/routes';
 
 import { AtlasTile } from '../atlas';
-import { StyledButton, StyledRow } from './styled';
+import { StyledButton } from './styled';
 import useNumberOfLoadedCards from './useNumberOfLoadedCards';
 
 import {
@@ -49,6 +51,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   const { mapTiles, selectedId, setSelectedId } = useLandsMapTiles();
   const getIsMounted = useGetIsMounted();
   const timeoutIdRef = useRef<number>();
+  const listingModal = useListingModal();
 
   const [cardsSize, setCardsSize] = useState<'compact' | 'normal'>('normal');
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
@@ -207,23 +210,40 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
         py={4}
         bgcolor="var(--theme-body-color)"
       >
-        <StyledRow>
-          <Typography variant="body2" color="#B9B9D3">
+        <CardsGrid sx={{ alignItems: 'center' }}>
+          <Typography sx={{ order: 1, '@media (min-width: 668px)': { order: 0 } }} variant="body2" color="#B9B9D3">
             Listed{' '}
             <Typography component="span" variant="inherit" color={THEME_COLORS.light}>
               {filteredLands.length} properties
             </Typography>
           </Typography>
-          <Stack direction="row" spacing={2}>
-            <StyledButton isActive={cardsSize === 'normal'} onClick={() => setCardsSize('normal')}>
+          <Stack gridColumn={-2} direction="row" gap="12px">
+            <SplitBeeListButton
+              sx={{ flexGrow: 1, minWidth: '0 !important' }}
+              onClick={listingModal.open}
+              btnSize="medium"
+              variant="gradient"
+            >
+              List Now
+            </SplitBeeListButton>
+            <Divider sx={{ height: 52, borderColor: '#27273A' }} orientation="vertical" />
+            <StyledButton
+              sx={{ flexShrink: 0 }}
+              isActive={cardsSize === 'normal'}
+              onClick={() => setCardsSize('normal')}
+            >
               <Icon iconElement={<GridIcon />} iconSize="m" />
             </StyledButton>
 
-            <StyledButton isActive={cardsSize === 'compact'} onClick={() => setCardsSize('compact')}>
+            <StyledButton
+              sx={{ flexShrink: 0 }}
+              isActive={cardsSize === 'compact'}
+              onClick={() => setCardsSize('compact')}
+            >
               <Icon iconElement={<GridBigIcon />} iconSize="m" />
             </StyledButton>
           </Stack>
-        </StyledRow>
+        </CardsGrid>
       </Box>
       <CardsGrid layout={cardsSize}>
         {loading &&

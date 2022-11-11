@@ -1,18 +1,18 @@
 import { FC, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useSubscription } from '@apollo/client';
-import splitbee from '@splitbee/web';
 
-import { Box, Button, Grid, Modal, Typography } from 'design-system';
+import { Box, Grid, Typography } from 'design-system';
+import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
 import { LocationState } from 'modules/interface';
 import { USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
+import { useListingModal } from 'providers/listing-modal-provider';
 import { MY_PROPERTIES_ROUTE_TABS, MyPropertiesRouteTabsValue, getMyPropertiesPath } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
 import { ReactComponent as AddIcon } from '../../../../resources/svg/add.svg';
 import LandsBannerClaimRents from '../lands-banner-claim-rents';
 import { ClaimModal } from '../lands-claim-modal';
-import ListNewProperty from '../list-new-property';
 import { TabListStyled, TabStyled } from './styled';
 
 import { THEME_COLORS } from 'themes/theme-constants';
@@ -27,9 +27,9 @@ const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, user }) =>
   const wallet = useWallet();
   const history = useHistory();
   const location = useLocation<LocationState>();
+  const listingModal = useListingModal();
 
   const [showClaimModal, setShowClaimModal] = useState(false);
-  const [showListNewModal, setShowListNewModal] = useState(false);
   const [claimButtonDisabled, setClaimButtonDisabled] = useState(false);
 
   const [claimData, setClaimData] = useState<UserEntity>();
@@ -116,26 +116,18 @@ const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, user }) =>
         </Grid>
         {hasMetamaskConnected && (
           <Grid item xs={6} lg={4} display="flex" justifyContent="flex-end">
-            <Button
+            <SplitBeeListButton
               btnSize="medium"
               variant="gradient"
               sx={{ marginLeft: 'auto', alignItems: 'center' }}
-              onClick={() => {
-                setShowListNewModal(true);
-
-                splitbee.track('List new property button click');
-              }}
+              onClick={listingModal.open}
             >
               <AddIcon style={{ marginRight: '10px' }} />
               List New Property
-            </Button>
+            </SplitBeeListButton>
           </Grid>
         )}
       </Grid>
-
-      <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
-        <ListNewProperty closeModal={() => setShowListNewModal(false)} />
-      </Modal>
 
       <ClaimModal
         onSubmit={() => {

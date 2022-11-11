@@ -3,14 +3,13 @@ import useDebounce from '@rooks/use-debounce';
 import { BooleanParam, useQueryParam, withDefault } from 'use-query-params';
 import { getNonHumanValue } from 'web3/utils';
 
-import { Box, Modal } from 'design-system';
+import { Box } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
 import { AtlasTile } from 'modules/land-works/components/atlas';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
 import { statusData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import { useRentStatusQueryParam } from 'modules/land-works/components/lands-explore-filters/rent-status-select';
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
-import ListNewProperty from 'modules/land-works/components/list-new-property';
 import usePriceQueryParams from 'modules/land-works/components/price-popover/usePriceQueryParams';
 import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-tile';
 import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
@@ -128,10 +127,6 @@ const ExploreView: React.FC = () => {
   const filteredLands = useMemo(() => {
     return moreFilters ? filterByMoreFilters(lands, moreFilters, metaverse) : lands;
   }, [lands, moreFilters, metaverse]);
-
-  const [showListNewModal, setShowListNewModal] = useState(false);
-
-  // const availableLands = filterLandsByAvailability(filterLandsByQuery(lands, searchQuery));
 
   const setClickedLandId = (x: number | string, y?: number | string | undefined) => {
     if (x && y) {
@@ -277,10 +272,6 @@ const ExploreView: React.FC = () => {
               onHideMap={() => setIsMapVisible(false)}
               onShowMap={() => setIsMapVisible(true)}
             />
-
-            <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
-              <ListNewProperty />
-            </Modal>
           </Box>
         </LandsMapTileProvider>
       </LandsMapTilesProvider>
