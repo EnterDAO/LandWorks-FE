@@ -1,8 +1,9 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Box, Button, Modal } from 'design-system';
-import ListNewProperty from 'modules/land-works/components/list-new-property';
+import { Box, Button } from 'design-system';
+import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
+import { useListingModal } from 'providers/listing-modal-provider';
 import { ReactComponent as EmptyStateAsset } from 'resources/svg/empty-state.svg';
 import { APP_ROUTES } from 'router/routes';
 
@@ -10,34 +11,28 @@ import { CrossIconStyled, RootStyled, TypographyStyled } from './styled';
 
 const LandsWorksGridEmptyState: FC = () => {
   const history = useHistory();
-  const [showListNewModal, setShowListNewModal] = useState(false);
+  const listingModal = useListingModal();
 
   return (
-    <>
-      <RootStyled>
-        <EmptyStateAsset />
-        <TypographyStyled variant="h3">Looks like your list is empty</TypographyStyled>
-        <TypographyStyled variant="h6">Explore what you can rent or list yours for lending</TypographyStyled>
-        <Box sx={{ paddingTop: '60px' }}>
-          <Button
-            variant="secondary"
-            btnSize="medium"
-            sx={{ marginRight: '20px' }}
-            onClick={() => history.push(APP_ROUTES.explore)}
-          >
-            Explore
-          </Button>
-          <Button variant="gradient" btnSize="medium" onClick={() => setShowListNewModal(true)}>
-            <CrossIconStyled />
-            List New Property
-          </Button>
-        </Box>
-      </RootStyled>
-
-      <Modal height={800} open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
-        <ListNewProperty />
-      </Modal>
-    </>
+    <RootStyled>
+      <EmptyStateAsset />
+      <TypographyStyled variant="h3">Looks like your list is empty</TypographyStyled>
+      <TypographyStyled variant="h6">Explore what you can rent or list yours for lending</TypographyStyled>
+      <Box sx={{ paddingTop: '60px' }}>
+        <Button
+          variant="secondary"
+          btnSize="medium"
+          sx={{ marginRight: '20px' }}
+          onClick={() => history.push(APP_ROUTES.explore)}
+        >
+          Explore
+        </Button>
+        <SplitBeeListButton variant="gradient" btnSize="medium" onClick={listingModal.open}>
+          <CrossIconStyled />
+          List New Property
+        </SplitBeeListButton>
+      </Box>
+    </RootStyled>
   );
 };
 

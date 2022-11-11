@@ -1,16 +1,16 @@
-import { ComponentType, FC, useEffect, useMemo, useState } from 'react';
+import { ComponentType, FC, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
-import splitbee from '@splitbee/web';
 
 import CardsGrid from 'components/custom/cards-grid';
 import Container from 'components/custom/container';
 import { useSearchBar } from 'components/custom/search-bar/SearchBar';
-import { Box, Button, Modal, Typography } from 'design-system';
+import { Box, Typography } from 'design-system';
+import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
 import { AssetEntity } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
 import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
-import ListNewProperty from 'modules/land-works/components/list-new-property';
+import { useListingModal } from 'providers/listing-modal-provider';
 import { APP_ROUTES, MY_PROPERTIES_ROUTE_TABS, useMyPropertiesRouteTab } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
@@ -33,7 +33,7 @@ const MyPropertiesView: FC = () => {
   const tab = useMyPropertiesRouteTab();
   const history = useHistory();
   const wallet = useWallet();
-  const [showListNewModal, setShowListNewModal] = useState(false);
+  const listingModal = useListingModal();
   const [metaverse] = useMetaverseQueryParam();
   const [search] = useSearchBar();
   const { data: accountAssets, isLoading } = useGetAccountAssetsQuery(wallet.account || '', metaverse);
@@ -56,12 +56,6 @@ const MyPropertiesView: FC = () => {
       window.clearTimeout(timeoutId);
     };
   }, []);
-
-  const handleListNowButtonClick = () => {
-    setShowListNewModal(true);
-
-    splitbee.track('List new property button click');
-  };
 
   const tabs: {
     id: string;
@@ -107,54 +101,48 @@ const MyPropertiesView: FC = () => {
   const TabContent = activeTab.Component;
 
   return (
-    <>
-      <Modal open={showListNewModal} handleClose={() => setShowListNewModal(false)}>
-        <ListNewProperty closeModal={() => setShowListNewModal(false)} />
-      </Modal>
-
-      <Container sx={{ pb: 24 }}>
-        <MyPropertiesViewHeader tabs={tabs} />
-        <Box display="flex" minHeight={90} alignItems="center" justifyContent="space-between" py="18px">
-          <Typography variant="body2" color="var(--theme-light-color)">
-            <Typography variant="inherit" component="span" color="var(--theme-subtle-color)">
-              Listed
-            </Typography>
-            &nbsp;
-            {activeTab.assets.length} lands
+    <Container sx={{ pb: 24 }}>
+      <MyPropertiesViewHeader tabs={tabs} />
+      <Box display="flex" minHeight={90} alignItems="center" justifyContent="space-between" py="18px">
+        <Typography variant="body2" color="var(--theme-light-color)">
+          <Typography variant="inherit" component="span" color="var(--theme-subtle-color)">
+            Listed
           </Typography>
+          &nbsp;
+          {activeTab.assets.length} lands
+        </Typography>
 
-          {isMetamaskConnected && (
-            <Button
-              btnSize="medium"
-              variant="gradient"
-              sx={{ marginLeft: 'auto', alignItems: 'center' }}
-              onClick={handleListNowButtonClick}
-            >
-              List Now
-            </Button>
-          )}
-        </Box>
-
-        <Box display="flex" alignItems="flex-start" minHeight={555}>
-          {isLoading ? (
-            <CardsGrid>
-              {Array.from({ length: 6 }).map((_, i) => {
-                return <LandCardSkeleton key={i} />;
-              })}
-            </CardsGrid>
-          ) : (
-            <TabContent totalAssets={activeTab.assets.length} assets={sortedAssets} />
-          )}
-        </Box>
-
-        {(isListedTab || isRentedTab) && (
-          <Box mt={15}>
-            {isListedTab && <ClaimHistoryTable metaverse={metaverse} />}
-            {isRentedTab && <MyPropetiesHistoryTable metaverse={metaverse} />}
-          </Box>
+        {isMetamaskConnected && (
+          <SplitBeeListButton
+            btnSize="medium"
+            variant="gradient"
+            sx={{ marginLeft: 'auto', alignItems: 'center' }}
+            onClick={listingModal.open}
+          >
+            List Now
+          </SplitBeeListButton>
         )}
-      </Container>
-    </>
+      </Box>
+
+      <Box display="flex" alignItems="flex-start" minHeight={555}>
+        {isLoading ? (
+          <CardsGrid>
+            {Array.from({ length: 6 }).map((_, i) => {
+              return <LandCardSkeleton key={i} />;
+            })}
+          </CardsGrid>
+        ) : (
+          <TabContent totalAssets={activeTab.assets.length} assets={sortedAssets} />
+        )}
+      </Box>
+
+      {(isListedTab || isRentedTab) && (
+        <Box mt={15}>
+          {isListedTab && <ClaimHistoryTable metaverse={metaverse} />}
+          {isRentedTab && <MyPropetiesHistoryTable metaverse={metaverse} />}
+        </Box>
+      )}
+    </Container>
   );
 };
 
