@@ -220,7 +220,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
           <Stack gridColumn={-2} direction="row" gap="12px">
             <SplitBeeListButton
               sx={{ flexGrow: 1, minWidth: '0 !important' }}
-              onClick={listingModal.open}
+              onClick={() => listingModal.open()}
               btnSize="medium"
               variant="gradient"
             >

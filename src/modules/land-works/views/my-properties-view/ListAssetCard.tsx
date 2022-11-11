@@ -3,6 +3,7 @@ import { Box, Divider, Stack } from '@mui/material';
 
 import { Button, Typography } from 'design-system';
 import { BaseNFT } from 'modules/interface';
+import { useListingModal } from 'providers/listing-modal-provider';
 import { useWallet } from 'wallets/wallet';
 
 import { shortenString } from 'modules/land-works/utils';
@@ -13,6 +14,11 @@ interface ListAssetCardProps {
 
 const ListAssetCard: FC<ListAssetCardProps> = ({ asset }) => {
   const wallet = useWallet();
+  const listingModal = useListingModal();
+
+  const handleListNowButtonClick = () => {
+    listingModal.open(asset);
+  };
 
   return (
     <Stack
@@ -54,7 +60,12 @@ const ListAssetCard: FC<ListAssetCardProps> = ({ asset }) => {
 
       <Divider sx={{ borderColor: 'var(--theme-separator-color)' }} />
 
-      <Button sx={{ width: '100% !important', mt: 'auto' }} variant="accentblue" btnSize="xsmall">
+      <Button
+        onClick={handleListNowButtonClick}
+        sx={{ width: '100% !important', mt: 'auto' }}
+        variant="accentblue"
+        btnSize="xsmall"
+      >
         List now
       </Button>
     </Stack>

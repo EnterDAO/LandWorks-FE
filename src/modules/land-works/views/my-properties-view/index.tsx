@@ -116,7 +116,7 @@ const MyPropertiesView: FC = () => {
             btnSize="medium"
             variant="gradient"
             sx={{ marginLeft: 'auto', alignItems: 'center' }}
-            onClick={listingModal.open}
+            onClick={() => listingModal.open()}
           >
             List Now
           </SplitBeeListButton>
