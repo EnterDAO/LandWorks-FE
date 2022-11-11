@@ -1,7 +1,8 @@
 import SelectUnstyled, { SelectUnstyledProps } from '@mui/base/SelectUnstyled';
+import { SxProps } from '@mui/system';
 import { isNull } from 'lodash';
 
-import { RadioButton } from 'design-system';
+import { Box, RadioButton } from 'design-system';
 import { Option } from 'modules/interface';
 
 import { StyledButton, StyledListbox, StyledOption, StyledPopper } from './styled';
@@ -26,6 +27,7 @@ interface ControlledSelectProps {
   withCheckbox?: boolean;
   staticPlaceholder?: string;
   isActive?: boolean;
+  sx?: SxProps;
 }
 
 const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
@@ -38,11 +40,12 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
     width,
     staticPlaceholder,
     isActive,
+    sx,
   } = props;
   const valueForPlaceholder = options.length + 10;
 
   return (
-    <div style={{ width: width }}>
+    <Box width={width} sx={sx}>
       <CustomSelect
         disabled={disabled}
         value={staticPlaceholder ? valueForPlaceholder : value}
@@ -75,7 +78,7 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
           </StyledOption>
         ))}
       </CustomSelect>
-    </div>
+    </Box>
   );
 };
 
