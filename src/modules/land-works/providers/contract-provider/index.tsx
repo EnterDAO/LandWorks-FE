@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { FC, createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { FC, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import ContractListener from 'web3/components/contract-listener';
 import Web3Contract from 'web3/web3Contract';
 
@@ -74,15 +74,17 @@ const ContractProvider: FC = (props) => {
     cryptoVoxelsContract.setAccount(walletCtx.account);
   }, [walletCtx.account]);
 
-  const value: ContextType = {
-    landRegistryContract,
-    estateRegistryContract,
-    cryptoVoxelsContract,
-    txInProgress,
-    setTxInProgress,
-    txHash,
-    setTxHash,
-  };
+  const value: ContextType = useMemo(() => {
+    return {
+      landRegistryContract,
+      estateRegistryContract,
+      cryptoVoxelsContract,
+      txInProgress,
+      setTxInProgress,
+      txHash,
+      setTxHash,
+    };
+  }, [landRegistryContract, estateRegistryContract, cryptoVoxelsContract, txInProgress, txHash]);
 
   return (
     <ProviderContext.Provider value={value}>

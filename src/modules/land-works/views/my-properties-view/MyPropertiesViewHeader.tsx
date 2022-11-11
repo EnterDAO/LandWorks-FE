@@ -10,7 +10,7 @@ import MetaverseSelect from './MetaverseSelect';
 import SortSelect from './SortSelect';
 
 interface MyPropertiesViewHeaderProps {
-  tabs: { id: string; label: string | number; labelEnd?: string | number }[];
+  tabs: { id: string; label: string | number; total: string | number }[];
 }
 
 const MyPropertiesViewHeader: FC<MyPropertiesViewHeaderProps> = ({ tabs }) => {
@@ -90,7 +90,7 @@ const MyPropertiesViewHeader: FC<MyPropertiesViewHeaderProps> = ({ tabs }) => {
                     <>
                       {tab.label}
                       <Typography ml={1} component="span" variant="inherit" color="var(--theme-grey700-color)">
-                        {tab.labelEnd}
+                        {tab.total}
                       </Typography>
                     </>
                   }
