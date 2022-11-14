@@ -1,9 +1,8 @@
-import { ComponentType, FC, useEffect, useMemo } from 'react';
+import { FC, ReactNode, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import CardsGrid from 'components/custom/cards-grid';
 import Container from 'components/custom/container';
-import { useSearchBar } from 'components/custom/search-bar/SearchBar';
 import { Box, Typography } from 'design-system';
 import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
 import { AssetEntity } from 'modules/land-works/api';
@@ -20,9 +19,7 @@ import MyPropertiesViewHeader from './MyPropertiesViewHeader';
 import NotListedTabContent from './NotListedTabContent';
 import RentedTabContent from './RentedTabContent';
 import useGetAccountAssetsQuery from './useGetAccountAssetsQuery';
-import useSortAssets from './useSortAssets';
-
-import { filterLandsByQuery } from 'modules/land-works/utils';
+import useGetAccountNonListedAssetsQuery from './useGetAccountNotListedAssets';
 
 export interface TabContentProps {
   totalAssets: number;
@@ -35,9 +32,21 @@ const MyPropertiesView: FC = () => {
   const wallet = useWallet();
   const listingModal = useListingModal();
   const [metaverse] = useMetaverseQueryParam();
-  const [search] = useSearchBar();
-  const { data: accountAssets, isLoading } = useGetAccountAssetsQuery(wallet.account || '', metaverse);
+  const { data: accountAssets, isLoading: areAssetsLoading } = useGetAccountAssetsQuery(
+    wallet.account || '',
+    metaverse
+  );
+  const { data: notListedAssets, isLoading: areNotListedAssetsLoading } = useGetAccountNonListedAssetsQuery(
+    wallet.account || '',
+    metaverse
+  );
   const isMetamaskConnected = wallet.isActive && wallet.connector?.id === 'metamask';
+  const isLoading = areNotListedAssetsLoading || areAssetsLoading;
+
+  console.log({
+    areNotListedAssetsLoading,
+    areAssetsLoading,
+  });
 
   useEffect(() => {
     if (wallet.disconnecting) {
@@ -60,45 +69,35 @@ const MyPropertiesView: FC = () => {
   const tabs: {
     id: string;
     label: string;
-    labelEnd: number | string;
-    assets: AssetEntity[];
-    Component: ComponentType<TabContentProps>;
+    total: number;
+    content: ReactNode;
   }[] = useMemo(() => {
     return [
       {
         id: MY_PROPERTIES_ROUTE_TABS.listed,
         label: 'Listed',
-        labelEnd: accountAssets.listed.length,
-        assets: accountAssets.listed,
-        Component: ListedTabContent,
+        total: isLoading ? 0 : accountAssets.listed.length,
+        content: <ListedTabContent assets={accountAssets.listed} />,
       },
       {
         id: MY_PROPERTIES_ROUTE_TABS.rented,
         label: 'Rented',
-        labelEnd: accountAssets.rented.length,
-        assets: accountAssets.rented,
-        Component: RentedTabContent,
+        total: isLoading ? 0 : accountAssets.rented.length,
+        content: <RentedTabContent assets={accountAssets.rented} />,
       },
-      // TODO: return when design for the not listed cards will be ready
-      // {
-      //   id: MY_PROPERTIES_ROUTE_TABS.notListed,
-      //   label: 'Not listed',
-      //   labelEnd: accountAssets.notListed.length,
-      //   assets: accountAssets.notListed,
-      //   Component: NotListedTabContent,
-      // },
+      {
+        id: MY_PROPERTIES_ROUTE_TABS.notListed,
+        label: 'Not listed',
+        total: isLoading ? 0 : notListedAssets.length,
+        content: <NotListedTabContent assets={notListedAssets} />,
+      },
     ];
-  }, [accountAssets]);
+  }, [accountAssets, notListedAssets, isLoading]);
 
   const activeTab = tabs.find(({ id }) => id === tab) || tabs[0];
 
   const isRentedTab = activeTab.id === MY_PROPERTIES_ROUTE_TABS.rented;
   const isListedTab = activeTab.id === MY_PROPERTIES_ROUTE_TABS.listed;
-
-  const filteredAssets = filterLandsByQuery(activeTab.assets, search);
-  const sortedAssets = useSortAssets(filteredAssets);
-
-  const TabContent = activeTab.Component;
 
   return (
     <Container sx={{ pb: 24 }}>
@@ -109,7 +108,7 @@ const MyPropertiesView: FC = () => {
             Listed
           </Typography>
           &nbsp;
-          {activeTab.assets.length} lands
+          {activeTab.total} lands
         </Typography>
 
         {isMetamaskConnected && (
@@ -117,7 +116,7 @@ const MyPropertiesView: FC = () => {
             btnSize="medium"
             variant="gradient"
             sx={{ marginLeft: 'auto', alignItems: 'center' }}
-            onClick={listingModal.open}
+            onClick={() => listingModal.open()}
           >
             List Now
           </SplitBeeListButton>
@@ -132,7 +131,7 @@ const MyPropertiesView: FC = () => {
             })}
           </CardsGrid>
         ) : (
-          <TabContent totalAssets={activeTab.assets.length} assets={sortedAssets} />
+          activeTab.content
         )}
       </Box>
 

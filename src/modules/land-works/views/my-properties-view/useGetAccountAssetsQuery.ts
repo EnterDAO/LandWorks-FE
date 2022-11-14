@@ -1,9 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { useSubscription } from '@apollo/client';
 
-import { DecentralandNFT } from 'modules/interface';
 import { AssetEntity, USER_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
-import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 
 const initialUser: UserEntity = {
   id: '',
@@ -14,29 +12,6 @@ const initialUser: UserEntity = {
   unclaimedRentAssets: [],
   ownerAndConsumerAssets: [],
 };
-
-const useGetAccountNonListedAssetsQuery = (account: string) => {
-  const registry = useContractRegistry();
-
-  const fetchAssets = useCallback(async () => {
-    if (!account) {
-      return;
-    }
-
-    const { landRegistryContract, estateRegistryContract, cryptoVoxelsContract } = registry;
-
-    const lands = await landRegistryContract?.getUserData(account);
-    const estates = (await estateRegistryContract?.getUserData(account)).filter((e: DecentralandNFT) => e.size > 0);
-    const cryptoVoxels = await cryptoVoxelsContract?.getUserData(account);
-
-    console.log('account non listed', lands, estates, cryptoVoxels);
-  }, [registry, account]);
-
-  useEffect(() => {
-    fetchAssets().then(console.log).catch(console.log);
-  }, [fetchAssets]);
-};
-
 const useGetAccountAssetsQuery = (
   account: string,
   metaverse: string | number
@@ -45,7 +20,6 @@ const useGetAccountAssetsQuery = (
   data: {
     listed: AssetEntity[];
     rented: AssetEntity[];
-    notListed: AssetEntity[];
   };
 } => {
   const [user, setUser] = useState<UserEntity | null>(null);
@@ -58,24 +32,21 @@ const useGetAccountAssetsQuery = (
     },
   });
 
-  const isParseUserLoadingRef = useRef(loading);
-  const isLoading = !!account && (loading || isParseUserLoadingRef.current);
+  const isLoading = (loading && !rawUserData) || !user;
 
-  useGetAccountNonListedAssetsQuery(account);
+  console.log({
+    loading,
+    rawUserData,
+    user,
+  });
 
-  useEffect(() => {
-    if (loading) {
-      isParseUserLoadingRef.current = true;
-    }
-  }, [loading]);
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!account) {
       setUser(initialUser);
     }
   }, [account]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!rawUserData) {
       return;
     }
@@ -89,21 +60,16 @@ const useGetAccountAssetsQuery = (
         .then((parsedUserData) => {
           if (!isCancelled) {
             setUser(parsedUserData);
-
-            isParseUserLoadingRef.current = false;
           }
         })
         .catch((e) => {
           console.error(e);
           if (!isCancelled) {
             setUser(initialUser);
-
-            isParseUserLoadingRef.current = false;
           }
         });
     } else {
       setUser(initialUser);
-      isParseUserLoadingRef.current = false;
     }
 
     return () => {
@@ -114,7 +80,6 @@ const useGetAccountAssetsQuery = (
   const assets: {
     rented: AssetEntity[];
     listed: AssetEntity[];
-    notListed: AssetEntity[];
   } = useMemo(() => {
     if (!user) {
       return {

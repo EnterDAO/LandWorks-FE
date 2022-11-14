@@ -6,7 +6,7 @@ import { sortData } from 'modules/land-works/components/lands-explore-filters/fi
 
 import { sessionStorageHandler } from 'utils';
 
-const SORT_QUERY_PARAM_KEY = 's';
+const SORT_QUERY_PARAM_KEY = 'o';
 
 export const useSortQueryParam = (): readonly [number, (value: number) => void] => {
   const [sort, setSort] = useQueryParam(SORT_QUERY_PARAM_KEY, NumberParam);

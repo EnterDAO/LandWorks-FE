@@ -1,9 +1,14 @@
 import { ComponentType } from 'react';
 import splitbee from '@splitbee/web';
 
+interface SplitBeeProps {
+  splitBeeEvent?: string;
+  splitBeeData?: Record<string, string | number | boolean | undefined | null>;
+}
+
 const withSplitBee =
   (defaultEvent: string) =>
-  <P extends { onClick?: (e: any) => void }>(WrappedComponent: ComponentType<P>) => {
+  <P extends { onClick?: (e: any) => void }>(WrappedComponent: ComponentType<P>): ComponentType<P & SplitBeeProps> => {
     const displayName = WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
     const ComponentWithSplitBee = ({
@@ -11,7 +16,7 @@ const withSplitBee =
       splitBeeData,
       onClick,
       ...otherProps
-    }: P & { splitBeeEvent?: string; splitBeeData?: Record<string, string | number | boolean | undefined | null> }) => {
+    }: P & SplitBeeProps) => {
       const handleClick: P['onClick'] = (e: any): void => {
         splitbee.track(splitBeeEvent, splitBeeData);
 

@@ -71,8 +71,10 @@ export const getDecentralandDataImageUrl = (land: DecentralandData) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getEstateImageUrl = (land: any) => {
-  const imageUrl = `${BASE_URL_DECENTRALEND}/estates/${land.metaverseAssetId}/map.png`;
+export const getEstateImageUrl = (land: string | { metaverseAssetId: string }) => {
+  const imageUrl = `${BASE_URL_DECENTRALEND}/estates/${
+    typeof land === 'string' ? land : land.metaverseAssetId
+  }/map.png`;
   return imageUrl;
 };
 

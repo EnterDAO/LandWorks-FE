@@ -120,7 +120,7 @@ const LandsMyPropertiesHeader: FC<Props> = ({ rentedCount, lentCount, user }) =>
               btnSize="medium"
               variant="gradient"
               sx={{ marginLeft: 'auto', alignItems: 'center' }}
-              onClick={listingModal.open}
+              onClick={() => listingModal.open()}
             >
               <AddIcon style={{ marginRight: '10px' }} />
               List New Property

@@ -27,7 +27,7 @@ const LandsWorksGridEmptyState: FC = () => {
         >
           Explore
         </Button>
-        <SplitBeeListButton variant="gradient" btnSize="medium" onClick={listingModal.open}>
+        <SplitBeeListButton variant="gradient" btnSize="medium" onClick={() => listingModal.open()}>
           <CrossIconStyled />
           List New Property
         </SplitBeeListButton>
