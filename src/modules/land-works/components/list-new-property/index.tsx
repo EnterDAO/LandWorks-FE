@@ -43,7 +43,6 @@ import {
   FEE_PRECISION,
   MaxRentPeriodOptions,
   MinRentPeriodOptions,
-  listNotificationMessage,
   listTypes,
 } from 'modules/land-works/constants';
 

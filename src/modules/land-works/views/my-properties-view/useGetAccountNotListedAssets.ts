@@ -3,7 +3,10 @@ import { useCallback, useLayoutEffect, useState } from 'react';
 import { BaseNFT, DecentralandNFT } from 'modules/interface';
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 
-const useGetAccountNonListedAssetsQuery = (account: string, metaverse: string | number) => {
+const useGetAccountNonListedAssetsQuery = (
+  account: string,
+  metaverse: string | number
+): { data: BaseNFT[]; isLoading: boolean } => {
   const registry = useContractRegistry();
   const [data, setData] = useState<BaseNFT[]>([]);
   const [isLoading, setIsLoading] = useState(false);
