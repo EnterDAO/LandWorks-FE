@@ -84,6 +84,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
       <Box
         height={1}
         width={1}
+        pt={4}
         sx={
           isMapMaximized
             ? {

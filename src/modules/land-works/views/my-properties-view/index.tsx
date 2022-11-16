@@ -1,159 +1,49 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, ReactNode, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useSubscription } from '@apollo/client';
-import TabContext from '@mui/lab/TabContext';
-import { useMediaQuery } from '@mui/material';
-import { Box } from '@mui/system';
 
 import CardsGrid from 'components/custom/cards-grid';
-import { AssetEntity, USER_SUBSCRIPTION, UserEntity, fetchUserAssetsByRents, parseUser } from 'modules/land-works/api';
+import Container from 'components/custom/container';
+import { Box, Typography } from 'design-system';
+import useIsMetamaskConnected from 'hooks/useIsMetamaskConnected';
+import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
+import { AssetEntity } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
 import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
-import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
-import LandWorksLoadingCard from 'modules/land-works/components/land-works-card-loading';
-import LandsWorksGridEmptyState from 'modules/land-works/components/land-works-grid-empty-state';
-import LoadMoreLands from 'modules/land-works/components/lands-explore-load-more';
-import LandsMyPropertiesHeader from 'modules/land-works/components/lands-my-properties-header';
-import LandsMyPropertiesSubheader from 'modules/land-works/components/lands-my-properties-subheader';
-import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
-import { APP_ROUTES, MY_PROPERTIES_ROUTE_TABS, getPropertyPath, useMyPropertiesRouteTab } from 'router/routes';
+import { useListingModal } from 'providers/listing-modal-provider';
+import { APP_ROUTES, MY_PROPERTIES_ROUTE_TABS, useMyPropertiesRouteTab } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
-import {
-  filterLandsByQuery,
-  isExistingLandInProgress,
-  isNewLandTxInProgress,
-  landsOrder,
-} from 'modules/land-works/utils';
-import { sessionStorageHandler } from 'utils';
+import ListedTabContent from './ListedTabContent';
+import { useMetaverseQueryParam } from './MetaverseSelect';
+import MyPropertiesViewHeader from './MyPropertiesViewHeader';
+import NotListedTabContent from './NotListedTabContent';
+import RentedTabContent from './RentedTabContent';
+import useGetAccountAssetsQuery from './useGetAccountAssetsQuery';
+import useGetAccountNonListedAssetsQuery from './useGetAccountNotListedAssets';
 
-import { sortColumns, sortDirections } from 'modules/land-works/constants';
+export interface TabContentProps {
+  totalAssets: number;
+  assets: AssetEntity[];
+}
 
 const MyPropertiesView: FC = () => {
   const tab = useMyPropertiesRouteTab();
-  const sessionFilters = {
-    order: sessionStorageHandler('get', 'my-properties-filters', 'order'),
-    metaverse: sessionStorageHandler('get', 'general', 'metaverse'),
-  };
-  const [metaverse, setMetaverse] = useState(sessionFilters.metaverse || 1);
-  const orderFilter =
-    sessionFilters.order && sessionFilters.order[`${metaverse}`] ? sessionFilters.order[`${metaverse}`] - 1 : 0;
   const history = useHistory();
-  const isGridPerFour = useMediaQuery('(max-width: 1599px)');
   const wallet = useWallet();
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [pageSize] = useState(getPageSize());
-  const [user, setUser] = useState({} as UserEntity);
-  const [lands, setLands] = useState<AssetEntity[]>([]);
-  const [rents, setRents] = useState<AssetEntity[]>([]);
-  const [totalRents, setTotalRents] = useState(0);
-  const [loadPercentageValue, setLoadPercentageValue] = useState(0);
-  const [slicedLands, setSlicedLands] = useState(pageSize);
-  const [sortDir, setSortDir] = useState(sortDirections[orderFilter]);
-  const [sortColumn, setSortColumn] = useState(sortColumns[orderFilter]);
+  const listingModal = useListingModal();
+  const [metaverse] = useMetaverseQueryParam();
 
-  const { data: userData } = useSubscription(USER_SUBSCRIPTION, {
-    skip: wallet.account === undefined,
-    variables: {
-      id: wallet.account?.toLowerCase(),
-      metaverse: String(metaverse),
-    },
-  });
-
-  function getPageSize() {
-    return isGridPerFour ? 4 : 8;
-  }
-
-  const handleLoadMore = () => {
-    setSlicedLands(slicedLands + getPageSize());
-  };
-
-  const getLoadPercentageValue = () => {
-    return (filteredLands.slice(0, slicedLands).length * 100) / filteredLands.length;
-  };
-
-  const fetchRents = async () => {
-    if (!wallet.account) return;
-
-    setLoading(true);
-    const rents = await fetchUserAssetsByRents(wallet.account, String(metaverse));
-    setRents(rents.data || []);
-    setTotalRents(rents.meta.count);
-  };
-
-  const updateUser = async () => {
-    await fetchRents();
-    if (userData && userData.user) {
-      setUser(await parseUser(userData.user));
-    } else {
-      setUser({
-        id: '',
-        hasUnclaimedRent: false,
-        assets: [],
-        consumerTo: [],
-        rents: [],
-        unclaimedRentAssets: [],
-        ownerAndConsumerAssets: [],
-      } as UserEntity);
-    }
-  };
-  const onChangeFiltersSortDirection = (value: number) => {
-    const sortIndex = Number(value) - 1;
-
-    setSortDir(sortDirections[sortIndex]);
-    setSortColumn(sortColumns[sortIndex]);
-    sortLands(sortColumns[sortIndex], sortDirections[sortIndex]);
-  };
-
-  const sortLands = (orderCol: string, orderDir: 'asc' | 'desc') => {
-    setLands(landsOrder(lands, orderCol, orderDir));
-    setRents(landsOrder(rents, orderCol, orderDir));
-    setLoading(false);
-  };
-
-  const onChangeMetaverse = (value: number) => {
-    setMetaverse(value);
-  };
-
-  const removeLands = () => {
-    setLands([]);
-    setRents([]);
-    setTotalRents(0);
-  };
-
-  useEffect(() => {
-    updateUser();
-  }, [userData]);
-
-  useEffect(() => {
-    fetchRents();
-  }, [metaverse]);
-
-  useEffect(() => {
-    if (tab === MY_PROPERTIES_ROUTE_TABS.rented) {
-      setLands(rents);
-    } else if (tab === MY_PROPERTIES_ROUTE_TABS.listed) {
-      setLands(user?.ownerAndConsumerAssets || []);
-    }
-  }, [tab, rents]);
-
-  useEffect(() => {
-    sortLands(sortColumn, sortDir);
-    if (Object.keys(user).length) {
-      if (tab === MY_PROPERTIES_ROUTE_TABS.rented) setLands(rents);
-      if (tab === MY_PROPERTIES_ROUTE_TABS.listed) setLands(user?.ownerAndConsumerAssets || []);
-    } else {
-      removeLands();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (!wallet.account) {
-      removeLands();
-    }
-  }, [wallet.account]);
+  const { data: accountAssets, isLoading: areAssetsLoading } = useGetAccountAssetsQuery(
+    wallet.account || '',
+    metaverse
+  );
+  const { data: notListedAssets, isLoading: areNotListedAssetsLoading } = useGetAccountNonListedAssetsQuery(
+    wallet.account || '',
+    metaverse
+  );
+  const isMetamaskConnected = useIsMetamaskConnected();
+  const isLoading = areNotListedAssetsLoading || areAssetsLoading;
 
   useEffect(() => {
     if (wallet.disconnecting) {
@@ -162,106 +52,93 @@ const MyPropertiesView: FC = () => {
   }, [wallet.disconnecting]);
 
   useEffect(() => {
-    if (!wallet.account || lands.length) {
-      setLoading(false);
-    }
-  }, [lands, rents]);
-
-  useEffect(() => {
-    setTimeout(() => {
+    const timeoutId = window.setTimeout(() => {
       if (!wallet.account) {
         wallet.showWalletsModal();
       }
     }, 500);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
   }, []);
 
-  useEffect(() => {
-    setLoadPercentageValue(getLoadPercentageValue());
-  }, [lands, slicedLands, searchQuery]);
+  const tabs: {
+    id: string;
+    label: string;
+    total: number;
+    content: ReactNode;
+  }[] = useMemo(() => {
+    return [
+      {
+        id: MY_PROPERTIES_ROUTE_TABS.rented,
+        label: 'Rented',
+        total: isLoading ? 0 : accountAssets.rented.length,
+        content: <RentedTabContent assets={accountAssets.rented} />,
+      },
+      {
+        id: MY_PROPERTIES_ROUTE_TABS.listed,
+        label: 'Listed',
+        total: isLoading ? 0 : accountAssets.listed.length,
+        content: <ListedTabContent assets={accountAssets.listed} />,
+      },
+      {
+        id: MY_PROPERTIES_ROUTE_TABS.notListed,
+        label: 'Not listed',
+        total: isLoading ? 0 : notListedAssets.length,
+        content: <NotListedTabContent assets={notListedAssets} />,
+      },
+    ];
+  }, [accountAssets, notListedAssets, isLoading]);
 
-  const slicedLandsInTotal = lands.slice(0, slicedLands).length;
-  const filteredLands = filterLandsByQuery(lands.slice(0, slicedLands), searchQuery);
+  const activeTab = tabs.find(({ id }) => id === tab) || tabs[0];
 
-  const { displayNewLandLoader, displayExistLandLoader } = useMemo(() => {
-    return {
-      displayNewLandLoader:
-        isNewLandTxInProgress(lands, loading, 'LISTING_IN_PROGRESS') ||
-        isNewLandTxInProgress(lands, loading, 'RENT_IN_PROGRESS'),
-      displayExistLandLoader:
-        isExistingLandInProgress(lands, loading, 'WITHDRAW_IN_PROGRESS') ||
-        isExistingLandInProgress(lands, loading, 'EXIST_RENT_IN_PROGRESS'),
-    };
-  }, [lands, loading]);
-
-  const newPropertyTitle = () => {
-    return localStorage.getItem('LISTING_IN_PROGRESS') ? 'Listing' : 'Renting';
-  };
-  const existPropertyTitle = () => {
-    return localStorage.getItem('WITHDRAW_IN_PROGRESS') ? 'Withdraw' : 'Renting';
-  };
+  const isRentedTab = activeTab.id === MY_PROPERTIES_ROUTE_TABS.rented;
+  const isListedTab = activeTab.id === MY_PROPERTIES_ROUTE_TABS.listed;
 
   return (
-    <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
-      <TabContext value={tab}>
-        <Box px="var(--horizontal-padding)" pb="var(--content-container-v-padding)">
-          <LandsMyPropertiesHeader
-            user={user}
-            rentedCount={totalRents}
-            lentCount={user?.ownerAndConsumerAssets?.length || 0}
-          />
-          <LandsMyPropertiesSubheader
-            propertiesCount={filteredLands.length}
-            onChangeSortDirection={onChangeFiltersSortDirection}
-            onChangeMetaverse={onChangeMetaverse}
-          />
-          <Box display="flex" justifyContent="center">
-            {(loading || !!filteredLands.length) && (
-              <CardsGrid>
-                {loading
-                  ? Array.from({ length: 6 }).map((_, i) => {
-                      return <LandCardSkeleton key={i} />;
-                    })
-                  : filteredLands.map((land) => {
-                      return displayExistLandLoader === land.metaverseAssetId ? (
-                        <LandWorksLoadingCard title={existPropertyTitle()} />
-                      ) : (
-                        <LandWorkCard
-                          key={land.id}
-                          land={land}
-                          onClick={() =>
-                            history.push({
-                              pathname: getPropertyPath(land.id),
-                              state: { from: window.location.pathname, title: 'My properties', tab },
-                            })
-                          }
-                        />
-                      );
-                    })}
-              </CardsGrid>
-            )}
+    <Container sx={{ pb: 24 }}>
+      <MyPropertiesViewHeader tabs={tabs} />
+      <Box display="flex" minHeight={90} alignItems="center" justifyContent="space-between" py="18px">
+        <Typography variant="body2" color="var(--theme-light-color)">
+          <Typography variant="inherit" component="span" color="var(--theme-subtle-color)">
+            Listed
+          </Typography>
+          &nbsp;
+          {activeTab.total} lands
+        </Typography>
 
-            {!loading &&
-              (displayNewLandLoader ? (
-                <LandWorksLoadingCard title={newPropertyTitle()} />
-              ) : (
-                !lands.length && <LandsWorksGridEmptyState />
-              ))}
-          </Box>
+        {isMetamaskConnected && (
+          <SplitBeeListButton
+            btnSize="medium"
+            variant="gradient"
+            sx={{ marginLeft: 'auto', alignItems: 'center' }}
+            onClick={() => listingModal.open()}
+          >
+            List Now
+          </SplitBeeListButton>
+        )}
+      </Box>
 
-          {lands.length > pageSize && (
-            <LoadMoreLands
-              textToDisplay={`List ${slicedLandsInTotal} of ${lands.length}`}
-              handleLoadMore={handleLoadMore}
-              percentageValue={loadPercentageValue}
-              disabled={slicedLandsInTotal === lands.length}
-            />
-          )}
+      <Box display="flex" alignItems="flex-start" minHeight={555}>
+        {isLoading ? (
+          <CardsGrid>
+            {Array.from({ length: 6 }).map((_, i) => {
+              return <LandCardSkeleton key={i} />;
+            })}
+          </CardsGrid>
+        ) : (
+          activeTab.content
+        )}
+      </Box>
 
-          {tab === MY_PROPERTIES_ROUTE_TABS.listed && <ClaimHistoryTable metaverse={metaverse} />}
-          {tab === MY_PROPERTIES_ROUTE_TABS.rented && <MyPropetiesHistoryTable metaverse={metaverse} />}
+      {(isListedTab || isRentedTab) && (
+        <Box mt={15}>
+          {isListedTab && <ClaimHistoryTable metaverse={metaverse} />}
+          {isRentedTab && <MyPropetiesHistoryTable metaverse={metaverse} />}
         </Box>
-      </TabContext>
-    </LandsSearchQueryProvider>
+      )}
+    </Container>
   );
 };
 

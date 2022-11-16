@@ -30,6 +30,7 @@ export const PricePopover: React.FC<IProps> = ({ text }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
   const [priceParams, setPriceParams] = usePriceQueryParams();
+
   const [currency, setCurrency] = useState<number>(priceParams.currency);
   const [minPrice, setMinPrice] = useState<string | number | null>(priceParams.minPrice || null);
   const [maxPrice, setMaxPrice] = useState<string | number | null>(priceParams.maxPrice || null);
@@ -101,7 +102,9 @@ export const PricePopover: React.FC<IProps> = ({ text }) => {
 
   return (
     <div>
-      <PopoverButton onClick={openPopover}>{text}</PopoverButton>
+      <PopoverButton isActive={priceParams.currency !== 0} onClick={openPopover}>
+        {text}
+      </PopoverButton>
       <StyledPopover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}

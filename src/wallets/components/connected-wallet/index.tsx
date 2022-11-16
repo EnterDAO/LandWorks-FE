@@ -4,6 +4,7 @@ import { isMobile } from 'react-device-detect';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import splitbee from '@splitbee/web';
 import cn from 'classnames';
 import { getEtherscanAddressUrl, getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
@@ -122,7 +123,14 @@ const ConnectedWallet: React.FC = () => {
 
   if (!wallet.isActive) {
     return !isMobile ? (
-      <HeaderActionButton onClick={() => wallet.showWalletsModal()}>Connect Wallet</HeaderActionButton>
+      <HeaderActionButton
+        onClick={() => {
+          wallet.showWalletsModal();
+          splitbee.track('Connect wallet click');
+        }}
+      >
+        Connect Wallet
+      </HeaderActionButton>
     ) : null;
   }
 

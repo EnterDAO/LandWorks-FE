@@ -1,6 +1,9 @@
 import { FC, useEffect, useState } from 'react';
+import { Zoom } from '@mui/material';
 
-import { Box, ControlledSelect } from 'design-system';
+import { ReactComponent as RoundPlusIcon } from 'assets/icons/round-plus.svg';
+import SearchBar from 'components/custom/search-bar';
+import { Box, ControlledSelect, Divider, Typography } from 'design-system';
 import { FiltersIcon } from 'design-system/icons';
 import { Option } from 'modules/interface';
 import { fetchMetaverses } from 'modules/land-works/api';
@@ -35,6 +38,7 @@ const LandWorksFilters: FC<Props> = ({
 }) => {
   const stickyOffset = useStickyOffset();
   const orderFilter = sessionStorageHandler('get', 'explore-filters', 'order');
+  const [isMetaverseFiltersActive, setIsMetaverseFiltersActive] = useState(false);
 
   const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
   const [openDecentralandFiltersModal, setOpenDecentralandFilterModal] = useState(false);
@@ -76,63 +80,93 @@ const LandWorksFilters: FC<Props> = ({
       px="var(--horizontal-padding)"
       ref={stickyOffset.register('filter')}
     >
-      <Box py={3} display="flex" justifyContent="space-between" flexWrap="wrap" gap={3}>
-        <Box display="flex" flexWrap="wrap" gap={3}>
-          <ControlledSelect
-            width={'18.75rem'}
-            value={Number(selectedMetaverse)}
-            onChange={onChangePlaceHandler}
-            options={metaverses}
-          />
-
-          <PricePopover text="Price" />
-
-          <RentStatusSelect />
-        </Box>
-        <Box display="flex" flexWrap="wrap" gap={3}>
-          <ControlledSelect
-            width="12.5rem"
-            value={selectedOrder}
-            onChange={onChangeSortDirectionHandler}
-            options={selectedMetaverse == 1 ? sortData : voxelsSortData}
-          />
-
-          <StyledButton
-            onClick={() =>
-              selectedMetaverse == 1 ? setOpenDecentralandFilterModal(true) : setOpenVoxelFilterModal(true)
-            }
+      <Box py="18px" width={1} boxShadow="inset 0 -2px var(--theme-modal-color)">
+        <Box position="relative" gap="12px" display="flex" flexWrap="wrap">
+          <Typography variant="h2" component="h1" mr="auto">
+            Explore
+          </Typography>
+          <Box
+            display="flex"
+            gap="12px"
+            flexWrap="wrap"
+            sx={{
+              width: 1,
+              order: 1,
+              '& > *': {
+                flex: '1 1 200px',
+                minWidth: 200,
+              },
+              '@media (min-width: 1260px)': {
+                width: 'auto',
+                order: 0,
+              },
+            }}
           >
-            <FiltersIcon height={20} width={20} />
-            <p>More Filters</p>
-          </StyledButton>
+            <ControlledSelect value={Number(selectedMetaverse)} onChange={onChangePlaceHandler} options={metaverses} />
+
+            <PricePopover text="Price" />
+
+            <RentStatusSelect />
+
+            <ControlledSelect
+              width="12.5rem"
+              value={selectedOrder}
+              onChange={onChangeSortDirectionHandler}
+              options={selectedMetaverse == 1 ? sortData : voxelsSortData}
+            />
+          </Box>
+
+          <Box display="flex" flexWrap="wrap" gap="12px">
+            <StyledButton
+              isActive={isMetaverseFiltersActive}
+              sx={{
+                width: 52,
+              }}
+              onClick={() =>
+                selectedMetaverse == 1 ? setOpenDecentralandFilterModal(true) : setOpenVoxelFilterModal(true)
+              }
+            >
+              <FiltersIcon height={24} width={24} />
+              <Zoom in={isMetaverseFiltersActive}>
+                <Box position="absolute" top={-5} right={-5}>
+                  <RoundPlusIcon width={16} height={16} />
+                </Box>
+              </Zoom>
+            </StyledButton>
+
+            <Divider sx={{ borderColor: '#27273A' }} orientation="vertical" />
+
+            <SearchBar placeholder="Search for land or owner..." />
+
+            <DecentralandFiltersModal
+              maxLandSize={maxLandSize}
+              onCancel={() => {
+                setOpenDecentralandFilterModal(false);
+              }}
+              handleSubmit={(e) => {
+                setOpenDecentralandFilterModal(false);
+                const values = Object.values(e);
+
+                setIsMetaverseFiltersActive(values.length > 1 || !values.includes('All'));
+                handleMoreFilter(e);
+              }}
+              open={openDecentralandFiltersModal}
+            />
+            <VoxelFiltersModal
+              maxHeight={maxHeight}
+              maxArea={maxArea}
+              onCancel={() => {
+                setOpenVoxelFilterModal(false);
+              }}
+              handleSubmit={(e) => {
+                setOpenVoxelFilterModal(false);
+                handleMoreFilter(e);
+              }}
+              open={openVoxelFiltersModal}
+            />
+          </Box>
         </Box>
       </Box>
-
-      <DecentralandFiltersModal
-        maxLandSize={maxLandSize}
-        onCancel={() => {
-          setOpenDecentralandFilterModal(false);
-        }}
-        handleSubmit={(e) => {
-          setOpenDecentralandFilterModal(false);
-          handleMoreFilter(e);
-        }}
-        open={openDecentralandFiltersModal}
-        children={<></>}
-      />
-      <VoxelFiltersModal
-        maxHeight={maxHeight}
-        maxArea={maxArea}
-        onCancel={() => {
-          setOpenVoxelFilterModal(false);
-        }}
-        handleSubmit={(e) => {
-          setOpenVoxelFilterModal(false);
-          handleMoreFilter(e);
-        }}
-        open={openVoxelFiltersModal}
-        children={<></>}
-      />
     </Box>
   );
 };

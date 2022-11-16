@@ -44,7 +44,14 @@ const RentStatusSelect: FC = () => {
   const [rentStatus, setRentStatus] = useRentStatusQueryParam();
 
   return (
-    <ControlledSelect width="12.5rem" value={rentStatus} onChange={setRentStatus} withCheckbox options={statusData} />
+    <ControlledSelect
+      isActive={rentStatus !== 0}
+      width="12.5rem"
+      value={rentStatus}
+      onChange={setRentStatus}
+      withCheckbox
+      options={statusData}
+    />
   );
 };
 

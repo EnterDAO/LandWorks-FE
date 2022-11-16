@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { CssBaseline, ThemeProvider } from '@mui/material';
+import splitbee from '@splitbee/web';
 import { QueryParamProvider } from 'use-query-params';
 import { ReactRouter5Adapter } from 'use-query-params/adapters/react-router-5';
 
@@ -21,6 +22,8 @@ import Web3WalletProvider from 'wallets/wallet';
 import * as sw from './serviceWorker';
 import appTheme from './themes/theme';
 import ScrollToTop from './top-scroll';
+
+splitbee.init();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.process = {} as any;

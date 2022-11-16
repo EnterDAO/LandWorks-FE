@@ -17,7 +17,8 @@
     "linebreak-style": "off",
     "prettier/prettier": [
       "error"
-    ]
+    ],
+    "@typescript-eslint/no-explicit-any": "off"
   },
   "env": {
     "browser": true,

@@ -65,7 +65,13 @@ export const Hero: React.FC = () => {
               ENTR token.
             </Typography>
 
-            <Button variant="gradient" btnSize="medium" onClick={() => history.push(APP_ROUTES.explore)}>
+            <Button
+              variant="gradient"
+              btnSize="medium"
+              onClick={() => {
+                history.push(APP_ROUTES.explore);
+              }}
+            >
               Explore
             </Button>
           </Grid>
