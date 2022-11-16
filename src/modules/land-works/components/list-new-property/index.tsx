@@ -699,14 +699,14 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             <Stack height={isSmallScreen ? '460px' : '530px'} overflow="auto">
               <Box display="flex" gap={4} margin="40px 0 10px">
                 <ControlledSelect
-                  width="182px"
+                  width="290px"
                   value={selectedMetaverse}
                   onChange={onChangeMetaverse}
                   options={availableMetaverses}
                 />
                 <Box>
                   <ControlledSelect
-                    width="182px"
+                    width="190px"
                     value={landType}
                     onChange={onChangeType}
                     options={listTypes[selectedMetaverse]}
