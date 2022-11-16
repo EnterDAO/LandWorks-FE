@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import CardsGrid from 'components/custom/cards-grid';
 import Container from 'components/custom/container';
 import { Box, Typography } from 'design-system';
+import useIsMetamaskConnected from 'hooks/useIsMetamaskConnected';
 import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
 import { AssetEntity } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
@@ -32,6 +33,7 @@ const MyPropertiesView: FC = () => {
   const wallet = useWallet();
   const listingModal = useListingModal();
   const [metaverse] = useMetaverseQueryParam();
+
   const { data: accountAssets, isLoading: areAssetsLoading } = useGetAccountAssetsQuery(
     wallet.account || '',
     metaverse
@@ -40,7 +42,7 @@ const MyPropertiesView: FC = () => {
     wallet.account || '',
     metaverse
   );
-  const isMetamaskConnected = wallet.isActive && wallet.connector?.id === 'metamask';
+  const isMetamaskConnected = useIsMetamaskConnected();
   const isLoading = areNotListedAssetsLoading || areAssetsLoading;
 
   useEffect(() => {
