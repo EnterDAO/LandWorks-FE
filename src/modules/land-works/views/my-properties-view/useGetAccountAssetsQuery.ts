@@ -34,12 +34,6 @@ const useGetAccountAssetsQuery = (
 
   const isLoading = (loading && !rawUserData) || !user;
 
-  console.log({
-    loading,
-    rawUserData,
-    user,
-  });
-
   useLayoutEffect(() => {
     if (!account) {
       setUser(initialUser);
@@ -97,8 +91,6 @@ const useGetAccountAssetsQuery = (
       notListed: [] as AssetEntity[],
     };
   }, [user]);
-
-  console.log(assets);
 
   return {
     data: assets,
