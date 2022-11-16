@@ -7,6 +7,7 @@ import { useSearchBar } from 'components/custom/search-bar/SearchBar';
 import { Box, Divider, Icon, Stack, Typography } from 'design-system';
 import { GridBigIcon, GridIcon } from 'design-system/icons';
 import useGetIsMounted from 'hooks/useGetIsMounted';
+import useIsMetamaskConnected from 'hooks/useIsMetamaskConnected';
 import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
 import { LocationState } from 'modules/interface';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
@@ -52,6 +53,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   const getIsMounted = useGetIsMounted();
   const timeoutIdRef = useRef<number>();
   const listingModal = useListingModal();
+  const isMetamaskConnected = useIsMetamaskConnected();
 
   const [cardsSize, setCardsSize] = useState<'compact' | 'normal'>('normal');
   const [loadPercentageValue, setLoadPercentageValue] = useState(0);
@@ -217,16 +219,20 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
               {filteredLands.length} properties
             </Typography>
           </Typography>
-          <Stack gridColumn={-2} direction="row" gap="12px">
-            <SplitBeeListButton
-              sx={{ flexGrow: 1, minWidth: '0 !important' }}
-              onClick={() => listingModal.open()}
-              btnSize="medium"
-              variant="gradient"
-            >
-              List Now
-            </SplitBeeListButton>
-            <Divider sx={{ height: 52, borderColor: '#27273A' }} orientation="vertical" />
+          <Stack gridColumn={-2} justifyContent="flex-end" direction="row" gap="12px">
+            {isMetamaskConnected && (
+              <>
+                <SplitBeeListButton
+                  sx={{ flexGrow: 1, minWidth: '0 !important' }}
+                  onClick={() => listingModal.open()}
+                  btnSize="medium"
+                  variant="gradient"
+                >
+                  List Now
+                </SplitBeeListButton>
+                <Divider sx={{ height: 52, borderColor: '#27273A' }} orientation="vertical" />
+              </>
+            )}
             <StyledButton
               sx={{ flexShrink: 0 }}
               isActive={cardsSize === 'normal'}
