@@ -43,11 +43,6 @@ const MyPropertiesView: FC = () => {
   const isMetamaskConnected = wallet.isActive && wallet.connector?.id === 'metamask';
   const isLoading = areNotListedAssetsLoading || areAssetsLoading;
 
-  console.log({
-    areNotListedAssetsLoading,
-    areAssetsLoading,
-  });
-
   useEffect(() => {
     if (wallet.disconnecting) {
       history.push(APP_ROUTES.explore);
@@ -74,16 +69,16 @@ const MyPropertiesView: FC = () => {
   }[] = useMemo(() => {
     return [
       {
-        id: MY_PROPERTIES_ROUTE_TABS.listed,
-        label: 'Listed',
-        total: isLoading ? 0 : accountAssets.listed.length,
-        content: <ListedTabContent assets={accountAssets.listed} />,
-      },
-      {
         id: MY_PROPERTIES_ROUTE_TABS.rented,
         label: 'Rented',
         total: isLoading ? 0 : accountAssets.rented.length,
         content: <RentedTabContent assets={accountAssets.rented} />,
+      },
+      {
+        id: MY_PROPERTIES_ROUTE_TABS.listed,
+        label: 'Listed',
+        total: isLoading ? 0 : accountAssets.listed.length,
+        content: <ListedTabContent assets={accountAssets.listed} />,
       },
       {
         id: MY_PROPERTIES_ROUTE_TABS.notListed,
