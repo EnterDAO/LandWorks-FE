@@ -4,15 +4,17 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { Button } from 'design-system';
 import InfoAlert from 'layout/components/info-alert';
 import { LocationState } from 'modules/interface';
-import { AssetEntity } from 'modules/land-works/api';
 import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import { ReactComponent as DollarRibbonIcon } from 'resources/svg/dollar-ribbon.svg';
 
-interface ClaimRewardsAlertProps {
-  unclaimedAssets: AssetEntity[];
-}
+import { useWallet } from '../../../../wallets/wallet';
+import useGetAccountUnclaimedAssetsQuery from './useGetAccountUnclaimedQuery';
 
-const ClaimRewardsAlert: FC<ClaimRewardsAlertProps> = ({ unclaimedAssets }) => {
+const ClaimRewardsAlert: FC = () => {
+  const wallet = useWallet();
+
+  const { data: notListedAssets } = useGetAccountUnclaimedAssetsQuery(wallet.account || '');
+
   const history = useHistory();
   const location = useLocation<LocationState>();
   const [isClaimButtonDisabled, setIsClaimButtonDisabled] = useState(false);
@@ -39,10 +41,10 @@ const ClaimRewardsAlert: FC<ClaimRewardsAlertProps> = ({ unclaimedAssets }) => {
         }}
         onCancel={() => setIsClaimRewardsModalOpen(false)}
         open={isClaimRewardsModalOpen}
-        rentFees={unclaimedAssets}
+        rentFees={notListedAssets.unclaimed}
       />
 
-      {unclaimedAssets.length > 0 && (
+      {notListedAssets.unclaimed.length > 0 && (
         <InfoAlert
           sx={{
             px: 6,

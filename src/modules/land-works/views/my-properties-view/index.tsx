@@ -99,7 +99,7 @@ const MyPropertiesView: FC = () => {
 
   return (
     <Container sx={{ pb: 24 }}>
-      <ClaimRewardsAlert unclaimedAssets={accountAssets.unclaimed} />
+      <ClaimRewardsAlert />
       <MyPropertiesViewHeader tabs={tabs} />
       <Box display="flex" minHeight={90} alignItems="center" justifyContent="space-between" py="18px">
         <Typography variant="body2" color="var(--theme-light-color)">
