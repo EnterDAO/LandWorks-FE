@@ -12,12 +12,14 @@ const initialUser: UserEntity = {
   unclaimedRentAssets: [],
   ownerAndConsumerAssets: [],
 };
+
 const useGetAccountAssetsQuery = (
   account: string,
   metaverse: string | number
 ): {
   isLoading: boolean;
   data: {
+    unclaimed: AssetEntity[];
     listed: AssetEntity[];
     rented: AssetEntity[];
   };
@@ -74,21 +76,22 @@ const useGetAccountAssetsQuery = (
   const assets: {
     rented: AssetEntity[];
     listed: AssetEntity[];
+    unclaimed: AssetEntity[];
   } = useMemo(() => {
     if (!user) {
       return {
         rented: [],
         listed: [],
-        notListed: [],
+        unclaimed: [],
       };
     }
 
-    const { rents: rented = [], ownerAndConsumerAssets: listed = [] } = user;
+    const { rents: rented = [], ownerAndConsumerAssets: listed = [], unclaimedRentAssets: unclaimed = [] } = user;
 
     return {
       rented,
       listed,
-      notListed: [] as AssetEntity[],
+      unclaimed,
     };
   }, [user]);
 
