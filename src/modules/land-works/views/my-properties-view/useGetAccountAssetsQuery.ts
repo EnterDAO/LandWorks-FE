@@ -102,4 +102,3 @@ const useGetAccountAssetsQuery = (
 };
 
 export default useGetAccountAssetsQuery;
-
