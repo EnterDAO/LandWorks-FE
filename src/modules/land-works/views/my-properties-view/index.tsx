@@ -104,7 +104,7 @@ const MyPropertiesView: FC = () => {
       <Box display="flex" minHeight={90} alignItems="center" justifyContent="space-between" py="18px">
         <Typography variant="body2" color="var(--theme-light-color)">
           <Typography variant="inherit" component="span" color="var(--theme-subtle-color)">
-            Listed
+            {activeTab.label}
           </Typography>
           &nbsp;
           {activeTab.total} lands
