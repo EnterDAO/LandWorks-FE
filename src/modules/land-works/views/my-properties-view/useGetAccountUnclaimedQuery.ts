@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { useSubscription } from '@apollo/client';
 
-import { AssetEntity, USER_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
+import { AssetEntity, USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
 
 const initialUser: UserEntity = {
   id: '',
@@ -13,24 +13,20 @@ const initialUser: UserEntity = {
   ownerAndConsumerAssets: [],
 };
 
-const useGetAccountAssetsQuery = (
-  account: string,
-  metaverse: string | number
+const useGetAccountUnclaimedAssetsQuery = (
+  account: string
 ): {
   isLoading: boolean;
   data: {
     unclaimed: AssetEntity[];
-    listed: AssetEntity[];
-    rented: AssetEntity[];
   };
 } => {
   const [user, setUser] = useState<UserEntity | null>(null);
 
-  const { data: rawUserData, loading } = useSubscription<{ user: UserEntity }>(USER_SUBSCRIPTION, {
+  const { data: rawUserData, loading } = useSubscription<{ user: UserEntity }>(USER_CLAIM_SUBSCRIPTION, {
     skip: !account,
     variables: {
       id: account.toLowerCase(),
-      metaverse: `${metaverse}`,
     },
   });
 
@@ -74,23 +70,17 @@ const useGetAccountAssetsQuery = (
   }, [rawUserData]);
 
   const assets: {
-    rented: AssetEntity[];
-    listed: AssetEntity[];
     unclaimed: AssetEntity[];
   } = useMemo(() => {
     if (!user) {
       return {
-        rented: [],
-        listed: [],
         unclaimed: [],
       };
     }
 
-    const { rents: rented = [], ownerAndConsumerAssets: listed = [], unclaimedRentAssets: unclaimed = [] } = user;
+    const { unclaimedRentAssets: unclaimed = [] } = user;
 
     return {
-      rented,
-      listed,
       unclaimed,
     };
   }, [user]);
@@ -101,4 +91,4 @@ const useGetAccountAssetsQuery = (
   };
 };
 
-export default useGetAccountAssetsQuery;
+export default useGetAccountUnclaimedAssetsQuery;
