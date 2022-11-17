@@ -14,6 +14,7 @@ import { useListingModal } from 'providers/listing-modal-provider';
 import { APP_ROUTES, MY_PROPERTIES_ROUTE_TABS, useMyPropertiesRouteTab } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
+import ClaimRewardsAlert from './ClaimRewardsAlert';
 import ListedTabContent from './ListedTabContent';
 import { useMetaverseQueryParam } from './MetaverseSelect';
 import MyPropertiesViewHeader from './MyPropertiesViewHeader';
@@ -98,6 +99,7 @@ const MyPropertiesView: FC = () => {
 
   return (
     <Container sx={{ pb: 24 }}>
+      <ClaimRewardsAlert unclaimedAssets={accountAssets.unclaimed} />
       <MyPropertiesViewHeader tabs={tabs} />
       <Box display="flex" minHeight={90} alignItems="center" justifyContent="space-between" py="18px">
         <Typography variant="body2" color="var(--theme-light-color)">
