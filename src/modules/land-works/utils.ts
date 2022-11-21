@@ -67,7 +67,7 @@ export const shortenString = (str: string): string => {
   return str.substring(0, 6) + '...' + str.substring(str.length - 4);
 };
 
-export const filterLandsByQuery = (lands: AssetEntity[], query: string): AssetEntity[] => {
+export const filterLandsByQuery = <T extends { name: string; [key: string]: any }>(lands: T[], query: string): T[] => {
   if (!query || !query.length) {
     return lands;
   }
@@ -216,7 +216,7 @@ export const filterByMoreFilters = (
   metaverse: string
 ): AssetEntity[] => {
   return lands.filter((item) => {
-    return metaverse === '1' ? decentralandFilter(item, filters) : voxelsFilter(item, filters);
+    return +metaverse === 1 ? decentralandFilter(item, filters) : voxelsFilter(item, filters);
   });
 };
 
