@@ -1,9 +1,9 @@
-import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import BigNumber from 'bignumber.js';
 
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import useGetIsMounted from 'hooks/useGetIsMounted';
-import { AssetEntity } from 'modules/land-works/api';
+import { AssetEntity, PaymentToken } from 'modules/land-works/api';
 import { useLandworks } from 'modules/land-works/providers/landworks-provider';
 
 import { createSafeContext, useSafeContext } from 'utils/context';
@@ -11,6 +11,8 @@ import { createSafeContext, useSafeContext } from 'utils/context';
 interface ClaimRewardsProviderProps {
   unclaimedAssets: AssetEntity[];
   adsReward: BigNumber;
+  adsRewardsPaymentToken?: PaymentToken;
+  claimAdsReward: () => Promise<void>;
 }
 
 interface ContextValue {
@@ -20,6 +22,7 @@ interface ContextValue {
   isAdsRewardClaiming: boolean;
   selectedAssetIds: string[];
   claimedAssetIds: string[];
+  adsRewardsPaymentToken?: PaymentToken;
   claimRentReward: () => Promise<void>;
   claimAdsReward: () => Promise<void>;
   toggleSelectedAssetById: (assetId: string) => void;
@@ -28,9 +31,15 @@ interface ContextValue {
 
 const Context = createSafeContext<ContextValue>();
 
-export const useClaimRewards = () => useSafeContext(Context);
+export const useClaimRewards = (): ContextValue => useSafeContext(Context);
 
-const ClaimRewardsProvider: React.FC<ClaimRewardsProviderProps> = ({ adsReward, unclaimedAssets, children }) => {
+const ClaimRewardsProvider: React.FC<ClaimRewardsProviderProps> = ({
+  adsReward,
+  adsRewardsPaymentToken,
+  unclaimedAssets,
+  children,
+  claimAdsReward: claimAds,
+}) => {
   const { landWorksContract } = useLandworks();
   const getIsMounted = useGetIsMounted();
   const [selectedAssetIds, setSelectedAssetIds] = useState<string[]>([]);
@@ -38,7 +47,6 @@ const ClaimRewardsProvider: React.FC<ClaimRewardsProviderProps> = ({ adsReward, 
   const [isRentRewardClaiming, setIsRentRewardClaiming] = useState(false);
   const [isAdsRewardClaiming, setIsAdsRewardClaiming] = useState(false);
 
-  const [actualAdsReward, setActualAdsReward] = useState(adsReward);
   const actualUnclaimedAssets = useMemo(() => {
     return unclaimedAssets.filter((unclaimedAsset) => !claimedAssetIds.includes(unclaimedAsset.id));
   }, [unclaimedAssets, claimedAssetIds]);
@@ -82,21 +90,12 @@ const ClaimRewardsProvider: React.FC<ClaimRewardsProviderProps> = ({ adsReward, 
   }, [selectedAssetIds, getIsMounted]);
 
   const claimAdsReward = useCallback(async () => {
-    if (!landWorksContract) {
-      return;
-    }
-
     setIsAdsRewardClaiming(true);
 
     try {
-      // TODO: replace with real logic
-      await new Promise((res) => {
-        setTimeout(res, 3000);
-      });
+      await claimAds();
 
       showToastNotification(ToastType.Success, 'Ads reward claimed successfully!');
-
-      setActualAdsReward(BigNumber.ZERO);
     } catch (e) {
       console.log(e);
 
@@ -106,20 +105,17 @@ const ClaimRewardsProvider: React.FC<ClaimRewardsProviderProps> = ({ adsReward, 
         setIsAdsRewardClaiming(false);
       }
     }
-  }, [getIsMounted]);
-
-  useLayoutEffect(() => {
-    setActualAdsReward(adsReward);
-  }, [adsReward]);
+  }, [getIsMounted, claimAds]);
 
   const value = useMemo(() => {
     return {
       unclaimedAssets: actualUnclaimedAssets,
-      adsReward: actualAdsReward,
+      adsReward,
       selectedAssetIds,
       claimedAssetIds,
       isRentRewardClaiming,
       isAdsRewardClaiming,
+      adsRewardsPaymentToken,
       isAssetSelected,
       toggleSelectedAssetById,
       claimRentReward,
@@ -127,11 +123,12 @@ const ClaimRewardsProvider: React.FC<ClaimRewardsProviderProps> = ({ adsReward, 
     };
   }, [
     actualUnclaimedAssets,
-    actualAdsReward,
+    adsReward,
     selectedAssetIds,
     claimedAssetIds,
     isRentRewardClaiming,
     isAdsRewardClaiming,
+    adsRewardsPaymentToken,
     isAssetSelected,
     toggleSelectedAssetById,
     claimRentReward,

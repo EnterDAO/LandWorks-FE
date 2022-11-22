@@ -1,50 +1,26 @@
-import React, { FC, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useSubscription } from '@apollo/client';
-import BigNumber from 'bignumber.js';
 
 import InfoAlert from 'components/custom/info-alert';
 import { Button } from 'design-system';
+import usePaymentToken from 'hooks/usePaymentToken';
 import { LocationState } from 'modules/interface';
-import { USER_CLAIM_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
 import { ReactComponent as DollarRibbonIcon } from 'resources/svg/dollar-ribbon.svg';
 import { useWallet } from 'wallets/wallet';
 
 import ClaimRewardsModal from './ClaimRewardsModal';
+import ClaimRewardsProvider from './ClaimRewardsProvider';
+import useAccountAdsRewards from './useAccountAdsRewards';
+import useGetAccountUnclaimedAssetsQuery from './useGetAccountUnclaimedQuery';
 
 const ClaimRewardsAlert: FC = () => {
   const history = useHistory();
   const location = useLocation<LocationState>();
   const wallet = useWallet();
   const [isClaimRewardsModalOpen, setIsClaimRewardsModalOpen] = useState(false);
-  const { data: userClaimData } = useSubscription<{ user: UserEntity }>(USER_CLAIM_SUBSCRIPTION, {
-    skip: !wallet.account,
-    variables: {
-      id: wallet.account?.toLowerCase(),
-    },
-  });
-
-  const [userData, setUserData] = useState<UserEntity | null>(null);
-
-  useLayoutEffect(() => {
-    if (!userClaimData || !userClaimData.user) {
-      return;
-    }
-
-    let isCancelled = false;
-
-    parseUser(userClaimData.user)
-      .then((result) => {
-        if (!isCancelled) {
-          setUserData(result);
-        }
-      })
-      .catch(console.error);
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [userClaimData]);
+  const { amount, claim, paymentTokenAddress } = useAccountAdsRewards();
+  const { data: unclaimedRentAssets } = useGetAccountUnclaimedAssetsQuery(wallet.account || '');
+  const adsRewardsPaymentToken = usePaymentToken(paymentTokenAddress);
 
   useEffect(() => {
     if (location.state?.openClaimModal) {
@@ -58,27 +34,25 @@ const ClaimRewardsAlert: FC = () => {
     }
   }, [location.state?.openClaimModal, history]);
 
-  // TODO: replace with real data
-  const adsReward = useMemo(() => new BigNumber(1), []);
-  const unclaimedRentAssets = userData?.unclaimedRentAssets || [];
-
   return (
     <>
-      <ClaimRewardsModal
-        open={isClaimRewardsModalOpen}
-        onClose={() => setIsClaimRewardsModalOpen(false)}
+      <ClaimRewardsProvider
         unclaimedAssets={unclaimedRentAssets}
-        adsReward={adsReward}
-      />
+        adsReward={amount}
+        adsRewardsPaymentToken={adsRewardsPaymentToken}
+        claimAdsReward={claim}
+      >
+        <ClaimRewardsModal open={isClaimRewardsModalOpen} onClose={() => setIsClaimRewardsModalOpen(false)} />
+      </ClaimRewardsProvider>
 
-      {(unclaimedRentAssets.length > 0 || adsReward.gt(0)) && (
+      {(unclaimedRentAssets.length > 0 || amount.gt(0)) && (
         <InfoAlert
           sx={{
             px: 6,
             py: 4,
             gap: 6,
             mt: 6,
-            mb: 12,
+            mb: 9,
           }}
           icon={<DollarRibbonIcon width={42} height={42} />}
           title="You have pending Rewards"

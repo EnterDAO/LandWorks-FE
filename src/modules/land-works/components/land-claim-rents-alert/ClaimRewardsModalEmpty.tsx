@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 
 import { ReactComponent as EmptyWalletIcon } from 'assets/icons/empty-wallet.svg';
 
-const ClaimRewardsModalEmpty = () => {
+const ClaimRewardsModalEmpty: FC = () => {
   return (
     <Stack m="auto" alignItems="center">
       <Box color="var(--theme-light-color)" display="flex" mb={3}>

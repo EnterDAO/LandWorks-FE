@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 
 import { Box, Button, Stack, Typography } from 'design-system';
+import { PaymentToken } from 'modules/land-works/api';
 
 import ClaimRewardsModalEmpty from './ClaimRewardsModalEmpty';
 import ClaimRewardsModalTotal from './ClaimRewardsModalTotal';
@@ -9,19 +10,18 @@ import { useClaimRewards } from './ClaimRewardsProvider';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
-const ClaimRewardsModalAdsTab = () => {
-  const { adsReward, isAdsRewardClaiming, claimAdsReward } = useClaimRewards();
-
+const ClaimRewardsModalAdsTab: FC = () => {
+  const { adsReward, isAdsRewardClaiming, adsRewardsPaymentToken, claimAdsReward } = useClaimRewards();
   const adsTotalRewards = useMemo(() => {
+    if (!adsRewardsPaymentToken) {
+      return [];
+    }
+
     const reward: {
-      paymentToken: {
-        symbol: string;
-      };
+      paymentToken: PaymentToken;
       total?: BigNumber;
     } = {
-      paymentToken: {
-        symbol: 'USDC',
-      },
+      paymentToken: adsRewardsPaymentToken,
     };
 
     if (adsReward.gt(0)) {
@@ -29,7 +29,7 @@ const ClaimRewardsModalAdsTab = () => {
     }
 
     return [reward];
-  }, [adsReward]);
+  }, [adsReward, adsRewardsPaymentToken]);
 
   const isAdsRewardAvailable = adsReward.gt(0);
   const isClaimButtonDisabled = !isAdsRewardAvailable || isAdsRewardClaiming;

@@ -1,14 +1,10 @@
-import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Box } from '@mui/system';
-import BigNumber from 'bignumber.js';
 
 import { Button, Divider, Modal, Stack, Typography } from 'design-system';
-import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import { AssetEntity } from 'modules/land-works/api';
 
 import ClaimRewardsModalAdsTab from './ClaimRewardsModalAdsTab';
 import ClaimRewardsModalRentsTab from './ClaimRewardsModalRentsTab';
-import ClaimRewardsProvider from './ClaimRewardsProvider';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
@@ -26,11 +22,9 @@ const tabs = [
 interface ClaimRewardsModalProps {
   open: boolean;
   onClose: () => void;
-  unclaimedAssets: AssetEntity[];
-  adsReward: BigNumber;
 }
 
-const ClaimRewardsModal: React.FC<ClaimRewardsModalProps> = ({ open, onClose, adsReward, unclaimedAssets }) => {
+const ClaimRewardsModal: React.FC<ClaimRewardsModalProps> = ({ open, onClose }) => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 
   const activeTab = tabs[activeTabIndex];
@@ -75,9 +69,7 @@ const ClaimRewardsModal: React.FC<ClaimRewardsModalProps> = ({ open, onClose, ad
       <Divider sx={{ my: 5, borderColor: '#3A3A4E' }} />
 
       <Stack gap={5}>
-        <ClaimRewardsProvider adsReward={adsReward} unclaimedAssets={unclaimedAssets}>
-          <TabContent />
-        </ClaimRewardsProvider>
+        <TabContent />
       </Stack>
     </Modal>
   );

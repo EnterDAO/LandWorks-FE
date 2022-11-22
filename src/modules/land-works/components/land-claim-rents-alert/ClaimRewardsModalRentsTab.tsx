@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Box } from '@mui/system';
 import BigNumber from 'bignumber.js';
 
@@ -15,7 +15,7 @@ import { THEME_COLORS } from 'themes/theme-constants';
 
 const MAX_CLAIM_SELECTED_ASSETS = 10;
 
-const ClaimRewardsModalRentsTab = () => {
+const ClaimRewardsModalRentsTab: FC = () => {
   const {
     unclaimedAssets,
     isAssetSelected,

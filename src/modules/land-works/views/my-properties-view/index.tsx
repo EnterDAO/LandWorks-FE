@@ -9,12 +9,12 @@ import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
 import { AssetEntity } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
+import ClaimRewardsAlert from 'modules/land-works/components/land-claim-rents-alert';
 import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
 import { useListingModal } from 'providers/listing-modal-provider';
 import { APP_ROUTES, MY_PROPERTIES_ROUTE_TABS, useMyPropertiesRouteTab } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
-import ClaimRewardsAlert from './ClaimRewardsAlert';
 import ListedTabContent from './ListedTabContent';
 import { useMetaverseQueryParam } from './MetaverseSelect';
 import MyPropertiesViewHeader from './MyPropertiesViewHeader';
@@ -100,6 +100,7 @@ const MyPropertiesView: FC = () => {
   return (
     <Container sx={{ pb: 24 }}>
       <ClaimRewardsAlert />
+
       <MyPropertiesViewHeader tabs={tabs} />
       <Box display="flex" minHeight={90} alignItems="center" justifyContent="space-between" py="18px">
         <Typography variant="body2" color="var(--theme-light-color)">
