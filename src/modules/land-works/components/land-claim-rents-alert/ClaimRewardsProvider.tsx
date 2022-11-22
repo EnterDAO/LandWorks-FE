@@ -72,7 +72,7 @@ const ClaimRewardsProvider: React.FC<ClaimRewardsProviderProps> = ({
     setIsRentRewardClaiming(true);
 
     try {
-      await landWorksContract.claimMultipleRentFees(selectedAssetIds, console.log);
+      await landWorksContract.claimMultipleRentFees(selectedAssetIds);
 
       showToastNotification(ToastType.Success, 'Rent claimed successfully!');
 
