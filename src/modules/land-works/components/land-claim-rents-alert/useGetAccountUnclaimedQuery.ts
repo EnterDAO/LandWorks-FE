@@ -17,9 +17,7 @@ const useGetAccountUnclaimedAssetsQuery = (
   account: string
 ): {
   isLoading: boolean;
-  data: {
-    unclaimed: AssetEntity[];
-  };
+  data: AssetEntity[];
 } => {
   const [user, setUser] = useState<UserEntity | null>(null);
 
@@ -69,24 +67,18 @@ const useGetAccountUnclaimedAssetsQuery = (
     };
   }, [rawUserData]);
 
-  const assets: {
-    unclaimed: AssetEntity[];
-  } = useMemo(() => {
+  const unclaimed = useMemo(() => {
     if (!user) {
-      return {
-        unclaimed: [],
-      };
+      return [];
     }
 
     const { unclaimedRentAssets: unclaimed = [] } = user;
 
-    return {
-      unclaimed,
-    };
+    return unclaimed;
   }, [user]);
 
   return {
-    data: assets,
+    data: unclaimed,
     isLoading,
   };
 };

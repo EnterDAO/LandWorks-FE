@@ -1,24 +1,26 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import InfoAlert from 'components/custom/info-alert';
 import { Button } from 'design-system';
-import InfoAlert from 'layout/components/info-alert';
+import usePaymentToken from 'hooks/usePaymentToken';
 import { LocationState } from 'modules/interface';
-import { ClaimModal } from 'modules/land-works/components/lands-claim-modal';
 import { ReactComponent as DollarRibbonIcon } from 'resources/svg/dollar-ribbon.svg';
+import { useWallet } from 'wallets/wallet';
 
-import { useWallet } from '../../../../wallets/wallet';
+import ClaimRewardsModal from './ClaimRewardsModal';
+import ClaimRewardsProvider from './ClaimRewardsProvider';
+import useAccountAdsRewards from './useAccountAdsRewards';
 import useGetAccountUnclaimedAssetsQuery from './useGetAccountUnclaimedQuery';
 
 const ClaimRewardsAlert: FC = () => {
-  const wallet = useWallet();
-
-  const { data: notListedAssets } = useGetAccountUnclaimedAssetsQuery(wallet.account || '');
-
   const history = useHistory();
   const location = useLocation<LocationState>();
-  const [isClaimButtonDisabled, setIsClaimButtonDisabled] = useState(false);
+  const wallet = useWallet();
   const [isClaimRewardsModalOpen, setIsClaimRewardsModalOpen] = useState(false);
+  const { amount, claim, paymentTokenAddress } = useAccountAdsRewards();
+  const { data: unclaimedRentAssets } = useGetAccountUnclaimedAssetsQuery(wallet.account || '');
+  const adsRewardsPaymentToken = usePaymentToken(paymentTokenAddress);
 
   useEffect(() => {
     if (location.state?.openClaimModal) {
@@ -34,17 +36,16 @@ const ClaimRewardsAlert: FC = () => {
 
   return (
     <>
-      <ClaimModal
-        onSubmit={() => {
-          setIsClaimButtonDisabled(true);
-          setIsClaimRewardsModalOpen(false);
-        }}
-        onCancel={() => setIsClaimRewardsModalOpen(false)}
-        open={isClaimRewardsModalOpen}
-        rentFees={notListedAssets.unclaimed}
-      />
+      <ClaimRewardsProvider
+        unclaimedAssets={unclaimedRentAssets}
+        adsReward={amount}
+        adsRewardsPaymentToken={adsRewardsPaymentToken}
+        claimAdsReward={claim}
+      >
+        <ClaimRewardsModal open={isClaimRewardsModalOpen} onClose={() => setIsClaimRewardsModalOpen(false)} />
+      </ClaimRewardsProvider>
 
-      {notListedAssets.unclaimed.length > 0 && (
+      {(unclaimedRentAssets.length > 0 || amount.gt(0)) && (
         <InfoAlert
           sx={{
             px: 6,
@@ -55,10 +56,9 @@ const ClaimRewardsAlert: FC = () => {
           }}
           icon={<DollarRibbonIcon width={42} height={42} />}
           title="You have pending Rewards"
-          description="There are unclaimed rents rewards from your listed properties. Claim now."
+          description="There are unclaimed rents and/or ad rewards from your listed properties. Claim now."
           action={
             <Button
-              disabled={isClaimButtonDisabled}
               variant="primary"
               btnSize="small"
               onClick={() => setIsClaimRewardsModalOpen(true)}

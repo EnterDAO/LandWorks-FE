@@ -157,8 +157,8 @@ export function getExponentValue(decimals = 0): BigNumber {
   return new BigNumber(10).pow(decimals);
 }
 
-export function getHumanValue(value?: BigNumber, decimals = 0): BigNumber | undefined {
-  return value?.div(getExponentValue(decimals));
+export function getHumanValue(value: BigNumber, decimals = 0): BigNumber {
+  return value.div(getExponentValue(decimals));
 }
 
 export function getNonHumanValue(value: BigNumber | number, decimals = 0): BigNumber {

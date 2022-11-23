@@ -524,6 +524,18 @@ export const USER_ASSET_RENTS_SUBSCRIPTION = gql`
   }
 `;
 
+export const GET_TOKEN_PAYMENTS = gql`
+  query GetTokenPayments {
+    paymentTokens {
+      id
+      name
+      symbol
+      decimals
+      feePercentage
+    }
+  }
+`;
+
 type PaginatedResult<T extends Record<string, any>> = {
   data: T[];
   meta: {
@@ -840,17 +852,7 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
  */
 export function fetchTokenPayments(): Promise<PaymentToken[]> {
   return GraphClient.get({
-    query: gql`
-      query GetTokenPayments {
-        paymentTokens {
-          id
-          name
-          symbol
-          decimals
-          feePercentage
-        }
-      }
-    `,
+    query: GET_TOKEN_PAYMENTS,
   })
     .then(async (response) => {
       return [...response.data.paymentTokens];
@@ -1730,4 +1732,11 @@ export function getAssetAdvertisement({
   return fetch(`${config.backend.apiUrl}/scene/${chainId}/${metaverseRegistry}/${metaverseAssetId}`).then((res) =>
     res.json()
   );
+}
+
+export function getAccountAdsRewards(
+  chainId: string | number,
+  walletAddress: string
+): Promise<{ amount: string; claimedAmount: string; contractAddress: string; proof: string[]; token: string }> {
+  return fetch(`${config.backend.apiUrl}/distribution/${chainId}/${walletAddress}`).then((res) => res.json());
 }
