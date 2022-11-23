@@ -14,6 +14,8 @@ import { useListingModal } from 'providers/listing-modal-provider';
 import { APP_ROUTES, MY_PROPERTIES_ROUTE_TABS, useMyPropertiesRouteTab } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
+import { AssetStatus } from '../../models/AssetStatus';
+import FeedbackButton from '../single-land-view/FeedbackButton';
 import ClaimRewardsAlert from './ClaimRewardsAlert';
 import ListedTabContent from './ListedTabContent';
 import { useMetaverseQueryParam } from './MetaverseSelect';
@@ -97,6 +99,10 @@ const MyPropertiesView: FC = () => {
   const isRentedTab = activeTab.id === MY_PROPERTIES_ROUTE_TABS.rented;
   const isListedTab = activeTab.id === MY_PROPERTIES_ROUTE_TABS.listed;
 
+  const isFeedbackButtonVisible = accountAssets.listed.some(
+    (listedAsset) => listedAsset.status !== AssetStatus.WITHDRAWN
+  );
+
   return (
     <Container sx={{ pb: 24 }}>
       <ClaimRewardsAlert />
@@ -111,14 +117,18 @@ const MyPropertiesView: FC = () => {
         </Typography>
 
         {isMetamaskConnected && (
-          <SplitBeeListButton
-            btnSize="medium"
-            variant="gradient"
-            sx={{ marginLeft: 'auto', alignItems: 'center' }}
-            onClick={() => listingModal.open()}
-          >
-            List Now
-          </SplitBeeListButton>
+          <Box display="flex" alignItems="center" gap="12px">
+            {isFeedbackButtonVisible && <FeedbackButton />}
+
+            <SplitBeeListButton
+              btnSize="medium"
+              variant="gradient"
+              sx={{ marginLeft: 'auto', alignItems: 'center' }}
+              onClick={() => listingModal.open()}
+            >
+              List Now
+            </SplitBeeListButton>
+          </Box>
         )}
       </Box>
 
