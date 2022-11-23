@@ -25,11 +25,6 @@ import RentedTabContent from './RentedTabContent';
 import useGetAccountAssetsQuery from './useGetAccountAssetsQuery';
 import useGetAccountNonListedAssetsQuery from './useGetAccountNotListedAssets';
 
-export interface TabContentProps {
-  totalAssets: number;
-  assets: AssetEntity[];
-}
-
 const MyPropertiesView: FC = () => {
   const tab = useMyPropertiesRouteTab();
   const history = useHistory();
