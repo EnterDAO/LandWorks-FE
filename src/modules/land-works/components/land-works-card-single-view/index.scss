@@ -45,7 +45,7 @@
   }
 
   .map-image-wrapper {
-    max-height: 418px;
+    max-height: 478px;
     border-radius: 20px;
     overflow: hidden;
     display: flex;
@@ -132,7 +132,8 @@
       min-width: 156px;
     }
 
-    .land-owner-address {
+    .land-owner-address,
+    .land-operator-address {
       color: var(--theme-accent-color);
       font-size: 14px;
       font-weight: 500;
@@ -376,6 +377,13 @@
   
   &__pill {
     flex-grow: 1;
+
+    & > button {
+      padding-top: 0;
+      padding-bottom: 0;
+      height: 32px;
+
+    }
   }
 
   &__hot {
@@ -492,7 +500,7 @@
 
 
 .hashtag-row {
-  margin-top: 15px;
+  margin-top: 7px;
   p {
     font-size: 12px;
     color: #68687b;

@@ -4,7 +4,9 @@
 import { gql } from '@apollo/client';
 import BigNumber from 'bignumber.js';
 import { constants } from 'ethers';
+import { getWeb3Token } from 'web3/token';
 
+import config from 'config';
 import { getCryptoVoxelsAsset, getLandImageUrl } from 'helpers/helpers';
 import { getUsdPrice } from 'providers/known-tokens-provider';
 
@@ -1676,4 +1678,56 @@ function parseAdditionalAttributes(data: additionalAttributes[]): any {
     parsedAttributes[fixedType] = item.value;
   });
   return parsedAttributes;
+}
+
+interface AssetAdvertisement {
+  id: number;
+  hasAgreedForAds: boolean;
+  metaverseRegistry: string;
+  metaverseAssetId: string;
+  owner: string;
+  chainId: number;
+}
+
+export function createAssetAdvertisement(args: {
+  metaverseRegistry: string;
+  metaverseAssetId: string;
+  hasAgreedForAds: boolean;
+}): Promise<AssetAdvertisement> {
+  return fetch(`${config.backend.apiUrl}/scene`, {
+    method: 'POST',
+    body: JSON.stringify(args),
+    headers: {
+      Authorization: `Bearer ${getWeb3Token()}`,
+      'Content-Type': 'application/json',
+    },
+  }).then((res) => res.json());
+}
+
+export function updateAssetAdvertisement(args: {
+  assetId: string;
+  hasAgreedForAds: boolean;
+}): Promise<AssetAdvertisement> {
+  return fetch(`${config.backend.apiUrl}/scene`, {
+    method: 'PUT',
+    body: JSON.stringify(args),
+    headers: {
+      Authorization: `Bearer ${getWeb3Token()}`,
+      'Content-Type': 'application/json',
+    },
+  }).then((res) => res.json());
+}
+
+export function getAssetAdvertisement({
+  chainId,
+  metaverseAssetId,
+  metaverseRegistry,
+}: {
+  chainId: string;
+  metaverseRegistry: string;
+  metaverseAssetId: string;
+}): Promise<Omit<AssetAdvertisement, 'id'>> {
+  return fetch(`${config.backend.apiUrl}/scene/${chainId}/${metaverseRegistry}/${metaverseAssetId}`).then((res) =>
+    res.json()
+  );
 }
