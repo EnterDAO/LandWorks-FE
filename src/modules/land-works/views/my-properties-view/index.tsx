@@ -6,7 +6,6 @@ import Container from 'components/custom/container';
 import { Box, Typography } from 'design-system';
 import useIsMetamaskConnected from 'hooks/useIsMetamaskConnected';
 import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
-import { AssetEntity } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
 import ClaimRewardsAlert from 'modules/land-works/components/land-claim-rents-alert';
