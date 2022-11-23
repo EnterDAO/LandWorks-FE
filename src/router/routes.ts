@@ -45,7 +45,6 @@ export const MY_PROPERTIES_ROUTE_TABS = {
   listed: 'listed',
   notListed: 'not-listed',
 } as const;
-
 export type MyPropertiesRouteTabsKey = keyof typeof MY_PROPERTIES_ROUTE_TABS;
 export type MyPropertiesRouteTabsValue = typeof MY_PROPERTIES_ROUTE_TABS[MyPropertiesRouteTabsKey];
 

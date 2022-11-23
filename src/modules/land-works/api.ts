@@ -636,6 +636,7 @@ export type AssetEntity = {
   hasUpcomingRents: boolean;
   lastRentEnd: string;
   isAvailable: boolean;
+  isEmptyEstate: boolean;
   additionalData: AdditionalDecantralandData;
 };
 
@@ -1473,7 +1474,8 @@ export async function parseAssets(assets: any[]): Promise<AssetEntity[]> {
     promises.push(parseAsset(asset));
   }
 
-  return Promise.all(promises);
+  const parsedAssets = await Promise.all(promises);
+  return parsedAssets.filter((asset: AssetEntity) => !asset.isEmptyEstate);
 }
 
 export async function parseAsset(asset: any): Promise<AssetEntity> {
@@ -1495,6 +1497,7 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
     liteAsset.name = getDecentralandAssetName(asset.decentralandData);
     liteAsset.imageUrl = getLandImageUrl(asset);
     liteAsset.externalUrl = getDecentralandPlayUrl(asset?.decentralandData?.coordinates);
+    liteAsset.isEmptyEstate = asset.decentralandData?.coordinates.length == 0;
   } else {
     const data = await getCryptoVoxelsAsset(asset.metaverseAssetId);
     liteAsset.name = data.name;

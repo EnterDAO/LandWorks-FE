@@ -396,79 +396,80 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                   );
                 })}
               </Stack>
-
-              <Box className="rent-section">
-                <Grid container columnSpacing={5} rowSpacing={2} className="rent-price">
-                  <Grid item xs={12} xl={6.5} className="price-wrapper">
-                    {asset?.availability?.isRentable && (
-                      <div className="period-wrapper">
-                        <span className="period-title">Rent period</span>
-                        <span className="available-period">
-                          {asset.minPeriodTimedType} - {asset.maxPeriodTimedType}
-                        </span>
-                        <span className="period-title">Max Rent Queue</span>
-                        <span className="available-period">{asset.maxFutureTimeTimedType}</span>
-                      </div>
-                    )}
-                    <Grid item>
-                      <Grid item className="eth-price-container">
-                        <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" />
-                        <SmallAmountTooltip
-                          className="price-eth"
-                          amount={asset?.pricePerMagnitude ? asset?.pricePerMagnitude?.price : new BigNumber('0')}
-                        />
-                        <p>{asset?.paymentToken?.symbol}</p>
-
-                        <div className="usd-price-container">
-                          <SmallAmountTooltip
-                            className="price"
-                            symbol="$"
-                            amount={asset?.pricePerMagnitude?.usdPrice || ZERO_BIG_NUMBER}
-                          />
-                          <span className="per-day">/{asset?.pricePerMagnitude?.magnitude}</span>
+              {!asset?.isEmptyEstate && (
+                <Box className="rent-section">
+                  <Grid container columnSpacing={5} rowSpacing={2} className="rent-price">
+                    <Grid item xs={12} xl={6.5} className="price-wrapper">
+                      {asset?.availability?.isRentable && (
+                        <div className="period-wrapper">
+                          <span className="period-title">Rent period</span>
+                          <span className="available-period">
+                            {asset.minPeriodTimedType} - {asset.maxPeriodTimedType}
+                          </span>
+                          <span className="period-title">Max Rent Queue</span>
+                          <span className="available-period">{asset.maxFutureTimeTimedType}</span>
                         </div>
+                      )}
+                      <Grid item>
+                        <Grid item className="eth-price-container">
+                          <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" />
+                          <SmallAmountTooltip
+                            className="price-eth"
+                            amount={asset?.pricePerMagnitude ? asset?.pricePerMagnitude?.price : new BigNumber('0')}
+                          />
+                          <p>{asset?.paymentToken?.symbol}</p>
+
+                          <div className="usd-price-container">
+                            <SmallAmountTooltip
+                              className="price"
+                              symbol="$"
+                              amount={asset?.pricePerMagnitude?.usdPrice || ZERO_BIG_NUMBER}
+                            />
+                            <span className="per-day">/{asset?.pricePerMagnitude?.magnitude}</span>
+                          </div>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={12} xl={5.5}>
+                      <Grid item className="property-button">
+                        {isOwnerOrConsumer() && (
+                          <Button
+                            variant="gradient"
+                            btnSize="small"
+                            type="button"
+                            className={'button-primary'}
+                            onClick={handleClaim}
+                            disabled={isClaimButtonDisabled}
+                          >
+                            <span>CLAIM RENT</span>
+                          </Button>
+                        )}
+                        {!isOwnerOrConsumer() && (
+                          <button
+                            type="button"
+                            className={'button-primary '}
+                            disabled={isRentButtonDisabled || isNotListed() || !asset?.availability?.isRentable}
+                            onClick={handleRent}
+                          >
+                            <span>{isAvailable ? 'RENT NOW' : 'RENT NEXT SLOT'}</span>
+                          </button>
+                        )}
+                      </Grid>
+                      <Grid item className="property-button">
+                        <ExternalLink className="marketplace-link" target={'_blank'} href={asset?.externalUrl}>
+                          <span>view in metaverse</span>
+                        </ExternalLink>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item xs={12} xl={5.5}>
-                    <Grid item className="property-button">
-                      {isOwnerOrConsumer() && (
-                        <Button
-                          variant="gradient"
-                          btnSize="small"
-                          type="button"
-                          className={'button-primary'}
-                          onClick={handleClaim}
-                          disabled={isClaimButtonDisabled}
-                        >
-                          <span>CLAIM RENT</span>
-                        </Button>
-                      )}
-                      {!isOwnerOrConsumer() && (
-                        <button
-                          type="button"
-                          className={'button-primary '}
-                          disabled={isRentButtonDisabled || isNotListed() || !asset?.availability?.isRentable}
-                          onClick={handleRent}
-                        >
-                          <span>{isAvailable ? 'RENT NOW' : 'RENT NEXT SLOT'}</span>
-                        </button>
-                      )}
-                    </Grid>
-                    <Grid item className="property-button">
-                      <ExternalLink className="marketplace-link" target={'_blank'} href={asset?.externalUrl}>
-                        <span>view in metaverse</span>
-                      </ExternalLink>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Box>
+                </Box>
+              )}
             </Grid>
 
             {shouldShowRenterCountdown() && (
               <Grid className="countdown">
                 <Grid item xs={10}>
-                  {/* // eslint-disable-next-line 
+                  {/* // eslint-disable-next-line
                   // @ts-ignore */}
                   <Countdown date={Number(countDownTimestamp) * 1000} zeroPadTime={3} renderer={renderCountdown} />
                 </Grid>
