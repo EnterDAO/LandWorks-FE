@@ -14,6 +14,7 @@ import { useListingModal } from 'providers/listing-modal-provider';
 import { APP_ROUTES, MY_PROPERTIES_ROUTE_TABS, useMyPropertiesRouteTab } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
+import { AssetStatus } from '../../models/AssetStatus';
 import FeedbackButton from '../single-land-view/FeedbackButton';
 import ClaimRewardsAlert from './ClaimRewardsAlert';
 import ListedTabContent from './ListedTabContent';
@@ -99,7 +100,7 @@ const MyPropertiesView: FC = () => {
   const isListedTab = activeTab.id === MY_PROPERTIES_ROUTE_TABS.listed;
 
   const isFeedbackButtonVisible = accountAssets.listed.some(
-    (listedAsset) => listedAsset.availability.isCurrentlyAvailable
+    (listedAsset) => listedAsset.status !== AssetStatus.WITHDRAWN
   );
 
   return (
