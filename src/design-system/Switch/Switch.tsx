@@ -13,9 +13,6 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
     '& .MuiSwitch-thumb': {
       width: 18,
     },
-    '& .MuiSwitch-switchBase.Mui-checked': {
-      transform: 'translateX(9px)',
-    },
   },
 
   '& .MuiSwitch-switchBase': {
@@ -35,16 +32,13 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
     top: '20px',
     height: 18,
     borderRadius: 15,
-    transition: theme.transitions.create('60px', {
-      duration: 200,
-    }),
   },
   '& .MuiSwitch-track': {
     width: 60,
     height: 30,
     borderRadius: 50,
     opacity: 1,
-    backgroundColor: THEME_COLORS.grey01,
+    backgroundColor: THEME_COLORS.grey02,
     boxSizing: 'border-box',
   },
   '& .Mui-disabled': {

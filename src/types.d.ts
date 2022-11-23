@@ -7,3 +7,9 @@ declare module '@mui/material/styles' {
     '3xl': true;
   }
 }
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
