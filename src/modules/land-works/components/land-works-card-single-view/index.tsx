@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Countdown, { CountdownTimeDelta, zeroPad } from 'react-countdown';
 import Grid from '@mui/material/Grid';
 import splitbee from '@splitbee/web';
