@@ -636,6 +636,7 @@ export type AssetEntity = {
   hasUpcomingRents: boolean;
   lastRentEnd: string;
   isAvailable: boolean;
+  isEmptyEstate: boolean;
   additionalData: AdditionalDecantralandData;
 };
 
@@ -860,16 +861,18 @@ export function fetchTokenPayments(): Promise<PaymentToken[]> {
     });
 }
 
+export const GET_METAVERSES_QUERY = gql`
+  {
+    metaverses {
+      id
+      name
+    }
+  }
+`;
+
 export function fetchMetaverses() {
   return GraphClient.get({
-    query: gql`
-      {
-        metaverses {
-          id
-          name
-        }
-      }
-    `,
+    query: GET_METAVERSES_QUERY,
   })
     .then(async (response) => {
       return response.data.metaverses.map((meta: any) => {
@@ -1028,7 +1031,7 @@ export function fetchUserFirstRentByTimestamp(
     });
 }
 
-export function fetchUserRents(address: string, availableOnly = false, metaverse: string): Promise<any> {
+export function fetchUserRents(address: string, availableOnly = false, metaverse: string | number): Promise<any> {
   const now = getNowTs();
   return GraphClient.get({
     query: gql`
@@ -1471,7 +1474,8 @@ export async function parseAssets(assets: any[]): Promise<AssetEntity[]> {
     promises.push(parseAsset(asset));
   }
 
-  return Promise.all(promises);
+  const parsedAssets = await Promise.all(promises);
+  return parsedAssets.filter((asset: AssetEntity) => !asset.isEmptyEstate);
 }
 
 export async function parseAsset(asset: any): Promise<AssetEntity> {
@@ -1493,6 +1497,7 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
     liteAsset.name = getDecentralandAssetName(asset.decentralandData);
     liteAsset.imageUrl = getLandImageUrl(asset);
     liteAsset.externalUrl = getDecentralandPlayUrl(asset?.decentralandData?.coordinates);
+    liteAsset.isEmptyEstate = asset.decentralandData?.coordinates.length == 0;
   } else {
     const data = await getCryptoVoxelsAsset(asset.metaverseAssetId);
     liteAsset.name = data.name;

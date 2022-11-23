@@ -74,15 +74,17 @@ const ContractProvider: FC = (props) => {
     cryptoVoxelsContract.setAccount(walletCtx.account);
   }, [walletCtx.account]);
 
-  const value: ContextType = {
-    landRegistryContract,
-    estateRegistryContract,
-    cryptoVoxelsContract,
-    txInProgress,
-    setTxInProgress,
-    txHash,
-    setTxHash,
-  };
+  const value: ContextType = useMemo(() => {
+    return {
+      landRegistryContract,
+      estateRegistryContract,
+      cryptoVoxelsContract,
+      txInProgress,
+      setTxInProgress,
+      txHash,
+      setTxHash,
+    };
+  }, [landRegistryContract, estateRegistryContract, cryptoVoxelsContract, txInProgress, txHash]);
 
   return (
     <ProviderContext.Provider value={value}>

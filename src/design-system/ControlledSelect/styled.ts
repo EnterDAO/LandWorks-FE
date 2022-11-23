@@ -38,6 +38,7 @@ export const StyledButton = styled('button')(
   text-align: left;
   line-height: 1.5;
   width: 100%;
+  min-width: 150px;
   color: ${THEME_COLORS.light};
 
   &:hover {
@@ -123,5 +124,6 @@ export const StyledOption = styled(OptionUnstyled)(
 );
 
 export const StyledPopper = styled(PopperUnstyled)`
-  z-index: 1;
+  position: relative;
+  z-index: 2;
 `;

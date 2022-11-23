@@ -46,7 +46,6 @@ import {
   FEE_PRECISION,
   MaxRentPeriodOptions,
   MinRentPeriodOptions,
-  listNotificationMessage,
   listTypes,
 } from 'modules/land-works/constants';
 import { THEME_COLORS } from 'themes/theme-constants';
@@ -56,15 +55,29 @@ import './index.scss';
 const SignTransactionMessage = 'Signing transaction...';
 const MineTransactionMessage = 'Listing property...';
 
+enum Step {
+  Asset = 0,
+  RentPeriod = 1,
+  RentPrice = 2,
+  Advertisement = 3,
+  Summary = 4,
+}
+
 interface IProps {
   closeModal?: () => void;
+  asset?: BaseNFT;
 }
 
 const getDefaultIsAdvertisementActive = () => !!localStorage.getItem('default-listing-modal-ads');
 const setDefaultIsAdvertisementActive = (isActive: boolean) =>
   localStorage.setItem('default-listing-modal-ads', isActive ? '1' : '');
 
-const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
+const metaverseIdByName = {
+  Decentraland: 1,
+  Voxels: 2,
+};
+
+const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const { setJoinPromptOpen } = useGeneral();
   const walletCtx = useWallet();
   const landworks = useLandworks();
@@ -96,14 +109,13 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [maxFutureSelectedOption, setMaxFutureSelectedOption] = useState(AtMostRentPeriodOptions[4]); // Selected Option Value for the select menu
   const [maxFutureError, setMaxFutureError] = useState('');
 
-  const [selectedProperty, setSelectedProperty] = useState(null as BaseNFT | null);
+  const [selectedProperty, setSelectedProperty] = useState<BaseNFT | null | undefined>(asset);
 
   const [assetProperties, setAssetProperties] = useState<DecentralandNFT[]>([]);
   const [assetEstates, setAssetEstates] = useState<DecentralandNFT[]>([]);
   const [estateGroup, setEstateGroup] = useState<DecentralandNFT[]>([]);
   const [cryptoVoxelParcels, setCryptoVoxelParcels] = useState<CryptoVoxelNFT[]>([]);
 
-  const [infoMessage, setInfoMessage] = useState<string>('');
   const [paymentTokens, setPaymentTokens] = useState([] as PaymentToken[]);
   const [paymentToken, setPaymentToken] = useState({} as PaymentToken);
   const [selectedCurrency, setSelectedCurrency] = useState(1);
@@ -122,7 +134,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   const [loading, setLoading] = useState(false);
   const [availableMetaverses, setAvailableMetaverses] = useState<Option[]>([]);
   const [selectedMetaverse, setSelectedMetaverse] = useState(
-    +sessionStorageHandler('get', 'general', 'metaverse') || 1
+    asset ? metaverseIdByName[asset.metaverseName] : +sessionStorageHandler('get', 'general', 'metaverse') || 1
   );
   const [activeStep, setActiveStep] = useState(0);
   const [showApproveModal, setShowApproveModal] = useState(false);
@@ -143,10 +155,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   useEffect(() => {
     fetchMetaverses().then((res) => setAvailableMetaverses(addIconToMetaverse(res)));
   }, []);
-
-  useEffect(() => {
-    setInfoMessage(listNotificationMessage[activeStep]);
-  }, [activeStep]);
 
   const isDecentraland = selectedProperty?.metaverseName === 'Decentraland';
   const isVoxels = selectedProperty?.metaverseName === 'Voxels';
@@ -580,8 +588,12 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   }, [selectedProperty]);
 
   useEffect(() => {
+    if (asset) {
+      return;
+    }
+
     setSelectedProperty(null);
-  }, [selectedMetaverse]);
+  }, [selectedMetaverse, asset]);
 
   const onChangeMetaverse = (value: number) => {
     setSelectedMetaverse(value);
@@ -592,8 +604,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
   };
 
   const showPriceInUsd = `$${usdPrice}`;
-
-  const steps = ['Choose Land', 'Rent Period', 'Rent Price', 'Advertise', 'Summary'];
 
   const getPropertyCountForMetaverse = () => {
     if (selectedMetaverse === 1) {
@@ -667,6 +677,54 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
 
   const properties = selectedMetaverse === 1 ? filteredDecentralandProperties : filteredVoxels;
 
+  const steps: {
+    id: Step;
+    label: string;
+    title?: string;
+    subtitle?: string;
+    warning?: string;
+  }[] = useMemo(() => {
+    return [
+      ...(!asset
+        ? [
+            {
+              id: Step.Asset,
+              label: 'Choose Land',
+            },
+          ]
+        : []),
+      {
+        id: Step.RentPeriod,
+        title: 'Choose rent period',
+        label: 'Rent Period',
+        subtitle: 'Select the wanted rent period for this property.',
+        warning:
+          'Once you list your property you can edit the entered rent period but you’ll have to pay a network fee.',
+      },
+      {
+        id: Step.RentPrice,
+        title: 'Select Rent Price',
+        label: 'Rent Price',
+        subtitle: 'Select the wanted rent price for this property.',
+        warning:
+          'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
+      },
+      {
+        id: Step.Advertisement,
+        title: 'Advertise',
+        label: 'Advertise',
+      },
+      {
+        id: Step.Summary,
+        label: 'Summary',
+        title: 'Listing Summary',
+        warning: 'There is a network fee in order to list the property.',
+      },
+    ];
+  }, []);
+
+  const step = steps[activeStep];
+
   return (
     <section className="list-view">
       <Grid container direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
@@ -674,9 +732,201 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
           List Property
         </Box>
         <Grid container direction="row" alignItems="center" justifyContent="center" width={600} alignSelf="center">
-          <CustomizedSteppers steps={steps} activeStep={activeStep} />
+          <CustomizedSteppers steps={steps.map(({ label }) => label)} activeStep={activeStep} />
         </Grid>
-        {activeStep === 0 && (
+
+        {(step.title || step.subtitle) && (
+          <Stack width={1} alignItems="center" textAlign="center">
+            <Typography variant="h3" component="h4" mt={8} mb={1}>
+              {activeStep + 1}. {step.title}
+            </Typography>
+
+            {step.subtitle && <Typography fontWeight={400}>{step.subtitle}</Typography>}
+          </Stack>
+        )}
+
+        <Box width={1} minHeight={370}>
+          {step.id === Step.Asset && (
+            <Stack height={isSmallScreen ? '460px' : '530px'} overflow="auto">
+              <Box display="flex" gap={4} margin="40px 0 10px">
+                <ControlledSelect
+                  width="290px"
+                  value={selectedMetaverse}
+                  onChange={onChangeMetaverse}
+                  options={availableMetaverses}
+                />
+                <Box>
+                  <ControlledSelect
+                    width="190px"
+                    value={landType}
+                    onChange={onChangeType}
+                    options={listTypes[selectedMetaverse]}
+                  />
+                </Box>
+              </Box>
+
+              {loading && <ListingCardSkeleton />}
+
+              {!loading &&
+                (properties.length > 0 ? (
+                  <Grid container className="properties">
+                    {properties.map((property) => {
+                      return (
+                        <Grid key={property.id} item xs={3} margin="0 0 10px">
+                          <ListingCard
+                            selected={property.name === selectedProperty?.name}
+                            onClick={handlePropertyChange}
+                            property={property}
+                            estateLands={estateGroup}
+                          />
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                ) : (
+                  <Stack flexGrow={1} justifyContent="center" alignItems="center">
+                    <Box component="img" src={landNotFoundImageSrc} width={170} mb={5} />
+                    <Typography variant="h1" component="p" mb={2}>
+                      Land not found
+                    </Typography>
+
+                    <Typography variant="subtitle2">It seems that you don’t have any land in your wallet.</Typography>
+                  </Stack>
+                ))}
+            </Stack>
+          )}
+
+          {step.id === Step.RentPeriod && (
+            <Box maxWidth={350} mx="auto" width={1}>
+              <RentPeriod
+                isMinPeriodSelected={isMinPeriodSelected}
+                handleMinCheckboxChange={handleMinCheckboxChange}
+                handleMinSelectChange={handleMinSelectChange}
+                handleMinInputChange={handleMinInputChange}
+                isMaxPeriodSelected={isMaxPeriodSelected}
+                handleMaxCheckboxChange={handleMaxCheckboxChange}
+                handleMaxSelectChange={handleMaxSelectChange}
+                handleMaxInputChange={handleMaxInputChange}
+                handleAtMostInputChange={handleAtMostInputChange}
+                handleAtMostSelectChange={handleAtMostSelectChange}
+                minOptions={MinRentPeriodOptions}
+                maxOptions={MaxRentPeriodOptions}
+                atMostOptions={AtMostRentPeriodOptions}
+                minOptionsValue={minPeriodSelectedOption.value}
+                maxOptionsValue={maxPeriodSelectedOption.value}
+                atMostOptionsValue={maxFutureSelectedOption.value}
+                minInputValue={minInput?.toNumber()}
+                maxInputValue={maxInput?.toNumber()}
+                atMostInputValue={maxFutureTimeInput?.toNumber()}
+                minError={minError}
+                maxError={maxError}
+                atMostError={maxFutureError}
+                withoutSwitch
+              />
+            </Box>
+          )}
+
+          {step.id === Step.RentPrice && (
+            <Stack mx="auto" maxWidth={350} width={1}>
+              <RentPrice
+                handleCostEthChange={handleCostEthChange}
+                handleCurrencyChange={handleCurrencyChange}
+                showPriceInUsd={showPriceInUsd}
+                paymentToken={paymentToken}
+                earnings={earnings}
+                protocolFee={protocolFee}
+                feePercentage={feePercentage}
+                options={currencyData}
+                optionsValue={selectedCurrency}
+                inputValue={tokenCost.toNumber()}
+                error={priceError}
+              />
+            </Stack>
+          )}
+          {step.id === Step.Advertisement && (
+            <Stack width={1} maxWidth={670} mt={10} mx="auto">
+              <Grid container spacing={5}>
+                <Grid item xs={6}>
+                  <Image
+                    width={640}
+                    height={480}
+                    src={listingAdImgSrc}
+                    sx={{
+                      width: 1,
+                      borderRadius: '8px',
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} display="flex" alignItems="center">
+                  <Typography component="p" color={THEME_COLORS.grey03} variant="caption" textAlign="left">
+                    We have partnered up with {'{placeholder}'} to allow for ads to be shown on your property until
+                    someone rents it. By allowing your plot to be used for ads, you will be rewarded additionally for
+                    each unique view that the ad gets. Rewards can be claimed every month.
+                    <br />
+                    <br />
+                    Think of it like providing your plot to the ads company until someone actually rents it!
+                  </Typography>
+                </Grid>
+              </Grid>
+
+              <Typography
+                variant="button"
+                component="label"
+                display="flex"
+                alignItems="center"
+                minHeight={45}
+                borderRadius="10px"
+                bgcolor="rgba(93, 143, 240, 0.12)"
+                p="12px"
+                mt={8}
+                sx={{
+                  cursor: 'pointer',
+                }}
+              >
+                <Checkbox
+                  checked={isLandProvidedForAdvertisement}
+                  onChange={(e, value) => setIsLandProvidedForAdvertisement(value)}
+                />
+                Provide land for advertising purposes until it gets rented.
+              </Typography>
+            </Stack>
+          )}
+          {step.id === Step.Summary && (
+            <Box mx="auto" maxWidth={630} mt={8}>
+              <Grid container wrap="nowrap" p="8px" className="summaryWrapper" flexDirection="row">
+                {selectedProperty && (
+                  <>
+                    <SelectedListCard
+                      src={selectedProperty.image}
+                      name={selectedProperty.name}
+                      withoutInfo
+                      coordinatesChild={handleCoords()}
+                    />
+
+                    <ListNewSummary
+                      minPeriodSelectedOption={minPeriodSelectedOption.label}
+                      maxPeriodSelectedOption={maxPeriodSelectedOption.label}
+                      maxFutureSelectedOption={maxFutureSelectedOption.label}
+                      minRentPeriod={minPeriod}
+                      maxRentPeriod={maxPeriod}
+                      maxFuturePeriod={maxFutureTime}
+                      rentPrice={tokenCost}
+                      paymentToken={paymentToken}
+                      feeText="There is small fee upon listing the property."
+                      withoutText
+                      metaverse={availableMetaverses[selectedMetaverse - 1]}
+                      name={selectedProperty.name}
+                      coordinatesChild={handleCoords()}
+                      isEstate={!(selectedProperty as DecentralandNFT).isLAND}
+                    />
+                  </>
+                )}
+              </Grid>
+            </Box>
+          )}
+        </Box>
+        {/* {stes} */}
+        {/* {activeStep === 0 && (
           <Stack height={isSmallScreen ? '460px' : '530px'} width={1} overflow="auto">
             <Box display="flex" gap={4} margin="40px 0 10px">
               <ControlledSelect
@@ -909,21 +1159,22 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               </Grid>
             </Grid>
           </Grid>
-        )}
-        {infoMessage.length ? (
+        )} */}
+
+        {step.warning && (
           <Grid className="warning-info">
             <WarningIcon />
             <Grid item>
               <Typography variant="h4">Keep in mind</Typography>
-              <Typography variant="subtitle2">{infoMessage}</Typography>
+              <Typography variant="subtitle2">{step.warning}</Typography>
             </Grid>
           </Grid>
-        ) : null}
+        )}
         <hr className="divider" />
 
-        {activeStep < 4 && (
+        {step.id !== Step.Summary && (
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
-            {activeStep === 0 ? (
+            {step.id === Step.Asset ? (
               <Button
                 sx={{
                   cursor: 'default',
@@ -944,7 +1195,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
               </Button>
             )}
             <Button
-              disabled={selectedProperty === null || (activeStep === 2 && Boolean(priceError.length))}
+              disabled={selectedProperty === null || (step.id === Step.RentPrice && Boolean(priceError.length))}
               variant="gradient"
               btnSize="medium"
               onClick={handleNextButtonClick}
@@ -953,7 +1204,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal }) => {
             </Button>
           </Grid>
         )}
-        {activeStep === 4 && (
+        {step.id === Step.Summary && (
           <Grid maxHeight={'50vh'} overflow="auto" container justifyContent="space-between" mt={4}>
             <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep((prev) => prev - 1)}>
               Back

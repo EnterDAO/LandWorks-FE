@@ -52,9 +52,8 @@ const CustomDropdownInput: FC<InputProps> = ({
         <Divider orientation="vertical" flexItem className={s.divider} />
         <Box>
           <ControlledSelect
-            sx={{ '& > *': { height: 1 } }}
+            sx={{ '& > button': { height: 1 } }}
             value={optionsValue}
-            width="8rem"
             onChange={handleChange}
             options={options}
           />
