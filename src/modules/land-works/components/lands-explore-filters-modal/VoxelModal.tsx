@@ -111,7 +111,12 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
   }, [props.maxHeight, props.maxArea]);
 
   return (
-    <Modal width={540} handleClose={onCancel} {...modalProps}>
+    <Modal
+      width={540}
+      handleClose={onCancel}
+      {...modalProps}
+      sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+    >
       <StyledTitle>More filters</StyledTitle>
 
       <StyledRoot>
@@ -255,16 +260,15 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
             </Grid>
           </Grid>
         </StyledGrid>
-
-        <ButtonRow container justifyContent="space-between">
-          <Button onClick={resetAll} variant="tertiary">
-            Clear all
-          </Button>
-          <Button onClick={onSubmit} btnSize="medium" variant="gradient">
-            Save
-          </Button>
-        </ButtonRow>
       </StyledRoot>
+      <ButtonRow container justifyContent="space-between">
+        <Button onClick={resetAll} variant="tertiary">
+          Clear all
+        </Button>
+        <Button onClick={onSubmit} btnSize="medium" variant="gradient">
+          Save
+        </Button>
+      </ButtonRow>
     </Modal>
   );
 };

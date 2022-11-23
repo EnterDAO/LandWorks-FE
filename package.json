@@ -123,6 +123,7 @@
     "web3": "^1.7.0",
     "web3-eth": "^1.7.0",
     "web3-eth-contract": "^1.7.0",
+    "web3-token": "^1.0.2",
     "web3-utils": "^1.7.0",
     "wolfy87-eventemitter": "5.2.9"
   },
