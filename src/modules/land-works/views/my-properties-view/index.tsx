@@ -98,7 +98,6 @@ const MyPropertiesView: FC = () => {
   const isRentedTab = activeTab.id === MY_PROPERTIES_ROUTE_TABS.rented;
   const isListedTab = activeTab.id === MY_PROPERTIES_ROUTE_TABS.listed;
 
-  console.log(accountAssets.listed);
   const isFeedbackButtonVisible = accountAssets.listed.some(
     (listedAsset) => listedAsset.availability.isCurrentlyAvailable
   );
