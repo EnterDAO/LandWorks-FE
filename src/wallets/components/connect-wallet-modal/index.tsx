@@ -25,6 +25,29 @@ const InitialState: ConnectWalletModalState = {
   showLedgerModal: false,
 };
 
+const activateInjectedProvider = (providerName: string) => {
+  const { ethereum } = window;
+
+  if (!ethereum?.providers) {
+    return;
+  }
+
+  let provider;
+
+  switch (providerName) {
+    case 'coinbase':
+      provider = ethereum.providers.find(({ isCoinbaseWallet }: { isCoinbaseWallet?: boolean }) => isCoinbaseWallet);
+      break;
+    case 'metamask':
+      provider = ethereum.providers.find(({ isMetaMask }: { isMetaMask?: boolean }) => isMetaMask);
+      break;
+  }
+
+  if (provider) {
+    ethereum.setSelectedProvider(provider);
+  }
+};
+
 const ConnectWalletModal: React.FC<ConnectWalletModalProps> = (props) => {
   const { ...modalProps } = props;
 
@@ -51,6 +74,8 @@ const ConnectWalletModal: React.FC<ConnectWalletModalProps> = (props) => {
         darkMode: isDarkTheme,
       } as CoinbaseWalletArgs;
     }
+
+    activateInjectedProvider(connector.id);
 
     wallet.connect(connector, args).catch(Error);
   }

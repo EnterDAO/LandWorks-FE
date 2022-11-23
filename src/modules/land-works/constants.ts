@@ -203,6 +203,7 @@ export const listNotificationMessage = [
   '',
   'Once you list your property you can edit the entered rent period but you’ll have to pay a network fee.',
   'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
+  '',
   'There is a network fee in order to list the property.',
 ];
 
