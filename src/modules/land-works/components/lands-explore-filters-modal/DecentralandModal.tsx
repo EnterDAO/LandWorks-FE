@@ -135,9 +135,13 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
   }, [maxLandSize]);
 
   return (
-    <Modal width={540} handleClose={onCancel} {...modalProps}>
+    <Modal
+      width={540}
+      sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+      handleClose={onCancel}
+      {...modalProps}
+    >
       <StyledTitle>More filters</StyledTitle>
-
       <StyledRoot>
         <StyledGrid container>
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
@@ -366,16 +370,16 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
             </Grid>
           </Grid>
         </StyledGrid>
-
-        <ButtonRow container justifyContent="space-between">
-          <Button onClick={resetAll} variant="tertiary">
-            Clear all
-          </Button>
-          <Button onClick={onSubmit} btnSize="medium" variant="gradient">
-            Save
-          </Button>
-        </ButtonRow>
       </StyledRoot>
+
+      <ButtonRow container justifyContent="space-between">
+        <Button onClick={resetAll} variant="tertiary">
+          Clear all
+        </Button>
+        <Button onClick={onSubmit} btnSize="medium" variant="gradient">
+          Save
+        </Button>
+      </ButtonRow>
     </Modal>
   );
 };
