@@ -3,6 +3,7 @@ import { Slider, styled } from '@mui/material';
 import { Grid, Typography } from 'design-system';
 
 export const StyledRoot = styled('div')(() => ({
+  minHeight: 0,
   maxHeight: '75vh',
   overflow: 'auto',
   padding: '0 10px',
