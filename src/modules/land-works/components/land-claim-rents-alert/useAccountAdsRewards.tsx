@@ -6,12 +6,14 @@ import { getAccountAdsRewards } from 'modules/land-works/api';
 import AdsRewardsContract from 'modules/land-works/contracts/rewards/AdsRewardsContract';
 import { useWallet } from 'wallets/wallet';
 
+import config from '../../../../config';
+
 const initialData = {
   amount: '0',
   claimedAmount: '0',
   contractAddress: '',
   proof: [],
-  token: '0xb45de2B65C6788C0334AAdDEd16d299b93Cc677F',
+  token: config.contracts.adsContract,
 };
 
 const useAdsRewardsContract = (contractAddress: string): AdsRewardsContract | undefined => {

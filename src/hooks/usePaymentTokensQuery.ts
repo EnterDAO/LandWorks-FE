@@ -3,16 +3,20 @@ import { useQuery } from '@apollo/client';
 import { GET_TOKEN_PAYMENTS, PaymentToken } from 'modules/land-works/api';
 import { KnownTokens } from 'providers/known-tokens-provider';
 
+import config from '../config';
+
+import { ONE_ADDRESS } from '../web3/utils';
+
 const initialPaymentTokens: PaymentToken[] = [
   {
-    id: '0x0000000000000000000000000000000000000001',
+    id: ONE_ADDRESS,
     decimals: 18,
     feePercentage: 3000,
     name: 'Ether',
     symbol: KnownTokens.ETH,
   },
   {
-    id: '0xc3e551e3ab9d268ca526ce0fa9104dd8285c0488',
+    id: config.tokens.usdc,
     decimals: 6,
     feePercentage: 3000,
     name: 'USD Coin',
