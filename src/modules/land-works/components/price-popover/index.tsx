@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Stack, ToggleButton } from '@mui/material';
 import BigNumber from 'bignumber.js';
+import classNames from 'classnames';
 import { formatUSD } from 'web3/utils';
 
 import { Button } from 'design-system';
@@ -103,7 +104,11 @@ export const PricePopover: React.FC<IProps> = ({ text }) => {
 
   return (
     <div>
-      <PopoverButton isActive={priceParams.currency !== 0} onClick={openPopover}>
+      <PopoverButton
+        className={classNames({ 'Mui-expanded': !!anchorEl })}
+        isActive={priceParams.currency !== 0}
+        onClick={openPopover}
+      >
         {text}
       </PopoverButton>
       <StyledPopover
