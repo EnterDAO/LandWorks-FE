@@ -308,24 +308,6 @@ const SingleLandView: React.FC = () => {
               </div>
               <span>Back to {breadcrumbs.title}</span>
             </Link>
-
-            <p className="separator" />
-
-            <Link
-              className="button-explore"
-              to={{
-                pathname: breadcrumbs.url,
-                state: {
-                  tab: location.state?.tab,
-                },
-              }}
-            >
-              {breadcrumbs.title}
-            </Link>
-
-            <Icon iconSize={'m'} iconElement={<ArrowRightIcon />} />
-
-            <p className="current-land">{asset.name}</p>
           </div>
         </div>
 
