@@ -123,14 +123,6 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
         <StyledGrid container>
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
             <StyledSubtitle>Type</StyledSubtitle>
-            <Button
-              disabled={typeof selectedType !== 'number'}
-              btnSize="xsmall"
-              onClick={() => setSelectedType(0)}
-              variant="tertiary"
-            >
-              Clear
-            </Button>
           </Grid>
           {voxelTypes.map((type) => (
             <CheckboxContainer key={type.value} onClick={() => typeHandler(type.value)} container>
