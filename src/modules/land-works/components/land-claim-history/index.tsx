@@ -83,7 +83,7 @@ const ClaimHistoryTable: React.FC<Props> = ({ metaverse }) => {
           <table style={{ width: '100%', borderSpacing: 0 }} aria-label="table">
             <StyledTableHead>
               <StyledTableHeaderRow>
-                <StyledTableCell>Property</StyledTableCell>
+                <StyledTableCell>Reward</StyledTableCell>
                 <StyledTableCell align="left">Tx Hash</StyledTableCell>
                 <StyledTableCell align="left">Claimed Amount</StyledTableCell>
                 <StyledTableCell align="left">Claimed on</StyledTableCell>
@@ -122,7 +122,7 @@ const ClaimHistoryTable: React.FC<Props> = ({ metaverse }) => {
                 {paginatedClaimHistory.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id}>
                     <StyledTableCell style={{ color: THEME_COLORS.light }} align="left">
-                      <StyledBox>{getAssetName(data.asset)}</StyledBox>
+                      <StyledBox>{data.asset ? `Rent: ${getAssetName(data.asset)}` : 'Ads'}</StyledBox>
                     </StyledTableCell>
                     <StyledTableCell style={{ fontWeight: '500' }} align="left">
                       <LandTableTxHash txHash={data.txHash} firstSymbolsLength={22} />
