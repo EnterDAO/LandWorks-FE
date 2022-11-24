@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { ToggleButton } from '@mui/material';
+import { Stack, ToggleButton } from '@mui/material';
 import BigNumber from 'bignumber.js';
+import { formatUSD } from 'web3/utils';
 
 import { Button } from 'design-system';
 import { getTokenPrice } from 'providers/known-tokens-provider';
@@ -9,12 +10,11 @@ import { currencyData } from '../lands-explore-filters/filters-data';
 import {
   ButtonGroup,
   ErrorText,
-  InputRow,
   PopoverButton,
+  PriceField,
   StyledGrid,
   StyledPopover,
   StyledTypography,
-  Subtitle,
 } from './styled';
 import usePriceQueryParams from './usePriceQueryParams';
 
@@ -64,7 +64,8 @@ export const PricePopover: React.FC<IProps> = ({ text }) => {
     const symbol = currency ? currencyData[currency].label : 'ETH';
     const ethPrice = new BigNumber(getTokenPrice(symbol) || '0');
     const ethToUsdPrice = ethPrice.multipliedBy(price);
-    return ethToUsdPrice.toFixed(2).replace(/\.00$/, '');
+
+    return ethToUsdPrice.toFixed();
   };
 
   useEffect(() => {
@@ -124,43 +125,56 @@ export const PricePopover: React.FC<IProps> = ({ text }) => {
               </ToggleButton>
             ))}
           </ButtonGroup>
+
           <StyledTypography>Price per day</StyledTypography>
-          <div>
-            <Subtitle>Min</Subtitle>
-            <InputRow>
-              <input
-                value={minPrice !== null ? minPrice : ''}
-                disabled={disableInput}
-                onChange={(e) => onInput(e.target.value, 'min')}
-                type="number"
-              />
-              <span style={{ color: disableInput ? 'var(--theme-grey700-color)' : 'var(--theme-grey900-color)' }}>
-                {getUsdPrice(minPrice || 0)} $
-              </span>
-            </InputRow>
-          </div>
-          <div>
-            <Subtitle>Max</Subtitle>
-            <InputRow>
-              <input
-                value={maxPrice !== null ? maxPrice : ''}
-                disabled={disableInput}
-                onChange={(e) => onInput(e.target.value, 'max')}
-                type="number"
-              />
-              <span style={{ color: disableInput ? 'var(--theme-grey700-color)' : 'var(--theme-grey900-color)' }}>
-                {getUsdPrice(maxPrice || 0)} $
-              </span>
-            </InputRow>
-          </div>
+
+          <Stack gap={3}>
+            <PriceField
+              label="Min"
+              disabled={disableInput}
+              onChange={(e) => onInput(e.target.value, 'min')}
+              value={minPrice !== null ? minPrice : ''}
+              right={formatUSD(getUsdPrice(minPrice || 0))}
+            />
+            <PriceField
+              label="Max"
+              disabled={disableInput}
+              onChange={(e) => onInput(e.target.value, 'max')}
+              value={maxPrice !== null ? maxPrice : ''}
+              right={formatUSD(getUsdPrice(maxPrice || 0))}
+            />
+          </Stack>
+
           <ErrorText>
             <span>{error}</span>
           </ErrorText>
           <StyledGrid container>
-            <Button onClick={resetPrice} btnSize="xsmall" disabled={!minPrice || !maxPrice} variant="secondary">
+            <Button
+              sx={{
+                ':disabled': {
+                  pointerEvents: 'none',
+                },
+
+                ':disabled:before': {
+                  display: 'none',
+                },
+              }}
+              onClick={resetPrice}
+              btnSize="xsmall"
+              disabled={!minPrice || !maxPrice}
+              variant="tertiary"
+            >
               Clear
             </Button>
-            <Button disabled={disableApply} onClick={handleSubmit} btnSize="xsmall" variant="secondary">
+            <Button
+              sx={{
+                background: 'transparent',
+              }}
+              disabled={disableApply}
+              onClick={handleSubmit}
+              btnSize="xsmall"
+              variant="tertiary"
+            >
               Apply
             </Button>
           </StyledGrid>

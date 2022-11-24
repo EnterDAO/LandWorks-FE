@@ -1,4 +1,5 @@
-import { Grid, Popover, ToggleButtonGroup } from '@mui/material';
+import { ComponentPropsWithoutRef, FC, ReactNode } from 'react';
+import { Box, Grid, Popover, ToggleButtonGroup } from '@mui/material';
 import { styled } from '@mui/system';
 
 import { Typography } from 'design-system';
@@ -83,7 +84,7 @@ export const StyledTypography = styled(Typography)(() => ({
 export const Subtitle = styled(Typography)(() => ({
   color: '--theme-subtle-color',
   fontSize: 14,
-  margin: '10px 0',
+  marginBottom: 4,
 }));
 
 export const InputRow = styled('div')(() => ({
@@ -94,22 +95,6 @@ export const InputRow = styled('div')(() => ({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  '& input': {
-    padding: '10px',
-    width: '50%',
-    border: 'none',
-    outline: 'none',
-    background: 'transparent',
-    color: 'var(--theme-grey900-color)',
-    '&:disabled': {
-      cursor: 'not-allowed',
-    },
-  },
-  '& span': {
-    width: '50%',
-    textAlign: 'end',
-    paddingRight: 5,
-  },
 }));
 
 export const StyledGrid = styled(Grid)(() => ({
@@ -123,3 +108,52 @@ export const ErrorText = styled('span')(() => ({
   alignItems: 'flex-start',
   color: 'var(--theme-red-color)',
 }));
+
+interface PriceFieldProps extends ComponentPropsWithoutRef<'input'> {
+  label: string;
+  right: ReactNode;
+}
+
+export const PriceField: FC<PriceFieldProps> = ({ label, right, placeholder = '...', ...inputProps }) => {
+  return (
+    <div>
+      <Subtitle>{label}</Subtitle>
+      <Box display="flex" alignItems="center" borderRadius="5px" bgcolor="var(--theme-card-color)" height={42}>
+        <Box
+          component="input"
+          border="none"
+          width={1}
+          display="block"
+          color="inherit"
+          fontFamily="inherit"
+          px="12px"
+          bgcolor="transparent"
+          type="number"
+          sx={{
+            ':disabled': {
+              color: 'var(--theme-grey700-color)',
+            },
+          }}
+          placeholder={placeholder}
+          {...inputProps}
+        />
+
+        <Typography
+          borderLeft="1px solid var(--theme-grey700-color)"
+          px="12px"
+          noWrap
+          width={92}
+          flexShrink={0}
+          textAlign="right"
+          variant="body2"
+          fontWeight={400}
+          color="var(--theme-grey700-color)"
+          display="inline-block"
+          component="span"
+        >
+          {right}
+        </Typography>
+      </Box>
+    </div>
+  );
+};
