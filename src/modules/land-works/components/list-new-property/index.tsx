@@ -943,20 +943,12 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
         {step.id !== Step.Summary && (
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
             {step.id === Step.Asset ? (
-              <Button
-                sx={{
-                  cursor: 'default',
-                  '&:hover': {
-                    '&::before': {
-                      backgroundColor: 'var(--theme-grey200-color) !important',
-                    },
-                  },
-                }}
-                variant="secondary"
-                btnSize="medium"
-              >
-                Found in wallet ({getPropertyCountForMetaverse()})
-              </Button>
+              <Typography variant="body2" color="var(--theme-subtle-color)">
+                Found in Wallet{' '}
+                <Typography component="span" variant="inherit" color="var(--theme-light-color)">
+                  {getPropertyCountForMetaverse()} Lands
+                </Typography>
+              </Typography>
             ) : (
               <Button
                 variant="secondary"
