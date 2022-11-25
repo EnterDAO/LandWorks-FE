@@ -91,11 +91,11 @@ const AdsToggle: FC<AdsToggleProps> = ({ asset }) => {
     }
   };
 
-  const refreshToken = async () => {
+  const refreshToken = async (msg?: string) => {
     setIsTokenRefreshing(true);
 
     try {
-      await refreshWeb3Token(account, provider);
+      await refreshWeb3Token(account, provider, msg);
     } finally {
       if (getIsMounted()) {
         setIsTokenRefreshing(false);
@@ -105,7 +105,7 @@ const AdsToggle: FC<AdsToggleProps> = ({ asset }) => {
 
   const handleEnableAdsConfirm = async () => {
     try {
-      await refreshToken();
+      await refreshToken('I agree for my land to be provided for advertising purposes until it gets rented.');
 
       setIsAllowAdvertiseModalOpen(false);
     } catch (e) {
@@ -119,7 +119,7 @@ const AdsToggle: FC<AdsToggleProps> = ({ asset }) => {
 
   const handleDisableAdsConfirm = async () => {
     try {
-      await refreshToken();
+      await refreshToken('I do not want my land to be used for advertising purposes until it gets rented anymore.');
 
       setIsDisableAdvertiseModalOpen(false);
     } catch (e) {
