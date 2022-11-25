@@ -907,6 +907,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                     />
 
                     <ListNewSummary
+                      isAdvertisementEnabled={isLandProvidedForAdvertisement}
                       minPeriodSelectedOption={minPeriodSelectedOption.label}
                       maxPeriodSelectedOption={maxPeriodSelectedOption.label}
                       maxFutureSelectedOption={maxFutureSelectedOption.label}
