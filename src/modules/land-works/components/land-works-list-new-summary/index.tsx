@@ -33,6 +33,7 @@ interface IListNewSummary {
   coordinatesChild?: React.ReactNode;
   name?: string;
   isEstate?: boolean;
+  isAdvertisementEnabled?: boolean;
 }
 
 const ListNewSummary: React.FC<IListNewSummary> = ({
@@ -51,6 +52,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   coordinatesChild,
   name,
   isEstate,
+  isAdvertisementEnabled,
 }) => {
   const min = minRentPeriod?.toNumber();
   const max = maxRentPeriod?.toNumber();
@@ -77,6 +79,26 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
       }
     } else return 0;
   };
+
+  const sceneDetail = isAdvertisementEnabled
+    ? {
+        label: '{placeholder} Ads Scene',
+        content: '{placeholder} Ads Billboard',
+        tooltip: {
+          title: '{placeholder} Ads Billboard',
+          description:
+            'A billboard showing ads will be placed on this land. You will earn {sum} per unique view. Rewards can be claimed every month.',
+        },
+      }
+    : {
+        label: 'SCENE',
+        content: 'LandWorks Promotional Scene',
+        tooltip: {
+          title: 'Promotional Scene',
+          description:
+            'A “For Rent” scene with an embedded link will be deployed on the property. The scene boosts chances for rent.',
+        },
+      };
 
   return (
     <Grid className={s.wrapper} mt={metaverse ? 0 : 4} item>
@@ -147,7 +169,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
             {metaverse?.value == 1 && (
               <Grid item xs={12} display="flex" flexDirection="column">
                 <Typography variant="inherit" component="span" display="inline-flex" alignItems="center" gap="4px">
-                  SCENE
+                  {sceneDetail.label}
                   <Tooltip
                     arrow
                     title={
@@ -155,11 +177,10 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
                         <Box borderRadius="10px" src={promotionalSceneTooltipThumbnail} component="img" width={170} />
                         <Box>
                           <Typography mb={1} fontWeight={400} variant="body2" color={THEME_COLORS.darkBlue01}>
-                            Promotional Scene
+                            {sceneDetail.tooltip.title}
                           </Typography>
                           <Typography fontWeight={400} variant="body2">
-                            A “For Rent” scene with an embedded link will be deployed on the property. The scene boosts
-                            chances for rent.
+                            {sceneDetail.tooltip.description}
                           </Typography>
                         </Box>
                       </Box>
@@ -170,7 +191,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
                     </Box>
                   </Tooltip>
                 </Typography>
-                <p>LandWorks Promotional Scene</p>
+                <p>{sceneDetail.content}</p>
               </Grid>
             )}
           </Grid>
