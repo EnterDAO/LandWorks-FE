@@ -300,7 +300,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     if (isOwner && isDecentraland) {
       _details.push({
         label: 'Allow advertising',
-        tooltip: 'tooltip',
+        tooltip: 'Toggle to allow advertising on your land.',
         content: <AdsToggle asset={asset} />,
       });
     }
