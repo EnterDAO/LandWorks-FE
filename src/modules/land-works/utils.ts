@@ -224,7 +224,7 @@ const isBetween = (value: number, minMax: { min: number; max: number }): boolean
   minMax.min <= value && value <= minMax.max;
 
 const isFilteredByBetween = (value: number | undefined, minMax?: { min: number; max: number }) => {
-  return isUndefined(minMax) || isUndefined(value) || isBetween(value, minMax);
+  return isUndefined(minMax) || (!isUndefined(value) && isBetween(value, minMax));
 };
 
 const decentralandFilter = (item: AssetEntity, filters: Partial<MoreFiltersType>) => {
