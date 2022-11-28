@@ -213,7 +213,7 @@ export const getMaxHeight = (lands: AssetEntity[]): number => {
 export const filterByMoreFilters = (
   lands: AssetEntity[],
   filters: Partial<MoreFiltersType>,
-  metaverse: string
+  metaverse: string | number
 ): AssetEntity[] => {
   return lands.filter((item) => {
     return +metaverse === 1 ? decentralandFilter(item, filters) : voxelsFilter(item, filters);
