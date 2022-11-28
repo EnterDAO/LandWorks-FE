@@ -5,6 +5,7 @@ import { Button, Divider, Modal, Stack, Typography } from 'design-system';
 
 import ClaimRewardsModalAdsTab from './ClaimRewardsModalAdsTab';
 import ClaimRewardsModalRentsTab from './ClaimRewardsModalRentsTab';
+import { useClaimRewards } from './ClaimRewardsProvider';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
@@ -25,7 +26,8 @@ interface ClaimRewardsModalProps {
 }
 
 const ClaimRewardsModal: React.FC<ClaimRewardsModalProps> = ({ open, onClose }) => {
-  const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const { unclaimedAssets } = useClaimRewards();
+  const [activeTabIndex, setActiveTabIndex] = useState(unclaimedAssets.length > 0 ? 0 : 1);
 
   const activeTab = tabs[activeTabIndex];
   const TabContent = activeTab.Component;
@@ -45,7 +47,7 @@ const ClaimRewardsModal: React.FC<ClaimRewardsModalProps> = ({ open, onClose }) 
 
           return (
             <Button
-              key={i}
+              key={tab.label}
               variant="secondary"
               onClick={() => setActiveTabIndex(i)}
               sx={[

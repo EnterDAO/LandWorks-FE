@@ -13,6 +13,7 @@ interface ClaimRewardsProviderProps {
   adsReward: BigNumber;
   adsRewardsPaymentToken?: PaymentToken;
   claimAdsReward: () => Promise<void>;
+  onClaim?: () => void;
 }
 
 interface ContextValue {
@@ -39,6 +40,7 @@ const ClaimRewardsProvider: React.FC<ClaimRewardsProviderProps> = ({
   unclaimedAssets,
   children,
   claimAdsReward: claimAds,
+  onClaim,
 }) => {
   const { landWorksContract } = useLandworks();
   const getIsMounted = useGetIsMounted();
@@ -76,11 +78,13 @@ const ClaimRewardsProvider: React.FC<ClaimRewardsProviderProps> = ({
 
       showToastNotification(ToastType.Success, 'Rent claimed successfully!');
 
+      if (onClaim) {
+        onClaim();
+      }
+
       setClaimedAssetIds([...selectedAssetIds]);
       setSelectedAssetIds([]);
     } catch (e) {
-      console.log(e);
-
       showToastNotification(ToastType.Error, 'There was an error while claiming the rent.');
     } finally {
       if (getIsMounted()) {
@@ -95,10 +99,12 @@ const ClaimRewardsProvider: React.FC<ClaimRewardsProviderProps> = ({
     try {
       await claimAds();
 
+      if (onClaim) {
+        onClaim();
+      }
+
       showToastNotification(ToastType.Success, 'Ads reward claimed successfully!');
     } catch (e) {
-      console.log(e);
-
       showToastNotification(ToastType.Error, 'There was an error while claiming the ads reward.');
     } finally {
       if (getIsMounted()) {

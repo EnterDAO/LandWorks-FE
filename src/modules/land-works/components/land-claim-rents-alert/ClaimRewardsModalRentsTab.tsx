@@ -130,7 +130,7 @@ const ClaimRewardsModalRentsTab: FC = () => {
 
       <Box display="flex" justifyContent="center">
         <Button disabled={isClaimButtonDisabled} btnSize="medium" variant="gradient" onClick={claimRentReward}>
-          Claim
+          {isRentRewardClaiming ? 'Claiming...' : 'Claim'}
         </Button>
       </Box>
     </>
