@@ -10,9 +10,9 @@ import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 import listingAdImgSrc from 'assets/img/listing-ad.jpg';
 import landNotFoundImageSrc from 'assets/land-not-found.svg';
 import Image from 'components/custom/image';
+import Stepper, { Step, StepLabel } from 'components/styled/stepper';
 import { Box, Button, Checkbox, ControlledSelect, Grid, Stack, Typography } from 'design-system';
 import { WarningIcon } from 'design-system/icons';
-import CustomizedSteppers from 'design-system/Stepper';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import useGetIsMounted from 'hooks/useGetIsMounted';
 import { BaseNFT, CryptoVoxelNFT, DecentralandNFT, Option } from 'modules/interface';
@@ -56,7 +56,7 @@ import './index.scss';
 const SignTransactionMessage = 'Signing transaction...';
 const MineTransactionMessage = 'Listing property...';
 
-enum Step {
+enum StepId {
   Asset = 0,
   RentPeriod = 1,
   RentPrice = 2,
@@ -68,10 +68,6 @@ interface IProps {
   closeModal?: () => void;
   asset?: BaseNFT;
 }
-
-const getDefaultIsAdvertisementActive = () => !!localStorage.getItem('default-listing-modal-ads');
-const setDefaultIsAdvertisementActive = (isActive: boolean) =>
-  localStorage.setItem('default-listing-modal-ads', isActive ? '1' : '');
 
 const metaverseIdByName = {
   Decentraland: 1,
@@ -144,7 +140,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const [showSignModal, setShowSignModal] = useState(false);
   const [listedPropertyId, setListedPropertyId] = useState('');
   const [landType, setLandType] = useState(0);
-  const [isLandProvidedForAdvertisement, setIsLandProvidedForAdvertisement] = useState(getDefaultIsAdvertisementActive);
+  const [isLandProvidedForAdvertisement, setIsLandProvidedForAdvertisement] = useState(true);
   const [isCreatingAssetAdvertisement, setIsCreatingAssetAdvertisement] = useState(false);
 
   const [filteredVoxels, setFilteredVoxels] = useState<CryptoVoxelNFT[]>([]);
@@ -557,10 +553,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   };
 
   useEffect(() => {
-    setDefaultIsAdvertisementActive(isLandProvidedForAdvertisement);
-  }, [isLandProvidedForAdvertisement]);
-
-  useEffect(() => {
     setLoading(true);
     getUserNfts();
     getPaymentTokens();
@@ -651,7 +643,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   }, [landType]);
 
   const handleNextButtonClick = async () => {
-    if (step.id === Step.Advertisement) {
+    if (step.id === StepId.Advertisement) {
       setIsCreatingAssetAdvertisement(true);
 
       try {
@@ -681,7 +673,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const properties = selectedMetaverse === 1 ? filteredDecentralandProperties : filteredVoxels;
 
   const steps: {
-    id: Step;
+    id: StepId;
     label: string;
     title?: string;
     subtitle?: string;
@@ -691,13 +683,13 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
       ...(!asset
         ? [
             {
-              id: Step.Asset,
+              id: StepId.Asset,
               label: 'Choose Land',
             },
           ]
         : []),
       {
-        id: Step.RentPeriod,
+        id: StepId.RentPeriod,
         title: 'Choose rent period',
         label: 'Rent Period',
         subtitle: 'Select the wanted rent period for this property.',
@@ -705,42 +697,49 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
           'Once you list your property you can edit the entered rent period but you’ll have to pay a network fee.',
       },
       {
-        id: Step.RentPrice,
+        id: StepId.RentPrice,
         title: 'Select Rent Price',
         label: 'Rent Price',
         subtitle: 'Select the wanted rent price for this property.',
         warning:
           'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
       },
+      ...(isDecentraland
+        ? [
+            {
+              id: StepId.Advertisement,
+              title: 'Advertise',
+              label: 'Advertise',
+            },
+          ]
+        : []),
       {
-        id: Step.Advertisement,
-        title: 'Advertise',
-        label: 'Advertise',
-      },
-      {
-        id: Step.Summary,
+        id: StepId.Summary,
         label: 'Summary',
         title: 'Listing Summary',
         warning: 'There is a network fee in order to list the property.',
       },
     ];
-  }, []);
+  }, [isDecentraland]);
 
   const step = steps[activeStep];
 
   return (
     <section className="list-view">
       <Grid container direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
-        <Box marginBottom="10px" fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
+        <Box mb={5} fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
           List Property
         </Box>
-        <Grid container direction="row" alignItems="center" justifyContent="center" width={600} alignSelf="center">
-          <CustomizedSteppers steps={steps.map(({ label }) => label)} activeStep={activeStep} />
-        </Grid>
-
+        <Stepper sx={{ width: 1, maxWidth: 600, mb: 8, mx: 'auto' }} activeStep={activeStep}>
+          {steps.map(({ label }) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
         {(step.title || step.subtitle) && (
           <Stack width={1} alignItems="center" textAlign="center">
-            <Typography variant="h3" component="h4" mt={8} mb={1}>
+            <Typography variant="h3" component="h4" mb={1}>
               {activeStep + 1}. {step.title}
             </Typography>
 
@@ -749,9 +748,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
         )}
 
         <Box width={1} minHeight={370}>
-          {step.id === Step.Asset && (
+          {step.id === StepId.Asset && (
             <Stack height={isSmallScreen ? '460px' : '530px'} overflow="auto">
-              <Box display="flex" gap={4} margin="40px 0 10px">
+              <Box display="flex" gap={4} mb={2}>
                 <ControlledSelect
                   width="290px"
                   value={selectedMetaverse}
@@ -799,7 +798,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             </Stack>
           )}
 
-          {step.id === Step.RentPeriod && (
+          {step.id === StepId.RentPeriod && (
             <Box maxWidth={350} mx="auto" width={1}>
               <RentPeriod
                 isMinPeriodSelected={isMinPeriodSelected}
@@ -829,7 +828,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             </Box>
           )}
 
-          {step.id === Step.RentPrice && (
+          {step.id === StepId.RentPrice && (
             <Stack mx="auto" maxWidth={350} width={1}>
               <RentPrice
                 handleCostEthChange={handleCostEthChange}
@@ -846,7 +845,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
               />
             </Stack>
           )}
-          {step.id === Step.Advertisement && (
+          {step.id === StepId.Advertisement && (
             <Stack width={1} maxWidth={670} mt={10} mx="auto">
               <Grid container spacing={5}>
                 <Grid item xs={6}>
@@ -894,7 +893,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
               </Typography>
             </Stack>
           )}
-          {step.id === Step.Summary && (
+          {step.id === StepId.Summary && (
             <Box mx="auto" maxWidth={630} mt={8}>
               <Grid container wrap="nowrap" p="8px" className="summaryWrapper" flexDirection="row">
                 {selectedProperty && (
@@ -941,9 +940,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
         )}
         <hr className="divider" />
 
-        {step.id !== Step.Summary && (
+        {step.id !== StepId.Summary && (
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
-            {step.id === Step.Asset ? (
+            {step.id === StepId.Asset ? (
               <Typography variant="body2" color="var(--theme-subtle-color)">
                 Found in Wallet{' '}
                 <Typography component="span" variant="inherit" color="var(--theme-light-color)">
@@ -963,7 +962,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             <Button
               disabled={
                 selectedProperty === null ||
-                (step.id === Step.RentPrice && Boolean(priceError.length)) ||
+                (step.id === StepId.RentPrice && Boolean(priceError.length)) ||
                 isCreatingAssetAdvertisement
               }
               variant="gradient"
@@ -974,7 +973,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             </Button>
           </Grid>
         )}
-        {step.id === Step.Summary && (
+        {step.id === StepId.Summary && (
           <Grid maxHeight={'50vh'} overflow="auto" container justifyContent="space-between" mt={4}>
             <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep((prev) => prev - 1)}>
               Back
