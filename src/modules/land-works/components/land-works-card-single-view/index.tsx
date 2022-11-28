@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 
 import ExternalLink from 'components/custom/external-link';
 import Icon from 'components/custom/icon';
+import Image from 'components/custom/image';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import config from 'config';
 import { Box, Button, Stack, Tooltip, Typography } from 'design-system';
@@ -312,23 +313,23 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
 
   return (
     <>
-      <Grid container justifyContent="space-between" className="single-land-card-container">
+      <Box gap={8} display="flex" flexDirection={{ xs: 'column', lg: 'row' }} className="single-land-card-container">
         {loading ? (
           <SingleLandCardSkeleton />
         ) : (
           <>
-            <Grid xs={12} md={6} item>
-              <div className="map-image-wrapper">
-                <img alt="vector Icon" className="card-image" src={asset?.imageUrl} />
+            <Box flex="1 1 100%" minHeight={400} maxWidth={{ lg: 570 }} display="flex" flexDirection="column">
+              <Box flexBasis={0} flexGrow={1} className="map-image-wrapper">
+                <Image alt={asset?.name} src={asset?.imageUrl} sx={{ objectFit: 'cover', width: 1, height: 1 }} />
                 <LandsMapOverlay
                   title={asset?.type || ''}
                   coordinates={asset?.decentralandData?.coordinates}
                   place={asset?.place}
                 />
-              </div>
-            </Grid>
+              </Box>
+            </Box>
 
-            <Grid xs={12} md={6} item display="flex" flexDirection="column" className="properties-container">
+            <Box flex="1 1 100%" display="flex" flexDirection="column" className="properties-container">
               <Grid container className="head-container">
                 <Grid item className="title-container">
                   <span className="title-container__text" title={asset?.name?.toLowerCase()}>
@@ -363,7 +364,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
               <Box display="flex" gap={2} mt="7px">
                 {hashtags.map((hashtag) => {
                   return (
-                    <Typography variant="body2" textTransform="uppercase">
+                    <Typography key={hashtag} variant="body2" textTransform="uppercase">
                       #{hashtag}
                     </Typography>
                   );
@@ -371,9 +372,9 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
               </Box>
 
               <Stack spacing={4} mt={6} mb="auto">
-                {details.map((detail) => {
+                {details.map((detail, i) => {
                   return (
-                    <Box display="flex" alignItems="center" flexWrap="wrap" minHeight={30} columnGap={6}>
+                    <Box key={i} display="flex" alignItems="center" flexWrap="wrap" minHeight={30} columnGap={6}>
                       <Typography
                         display="inline-flex"
                         fontWeight={500}
@@ -384,9 +385,9 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                         {detail.label}
                         {!!detail.tooltip && (
                           <Tooltip disableFocusListener placement="bottom-start" title={detail.tooltip}>
-                            <div>
+                            <span>
                               <Icon name="about" className="info-icon" />
-                            </div>
+                            </span>
                           </Tooltip>
                         )}
                       </Typography>
@@ -464,7 +465,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                   </Grid>
                 </Box>
               )}
-            </Grid>
+            </Box>
 
             {shouldShowRenterCountdown() && (
               <Grid className="countdown">
@@ -505,7 +506,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
             )}
           </>
         )}
-      </Grid>
+      </Box>
     </>
   );
 };
