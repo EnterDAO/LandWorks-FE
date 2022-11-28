@@ -8,7 +8,6 @@ export default class AdsRewardsContract extends Web3Contract {
   }
 
   claim(walletAddress: string, amount: string, proof: string[]): Promise<any> {
-    console.log('claim', { walletAddress, amount, proof });
     return this.send('claim', [walletAddress, amount, proof], {
       from: walletAddress,
     });

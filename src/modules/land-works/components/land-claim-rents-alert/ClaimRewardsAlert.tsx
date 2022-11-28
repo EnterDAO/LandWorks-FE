@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { Collapse } from '@mui/material';
 
 import InfoAlert from 'components/custom/info-alert';
 import { Button } from 'design-system';
@@ -37,6 +38,7 @@ const ClaimRewardsAlert: FC = () => {
   return (
     <>
       <ClaimRewardsProvider
+        onClaim={() => setIsClaimRewardsModalOpen(false)}
         unclaimedAssets={unclaimedRentAssets}
         adsReward={amount}
         adsRewardsPaymentToken={adsRewardsPaymentToken}
@@ -45,7 +47,7 @@ const ClaimRewardsAlert: FC = () => {
         <ClaimRewardsModal open={isClaimRewardsModalOpen} onClose={() => setIsClaimRewardsModalOpen(false)} />
       </ClaimRewardsProvider>
 
-      {(unclaimedRentAssets.length > 0 || amount.gt(0)) && (
+      <Collapse appear in={unclaimedRentAssets.length > 0 || amount.gt(0)}>
         <InfoAlert
           sx={{
             px: 6,
@@ -70,7 +72,7 @@ const ClaimRewardsAlert: FC = () => {
             </Button>
           }
         />
-      )}
+      </Collapse>
     </>
   );
 };
