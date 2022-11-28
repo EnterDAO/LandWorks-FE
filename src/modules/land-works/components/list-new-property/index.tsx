@@ -24,6 +24,7 @@ import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-modal';
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
+import { useMetaverseQueryParam } from 'modules/land-works/views/my-properties-view/MetaverseSelect';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 import { MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath } from 'router/routes';
@@ -68,11 +69,6 @@ interface IProps {
   closeModal?: () => void;
   asset?: BaseNFT;
 }
-
-const metaverseIdByName = {
-  Decentraland: 1,
-  Voxels: 2,
-};
 
 const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const { setJoinPromptOpen } = useGeneral();
@@ -131,9 +127,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
 
   const [loading, setLoading] = useState(false);
   const [availableMetaverses, setAvailableMetaverses] = useState<Option[]>([]);
-  const [selectedMetaverse, setSelectedMetaverse] = useState(
-    asset ? metaverseIdByName[asset.metaverseName] : +sessionStorageHandler('get', 'general', 'metaverse') || 1
-  );
+  const [selectedMetaverse, setSelectedMetaverse] = useMetaverseQueryParam();
+
   const [activeStep, setActiveStep] = useState(0);
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -704,7 +699,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
         warning:
           'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
       },
-      ...(isDecentraland
+      ...(selectedMetaverse === 1
         ? [
             {
               id: StepId.Advertisement,
@@ -720,7 +715,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
         warning: 'There is a network fee in order to list the property.',
       },
     ];
-  }, [isDecentraland]);
+  }, [selectedMetaverse]);
 
   const step = steps[activeStep];
 
