@@ -127,7 +127,7 @@ const MyPropertiesView: FC = () => {
         )}
       </Box>
 
-      <Box display="flex" alignItems="flex-start" minHeight={555}>
+      <Box display="flex" flexWrap="wrap" justifyContent="center" alignItems="flex-start" minHeight={555}>
         {isLoading ? (
           <CardsGrid>
             {Array.from({ length: 6 }).map((_, i) => {

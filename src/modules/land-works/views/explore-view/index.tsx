@@ -22,6 +22,7 @@ import {
   fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   fetchTokenPayments,
 } from '../../api';
+import { useMetaverseQueryParam } from '../my-properties-view/MetaverseSelect';
 import ExploreMap from './ExploreMap';
 
 import {
@@ -36,7 +37,6 @@ import { getNowTs, sessionStorageHandler } from 'utils';
 import { DAY_IN_SECONDS } from 'utils/date';
 
 import {
-  DECENTRALAND_METAVERSE,
   DEFAULT_LAST_RENT_END,
   DEFAULT_TOKEN_ADDRESS,
   RentStatus,
@@ -78,7 +78,6 @@ const ExploreView: React.FC = () => {
   const sessionFilters = {
     order: sessionStorageHandler('get', 'explore-filters', 'order'),
     owner: sessionStorageHandler('get', 'explore-filters', 'owner'),
-    metaverse: sessionStorageHandler('get', 'general', 'metaverse'),
   };
 
   const [lands, setLands] = useState<AssetEntity[]>([]);
@@ -90,7 +89,8 @@ const ExploreView: React.FC = () => {
     type: '',
     owner: '',
   });
-  const [metaverse, setMetaverse] = useState(sessionFilters.metaverse || DECENTRALAND_METAVERSE);
+
+  const [metaverse, setMetaverse] = useMetaverseQueryParam();
   const orderFilter =
     sessionFilters.order && sessionFilters.order[`${metaverse}`] ? sessionFilters.order[`${metaverse}`] - 1 : 0;
   const [sortDir, setSortDir] = useState(sortDirections[orderFilter]);
@@ -162,7 +162,7 @@ const ExploreView: React.FC = () => {
   };
 
   const onChangeMetaverse = (index: string) => {
-    setMetaverse(index);
+    setMetaverse(+index);
     setMoreFilters(null);
   };
 

@@ -8,21 +8,20 @@ import { Box, Divider, Icon, Stack, Typography } from 'design-system';
 import { GridBigIcon, GridIcon } from 'design-system/icons';
 import useGetIsMounted from 'hooks/useGetIsMounted';
 import useIsMetamaskConnected from 'hooks/useIsMetamaskConnected';
+import LoadMoreButton from 'layout/components/load-more-button';
+import useLoadMoreButton from 'layout/components/load-more-button/useLoadMoreButton';
 import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
 import { LocationState } from 'modules/interface';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
 import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
-import LoadMoreLands from 'modules/land-works/components/lands-explore-load-more';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useListingModal } from 'providers/listing-modal-provider';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 import { getPropertyPath } from 'router/routes';
 
-import { AtlasTile } from '../atlas';
 import { StyledButton } from './styled';
-import useNumberOfLoadedCards from './useNumberOfLoadedCards';
 
 import {
   filterLandsByAvailability,
@@ -30,6 +29,7 @@ import {
   getAllLandsCoordinates,
   getOwnerOrConsumerId,
 } from 'modules/land-works/utils';
+import { sessionStorageHandler } from 'utils';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
@@ -47,7 +47,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   const history = useHistory();
   const location = useLocation<LocationState>();
   const stickyOffset = useStickyOffset();
-  const { clickedLandId, setClickedLandId, setSelectedTile, setShowCardPreview } = useLandsMapTile();
+  const { setClickedLandId, setSelectedTile } = useLandsMapTile();
   const [searchQuery] = useSearchBar();
   const { mapTiles, selectedId, setSelectedId } = useLandsMapTiles();
   const getIsMounted = useGetIsMounted();
@@ -56,19 +56,9 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   const isMetamaskConnected = useIsMetamaskConnected();
 
   const [cardsSize, setCardsSize] = useState<'compact' | 'normal'>('normal');
-  const [loadPercentageValue, setLoadPercentageValue] = useState(0);
-  const [blockAutoScroll, setBlockAutoScroll] = useState(false);
 
-  const initialNumberOfCards = isMapVisible ? (cardsSize === 'compact' ? 10 : 6) : 18;
-  const [numberOfLoadedCards, setNumberOfLoadedCards] = useNumberOfLoadedCards(initialNumberOfCards);
-
-  const handleLoadMore = () => {
-    const newSlicedLands = numberOfLoadedCards + NUMBER_OF_CARDS_PER_LOAD;
-    const highlights = getAllLandsCoordinates(lands.slice(0, newSlicedLands));
-
-    setNumberOfLoadedCards(newSlicedLands);
-    setPointMapCentre(highlights);
-  };
+  const initialNumberOfCards =
+    sessionStorageHandler('get', 'explore-page', 'listed') || (isMapVisible ? (cardsSize === 'compact' ? 10 : 6) : 18);
 
   const setActiveLand = useCallback(
     (land: AssetEntity) => {
@@ -129,54 +119,20 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
     };
   };
 
-  const getLoadPercentageValue = () => {
-    const percentage = (filteredLands.slice(0, numberOfLoadedCards).length * 100) / filteredLands.length;
-    return percentage || 0;
-  };
-
-  const getLandArrayIndexByIdCoordinate = (decentralandId: AtlasTile['id']) => {
-    let index = -1;
-
-    lands.forEach((land, landIndex) => {
-      land.decentralandData
-        ? land.decentralandData?.coordinates.forEach((coord) => {
-            if (coord.id === decentralandId.replace(',', '-')) {
-              index = landIndex;
-            }
-          })
-        : (index = landIndex);
-    });
-
-    return index;
-  };
-
-  useEffect(() => {
-    setLoadPercentageValue(getLoadPercentageValue());
-  }, [lands, numberOfLoadedCards, searchQuery]);
-
-  useEffect(() => {
-    setShowCardPreview && setShowCardPreview(false);
-    if (!window || !clickedLandId || blockAutoScroll) return;
-
-    if (searchQuery) {
-      return setShowCardPreview && setShowCardPreview(true);
-    }
-
-    const index = getLandArrayIndexByIdCoordinate(clickedLandId);
-
-    if (index !== -1) {
-      setNumberOfLoadedCards(index > numberOfLoadedCards ? index + 1 : numberOfLoadedCards);
-    }
-  }, [clickedLandId]);
-
   let filteredLands = filterLandsByQuery(lands, searchQuery);
 
   if (lastRentEnd !== '0') {
     filteredLands = filterLandsByAvailability(filteredLands);
   }
 
-  const slicedLandsInTotal = filteredLands.slice(0, numberOfLoadedCards).length;
+  const [filteredAndListedLands, loadMoreButtonProps] = useLoadMoreButton(filteredLands, {
+    initialListed: initialNumberOfCards,
+    itemsPerLoad: NUMBER_OF_CARDS_PER_LOAD,
+  });
 
+  useEffect(() => {
+    sessionStorageHandler('set', 'explore-page', 'listed', loadMoreButtonProps.listed);
+  }, [loadMoreButtonProps.listed]);
   const saveScrollPosition = useDebounce(() => {
     if (filteredLands) sessionStorage.setItem('scroll-position', String(window.scrollY));
   }, 500);
@@ -191,6 +147,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
     if (!loading && scrollPosition && filteredLands.length) {
       window.scrollTo({ top: +scrollPosition, behavior: 'smooth' });
     }
+
     document.addEventListener('scroll', scroll);
 
     return () => {
@@ -199,10 +156,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
   }, [loading]);
 
   return (
-    <div
-      onMouseMove={() => setBlockAutoScroll(true)}
-      onMouseOut={() => setTimeout(() => setBlockAutoScroll(false), 350)}
-    >
+    <div>
       <Box
         position="sticky"
         top={stickyOffset.offsets.filter + stickyOffset.offsets.header}
@@ -259,26 +213,20 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
 
         {!loading &&
           filteredLands.length > 0 &&
-          filteredLands
-            .slice(0, numberOfLoadedCards)
-            .map((land) => (
-              <LandWorkCard
-                key={land.id}
-                layout={cardsSize}
-                onMouseOver={handleCardMouseOver}
-                onMouseOut={handleCardMouseOut}
-                onClick={getCardClickHandler(land)}
-                land={land}
-              />
-            ))}
+          filteredAndListedLands.map((land) => (
+            <LandWorkCard
+              key={land.id}
+              layout={cardsSize}
+              onMouseOver={handleCardMouseOver}
+              onMouseOut={handleCardMouseOut}
+              onClick={getCardClickHandler(land)}
+              land={land}
+            />
+          ))}
       </CardsGrid>
       {!loading && filteredLands.length === 0 && <p>No properties are currently listed</p>}
-      <LoadMoreLands
-        textToDisplay={`List ${slicedLandsInTotal} of ${filteredLands.length}`}
-        handleLoadMore={handleLoadMore}
-        percentageValue={loadPercentageValue}
-        disabled={slicedLandsInTotal === filteredLands.length}
-      />
+
+      <LoadMoreButton sx={{ my: 10 }} {...loadMoreButtonProps} />
     </div>
   );
 };
