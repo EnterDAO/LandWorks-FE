@@ -10,10 +10,10 @@ import { useStickyOffset } from 'providers/sticky-offset-provider';
 import MapControlButton from './MapControlButton';
 import ToggleMapVisibilityButton from './ToggleMapVisibilityButton';
 
-import { DECENTRALAND_METAVERSE, VOXEL_METAVERSE } from 'modules/land-works/constants';
+import { VOXEL_METAVERSE } from 'modules/land-works/constants';
 
 interface ExploreMapProps extends Omit<LandsExploreMapBaseProps, 'zoom' | 'onZoom'> {
-  type: typeof VOXEL_METAVERSE | typeof DECENTRALAND_METAVERSE;
+  type: number;
   isMapVisible?: boolean;
   onShowMap?: () => void;
   onHideMap?: () => void;
@@ -54,7 +54,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
 
   const toggleIsMapMaximized = () => setIsMapMaximized((prevIsMapMaximized) => !prevIsMapMaximized);
 
-  const MapComponent = type === VOXEL_METAVERSE ? LandsExploreMapVoxels : LandsExploreMap;
+  const MapComponent = type === +VOXEL_METAVERSE ? LandsExploreMapVoxels : LandsExploreMap;
 
   const mapOffsetTop = stickyOffset.offsets.filter + stickyOffset.offsets.header;
 
