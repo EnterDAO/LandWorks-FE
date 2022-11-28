@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js';
 
 import { Box, Button, Stack, Typography } from 'design-system';
 import { PaymentToken } from 'modules/land-works/api';
+import { UsdcToken } from 'providers/known-tokens-provider';
 
 import ClaimRewardsModalEmpty from './ClaimRewardsModalEmpty';
 import ClaimRewardsModalTotal from './ClaimRewardsModalTotal';
@@ -14,7 +15,13 @@ const ClaimRewardsModalAdsTab: FC = () => {
   const { adsReward, isAdsRewardClaiming, adsRewardsPaymentToken, claimAdsReward } = useClaimRewards();
   const adsTotalRewards = useMemo(() => {
     if (!adsRewardsPaymentToken) {
-      return [];
+      return [
+        {
+          paymentToken: {
+            symbol: UsdcToken.symbol,
+          },
+        },
+      ];
     }
 
     const reward: {
@@ -47,7 +54,11 @@ const ClaimRewardsModalAdsTab: FC = () => {
             <br />
             The awards are paid out based on the unique views the ad accumulated until the last day of each month. Each
             unique view pays a 0.05 USDC. For a more detailed split of the accumulated unique views of your listed
-            properties or if you have any questions, please reach out on our Discord server.
+            properties or if you have any questions, please reach out on our{' '}
+            <a href="https://discord.gg/xrShf4qU" target="_blank">
+              Discord server
+            </a>
+            .
             <br />
             <br />
             You have <strong>X</strong> listed properties on LandWorks where you have allowed ads to be displayed. The
@@ -60,7 +71,7 @@ const ClaimRewardsModalAdsTab: FC = () => {
 
       <Box display="flex" justifyContent="center">
         <Button disabled={isClaimButtonDisabled} onClick={claimAdsReward} btnSize="medium" variant="gradient">
-          Claim
+          {isAdsRewardClaiming ? 'Claiming...' : 'Claim'}
         </Button>
       </Box>
     </>

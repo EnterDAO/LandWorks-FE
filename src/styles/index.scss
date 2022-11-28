@@ -257,13 +257,10 @@ ul {
 
 a {
   text-decoration: none;
-  color: #177ddc;
+  color: var(--theme-accent-color);
 
-  &:hover {
-    color: #165996;
-  }
-
+  &:hover,
   &:active {
-    color: #388ed3;
+    color: var(--theme-accent-hover-color);
   }
 }
