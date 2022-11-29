@@ -6,6 +6,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import splitbee from '@splitbee/web';
 import { UnsupportedChainIdError, Web3ReactProvider, useWeb3React } from '@web3-react/core';
 import { NoEthereumProviderError } from '@web3-react/injected-connector';
+import { activateInjectedProvider } from 'web3/utils';
 
 import config from 'config';
 import { Loader } from 'design-system';
@@ -139,6 +140,8 @@ const WalletProvider: React.FC = (props) => {
         setActiveConnector(walletConnector);
         setSessionProvider(walletConnector.id);
       }
+
+      activateInjectedProvider('metamask');
 
       await web3React.activate(connector, undefined, true).then(onSuccess).catch(onError);
 
