@@ -2,7 +2,7 @@ import { ChangeEvent, FC } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 
-import { ControlledSelect } from 'design-system';
+import { ControlledSelect, Typography } from 'design-system';
 import { Option } from 'modules/interface';
 
 import { THEME_COLORS } from 'themes/theme-constants';
@@ -12,11 +12,12 @@ import s from './s.module.scss';
 interface InputProps {
   options: Option[];
   optionsValue: number;
+  placeholder?: string;
   handleOptionChange: (value: number) => void;
   onInput: (e: ChangeEvent<HTMLInputElement>) => void;
   ethInUsd?: string;
   error?: string;
-  defaultInputValue: number;
+  defaultInputValue?: number | string;
 }
 
 const CustomDropdownInput: FC<InputProps> = ({
@@ -27,6 +28,7 @@ const CustomDropdownInput: FC<InputProps> = ({
   optionsValue,
   error,
   defaultInputValue,
+  placeholder,
 }) => {
   const handleChange = (value: number) => {
     handleOptionChange(value);
@@ -41,6 +43,7 @@ const CustomDropdownInput: FC<InputProps> = ({
       className={s.wrapper}
     >
       <input
+        placeholder={placeholder}
         className={s.input}
         onWheel={(event) => event.currentTarget.blur()}
         type={'number'}
@@ -48,7 +51,9 @@ const CustomDropdownInput: FC<InputProps> = ({
         defaultValue={defaultInputValue}
       />
       <Box display="flex" flexDirection="row" className={s.dropdownBox}>
-        <span>{ethInUsd}</span>
+        <Typography minWidth={0} color="var(--theme-grey700-color)" variant="caption" noWrap>
+          {ethInUsd}
+        </Typography>
         <Divider orientation="vertical" flexItem className={s.divider} />
         <Box>
           <ControlledSelect

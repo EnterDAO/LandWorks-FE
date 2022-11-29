@@ -133,8 +133,8 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
               </p>
             </Grid>
             <Grid item xs={6} display="flex" flexDirection="column">
-              Rent Price
-              <p>
+              Price Per Day
+              <div>
                 <Icon
                   name={getTokenIconName(paymentToken.symbol || 'png/eth')}
                   style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
@@ -151,7 +151,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
                     {rentPrice.toNumber()} {paymentToken.symbol}
                   </>
                 )}
-              </p>
+              </div>
             </Grid>
             {metaverse && (
               <Grid item xs={6} display="flex" flexDirection="column">

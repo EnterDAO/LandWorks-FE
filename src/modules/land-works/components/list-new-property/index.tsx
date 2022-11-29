@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
 import BigNumber from 'bignumber.js';
@@ -114,11 +114,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const [paymentToken, setPaymentToken] = useState({} as PaymentToken);
   const [selectedCurrency, setSelectedCurrency] = useState(1);
 
-  const [tokenCost, setTokenCost] = useState(new BigNumber(0));
+  const [tokenCost, setTokenCost] = useState<BigNumber | undefined>();
   const [earnings, setEarnings] = useState(ZERO_BIG_NUMBER);
   const [protocolFee, setProtocolFee] = useState(ZERO_BIG_NUMBER);
   const [feePercentage, setFeePercentage] = useState(0);
-  const [pricePerSecond, setPricePerSecond] = useState(ZERO_BIG_NUMBER);
   const [priceError, setPriceError] = useState('');
 
   const [approveDisabled, setApproveDisabled] = useState(false);
@@ -141,6 +140,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const [filteredVoxels, setFilteredVoxels] = useState<CryptoVoxelNFT[]>([]);
 
   const [listModalMessage, setListModalMessage] = useState(SignTransactionMessage);
+
+  const pricePerSecond = getNonHumanValue(tokenCost || BigNumber.ZERO, paymentToken.decimals).dividedBy(DAY_IN_SECONDS);
 
   const handlePropertyChange = (selectedLand: BaseNFT) => {
     setSelectedProperty(selectedLand);
@@ -280,10 +281,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   };
 
   const handleCostEthChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = BigNumber.from(e.target.value || '');
-    const zeroValue = e.target.value === '';
-    const dynamicValue = zeroValue ? BigNumber.from(0) : value!;
-    setTokenCost(dynamicValue!);
+    setTokenCost(!e.target.value ? undefined : BigNumber.from(e.target.value));
   };
 
   const handleApprove = async () => {
@@ -328,11 +326,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
     setProtocolFee(fee!);
     setEarnings(earnings!);
     setFeePercentage((100 * Number(paymentToken?.feePercentage)) / FEE_PRECISION);
-  };
-
-  const calculatePricePerSecond = () => {
-    const pricePerSecond = getNonHumanValue(tokenCost, paymentToken.decimals).dividedBy(DAY_IN_SECONDS);
-    setPricePerSecond(pricePerSecond);
   };
 
   const handleConfirmListing = async () => {
@@ -502,10 +495,14 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
       setMaxFutureError('');
     }
 
-    if (pricePerSecondisLTE) {
-      setPriceError('Price per second cannot be negative or equal zero');
-    } else if (pricePerSecondEqualZero) {
-      setPriceError('Price per second equals to zero');
+    if (tokenCost) {
+      if (pricePerSecondisLTE) {
+        setPriceError('Price per second cannot be negative or equal zero');
+      } else if (pricePerSecondEqualZero) {
+        setPriceError('Price per second equals to zero');
+      } else {
+        setPriceError('');
+      }
     } else {
       setPriceError('');
     }
@@ -553,13 +550,13 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
     getPaymentTokens();
   }, [walletCtx.account]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     evaluateInput();
   }, [approveDisabled, minPeriod, maxPeriod, maxFutureTime, paymentToken, selectedProperty, pricePerSecond]);
 
   useEffect(() => {
     calculateTotalAndFeePrecision();
-    calculatePricePerSecond();
+    // calculatePricePerSecond();
     getUsdPrice(paymentToken.symbol, tokenCost?.toNumber() || 0);
   }, [paymentToken, tokenCost]);
 
@@ -835,7 +832,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                 feePercentage={feePercentage}
                 options={currencyData}
                 optionsValue={selectedCurrency}
-                inputValue={tokenCost.toNumber()}
+                inputValue={tokenCost ? tokenCost.toNumber() : ''}
                 error={priceError}
               />
             </Stack>
@@ -908,7 +905,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                       minRentPeriod={minPeriod}
                       maxRentPeriod={maxPeriod}
                       maxFuturePeriod={maxFutureTime}
-                      rentPrice={tokenCost}
+                      rentPrice={tokenCost || BigNumber.ZERO}
                       paymentToken={paymentToken}
                       feeText="There is small fee upon listing the property."
                       withoutText
@@ -957,7 +954,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             <Button
               disabled={
                 selectedProperty === null ||
-                (step.id === StepId.RentPrice && Boolean(priceError.length)) ||
+                (step.id === StepId.RentPrice && (Boolean(priceError.length) || !tokenCost)) ||
                 isCreatingAssetAdvertisement
               }
               variant="gradient"
