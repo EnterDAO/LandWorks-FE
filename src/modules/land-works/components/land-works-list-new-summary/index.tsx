@@ -133,7 +133,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
               </p>
             </Grid>
             <Grid item xs={6} display="flex" flexDirection="column">
-              Rent Price
+              Price Per Day
               <p>
                 <Icon
                   name={getTokenIconName(paymentToken.symbol || 'png/eth')}
