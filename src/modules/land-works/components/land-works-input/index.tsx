@@ -2,7 +2,7 @@ import { ChangeEvent, FC } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 
-import { ControlledSelect } from 'design-system';
+import { ControlledSelect, Typography } from 'design-system';
 import { Option } from 'modules/interface';
 
 import { THEME_COLORS } from 'themes/theme-constants';
@@ -48,7 +48,9 @@ const CustomDropdownInput: FC<InputProps> = ({
         defaultValue={defaultInputValue}
       />
       <Box display="flex" flexDirection="row" className={s.dropdownBox}>
-        <span>{ethInUsd}</span>
+        <Typography minWidth={0} color="var(--theme-grey700-color)" variant="caption" noWrap>
+          {ethInUsd}
+        </Typography>
         <Divider orientation="vertical" flexItem className={s.divider} />
         <Box>
           <ControlledSelect
