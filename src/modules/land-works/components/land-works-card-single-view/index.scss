@@ -45,19 +45,12 @@
   }
 
   .map-image-wrapper {
-    max-height: 478px;
     border-radius: 20px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    margin-bottom: 20px;
-
-    @media all and (min-width: 769px) {
-      margin-bottom: 0;
-      margin-right: 40px;
-    }
   }
 
   .label {
@@ -165,7 +158,7 @@
     .rent-section {
       background: var(--theme-modal-color);
       border-radius: 25px;
-      margin-top: 20px;
+      margin-top: 36px;
       padding: 15px 0px;
 
       @media all and (max-width: 500px) {
