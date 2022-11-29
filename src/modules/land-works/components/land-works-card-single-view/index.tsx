@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useMemo, useState } from 'react';
-import Countdown, { CountdownTimeDelta, zeroPad } from 'react-countdown';
 import Grid from '@mui/material/Grid';
 import splitbee from '@splitbee/web';
 import BigNumber from 'bignumber.js';
@@ -14,6 +13,7 @@ import { Box, Button, Stack, Tooltip, Typography } from 'design-system';
 import { CopyIcon, MessageIcon } from 'design-system/icons';
 import { getENSName, getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
+import InfoAlert from 'layout/components/info-alert';
 
 import { ReactComponent as WarningIcon } from '../../../../resources/svg/warning.svg';
 import { ReactComponent as FireIcon } from '../../../../resources/svg/white_fire.svg';
@@ -24,6 +24,7 @@ import { useLandworks } from '../../providers/landworks-provider';
 import SingleLandCardSkeleton from '../land-single-card-loader';
 import LandsMapOverlay from '../lands-map-overlay';
 import AdsToggle from './AdsToggle';
+import CountdownBanner from './CountdownBanner';
 import { StyledButton } from './styled';
 
 import { getNowTs } from '../../../../utils';
@@ -63,28 +64,23 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
   const [openOwnerTooltip, setOpenOwnerTooltip] = useState(false);
   const [openOperatorTooltip, setOpenOperatorTooltip] = useState(false);
 
-  const isOwnerOrConsumer = () => {
-    return (
-      wallet.account &&
-      (wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase() ||
-        wallet.account.toLowerCase() === asset?.consumer?.id.toLowerCase())
-    );
-  };
+  const isOwnerOrConsumer =
+    wallet.account &&
+    (wallet.account.toLowerCase() === asset?.owner?.id.toLowerCase() ||
+      wallet.account.toLowerCase() === asset?.consumer?.id.toLowerCase());
 
   const isNotListed = () => asset?.status !== AssetStatus.LISTED;
   const isAvailable = asset?.isAvailable && asset?.availability.isCurrentlyAvailable;
 
-  const shouldShowUpdateOperator = () => {
-    const validOperator =
-      currentRent?.renter?.id.toLowerCase() === wallet.account?.toLowerCase() &&
-      currentRent?.operator?.toLowerCase() !== asset?.operator?.toLowerCase();
+  const shouldShowUpdateOperator =
+    currentRent?.renter &&
+    wallet?.account &&
+    asset?.operator &&
+    currentRent.renter.id.toLowerCase() === wallet.account.toLowerCase() &&
+    currentRent.operator.toLowerCase() !== asset?.operator?.toLowerCase();
 
-    return wallet.account && validOperator;
-  };
-
-  const shouldShowRenterCountdown = () => {
-    return countDownRent?.renter?.id && countDownRent?.renter?.id.toLowerCase() === wallet.account?.toLowerCase();
-  };
+  const shouldShowRenterCountdown =
+    countDownRent?.renter?.id && countDownRent?.renter?.id.toLowerCase() === wallet.account?.toLowerCase();
 
   const getCurrentAndCountdownRents = async () => {
     if (asset?.id) {
@@ -160,20 +156,6 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
       setCountDownTimestamp('0');
     };
   }, []);
-
-  const renderCountdown = (props: CountdownTimeDelta) => {
-    if (props.completed) {
-      setCountDownRent({} as RentEntity);
-      setCountDownTimestamp('0');
-    }
-    const days = props.days > 0 ? `${props.days} : ` : '';
-    const hours = props.hours >= 0 ? `${zeroPad(props.hours)} : ` : '';
-    const minutes = props.minutes >= 0 ? `${zeroPad(props.minutes)} : ` : '';
-    const seconds = props.seconds >= 0 ? `${zeroPad(props.seconds)} ` : '';
-    const expired = days || hours || minutes || seconds;
-    const placeholder = expired ? `${days}${hours}${minutes}${seconds} ` : '';
-    return <p className="remaining-time">{placeholder}</p>;
-  };
 
   const isAssetStaked = () => {
     return asset?.owner?.id == config.contracts.yf.staking;
@@ -313,12 +295,12 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
 
   return (
     <>
-      <Box gap={8} display="flex" flexDirection={{ xs: 'column', lg: 'row' }} className="single-land-card-container">
+      <Grid container spacing={8} className="single-land-card-container">
         {loading ? (
           <SingleLandCardSkeleton />
         ) : (
           <>
-            <Box flex="1 1 100%" minHeight={400} maxWidth={{ lg: 570 }} display="flex" flexDirection="column">
+            <Grid item xs={12} lg={5} minHeight={400} display="flex" flexDirection="column">
               <Box flexBasis={0} flexGrow={1} className="map-image-wrapper">
                 <Image alt={asset?.name} src={asset?.imageUrl} sx={{ objectFit: 'cover', width: 1, height: 1 }} />
                 <LandsMapOverlay
@@ -327,186 +309,174 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                   place={asset?.place}
                 />
               </Box>
-            </Box>
+            </Grid>
 
-            <Box flex="1 1 100%" display="flex" flexDirection="column" className="properties-container">
-              <Grid container className="head-container">
-                <Grid item className="title-container">
-                  <span className="title-container__text" title={asset?.name?.toLowerCase()}>
-                    {asset?.name?.toLowerCase()}
-                  </span>
-                  <span className={`title-container__pill button-section `}>
-                    <button
-                      className={`${
-                        isNotListed() ? 'button-delisted' : isAvailable ? 'button-available' : 'button-rented'
-                      }`}
-                    >
-                      <div
-                        className={`button-label ${
-                          isNotListed()
-                            ? 'button-delisted-dot'
-                            : isAvailable
-                            ? 'button-available-dot'
-                            : 'button-rented-dot'
-                        }`}
-                      />
-                      {isNotListed() ? 'Delisted' : isAvailable ? 'Available' : 'Rented'}
-                    </button>
-                  </span>
-                  {asset?.isHot && (
-                    <span className="title-container__hot label card-hot-label">
-                      <FireIcon className="name-label" />
+            <Grid item xs={12} lg={7} display="flex" flexDirection="column">
+              <Box className="properties-container">
+                <Grid container className="head-container">
+                  <Grid item className="title-container">
+                    <span className="title-container__text" title={asset?.name?.toLowerCase()}>
+                      {asset?.name?.toLowerCase()}
                     </span>
-                  )}
-                </Grid>
-              </Grid>
-
-              <Box display="flex" gap={2} mt="7px">
-                {hashtags.map((hashtag) => {
-                  return (
-                    <Typography key={hashtag} variant="body2" textTransform="uppercase">
-                      #{hashtag}
-                    </Typography>
-                  );
-                })}
-              </Box>
-
-              <Stack spacing={4} mt={6} mb="auto">
-                {details.map((detail, i) => {
-                  return (
-                    <Box key={i} display="flex" alignItems="center" flexWrap="wrap" minHeight={30} columnGap={6}>
-                      <Typography
-                        display="inline-flex"
-                        fontWeight={500}
-                        color={THEME_COLORS.grey03}
-                        variant="body2"
-                        flex="0 0 141px"
+                    <span className={`title-container__pill button-section `}>
+                      <button
+                        className={`${
+                          isNotListed() ? 'button-delisted' : isAvailable ? 'button-available' : 'button-rented'
+                        }`}
                       >
-                        {detail.label}
-                        {!!detail.tooltip && (
-                          <Tooltip disableFocusListener placement="bottom-start" title={detail.tooltip}>
-                            <span>
-                              <Icon name="about" className="info-icon" />
-                            </span>
-                          </Tooltip>
-                        )}
+                        <div
+                          className={`button-label ${
+                            isNotListed()
+                              ? 'button-delisted-dot'
+                              : isAvailable
+                              ? 'button-available-dot'
+                              : 'button-rented-dot'
+                          }`}
+                        />
+                        {isNotListed() ? 'Delisted' : isAvailable ? 'Available' : 'Rented'}
+                      </button>
+                    </span>
+                    {asset?.isHot && (
+                      <span className="title-container__hot label card-hot-label">
+                        <FireIcon className="name-label" />
+                      </span>
+                    )}
+                  </Grid>
+                </Grid>
+
+                <Box display="flex" gap={2} mt="7px">
+                  {hashtags.map((hashtag) => {
+                    return (
+                      <Typography key={hashtag} variant="body2" textTransform="uppercase">
+                        #{hashtag}
                       </Typography>
+                    );
+                  })}
+                </Box>
 
-                      <Box>{detail.content}</Box>
-                    </Box>
-                  );
-                })}
-              </Stack>
-              {!asset?.isEmptyEstate && (
-                <Box className="rent-section">
-                  <Grid container columnSpacing={5} rowSpacing={2} className="rent-price">
-                    <Grid item xs={12} xl={6.5} className="price-wrapper">
-                      {asset?.availability?.isRentable && (
-                        <div className="period-wrapper">
-                          <span className="period-title">Rent period</span>
-                          <span className="available-period">
-                            {asset.minPeriodTimedType} - {asset.maxPeriodTimedType}
-                          </span>
-                          <span className="period-title">Max Rent Queue</span>
-                          <span className="available-period">{asset.maxFutureTimeTimedType}</span>
-                        </div>
-                      )}
-                      <Grid item>
-                        <Grid item className="eth-price-container">
-                          <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" />
-                          <SmallAmountTooltip
-                            className="price-eth"
-                            amount={asset?.pricePerMagnitude ? asset?.pricePerMagnitude?.price : new BigNumber('0')}
-                          />
-                          <p>{asset?.paymentToken?.symbol}</p>
+                <Stack spacing={4} mt={6} mb="auto">
+                  {details.map((detail, i) => {
+                    return (
+                      <Box key={i} display="flex" alignItems="center" flexWrap="wrap" minHeight={30} columnGap={6}>
+                        <Typography
+                          display="inline-flex"
+                          fontWeight={500}
+                          color={THEME_COLORS.grey03}
+                          variant="body2"
+                          flex="0 0 141px"
+                        >
+                          {detail.label}
+                          {!!detail.tooltip && (
+                            <Tooltip disableFocusListener placement="bottom-start" title={detail.tooltip}>
+                              <span>
+                                <Icon name="about" className="info-icon" />
+                              </span>
+                            </Tooltip>
+                          )}
+                        </Typography>
 
-                          <div className="usd-price-container">
-                            <SmallAmountTooltip
-                              className="price"
-                              symbol="$"
-                              amount={asset?.pricePerMagnitude?.usdPrice || ZERO_BIG_NUMBER}
-                            />
-                            <span className="per-day">/{asset?.pricePerMagnitude?.magnitude}</span>
+                        <Box>{detail.content}</Box>
+                      </Box>
+                    );
+                  })}
+                </Stack>
+                {!asset?.isEmptyEstate && (
+                  <Box className="rent-section">
+                    <Grid container columnSpacing={5} rowSpacing={2} className="rent-price">
+                      <Grid item xs={12} xl={6.5} className="price-wrapper">
+                        {asset?.availability?.isRentable && (
+                          <div className="period-wrapper">
+                            <span className="period-title">Rent period</span>
+                            <span className="available-period">
+                              {asset.minPeriodTimedType} - {asset.maxPeriodTimedType}
+                            </span>
+                            <span className="period-title">Max Rent Queue</span>
+                            <span className="available-period">{asset.maxFutureTimeTimedType}</span>
                           </div>
+                        )}
+                        <Grid item>
+                          <Grid item className="eth-price-container">
+                            <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" />
+                            <SmallAmountTooltip
+                              className="price-eth"
+                              amount={asset?.pricePerMagnitude ? asset?.pricePerMagnitude?.price : new BigNumber('0')}
+                            />
+                            <p>{asset?.paymentToken?.symbol}</p>
+
+                            <div className="usd-price-container">
+                              <SmallAmountTooltip
+                                className="price"
+                                symbol="$"
+                                amount={asset?.pricePerMagnitude?.usdPrice || ZERO_BIG_NUMBER}
+                              />
+                              <span className="per-day">/{asset?.pricePerMagnitude?.magnitude}</span>
+                            </div>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={12} xl={5.5}>
+                        <Grid item className="property-button">
+                          {isOwnerOrConsumer ? (
+                            <Button
+                              variant="gradient"
+                              btnSize="small"
+                              type="button"
+                              className={'button-primary'}
+                              onClick={handleClaim}
+                              disabled={isClaimButtonDisabled}
+                            >
+                              <span>CLAIM RENT</span>
+                            </Button>
+                          ) : (
+                            <button
+                              type="button"
+                              className={'button-primary '}
+                              disabled={isRentButtonDisabled || isNotListed() || !asset?.availability?.isRentable}
+                              onClick={handleRent}
+                            >
+                              <span>{isAvailable ? 'RENT NOW' : 'RENT NEXT SLOT'}</span>
+                            </button>
+                          )}
+                        </Grid>
+                        <Grid item className="property-button">
+                          <ExternalLink className="marketplace-link" target={'_blank'} href={asset?.externalUrl}>
+                            <span>view in metaverse</span>
+                          </ExternalLink>
                         </Grid>
                       </Grid>
                     </Grid>
-                    <Grid item xs={12} xl={5.5}>
-                      <Grid item className="property-button">
-                        {isOwnerOrConsumer() && (
-                          <Button
-                            variant="gradient"
-                            btnSize="small"
-                            type="button"
-                            className={'button-primary'}
-                            onClick={handleClaim}
-                            disabled={isClaimButtonDisabled}
-                          >
-                            <span>CLAIM RENT</span>
-                          </Button>
-                        )}
-                        {!isOwnerOrConsumer() && (
-                          <button
-                            type="button"
-                            className={'button-primary '}
-                            disabled={isRentButtonDisabled || isNotListed() || !asset?.availability?.isRentable}
-                            onClick={handleRent}
-                          >
-                            <span>{isAvailable ? 'RENT NOW' : 'RENT NEXT SLOT'}</span>
-                          </button>
-                        )}
-                      </Grid>
-                      <Grid item className="property-button">
-                        <ExternalLink className="marketplace-link" target={'_blank'} href={asset?.externalUrl}>
-                          <span>view in metaverse</span>
-                        </ExternalLink>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Box>
-              )}
-            </Box>
+                  </Box>
+                )}
+              </Box>
+            </Grid>
 
-            {shouldShowRenterCountdown() && (
-              <Grid className="countdown">
-                <Grid item xs={10}>
-                  {/* // eslint-disable-next-line
-                  // @ts-ignore */}
-                  <Countdown date={Number(countDownTimestamp) * 1000} zeroPadTime={3} renderer={renderCountdown} />
-                </Grid>
-                <Grid item>
-                  <p className="rented-on">{countDownPlaceholderMessage}</p>
-                </Grid>
-              </Grid>
-            )}
-
-            {shouldShowUpdateOperator() && (
-              <Grid container className="operator-update-container">
-                <Grid item className="info-warning-container">
-                  <WarningIcon />
-                  <div className="info-warning-text">
-                    <h3>Synchronise Operator</h3>
-                    <p>
-                      Synchronising the configured operator in LandWorks is important in order to update with the actual
-                      operator specified in the Metaverse.
-                    </p>
-                  </div>
-                </Grid>
-                <Grid item>
-                  <button
-                    className="update-operator-btn"
-                    type="button"
-                    onClick={handleUpdateOperator}
-                    disabled={isUpdateOperatorButtonDisabled}
-                  >
-                    <span>SYNCHRONISE</span>
-                  </button>
-                </Grid>
+            {shouldShowRenterCountdown && (
+              <Grid item xs={12} lg={7} ml="auto" display="flex" mt={-8} justifyContent="center">
+                <CountdownBanner date={Number(countDownTimestamp) * 1000} label={countDownPlaceholderMessage} />
               </Grid>
             )}
           </>
         )}
-      </Box>
+      </Grid>
+
+      {shouldShowUpdateOperator && (
+        <InfoAlert
+          sx={{ maxWidth: 1024, mx: 'auto', mt: 6, p: 6, borderRadius: '20px', gap: 3 }}
+          icon={<WarningIcon />}
+          title="Synchronise Operator"
+          description="Synchronising the configured operator in LandWorks is important in order to update with the actual operator specified in the Metaverse. "
+          action={
+            <Button
+              variant="primary"
+              btnSize="medium"
+              onClick={handleUpdateOperator}
+              disabled={isUpdateOperatorButtonDisabled}
+            >
+              Synchronize
+            </Button>
+          }
+        />
+      )}
     </>
   );
 };
