@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import { ReactComponent as BluePlus } from 'assets/icons/blue-plus.svg';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
-import { Grid, Tooltip } from 'design-system';
+import { Grid, Tooltip, Typography } from 'design-system';
 import { getTokenIconName } from 'helpers/helpers';
 import { Option } from 'modules/interface';
 import { PaymentToken } from 'modules/land-works/api';
@@ -24,7 +24,7 @@ interface IProps {
   feePercentage: number;
   options: Option[];
   optionsValue: number;
-  inputValue: number;
+  inputValue?: number | string;
   error: string;
 }
 
@@ -50,6 +50,7 @@ export const RentPrice: React.FC<IProps> = ({
         </Grid>
         <Grid mt={3}>
           <CustomDropdownInput
+            placeholder="Set a price"
             defaultInputValue={inputValue}
             onInput={handleCostEthChange}
             handleOptionChange={handleCurrencyChange}
@@ -59,9 +60,11 @@ export const RentPrice: React.FC<IProps> = ({
             error={error}
           />
         </Grid>
-        <div className="error">
-          <span>{error}</span>
-        </div>
+        {!!error && (
+          <Typography mt={1} textAlign="left" variant="body2" color="var(--theme-red-color)">
+            {error}
+          </Typography>
+        )}
       </Grid>
       <Grid className="blueBox" display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
         <Grid display="flex" justifyContent="center" alignItems="flex-start" flexDirection="column">

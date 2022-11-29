@@ -12,11 +12,12 @@ import s from './s.module.scss';
 interface InputProps {
   options: Option[];
   optionsValue: number;
+  placeholder?: string;
   handleOptionChange: (value: number) => void;
   onInput: (e: ChangeEvent<HTMLInputElement>) => void;
   ethInUsd?: string;
   error?: string;
-  defaultInputValue: number;
+  defaultInputValue?: number | string;
 }
 
 const CustomDropdownInput: FC<InputProps> = ({
@@ -27,6 +28,7 @@ const CustomDropdownInput: FC<InputProps> = ({
   optionsValue,
   error,
   defaultInputValue,
+  placeholder,
 }) => {
   const handleChange = (value: number) => {
     handleOptionChange(value);
@@ -41,6 +43,7 @@ const CustomDropdownInput: FC<InputProps> = ({
       className={s.wrapper}
     >
       <input
+        placeholder={placeholder}
         className={s.input}
         onWheel={(event) => event.currentTarget.blur()}
         type={'number'}

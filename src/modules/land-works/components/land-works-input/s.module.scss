@@ -32,7 +32,16 @@
   padding: 16px;
   min-width: 0;
   max-width: 140px;
-  color: var(--theme-light-color),
+  font-family: inherit;
+  color: var(--theme-light-color);
+}
+
+.input::placeholder {
+  color: var(--theme-grey700-color);
+}
+
+.input:focus::placeholder {
+  color: transparent;
 }
 
 .dropdownBox {
