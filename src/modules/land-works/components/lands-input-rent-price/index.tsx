@@ -1,10 +1,11 @@
 import { ChangeEvent } from 'react';
+import { Box } from '@mui/system';
 import BigNumber from 'bignumber.js';
 
 import { ReactComponent as BluePlus } from 'assets/icons/blue-plus.svg';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
-import { Grid } from 'design-system';
+import { Grid, Tooltip } from 'design-system';
 import { getTokenIconName } from 'helpers/helpers';
 import { Option } from 'modules/interface';
 import { PaymentToken } from 'modules/land-works/api';
@@ -71,7 +72,9 @@ export const RentPrice: React.FC<IProps> = ({
             />
             <SmallAmountTooltip className="amount" amount={new BigNumber(earnings || '0')} />
           </Grid>
-          <Grid className="amount-label">Your Earnings</Grid>
+          <Grid display="flex" alignItems="center" className="amount-label">
+            Your Earnings
+          </Grid>
         </Grid>
         <BluePlus />
         <Grid display="flex" justifyContent="center" alignItems="flex-start" flexDirection="column">
@@ -84,7 +87,23 @@ export const RentPrice: React.FC<IProps> = ({
               <SmallAmountTooltip className="amount" amount={new BigNumber(protocolFee || '0')} />
             </span>
           </Grid>
-          <Grid className="amount-label">{feePercentage}% Protocol Fee</Grid>
+          <Grid display="flex" alignItems="center" className="amount-label">
+            {feePercentage}% Protocol Fee
+            <Tooltip
+              placement="bottom"
+              title={
+                <>
+                  This is the protocol fee of LandWorks.
+                  <br />
+                  It occurs when the property is rented.
+                </>
+              }
+            >
+              <Box display="flex">
+                <Icon name="about" className="info-icon" />
+              </Box>
+            </Tooltip>
+          </Grid>
         </Grid>
       </Grid>
     </>
