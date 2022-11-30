@@ -89,7 +89,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
           isMapMaximized
             ? {
                 top: 0,
-                pt: stickyOffset.offsets.header + 'px',
+                pt: mapOffsetTop + 'px',
                 position: 'fixed',
                 height: 1,
               }
