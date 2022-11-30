@@ -1,14 +1,14 @@
-import { FC, useEffect, useState } from 'react';
-import { GeoJSON, MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { GeoJSON, GeoJSONProps, MapContainer, Marker, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import { Icon, LatLngExpression, Layer } from 'leaflet';
 import { find } from 'lodash';
 
 import MapMarker from 'assets/img/mapMarker.png';
-import { LandsExploreMapBaseProps, VoxelsMapCollection, VoxelsTileType } from 'modules/interface';
+import { LandsExploreMapBaseProps, VoxelsTileType } from 'modules/interface';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 
-import { parceVoxelsMapAsset } from 'modules/land-works/utils';
+import { voxelsTilesToVoxelsMapCollection } from 'modules/land-works/utils';
 import { inverseLerp, lerp } from 'utils';
 
 import { TILES_URL_VOXEL } from 'modules/land-works/constants';
@@ -25,13 +25,23 @@ type LandsExploreMapVoxelsProps = LandsExploreMapBaseProps;
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 12;
 
+const center: [number, number] = [-0.0054, 0.0132];
+
+type LeafletMap = ReturnType<typeof useMap>;
+
+const pathOptions = {
+  color: '#9370DB',
+  fillColor: 'lightblue',
+  fillOpacity: 0.7,
+  opacity: 1,
+  weight: 1,
+};
+
 const LandsExploreMapVoxels: FC<LandsExploreMapVoxelsProps> = ({ zoom = 0.5, onZoom, lands }) => {
+  const mapRef = useRef<LeafletMap | null>(null);
   const { setClickedLandId } = useLandsMapTile();
   const { selectedId } = useLandsMapTiles();
-
   const [mapTiles, setMapTiles] = useState<VoxelsTileType[]>();
-  const [mapCollection, setMapCollection] = useState<VoxelsMapCollection>();
-
   const [markerPosition, setMarkerPosition] = useState<LatLngExpression>();
 
   const fetchTiles = async (url: string = TILES_URL_VOXEL) => {
@@ -42,37 +52,42 @@ const LandsExploreMapVoxels: FC<LandsExploreMapVoxelsProps> = ({ zoom = 0.5, onZ
     setMapTiles && setMapTiles(json.parcels);
   };
 
-  const getLandData = () => {
-    parceVoxelsMapAsset(lands, mapTiles).then(setMapCollection);
-  };
+  useEffect(() => {
+    if (!!mapTiles && mapRef.current) {
+      mapRef.current.invalidateSize();
+    }
+  }, [mapTiles]);
 
-  const geoEachFeature = (feature: GeoJSON.Feature<GeoJSON.GeometryObject>, layer: Layer) => {
-    layer.on({
-      mouseover: function (e) {
-        const auxLayer = e.target;
-        auxLayer.setStyle({
-          weight: 2,
-          color: '#800080',
-          fillColor: '#7dcae3',
-        });
-      },
-      mouseout: function (e) {
-        const auxLayer = e.target;
-        auxLayer.setStyle({
-          weight: 1,
-          color: '#9370DB',
-          fillColor: 'lightblue',
-          dashArray: '',
-          fillOpacity: 0.7,
-          opacity: 1,
-        });
-      },
-      click: function (e) {
-        setMarkerPosition(getCentre(e.target.feature.geometry.coordinates[0]));
-        setClickedLandId && setClickedLandId(e.target.feature.id);
-      },
-    });
-  };
+  const geoEachFeature = useCallback(
+    (feature: GeoJSON.Feature<GeoJSON.GeometryObject>, layer: Layer) => {
+      layer.on({
+        mouseover: function (e) {
+          const auxLayer = e.target;
+          auxLayer.setStyle({
+            weight: 2,
+            color: '#800080',
+            fillColor: '#7dcae3',
+          });
+        },
+        mouseout: function (e) {
+          const auxLayer = e.target;
+          auxLayer.setStyle({
+            weight: 1,
+            color: '#9370DB',
+            fillColor: 'lightblue',
+            dashArray: '',
+            fillOpacity: 0.7,
+            opacity: 1,
+          });
+        },
+        click: function (e) {
+          setMarkerPosition(getCentre(e.target.feature.geometry.coordinates[0]));
+          setClickedLandId && setClickedLandId(e.target.feature.id);
+        },
+      });
+    },
+    [setMarkerPosition, setClickedLandId]
+  );
 
   useEffect(() => {
     fetchTiles();
@@ -80,19 +95,40 @@ const LandsExploreMapVoxels: FC<LandsExploreMapVoxelsProps> = ({ zoom = 0.5, onZ
 
   useEffect(() => {
     const found = find(mapTiles, { id: Number(selectedId) });
-    if (found) setMarkerPosition(getCentre(found.geometry.coordinates[0]));
-  }, [selectedId]);
 
-  useEffect(() => {
-    if (lands.length && mapTiles?.length) {
-      getLandData();
+    if (found) {
+      setMarkerPosition(getCentre(found.geometry.coordinates[0]));
     }
+  }, [selectedId, mapTiles, setMarkerPosition]);
+
+  const geoJsonObject = useMemo(() => {
+    if (!lands.length || !mapTiles) {
+      return;
+    }
+
+    const landsTiles = lands
+      .map((land) => {
+        return mapTiles.find((tile) => tile.id === +land.metaverseAssetId);
+      })
+      .filter((tile): tile is VoxelsTileType => !!tile);
+
+    if (!landsTiles.length) {
+      return;
+    }
+
+    return voxelsTilesToVoxelsMapCollection(landsTiles) as any as GeoJSONProps['data'];
   }, [lands, mapTiles]);
+
+  // prop data of the geojson is immutable so
+  // component will not rerender if we change data prop
+  // to address this issue we need key as a workaround
+  const geoJsonKey = useMemo(() => lands.map((land) => land.id).join(','), [lands]);
 
   return (
     <div className={styles.root}>
       <MapContainer
-        center={[-0.0054, 0.0132]}
+        ref={mapRef}
+        center={center}
         minZoom={MIN_ZOOM}
         maxZoom={MAX_ZOOM}
         zoomControl={false}
@@ -105,20 +141,8 @@ const LandsExploreMapVoxels: FC<LandsExploreMapVoxelsProps> = ({ zoom = 0.5, onZ
           url="https://map.cryptovoxels.com/tile/?z={z}&x={x}&y={y}"
         />
         {markerPosition && <Marker position={markerPosition} icon={iconPerson} />}
-        {mapCollection && (
-          <GeoJSON
-            //eslint-disable-next-line
-            //@ts-ignore
-            data={mapCollection}
-            pathOptions={{
-              color: '#9370DB',
-              fillColor: 'lightblue',
-              fillOpacity: 0.7,
-              opacity: 1,
-              weight: 1,
-            }}
-            onEachFeature={geoEachFeature}
-          />
+        {geoJsonObject && (
+          <GeoJSON key={geoJsonKey} data={geoJsonObject} pathOptions={pathOptions} onEachFeature={geoEachFeature} />
         )}
       </MapContainer>
     </div>

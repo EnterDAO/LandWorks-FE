@@ -194,6 +194,28 @@ export const parceVoxelsMapAsset = async (
   return collection;
 };
 
+const voxelsTilesToVoxelsMapCollectionFeatures = (
+  voxelsTiles: VoxelsTileType[]
+): { type: 'Feature'; id: string; geometry: { type: string; coordinates: number[][][] } }[] => {
+  return voxelsTiles.map((tile) => {
+    return {
+      type: 'Feature',
+      id: String(tile.id),
+      geometry: {
+        type: tile.geometry.type,
+        coordinates: tile.geometry.coordinates,
+      },
+    };
+  });
+};
+
+export const voxelsTilesToVoxelsMapCollection = (voxelsTiles: VoxelsTileType[]): VoxelsMapCollection => {
+  return {
+    type: 'FeatureCollection',
+    features: voxelsTilesToVoxelsMapCollectionFeatures(voxelsTiles),
+  };
+};
+
 export const landsOrder = (lands: AssetEntity[], orderCol: string, orderDir: 'asc' | 'desc'): AssetEntity[] => {
   return orderBy(lands, [orderEnum[orderCol]], [orderDir]);
 };

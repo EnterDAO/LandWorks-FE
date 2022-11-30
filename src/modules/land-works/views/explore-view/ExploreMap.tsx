@@ -29,7 +29,6 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
   const handleZoom = (newZoom: number) => {
     setZoom(newZoom);
   };
-
   useLayoutEffect(() => {
     if (!isMapVisible) {
       setIsMapMaximized(false);
