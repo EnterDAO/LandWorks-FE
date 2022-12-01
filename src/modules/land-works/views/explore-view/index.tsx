@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import useDebounce from '@rooks/use-debounce';
 import { BooleanParam, useQueryParam, withDefault } from 'use-query-params';
 import { getNonHumanValue } from 'web3/utils';
@@ -166,17 +166,16 @@ const ExploreView: React.FC = () => {
     setMoreFilters(null);
   };
 
-  const getLands = useDebounce(
+  const getLands = useCallback(
     async (
       metaverse: number,
       orderColumn: string,
       sortDir: 'asc' | 'desc',
       lastRentEnd: string,
-      paymentToken: PaymentToken,
+      paymentToken?: PaymentToken,
       minPrice?: number | null,
       maxPrice?: number | null
     ) => {
-      setLoading(true);
       const sortBySize = orderColumn == 'size';
       const sortByHottest = orderColumn == 'totalRents';
 
@@ -199,8 +198,6 @@ const ExploreView: React.FC = () => {
 
       setLands(sortByHottest || sortBySize ? landsOrder(lands.data, orderColumn, sortDir) : lands.data);
 
-      setLoading(false);
-
       const highlights = getAllLandsCoordinates(lands.data);
       setCoordinatesHighlights(highlights);
       setPointMapCentre(highlights);
@@ -212,10 +209,13 @@ const ExploreView: React.FC = () => {
         setMaxArea(getMaxArea(lands.data));
       }
     },
-    500
+    []
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    setLoading(true);
+    setLands([]);
+
     getLands(
       Number(metaverse),
       sortColumn,
@@ -224,8 +224,10 @@ const ExploreView: React.FC = () => {
       paymentToken,
       priceParams.minPrice,
       priceParams.maxPrice
-    );
-  }, [sortColumn, sortDir, lastRentEnd, paymentToken, metaverse, priceParams.minPrice, priceParams.maxPrice]);
+    ).finally(() => {
+      setLoading(false);
+    });
+  }, [getLands, sortColumn, sortDir, lastRentEnd, paymentToken, metaverse, priceParams.minPrice, priceParams.maxPrice]);
 
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>

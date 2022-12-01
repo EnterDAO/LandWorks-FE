@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GeoJSON, GeoJSONProps, MapContainer, Marker, TileLayer, useMap, useMapEvents } from 'react-leaflet';
-import { Icon, LatLngExpression, Layer } from 'leaflet';
-import { find } from 'lodash';
+import { Icon, LatLngLiteral, Layer } from 'leaflet';
+import useSWR from 'swr';
 
 import MapMarker from 'assets/img/mapMarker.png';
 import { LandsExploreMapBaseProps, VoxelsTileType } from 'modules/interface';
@@ -18,6 +18,8 @@ import styles from './lands-explore-map-voxels.module.scss';
 
 const iconPerson = new Icon({
   iconUrl: `${MapMarker}`,
+  iconSize: [35, 51],
+  iconAnchor: [17.5, 51],
 });
 
 type LandsExploreMapVoxelsProps = LandsExploreMapBaseProps;
@@ -37,31 +39,29 @@ const pathOptions = {
   weight: 1,
 };
 
+const FLY_ZOOM = 9;
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+// TODO: refactor
 const LandsExploreMapVoxels: FC<LandsExploreMapVoxelsProps> = ({ zoom = 0.5, onZoom, lands }) => {
   const mapRef = useRef<LeafletMap | null>(null);
   const { setClickedLandId } = useLandsMapTile();
-  const { selectedId } = useLandsMapTiles();
-  const [mapTiles, setMapTiles] = useState<VoxelsTileType[]>();
-  const [markerPosition, setMarkerPosition] = useState<LatLngExpression>();
-
-  const fetchTiles = async (url: string = TILES_URL_VOXEL) => {
-    if (!window.fetch) return {};
-    const resp = await window.fetch(url);
-    const json = await resp.json();
-
-    setMapTiles && setMapTiles(json.parcels);
-  };
+  const { selectedId, setSelectedId } = useLandsMapTiles();
+  const [markerPosition, setMarkerPosition] = useState<LatLngLiteral>();
+  const { data: { parcels } = {} } = useSWR<{ success: boolean; parcels: VoxelsTileType[] }>(TILES_URL_VOXEL, fetcher);
+  const geoJsonRef = useRef<any | null>(null);
 
   useEffect(() => {
-    if (!!mapTiles && mapRef.current) {
+    if (parcels && mapRef.current) {
       mapRef.current.invalidateSize();
     }
-  }, [mapTiles]);
+  }, [parcels]);
 
   const geoEachFeature = useCallback(
     (feature: GeoJSON.Feature<GeoJSON.GeometryObject>, layer: Layer) => {
       layer.on({
-        mouseover: function (e) {
+        mouseover(e) {
           const auxLayer = e.target;
           auxLayer.setStyle({
             weight: 2,
@@ -69,7 +69,7 @@ const LandsExploreMapVoxels: FC<LandsExploreMapVoxelsProps> = ({ zoom = 0.5, onZ
             fillColor: '#7dcae3',
           });
         },
-        mouseout: function (e) {
+        mouseout(e) {
           const auxLayer = e.target;
           auxLayer.setStyle({
             weight: 1,
@@ -80,9 +80,16 @@ const LandsExploreMapVoxels: FC<LandsExploreMapVoxelsProps> = ({ zoom = 0.5, onZ
             opacity: 1,
           });
         },
-        click: function (e) {
-          setMarkerPosition(getCentre(e.target.feature.geometry.coordinates[0]));
-          setClickedLandId && setClickedLandId(e.target.feature.id);
+        click(e) {
+          setMarkerPosition(e.target.getCenter());
+
+          if (setClickedLandId) {
+            setClickedLandId(e.target.feature.id);
+          }
+
+          if (setSelectedId) {
+            setSelectedId(e.target.feature.id);
+          }
         },
       });
     },
@@ -90,25 +97,36 @@ const LandsExploreMapVoxels: FC<LandsExploreMapVoxelsProps> = ({ zoom = 0.5, onZ
   );
 
   useEffect(() => {
-    fetchTiles();
-  }, []);
-
-  useEffect(() => {
-    const found = find(mapTiles, { id: Number(selectedId) });
-
-    if (found) {
-      setMarkerPosition(getCentre(found.geometry.coordinates[0]));
+    if (!geoJsonRef.current) {
+      return;
     }
-  }, [selectedId, mapTiles, setMarkerPosition]);
+
+    const foundLayer = geoJsonRef.current.getLayers().find((layer: any) => layer.feature.id === selectedId);
+    const hasLand = !!lands.find((land) => land.metaverseAssetId === selectedId);
+
+    if (!foundLayer || !hasLand) {
+      return;
+    }
+
+    const center = foundLayer.getCenter();
+
+    setMarkerPosition(center);
+
+    if (!mapRef.current) {
+      return;
+    }
+
+    mapRef.current.setView(center, FLY_ZOOM);
+  }, [lands, selectedId, setMarkerPosition]);
 
   const geoJsonObject = useMemo(() => {
-    if (!lands.length || !mapTiles) {
+    if (!lands.length || !parcels) {
       return;
     }
 
     const landsTiles = lands
       .map((land) => {
-        return mapTiles.find((tile) => tile.id === +land.metaverseAssetId);
+        return parcels.find((tile) => tile.id === +land.metaverseAssetId);
       })
       .filter((tile): tile is VoxelsTileType => !!tile);
 
@@ -117,7 +135,7 @@ const LandsExploreMapVoxels: FC<LandsExploreMapVoxelsProps> = ({ zoom = 0.5, onZ
     }
 
     return voxelsTilesToVoxelsMapCollection(landsTiles) as any as GeoJSONProps['data'];
-  }, [lands, mapTiles]);
+  }, [lands, parcels]);
 
   // prop data of the geojson is immutable so
   // component will not rerender if we change data prop
@@ -135,14 +153,20 @@ const LandsExploreMapVoxels: FC<LandsExploreMapVoxelsProps> = ({ zoom = 0.5, onZ
         zoom={lerp(MIN_ZOOM, MAX_ZOOM, zoom)}
         className={styles['leaflet-container']}
       >
-        <MapOptions id={selectedId} zoom={zoom} onZoom={onZoom} mapTiles={mapTiles} />
+        <MapOptions id={selectedId} zoom={zoom} onZoom={onZoom} />
         <TileLayer
           attribution='&copy; <a href="https://www.cryptovoxels.com/">Voxel</a>'
           url="https://map.cryptovoxels.com/tile/?z={z}&x={x}&y={y}"
         />
         {markerPosition && <Marker position={markerPosition} icon={iconPerson} />}
         {geoJsonObject && (
-          <GeoJSON key={geoJsonKey} data={geoJsonObject} pathOptions={pathOptions} onEachFeature={geoEachFeature} />
+          <GeoJSON
+            key={geoJsonKey}
+            ref={geoJsonRef}
+            data={geoJsonObject}
+            pathOptions={pathOptions}
+            onEachFeature={geoEachFeature}
+          />
         )}
       </MapContainer>
     </div>
@@ -153,18 +177,14 @@ export default LandsExploreMapVoxels;
 
 interface MapOptionsProps {
   id: string | undefined;
-  mapTiles: VoxelsTileType[] | undefined;
   onZoom?: (zoom: number) => void;
   zoom?: number;
 }
 
-const FLY_ZOOM = 9;
-
-const MapOptions: React.FC<MapOptionsProps> = ({ id, mapTiles, zoom = 0.5, onZoom }) => {
+const MapOptions: React.FC<MapOptionsProps> = ({ zoom = 0.5, onZoom }) => {
   const map = useMapEvents({
     zoom: () => {
       if (onZoom) {
-        console.log('zoom', map.getZoom());
         onZoom(inverseLerp(MIN_ZOOM, MAX_ZOOM, map.getZoom()));
       }
     },
@@ -174,33 +194,5 @@ const MapOptions: React.FC<MapOptionsProps> = ({ id, mapTiles, zoom = 0.5, onZoo
     map.setZoom(lerp(MIN_ZOOM, MAX_ZOOM, zoom));
   }, [map, zoom]);
 
-  useEffect(() => {
-    if (!id) {
-      return;
-    }
-
-    const foundTile = find(mapTiles, { id: Number(id) });
-    const coords = foundTile?.geometry.coordinates[0];
-    const landCentre = coords ? getCentre(coords) : map.getCenter();
-
-    if (coords) {
-      map.setView(landCentre, FLY_ZOOM);
-    }
-  }, [id]);
-
   return null;
 };
-
-function getCentre(coords: Array<number[]>) {
-  const LNG_CALC_MISTAKE = 0.065;
-  const LAT_CALC_MISTAKE = 0.15;
-  const summary = coords.reduce(
-    (acc, current) => {
-      acc[0] = acc[0] + current[0];
-      acc[1] = acc[1] + current[1];
-      return acc;
-    },
-    [0, 0]
-  );
-  return { lng: summary[0] / coords.length - LNG_CALC_MISTAKE, lat: summary[1] / coords.length + LAT_CALC_MISTAKE };
-}
