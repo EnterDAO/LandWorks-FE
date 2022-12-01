@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import useDebounce from '@rooks/use-debounce';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { BooleanParam, useQueryParam, withDefault } from 'use-query-params';
 import { getNonHumanValue } from 'web3/utils';
 
@@ -166,17 +165,20 @@ const ExploreView: React.FC = () => {
     setMoreFilters(null);
   };
 
-  const getLands = useDebounce(
+  const getLands = useCallback(
     async (
       metaverse: number,
       orderColumn: string,
       sortDir: 'asc' | 'desc',
       lastRentEnd: string,
-      paymentToken: PaymentToken,
+      rentStatus: RentStatus,
+      paymentToken?: PaymentToken,
       minPrice?: number | null,
       maxPrice?: number | null
     ) => {
       setLoading(true);
+      setLands([]);
+
       const sortBySize = orderColumn == 'size';
       const sortByHottest = orderColumn == 'totalRents';
 
@@ -199,8 +201,6 @@ const ExploreView: React.FC = () => {
 
       setLands(sortByHottest || sortBySize ? landsOrder(lands.data, orderColumn, sortDir) : lands.data);
 
-      setLoading(false);
-
       const highlights = getAllLandsCoordinates(lands.data);
       setCoordinatesHighlights(highlights);
       setPointMapCentre(highlights);
@@ -211,8 +211,10 @@ const ExploreView: React.FC = () => {
         setMaxHeight(getMaxHeight(lands.data));
         setMaxArea(getMaxArea(lands.data));
       }
+
+      setLoading(false);
     },
-    500
+    []
   );
 
   useEffect(() => {
@@ -221,11 +223,22 @@ const ExploreView: React.FC = () => {
       sortColumn,
       sortDir,
       lastRentEnd,
+      rentStatus,
       paymentToken,
       priceParams.minPrice,
       priceParams.maxPrice
     );
-  }, [sortColumn, sortDir, lastRentEnd, paymentToken, metaverse, priceParams.minPrice, priceParams.maxPrice]);
+  }, [
+    getLands,
+    sortColumn,
+    sortDir,
+    rentStatus,
+    lastRentEnd,
+    paymentToken,
+    metaverse,
+    priceParams.minPrice,
+    priceParams.maxPrice,
+  ]);
 
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
