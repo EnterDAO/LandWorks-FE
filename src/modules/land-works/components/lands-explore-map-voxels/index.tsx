@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { GeoJSON, GeoJSONProps, MapContainer, Marker, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import { Icon, LatLngLiteral, Layer } from 'leaflet';
 import useSWR from 'swr';
@@ -96,15 +96,20 @@ const LandsExploreMapVoxels: FC<LandsExploreMapVoxelsProps> = ({ zoom = 0.5, onZ
     [setMarkerPosition, setClickedLandId]
   );
 
+  useLayoutEffect(() => {
+    if (lands.length === 0) {
+      setMarkerPosition(undefined);
+    }
+  }, [lands]);
+
   useEffect(() => {
     if (!geoJsonRef.current) {
       return;
     }
 
     const foundLayer = geoJsonRef.current.getLayers().find((layer: any) => layer.feature.id === selectedId);
-    const hasLand = !!lands.find((land) => land.metaverseAssetId === selectedId);
 
-    if (!foundLayer || !hasLand) {
+    if (!foundLayer) {
       return;
     }
 

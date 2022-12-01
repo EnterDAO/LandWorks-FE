@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import useDebounce from '@rooks/use-debounce';
 import { BooleanParam, useQueryParam, withDefault } from 'use-query-params';
 import { getNonHumanValue } from 'web3/utils';
 
@@ -172,6 +171,7 @@ const ExploreView: React.FC = () => {
       orderColumn: string,
       sortDir: 'asc' | 'desc',
       lastRentEnd: string,
+      rentStatus: RentStatus,
       paymentToken?: PaymentToken,
       minPrice?: number | null,
       maxPrice?: number | null
@@ -221,13 +221,24 @@ const ExploreView: React.FC = () => {
       sortColumn,
       sortDir,
       lastRentEnd,
+      rentStatus,
       paymentToken,
       priceParams.minPrice,
       priceParams.maxPrice
     ).finally(() => {
       setLoading(false);
     });
-  }, [getLands, sortColumn, sortDir, lastRentEnd, paymentToken, metaverse, priceParams.minPrice, priceParams.maxPrice]);
+  }, [
+    getLands,
+    sortColumn,
+    sortDir,
+    rentStatus,
+    lastRentEnd,
+    paymentToken,
+    metaverse,
+    priceParams.minPrice,
+    priceParams.maxPrice,
+  ]);
 
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
