@@ -33,7 +33,7 @@ const SmallAmountTooltip: React.FC<ISmallAmountTooltip> = ({ amount, symbol, cla
       {amount.toFixed()}
     </Tooltip>
   ) : (
-    <Box component="span" textAlign="start" overflow="hidden" width={1} className={className}>
+    <Box display="flex" component="span" textAlign="start" overflow="hidden" className={className}>
       {icon || symbol}
       {!symbolNoSpace.find((s) => s === symbol) ? '  ' : ''}
       <Typography display="block" variant="inherit" noWrap component="span">
