@@ -15,6 +15,8 @@ const useLoadMoreButton = <T>(
     setListed((prevState) => Math.max(prevState + itemsPerLoad, items.length));
   }, [itemsPerLoad, items.length]);
 
+  // useLayoutEffect
+
   const loadMoreButtonProps = useMemo(() => {
     const total = items.length;
     const numberOfListed = Math.min(listed, total);
