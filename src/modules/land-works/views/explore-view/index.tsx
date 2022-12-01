@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { BooleanParam, useQueryParam, withDefault } from 'use-query-params';
 import { getNonHumanValue } from 'web3/utils';
 
@@ -176,6 +176,9 @@ const ExploreView: React.FC = () => {
       minPrice?: number | null,
       maxPrice?: number | null
     ) => {
+      setLoading(true);
+      setLands([]);
+
       const sortBySize = orderColumn == 'size';
       const sortByHottest = orderColumn == 'totalRents';
 
@@ -208,14 +211,13 @@ const ExploreView: React.FC = () => {
         setMaxHeight(getMaxHeight(lands.data));
         setMaxArea(getMaxArea(lands.data));
       }
+
+      setLoading(false);
     },
     []
   );
 
-  useLayoutEffect(() => {
-    setLoading(true);
-    setLands([]);
-
+  useEffect(() => {
     getLands(
       Number(metaverse),
       sortColumn,
@@ -225,9 +227,7 @@ const ExploreView: React.FC = () => {
       paymentToken,
       priceParams.minPrice,
       priceParams.maxPrice
-    ).finally(() => {
-      setLoading(false);
-    });
+    );
   }, [
     getLands,
     sortColumn,
