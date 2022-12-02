@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useMemo, useState } from 'react';
+import { Skeleton } from '@mui/material';
+// import Skeleton from 'react-loading-skeleton';
 import Grid from '@mui/material/Grid';
 import splitbee from '@splitbee/web';
 import BigNumber from 'bignumber.js';
@@ -21,7 +23,6 @@ import { useWallet } from '../../../../wallets/wallet';
 import { AssetEntity, RentEntity, fetchAssetRentByTimestamp, fetchUserFirstRentByTimestamp } from '../../api';
 import { AssetStatus } from '../../models/AssetStatus';
 import { useLandworks } from '../../providers/landworks-provider';
-import SingleLandCardSkeleton from '../land-single-card-loader';
 import LandsMapOverlay from '../lands-map-overlay';
 import AdsToggle from './AdsToggle';
 import CountdownBanner from './CountdownBanner';
@@ -297,7 +298,36 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     <>
       <Grid container spacing={8} className="single-land-card-container">
         {loading ? (
-          <SingleLandCardSkeleton />
+          <>
+            <Grid item xs={12} lg={5} minHeight={400} display="flex" flexDirection="column">
+              <Skeleton
+                sx={{ bgcolor: 'var(--theme-card-color)', flexBasis: 0, flexGrow: 1, borderRadius: '20px' }}
+                variant="rectangular"
+              />
+            </Grid>
+            <Grid item xs={12} lg={7}>
+              <Box
+                minHeight={400}
+                bgcolor="var(--theme-card-color)"
+                p={6}
+                borderRadius="20px"
+                sx={{
+                  '& .MuiSkeleton-root': {
+                    bgcolor: 'var(--theme-modal-color) !important',
+                    borderRadius: '5px',
+                  },
+                }}
+              >
+                <Skeleton height={32} variant="rectangular" sx={{ maxWidth: 350, mb: '7px' }} />
+                <Skeleton height={18} variant="rectangular" sx={{ maxWidth: 200, mb: 6 }} />
+                <Stack maxWidth={520} gap={4} mb="36px">
+                  <Skeleton height={30} variant="rectangular" />
+                  <Skeleton height={30} variant="rectangular" />
+                </Stack>
+                <Skeleton height={149} variant="rectangular" sx={{ borderRadius: '25px !important' }} />
+              </Box>
+            </Grid>
+          </>
         ) : (
           <>
             <Grid item xs={12} lg={5} minHeight={400} display="flex" flexDirection="column">

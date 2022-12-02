@@ -112,7 +112,6 @@ const SingleLandView: React.FC = () => {
         history.push(APP_ROUTES.explore);
         return;
       }
-      disableButtons(false);
       setAsset(await parseAsset(subscriptionData.data.asset));
     },
   });
@@ -249,6 +248,8 @@ const SingleLandView: React.FC = () => {
   };
 
   useEffect(() => {
+    disableButtons(false);
+
     setClaimButtonDisabled(!asset?.unclaimedRentFee?.gt(0));
   }, [asset]);
 

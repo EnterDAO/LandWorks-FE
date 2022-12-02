@@ -66,31 +66,47 @@ export const RentPrice: React.FC<IProps> = ({
           </Typography>
         )}
       </Grid>
-      <Grid className="blueBox" display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-        <Grid display="flex" justifyContent="center" alignItems="flex-start" flexDirection="column">
-          <Grid display="flex" flexDirection="row" alignItems="center">
+      <Box className="blueBox" display="flex" alignItems="center" justifyContent="space-between">
+        <Box
+          flex="1 1 100%"
+          overflow="hidden"
+          display="flex"
+          justifyContent="center"
+          alignItems="flex-start"
+          flexDirection="column"
+        >
+          <Grid display="flex" width={1} flexDirection="row" alignItems="center">
             <Icon
               name={getTokenIconName(paymentToken.symbol || 'png/eth')}
               style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
             />
             <SmallAmountTooltip className="amount" amount={new BigNumber(earnings || '0')} />
           </Grid>
-          <Grid display="flex" alignItems="center" className="amount-label">
+          <Grid display="flex" sx={{ whiteSpace: 'nowrap' }} alignItems="center" className="amount-label">
             Your Earnings
           </Grid>
-        </Grid>
-        <BluePlus />
-        <Grid display="flex" justifyContent="center" alignItems="flex-start" flexDirection="column">
-          <Grid display="flex" flexDirection="row" alignItems="center">
+        </Box>
+        <Box flexShrink={0}>
+          <BluePlus />
+        </Box>
+        <Box
+          flex="1 1 100%"
+          overflow="hidden"
+          display="flex"
+          justifyContent="center"
+          alignItems="flex-start"
+          flexDirection="column"
+        >
+          <Grid display="flex" width={1} flexDirection="row" alignItems="center">
             <Icon
               name={getTokenIconName(paymentToken.symbol || 'png/eth')}
               style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
             />
-            <span className="earnings-num">
+            <Box sx={{ overflow: 'hidden' }} className="earnings-num">
               <SmallAmountTooltip className="amount" amount={new BigNumber(protocolFee || '0')} />
-            </span>
+            </Box>
           </Grid>
-          <Grid display="flex" alignItems="center" className="amount-label">
+          <Grid display="flex" alignItems="center" sx={{ whiteSpace: 'nowrap' }} className="amount-label">
             {feePercentage}% Protocol Fee
             <Tooltip
               placement="bottom"
@@ -107,8 +123,8 @@ export const RentPrice: React.FC<IProps> = ({
               </Box>
             </Tooltip>
           </Grid>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </>
   );
 };

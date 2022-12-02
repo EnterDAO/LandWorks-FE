@@ -1,4 +1,6 @@
 import React, { ReactElement } from 'react';
+import { Typography } from '@mui/material';
+import { Box } from '@mui/system';
 import BigNumber from 'bignumber.js';
 
 import { Tooltip } from 'components/custom/tooltip';
@@ -31,11 +33,13 @@ const SmallAmountTooltip: React.FC<ISmallAmountTooltip> = ({ amount, symbol, cla
       {amount.toFixed()}
     </Tooltip>
   ) : (
-    <span className={className}>
+    <Box display="flex" component="span" textAlign="start" overflow="hidden" className={className}>
       {icon || symbol}
       {!symbolNoSpace.find((s) => s === symbol) ? '  ' : ''}
-      <span>{formattedAmount}</span>
-    </span>
+      <Typography display="block" variant="inherit" noWrap component="span">
+        {formattedAmount}
+      </Typography>
+    </Box>
   );
 };
 

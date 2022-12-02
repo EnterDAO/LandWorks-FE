@@ -57,8 +57,10 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
 
   const [cardsSize, setCardsSize] = useState<'compact' | 'normal'>('normal');
 
-  const initialNumberOfCards =
-    sessionStorageHandler('get', 'explore-page', 'listed') || (isMapVisible ? (cardsSize === 'compact' ? 10 : 6) : 18);
+  const initialNumberOfCards = Math.max(
+    sessionStorageHandler('get', 'explore-page', 'listed') || 0,
+    isMapVisible ? (cardsSize === 'compact' ? 10 : 6) : 18
+  );
 
   const setActiveLand = useCallback(
     (land: AssetEntity) => {

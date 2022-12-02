@@ -55,7 +55,7 @@ const ClaimRewardsModalAdsTab: FC = () => {
             The awards are paid out based on the unique views the ad accumulated until the last day of each month. Each
             unique view pays a 0.05 USDC. For a more detailed split of the accumulated unique views of your listed
             properties or if you have any questions, please reach out on our{' '}
-            <a href="https://discord.gg/xrShf4qU" target="_blank">
+            <a href="https://discord.com/invite/7QJvEctG2G" target="_blank">
               Discord server
             </a>
             .
