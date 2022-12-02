@@ -1721,22 +1721,17 @@ export function updateAssetAdvertisement(args: {
 }
 
 export function getAssetAdvertisement({
-  chainId,
   metaverseAssetId,
   metaverseRegistry,
 }: {
-  chainId: string;
   metaverseRegistry: string;
   metaverseAssetId: string;
 }): Promise<Omit<AssetAdvertisement, 'id'>> {
-  return fetch(`${config.backend.apiUrl}/scene/${chainId}/${metaverseRegistry}/${metaverseAssetId}`).then((res) =>
-    res.json()
-  );
+  return fetch(`${config.backend.apiUrl}/scene/${metaverseRegistry}/${metaverseAssetId}`).then((res) => res.json());
 }
 
 export function getAccountAdsRewards(
-  chainId: string | number,
   walletAddress: string
 ): Promise<{ amount: string; claimedAmount: string; contractAddress: string; proof: string[]; token: string }> {
-  return fetch(`${config.backend.apiUrl}/distribution/${chainId}/${walletAddress}`).then((res) => res.json());
+  return fetch(`${config.backend.apiUrl}/distribution/${walletAddress}`).then((res) => res.json());
 }
