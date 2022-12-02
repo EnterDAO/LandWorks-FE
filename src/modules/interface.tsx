@@ -97,6 +97,7 @@ export interface LandsExploreMapBaseProps {
   positionX: number;
   positionY: number;
   zoom?: number;
+  enableTooltips?: boolean;
   onZoom?: (zoom: number) => void;
   lands: AssetEntity[];
   highlights?: CoordinatesLand[];

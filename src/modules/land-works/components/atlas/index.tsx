@@ -52,7 +52,7 @@ const COLOR_BY_TYPE: Record<number | string, string> = {
 };
 
 const Atlas: FC<AtlasProps> = (props) => {
-  const { tiles, layers = [], onChange, onPopup, onClick, ...rest } = props;
+  const { tiles, layers = [], ...rest } = props;
   const [zoom, setZoom] = useState(props.zoom);
 
   const layer: Layer = (x, y) => {
@@ -78,16 +78,7 @@ const Atlas: FC<AtlasProps> = (props) => {
     }
   }, [props.zoom]);
 
-  return (
-    <TileMap
-      onClick={onClick}
-      onPopup={onPopup}
-      onChange={onChange}
-      zoom={zoom}
-      {...rest}
-      layers={[layer, ...(layers as Layer[])]}
-    />
-  );
+  return <TileMap zoom={zoom} {...rest} layers={[layer, ...(layers as Layer[])]} />;
 };
 
 export default Atlas;
