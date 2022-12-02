@@ -1,6 +1,6 @@
 import 'react-tile-map/lib/styles.css';
 
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { Coord, Layer, TileMap, TileMapProps } from 'react-tile-map';
 
 export type AtlasTile = {
@@ -53,7 +53,6 @@ const COLOR_BY_TYPE: Record<number | string, string> = {
 
 const Atlas: FC<AtlasProps> = (props) => {
   const { tiles, layers = [], ...rest } = props;
-  const [zoom, setZoom] = useState(props.zoom);
 
   const layer: Layer = (x, y) => {
     const id = x + ',' + y;
@@ -72,13 +71,7 @@ const Atlas: FC<AtlasProps> = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (props.zoom && props.zoom !== zoom) {
-      setZoom(props.zoom);
-    }
-  }, [props.zoom]);
-
-  return <TileMap zoom={zoom} {...rest} layers={[layer, ...(layers as Layer[])]} />;
+  return <TileMap {...rest} layers={[layer, ...(layers as Layer[])]} />;
 };
 
 export default Atlas;

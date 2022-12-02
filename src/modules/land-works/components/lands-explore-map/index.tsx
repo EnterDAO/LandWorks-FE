@@ -23,8 +23,8 @@ import styles from './lands-explore-map.module.scss';
 
 type LandExploreMap = LandsExploreMapBaseProps;
 
-const MIN_ZOOM = 0.5;
-const MAX_ZOOM = 3;
+const MIN_SIZE = 11;
+const MAX_SIZE = 40;
 
 // TODO: refactor
 const LandsExploreMap: FC<LandExploreMap> = ({
@@ -53,7 +53,8 @@ const LandsExploreMap: FC<LandExploreMap> = ({
 
   const onChangeAtlasHandler = (data: { zoom: number }) => {
     if (onZoom) {
-      onZoom(inverseLerp(MIN_ZOOM, MAX_ZOOM, data.zoom));
+      console.log('change handler', zoom);
+      onZoom(inverseLerp(MIN_SIZE, MAX_SIZE, data.zoom));
     }
   };
 
@@ -226,7 +227,10 @@ const LandsExploreMap: FC<LandExploreMap> = ({
         tiles={mapTiles}
         x={positionX}
         y={positionY}
-        zoom={lerp(MIN_ZOOM, MAX_ZOOM, zoom)}
+        zoom={lerp(MIN_SIZE, MAX_SIZE, zoom)}
+        size={1}
+        maxSize={MAX_SIZE}
+        minSize={MIN_SIZE}
         layers={[strokeLayer, fillLayer, clickedTileStrokeLayer, clickedTileFillLayer]}
         onChange={onChangeAtlasHandler}
         onHover={handleAtlasHover}
