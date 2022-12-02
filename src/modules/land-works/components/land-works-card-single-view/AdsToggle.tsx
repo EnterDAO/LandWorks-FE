@@ -33,7 +33,6 @@ const AdsToggle: FC<AdsToggleProps> = ({ asset }) => {
     setIsLoading(true);
 
     getAssetAdvertisement({
-      chainId: networkId.toString(),
       metaverseAssetId: asset.metaverseAssetId,
       metaverseRegistry: asset.metaverseRegistry.id,
     })

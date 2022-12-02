@@ -38,7 +38,7 @@ const useAccountAdsRewards = () => {
     data = initialData,
     mutate,
     ...other
-  } = useSWR(wallet.account && wallet.networkId ? [wallet.networkId, wallet.account] : null, getAccountAdsRewards);
+  } = useSWR(wallet.account ? [wallet.account] : null, getAccountAdsRewards);
   const contract = useAdsRewardsContract(data.contractAddress);
   const amount = useMemo(() => new BigNumber(data.amount).minus(data.claimedAmount), [data.amount, data.claimedAmount]);
 
