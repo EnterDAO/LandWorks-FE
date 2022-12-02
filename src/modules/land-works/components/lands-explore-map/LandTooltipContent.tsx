@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Divider } from '@mui/material';
-import { ZERO_BIG_NUMBER } from 'web3/utils';
+import { ZERO_BIG_NUMBER, formatUSD } from 'web3/utils';
 
 import Icon from 'components/custom/icon';
 import { Typography } from 'design-system';
@@ -9,7 +9,7 @@ import { AssetEntity } from 'modules/land-works/api';
 
 import LandCardAvailability from '../land-works-card-availability';
 
-import { formatBigNumber, formatUsd } from 'utils';
+import { formatBigNumber } from 'utils';
 
 interface LandTooltipContentProps {
   land: AssetEntity;
@@ -17,7 +17,7 @@ interface LandTooltipContentProps {
 
 const LandTooltipContent = ({ land }: LandTooltipContentProps) => {
   const usdPrice = (land.pricePerMagnitude.usdPrice || ZERO_BIG_NUMBER).toFixed();
-  const formattedUsdPrice = formatUsd(usdPrice);
+  const formattedUsdPrice = formatUSD(usdPrice);
   const price = land.pricePerMagnitude.price.toFixed();
   const formattedPrice = formatBigNumber(land.pricePerMagnitude.price);
 

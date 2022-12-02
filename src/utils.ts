@@ -438,7 +438,3 @@ export const clamp = (value: number, min = 0, max = 1): number => Math.min(max, 
 export const inverseLerp = (a: number, b: number, value: number): number => clamp((value - a) / (b - a));
 
 export const swrFetcher = (url: string) => fetch(url).then((res) => res.json());
-
-export const formatUsd = (usd: number | string, options?: Intl.NumberFormatOptions) => {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', ...options }).format(+usd);
-};

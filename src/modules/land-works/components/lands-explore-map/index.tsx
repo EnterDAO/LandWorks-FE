@@ -53,13 +53,13 @@ const LandsExploreMap: FC<LandExploreMap> = ({
 
   const onChangeAtlasHandler = (data: { zoom: number }) => {
     if (onZoom) {
-      console.log('change handler', zoom);
       onZoom(inverseLerp(MIN_SIZE, MAX_SIZE, data.zoom));
     }
   };
 
-  const onPopupAtlasHandler = ({ x: tileX, y: tileY }: any) => {
-    const id = `${tileX},${tileY}`;
+  const onPopupAtlasHandler = ({ x, y }: { x: number; y: number }) => {
+    const id = `${x},${y}`;
+
     if (!mapTiles || !mapTiles[id]) return;
 
     const land = lands.find((land) => {
@@ -205,8 +205,8 @@ const LandsExploreMap: FC<LandExploreMap> = ({
 
   const tileMapRenderMap: MapRenderer = useCallback(
     (args) => {
-      renderMap(args);
       updateHoveredTileTooltipHitBox(args);
+      renderMap(args);
     },
     [updateHoveredTileTooltipHitBox]
   );
@@ -221,13 +221,15 @@ const LandsExploreMap: FC<LandExploreMap> = ({
     return tooltip && lands.find((land) => land.id === tooltip.landTile.landId);
   }, [tooltip, lands]);
 
+  const atlasZoom = lerp(MIN_SIZE, MAX_SIZE, zoom);
+
   return (
     <Box ref={containerRef} className={styles.root}>
       <Atlas
         tiles={mapTiles}
         x={positionX}
         y={positionY}
-        zoom={lerp(MIN_SIZE, MAX_SIZE, zoom)}
+        zoom={atlasZoom}
         size={1}
         maxSize={MAX_SIZE}
         minSize={MIN_SIZE}
