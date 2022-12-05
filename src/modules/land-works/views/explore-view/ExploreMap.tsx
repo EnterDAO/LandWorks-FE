@@ -111,7 +111,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
             zIndex={0}
             bgcolor="#662363"
           >
-            <MapComponent {...mapProps} zoom={zoom} onZoom={handleZoom} />
+            <MapComponent {...mapProps} enableTooltips={isMapMaximized} zoom={zoom} onZoom={handleZoom} />
 
             <Stack spacing={2} position="absolute" right={20} top={20}>
               <MapControlButton disabled={zoom === 1} onClick={zoomIn} icon={PlusThinIcon} />

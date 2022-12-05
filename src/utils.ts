@@ -436,3 +436,5 @@ export const lerp = (a: number, b: number, amount: number): number => {
 export const clamp = (value: number, min = 0, max = 1): number => Math.min(max, Math.max(min, value));
 
 export const inverseLerp = (a: number, b: number, value: number): number => clamp((value - a) / (b - a));
+
+export const swrFetcher = (url: string) => fetch(url).then((res) => res.json());

@@ -1,15 +1,21 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { renderMap } from 'react-tile-map';
+import { MapRenderer } from 'react-tile-map/lib/src/components/TileMap/TileMap.types';
+import { Box } from '@mui/system';
+import useSWR from 'swr';
 
 import { LandsExploreMapBaseProps } from 'modules/interface';
+import { CoordinatesLand } from 'modules/land-works/api';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 
 import Atlas, { AtlasTile, Coord, Layer } from '../atlas';
 import LandsExploreLandPreview from '../lands-explore-land-preview';
 import LandsExploreNavigatorInfo from '../lands-explore-navigator-info';
+import LandTooltip from './LandTooltip';
 
 import { getOwnerOrConsumerId } from 'modules/land-works/utils';
-import { inverseLerp, lerp } from 'utils';
+import { inverseLerp, lerp, swrFetcher } from 'utils';
 
 import { TILES_URL_DECENTRALEND } from 'modules/land-works/constants';
 
@@ -17,30 +23,43 @@ import styles from './lands-explore-map.module.scss';
 
 type LandExploreMap = LandsExploreMapBaseProps;
 
-const MIN_ZOOM = 0.5;
-const MAX_ZOOM = 3;
+const MIN_SIZE = 11;
+const MAX_SIZE = 40;
 
-const LandsExploreMap: FC<LandExploreMap> = ({ positionX, positionY, onZoom, zoom = 0, highlights = [], lands }) => {
+// TODO: refactor
+const LandsExploreMap: FC<LandExploreMap> = ({
+  positionX,
+  positionY,
+  onZoom,
+  zoom = 0,
+  enableTooltips,
+  highlights = [],
+  lands,
+}) => {
   const { clickedLandId, setClickedLandId, setSelectedTile, showCardPreview } = useLandsMapTile();
   const { mapTiles, setMapTiles, selectedId, setSelectedId } = useLandsMapTiles();
   const [highlightedTiles, setHighlightedTiles] = useState<Coord[]>([]);
+  const { data } = useSWR<{ ok: boolean; data: Record<string, AtlasTile> }>(TILES_URL_DECENTRALEND, swrFetcher);
+  const [tooltip, setTooltip] = useState<
+    { x: number; y: number; landTile: CoordinatesLand; size: number } | undefined | null
+  >(null);
+  const lastHoveredTileIdRef = useRef<string | null>(null);
 
-  const fetchTiles = async (url: string = TILES_URL_DECENTRALEND) => {
-    if (!window.fetch) return {};
-    const resp = await window.fetch(url);
-    const json = await resp.json();
-
-    setMapTiles && setMapTiles(json.data as Record<string, AtlasTile>);
-  };
+  useLayoutEffect(() => {
+    if (setMapTiles && data?.ok) {
+      setMapTiles(data.data);
+    }
+  }, [setMapTiles, data]);
 
   const onChangeAtlasHandler = (data: { zoom: number }) => {
     if (onZoom) {
-      onZoom(inverseLerp(MIN_ZOOM, MAX_ZOOM, data.zoom));
+      onZoom(inverseLerp(MIN_SIZE, MAX_SIZE, data.zoom));
     }
   };
 
-  const onPopupAtlasHandler = (data: { x: number; y: number }) => {
-    const id = `${data.x},${data.y}`;
+  const onPopupAtlasHandler = ({ x, y }: { x: number; y: number }) => {
+    const id = `${x},${y}`;
+
     if (!mapTiles || !mapTiles[id]) return;
 
     const land = lands.find((land) => {
@@ -129,27 +148,112 @@ const LandsExploreMap: FC<LandExploreMap> = ({ positionX, positionY, onZoom, zoo
     });
   }, [highlights]);
 
-  useEffect(() => {
-    fetchTiles();
+  const handleAtlasHover = useCallback(
+    (x: number, y: number) => {
+      if (!mapTiles) {
+        return;
+      }
+
+      const key = `${x},${y}`;
+
+      if (mapTiles[key]) {
+        lastHoveredTileIdRef.current = key;
+      }
+    },
+    [mapTiles]
+  );
+
+  const updateHoveredTileTooltipHitBox: MapRenderer = useCallback(
+    ({ se, nw, center, width, height, size, pan }) => {
+      const landsTilesInView = highlights.filter((highlight) => {
+        const x = +highlight.x;
+        const y = +highlight.y;
+
+        return x >= nw.x && x <= se.x && y >= se.y && y <= nw.y;
+      });
+
+      const hoveredLandTile = landsTilesInView.find((landTile) => landTile.id === lastHoveredTileIdRef.current);
+
+      if (hoveredLandTile && hoveredLandTile.landId) {
+        const hw = width / 2;
+        const hh = height / 2;
+        const hs = size / 2;
+        const x = hw - ((center.x - +hoveredLandTile.x) * size + (pan?.x || 0)) - hs;
+        const y = hh - ((+hoveredLandTile.y - center.y) * size + (pan?.y || 0)) - hs;
+
+        const updatedTooltip = {
+          landTile: hoveredLandTile,
+          x,
+          y,
+          size,
+        };
+
+        setTooltip((prevTooltip) => {
+          return prevTooltip &&
+            Object.entries(prevTooltip).every(
+              ([key, val]) => updatedTooltip[key as keyof typeof updatedTooltip] === val
+            )
+            ? prevTooltip
+            : updatedTooltip;
+        });
+      } else {
+        setTooltip(null);
+      }
+    },
+    [highlights]
+  );
+
+  const tileMapRenderMap: MapRenderer = useCallback(
+    (args) => {
+      updateHoveredTileTooltipHitBox(args);
+      renderMap(args);
+    },
+    [updateHoveredTileTooltipHitBox]
+  );
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const getPopperContainer = useCallback(() => {
+    return containerRef.current;
   }, []);
 
+  const landTooltip = useMemo(() => {
+    return tooltip && lands.find((land) => land.id === tooltip.landTile.landId);
+  }, [tooltip, lands]);
+
+  const atlasZoom = lerp(MIN_SIZE, MAX_SIZE, zoom);
+
   return (
-    <div className={styles.root}>
+    <Box ref={containerRef} className={styles.root}>
       <Atlas
         tiles={mapTiles}
         x={positionX}
         y={positionY}
-        zoom={lerp(MIN_ZOOM, MAX_ZOOM, zoom)}
+        zoom={atlasZoom}
+        size={1}
+        maxSize={MAX_SIZE}
+        minSize={MIN_SIZE}
         layers={[strokeLayer, fillLayer, clickedTileStrokeLayer, clickedTileFillLayer]}
         onChange={onChangeAtlasHandler}
+        onHover={handleAtlasHover}
         onPopup={onPopupAtlasHandler}
         onClick={onClickAtlasHandler}
+        renderMap={enableTooltips ? tileMapRenderMap : undefined}
       />
+
+      {enableTooltips && tooltip && landTooltip && (
+        <LandTooltip
+          land={landTooltip}
+          x={tooltip.x + tooltip.size / 2}
+          y={tooltip.y + tooltip.size / 2}
+          container={getPopperContainer}
+        />
+      )}
 
       <LandsExploreNavigatorInfo />
 
       {showCardPreview && <LandsExploreLandPreview lands={lands} />}
-    </div>
+    </Box>
   );
 };
 
