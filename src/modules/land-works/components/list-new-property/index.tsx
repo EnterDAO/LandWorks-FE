@@ -35,6 +35,7 @@ import { PaymentToken, createAssetAdvertisement, fetchMetaverses, fetchTokenPaym
 import { useLandworks } from '../../providers/landworks-provider';
 import ListingCardSkeleton from '../land-listing-skeleton';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
+import AssetList from './AssetList';
 
 import { parseVoxelsAsset } from 'modules/land-works/utils';
 import { getTimeType, secondsToDuration, sessionStorageHandler } from 'utils';
@@ -68,6 +69,11 @@ enum StepId {
 interface IProps {
   closeModal?: () => void;
   asset?: BaseNFT;
+}
+
+enum ListPropertyModalVariant {
+  Listing = 0,
+  Buying = 1,
 }
 
 const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
@@ -739,10 +745,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
           </Stack>
         )}
 
-        <Box width={1} minHeight={370}>
+        <Stack width={1} minHeight={370}>
           {step.id === StepId.Asset && (
-            <Stack height={isSmallScreen ? '460px' : '530px'} overflow="auto">
-              <Box display="flex" gap={4} mb={2}>
+            <>
+              <Box display="flex" gap={4} pb={2}>
                 <ControlledSelect
                   width="290px"
                   value={selectedMetaverse}
@@ -759,35 +765,45 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                 </Box>
               </Box>
 
-              {loading && <ListingCardSkeleton />}
+              <Stack height={455} overflow="auto" p={4} mx={-4}>
+                {loading && <ListingCardSkeleton />}
 
-              {!loading &&
-                (properties.length > 0 ? (
-                  <Grid container className="properties">
-                    {properties.map((property) => {
-                      return (
-                        <Grid key={property.id} item xs={3} margin="0 0 10px">
-                          <ListingCard
-                            selected={property.name === selectedProperty?.name}
-                            onClick={handlePropertyChange}
-                            property={property}
-                            estateLands={estateGroup}
-                          />
-                        </Grid>
-                      );
-                    })}
-                  </Grid>
-                ) : (
-                  <Stack flexGrow={1} justifyContent="center" alignItems="center">
-                    <Box component="img" src={landNotFoundImageSrc} width={170} mb={5} />
-                    <Typography variant="h1" component="p" mb={2}>
-                      Land not found
-                    </Typography>
+                {!loading &&
+                  (properties.length > 0 ? (
+                    <Grid container columnSpacing={4} rowSpacing={3}>
+                      {properties.map((property) => {
+                        return (
+                          <Grid key={property.id} item xs={3}>
+                            <ListingCard
+                              selected={property.name === selectedProperty?.name}
+                              onClick={handlePropertyChange}
+                              property={property}
+                              estateLands={estateGroup}
+                            />
+                          </Grid>
+                        );
+                      })}
+                    </Grid>
+                  ) : (
+                    <Stack flexGrow={1} justifyContent="center" alignItems="center">
+                      <Box component="img" src={landNotFoundImageSrc} width={170} mb={5} />
+                      <Typography variant="h1" component="p" mb={2}>
+                        Land not found
+                      </Typography>
 
-                    <Typography variant="subtitle2">It seems that you don’t have any land in your wallet.</Typography>
-                  </Stack>
-                ))}
-            </Stack>
+                      <Typography variant="subtitle2" mb={5}>
+                        It seems that you don’t have any land in your wallet.
+                        <br />
+                        Do you want to buy land and list it for sale?
+                      </Typography>
+
+                      <Button variant="accentblue" btnSize="small">
+                        buy LAND
+                      </Button>
+                    </Stack>
+                  ))}
+              </Stack>
+            </>
           )}
 
           {step.id === StepId.RentPeriod && (
@@ -919,7 +935,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
               </Grid>
             </Box>
           )}
-        </Box>
+        </Stack>
 
         {step.warning && (
           <Grid className="warning-info">
