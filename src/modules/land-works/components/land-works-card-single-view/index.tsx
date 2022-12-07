@@ -414,20 +414,18 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                   <Box className="rent-section">
                     <Grid container columnSpacing={5} rowSpacing={2} className="rent-price">
                       <Grid item xs={12} xl={6.5} className="price-wrapper">
-                        {asset?.availability?.isRentable && (
-                          <div className="period-wrapper">
-                            <Box display="flex">
-                              <span className="period-title">Rent period</span>
-                              <span className="available-period">
-                                {asset.minPeriodTimedType} - {asset.maxPeriodTimedType}
-                              </span>
-                            </Box>
-                            <Box display="flex">
-                              <span className="period-title">Max Rent Queue</span>
-                              <span className="available-period">{asset.maxFutureTimeTimedType}</span>
-                            </Box>
-                          </div>
-                        )}
+                        <div className="period-wrapper">
+                          <Box display="flex">
+                            <span className="period-title">Rent period</span>
+                            <span className="available-period">
+                              {asset?.minPeriodTimedType} - {asset?.maxPeriodTimedType}
+                            </span>
+                          </Box>
+                          <Box display="flex">
+                            <span className="period-title">Max Rent Queue</span>
+                            <span className="available-period">{asset?.maxFutureTimeTimedType}</span>
+                          </Box>
+                        </div>
                         <Grid item>
                           <Grid item className="eth-price-container">
                             <Icon name={getTokenIconName(asset?.paymentToken?.symbol || '')} className="eth-icon" />
