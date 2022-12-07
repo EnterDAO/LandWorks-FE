@@ -416,12 +416,16 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                       <Grid item xs={12} xl={6.5} className="price-wrapper">
                         {asset?.availability?.isRentable && (
                           <div className="period-wrapper">
-                            <span className="period-title">Rent period</span>
-                            <span className="available-period">
-                              {asset.minPeriodTimedType} - {asset.maxPeriodTimedType}
-                            </span>
-                            <span className="period-title">Max Rent Queue</span>
-                            <span className="available-period">{asset.maxFutureTimeTimedType}</span>
+                            <Box display="flex">
+                              <span className="period-title">Rent period</span>
+                              <span className="available-period">
+                                {asset.minPeriodTimedType} - {asset.maxPeriodTimedType}
+                              </span>
+                            </Box>
+                            <Box display="flex">
+                              <span className="period-title">Max Rent Queue</span>
+                              <span className="available-period">{asset.maxFutureTimeTimedType}</span>
+                            </Box>
                           </div>
                         )}
                         <Grid item>
