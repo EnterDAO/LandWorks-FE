@@ -1,5 +1,6 @@
 import React, { FC, useLayoutEffect, useState } from 'react';
 
+import { ReactComponent as MinimizeIcon } from 'assets/icons/minimize.svg';
 import { Box, Stack } from 'design-system';
 import { MinusIcon, PlusThinIcon, ViewAllIcon } from 'design-system/icons';
 import { LandsExploreMapBaseProps } from 'modules/interface';
@@ -67,7 +68,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
       top={0}
       position="absolute"
       height={1}
-      zIndex={1}
+      zIndex={2}
       sx={
         isMapVisible
           ? {
@@ -88,7 +89,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
           isMapMaximized
             ? {
                 top: 0,
-                pt: mapOffsetTop + 'px',
+                pt: stickyOffset.offsets.header + 'px',
                 position: 'fixed',
                 height: 1,
               }
@@ -116,7 +117,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
             <Stack spacing={2} position="absolute" right={20} top={20}>
               <MapControlButton disabled={zoom === 1} onClick={zoomIn} icon={PlusThinIcon} />
               <MapControlButton disabled={zoom === 0} onClick={zoomOut} icon={MinusIcon} />
-              <MapControlButton onClick={toggleIsMapMaximized} icon={ViewAllIcon} />
+              <MapControlButton onClick={toggleIsMapMaximized} icon={isMapMaximized ? MinimizeIcon : ViewAllIcon} />
             </Stack>
           </Box>
         )}

@@ -136,7 +136,7 @@ const LandWorksFilters: FC<Props> = ({
 
             <Divider sx={{ borderColor: '#27273A' }} orientation="vertical" />
 
-            <SearchBar placeholder="Search for land or owner..." />
+            <SearchBar />
 
             <DecentralandFiltersModal
               maxLandSize={maxLandSize}
