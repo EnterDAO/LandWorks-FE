@@ -30,9 +30,9 @@ const ListCard = ({ image, title, subtitle, footer, isActive, onClick }: ListCar
       sx={{
         cursor: 'pointer',
         transition: 'all 0.15s',
+        boxShadow: isActive ? '0px 5px 18px rgba(255, 255, 255, 0.3)' : '',
         border: `2px solid ${isActive ? 'var(--theme-primary-color)' : 'transparent'}`,
         ':hover': {
-          boxShadow: '0px 5px 18px rgba(255, 255, 255, 0.3)',
           borderColor: 'var(--theme-primary-color)',
         },
       }}
