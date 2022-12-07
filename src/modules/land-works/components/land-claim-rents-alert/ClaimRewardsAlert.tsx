@@ -23,6 +23,8 @@ const ClaimRewardsAlert: FC = () => {
   const { data: unclaimedRentAssets } = useGetAccountUnclaimedAssetsQuery(wallet.account || '');
   const adsRewardsPaymentToken = usePaymentToken(paymentTokenAddress);
 
+  console.log({ amount, paymentTokenAddress });
+
   useEffect(() => {
     if (location.state?.openClaimModal) {
       setIsClaimRewardsModalOpen(true);

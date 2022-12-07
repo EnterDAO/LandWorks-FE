@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ChangeEvent, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useMediaQuery } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { refreshWeb3Token } from 'web3/token';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
@@ -36,6 +35,7 @@ import { useLandworks } from '../../providers/landworks-provider';
 import ListingCardSkeleton from '../land-listing-skeleton';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
 import AssetList from './AssetList';
+import SortSelect, { SortType } from './SortSelect';
 
 import { parseVoxelsAsset } from 'modules/land-works/utils';
 import { getTimeType, secondsToDuration, sessionStorageHandler } from 'utils';
@@ -71,17 +71,12 @@ interface IProps {
   asset?: BaseNFT;
 }
 
-enum ListPropertyModalVariant {
-  Listing = 0,
-  Buying = 1,
-}
-
+// TODO: refactor
 const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const { setJoinPromptOpen } = useGeneral();
   const walletCtx = useWallet();
   const landworks = useLandworks();
   const registry = useContractRegistry();
-  const isSmallScreen = useMediaQuery('(max-height: 780px)');
   const getIsMounted = useGetIsMounted();
 
   const history = useHistory();
@@ -146,6 +141,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const [filteredVoxels, setFilteredVoxels] = useState<CryptoVoxelNFT[]>([]);
 
   const [listModalMessage, setListModalMessage] = useState(SignTransactionMessage);
+  const [sort, setSort] = useState<SortType>(SortType.PriceLowFirst);
+  const [isBuying, setIsBuying] = useState(false);
+  const [selectedAssetId, setSelectedAssetId] = useState<string>();
 
   const pricePerSecond = getNonHumanValue(tokenCost || BigNumber.ZERO, paymentToken.decimals).dividedBy(DAY_IN_SECONDS);
 
@@ -755,53 +753,60 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                   onChange={onChangeMetaverse}
                   options={availableMetaverses}
                 />
-                <Box>
-                  <ControlledSelect
-                    width="190px"
-                    value={landType}
-                    onChange={onChangeType}
-                    options={listTypes[selectedMetaverse]}
-                  />
-                </Box>
+
+                <ControlledSelect
+                  width="190px"
+                  value={landType}
+                  onChange={onChangeType}
+                  options={listTypes[selectedMetaverse]}
+                />
+
+                {isBuying && <SortSelect value={sort} onChange={setSort} />}
               </Box>
 
-              <Stack height={455} overflow="auto" p={4} mx={-4}>
-                {loading && <ListingCardSkeleton />}
+              <Stack height={470} overflow="auto" p={4} mx={-4}>
+                {isBuying ? (
+                  <AssetList activeAssetId={selectedAssetId} onAssetClick={setSelectedAssetId} />
+                ) : (
+                  <>
+                    {loading && <ListingCardSkeleton />}
 
-                {!loading &&
-                  (properties.length > 0 ? (
-                    <Grid container columnSpacing={4} rowSpacing={3}>
-                      {properties.map((property) => {
-                        return (
-                          <Grid key={property.id} item xs={3}>
-                            <ListingCard
-                              selected={property.name === selectedProperty?.name}
-                              onClick={handlePropertyChange}
-                              property={property}
-                              estateLands={estateGroup}
-                            />
-                          </Grid>
-                        );
-                      })}
-                    </Grid>
-                  ) : (
-                    <Stack flexGrow={1} justifyContent="center" alignItems="center">
-                      <Box component="img" src={landNotFoundImageSrc} width={170} mb={5} />
-                      <Typography variant="h1" component="p" mb={2}>
-                        Land not found
-                      </Typography>
+                    {!loading &&
+                      (properties.length > 0 ? (
+                        <Grid container columnSpacing={4} rowSpacing={3}>
+                          {properties.map((property) => {
+                            return (
+                              <Grid key={property.id} item xs={3}>
+                                <ListingCard
+                                  selected={property.name === selectedProperty?.name}
+                                  onClick={handlePropertyChange}
+                                  property={property}
+                                  estateLands={estateGroup}
+                                />
+                              </Grid>
+                            );
+                          })}
+                        </Grid>
+                      ) : (
+                        <Stack flexGrow={1} justifyContent="center" alignItems="center">
+                          <Box component="img" src={landNotFoundImageSrc} width={170} mb={5} />
+                          <Typography variant="h1" component="p" mb={2}>
+                            Land not found
+                          </Typography>
 
-                      <Typography variant="subtitle2" mb={5}>
-                        It seems that you don’t have any land in your wallet.
-                        <br />
-                        Do you want to buy land and list it for sale?
-                      </Typography>
+                          <Typography variant="subtitle2" mb={5}>
+                            It seems that you don’t have any land in your wallet.
+                            <br />
+                            Do you want to buy land and list it for sale?
+                          </Typography>
 
-                      <Button variant="accentblue" btnSize="small">
-                        buy LAND
-                      </Button>
-                    </Stack>
-                  ))}
+                          <Button variant="accentblue" btnSize="small" onClick={() => setIsBuying(true)}>
+                            buy LAND
+                          </Button>
+                        </Stack>
+                      ))}
+                  </>
+                )}
               </Stack>
             </>
           )}
@@ -950,7 +955,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
 
         {step.id !== StepId.Summary && (
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
-            {step.id === StepId.Asset ? (
+            {step.id === StepId.Asset && !isBuying ? (
               <Typography variant="body2" color="var(--theme-subtle-color)">
                 Found in Wallet{' '}
                 <Typography component="span" variant="inherit" color="var(--theme-light-color)">
@@ -962,7 +967,13 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                 variant="secondary"
                 disabled={isCreatingAssetAdvertisement}
                 btnSize="medium"
-                onClick={() => setActiveStep((prev) => prev - 1)}
+                onClick={() => {
+                  if (isBuying) {
+                    setIsBuying(false);
+                  } else {
+                    setActiveStep((prev) => prev - 1);
+                  }
+                }}
               >
                 Back
               </Button>
