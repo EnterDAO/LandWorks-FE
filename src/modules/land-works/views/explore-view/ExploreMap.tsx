@@ -68,7 +68,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
       top={0}
       position="absolute"
       height={1}
-      zIndex={1}
+      zIndex={2}
       sx={
         isMapVisible
           ? {
