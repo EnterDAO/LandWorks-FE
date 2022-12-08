@@ -75,54 +75,63 @@ export const RentPrice: React.FC<IProps> = ({
           alignItems="flex-start"
           flexDirection="column"
         >
-          <Grid display="flex" width={1} flexDirection="row" alignItems="center">
+          <Grid display="flex" width={1} flexDirection="row" alignItems="center" mb="2px">
             <Icon
               name={getTokenIconName(paymentToken.symbol || 'png/eth')}
               style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
             />
             <SmallAmountTooltip className="amount" amount={new BigNumber(earnings || '0')} />
           </Grid>
-          <Grid display="flex" sx={{ whiteSpace: 'nowrap' }} alignItems="center" className="amount-label">
+          <Typography
+            display="flex"
+            sx={{ whiteSpace: 'nowrap' }}
+            alignItems="center"
+            variant="body2"
+            color="var(--theme-accent-color)"
+          >
             Your Earnings
-          </Grid>
+          </Typography>
         </Box>
-        <Box flexShrink={0}>
+        <Box flexShrink={0} mx={2}>
           <BluePlus />
         </Box>
         <Box
-          flex="1 1 100%"
+          width={1}
+          flexGrow={1}
           overflow="hidden"
           display="flex"
           justifyContent="center"
-          alignItems="flex-start"
+          alignItems="flex-end"
           flexDirection="column"
         >
-          <Grid display="flex" width={1} flexDirection="row" alignItems="center">
-            <Icon
-              name={getTokenIconName(paymentToken.symbol || 'png/eth')}
-              style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
-            />
-            <Box sx={{ overflow: 'hidden' }} className="earnings-num">
-              <SmallAmountTooltip className="amount" amount={new BigNumber(protocolFee || '0')} />
-            </Box>
-          </Grid>
-          <Grid display="flex" alignItems="center" sx={{ whiteSpace: 'nowrap' }} className="amount-label">
-            {feePercentage}% Protocol Fee
-            <Tooltip
-              placement="bottom"
-              title={
-                <>
-                  This is the protocol fee of LandWorks.
-                  <br />
-                  It occurs when the property is rented.
-                </>
-              }
-            >
-              <Box display="flex">
-                <Icon name="about" className="info-icon" />
+          <Box maxWidth={1}>
+            <Grid display="flex" flexDirection="row" alignItems="center" mb="2px">
+              <Icon
+                name={getTokenIconName(paymentToken.symbol || 'png/eth')}
+                style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '5px' }}
+              />
+              <Box sx={{ overflow: 'hidden' }} className="earnings-num">
+                <SmallAmountTooltip className="amount" amount={new BigNumber(protocolFee || '0')} />
               </Box>
-            </Tooltip>
-          </Grid>
+            </Grid>
+            <Typography display="flex" alignItems="center" variant="body2" color="var(--theme-accent-color)">
+              {feePercentage}% Protocol Fee
+              <Tooltip
+                placement="bottom"
+                title={
+                  <>
+                    This is the protocol fee of LandWorks.
+                    <br />
+                    It occurs when the property is rented.
+                  </>
+                }
+              >
+                <Box display="flex">
+                  <Icon name="about" className="info-icon" />
+                </Box>
+              </Tooltip>
+            </Typography>
+          </Box>
         </Box>
       </Box>
     </>
