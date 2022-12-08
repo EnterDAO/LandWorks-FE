@@ -9,7 +9,6 @@
   }
 
   .card {
-    cursor: pointer;
     border-radius: 10px;
     border: 2px solid transparent;
     transition: all 0.2s ease-out;
@@ -64,7 +63,7 @@
       line-height: 21px;
       color: var(--theme-primary-color);
       font-weight: bold;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
 
     .title {
@@ -79,7 +78,7 @@
       width: 100%;
       height: 2px;
       background: var(--theme-grey400-color);
-      margin: 20px 0;
+      margin: 15px 0;
     }
   }
 }

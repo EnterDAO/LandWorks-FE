@@ -143,7 +143,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const [listModalMessage, setListModalMessage] = useState(SignTransactionMessage);
   const [sort, setSort] = useState<SortType>(SortType.PriceLowFirst);
   const [isBuying, setIsBuying] = useState(false);
-  const [selectedAssetId, setSelectedAssetId] = useState<string>();
 
   const pricePerSecond = getNonHumanValue(tokenCost || BigNumber.ZERO, paymentToken.decimals).dividedBy(DAY_IN_SECONDS);
 
@@ -684,31 +683,31 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             },
           ]
         : []),
-      {
-        id: StepId.RentPeriod,
-        title: 'Choose rent period',
-        label: 'Rent Period',
-        subtitle: 'Select the wanted rent period for this property.',
-        warning:
-          'Once you list your property you can edit the entered rent period but you’ll have to pay a network fee.',
-      },
-      {
-        id: StepId.RentPrice,
-        title: 'Select Rent Price',
-        label: 'Rent Price',
-        subtitle: 'Select the wanted rent price for this property.',
-        warning:
-          'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
-      },
-      ...(selectedMetaverse === 1
-        ? [
-            {
-              id: StepId.Advertisement,
-              title: 'Advertise',
-              label: 'Advertise',
-            },
-          ]
-        : []),
+      // {
+      //   id: StepId.RentPeriod,
+      //   title: 'Choose rent period',
+      //   label: 'Rent Period',
+      //   subtitle: 'Select the wanted rent period for this property.',
+      //   warning:
+      //     'Once you list your property you can edit the entered rent period but you’ll have to pay a network fee.',
+      // },
+      // {
+      //   id: StepId.RentPrice,
+      //   title: 'Select Rent Price',
+      //   label: 'Rent Price',
+      //   subtitle: 'Select the wanted rent price for this property.',
+      //   warning:
+      //     'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
+      // },
+      // ...(selectedMetaverse === 1
+      //   ? [
+      //       {
+      //         id: StepId.Advertisement,
+      //         title: 'Advertise',
+      //         label: 'Advertise',
+      //       },
+      //     ]
+      //   : []),
       {
         id: StepId.Summary,
         label: 'Summary',
@@ -919,6 +918,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                 />
 
                 <ListNewSummary
+                  isBuying={isBuying}
                   isAdvertisementEnabled={isLandProvidedForAdvertisement}
                   minPeriodSelectedOption={minPeriodSelectedOption.label}
                   maxPeriodSelectedOption={maxPeriodSelectedOption.label}

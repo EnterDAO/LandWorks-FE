@@ -5,7 +5,7 @@ import { ReactComponent as AlertIcon } from 'assets/icons/warning.svg';
 import promotionalSceneTooltipThumbnail from 'assets/img/promotional-scene-thumbnail.jpg';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
-import { Tooltip } from 'design-system';
+import { Stack, Tooltip } from 'design-system';
 import { Box, Grid, Typography } from 'design-system';
 import { getTokenIconName } from 'helpers/helpers';
 import { Option } from 'modules/interface';
@@ -34,6 +34,7 @@ interface IListNewSummary {
   name?: string;
   isEstate?: boolean;
   isAdvertisementEnabled?: boolean;
+  isBuying?: boolean;
 }
 
 const ListNewSummary: React.FC<IListNewSummary> = ({
@@ -53,6 +54,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   name,
   isEstate,
   isAdvertisementEnabled,
+  isBuying,
 }) => {
   const min = minRentPeriod?.toNumber();
   const max = maxRentPeriod?.toNumber();
@@ -101,18 +103,45 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
       };
 
   return (
-    <Grid className={s.wrapper} mt={metaverse ? 0 : 4} item>
+    <Grid className={s.wrapper} mt={metaverse ? 0 : 4} zeroMinWidth item>
       <Grid className={s.card}>
         {name && coordinatesChild && (
           <>
-            <Grid container flexDirection="column">
-              <Grid item textAlign="left" className={s.name}>
-                <span>{name}</span>
-              </Grid>
-              <Grid item className={s.title}>
+            <Stack textAlign="left" gap="4px">
+              <Typography color="var(--theme-light-color)" fontWeight={600}>
+                {name}
+              </Typography>
+              <Typography variant="body2" color="var(--theme-grey700-color)">
                 {isEstate ? 'Lands : ' : 'Location : '} {coordinatesChild}
-              </Grid>
-            </Grid>
+              </Typography>
+              {isBuying && (
+                <Typography
+                  variant="body2"
+                  color="var(--theme-grey700-color)"
+                  display="flex"
+                  alignItems="center"
+                  gap="4px"
+                  noWrap
+                >
+                  Buy from Opensea for:
+                  <Typography
+                    component="span"
+                    variant="inherit"
+                    color="var(--theme-light-color)"
+                    display="flex"
+                    gap="2px"
+                  >
+                    <Icon name="png/eth" style={{ width: '15px', height: '15px' }} />
+                    <Typography component="span" variant="inherit" noWrap maxWidth={60}>
+                      1.5
+                    </Typography>
+                  </Typography>
+                  <Typography component="span" variant="inherit" color="var(--theme-subtle-color)" noWrap maxWidth={60}>
+                    $1234.56
+                  </Typography>
+                </Typography>
+              )}
+            </Stack>
             <div className={s.divider} />
           </>
         )}
@@ -120,7 +149,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
           <Grid textAlign="left" className={s.subtitle}>
             <span>{metaverse ? 'Rent Details' : 'Summary'}</span>
           </Grid>
-          <Grid container textAlign="left" spacing={3} className={s.details}>
+          <Grid container textAlign="left" spacing={2} className={s.details}>
             <Grid item xs={6} display="flex" flexDirection="column">
               Rent Period
               <p>
