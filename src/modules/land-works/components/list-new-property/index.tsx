@@ -718,6 +718,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
     ];
   }, [selectedMetaverse]);
 
+  console.log(selectedProperty);
+
   const step = steps[activeStep];
 
   return (
@@ -766,7 +768,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
 
               <Stack height={470} overflow="auto" p={4} mx={-4}>
                 {isBuying ? (
-                  <AssetList activeAssetId={selectedAssetId} onAssetClick={setSelectedAssetId} />
+                  <AssetList selectedAssetId={selectedProperty?.id} onSelectAsset={setSelectedProperty} />
                 ) : (
                   <>
                     {loading && <ListingCardSkeleton />}
@@ -906,37 +908,33 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
               </Typography>
             </Stack>
           )}
-          {step.id === StepId.Summary && (
+          {step.id === StepId.Summary && selectedProperty && (
             <Box mx="auto" maxWidth={630} mt={8}>
-              <Grid container wrap="nowrap" p="8px" className="summaryWrapper" flexDirection="row">
-                {selectedProperty && (
-                  <>
-                    <SelectedListCard
-                      src={selectedProperty.image}
-                      name={selectedProperty.name}
-                      withoutInfo
-                      coordinatesChild={handleCoords()}
-                    />
+              <Grid container wrap="nowrap" p="8px" borderRadius="20px" bgcolor="var(--theme-modal-color)">
+                <SelectedListCard
+                  src={selectedProperty.image}
+                  name={selectedProperty.name}
+                  withoutInfo
+                  coordinatesChild={handleCoords()}
+                />
 
-                    <ListNewSummary
-                      isAdvertisementEnabled={isLandProvidedForAdvertisement}
-                      minPeriodSelectedOption={minPeriodSelectedOption.label}
-                      maxPeriodSelectedOption={maxPeriodSelectedOption.label}
-                      maxFutureSelectedOption={maxFutureSelectedOption.label}
-                      minRentPeriod={minPeriod}
-                      maxRentPeriod={maxPeriod}
-                      maxFuturePeriod={maxFutureTime}
-                      rentPrice={tokenCost || BigNumber.ZERO}
-                      paymentToken={paymentToken}
-                      feeText="There is small fee upon listing the property."
-                      withoutText
-                      metaverse={availableMetaverses[selectedMetaverse - 1]}
-                      name={selectedProperty.name}
-                      coordinatesChild={handleCoords()}
-                      isEstate={!(selectedProperty as DecentralandNFT).isLAND}
-                    />
-                  </>
-                )}
+                <ListNewSummary
+                  isAdvertisementEnabled={isLandProvidedForAdvertisement}
+                  minPeriodSelectedOption={minPeriodSelectedOption.label}
+                  maxPeriodSelectedOption={maxPeriodSelectedOption.label}
+                  maxFutureSelectedOption={maxFutureSelectedOption.label}
+                  minRentPeriod={minPeriod}
+                  maxRentPeriod={maxPeriod}
+                  maxFuturePeriod={maxFutureTime}
+                  rentPrice={tokenCost || BigNumber.ZERO}
+                  paymentToken={paymentToken}
+                  feeText="There is small fee upon listing the property."
+                  withoutText
+                  metaverse={availableMetaverses[selectedMetaverse - 1]}
+                  name={selectedProperty.name}
+                  coordinatesChild={handleCoords()}
+                  isEstate={!(selectedProperty as DecentralandNFT).isLAND}
+                />
               </Grid>
             </Box>
           )}

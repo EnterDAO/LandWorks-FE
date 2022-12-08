@@ -4,6 +4,7 @@ import { Box, Grid, Typography } from '@mui/material';
 import decentralandLandMapSrc from 'assets/img/decentraland-land-map.png';
 import openseaLogoMarkSrc from 'assets/img/opensea-logomark.png';
 import Image from 'components/custom/image';
+import { BaseNFT } from 'modules/interface';
 
 interface ListCardProps {
   image: string;
@@ -117,8 +118,8 @@ const AssetListCard = ({ asset, ...otherProps }: AssetListCardProps) => {
 
 interface LandListProps {
   assets?: Asset[];
-  activeAssetId?: string;
-  onAssetClick?: (assetId: string) => void;
+  selectedAssetId?: string;
+  onSelectAsset?: (asset: BaseNFT) => void;
 }
 
 const mockAsset: Asset = {
@@ -141,7 +142,18 @@ const mockAssets = Array.from({ length: 32 }, (_, i) => {
   };
 });
 
-const AssetList = ({ assets = mockAssets, activeAssetId, onAssetClick }: LandListProps) => {
+const assetToBaseNft = (asset: Asset): BaseNFT => {
+  return {
+    id: asset.id,
+    image: asset.image,
+    name: asset.name,
+    contractAddress: '',
+    metaverseName: asset.metaverse === 1 ? 'Decentraland' : 'Voxels',
+    place: '',
+  };
+};
+
+const AssetList = ({ assets = mockAssets, selectedAssetId: activeAssetId, onSelectAsset }: LandListProps) => {
   return (
     <Grid container rowSpacing={3} columnSpacing={4}>
       {assets.map((asset) => {
@@ -150,7 +162,7 @@ const AssetList = ({ assets = mockAssets, activeAssetId, onAssetClick }: LandLis
             <AssetListCard
               isActive={asset.id === activeAssetId}
               asset={asset}
-              onClick={() => onAssetClick && onAssetClick(asset.id)}
+              onClick={() => onSelectAsset && onSelectAsset(assetToBaseNft(asset))}
             />
           </Grid>
         );

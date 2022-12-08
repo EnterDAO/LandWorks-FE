@@ -104,15 +104,17 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
     <Grid className={s.wrapper} mt={metaverse ? 0 : 4} item>
       <Grid className={s.card}>
         {name && coordinatesChild && (
-          <Grid container flexDirection="column">
-            <Grid item textAlign="left" className={s.name}>
-              <span>{name}</span>
-            </Grid>
-            <Grid item className={s.title}>
-              {isEstate ? 'Lands : ' : 'Location : '} {coordinatesChild}
+          <>
+            <Grid container flexDirection="column">
+              <Grid item textAlign="left" className={s.name}>
+                <span>{name}</span>
+              </Grid>
+              <Grid item className={s.title}>
+                {isEstate ? 'Lands : ' : 'Location : '} {coordinatesChild}
+              </Grid>
             </Grid>
             <div className={s.divider} />
-          </Grid>
+          </>
         )}
         <Grid flexDirection="column" alignContent="flex-start" textAlign="left">
           <Grid textAlign="left" className={s.subtitle}>
