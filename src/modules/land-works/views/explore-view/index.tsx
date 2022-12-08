@@ -127,23 +127,27 @@ const ExploreView: React.FC = () => {
     return moreFilters ? filterByMoreFilters(lands, moreFilters, metaverse) : lands;
   }, [lands, moreFilters, metaverse]);
 
-  const setClickedLandId = (x: number | string, y?: number | string | undefined) => {
-    if (x && y) {
-      let landId = `${x},${y}`;
+  const setClickedLandId = useCallback(
+    (x: number | string, y?: number | string | undefined) => {
+      if (x && y) {
+        let landId = `${x},${y}`;
 
-      // Look for the first coordinate for land estate.
-      lands.forEach((land) => {
-        land.decentralandData?.coordinates.forEach((coord, coordIndex) => {
-          if (coordIndex > 0 && coord.id === landId.replace(',', '-')) {
-            landId = `${land.decentralandData?.coordinates[0].x},${land.decentralandData?.coordinates[0].y}`;
-          }
+        // Look for the first coordinate for land estate.
+        lands.forEach((land) => {
+          land.decentralandData?.coordinates.forEach((coord, coordIndex) => {
+            if (coordIndex > 0 && coord.id === landId.replace(',', '-')) {
+              landId = `${land.decentralandData?.coordinates[0].x},${land.decentralandData?.coordinates[0].y}`;
+            }
+          });
         });
-      });
 
-      return setStateClickedLandId(landId);
-    }
-    if (x) setStateClickedLandId(`${x}`);
-  };
+        return setStateClickedLandId(landId);
+      } else {
+        setStateClickedLandId(`${x}`);
+      }
+    },
+    [lands]
+  );
 
   const setPointMapCentre = (lands: CoordinatesLand[]) => {
     if (lands[0]) {
@@ -240,19 +244,30 @@ const ExploreView: React.FC = () => {
     priceParams.maxPrice,
   ]);
 
+  const landsMapTilesValue = useMemo(() => {
+    return {
+      mapTiles,
+      setMapTiles,
+      selectedId,
+      setSelectedId,
+    };
+  }, [mapTiles, setMapTiles, selectedId, setSelectedId]);
+
+  const landsMapTileValue = useMemo(() => {
+    return {
+      clickedLandId,
+      setClickedLandId,
+      selectedTile,
+      setSelectedTile,
+      showCardPreview,
+      setShowCardPreview,
+    };
+  }, [clickedLandId, setClickedLandId, selectedTile, setSelectedTile, showCardPreview, setShowCardPreview]);
+
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
-      <LandsMapTilesProvider value={{ mapTiles, setMapTiles, selectedId, setSelectedId }}>
-        <LandsMapTileProvider
-          value={{
-            clickedLandId,
-            setClickedLandId,
-            selectedTile,
-            setSelectedTile,
-            showCardPreview,
-            setShowCardPreview,
-          }}
-        >
+      <LandsMapTilesProvider value={landsMapTilesValue}>
+        <LandsMapTileProvider value={landsMapTileValue}>
           <LandsExploreFilters
             handleMoreFilter={setMoreFilters}
             onChangeSortDirection={onChangeFiltersSortDirection}

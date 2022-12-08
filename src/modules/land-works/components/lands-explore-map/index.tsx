@@ -9,7 +9,7 @@ import { CoordinatesLand } from 'modules/land-works/api';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 
-import Atlas, { AtlasTile, Coord, Layer } from '../atlas';
+import Atlas, { AtlasTile, Layer } from '../atlas';
 import LandsExploreLandPreview from '../lands-explore-land-preview';
 import LandsExploreNavigatorInfo from '../lands-explore-navigator-info';
 import LandTooltip from './LandTooltip';
@@ -26,7 +26,7 @@ type LandExploreMap = LandsExploreMapBaseProps;
 const MIN_SIZE = 11;
 const MAX_SIZE = 40;
 
-// TODO: refactor
+// TODO: refactor (move rendering logic in Atlas component)
 const LandsExploreMap: FC<LandExploreMap> = ({
   positionX,
   positionY,
@@ -38,12 +38,13 @@ const LandsExploreMap: FC<LandExploreMap> = ({
 }) => {
   const { clickedLandId, setClickedLandId, setSelectedTile, showCardPreview } = useLandsMapTile();
   const { mapTiles, setMapTiles, selectedId, setSelectedId } = useLandsMapTiles();
-  const [highlightedTiles, setHighlightedTiles] = useState<Coord[]>([]);
   const { data } = useSWR<{ ok: boolean; data: Record<string, AtlasTile> }>(TILES_URL_DECENTRALEND, swrFetcher);
   const [tooltip, setTooltip] = useState<
     { x: number; y: number; landTile: CoordinatesLand; size: number } | undefined | null
   >(null);
+  const [isTooltipOpened, setIsTooltipOpened] = useState(false);
   const lastHoveredTileIdRef = useRef<string | null>(null);
+  const timeoutRef = useRef<number>();
 
   useLayoutEffect(() => {
     if (setMapTiles && data?.ok) {
@@ -107,7 +108,7 @@ const LandsExploreMap: FC<LandExploreMap> = ({
   };
 
   const isInList = (x: number, y: number) => {
-    return highlightedTiles.some((coord) => coord.x === x && coord.y === y);
+    return highlights.some((coord) => +coord.x === x && +coord.y === y);
   };
 
   const isClicked = (x: number, y: number) => {
@@ -140,30 +141,47 @@ const LandsExploreMap: FC<LandExploreMap> = ({
   };
 
   useEffect(() => {
-    highlights.forEach(({ x, y }) => {
-      setHighlightedTiles((state) => {
-        state.push({ x: Number(x), y: Number(y) });
-        return [...state];
-      });
-    });
-  }, [highlights]);
+    if (setSelectedId) {
+      setSelectedId('');
+    }
+
+    if (setClickedLandId) {
+      setClickedLandId('');
+    }
+  }, [enableTooltips, setSelectedId, setClickedLandId]);
 
   const handleAtlasHover = useCallback(
     (x: number, y: number) => {
-      if (!mapTiles) {
+      if (!enableTooltips) {
         return;
       }
 
       const key = `${x},${y}`;
+      const landTile = highlights.find(({ id }) => id === key);
 
-      if (mapTiles[key]) {
-        lastHoveredTileIdRef.current = key;
+      if (landTile) {
+        lastHoveredTileIdRef.current = landTile.id;
+
+        window.clearTimeout(timeoutRef.current);
+
+        if (setSelectedId && landTile.landId) {
+          setSelectedId(landTile.landId);
+        }
+
+        setIsTooltipOpened(true);
+      } else {
+        timeoutRef.current = window.setTimeout(() => {
+          if (setSelectedId) {
+            setSelectedId('');
+          }
+          setIsTooltipOpened(false);
+        }, 500);
       }
     },
-    [mapTiles]
+    [setClickedLandId, highlights, enableTooltips]
   );
 
-  const updateHoveredTileTooltipHitBox: MapRenderer = useCallback(
+  const updateHoveredTileTooltip: MapRenderer = useCallback(
     ({ se, nw, center, width, height, size, pan }) => {
       const landsTilesInView = highlights.filter((highlight) => {
         const x = +highlight.x;
@@ -175,14 +193,17 @@ const LandsExploreMap: FC<LandExploreMap> = ({
       const hoveredLandTile = landsTilesInView.find((landTile) => landTile.id === lastHoveredTileIdRef.current);
 
       if (hoveredLandTile && hoveredLandTile.landId) {
+        const hoveredLandTiles = landsTilesInView.filter((landTile) => landTile.landId === hoveredLandTile.landId);
+        const hoveredLandTileTarget = hoveredLandTiles.sort((a, b) => +b.x - +a.x || +b.y - +a.y)[0];
+
         const hw = width / 2;
         const hh = height / 2;
         const hs = size / 2;
-        const x = hw - ((center.x - +hoveredLandTile.x) * size + (pan?.x || 0)) - hs;
-        const y = hh - ((+hoveredLandTile.y - center.y) * size + (pan?.y || 0)) - hs;
+        const x = hw - ((center.x - +hoveredLandTileTarget.x) * size + (pan?.x || 0)) - hs;
+        const y = hh - ((+hoveredLandTileTarget.y - center.y) * size + (pan?.y || 0)) - hs;
 
         const updatedTooltip = {
-          landTile: hoveredLandTile,
+          landTile: hoveredLandTileTarget,
           x,
           y,
           size,
@@ -196,8 +217,6 @@ const LandsExploreMap: FC<LandExploreMap> = ({
             ? prevTooltip
             : updatedTooltip;
         });
-      } else {
-        setTooltip(null);
       }
     },
     [highlights]
@@ -205,10 +224,10 @@ const LandsExploreMap: FC<LandExploreMap> = ({
 
   const tileMapRenderMap: MapRenderer = useCallback(
     (args) => {
-      updateHoveredTileTooltipHitBox(args);
+      updateHoveredTileTooltip(args);
       renderMap(args);
     },
-    [updateHoveredTileTooltipHitBox]
+    [updateHoveredTileTooltip]
   );
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -243,6 +262,7 @@ const LandsExploreMap: FC<LandExploreMap> = ({
 
       {enableTooltips && tooltip && landTooltip && (
         <LandTooltip
+          open={isTooltipOpened}
           land={landTooltip}
           x={tooltip.x + tooltip.size / 2}
           y={tooltip.y + tooltip.size / 2}
