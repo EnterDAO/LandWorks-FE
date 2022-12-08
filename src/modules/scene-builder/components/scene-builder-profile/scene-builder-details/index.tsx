@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 
 import { Button, Grid } from 'design-system';
 import { AlertIcon, LanguagesIcon, LocationIcon, TagIcon } from 'design-system/icons';
+import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import BuilderContactModal from '../../scene-builder-contact-modal';
 import { BlueBoxContainer, CardContainer, DividerStyled, StyledBox, TypographyStyled } from '../styled';
@@ -14,6 +15,7 @@ interface ISceneBuilderDetails {
 
 const SceneBuilderDetails: FC<ISceneBuilderDetails> = ({ builder }) => {
   const [showContactModal, setShowContactModal] = useState(false);
+  const { offsets } = useStickyOffset();
 
   const iconStyle = {
     marginRight: '20px',
@@ -26,7 +28,7 @@ const SceneBuilderDetails: FC<ISceneBuilderDetails> = ({ builder }) => {
       className="scene-builder-card"
       style={{
         position: 'sticky',
-        top: '220px',
+        top: offsets.header + 20,
         padding: '20px 30px',
         height: '550px',
         display: 'flex',
