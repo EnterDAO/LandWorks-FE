@@ -68,12 +68,12 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
       top={0}
       position="absolute"
       height={1}
-      zIndex={2}
       sx={
         isMapVisible
           ? {
               pl: isMapMaximized ? 0 : 3,
               width: isMapMaximized ? 1 : 0.5,
+              zIndex: isMapMaximized ? 2 : 1,
             }
           : {
               width: 0,

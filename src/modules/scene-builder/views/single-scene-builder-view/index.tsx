@@ -5,14 +5,14 @@ import { Link, useParams } from 'react-router-dom';
 
 import { useNotion } from 'api/notion/client';
 import { Grid } from 'design-system';
-import { ArrowRightIcon, BackIcon } from 'design-system/icons';
+import { BackIcon } from 'design-system/icons';
 import SceneBuilderProfile from 'modules/scene-builder/components/scene-builder-profile';
 import ProfileLoaderSkeleton from 'modules/scene-builder/components/scene-builder-profile/card-loader-skeleton';
 import SceneBuilderDetails from 'modules/scene-builder/components/scene-builder-profile/scene-builder-details';
 import SceneBuilderPortfolio from 'modules/scene-builder/components/scene-builder-profile/scene-builder-portfolio';
 import { APP_ROUTES, LANDING_ROUTES, useIsAppRoute } from 'router/routes';
 
-import { BreadCrumbs, Separator } from '../scene-builder-form-view/styled';
+import { BreadCrumbs } from '../scene-builder-form-view/styled';
 import { StyledBreadcrumbsGrid } from './styled';
 
 import { transformSceneProviderForProfile } from 'modules/scene-builder/utils';
@@ -54,12 +54,6 @@ const SingleBuilderView: FC = () => {
             </div>
             <span>Back to {'Scene Builders'}</span>
           </Link>
-          <Separator />
-          <Link className="button-explore" to={sceneBuilderRoute}>
-            <span>{'Builders'}</span>
-          </Link>
-          <ArrowRightIcon style={{ width: '20px' }} />
-          <span>{selectedBuilder?.builderName}</span>
         </BreadCrumbs>
       </StyledBreadcrumbsGrid>
       <Grid className="content-container" style={{ paddingTop: '0px', position: 'relative' }}>
