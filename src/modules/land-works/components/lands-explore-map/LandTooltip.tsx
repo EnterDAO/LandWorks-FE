@@ -28,9 +28,10 @@ interface LandTooltipProps extends Pick<PopperProps, 'container'> {
   land: AssetEntity;
   x: number;
   y: number;
+  open?: boolean;
 }
 
-const LandTooltip = ({ land, x, y, container }: LandTooltipProps) => {
+const LandTooltip = ({ land, open, x, y, container }: LandTooltipProps) => {
   const history = useHistory();
 
   const handlePopperClick = () => {
@@ -42,13 +43,14 @@ const LandTooltip = ({ land, x, y, container }: LandTooltipProps) => {
 
   return (
     <DarkTooltip
-      open
+      open={open}
       arrow
       placement="top"
       title={<LandTooltipContent land={land} />}
       PopperProps={{
         container,
         onClick: handlePopperClick,
+        disablePortal: true,
       }}
     >
       <Box
