@@ -35,6 +35,7 @@ import { useLandworks } from '../../providers/landworks-provider';
 import ListingCardSkeleton from '../land-listing-skeleton';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
 import AssetList from './AssetList';
+import BuyAndListConfirmModal from './BuyAndListConfirmModal';
 import SortSelect, { SortType } from './SortSelect';
 
 import { parseVoxelsAsset } from 'modules/land-works/utils';
@@ -1041,6 +1042,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             }}
           />
         )}
+        <BuyAndListConfirmModal open />
       </Grid>
     </section>
   );
