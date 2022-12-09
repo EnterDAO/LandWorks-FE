@@ -12,7 +12,7 @@ const useLoadMoreButton = <T>(
 ): UseLoadMoreButtonReturn<T> => {
   const [listed, setListed] = useState(initialListed);
   const onLoadMore = useCallback(() => {
-    setListed((prevState) => Math.max(prevState + itemsPerLoad, items.length));
+    setListed((prevState) => Math.min(prevState + itemsPerLoad, items.length));
   }, [itemsPerLoad, items.length]);
 
   // useLayoutEffect
