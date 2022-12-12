@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ChangeEvent, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Skeleton, useMediaQuery } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { refreshWeb3Token } from 'web3/token';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
@@ -16,7 +15,6 @@ import { WarningIcon } from 'design-system/icons';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import useGetIsMounted from 'hooks/useGetIsMounted';
 import { BaseNFT, CryptoVoxelNFT, DecentralandNFT, Option } from 'modules/interface';
-import { ListingCard } from 'modules/land-works/components/land-works-list-card';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
 import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
 import { addIconToMetaverse, currencyData } from 'modules/land-works/components/lands-explore-filters/filters-data';
@@ -33,7 +31,6 @@ import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
 import { PaymentToken, createAssetAdvertisement, fetchMetaverses, fetchTokenPayments } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
-import ListingCardSkeleton from '../land-listing-skeleton';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
 import AssetList from './AssetList';
 import LoadingAssetList from './LoadingAssetList';
@@ -77,7 +74,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const walletCtx = useWallet();
   const landworks = useLandworks();
   const registry = useContractRegistry();
-  const isLargeScreen = useMediaQuery('(min-width: 1440px)');
   const getIsMounted = useGetIsMounted();
 
   const history = useHistory();

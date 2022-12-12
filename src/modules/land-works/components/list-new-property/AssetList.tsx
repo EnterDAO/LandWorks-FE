@@ -1,9 +1,8 @@
 import React, { MouseEvent, ReactNode } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 
-import decentralandLandMapSrc from 'assets/img/decentraland-land-map.png';
 import Image from 'components/custom/image';
-import { BaseNFT, CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
+import { CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
 
 interface ListCardProps {
   image: string;
