@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { ChangeEvent, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useMediaQuery } from '@mui/material';
+import { Skeleton, useMediaQuery } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { refreshWeb3Token } from 'web3/token';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
@@ -35,6 +35,8 @@ import { PaymentToken, createAssetAdvertisement, fetchMetaverses, fetchTokenPaym
 import { useLandworks } from '../../providers/landworks-provider';
 import ListingCardSkeleton from '../land-listing-skeleton';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
+import AssetList from './AssetList';
+import LoadingAssetList from './LoadingAssetList';
 
 import { parseVoxelsAsset } from 'modules/land-works/utils';
 import { getTimeType, secondsToDuration, sessionStorageHandler } from 'utils';
@@ -75,7 +77,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const walletCtx = useWallet();
   const landworks = useLandworks();
   const registry = useContractRegistry();
-  const isSmallScreen = useMediaQuery('(max-height: 780px)');
+  const isLargeScreen = useMediaQuery('(min-width: 1440px)');
   const getIsMounted = useGetIsMounted();
 
   const history = useHistory();
@@ -718,30 +720,36 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
 
   return (
     <section className="list-view">
-      <Grid container direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
-        <Box mb={5} fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
+      <Stack height={1}>
+        <Typography variant="h3" mb={6} textAlign="center">
           List Property
-        </Box>
-        <Stepper sx={{ width: 1, maxWidth: 600, mb: 8, mx: 'auto' }} activeStep={activeStep}>
+        </Typography>
+
+        <Stepper sx={{ width: 1, maxWidth: 736, mb: 6, mx: 'auto' }} activeStep={activeStep}>
           {steps.map(({ label }) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>
           ))}
         </Stepper>
+
         {(step.title || step.subtitle) && (
-          <Stack width={1} alignItems="center" textAlign="center">
-            <Typography variant="h3" component="h4" mb={1}>
+          <Stack alignItems="center" textAlign="center">
+            <Typography variant="h3" component="h4">
               {activeStep + 1}. {step.title}
             </Typography>
 
-            {step.subtitle && <Typography fontWeight={400}>{step.subtitle}</Typography>}
+            {step.subtitle && (
+              <Typography fontWeight={400} mt={1}>
+                {step.subtitle}
+              </Typography>
+            )}
           </Stack>
         )}
 
-        <Box width={1} minHeight={370}>
+        <Stack flexGrow={1} minHeight={0} mb={4}>
           {step.id === StepId.Asset && (
-            <Stack height={isSmallScreen ? '460px' : '530px'} overflow="auto">
+            <>
               <Box display="flex" gap={4} mb={2}>
                 <ControlledSelect
                   width="290px"
@@ -759,39 +767,41 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                 </Box>
               </Box>
 
-              {loading && <ListingCardSkeleton />}
+              <Stack height={1} overflow="auto" p={2} mx={-2}>
+                {loading && <LoadingAssetList />}
 
-              {!loading &&
-                (properties.length > 0 ? (
-                  <Grid container className="properties">
-                    {properties.map((property) => {
-                      return (
-                        <Grid key={property.id} item xs={3} margin="0 0 10px">
-                          <ListingCard
-                            selected={property.name === selectedProperty?.name}
-                            onClick={handlePropertyChange}
-                            property={property}
-                            estateLands={estateGroup}
-                          />
-                        </Grid>
-                      );
-                    })}
-                  </Grid>
-                ) : (
-                  <Stack flexGrow={1} justifyContent="center" alignItems="center">
-                    <Box component="img" src={landNotFoundImageSrc} width={170} mb={5} />
-                    <Typography variant="h1" component="p" mb={2}>
-                      Land not found
-                    </Typography>
+                {!loading &&
+                  (properties.length > 0 ? (
+                    <AssetList
+                      assets={properties}
+                      selectedAssetId={selectedProperty?.id}
+                      onSelectAsset={handlePropertyChange}
+                    />
+                  ) : (
+                    <Stack flexGrow={1} justifyContent="center" alignItems="center">
+                      <Box component="img" src={landNotFoundImageSrc} width={{ xs: 128, xxl: 170 }} mb={5} />
+                      <Typography variant="h1" component="p" mb={2}>
+                        Land not found
+                      </Typography>
 
-                    <Typography variant="subtitle2">It seems that you don’t have any land in your wallet.</Typography>
-                  </Stack>
-                ))}
-            </Stack>
+                      <Typography variant="subtitle2">It seems that you don’t have any land in your wallet.</Typography>
+                    </Stack>
+                  ))}
+              </Stack>
+            </>
           )}
 
           {step.id === StepId.RentPeriod && (
-            <Box maxWidth={350} mx="auto" width={1}>
+            <Box
+              alignSelf="center"
+              maxWidth={{ xxl: 350 }}
+              mt={{ xs: 4, xxl: 6 }}
+              width={1}
+              height={1}
+              overflow="auto"
+              px={2}
+              mx={-2}
+            >
               <RentPeriod
                 isMinPeriodSelected={isMinPeriodSelected}
                 handleMinCheckboxChange={handleMinCheckboxChange}
@@ -816,6 +826,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                 maxError={maxError}
                 atMostError={maxFutureError}
                 withoutSwitch
+                layout="adaptive"
               />
             </Box>
           )}
@@ -838,7 +849,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             </Stack>
           )}
           {step.id === StepId.Advertisement && (
-            <Stack width={1} maxWidth={670} mt={10} mx="auto">
+            <Stack width={1} maxWidth={670} mt={{ xs: 4, xxl: 10 }} mx="auto">
               <Grid container spacing={5}>
                 <Grid item xs={6}>
                   <Image
@@ -886,7 +897,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             </Stack>
           )}
           {step.id === StepId.Summary && (
-            <Box mx="auto" maxWidth={630} mt={8}>
+            <Box maxWidth={630} alignSelf="center" mt={{ xs: 4, xxl: 8 }}>
               <Grid container wrap="nowrap" p="8px" className="summaryWrapper" flexDirection="row">
                 {selectedProperty && (
                   <>
@@ -919,17 +930,20 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
               </Grid>
             </Box>
           )}
-        </Box>
+        </Stack>
 
         {step.warning && (
-          <Grid className="warning-info">
-            <WarningIcon />
+          <Grid className="warning-info" mb={{ xs: 2, xxl: 4 }} mx="auto">
+            <WarningIcon style={{ width: 20, height: 20 }} />
             <Grid item>
-              <Typography variant="h4">Keep in mind</Typography>
+              <Typography display={{ xs: 'none', xxl: 'block' }} variant="h4">
+                Keep in mind
+              </Typography>
               <Typography variant="subtitle2">{step.warning}</Typography>
             </Grid>
           </Grid>
         )}
+
         <hr className="divider" />
 
         {step.id !== StepId.Summary && (
@@ -966,7 +980,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
           </Grid>
         )}
         {step.id === StepId.Summary && (
-          <Grid maxHeight={'50vh'} overflow="auto" container justifyContent="space-between" mt={4}>
+          <Grid container justifyContent="space-between">
             <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep((prev) => prev - 1)}>
               Back
             </Button>
@@ -1016,7 +1030,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             }}
           />
         )}
-      </Grid>
+      </Stack>
     </section>
   );
 };

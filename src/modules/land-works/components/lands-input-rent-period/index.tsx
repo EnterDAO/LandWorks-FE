@@ -32,6 +32,7 @@ interface IProps {
   maxError?: string;
   atMostError?: string;
   withoutSwitch?: boolean;
+  layout?: 'adaptive';
 }
 
 const RentPeriod: React.FC<IProps> = ({
@@ -58,54 +59,70 @@ const RentPeriod: React.FC<IProps> = ({
   maxError,
   atMostError,
   withoutSwitch,
+  layout,
 }) => {
   return (
-    <>
-      <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
-        <span className="label">Min Rent Period</span>
-        {!withoutSwitch && (
-          <StyledSwitch className="switch" checked={isMinPeriodSelected} onChange={handleMinCheckboxChange} />
+    <Grid container rowSpacing={3} columnSpacing={3}>
+      {/* // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore */}
+      <Grid item xs={layout === 'adaptive' ? 6 : 12} xxl={12}>
+        <Grid alignItems="center" display="flex" flexDirection="row" mb="13px">
+          <span className="label">Min Rent Period</span>
+          {!withoutSwitch && (
+            <StyledSwitch className="switch" checked={isMinPeriodSelected} onChange={handleMinCheckboxChange} />
+          )}
+        </Grid>
+        {isMinPeriodSelected && (
+          <>
+            <Grid>
+              <CustomDropdownInput
+                defaultInputValue={minInputValue}
+                optionsValue={minOptionsValue}
+                handleOptionChange={handleMinSelectChange}
+                onInput={handleMinInputChange}
+                options={minOptions}
+                error={minError}
+              />
+            </Grid>
+            <div className="error">
+              <span>{minError}</span>
+            </div>
+          </>
         )}
       </Grid>
-      {isMinPeriodSelected && (
-        <>
-          <Grid mt={3}>
-            <CustomDropdownInput
-              defaultInputValue={minInputValue}
-              optionsValue={minOptionsValue}
-              handleOptionChange={handleMinSelectChange}
-              onInput={handleMinInputChange}
-              options={minOptions}
-              error={minError}
-            />
-          </Grid>
-          <div className="error">
-            <span>{minError}</span>
-          </div>
-        </>
-      )}
-      <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
-        <span className="label">Max Rent Period</span>
-        {!withoutSwitch && (
-          <StyledSwitch className="switch" checked={isMaxPeriodSelected} onChange={handleMaxCheckboxChange} />
+
+      {/* // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore */}
+      <Grid item xs={layout === 'adaptive' ? 6 : 12} xxl={12}>
+        <Grid alignItems="center" display="flex" flexDirection="row" mb="13px">
+          <span className="label">Max Rent Period</span>
+          {!withoutSwitch && (
+            <StyledSwitch className="switch" checked={isMaxPeriodSelected} onChange={handleMaxCheckboxChange} />
+          )}
+        </Grid>
+
+        {isMaxPeriodSelected && (
+          <>
+            <Grid>
+              <CustomDropdownInput
+                defaultInputValue={maxInputValue}
+                optionsValue={maxOptionsValue}
+                handleOptionChange={handleMaxSelectChange}
+                onInput={handleMaxInputChange}
+                options={maxOptions}
+                error={maxError}
+              />
+            </Grid>
+            <div className="error">
+              <span>{maxError}</span>
+            </div>
+          </>
         )}
       </Grid>
+
       {isMaxPeriodSelected && (
-        <>
-          <Grid mt={3}>
-            <CustomDropdownInput
-              defaultInputValue={maxInputValue}
-              optionsValue={maxOptionsValue}
-              handleOptionChange={handleMaxSelectChange}
-              onInput={handleMaxInputChange}
-              options={maxOptions}
-              error={maxError}
-            />
-          </Grid>
-          <div className="error">
-            <span>{maxError}</span>
-          </div>
-          <Grid alignItems="center" display="flex" flexDirection="row" mt={3}>
+        <Grid item xs={12}>
+          <Grid alignItems="center" display="flex" flexDirection="row" mb="13px">
             <span className="label">Max Rent Queue</span>
             <Tooltip
               disableFocusListener
@@ -119,7 +136,7 @@ const RentPeriod: React.FC<IProps> = ({
               </div>
             </Tooltip>
           </Grid>
-          <Grid mt={3}>
+          <Grid>
             <CustomDropdownInput
               defaultInputValue={atMostInputValue}
               optionsValue={atMostOptionsValue}
@@ -132,9 +149,9 @@ const RentPeriod: React.FC<IProps> = ({
           <div className="error">
             <span>{atMostError}</span>
           </div>
-        </>
+        </Grid>
       )}
-    </>
+    </Grid>
   );
 };
 

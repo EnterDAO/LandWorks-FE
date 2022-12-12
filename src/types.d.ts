@@ -3,6 +3,7 @@ declare module 'react-eth-address';
 
 declare module '@mui/material/styles' {
   interface BreakpointOverrides {
+    xxl: true;
     '2xl': true;
     '3xl': true;
   }
