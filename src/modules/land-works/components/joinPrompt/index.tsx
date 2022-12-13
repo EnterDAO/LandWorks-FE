@@ -22,6 +22,7 @@ export const JoinPrompt: React.FC = () => {
     localStorage.removeItem('join_prompt');
     setJoinPromptOpen(false);
   };
+
   return (
     <StyledRoot
       onBlur={() => setOpen(false)}
