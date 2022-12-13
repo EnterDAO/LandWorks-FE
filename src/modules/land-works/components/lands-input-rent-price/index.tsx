@@ -44,11 +44,11 @@ export const RentPrice: React.FC<IProps> = ({
   return (
     <>
       <Grid>
-        <Grid alignItems="center" display="flex" flexDirection="row" mt={3} justifyContent="space-between">
-          <span className="light">Amount</span>
-          <span className="grey">per day</span>
-        </Grid>
-        <Grid mt={3}>
+        <Typography variant="button" alignItems="center" display="flex" mt={3} justifyContent="space-between">
+          Amount
+          <Typography color="var(--theme-grey700-color)">per day</Typography>
+        </Typography>
+        <Grid mt="13px">
           <CustomDropdownInput
             placeholder="Set a price"
             defaultInputValue={inputValue}

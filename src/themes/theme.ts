@@ -30,6 +30,7 @@ const appTheme = createTheme({
       lg: 992,
       xl: 1230,
       '2xl': 1440,
+      xxl: 1440,
       '3xl': 1600,
     },
   },

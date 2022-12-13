@@ -24,10 +24,10 @@ const ListAssetCard: FC<ListAssetCardProps> = ({ asset }) => {
     <Stack
       boxSizing="border-box"
       borderRadius="20px"
-      width={300}
       bgcolor="var(--theme-card-color)"
       border="2px solid transparent"
       p={3}
+      width={1}
       minHeight={363}
       gap={3}
       sx={{
