@@ -6,10 +6,10 @@ import Container from 'components/custom/container';
 import { Box, Typography } from 'design-system';
 import useIsMetamaskConnected from 'hooks/useIsMetamaskConnected';
 import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
-import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
 import ClaimRewardsAlert from 'modules/land-works/components/land-claim-rents-alert';
 import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
+import PropertyCardSkeleton from 'modules/land-works/components/land-works-card-explore-view/PropertyCardSkeleton';
 import { useListingModal } from 'providers/listing-modal-provider';
 import { APP_ROUTES, MY_PROPERTIES_ROUTE_TABS, useMyPropertiesRouteTab } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
@@ -131,7 +131,7 @@ const MyPropertiesView: FC = () => {
         {isLoading ? (
           <CardsGrid>
             {Array.from({ length: 6 }).map((_, i) => {
-              return <LandCardSkeleton key={i} />;
+              return <PropertyCardSkeleton key={i} />;
             })}
           </CardsGrid>
         ) : (
