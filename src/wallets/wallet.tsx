@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, { useEffect } from 'react';
-import { useSessionStorage } from 'react-use-storage';
+import { useLocalStorage } from 'react-use-storage';
 import { Web3Provider } from '@ethersproject/providers';
 import splitbee from '@splitbee/web';
 import { UnsupportedChainIdError, Web3ReactProvider, useWeb3React } from '@web3-react/core';
@@ -74,7 +74,7 @@ export function useWallet(): Wallet {
 const WalletProvider: React.FC = (props) => {
   const web3React = useWeb3React();
   const { setJoinPromptOpen } = useGeneral();
-  const [sessionProvider, setSessionProvider, removeSessionProvider] = useSessionStorage<string | undefined>(
+  const [sessionProvider, setSessionProvider, removeSessionProvider] = useLocalStorage<string | undefined>(
     'wallet_provider'
   );
 
