@@ -41,7 +41,7 @@ export const TabListStyled = styled(TabList)<TabListProps>(() => ({
 
 export const TabStyled = styled(Tab)<TabProps>(() => ({
   fontSize: '14px',
-  fontWEight: '600',
+  fontWeight: '600',
   lineHeight: '21px',
   minHeight: '45px',
   minWidth: '120px',

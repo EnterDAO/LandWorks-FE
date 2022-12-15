@@ -8,15 +8,17 @@ import {
   SCENE_BUILDER_TAB_STATE_ALL,
   SCENE_BUILDER_TAB_STATE_INDIVIDUAL,
   SCENE_BUILDER_TAB_STATE_STUDIO,
+  SceneBuilderTab,
 } from 'modules/scene-builder/constants';
 
 interface Props {
-  setTab: Dispatch<SetStateAction<string>>;
+  tabs: string[];
+  onChange: (tab: string) => void;
 }
 
-const SceneBuilderTabs: FC<Props> = ({ setTab }) => {
+const SceneBuilderTabs: FC<Props> = ({ tabs, onChange }) => {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setTab(newValue);
+    onChange(newValue);
   };
 
   return (
@@ -25,7 +27,10 @@ const SceneBuilderTabs: FC<Props> = ({ setTab }) => {
       <RootStyled style={{ display: 'flex', justifyContent: 'center' }}>
         <Box>
           <TabListStyled onChange={handleChange} aria-label="Lands tabs filter">
-            <TabStyled
+            {tabs.map((tab) => {
+              return <TabStyled label={tab} value={tab} />;
+            })}
+            {/* <TabStyled
               label={
                 <>
                   <strong>All</strong>
@@ -48,7 +53,7 @@ const SceneBuilderTabs: FC<Props> = ({ setTab }) => {
                 </>
               }
               value={SCENE_BUILDER_TAB_STATE_STUDIO}
-            />
+            /> */}
           </TabListStyled>
         </Box>
       </RootStyled>
