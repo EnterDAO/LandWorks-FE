@@ -27,6 +27,7 @@ import UserInfo from './UserInfo/UserInfo';
 
 import s from './s.module.scss';
 
+// TODO: refactor
 const ConnectedWallet: React.FC = () => {
   const wallet = useWallet();
 
@@ -70,6 +71,11 @@ const ConnectedWallet: React.FC = () => {
       });
   }, [wallet]);
 
+  const handleDisconnectButtonClick = () => {
+    setAnchorEl(null);
+    wallet.disconnect();
+  };
+
   if (wallet.connecting) {
     return (
       <>
@@ -110,7 +116,7 @@ const ConnectedWallet: React.FC = () => {
             </Grid>
             <Divider className={s.divider} style={{ minHeight: 28 }} />
             <Grid padding={24}>
-              <button type="button" className="button button-ghost" onClick={() => wallet.disconnect()}>
+              <button type="button" className="button button-ghost" onClick={handleDisconnectButtonClick}>
                 <span>Disconnect</span>
               </button>
             </Grid>
@@ -186,7 +192,7 @@ const ConnectedWallet: React.FC = () => {
             </Grid>
           </Grid>
           <Grid padding={[0, 24, 20]}>
-            <button type="button" className="button-primary-grey" onClick={() => wallet.disconnect()}>
+            <button type="button" className="button-primary-grey" onClick={handleDisconnectButtonClick}>
               <span>Disconnect</span>
             </button>
           </Grid>

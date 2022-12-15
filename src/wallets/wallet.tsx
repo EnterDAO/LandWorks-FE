@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, { useEffect } from 'react';
-import { useLocalStorage, useSessionStorage } from 'react-use-storage';
+import { useLocalStorage } from 'react-use-storage';
 import { Web3Provider } from '@ethersproject/providers';
 import splitbee from '@splitbee/web';
 import { UnsupportedChainIdError, Web3ReactProvider, useWeb3React } from '@web3-react/core';
