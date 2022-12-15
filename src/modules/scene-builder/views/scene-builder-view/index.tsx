@@ -24,6 +24,7 @@ type TabType = typeof tabs[number];
 
 export const useSceneBuilders = () => {
   const { getSceneProviders } = useNotion();
+
   return useSWR<NotionResultForProfile[]>('scene-builders', getSceneProviders);
 };
 
@@ -32,25 +33,6 @@ const SceneBuilderView: FC = () => {
   const sceneBuilderContainerElRef = useRef<HTMLElement | null>(null);
   const [activeTab, setTab] = useState<TabType>(SCENE_BUILDER_TAB_STATE_ALL);
   const loading = !data;
-  const sceneBuilderByTab = useMemo(() => {
-    const sceneBuilders = data || [];
-
-    const groupedSceneBuilderByType = sceneBuilders.reduce((acc, sceneBuilder) => {
-      if (!(sceneBuilder.builderType in acc)) {
-        acc[sceneBuilder.builderType] = [];
-      }
-
-      acc[sceneBuilder.builderType].push(sceneBuilder);
-
-      return acc;
-    }, {} as Record<string, NotionResultForProfile[]>);
-
-    return {
-      [SCENE_BUILDER_TAB_STATE_ALL]: sceneBuilders,
-      [SCENE_BUILDER_TAB_STATE_INDIVIDUAL]: groupedSceneBuilderByType['Individual'],
-      [SCENE_BUILDER_TAB_STATE_STUDIO]: groupedSceneBuilderByType['Studio'],
-    };
-  }, [data]);
 
   const handleTabChange = (e: any, tab: string) => {
     setTab(tab as TabType);
@@ -62,7 +44,15 @@ const SceneBuilderView: FC = () => {
     }
   };
 
-  const sceneBuilders = sceneBuilderByTab[activeTab];
+  const sceneBuilders = useMemo(() => {
+    const tabData = data || [];
+
+    if (activeTab === SCENE_BUILDER_TAB_STATE_ALL) {
+      return tabData;
+    }
+
+    return tabData.filter((sceneBuilder) => sceneBuilder.builderType === activeTab);
+  }, [activeTab, data]);
 
   return (
     <Container>
