@@ -1,6 +1,5 @@
 import React from 'react';
 import { useLocalStorage } from 'react-use-storage';
-import cn from 'classnames';
 
 import { ReactComponent as RoundClose } from 'assets/icons/round-close.svg';
 import Container from 'components/custom/container';

@@ -16,7 +16,7 @@ const CardsGrid: FC<CardsGrid> = ({ children, layout, sx }) => {
       gap={4}
       sx={sx}
       width={1}
-      gridTemplateColumns={`repeat(auto-fill, minmax(${layout === 'compact' ? 190 : 300}px, 1fr))`}
+      gridTemplateColumns={`repeat(auto-fill, minmax(min(${layout === 'compact' ? 190 : 300}px, 100%), 1fr))`}
     >
       {children}
     </Box>
