@@ -2,6 +2,8 @@ import React from 'react';
 import { useLocalStorage } from 'react-use-storage';
 import cn from 'classnames';
 
+import { ReactComponent as RoundClose } from 'assets/icons/round-close.svg';
+import Container from 'components/custom/container';
 import Grid from 'components/custom/grid';
 import Icon from 'components/custom/icon';
 import { Text } from 'components/custom/typography';
@@ -51,11 +53,15 @@ const Warn: React.FC<WarnProps> = (props) => {
   }
 
   return (
-    <div
-      className={cn(
-        s.warning,
-        'grid flow-col col-gap-16 sm-col-gap-12 align-center justify-space-between pv-12 ph-64 sm-ph-24'
-      )}
+    <Container
+      sx={{
+        py: '12px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 2,
+      }}
+      className={s.warning}
     >
       <Grid flow="col" gap={16} align="center">
         <Icon name="warning-outlined" color="red" />
@@ -64,11 +70,23 @@ const Warn: React.FC<WarnProps> = (props) => {
         </Text>
       </Grid>
       {closable && (
-        <Button variant="accentblue" onClick={handleClose}>
-          <Icon name="close" className={s.closeIcon} />
+        <Button
+          variant="secondary"
+          sx={{
+            width: '52px !important',
+            p: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            '> *': { display: 'flex' },
+          }}
+          onClick={handleClose}
+        >
+          <RoundClose width={20} height={20} />
         </Button>
       )}
-    </div>
+    </Container>
   );
 };
 
@@ -87,6 +105,8 @@ const WarningProvider: React.FC = (props) => {
     };
   }
 
+  console.log({ warns });
+
   return (
     <WarningContext.Provider
       value={{
@@ -94,7 +114,7 @@ const WarningProvider: React.FC = (props) => {
         warns,
       }}
     >
-      <Grid flow="row">
+      <Grid className="warning-list" flow="row">
         {warns.map((warn, idx) => (
           <Warn key={idx} {...warn} onClose={() => removeWarm(warn)} />
         ))}
