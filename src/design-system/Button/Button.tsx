@@ -15,6 +15,7 @@ interface ButtonProps extends ButtonUnstyledProps {
 
 type ButtonRef = HTMLButtonElement;
 
+// TODO: refactor
 const Button = (props: ButtonProps, ref: Ref<ButtonRef>) => {
   const { variant, children, disabled, className, btnSize, iconLeft, iconRight, sx } = props;
 

@@ -21,22 +21,6 @@ const appTheme = createTheme({
         },
       },
     },
-    MuiTypography: {
-      variants: [
-        {
-          props: {
-            color: 'gradient',
-          },
-          style: {
-            background: 'var(--theme-primary-gradient)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            textShadow: '0 0 10px #AC2CCB',
-            color: 'inherit',
-          },
-        },
-      ],
-    },
   },
   breakpoints: {
     values: {
