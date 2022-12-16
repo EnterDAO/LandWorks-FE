@@ -4,7 +4,7 @@ import heroImage from 'assets/img/grandProgramHero.png';
 import { Box, Button, Grid, Typography } from 'design-system';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 
-import { GRADIENT_TEXT, THEME_COLORS } from 'themes/theme-constants';
+import { THEME_COLORS } from 'themes/theme-constants';
 
 export const Hero: FC = () => {
   const stickyOffset = useStickyOffset();
@@ -28,7 +28,7 @@ export const Hero: FC = () => {
           >
             Open Scenes
             <br />
-            <Typography variant="inherit" component="span" sx={GRADIENT_TEXT}>
+            <Typography variant="inherit" component="span" color="gradient">
               Grant Program
             </Typography>
           </Typography>
