@@ -9,7 +9,7 @@ const Typography = styled((props: TypographyProps) => {
           background: 'var(--theme-primary-gradient)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
-          textShadow: '0 0 0.8em #AC2CCB',
+          textShadow: '0 0 0.5em rgba(221, 61, 203, 0.6)',
         }
       : undefined;
 
