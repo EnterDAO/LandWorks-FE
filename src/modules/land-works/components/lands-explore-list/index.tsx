@@ -3,8 +3,9 @@ import { useHistory, useLocation } from 'react-router-dom';
 import useDebounce from '@rooks/use-debounce';
 
 import CardsGrid from 'components/custom/cards-grid';
+import Divider from 'components/custom/divider';
 import { useSearchBar } from 'components/custom/search-bar/SearchBar';
-import { Box, Divider, Icon, Stack, Typography } from 'design-system';
+import { Box, Icon, Stack, Typography } from 'design-system';
 import { GridBigIcon, GridIcon } from 'design-system/icons';
 import useGetIsMounted from 'hooks/useGetIsMounted';
 import useIsMetamaskConnected from 'hooks/useIsMetamaskConnected';
@@ -13,7 +14,6 @@ import useLoadMoreButton from 'layout/components/load-more-button/useLoadMoreBut
 import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
 import { LocationState } from 'modules/interface';
 import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
-import LandCardSkeleton from 'modules/land-works/components/land-base-loader-card';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
@@ -21,6 +21,7 @@ import { useListingModal } from 'providers/listing-modal-provider';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 import { getPropertyPath } from 'router/routes';
 
+import PropertyCardSkeleton from '../land-works-card-explore-view/PropertyCardSkeleton';
 import { StyledButton } from './styled';
 
 import {
@@ -207,10 +208,10 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
           </Stack>
         </CardsGrid>
       </Box>
-      <CardsGrid layout={cardsSize}>
+      <CardsGrid minWidth={cardsSize === 'compact' ? '190px' : undefined}>
         {loading &&
           Array.from({ length: initialNumberOfCards }, (_, i) => {
-            return <LandCardSkeleton key={i} />;
+            return <PropertyCardSkeleton key={i} layout={cardsSize} />;
           })}
 
         {!loading &&

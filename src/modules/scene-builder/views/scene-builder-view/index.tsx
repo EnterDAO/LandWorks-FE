@@ -1,15 +1,14 @@
-import { FC, useEffect, useState } from 'react';
-import TabContext from '@mui/lab/TabContext';
+import { FC, useMemo, useRef, useState } from 'react';
+import { Box, Typography } from '@mui/material';
+import useSWR from 'swr';
 
 import { useNotion } from 'api/notion/client';
-import { Grid } from 'design-system';
-import useWindowDimensions from 'hooks/useWindowDimensions';
+import CardsGrid from 'components/custom/cards-grid';
+import Container from 'components/custom/container';
+import { Tab, Tabs } from 'components/styled/tab';
 import SceneBuilderHeading from 'modules/scene-builder/components/land-works-scene-builders-heading';
 import SceneBuilderCard from 'modules/scene-builder/components/scene-builder-card';
-import CardLoaderSkeleton from 'modules/scene-builder/components/scene-builder-card/card-loader-skeleton';
-import SceneBuilderTabs from 'modules/scene-builder/components/scene-builder-tabs';
-
-import { transformSceneProviderForCard } from 'modules/scene-builder/utils';
+import SceneBuilderCardSkeleton from 'modules/scene-builder/components/scene-builder-card/SceneBuilderCardSkeleton';
 
 import {
   SCENE_BUILDER_TAB_STATE_ALL,
@@ -17,74 +16,72 @@ import {
   SCENE_BUILDER_TAB_STATE_STUDIO,
 } from 'modules/scene-builder/constants';
 
-import { NotionResultForCard } from 'modules/scene-builder/components/scene-builder-card/types';
+import { NotionResultForProfile } from 'modules/scene-builder/components/scene-builder-card/types';
+
+const tabs = [SCENE_BUILDER_TAB_STATE_ALL, SCENE_BUILDER_TAB_STATE_INDIVIDUAL, SCENE_BUILDER_TAB_STATE_STUDIO] as const;
+
+type TabType = typeof tabs[number];
+
+export const useSceneBuilders = () => {
+  const { getSceneProviders } = useNotion();
+
+  return useSWR<NotionResultForProfile[]>('scene-builders', getSceneProviders);
+};
 
 const SceneBuilderView: FC = () => {
-  const { getSceneProviders } = useNotion();
-  const [sceneBuilders, setSceneBuilders] = useState<NotionResultForCard[]>([]);
-  const [filteredData, setFilteredData] = useState(sceneBuilders);
-  const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState(SCENE_BUILDER_TAB_STATE_ALL);
-  const { height } = useWindowDimensions();
+  const { data } = useSceneBuilders();
+  const sceneBuilderContainerElRef = useRef<HTMLElement | null>(null);
+  const [activeTab, setTab] = useState<TabType>(SCENE_BUILDER_TAB_STATE_ALL);
+  const loading = !data;
 
-  const scrollToDiv = () => {
-    window.scrollTo({
-      top: height - 90,
-      behavior: 'smooth',
-    });
+  const handleTabChange = (e: any, tab: string) => {
+    setTab(tab as TabType);
   };
 
-  useEffect(() => {
-    (async () => {
-      const sceneProv = await getSceneProviders();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const data = sceneProv.results.map((i: any) => transformSceneProviderForCard(i));
-      setSceneBuilders(data);
-      setLoading(false);
-    })();
-  }, [tab]);
-
-  const individualBuilders = sceneBuilders?.filter((i) => i.builderType === 'Individual');
-  const studioBuilders = sceneBuilders?.filter((i) => i.builderType === 'Studio');
-
-  useEffect(() => {
-    if (tab === SCENE_BUILDER_TAB_STATE_INDIVIDUAL && individualBuilders !== undefined) {
-      setFilteredData(individualBuilders);
-    } else if (tab === SCENE_BUILDER_TAB_STATE_STUDIO && studioBuilders !== undefined) {
-      setFilteredData(studioBuilders);
-    } else {
-      setFilteredData(sceneBuilders);
+  const handleExploreButtonClick = () => {
+    if (sceneBuilderContainerElRef.current) {
+      sceneBuilderContainerElRef.current.scrollIntoView();
     }
-  }, [tab, sceneBuilders]);
+  };
+
+  const sceneBuilders = useMemo(() => {
+    const tabData = data || [];
+
+    if (activeTab === SCENE_BUILDER_TAB_STATE_ALL) {
+      return tabData;
+    }
+
+    return tabData.filter((sceneBuilder) => sceneBuilder.builderType === activeTab);
+  }, [activeTab, data]);
 
   return (
-    <Grid
-      className="content-container"
-      style={{ transform: 'translate3d(0px, 0px, 0px)', transition: 'all 700ms ease' }}
-    >
-      <SceneBuilderHeading navigateToBuilders={() => scrollToDiv()} />
-      <TabContext value={tab}>
-        <SceneBuilderTabs setTab={setTab} />
-        {loading ? (
-          <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
-            {[1, 2, 3, 4].map((i) => (
-              <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={i}>
-                <CardLoaderSkeleton key={i} />
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Grid container spacing={4} rowSpacing={4} columnSpacing={4}>
-            {sceneBuilders.length &&
-              filteredData.map((builder) => (
-                <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={builder.builderName}>
-                  <SceneBuilderCard builder={builder} />
-                </Grid>
-              ))}
-          </Grid>
-        )}
-      </TabContext>
-    </Grid>
+    <Container>
+      <SceneBuilderHeading onExploreButtonClick={handleExploreButtonClick} />
+
+      <Box ref={sceneBuilderContainerElRef} pt={20} pb={12}>
+        <Typography variant="h2" textAlign="center" mb={6}>
+          Scene Builders
+        </Typography>
+
+        <Box display="flex" justifyContent="center" mb={10}>
+          <Tabs value={activeTab} onChange={handleTabChange}>
+            {tabs.map((tab) => {
+              return <Tab key={tab} label={tab} value={tab} />;
+            })}
+          </Tabs>
+        </Box>
+
+        <CardsGrid>
+          {loading
+            ? Array.from({ length: 10 }, (_, i) => {
+                return <SceneBuilderCardSkeleton key={i} />;
+              })
+            : sceneBuilders.map((sceneBuilder) => {
+                return <SceneBuilderCard key={sceneBuilder.id} builder={sceneBuilder} />;
+              })}
+        </CardsGrid>
+      </Box>
+    </Container>
   );
 };
 

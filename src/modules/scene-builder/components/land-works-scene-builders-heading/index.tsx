@@ -8,11 +8,11 @@ import landingImage from './assets/scene-expert-landing.png';
 import { TypographyStyled } from './styled';
 
 interface Props {
-  navigateToBuilders: () => void;
+  onExploreButtonClick: () => void;
 }
 
 const SceneBuilderHeading: React.FC<Props> = (props: Props) => {
-  const { navigateToBuilders } = props;
+  const { onExploreButtonClick } = props;
   const history = useHistory();
   const isAppRoute = useIsAppRoute();
 
@@ -24,7 +24,7 @@ const SceneBuilderHeading: React.FC<Props> = (props: Props) => {
           A place to find builders and professionals in developing 3D metaverse assets.
         </TypographyStyled>
         <Grid justifyContent="center" display="flex" mt={'30px'} columnGap={3}>
-          <Button variant="secondary" btnSize="medium" onClick={navigateToBuilders}>
+          <Button variant="secondary" btnSize="medium" onClick={onExploreButtonClick}>
             Explore Builders
           </Button>
           <Button

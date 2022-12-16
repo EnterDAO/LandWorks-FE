@@ -1,16 +1,20 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { FC, createContext, useContext } from 'react';
 import { Client } from '@notionhq/client';
-import { GetPageResponse, QueryDatabaseResponse } from '@notionhq/client/build/src/api-endpoints';
+import { GetPageResponse } from '@notionhq/client/build/src/api-endpoints';
 
 import config from '../../config';
 
+import { transformNotionEntityToSceneBuilder } from 'modules/scene-builder/utils';
+
+import { NotionResultForProfile } from 'modules/scene-builder/components/scene-builder-card/types';
+
 export interface INotionService {
-  getSceneProviders: () => Promise<QueryDatabaseResponse>;
+  getSceneProviders: () => Promise<NotionResultForProfile[]>;
   getPage: (id: string) => Promise<GetPageResponse>;
 }
 export const NotionServiceContext = createContext<INotionService>({
-  getSceneProviders: () => new Promise<QueryDatabaseResponse>(() => []),
+  getSceneProviders: () => new Promise<NotionResultForProfile[]>(() => []),
   getPage: () => new Promise<GetPageResponse>(() => {}),
 });
 
@@ -50,8 +54,8 @@ const NotionProvider: FC = (props) => {
         },
       ];
 
-  const getSceneProviders = async function (): Promise<QueryDatabaseResponse> {
-    return notion.databases.query({
+  const getSceneProviders = async () => {
+    const response = await notion.databases.query({
       database_id: config.notion.databaseId,
       filter: {
         or: sceneProviderFilters,
@@ -62,6 +66,10 @@ const NotionProvider: FC = (props) => {
           direction: 'ascending',
         },
       ],
+    });
+
+    return response.results.map((result) => {
+      return transformNotionEntityToSceneBuilder(result as any);
     });
   };
 

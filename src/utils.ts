@@ -67,14 +67,15 @@ export function formatBigNumberInput(value: BigNumber): string {
 }
 
 export function formatShortDescription(desc: string): string {
-  const limitStringLength = desc.slice(0, 105);
-  const cutOff = limitStringLength.lastIndexOf(' ');
-  const shortenedDescription = limitStringLength.substring(0, cutOff);
-  if (desc.length > 105) {
+  if (desc.length > 90) {
+    const limitStringLength = desc.slice(0, 90);
+    const cutOff = limitStringLength.lastIndexOf(' ');
+    const shortenedDescription = limitStringLength.substring(0, cutOff);
+
     return `${shortenedDescription}...`;
-  } else {
-    return desc;
   }
+
+  return desc;
 }
 
 export function getFormattedDuration(value?: number, endValue?: number): string | undefined {
