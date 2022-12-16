@@ -11,7 +11,7 @@ import HeaderMobileNav from './HeaderMobileNav';
 import { THEME_COLORS } from 'themes/theme-constants';
 
 const LayoutHeader: FC = () => {
-  const isDesktop = useMediaQuery('(min-width: 992px)');
+  const isDesktop = useMediaQuery('(min-width: 1080px)');
   const stickyOffset = useStickyOffset();
 
   return (

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useEffect, useState } from 'react';
+import React, { MouseEvent, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -38,9 +38,9 @@ const ConnectedWallet: React.FC = () => {
 
   const [validTxHash, setValidTxHash] = useState(landworksTxHash || txHash || erc20TxHash);
 
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -135,7 +135,7 @@ const ConnectedWallet: React.FC = () => {
   }
 
   const AccountSection = (
-    <Box ref={containerRef}>
+    <Box height={1} ref={containerRef}>
       <StyledPopover
         anchorOrigin={{
           vertical: 'bottom',
@@ -192,9 +192,13 @@ const ConnectedWallet: React.FC = () => {
           </Grid>
         </div>
       </StyledPopover>
-      <Button onClick={handleClick}>
-        <UserInfo open={open} address={ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 10, 3)} />
-      </Button>
+      {/* <Button onClick={handleClick}> */}
+      {/* </Button> */}
+      <UserInfo
+        open={open}
+        address={ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 10, 3)}
+        onClick={handleClick}
+      />
     </Box>
   );
 
