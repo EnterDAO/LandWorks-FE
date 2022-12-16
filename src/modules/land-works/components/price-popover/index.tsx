@@ -112,6 +112,7 @@ export const PricePopover: React.FC<IProps> = ({ text }) => {
         {text}
       </PopoverButton>
       <StyledPopover
+        TransitionProps={{ timeout: 0 }}
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
         onClose={closePopover}
