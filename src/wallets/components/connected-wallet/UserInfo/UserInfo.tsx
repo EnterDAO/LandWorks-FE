@@ -25,7 +25,10 @@ const UserInfo: FC<UserInfoProps> = ({ open, address, onClick }) => {
       alignItems="center"
       onClick={onClick}
       pr="12px"
-      pl={6}
+      pl={{
+        xs: '12px',
+        xxl: 6,
+      }}
       sx={{
         cursor: 'pointer',
         ':after': {
@@ -49,17 +52,39 @@ const UserInfo: FC<UserInfoProps> = ({ open, address, onClick }) => {
         },
       }}
     >
-      <Identicon address={wallet.account} width={36} height={36} className="mr-8" />
+      <Box display="flex" alignItems="center" gap={2}>
+        <Identicon address={wallet.account} width={36} height={36} />
 
-      <Box>
-        <Typography variant="body1" component="span">
-          gm
-        </Typography>
-        <Typography variant="body1" sx={styles.userName} component="span">
-          {address}
-        </Typography>
+        <Box
+          gap={1}
+          sx={{
+            display: 'none',
+            '@media (min-width: 1300px)': {
+              display: 'flex',
+            },
+          }}
+        >
+          <Typography variant="body1" display={{ xs: 'none', xxl: 'inline-block' }} component="span">
+            gm
+          </Typography>
+          <Typography
+            variant="body1"
+            fontWeight={700}
+            sx={{
+              fontSize: {
+                xs: 14,
+                xxl: 16,
+              },
+            }}
+            color="var(--theme-grey900-color)"
+            component="span"
+          >
+            {address}
+          </Typography>
+        </Box>
+
+        <Icon iconElement={<HiIcon />} display={{ xs: 'none', xxl: 'inline-block' }} />
       </Box>
-      <Icon iconElement={<HiIcon />} sx={styles.hiIcon} />
 
       <Divider sx={styles.divider} orientation="vertical" flexItem />
 

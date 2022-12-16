@@ -47,14 +47,6 @@ const styles = {
       zIndex: -1,
     },
   },
-  userName: {
-    fontWeight: '700',
-    color: 'var(--theme-grey900-color)',
-    margin: '0 0 0 5px',
-  },
-  hiIcon: {
-    margin: '0 5px',
-  },
   dropdown: {
     display: 'flex',
     position: 'relative',
