@@ -104,8 +104,6 @@ const WarningProvider: React.FC = (props) => {
     };
   }
 
-  console.log({ warns });
-
   return (
     <WarningContext.Provider
       value={{
