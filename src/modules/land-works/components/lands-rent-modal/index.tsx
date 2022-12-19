@@ -14,6 +14,8 @@ import { CalendarIcon, ProfileIcon, WarningIcon } from 'design-system/icons';
 import { ModalProps } from 'design-system/Modal/Modal';
 import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
+import { addExistingRentIdsInProgress } from 'modules/land-works/views/my-properties-view/useExistingRentIdsInProgress';
+import { addRentIdsInProgress } from 'modules/land-works/views/my-properties-view/useRentIdsInProgress';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 import { MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath } from 'router/routes';
@@ -181,10 +183,13 @@ export const RentModal: React.FC<Props> = (props) => {
       return;
     }
     try {
-      metaverseAssetId && localStorage.setItem('RENT_IN_PROGRESS', metaverseAssetId);
-      metaverseAssetId && localStorage.setItem('EXIST_RENT_IN_PROGRESS', metaverseAssetId);
+      if (metaverseAssetId) {
+        addRentIdsInProgress(metaverseAssetId);
+        addExistingRentIdsInProgress(metaverseAssetId);
+      }
 
       setTransactionLoading(true);
+
       const bnPeriod = new BigNumber(period);
       const assetLastRentEnd = await fetchAssetLastRentEnd(assetId);
       const maxRentStart = assetLastRentEnd + HOUR_IN_SECONDS;

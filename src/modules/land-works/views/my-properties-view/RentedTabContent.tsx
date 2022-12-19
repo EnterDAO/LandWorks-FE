@@ -10,10 +10,12 @@ import LandWorksLoadingCard from 'modules/land-works/components/land-works-card-
 import LandsWorksGridEmptyState from 'modules/land-works/components/land-works-grid-empty-state';
 import { getPropertyPath } from 'router/routes';
 
+import useExistingRentIdsInProgress from './useExistingRentIdsInProgress';
 import useMyPropertiesLoadMoreButton from './useMyPropertiesLoadMoreButton';
+import useRentIdsInProgress from './useRentIdsInProgress';
 import useSortAssets from './useSortAssets';
 
-import { filterLandsByQuery, getExistingLandIdInProgress, isNewLandTxInProgress } from 'modules/land-works/utils';
+import { filterLandsByQuery } from 'modules/land-works/utils';
 
 interface RentedTabContentProps {
   assets: AssetEntity[];
@@ -22,18 +24,19 @@ interface RentedTabContentProps {
 const RentedTabContent: FC<RentedTabContentProps> = ({ assets }) => {
   const history = useHistory();
   const [search] = useSearchBar();
-  const isRentingInProgress = isNewLandTxInProgress(assets, 'RENT_IN_PROGRESS');
-  const existLandIdRentInProgress = getExistingLandIdInProgress(assets, 'EXIST_RENT_IN_PROGRESS');
 
   const filteredAssets = filterLandsByQuery(assets, search);
   const sortedAssets = useSortAssets(filteredAssets);
   const [listedAssets, loadMoreButtonProps] = useMyPropertiesLoadMoreButton(sortedAssets);
 
-  return assets.length > 0 || isRentingInProgress ? (
+  const rentIdsInProgress = useRentIdsInProgress(assets);
+  const existLandIdRentInProgress = useExistingRentIdsInProgress(assets);
+
+  return assets.length > 0 || rentIdsInProgress.length > 0 ? (
     <>
       <CardsGrid>
         {listedAssets.map((asset) => {
-          if (existLandIdRentInProgress === asset.metaverseAssetId) {
+          if (existLandIdRentInProgress.includes(asset.metaverseAssetId)) {
             return <LandWorksLoadingCard key={asset.metaverseAssetId} title="Renting" />;
           } else {
             return (
@@ -50,14 +53,17 @@ const RentedTabContent: FC<RentedTabContentProps> = ({ assets }) => {
             );
           }
         })}
-        {isRentingInProgress && <LandWorksLoadingCard title="Renting" />}
+
+        {rentIdsInProgress.map((rentIdInProgress) => {
+          return <LandWorksLoadingCard key={rentIdInProgress} title="Renting" />;
+        })}
       </CardsGrid>
 
       <LoadMoreButton
         sx={{ mt: 10 }}
         {...loadMoreButtonProps}
-        listed={+isRentingInProgress + loadMoreButtonProps.listed}
-        total={+isRentingInProgress + loadMoreButtonProps.total}
+        listed={rentIdsInProgress.length + loadMoreButtonProps.listed}
+        total={rentIdsInProgress.length + loadMoreButtonProps.total}
       />
     </>
   ) : (
