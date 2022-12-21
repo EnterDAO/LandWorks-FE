@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import CardsGrid from 'components/custom/cards-grid';
 import Container from 'components/custom/container';
-import { Box, Typography } from 'design-system';
+import { Box } from 'design-system';
 import useIsMetamaskConnected from 'hooks/useIsMetamaskConnected';
 import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
@@ -19,6 +19,7 @@ import FeedbackButton from '../single-land-view/FeedbackButton';
 import ListedTabContent from './ListedTabContent';
 import { useMetaverseQueryParam } from './MetaverseSelect';
 import MyPropertiesViewHeader from './MyPropertiesViewHeader';
+import MyPropertiesViewTabs from './MyPropertiesViewTabs';
 import NotListedTabContent from './NotListedTabContent';
 import RentedTabContent from './RentedTabContent';
 import useGetAccountAssetsQuery from './useGetAccountAssetsQuery';
@@ -101,18 +102,22 @@ const MyPropertiesView: FC = () => {
     <Container sx={{ pb: 24 }}>
       <ClaimRewardsAlert />
 
-      <MyPropertiesViewHeader tabs={tabs} />
-      <Box display="flex" minHeight={90} alignItems="center" justifyContent="space-between" py="18px">
-        <Typography variant="body2" color="var(--theme-light-color)">
-          <Typography variant="inherit" component="span" color="var(--theme-subtle-color)">
-            {activeTab.label}
-          </Typography>
-          &nbsp;
-          {activeTab.total} lands
-        </Typography>
+      <MyPropertiesViewHeader />
+
+      <Box
+        display="flex"
+        alignItems="center"
+        flexWrap="wrap-reverse"
+        gap="18px"
+        justifyContent="space-between"
+        py="18px"
+      >
+        <Box flex="1 0 auto">
+          <MyPropertiesViewTabs tabs={tabs} />
+        </Box>
 
         {isMetamaskConnected && (
-          <Box display="flex" alignItems="center" gap="12px">
+          <Box display="flex" alignItems="center" ml="auto" justifyContent="flex-end" flexWrap="wrap" gap="12px">
             {isFeedbackButtonVisible && <FeedbackButton />}
 
             <SplitBeeListButton

@@ -40,6 +40,8 @@ export const StyledButton = styled('button')(
   width: 100%;
   min-width: 150px;
   color: ${THEME_COLORS.light};
+  display: flex;
+  align-items: center;
 
   &:hover {
     background: ${THEME_COLORS.grey02};
