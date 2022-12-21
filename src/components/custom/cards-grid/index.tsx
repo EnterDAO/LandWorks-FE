@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactNode, Ref, forwardRef } from 'react';
 import { SxProps } from '@mui/system';
 
 import { Box } from 'design-system';
@@ -6,11 +6,13 @@ import { Box } from 'design-system';
 interface CardsGrid {
   minWidth?: string | undefined;
   sx?: SxProps;
+  children?: ReactNode;
 }
 
-const CardsGrid: FC<CardsGrid> = ({ children, minWidth = '300px', sx }) => {
+const CardsGrid = ({ children, minWidth = '300px', sx }: CardsGrid, ref: Ref<HTMLDivElement>) => {
   return (
     <Box
+      ref={ref}
       flexGrow={1}
       display="grid"
       gap={4}
@@ -23,4 +25,4 @@ const CardsGrid: FC<CardsGrid> = ({ children, minWidth = '300px', sx }) => {
   );
 };
 
-export default CardsGrid;
+export default forwardRef(CardsGrid);

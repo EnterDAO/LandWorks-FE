@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useMemo } from 'react';
+import { FC, ReactNode, RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import CardsGrid from 'components/custom/cards-grid';
@@ -24,12 +24,28 @@ import RentedTabContent from './RentedTabContent';
 import useGetAccountAssetsQuery from './useGetAccountAssetsQuery';
 import useGetAccountNonListedAssetsQuery from './useGetAccountNotListedAssets';
 
+const useGridNumberOfColumns = (ref: RefObject<HTMLElement | null>, initialNumberOfColumns = 6) => {
+  const [numberOfColumns, setNumberOfColumns] = useState(initialNumberOfColumns);
+
+  useLayoutEffect(() => {
+    if (ref.current) {
+      const { gridTemplateColumns } = window.getComputedStyle(ref.current);
+
+      setNumberOfColumns(gridTemplateColumns.split(' ').length);
+    }
+  }, []);
+
+  return numberOfColumns;
+};
+
 const MyPropertiesView: FC = () => {
   const tab = useMyPropertiesRouteTab();
   const history = useHistory();
   const wallet = useWallet();
   const listingModal = useListingModal();
   const [metaverse] = useMetaverseQueryParam();
+  const cardGridElRef = useRef<HTMLDivElement | null>(null);
+  const numberOfCardsPerRow = useGridNumberOfColumns(cardGridElRef);
 
   const { data: accountAssets, isLoading: areAssetsLoading } = useGetAccountAssetsQuery(
     wallet.account || '',
@@ -129,8 +145,8 @@ const MyPropertiesView: FC = () => {
 
       <Box display="flex" flexWrap="wrap" justifyContent="center" alignItems="flex-start" minHeight={555}>
         {isLoading ? (
-          <CardsGrid>
-            {Array.from({ length: 6 }).map((_, i) => {
+          <CardsGrid ref={cardGridElRef}>
+            {Array.from({ length: numberOfCardsPerRow }).map((_, i) => {
               return <PropertyCardSkeleton key={i} />;
             })}
           </CardsGrid>
