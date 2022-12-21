@@ -182,6 +182,7 @@ export const RentModal: React.FC<Props> = (props) => {
     if (!isValidForm() || !assetId || !paymentToken || !metaverseRegistry) {
       return;
     }
+
     try {
       if (metaverseAssetId) {
         addRentIdsInProgress(metaverseAssetId);
