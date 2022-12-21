@@ -1,16 +1,19 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback } from 'react';
 import { useSubscription } from '@apollo/client';
+import useSWR from 'swr';
 
 import { AssetEntity, USER_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
 
-const initialUser: UserEntity = {
-  id: '',
-  hasUnclaimedRent: false,
-  assets: [],
-  consumerTo: [],
-  rents: [],
-  unclaimedRentAssets: [],
-  ownerAndConsumerAssets: [],
+interface UserAssets {
+  rented: AssetEntity[];
+  listed: AssetEntity[];
+  unclaimed: AssetEntity[];
+}
+
+const initialUserAssets: UserAssets = {
+  rented: [],
+  listed: [],
+  unclaimed: [],
 };
 
 const useGetAccountAssetsQuery = (
@@ -18,85 +21,43 @@ const useGetAccountAssetsQuery = (
   metaverse: string | number
 ): {
   isLoading: boolean;
-  data: {
-    unclaimed: AssetEntity[];
-    listed: AssetEntity[];
-    rented: AssetEntity[];
-  };
+  data: UserAssets;
 } => {
-  const [user, setUser] = useState<UserEntity | null>(null);
-
   const { data: rawUserData, loading } = useSubscription<{ user: UserEntity }>(USER_SUBSCRIPTION, {
     skip: !account,
     variables: {
       id: account.toLowerCase(),
-      metaverse: `${metaverse}`,
+      metaverse: metaverse.toString(),
     },
   });
 
-  const isLoading = (loading && !rawUserData) || !user;
-
-  useLayoutEffect(() => {
-    if (!account) {
-      setUser(initialUser);
-    }
-  }, [account]);
-
-  useLayoutEffect(() => {
-    if (!rawUserData) {
-      return;
-    }
-
-    let isCancelled = false;
-
-    const { user } = rawUserData;
-
-    if (user) {
-      parseUser(user)
-        .then((parsedUserData) => {
-          if (!isCancelled) {
-            setUser(parsedUserData);
-          }
-        })
-        .catch((e) => {
-          console.error(e);
-          if (!isCancelled) {
-            setUser(initialUser);
-          }
-        });
-    } else {
-      setUser(initialUser);
-    }
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [rawUserData]);
-
-  const assets: {
-    rented: AssetEntity[];
-    listed: AssetEntity[];
-    unclaimed: AssetEntity[];
-  } = useMemo(() => {
+  const getUserAssets = useCallback(async (user?: any): Promise<UserAssets> => {
     if (!user) {
-      return {
-        rented: [],
-        listed: [],
-        unclaimed: [],
-      };
+      return initialUserAssets;
     }
 
-    const { rents: rented = [], ownerAndConsumerAssets: listed = [], unclaimedRentAssets: unclaimed = [] } = user;
+    const {
+      rents: rented = [],
+      ownerAndConsumerAssets: listed = [],
+      unclaimedRentAssets: unclaimed = [],
+    } = await parseUser(user);
 
     return {
       rented,
       listed,
       unclaimed,
     };
-  }, [user]);
+  }, []);
+
+  const { data: userAssets = initialUserAssets } = useSWR<UserAssets>(
+    rawUserData?.user ? [rawUserData.user, 'user'] : null,
+    getUserAssets
+  );
+
+  const isLoading = (loading && !rawUserData) || userAssets === undefined;
 
   return {
-    data: assets,
+    data: userAssets,
     isLoading,
   };
 };
