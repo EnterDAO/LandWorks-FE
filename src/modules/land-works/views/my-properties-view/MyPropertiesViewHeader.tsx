@@ -1,29 +1,10 @@
-import { FC } from 'react';
-import { useHistory } from 'react-router-dom';
-
 import SearchBar from 'components/custom/search-bar';
-import { Tab, Tabs } from 'components/styled/tab';
 import { Box, Divider, Typography } from 'design-system';
-import { MyPropertiesRouteTabsValue, getMyPropertiesPath, useMyPropertiesRouteTab } from 'router/routes';
 
 import MetaverseSelect from './MetaverseSelect';
 import SortSelect from './SortSelect';
 
-interface MyPropertiesViewHeaderProps {
-  tabs: { id: string; label: string | number; total: string | number }[];
-}
-
-const MyPropertiesViewHeader: FC<MyPropertiesViewHeaderProps> = ({ tabs }) => {
-  const activeTabId = useMyPropertiesRouteTab();
-  const history = useHistory();
-
-  const handleTabChange = (event: unknown, tabId: string) => {
-    history.replace({
-      pathname: getMyPropertiesPath(tabId as MyPropertiesRouteTabsValue),
-      search: history.location.search,
-    });
-  };
-
+const MyPropertiesViewHeader = () => {
   return (
     <Box py="18px" width={1} boxShadow="inset 0 -2px var(--theme-modal-color)">
       <Box position="relative" gap="12px" display="flex" flexWrap="wrap">
@@ -39,90 +20,33 @@ const MyPropertiesViewHeader: FC<MyPropertiesViewHeaderProps> = ({ tabs }) => {
         >
           My Properties
         </Typography>
-
         <Box
           display="flex"
           gap="12px"
-          alignItems="center"
-          justifyContent="space-between"
           flexWrap="wrap"
+          ml="auto"
           sx={{
             width: 1,
             order: 1,
-            '@media (min-width: 1290px)': {
-              order: 0,
+            '& > *': {
+              flex: '1 1 200px',
+            },
+            '@media (min-width: 900px)': {
               width: 'auto',
-              flexGrow: 1,
+              order: 0,
+            },
+            '@media (min-width: 990px)': {
+              width: 'auto',
+              '& > *': {
+                width: 200,
+                flex: '0 0 auto',
+              },
             },
           }}
         >
-          <Tabs
-            sx={{
-              width: 1,
-              order: 1,
-              display: 'inline-flex',
-              '& button': {
-                maxWidth: 'none',
-                flex: '1 1 auto',
-              },
-              '& .MuiTabs-flexContainer': {
-                flexWrap: 'wrap',
-              },
-              '@media (min-width: 990px)': {
-                order: 0,
-                width: 'auto',
-                '& button': {
-                  flex: '0 0 auto',
-                },
-                '& .MuiTabs-flexContainer': {
-                  flexWrap: 'nowrap',
-                },
-              },
-            }}
-            value={activeTabId}
-            onChange={handleTabChange}
-          >
-            {tabs.map((tab) => {
-              return (
-                <Tab
-                  key={tab.id}
-                  label={
-                    <>
-                      {tab.label}
-                      <Typography ml={1} component="span" variant="inherit" color="var(--theme-grey700-color)">
-                        {tab.total}
-                      </Typography>
-                    </>
-                  }
-                  value={tab.id}
-                />
-              );
-            })}
-          </Tabs>
+          <MetaverseSelect />
 
-          <Box
-            display="flex"
-            gap="12px"
-            flexWrap="wrap"
-            ml="auto"
-            sx={{
-              width: 1,
-              '& > *': {
-                flex: '1 1 200px',
-              },
-              '@media (min-width: 990px)': {
-                width: 'auto',
-                '& > *': {
-                  width: 200,
-                  flex: '0 0 auto',
-                },
-              },
-            }}
-          >
-            <MetaverseSelect />
-
-            <SortSelect />
-          </Box>
+          <SortSelect />
         </Box>
 
         <Box
@@ -131,7 +55,7 @@ const MyPropertiesViewHeader: FC<MyPropertiesViewHeaderProps> = ({ tabs }) => {
           gap="12px"
           sx={{
             ml: 'auto',
-            '@media (min-width: 1290px)': {
+            '@media (min-width: 900px)': {
               ml: 0,
             },
           }}
@@ -140,7 +64,7 @@ const MyPropertiesViewHeader: FC<MyPropertiesViewHeaderProps> = ({ tabs }) => {
             sx={{
               borderColor: '#27273A',
               display: 'none',
-              '@media (min-width: 1290px)': {
+              '@media (min-width: 900px)': {
                 display: 'block',
               },
             }}
