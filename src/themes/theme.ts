@@ -1,10 +1,23 @@
-import { createTheme } from '@mui/material/styles';
+import { alpha, createTheme } from '@mui/material/styles';
 
 import typographyStyles from './typography-styles';
 
 import { THEME_SPACING_BASE } from './theme-constants';
 
 const appTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#5D8FF0',
+    },
+    text: {
+      primary: '#f8f8ff',
+      secondary: '#B9B9D3',
+      disabled: '#68687B',
+    },
+    background: {
+      paper: '#27273A',
+    },
+  },
   spacing: THEME_SPACING_BASE,
   typography: typographyStyles,
   components: {
@@ -18,6 +31,30 @@ const appTheme = createTheme({
           fontSize: '14px',
           lineHeight: '21px',
           color: 'var(--theme-grey900-color)',
+        },
+      },
+    },
+    MuiPickersPopper: {
+      styleOverrides: {
+        paper: {
+          borderRadius: 10,
+        },
+      },
+    },
+    MuiPickersArrowSwitcher: {
+      styleOverrides: {
+        button: {
+          color: '#f8f8ff',
+          '&:disabled': {
+            color: alpha('#f8f8ff', 0.3),
+          },
+        },
+      },
+    },
+    MuiPickersCalendarHeader: {
+      styleOverrides: {
+        switchViewButton: {
+          color: '#f8f8ff',
         },
       },
     },
