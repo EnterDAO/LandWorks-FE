@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
-
 import { MinusIcon, PlusIcon } from 'design-system/icons';
 
 import { Accordion, AccordionDetails, AccordionSummary, IconWrapper, StyledGrid } from './styled';
