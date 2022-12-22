@@ -1085,11 +1085,11 @@ export function fetchUserRents(address: string, availableOnly = false, metaverse
     },
   })
     .then(async (response) => {
-      return response.data;
+      return response.data.rents;
     })
     .catch((e) => {
       console.log(e);
-      return {} as UserEntity;
+      return [];
     });
 }
 

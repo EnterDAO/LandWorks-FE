@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
+import useSWR from 'swr';
 
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
@@ -15,46 +16,35 @@ interface ILandTablePriceProps {
   weiAmount: string;
   dateTimestamp: string;
 }
+
+const fetchTokenUsdPrice = async (tokenSymbol: string, timestamp: string) => {
+  if (tokenSymbol.toLowerCase() === 'usdc') {
+    return 1;
+  }
+
+  const date = timestampSecondsToUTCDate(timestamp, 'dd-MM-yyyy');
+  const usdPrice = await getTokenPriceForDate(tokenSymbol, date);
+
+  return usdPrice;
+};
+
 const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDecimals, weiAmount, dateTimestamp }) => {
-  const coingeckoApiDateFormat = 'dd-MM-yyyy';
-  const [formatedAmount, setFormattedAmount] = useState<BigNumber | null>(null);
-  const [usdPrice, setUsdPrice] = useState<BigNumber | null>(null);
-
-  useEffect(() => {
-    getTokenPrice();
-    return () => {
-      setUsdPrice(new BigNumber(0));
-    };
-  }, []);
-
-  const getTokenPrice = async () => {
-    const date = timestampSecondsToUTCDate(dateTimestamp, coingeckoApiDateFormat);
-    const ethAmount = ethers.utils.formatUnits(weiAmount, tokenDecimals);
-    const formatedAmount = new BigNumber(ethAmount);
-    setFormattedAmount(formatedAmount);
-
-    if (tokenSymbol.toLowerCase() === 'usdc') {
-      setUsdPrice(formatedAmount);
-    } else {
-      const usdEthPrice = await getTokenPriceForDate(tokenSymbol, date);
-      const usdPrice = formatedAmount.multipliedBy(usdEthPrice);
-      setUsdPrice(usdPrice);
-    }
-  };
+  const { data: usdPrice } = useSWR([tokenSymbol, dateTimestamp], fetchTokenUsdPrice);
+  const amount = new BigNumber(ethers.utils.formatUnits(weiAmount, tokenDecimals));
+  const priceInUsd = usdPrice ? amount.multipliedBy(usdPrice) : null;
 
   return (
     <span className="amount-container">
-      {formatedAmount && usdPrice ? (
-        <>
-          <SmallAmountTooltip
-            className="amount-text"
-            icon={<Icon style={{ width: 16, height: 16 }} name={getTokenIconName(tokenSymbol)} />}
-            amount={formatedAmount}
-          />
-          <SmallAmountTooltip className="usd-price" symbol="$" amount={usdPrice} />
-        </>
+      <SmallAmountTooltip
+        className="amount-text"
+        icon={<Icon style={{ width: 16, height: 16 }} name={getTokenIconName(tokenSymbol)} />}
+        amount={amount}
+      />
+
+      {priceInUsd ? (
+        <SmallAmountTooltip className="usd-price" symbol="$" amount={priceInUsd} />
       ) : (
-        <span>Calculating price</span>
+        <span className="usd-price">-</span>
       )}
     </span>
   );

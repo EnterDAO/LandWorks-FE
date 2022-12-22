@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Box } from '@mui/material';
 import { uniqueId } from 'lodash';
+import useSWR from 'swr';
 
 import { Typography } from 'design-system';
 import { EmptyIcon } from 'design-system/icons';
-import useIntersectionObserver from 'hooks/useElementOnScreen';
 import { RentEntity, fetchUserRents } from 'modules/land-works/api';
 
 import { useWallet } from '../../../../wallets/wallet';
@@ -28,67 +28,59 @@ import {
 
 import { getAssetName, getNowTs } from '../../../../utils';
 
-import { DEFAULT_SLICED_HISTORY } from 'modules/land-works/constants';
-
 interface Props {
   metaverse: string | number;
 }
 
-const MyPropetiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
-  const wallet = useWallet();
-  const [rents, setRents] = useState([] as RentEntity[]);
-  const [totalRents, setTotalRents] = useState(0);
-  const [pageSize, setPageSize] = useState(DEFAULT_SLICED_HISTORY);
-  const [paginatedRents, setPaginatedRents] = useState([] as RentEntity[]);
+const initialRents: RentEntity[] = [];
 
+interface LandStatusProps {
+  rent: RentEntity;
+}
+
+const LandStatus = ({ rent }: LandStatusProps) => {
   const now = getNowTs();
-  const ref = useRef<HTMLDivElement | null>(null);
-  const entry = useIntersectionObserver(ref, { freezeOnceInvisible: true });
-  const isVisible = !!entry?.isIntersecting;
 
-  const fetchRents = async (account: string) => {
-    const rents = await fetchUserRents(account, false, metaverse);
+  if (now < Number(rent.start)) {
+    return <UpcomingButton>Upcoming</UpcomingButton>;
+  } else if (Number(rent.start) <= now && now <= Number(rent.end)) {
+    return <ActiveButton>Active</ActiveButton>;
+  }
 
-    setRents(rents.rents || []);
-    setPaginatedRents(rents.rents?.slice(0, DEFAULT_SLICED_HISTORY));
+  return <PassedButton>Passed</PassedButton>;
+};
 
-    setTotalRents(rents.rents.length);
-  };
+interface LandOperatorProps {
+  rent: RentEntity;
+}
 
-  useEffect(() => {
-    if (wallet.account) {
-      fetchRents(wallet.account);
-    } else {
-      setRents([]);
-      setTotalRents(0);
-    }
-  }, [wallet.account, metaverse]);
+const LandOperator = ({ rent }: LandOperatorProps) => {
+  const now = getNowTs();
+  const isActiveRent = Number(rent.start) <= now && now < Number(rent.end);
+  const isUpcomingRent = Number(rent.start) >= now;
+  const isEditableRow = isActiveRent || isUpcomingRent;
 
-  const isEditableRow = (start: string, end: string) => {
-    const isActiveRent = Number(start) <= now && now < Number(end);
-    const isUpcomingRent = Number(start) >= now;
-    return isActiveRent || isUpcomingRent;
-  };
+  return (
+    <TableInput
+      operator={rent.operator}
+      assetId={rent.asset?.id || ''}
+      metaverseRegistry={rent.asset?.metaverseRegistry?.id || ''}
+      rentId={rent.id}
+      renter={rent.renter.id}
+      key={uniqueId()}
+      isEditable={isEditableRow}
+    />
+  );
+};
 
-  useEffect(() => {
-    if (rents.length > paginatedRents.length && isVisible) {
-      setPaginatedRents(rents.slice(0, pageSize + DEFAULT_SLICED_HISTORY));
-      setPageSize((prev) => prev + DEFAULT_SLICED_HISTORY);
-    }
-  }, [entry]);
+// TODO: refactor
+const MyPropertiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
+  const wallet = useWallet();
 
-  const rentStatus = (start: string, end: string) => {
-    let isUpcoming = false;
-    let isActive = false;
-    const now = getNowTs();
-    if (now < Number(start)) {
-      isUpcoming = true;
-    } else if (Number(start) <= now && now <= Number(end)) {
-      isActive = true;
-    }
-
-    return { isUpcoming, isActive };
-  };
+  const { data: rents = initialRents } = useSWR<RentEntity[]>(
+    wallet.account ? [wallet.account, false, metaverse] : null,
+    fetchUserRents
+  );
 
   return (
     <Box>
@@ -111,7 +103,7 @@ const MyPropetiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
               </StyledTableHeaderRow>
             </StyledTableHead>
 
-            {totalRents < 1 ? (
+            {rents.length === 0 ? (
               <tbody
                 style={{
                   height: '240px',
@@ -138,7 +130,7 @@ const MyPropetiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
               </tbody>
             ) : (
               <StyledTableBody style={{ maxHeight: 260, overflowY: 'auto' }}>
-                {paginatedRents.map((data) => (
+                {rents.map((data) => (
                   <StyledTableRow style={{ padding: '10px 0' }} key={data.id}>
                     <StyledTableCell align="left">
                       <StyledBox>{data.asset ? getAssetName(data.asset) : ''}</StyledBox>
@@ -166,33 +158,20 @@ const MyPropetiesHistoryTable: React.FC<Props> = ({ metaverse }) => {
                     </StyledTableCell>
 
                     <StyledTableCell align="left">
-                      <TableInput
-                        operator={data.operator}
-                        assetId={data.asset?.id || ''}
-                        metaverseRegistry={data.asset?.metaverseRegistry?.id || ''}
-                        rentId={data.id}
-                        renter={data.renter.id}
-                        key={uniqueId()}
-                        isEditable={isEditableRow(data.start, data.end)}
-                      />
+                      <LandOperator rent={data} />
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      {rentStatus(data.start, data.end).isUpcoming && <UpcomingButton>Upcoming</UpcomingButton>}
-                      {rentStatus(data.start, data.end).isActive && <ActiveButton>Active</ActiveButton>}
-                      {!rentStatus(data.start, data.end).isUpcoming && !rentStatus(data.start, data.end).isActive && (
-                        <PassedButton>Passed</PassedButton>
-                      )}
+                      <LandStatus rent={data} />
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
               </StyledTableBody>
             )}
           </table>
-          <div ref={ref} />
         </StyledPaper>
       </RootStyled>
     </Box>
   );
 };
 
-export default MyPropetiesHistoryTable;
+export default MyPropertiesHistoryTable;
