@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useLocalStorage } from 'react-use-storage';
 import { Web3Provider } from '@ethersproject/providers';
 import splitbee from '@splitbee/web';
@@ -186,6 +186,10 @@ const WalletProvider: React.FC = (props) => {
     }
   }, [web3React.account, setJoinPromptOpen]);
 
+  const showWalletsModal = useCallback(() => {
+    setWalletsModal(true);
+  }, []);
+
   const value = React.useMemo<Wallet>(
     () => ({
       initialized,
@@ -197,13 +201,21 @@ const WalletProvider: React.FC = (props) => {
       networkName: getNetworkName(web3React.chainId),
       connector: activeConnector,
       provider: activeProvider,
-      showWalletsModal: () => {
-        setWalletsModal(true);
-      },
+      showWalletsModal,
       connect,
       disconnect,
     }),
-    [web3React, initialized, connecting, disconnecting, activeConnector, activeProvider, disconnect, connect]
+    [
+      web3React,
+      initialized,
+      connecting,
+      disconnecting,
+      activeConnector,
+      activeProvider,
+      showWalletsModal,
+      disconnect,
+      connect,
+    ]
   );
 
   return (
