@@ -7,10 +7,10 @@ import { MyPropertiesRouteTabsValue, getMyPropertiesPath, useMyPropertiesRouteTa
 
 interface MyPropertiesViewTabsProps {
   tabs: { id: string; label: string | number; total: string | number }[];
+  activeTabId: string;
 }
 
-const MyPropertiesViewTabs: FC<MyPropertiesViewTabsProps> = ({ tabs }) => {
-  const activeTabId = useMyPropertiesRouteTab();
+const MyPropertiesViewTabs: FC<MyPropertiesViewTabsProps> = ({ activeTabId, tabs }) => {
   const history = useHistory();
 
   const handleTabChange = (event: unknown, tabId: string) => {
