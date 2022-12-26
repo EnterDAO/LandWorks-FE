@@ -5,7 +5,7 @@ import Divider from 'components/custom/divider';
 import Image from 'components/custom/image';
 import { Box, Stack, Typography } from 'design-system';
 import { LocationIcon } from 'design-system/icons';
-import { useSceneBuilderBuilderPath } from 'router/routes';
+import { useMetaCreatorsCreatorPath } from 'router/routes';
 
 import { TypeChip } from './styled';
 
@@ -18,7 +18,7 @@ interface SceneBuilderCardProps {
 }
 
 const SceneBuilderCard: FC<SceneBuilderCardProps> = ({ builder }) => {
-  const sceneBuilderPath = useSceneBuilderBuilderPath(builder.builderName);
+  const sceneBuilderPath = useMetaCreatorsCreatorPath(builder.builderName);
 
   return (
     <Stack

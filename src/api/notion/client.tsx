@@ -5,9 +5,9 @@ import { GetPageResponse } from '@notionhq/client/build/src/api-endpoints';
 
 import config from '../../config';
 
-import { transformNotionEntityToSceneBuilder } from 'modules/scene-builder/utils';
+import { transformNotionEntityToSceneBuilder } from 'modules/meta-creators/utils';
 
-import { NotionResultForProfile } from 'modules/scene-builder/components/scene-builder-card/types';
+import { NotionResultForProfile } from 'modules/meta-creators/components/scene-builder-card/types';
 
 export interface INotionService {
   getSceneProviders: () => Promise<NotionResultForProfile[]>;

@@ -30,8 +30,8 @@ const landingNav: HeaderNavLinkProps[] = [
     label: 'FAQ',
   },
   {
-    to: LANDING_ROUTES.sceneBuilder,
-    label: 'Scene Builder',
+    to: LANDING_ROUTES.metaCreators,
+    label: 'MetaCreators',
   },
   {
     to: LANDING_ROUTES.grantsProgram,
@@ -52,7 +52,7 @@ const appNav: HeaderNavLinkProps[] = [
   },
   {
     to: APP_ROUTES.sceneBuilder,
-    label: 'Scene Builder',
+    label: 'MetaCreators',
   },
   {
     to: APP_ROUTES.faq,
