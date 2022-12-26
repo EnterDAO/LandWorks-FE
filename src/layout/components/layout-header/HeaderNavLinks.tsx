@@ -51,7 +51,7 @@ const appNav: HeaderNavLinkProps[] = [
     label: 'My properties',
   },
   {
-    to: APP_ROUTES.sceneBuilder,
+    to: APP_ROUTES.metaCreators,
     label: 'MetaCreators',
   },
   {
