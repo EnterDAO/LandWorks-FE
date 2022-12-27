@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, MouseEvent, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import useDebounce from '@rooks/use-debounce';
 
@@ -44,17 +44,19 @@ interface Props {
 
 const NUMBER_OF_CARDS_PER_LOAD = 18;
 
+// TODO: Refactor
 const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRentEnd, isMapVisible }) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
   const stickyOffset = useStickyOffset();
-  const { setClickedLandId, setSelectedTile } = useLandsMapTile();
+  const { clickedLandId, setClickedLandId, setSelectedTile } = useLandsMapTile();
   const [searchQuery] = useSearchBar();
   const { mapTiles, selectedId, setSelectedId } = useLandsMapTiles();
   const getIsMounted = useGetIsMounted();
   const timeoutIdRef = useRef<number>();
   const listingModal = useListingModal();
   const isMetamaskConnected = useIsMetamaskConnected();
+  const activeLandRef = useRef<HTMLAnchorElement | null>(null);
 
   const [cardsSize, setCardsSize] = useState<'compact' | 'normal'>('normal');
 
@@ -62,6 +64,20 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
     sessionStorageHandler('get', 'explore-page', 'listed') || 0,
     isMapVisible ? (cardsSize === 'compact' ? 10 : 6) : 18
   );
+
+  const totalOffsetsRef = useRef(stickyOffset.offsets.exploreHeader);
+
+  useEffect(() => {
+    totalOffsetsRef.current = stickyOffset.offsets.exploreHeader;
+  }, [stickyOffset.offsets]);
+
+  useLayoutEffect(() => {
+    if (!activeLandRef.current) {
+      return;
+    }
+
+    window.scrollTo(0, activeLandRef.current.offsetTop - totalOffsetsRef.current);
+  }, [cardsSize]);
 
   const setActiveLand = useCallback(
     (land: AssetEntity) => {
@@ -163,6 +179,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
       <Box
         position="sticky"
         top={stickyOffset.offsets.filter + stickyOffset.offsets.header}
+        ref={stickyOffset.register('exploreHeader')}
         zIndex={2}
         px={4}
         mx={-4}
@@ -216,16 +233,25 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
 
         {!loading &&
           filteredLands.length > 0 &&
-          filteredAndListedLands.map((land) => (
-            <LandWorkCard
-              key={land.id}
-              layout={cardsSize}
-              onMouseOver={handleCardMouseOver}
-              onMouseOut={handleCardMouseOut}
-              onClick={getCardClickHandler(land)}
-              land={land}
-            />
-          ))}
+          filteredAndListedLands.map((land) => {
+            const did = land.decentralandData
+              ? `${land.decentralandData?.coordinates[0]?.x},${land.decentralandData?.coordinates[0]?.y}`
+              : land.metaverseAssetId;
+            const isActive = clickedLandId === did;
+
+            return (
+              <LandWorkCard
+                key={land.id}
+                ref={isActive ? activeLandRef : undefined}
+                layout={cardsSize}
+                onMouseOver={handleCardMouseOver}
+                onMouseOut={handleCardMouseOut}
+                onClick={getCardClickHandler(land)}
+                land={land}
+                isActive={isActive}
+              />
+            );
+          })}
       </CardsGrid>
       {!loading && filteredLands.length === 0 && <p>No properties are currently listed</p>}
 
