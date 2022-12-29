@@ -32,7 +32,7 @@ const LoadMoreButton: FC<LoadMoreButtonProps> = ({ listed = 0, total = 0, disabl
   return (
     <Stack sx={sx} alignItems="center">
       <Typography mb={2} variant="button">
-        Listed {listed} of {total}
+        {listed} of {total}
       </Typography>
 
       <ProgressBar sx={{ mb: 4 }} variant="determinate" value={(listed * 100) / total} />

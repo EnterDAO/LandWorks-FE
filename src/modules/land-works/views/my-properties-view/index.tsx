@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import CardsGrid from 'components/custom/cards-grid';
 import Container from 'components/custom/container';
+import Skeleton from 'components/custom/skeleton';
 import { Box } from 'design-system';
 import useIsMetamaskConnected from 'hooks/useIsMetamaskConnected';
 import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
@@ -23,8 +24,25 @@ import MyPropertiesViewHeader from './MyPropertiesViewHeader';
 import MyPropertiesViewTabs from './MyPropertiesViewTabs';
 import NotListedTabContent from './NotListedTabContent';
 import RentedTabContent from './RentedTabContent';
-import useGetAccountAssetsQuery from './useGetAccountAssetsQuery';
-import useGetAccountNonListedAssetsQuery from './useGetAccountNotListedAssets';
+import useGetAllAccountAssetsQuery, { UserAssets } from './useGetAllAccountAssetsQuery';
+
+const useActiveTabId = ({ listed, rented, notListed }: Omit<UserAssets, 'unclaimed'>) => {
+  const routeTab = useMyPropertiesRouteTab();
+
+  return useMemo(() => {
+    if (routeTab) {
+      return routeTab;
+    }
+
+    if (notListed.length >= Math.max(listed.length, rented.length)) {
+      return MY_PROPERTIES_ROUTE_TABS.notListed;
+    } else if (rented.length >= Math.max(notListed.length, listed.length)) {
+      return MY_PROPERTIES_ROUTE_TABS.rented;
+    }
+
+    return MY_PROPERTIES_ROUTE_TABS.listed;
+  }, [routeTab, rented.length, listed.length, notListed.length]);
+};
 
 const useGridNumberOfColumns = (ref: RefObject<HTMLElement | null>, initialNumberOfColumns = 6) => {
   const [numberOfColumns, setNumberOfColumns] = useState(initialNumberOfColumns);
@@ -41,7 +59,6 @@ const useGridNumberOfColumns = (ref: RefObject<HTMLElement | null>, initialNumbe
 };
 
 const MyPropertiesView: FC = () => {
-  const tab = useMyPropertiesRouteTab();
   const history = useHistory();
   const wallet = useWallet();
   const listingModal = useListingModal();
@@ -49,23 +66,11 @@ const MyPropertiesView: FC = () => {
   const cardGridElRef = useRef<HTMLDivElement | null>(null);
   const numberOfCardsPerRow = useGridNumberOfColumns(cardGridElRef);
 
-  const { data: accountAssets, isLoading: areAssetsLoading } = useGetAccountAssetsQuery(
-    wallet.account || '',
-    metaverse
-  );
+  const { data, isLoading } = useGetAllAccountAssetsQuery(wallet.account || '', metaverse);
 
-  const { data: notListedAssets, isLoading: areNotListedAssetsLoading } = useGetAccountNonListedAssetsQuery(
-    wallet.account || '',
-    metaverse
-  );
-
-  useSyncActiveAssetTransactions({
-    ...accountAssets,
-    notListed: notListedAssets,
-  });
+  useSyncActiveAssetTransactions(data);
 
   const isMetamaskConnected = useIsMetamaskConnected();
-  const isLoading = areNotListedAssetsLoading || areAssetsLoading;
 
   useEffect(() => {
     if (wallet.disconnecting) {
@@ -95,32 +100,31 @@ const MyPropertiesView: FC = () => {
       {
         id: MY_PROPERTIES_ROUTE_TABS.rented,
         label: 'Rented',
-        total: isLoading ? 0 : accountAssets.rented.length,
-        content: <RentedTabContent assets={accountAssets.rented} />,
+        total: isLoading ? 0 : data.rented.length,
+        content: <RentedTabContent assets={data.rented} />,
       },
       {
         id: MY_PROPERTIES_ROUTE_TABS.listed,
         label: 'Listed',
-        total: isLoading ? 0 : accountAssets.listed.length,
-        content: <ListedTabContent assets={accountAssets.listed} />,
+        total: isLoading ? 0 : data.listed.length,
+        content: <ListedTabContent assets={data.listed} />,
       },
       {
         id: MY_PROPERTIES_ROUTE_TABS.notListed,
         label: 'Not listed',
-        total: isLoading ? 0 : notListedAssets.length,
-        content: <NotListedTabContent assets={notListedAssets} />,
+        total: isLoading ? 0 : data.notListed.length,
+        content: <NotListedTabContent assets={data.notListed} />,
       },
     ];
-  }, [accountAssets, notListedAssets, isLoading]);
+  }, [data.notListed, data.listed, data.rented, isLoading]);
 
-  const activeTab = tabs.find(({ id }) => id === tab) || tabs[0];
+  const activeTabId = useActiveTabId(data);
+  const activeTab = tabs.find(({ id }) => id === activeTabId) || tabs[0];
 
   const isRentedTab = activeTab.id === MY_PROPERTIES_ROUTE_TABS.rented;
   const isListedTab = activeTab.id === MY_PROPERTIES_ROUTE_TABS.listed;
 
-  const isFeedbackButtonVisible = accountAssets.listed.some(
-    (listedAsset) => listedAsset.status !== AssetStatus.WITHDRAWN
-  );
+  const isFeedbackButtonVisible = data.listed.some((listedAsset) => listedAsset.status !== AssetStatus.WITHDRAWN);
 
   return (
     <Container sx={{ pb: 24 }}>
@@ -137,7 +141,34 @@ const MyPropertiesView: FC = () => {
         py="18px"
       >
         <Box flex="1 0 auto">
-          <MyPropertiesViewTabs tabs={tabs} />
+          {isLoading ? (
+            <Box
+              display="flex"
+              gap={2}
+              sx={{
+                width: 1,
+                flexWrap: 'wrap',
+                '> *': {
+                  flex: '1 1 auto',
+                },
+                '@media (min-width: 700px)': {
+                  width: 'auto',
+                  flexWrap: 'nowrap',
+                  '> *': {
+                    flex: '0 0 auto',
+                  },
+                },
+              }}
+            >
+              {tabs.map((tab) => {
+                return (
+                  <Skeleton key={tab.id} width={120} height={45} variant="rectangular" sx={{ borderRadius: '8px' }} />
+                );
+              })}
+            </Box>
+          ) : (
+            <MyPropertiesViewTabs activeTabId={activeTabId} tabs={tabs} />
+          )}
         </Box>
 
         {isMetamaskConnected && (
