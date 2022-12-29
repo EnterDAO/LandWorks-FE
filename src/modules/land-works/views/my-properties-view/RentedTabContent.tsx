@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import CardsGrid from 'components/custom/cards-grid';
@@ -8,11 +8,10 @@ import { AssetEntity } from 'modules/land-works/api';
 import LandWorksCard from 'modules/land-works/components/land-works-card-explore-view';
 import LandWorksLoadingCard from 'modules/land-works/components/land-works-card-loading';
 import LandsWorksGridEmptyState from 'modules/land-works/components/land-works-grid-empty-state';
+import { useActiveAssetTransactions } from 'providers/ActiveAssetTransactionsProvider/ActiveAssetTransactionsProvider';
 import { getPropertyPath } from 'router/routes';
 
-import useExistingRentIdsInProgress from './useExistingRentIdsInProgress';
 import useMyPropertiesLoadMoreButton from './useMyPropertiesLoadMoreButton';
-import useRentIdsInProgress from './useRentIdsInProgress';
 import useSortAssets from './useSortAssets';
 
 import { filterLandsByQuery } from 'modules/land-works/utils';
@@ -28,16 +27,35 @@ const RentedTabContent: FC<RentedTabContentProps> = ({ assets }) => {
   const filteredAssets = filterLandsByQuery(assets, search);
   const sortedAssets = useSortAssets(filteredAssets);
   const [listedAssets, loadMoreButtonProps] = useMyPropertiesLoadMoreButton(sortedAssets);
+  const { rentingTransactionIds } = useActiveAssetTransactions();
 
-  const rentIdsInProgress = useRentIdsInProgress(assets);
-  const existLandIdRentInProgress = useExistingRentIdsInProgress(assets);
+  const { existingRentingAssetIds, newRentingAssetIds } = useMemo(() => {
+    const rentAssetIds = Object.keys(rentingTransactionIds);
+    const existingRentingAssetIds: string[] = [];
+    const newRentingAssetIds: string[] = [];
 
-  return assets.length > 0 || rentIdsInProgress.length > 0 ? (
+    rentAssetIds.forEach((assetId) => {
+      const foundAsset = assets.find((asset) => asset.id === assetId);
+
+      if (foundAsset) {
+        existingRentingAssetIds.push(assetId);
+      } else {
+        newRentingAssetIds.push(assetId);
+      }
+    });
+
+    return {
+      existingRentingAssetIds,
+      newRentingAssetIds,
+    };
+  }, [rentingTransactionIds, assets]);
+
+  return assets.length > 0 || newRentingAssetIds.length > 0 ? (
     <>
       <CardsGrid>
         {listedAssets.map((asset) => {
-          if (existLandIdRentInProgress.includes(asset.metaverseAssetId)) {
-            return <LandWorksLoadingCard key={asset.metaverseAssetId} title="Renting" />;
+          if (existingRentingAssetIds.includes(asset.id)) {
+            return <LandWorksLoadingCard key={asset.id} title="Renting" />;
           } else {
             return (
               <LandWorksCard
@@ -54,16 +72,16 @@ const RentedTabContent: FC<RentedTabContentProps> = ({ assets }) => {
           }
         })}
 
-        {rentIdsInProgress.map((rentIdInProgress) => {
-          return <LandWorksLoadingCard key={rentIdInProgress} title="Renting" />;
+        {newRentingAssetIds.map((assetId) => {
+          return <LandWorksLoadingCard key={assetId} title="Renting" />;
         })}
       </CardsGrid>
 
       <LoadMoreButton
         sx={{ mt: 10 }}
         {...loadMoreButtonProps}
-        listed={rentIdsInProgress.length + loadMoreButtonProps.listed}
-        total={rentIdsInProgress.length + loadMoreButtonProps.total}
+        listed={newRentingAssetIds.length + loadMoreButtonProps.listed}
+        total={newRentingAssetIds.length + loadMoreButtonProps.total}
       />
     </>
   ) : (

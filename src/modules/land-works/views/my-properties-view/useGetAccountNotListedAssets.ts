@@ -6,19 +6,14 @@ import { useContractRegistry } from 'modules/land-works/providers/contract-provi
 
 const initialData: BaseNFT[] = [];
 
-const useGetAccountNonListedAssetsQuery = (
-  account: string,
-  metaverse: string | number
-): { data: BaseNFT[]; isLoading: boolean } => {
-  const registry = useContractRegistry();
+const useGetAccountNonListedAssetsQuery = (account: string, metaverse: string | number) => {
+  const { landRegistryContract, estateRegistryContract, cryptoVoxelsContract } = useContractRegistry();
 
   const fetchAssets = useCallback(
     async (account: string, metaverse: number): Promise<BaseNFT[]> => {
       if (!account || !metaverse) {
         return [];
       }
-
-      const { landRegistryContract, estateRegistryContract, cryptoVoxelsContract } = registry;
 
       if (metaverse == 1) {
         const lands = await landRegistryContract?.getUserData(account);
@@ -33,14 +28,21 @@ const useGetAccountNonListedAssetsQuery = (
 
       return [];
     },
-    [registry, account, metaverse]
+    [landRegistryContract, estateRegistryContract, cryptoVoxelsContract]
   );
 
-  const { data } = useSWR(account ? [account, metaverse] : null, fetchAssets);
+  const {
+    data,
+    error,
+    mutate: refetch,
+  } = useSWR(account ? [account, metaverse] : null, fetchAssets, { refreshInterval: 5000 });
+
+  const isLoading = !data && !error;
 
   return {
     data: data || initialData,
-    isLoading: data === undefined,
+    isLoading,
+    refetch,
   };
 };
 

@@ -1,6 +1,5 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSubscription } from '@apollo/client';
-import useSWR from 'swr';
 
 import { AssetEntity, USER_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
 
@@ -23,7 +22,7 @@ const useGetAccountAssetsQuery = (
   isLoading: boolean;
   data: UserAssets;
 } => {
-  const { data: rawUserData, loading } = useSubscription<{ user: UserEntity }>(USER_SUBSCRIPTION, {
+  const { data: rawUserData } = useSubscription<{ user: UserEntity }>(USER_SUBSCRIPTION, {
     skip: !account,
     variables: {
       id: account.toLowerCase(),
@@ -31,11 +30,10 @@ const useGetAccountAssetsQuery = (
     },
   });
 
-  const getUserAssets = useCallback(async (user?: any): Promise<UserAssets> => {
-    if (!user) {
-      return initialUserAssets;
-    }
+  const [data, setData] = useState<UserAssets>();
+  const [error, setError] = useState();
 
+  const getUserAssets = useCallback(async (user: any): Promise<UserAssets> => {
     const {
       rents: rented = [],
       ownerAndConsumerAssets: listed = [],
@@ -49,15 +47,23 @@ const useGetAccountAssetsQuery = (
     };
   }, []);
 
-  const { data: userAssets = initialUserAssets } = useSWR<UserAssets>(
-    rawUserData?.user ? [rawUserData.user, 'user'] : null,
-    getUserAssets
-  );
+  useEffect(() => {
+    if (!rawUserData?.user) {
+      return;
+    }
 
-  const isLoading = (loading && !rawUserData) || userAssets === undefined;
+    getUserAssets(rawUserData.user)
+      .then((assets) => {
+        setData(assets);
+        setError(undefined);
+      })
+      .catch(setError);
+  }, [rawUserData]);
+
+  const isLoading = !data && !error;
 
   return {
-    data: userAssets,
+    data: data || initialUserAssets,
     isLoading,
   };
 };

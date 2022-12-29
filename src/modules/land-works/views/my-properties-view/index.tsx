@@ -10,6 +10,7 @@ import ClaimHistoryTable from 'modules/land-works/components/land-claim-history'
 import ClaimRewardsAlert from 'modules/land-works/components/land-claim-rents-alert';
 import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
 import PropertyCardSkeleton from 'modules/land-works/components/land-works-card-explore-view/PropertyCardSkeleton';
+import { useSyncActiveAssetTransactions } from 'providers/ActiveAssetTransactionsProvider/ActiveAssetTransactionsProvider';
 import { useListingModal } from 'providers/listing-modal-provider';
 import { APP_ROUTES, MY_PROPERTIES_ROUTE_TABS, useMyPropertiesRouteTab } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
@@ -52,10 +53,17 @@ const MyPropertiesView: FC = () => {
     wallet.account || '',
     metaverse
   );
+
   const { data: notListedAssets, isLoading: areNotListedAssetsLoading } = useGetAccountNonListedAssetsQuery(
     wallet.account || '',
     metaverse
   );
+
+  useSyncActiveAssetTransactions({
+    ...accountAssets,
+    notListed: notListedAssets,
+  });
+
   const isMetamaskConnected = useIsMetamaskConnected();
   const isLoading = areNotListedAssetsLoading || areAssetsLoading;
 

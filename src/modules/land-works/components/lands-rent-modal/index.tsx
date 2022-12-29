@@ -14,8 +14,7 @@ import { CalendarIcon, ProfileIcon, WarningIcon } from 'design-system/icons';
 import { ModalProps } from 'design-system/Modal/Modal';
 import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import { addExistingRentIdsInProgress } from 'modules/land-works/views/my-properties-view/useExistingRentIdsInProgress';
-import { addRentIdsInProgress } from 'modules/land-works/views/my-properties-view/useRentIdsInProgress';
+import { useActiveAssetTransactions } from 'providers/ActiveAssetTransactionsProvider/ActiveAssetTransactionsProvider';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 import { MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath } from 'router/routes';
@@ -50,17 +49,8 @@ const RentTransactionMessage = 'Renting property...';
 
 // TODO: refactor
 export const RentModal: React.FC<Props> = (props) => {
-  const {
-    availability,
-    assetId,
-    pricePerSecond,
-    paymentToken,
-    metaverseAssetId,
-    metaverseRegistry,
-    onCancel,
-    onSubmit,
-    ...modalProps
-  } = props;
+  const { availability, assetId, pricePerSecond, paymentToken, metaverseRegistry, onCancel, onSubmit, ...modalProps } =
+    props;
 
   // added one minute each to be able to choose if MIN & MAX
   const { startDate, minEndDate, maxEndDate } = useMemo(() => {
@@ -91,6 +81,7 @@ export const RentModal: React.FC<Props> = (props) => {
 
   const [approveDisabled, setApproveDisabled] = useState(false);
   const [rentDisabled, setRentDisabled] = useState(false);
+  const { addRentingTransaction, deleteRentingTransaction } = useActiveAssetTransactions();
 
   const isEndDateInvalid = !!endDate && isNaN(+endDate);
 
@@ -215,11 +206,6 @@ export const RentModal: React.FC<Props> = (props) => {
     }
 
     try {
-      if (metaverseAssetId) {
-        addRentIdsInProgress(metaverseAssetId);
-        addExistingRentIdsInProgress(metaverseAssetId);
-      }
-
       setTransactionLoading(true);
 
       const bnPeriod = new BigNumber(period);
@@ -235,9 +221,10 @@ export const RentModal: React.FC<Props> = (props) => {
           maxRentStart,
           paymentToken.id,
           value,
-          () => {
+          (txHash: string) => {
             onSubmit();
             setModalText(RentTransactionMessage);
+            addRentingTransaction(assetId, txHash);
           }
         );
       } else {
@@ -249,9 +236,10 @@ export const RentModal: React.FC<Props> = (props) => {
           maxRentStart,
           paymentToken.id,
           value,
-          () => {
+          (txHash: string) => {
             onSubmit();
             setModalText(RentTransactionMessage);
+            addRentingTransaction(assetId, txHash);
           }
         );
         erc20Contract?.loadAllowance(config.contracts.landworksContract);
@@ -259,10 +247,10 @@ export const RentModal: React.FC<Props> = (props) => {
       setTransactionLoading(false);
       setSuccessTrunsaction(true);
     } catch (e) {
-      localStorage.removeItem('RENT_IN_PROGRESS');
-      localStorage.removeItem('EXIST_RENT_IN_PROGRESS');
       showToastNotification(ToastType.Error, 'There was an error while renting the property.');
       setTransactionLoading(false);
+      deleteRentingTransaction(assetId);
+
       console.log(e);
     }
   };

@@ -23,6 +23,7 @@ import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-modal';
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 import { useMetaverseQueryParam } from 'modules/land-works/views/my-properties-view/MetaverseSelect';
+import { useActiveAssetTransactions } from 'providers/ActiveAssetTransactionsProvider/ActiveAssetTransactionsProvider';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 import { MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath } from 'router/routes';
@@ -75,6 +76,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const landworks = useLandworks();
   const registry = useContractRegistry();
   const getIsMounted = useGetIsMounted();
+  const { addListingTransaction, deleteListingTransaction } = useActiveAssetTransactions();
 
   const history = useHistory();
 
@@ -347,21 +349,26 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
 
     try {
       setShowSignModal(true);
-      const txReceipt = await landWorksContract?.list(
-        selectedMetaverse,
-        metaverseRegistry,
-        id,
-        minPeriod,
-        maxPeriod,
-        maxFutureTime,
-        paymentToken.id,
-        pricePerSecond.toFixed(0),
-        () => {
-          setListModalMessage(MineTransactionMessage);
-        }
-      );
 
-      localStorage.setItem('LISTING_IN_PROGRESS', id);
+      const txReceipt = await landWorksContract
+        ?.list(
+          selectedMetaverse,
+          metaverseRegistry,
+          id,
+          minPeriod,
+          maxPeriod,
+          maxFutureTime,
+          paymentToken.id,
+          pricePerSecond.toFixed(0),
+          (txHash) => {
+            addListingTransaction(id, txHash);
+
+            setListModalMessage(MineTransactionMessage);
+          }
+        )
+        .then((txReceipt) => {
+          return txReceipt;
+        });
 
       setListedPropertyId(txReceipt.events['List'].returnValues[0]);
 
@@ -373,6 +380,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
       setShowSignModal(false);
       setListDisabled(false);
       showToastNotification(ToastType.Error, 'There was an error while listing the property.');
+      deleteListingTransaction(id);
       console.log(e);
 
       return;
