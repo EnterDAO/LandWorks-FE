@@ -1,4 +1,4 @@
-import { ConsumerProps, Context, createContext, useContext } from 'react';
+import { ConsumerProps, Context, Provider, createContext, useContext } from 'react';
 
 const defaultValue = undefined;
 type DefaultValue = undefined;
@@ -26,4 +26,15 @@ export const createSafeConsumer = <T>(
   };
 
   return SafeConsumer;
+};
+
+export const createDataProvider = <D>() => {
+  const Context = createSafeContext<D>();
+  const useData = () => useSafeContext(Context);
+
+  return {
+    Context,
+    useData,
+    DataProvider: Context.Provider as Provider<D>,
+  };
 };
