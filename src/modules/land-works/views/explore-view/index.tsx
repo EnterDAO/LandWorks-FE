@@ -9,7 +9,9 @@ import LandsExploreFilters from 'modules/land-works/components/lands-explore-fil
 import { statusData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import { useRentStatusQueryParam } from 'modules/land-works/components/lands-explore-filters/rent-status-select';
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
+import { useMetaverseQueryParam } from 'modules/land-works/components/MetaverseSelect/MetaverseSelect';
 import usePriceQueryParams from 'modules/land-works/components/price-popover/usePriceQueryParams';
+import { METAVERSES } from 'modules/land-works/data/metaverses';
 import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-tile';
 import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
@@ -21,7 +23,6 @@ import {
   fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   fetchTokenPayments,
 } from '../../api';
-import { useMetaverseQueryParam } from '../my-properties-view/MetaverseSelect';
 import ExploreMap from './ExploreMap';
 
 import {
@@ -89,7 +90,7 @@ const ExploreView: React.FC = () => {
     owner: '',
   });
 
-  const [metaverse, setMetaverse] = useMetaverseQueryParam();
+  const [metaverse] = useMetaverseQueryParam();
   const orderFilter =
     sessionFilters.order && sessionFilters.order[`${metaverse}`] ? sessionFilters.order[`${metaverse}`] - 1 : 0;
   const [sortDir, setSortDir] = useState(sortDirections[orderFilter]);
@@ -164,14 +165,13 @@ const ExploreView: React.FC = () => {
     setSortColumn(sortColumns[sortIndex]);
   };
 
-  const onChangeMetaverse = (index: string) => {
-    setMetaverse(+index);
+  useEffect(() => {
     setMoreFilters(null);
-  };
+  }, [metaverse]);
 
   const getLands = useCallback(
     async (
-      metaverse: number,
+      metaverse: string,
       orderColumn: string,
       sortDir: 'asc' | 'desc',
       lastRentEnd: string,
@@ -193,7 +193,7 @@ const ExploreView: React.FC = () => {
       const normalizedMaxPrice = maxPrice ? parsePriceToNonHuman(maxPrice, paymentToken?.decimals) : undefined;
 
       const lands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
-        String(metaverse),
+        metaverse,
         lastRentEnd,
         sortBySize ? 'totalRents' : orderColumn,
         sortDir,
@@ -209,7 +209,8 @@ const ExploreView: React.FC = () => {
       setCoordinatesHighlights(highlights);
       setPointMapCentre(highlights);
 
-      if (metaverse === 1) {
+      // TODO: refactor it to support new metaverses
+      if (metaverse === METAVERSES.Decentraland) {
         setMaxLandSize(getMaxLandSize(lands.data));
       } else {
         setMaxHeight(getMaxHeight(lands.data));
@@ -223,7 +224,7 @@ const ExploreView: React.FC = () => {
 
   useEffect(() => {
     getLands(
-      Number(metaverse),
+      metaverse,
       sortColumn,
       sortDir,
       lastRentEnd,
@@ -271,7 +272,6 @@ const ExploreView: React.FC = () => {
           <LandsExploreFilters
             handleMoreFilter={setMoreFilters}
             onChangeSortDirection={onChangeFiltersSortDirection}
-            onChangeMetaverse={onChangeMetaverse}
             maxLandSize={maxLandSize}
             maxHeight={maxHeight}
             maxArea={maxArea}
@@ -291,7 +291,7 @@ const ExploreView: React.FC = () => {
             </Box>
 
             <ExploreMap
-              type={metaverse}
+              metaverse={metaverse}
               positionX={atlasMapX}
               positionY={atlasMapY}
               highlights={coordinatesHighlights}

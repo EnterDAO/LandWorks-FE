@@ -1,16 +1,18 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 
 import { BaseNFT, DecentralandNFT } from 'modules/interface';
+import { METAVERSES } from 'modules/land-works/data/metaverses';
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 
 const useGetAccountNonListedAssetsQuery = (
   account: string,
-  metaverse: string | number
+  metaverse: string
 ): { data: BaseNFT[]; isLoading: boolean } => {
   const registry = useContractRegistry();
   const [data, setData] = useState<BaseNFT[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // TODO: move logic in hook
   const fetchAssets = useCallback(async (): Promise<BaseNFT[]> => {
     if (!account || !metaverse) {
       return [];
@@ -18,12 +20,13 @@ const useGetAccountNonListedAssetsQuery = (
 
     const { landRegistryContract, estateRegistryContract, cryptoVoxelsContract } = registry;
 
-    if (metaverse == 1) {
-      const lands = await landRegistryContract?.getUserData(account);
-      const estates = (await estateRegistryContract?.getUserData(account)).filter((e: DecentralandNFT) => e.size > 0);
+    if (metaverse === METAVERSES.Decentraland) {
+      const lands = (await landRegistryContract?.getUserData(account)) || [];
+      const estates =
+        (await estateRegistryContract?.getUserData(account)).filter((e: DecentralandNFT) => e.size > 0) || [];
 
-      return [...(lands || []), ...(estates || [])];
-    } else if (metaverse == 2) {
+      return [...lands, ...estates];
+    } else if (metaverse === METAVERSES.Voxels) {
       const cryptoVoxels = await cryptoVoxelsContract?.getUserData(account);
 
       return cryptoVoxels || [];

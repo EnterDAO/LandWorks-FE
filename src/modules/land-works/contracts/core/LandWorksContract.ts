@@ -33,7 +33,7 @@ export default class LandWorksContract extends Web3Contract {
    * @param callback Function, executed once the transaction has been submitted
    */
   list(
-    metaverseId: BigNumber | number,
+    metaverseId: BigNumber | number | string,
     metaverseRegistry: string,
     metaverseAssetId: BigNumber | string,
     minPeriod: BigNumber,

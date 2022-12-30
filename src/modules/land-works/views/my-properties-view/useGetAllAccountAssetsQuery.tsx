@@ -11,7 +11,7 @@ export interface UserAssets {
   unclaimed: AssetEntity[];
 }
 
-const useGetAllAccountAssetsQuery = (account: string, metaverse: number): { data: UserAssets; isLoading: boolean } => {
+const useGetAllAccountAssetsQuery = (account: string, metaverse: string): { data: UserAssets; isLoading: boolean } => {
   const { data: accountAssets, isLoading: areAssetsLoading } = useGetAccountAssetsQuery(account, metaverse);
   const { data: notListedAssets, isLoading: areNotListedAssetsLoading } = useGetAccountNonListedAssetsQuery(
     account,

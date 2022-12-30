@@ -1,20 +1,20 @@
-import React, { FC, useLayoutEffect, useState } from 'react';
+import React, { ComponentType, useLayoutEffect, useState } from 'react';
 
 import { ReactComponent as MinimizeIcon } from 'assets/icons/minimize.svg';
+import Typography from 'components/common/Typography';
 import { Box, Stack } from 'design-system';
 import { MinusIcon, PlusThinIcon, ViewAllIcon } from 'design-system/icons';
 import { LandsExploreMapBaseProps } from 'modules/interface';
 import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
 import LandsExploreMapVoxels from 'modules/land-works/components/lands-explore-map-voxels';
+import { METAVERSES, MetaverseId } from 'modules/land-works/data/metaverses';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import MapControlButton from './MapControlButton';
 import ToggleMapVisibilityButton from './ToggleMapVisibilityButton';
 
-import { VOXEL_METAVERSE } from 'modules/land-works/constants';
-
 interface ExploreMapProps extends Omit<LandsExploreMapBaseProps, 'zoom' | 'onZoom'> {
-  type: number;
+  metaverse: string;
   isMapVisible?: boolean;
   onShowMap?: () => void;
   onHideMap?: () => void;
@@ -22,7 +22,13 @@ interface ExploreMapProps extends Omit<LandsExploreMapBaseProps, 'zoom' | 'onZoo
 
 const ZOOM_STEP = 0.2;
 
-const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHideMap, ...mapProps }) => {
+const metaverseMapComponentsById: Record<MetaverseId, ComponentType<LandsExploreMapBaseProps>> = {
+  [METAVERSES.Decentraland]: LandsExploreMap,
+  [METAVERSES.Voxels]: LandsExploreMapVoxels,
+};
+
+// TODO: refactor
+const ExploreMap = ({ metaverse, isMapVisible, onShowMap, onHideMap, ...mapProps }: ExploreMapProps) => {
   const stickyOffset = useStickyOffset();
   const [zoom, setZoom] = useState(0.5);
   const [isMapMaximized, setIsMapMaximized] = useState(false);
@@ -54,7 +60,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
 
   const toggleIsMapMaximized = () => setIsMapMaximized((prevIsMapMaximized) => !prevIsMapMaximized);
 
-  const MapComponent = type === +VOXEL_METAVERSE ? LandsExploreMapVoxels : LandsExploreMap;
+  const MapComponent = metaverseMapComponentsById[metaverse as MetaverseId];
 
   const mapOffsetTop = stickyOffset.offsets.filter + stickyOffset.offsets.header;
 
@@ -102,6 +108,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
         }
       >
         <ToggleMapVisibilityButton active={isMapVisible} onClick={isMapVisible ? onHideMap : onShowMap} />
+
         {isMapVisible && (
           <Box
             position="relative"
@@ -110,15 +117,23 @@ const ExploreMap: FC<ExploreMapProps> = ({ type, isMapVisible, onShowMap, onHide
             height={1}
             width={1}
             zIndex={0}
-            bgcolor="#662363"
+            bgcolor="var(--theme-card-color)"
           >
-            <MapComponent {...mapProps} enableTooltips={isMapMaximized} zoom={zoom} onZoom={handleZoom} />
+            {MapComponent ? (
+              <>
+                <MapComponent {...mapProps} enableTooltips={isMapMaximized} zoom={zoom} onZoom={handleZoom} />
 
-            <Stack spacing={2} position="absolute" right={20} top={20}>
-              <MapControlButton disabled={zoom === 1} onClick={zoomIn} icon={PlusThinIcon} />
-              <MapControlButton disabled={zoom === 0} onClick={zoomOut} icon={MinusIcon} />
-              <MapControlButton onClick={toggleIsMapMaximized} icon={isMapMaximized ? MinimizeIcon : ViewAllIcon} />
-            </Stack>
+                <Stack spacing={2} position="absolute" right={20} top={20}>
+                  <MapControlButton disabled={zoom === 1} onClick={zoomIn} icon={PlusThinIcon} />
+                  <MapControlButton disabled={zoom === 0} onClick={zoomOut} icon={MinusIcon} />
+                  <MapControlButton onClick={toggleIsMapMaximized} icon={isMapMaximized ? MinimizeIcon : ViewAllIcon} />
+                </Stack>
+              </>
+            ) : (
+              <Typography position="absolute" top={0} left={0} right={0} bottom={0} margin="auto">
+                Map is not implemented yet
+              </Typography>
+            )}
           </Box>
         )}
       </Box>

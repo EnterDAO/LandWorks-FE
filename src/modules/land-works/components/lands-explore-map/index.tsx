@@ -243,7 +243,7 @@ const LandsExploreMap: FC<LandExploreMap> = ({
   const atlasZoom = lerp(MIN_SIZE, MAX_SIZE, zoom);
 
   return (
-    <Box ref={containerRef} className={styles.root}>
+    <Box ref={containerRef} bgcolor="#662363" className={styles.root}>
       <Atlas
         tiles={mapTiles}
         x={positionX}

@@ -3,6 +3,8 @@ import BigNumber from 'bignumber.js';
 
 import { SortDirection } from 'modules/land-works/models/SortDirection';
 
+import { METAVERSES } from './data/metaverses';
+
 import {
   DAY_IN_SECONDS,
   HOUR_IN_SECONDS,
@@ -207,20 +209,19 @@ export const listNotificationMessage = [
   'There is a network fee in order to list the property.',
 ];
 
-export const listTypes = [
-  [],
-  [
+export const listTypes: Record<string, { value: number; label: string }[]> = {
+  [METAVERSES.Decentraland]: [
     { value: 0, label: 'All types' },
     { value: 1, label: 'Land' },
     { value: 2, label: 'Estate' },
   ],
-  [
+  [METAVERSES.Voxels]: [
     { value: 0, label: 'All types' },
     { value: 1, label: 'Parcel' },
     { value: 2, label: 'Unit' },
     { value: 3, label: 'Inner' },
   ],
-];
+};
 
 export enum RentStatus {
   All = 0,

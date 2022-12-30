@@ -1,75 +1,56 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { Zoom } from '@mui/material';
 
 import { ReactComponent as RoundPlusIcon } from 'assets/icons/round-plus.svg';
 import SearchBar from 'components/custom/search-bar';
 import { Box, ControlledSelect, Divider, Typography } from 'design-system';
 import { FiltersIcon } from 'design-system/icons';
-import { Option } from 'modules/interface';
-import { fetchMetaverses } from 'modules/land-works/api';
+import { METAVERSES } from 'modules/land-works/data/metaverses';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import { DecentralandFiltersModal, VoxelFiltersModal } from '../lands-explore-filters-modal';
+import MetaverseSelect from '../MetaverseSelect';
+import { useMetaverseQueryParam } from '../MetaverseSelect/MetaverseSelect';
 import { PricePopover } from '../price-popover';
-import { addIconToMetaverse, landsData, sortData } from './filters-data';
+import { sortData } from './filters-data';
 import RentStatusSelect from './rent-status-select';
 import { StyledButton } from './styled';
-
-import { sessionStorageHandler } from 'utils';
 
 import { MoreFiltersType } from '../lands-explore-filters-modal/types';
 
 interface Props {
   onChangeSortDirection: (value: number) => void;
-  onChangeMetaverse: (value: string) => void;
   handleMoreFilter: (value: Partial<MoreFiltersType>) => void;
   maxLandSize: number;
   maxHeight: number;
   maxArea: number;
 }
 
-const LandWorksFilters: FC<Props> = ({
-  onChangeSortDirection,
-  onChangeMetaverse,
-  maxLandSize,
-  handleMoreFilter,
-  maxHeight,
-  maxArea,
-}) => {
+// TODO: refactor
+const LandWorksFilters: FC<Props> = ({ onChangeSortDirection, maxLandSize, handleMoreFilter, maxHeight, maxArea }) => {
   const stickyOffset = useStickyOffset();
-  const orderFilter = sessionStorageHandler('get', 'explore-filters', 'order');
+  const [metaverse] = useMetaverseQueryParam();
   const [isMetaverseFiltersActive, setIsMetaverseFiltersActive] = useState(false);
 
-  const [selectedMetaverse, setSelectedMetaverse] = useState(sessionStorageHandler('get', 'general', 'metaverse') || 1);
   const [openDecentralandFiltersModal, setOpenDecentralandFilterModal] = useState(false);
   const [openVoxelFiltersModal, setOpenVoxelFilterModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(1);
-  const [metaverses, setMetaverses] = useState<Option[]>(landsData);
-  const voxelsSortData = sortData.slice(0, sortData.length - 1);
-
-  const onChangePlaceHandler = (value: number) => {
-    sessionStorageHandler('set', 'general', 'metaverse', value);
-    onChangeMetaverse(`${value}`);
-    setSelectedMetaverse(value);
-    // TODO:: some filtering here
-  };
 
   const onChangeSortDirectionHandler = (value: number) => {
     setSelectedOrder(value);
     onChangeSortDirection(value);
-    sessionStorageHandler('set', 'explore-filters', 'order', {
-      ...orderFilter,
-      [`${selectedMetaverse}`]: value,
-    });
   };
 
-  useEffect(() => {
-    setSelectedOrder(orderFilter && orderFilter[`${selectedMetaverse}`] ? orderFilter[`${selectedMetaverse}`] : 1);
-  }, [selectedMetaverse]);
+  const handleFiltersButtonClick = () => {
+    const setOpenFilterModal = {
+      [METAVERSES.Decentraland]: setOpenDecentralandFilterModal,
+      [METAVERSES.Voxels]: setOpenVoxelFilterModal,
+    }[metaverse];
 
-  useEffect(() => {
-    fetchMetaverses().then((res) => setMetaverses(addIconToMetaverse(res)));
-  }, []);
+    if (setOpenFilterModal) {
+      setOpenFilterModal(true);
+    }
+  };
 
   return (
     <Box
@@ -102,7 +83,7 @@ const LandWorksFilters: FC<Props> = ({
               },
             }}
           >
-            <ControlledSelect value={Number(selectedMetaverse)} onChange={onChangePlaceHandler} options={metaverses} />
+            <MetaverseSelect />
 
             <PricePopover text="Price" />
 
@@ -112,7 +93,7 @@ const LandWorksFilters: FC<Props> = ({
               width="12.5rem"
               value={selectedOrder}
               onChange={onChangeSortDirectionHandler}
-              options={selectedMetaverse == 1 ? sortData : voxelsSortData}
+              options={sortData}
             />
           </Box>
 
@@ -122,9 +103,7 @@ const LandWorksFilters: FC<Props> = ({
               sx={{
                 width: 52,
               }}
-              onClick={() =>
-                selectedMetaverse == 1 ? setOpenDecentralandFilterModal(true) : setOpenVoxelFilterModal(true)
-              }
+              onClick={handleFiltersButtonClick}
             >
               <FiltersIcon height={24} width={24} />
               <Zoom in={isMetaverseFiltersActive}>

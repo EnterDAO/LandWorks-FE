@@ -14,29 +14,30 @@ import { Box, Button, Checkbox, ControlledSelect, Grid, Stack, Typography } from
 import { WarningIcon } from 'design-system/icons';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import useGetIsMounted from 'hooks/useGetIsMounted';
-import { BaseNFT, CryptoVoxelNFT, DecentralandNFT, Option } from 'modules/interface';
+import { BaseNFT, CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
 import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
-import { addIconToMetaverse, currencyData } from 'modules/land-works/components/lands-explore-filters/filters-data';
+import { currencyData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-modal';
+import { METAVERSES } from 'modules/land-works/data/metaverses';
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
-import { useMetaverseQueryParam } from 'modules/land-works/views/my-properties-view/MetaverseSelect';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 import { MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath } from 'router/routes';
 
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
-import { PaymentToken, createAssetAdvertisement, fetchMetaverses, fetchTokenPayments } from '../../api';
+import { PaymentToken, createAssetAdvertisement, fetchTokenPayments } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
+import MetaverseSelect, { useMetaverseQueryParam } from '../MetaverseSelect';
 import AssetList from './AssetList';
 import LoadingAssetList from './LoadingAssetList';
 
 import { parseVoxelsAsset } from 'modules/land-works/utils';
-import { getTimeType, secondsToDuration, sessionStorageHandler } from 'utils';
+import { getTimeType, secondsToDuration } from 'utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
 
 import {
@@ -123,8 +124,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const [usdPrice, setUsdPrice] = useState('0');
 
   const [loading, setLoading] = useState(false);
-  const [availableMetaverses, setAvailableMetaverses] = useState<Option[]>([]);
-  const [selectedMetaverse, setSelectedMetaverse] = useMetaverseQueryParam();
+  const [selectedMetaverse] = useMetaverseQueryParam();
 
   const [activeStep, setActiveStep] = useState(0);
   const [showApproveModal, setShowApproveModal] = useState(false);
@@ -135,8 +135,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const [isLandProvidedForAdvertisement, setIsLandProvidedForAdvertisement] = useState(true);
   const [isCreatingAssetAdvertisement, setIsCreatingAssetAdvertisement] = useState(false);
 
-  const [filteredVoxels, setFilteredVoxels] = useState<CryptoVoxelNFT[]>([]);
-
   const [listModalMessage, setListModalMessage] = useState(SignTransactionMessage);
 
   const pricePerSecond = getNonHumanValue(tokenCost || BigNumber.ZERO, paymentToken.decimals).dividedBy(DAY_IN_SECONDS);
@@ -144,10 +142,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const handlePropertyChange = (selectedLand: BaseNFT) => {
     setSelectedProperty(selectedLand);
   };
-
-  useEffect(() => {
-    fetchMetaverses().then((res) => setAvailableMetaverses(addIconToMetaverse(res)));
-  }, []);
 
   const isDecentraland = selectedProperty?.metaverseName === 'Decentraland';
   const isVoxels = selectedProperty?.metaverseName === 'Voxels';
@@ -426,8 +420,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
       setAssetEstates(estates);
       if (cryptoVoxels) {
         const parsedVoxels = await parseVoxelsAsset(cryptoVoxels);
+
         setCryptoVoxelParcels(parsedVoxels);
-        setFilteredVoxels(parsedVoxels);
       }
     } catch (e) {
       console.log(e);
@@ -570,27 +564,15 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
     setSelectedProperty(null);
   }, [selectedMetaverse, asset]);
 
-  const onChangeMetaverse = (value: number) => {
-    setSelectedMetaverse(value);
-  };
+  useEffect(() => {
+    setLandType(0);
+  }, [selectedMetaverse]);
 
   const onChangeType = (value: number) => {
     setLandType(value);
   };
 
   const showPriceInUsd = `$${usdPrice}`;
-
-  const getPropertyCountForMetaverse = () => {
-    if (selectedMetaverse === 1) {
-      return landType === 0
-        ? assetProperties.length + assetEstates.length
-        : landType === 1
-        ? assetProperties.length
-        : assetEstates.length;
-    } else {
-      return cryptoVoxelParcels.length;
-    }
-  };
 
   const handleCoords = () => {
     if (selectedProperty && isVoxels && (selectedProperty as CryptoVoxelNFT)) {
@@ -605,18 +587,15 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
     }
   };
 
-  const onTypeChange = () => {
+  const filteredVoxels = useMemo(() => {
     if (landType === 0) {
-      setFilteredVoxels(cryptoVoxelParcels);
+      return cryptoVoxelParcels;
     }
-    if (selectedMetaverse === 2 && landType !== 0) {
-      setFilteredVoxels(
-        cryptoVoxelParcels.filter(
-          (l) => l.type?.toLowerCase() === listTypes[selectedMetaverse][landType].label.toLowerCase()
-        )
-      );
-    }
-  };
+
+    return cryptoVoxelParcels.filter(
+      (l) => l.type?.toLowerCase() === listTypes[selectedMetaverse][landType].label.toLowerCase()
+    );
+  }, [cryptoVoxelParcels, landType]);
 
   const filteredDecentralandProperties = useMemo(() => {
     if (landType === 1) {
@@ -627,10 +606,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
 
     return [...assetProperties, ...assetEstates];
   }, [landType, assetProperties, assetEstates]);
-
-  useEffect(() => {
-    onTypeChange();
-  }, [landType]);
 
   const handleNextButtonClick = async () => {
     if (step.id === StepId.Advertisement) {
@@ -660,7 +635,11 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
     }
   };
 
-  const properties = selectedMetaverse === 1 ? filteredDecentralandProperties : filteredVoxels;
+  const assets =
+    {
+      [METAVERSES.Decentraland]: filteredDecentralandProperties,
+      [METAVERSES.Voxels]: filteredVoxels,
+    }[selectedMetaverse] || [];
 
   const steps: {
     id: StepId;
@@ -694,7 +673,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
         warning:
           'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
       },
-      ...(selectedMetaverse === 1
+      // NOTE: we should probably add flag like `hadAdvertizement` in metaverse object
+      ...(selectedMetaverse === METAVERSES.Decentraland
         ? [
             {
               id: StepId.Advertisement,
@@ -747,12 +727,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
           {step.id === StepId.Asset && (
             <>
               <Box display="flex" gap={4} mb={2}>
-                <ControlledSelect
-                  width="290px"
-                  value={selectedMetaverse}
-                  onChange={onChangeMetaverse}
-                  options={availableMetaverses}
-                />
+                <MetaverseSelect width="290px" />
+
                 <Box>
                   <ControlledSelect
                     width="190px"
@@ -767,9 +743,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                 {loading && <LoadingAssetList />}
 
                 {!loading &&
-                  (properties.length > 0 ? (
+                  (assets.length > 0 ? (
                     <AssetList
-                      assets={properties}
+                      assets={assets}
                       selectedAssetId={selectedProperty?.id}
                       onSelectAsset={handlePropertyChange}
                     />
@@ -916,7 +892,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                       paymentToken={paymentToken}
                       feeText="There is small fee upon listing the property."
                       withoutText
-                      metaverse={availableMetaverses[selectedMetaverse - 1]}
+                      metaverse={selectedMetaverse}
                       name={selectedProperty.name}
                       coordinatesChild={handleCoords()}
                       isEstate={!(selectedProperty as DecentralandNFT).isLAND}
@@ -948,7 +924,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
               <Typography variant="body2" color="var(--theme-subtle-color)">
                 Found in Wallet{' '}
                 <Typography component="span" variant="inherit" color="var(--theme-light-color)">
-                  {getPropertyCountForMetaverse()} Lands
+                  {assets.length} Lands
                 </Typography>
               </Typography>
             ) : (
@@ -1017,7 +993,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             showShareButton={true}
             showModal={showSuccessModal}
             handleClose={() => {
-              sessionStorageHandler('set', 'general', 'metaverse', selectedMetaverse);
               localStorage.setItem('join_prompt', 'true');
               setShowSuccessModal(false);
               closeModal && closeModal();

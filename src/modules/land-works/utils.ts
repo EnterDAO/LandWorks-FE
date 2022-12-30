@@ -5,6 +5,7 @@ import { getCryptoVoxelsAsset } from 'helpers/helpers';
 import { CryptoVoxelNFT, CryptoVoxelXYcoords, VoxelsMapCollection, VoxelsTileType } from 'modules/interface';
 
 import { AssetEntity, CoordinatesLand, CoordinatesLandWithLandId } from './api';
+import { METAVERSES } from './data/metaverses';
 
 import { getNowTs, isDecentralandMetaverseRegistry, isVoxelsRegistry } from 'utils';
 
@@ -232,13 +233,14 @@ export const getMaxHeight = (lands: AssetEntity[]): number => {
   return Math.max(...lands.map((land) => land.attributes.height));
 };
 
+// TODO: make somekind of adapter for filtering assets for new metaverses
 export const filterByMoreFilters = (
   lands: AssetEntity[],
   filters: Partial<MoreFiltersType>,
   metaverse: string | number
 ): AssetEntity[] => {
   return lands.filter((item) => {
-    return +metaverse === 1 ? decentralandFilter(item, filters) : voxelsFilter(item, filters);
+    return metaverse === METAVERSES.Decentraland ? decentralandFilter(item, filters) : voxelsFilter(item, filters);
   });
 };
 

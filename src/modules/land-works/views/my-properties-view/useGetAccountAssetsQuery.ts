@@ -15,7 +15,7 @@ const initialUser: UserEntity = {
 
 const useGetAccountAssetsQuery = (
   account: string,
-  metaverse: string | number
+  metaverse: string
 ): {
   isLoading: boolean;
   data: {
@@ -30,7 +30,7 @@ const useGetAccountAssetsQuery = (
     skip: !account,
     variables: {
       id: account.toLowerCase(),
-      metaverse: `${metaverse}`,
+      metaverse: metaverse,
     },
   });
 

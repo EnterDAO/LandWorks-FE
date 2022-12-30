@@ -8,8 +8,11 @@ import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { Tooltip } from 'design-system';
 import { Box, Grid, Typography } from 'design-system';
 import { getTokenIconName } from 'helpers/helpers';
-import { Option } from 'modules/interface';
 import { AssetEntity, PaymentToken } from 'modules/land-works/api';
+import { METAVERSES } from 'modules/land-works/data/metaverses';
+import useMetaverseById from 'modules/land-works/hooks/useMetaverseById';
+
+import MetaverseIcon from '../MetaverseIcon';
 
 import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
 
@@ -29,7 +32,7 @@ interface IListNewSummary {
   feeText: string;
   asset?: AssetEntity;
   withoutText?: boolean;
-  metaverse?: Option;
+  metaverse?: string;
   coordinatesChild?: React.ReactNode;
   name?: string;
   isEstate?: boolean;
@@ -63,6 +66,8 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   const days = DAY_IN_SECONDS;
   const weeks = WEEK_IN_SECONDS;
   const months = MONTH_IN_SECONDS;
+
+  const currentMetaverse = useMetaverseById(metaverse || '');
 
   const getCalcByTimeSelection = (n: number, t: string) => {
     if (n !== undefined && n !== 1) {
@@ -153,20 +158,19 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
                 )}
               </div>
             </Grid>
-            {metaverse && (
+            {currentMetaverse && (
               <Grid item xs={6} display="flex" flexDirection="column">
                 Metaverse
                 <Box component="p" display="flex" alignItems="center">
-                  {metaverse.icon && (
-                    <Box display="inline-flex" mr={1} sx={{ img: { width: 15, height: 15 } }}>
-                      {metaverse.icon}
-                    </Box>
-                  )}
-                  {metaverse.label}
+                  <Box display="inline-flex" mr={1} sx={{ img: { width: 15, height: 15 } }}>
+                    <MetaverseIcon metaverseId={currentMetaverse.id} size={20} />
+                  </Box>
+
+                  {currentMetaverse.name}
                 </Box>
               </Grid>
             )}
-            {metaverse?.value == 1 && (
+            {currentMetaverse?.id === METAVERSES.Decentraland && (
               <Grid item xs={12} display="flex" flexDirection="column">
                 <Typography variant="inherit" component="span" display="inline-flex" alignItems="center" gap="4px">
                   {sceneDetail.label}

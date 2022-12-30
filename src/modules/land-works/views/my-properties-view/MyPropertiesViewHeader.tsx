@@ -1,7 +1,7 @@
 import SearchBar from 'components/custom/search-bar';
 import { Box, Divider, Typography } from 'design-system';
+import MetaverseSelect from 'modules/land-works/components/MetaverseSelect';
 
-import MetaverseSelect from './MetaverseSelect';
 import SortSelect from './SortSelect';
 
 const MyPropertiesViewHeader = () => {
