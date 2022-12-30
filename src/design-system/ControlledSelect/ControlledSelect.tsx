@@ -8,8 +8,8 @@ import { Option } from 'modules/interface';
 
 import { StyledButton, StyledListbox, StyledOption, StyledPopper } from './styled';
 
-function CustomSelect(props: SelectUnstyledProps<number>) {
-  const components: SelectUnstyledProps<number>['components'] = {
+function CustomSelect<T extends string | number>(props: SelectUnstyledProps<T>) {
+  const components: SelectUnstyledProps<T>['components'] = {
     Root: StyledButton,
     Listbox: StyledListbox,
     Popper: StyledPopper,
@@ -19,9 +19,9 @@ function CustomSelect(props: SelectUnstyledProps<number>) {
   return <SelectUnstyled {...props} components={components} />;
 }
 
-interface ControlledSelectProps {
-  onChange: (value: number) => void;
-  value?: number;
+interface ControlledSelectProps<V extends string | number> {
+  onChange: (value: V) => void;
+  value?: V;
   options: Option[];
   width?: string;
   disabled?: boolean;
@@ -40,7 +40,11 @@ interface OptionContentProps {
 const OptionContent = ({ option, withCheckbox, value }: OptionContentProps) => {
   return (
     <Box display="inline-flex" flexGrow={1} alignItems="center">
-      {option.icon && <span style={{ marginRight: '15px', width: '20px' }}>{option.icon}</span>}
+      {option.icon && (
+        <Box component="span" sx={{ mr: 3 }} display="flex" alignItems="center">
+          {option.icon}
+        </Box>
+      )}
       {withCheckbox && <RadioButton disabled checked={option.value == value} />}
       {option.label}
       {option.tooltip && (
@@ -54,7 +58,7 @@ const OptionContent = ({ option, withCheckbox, value }: OptionContentProps) => {
   );
 };
 
-const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
+const ControlledSelect = <V extends string | number>(props: ControlledSelectProps<V>) => {
   const {
     disabled = false,
     withCheckbox = false,
@@ -85,7 +89,7 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
         }}
         onChange={(e) => {
           if (!isNull(e)) {
-            onChange(e);
+            onChange(e as V);
           }
         }}
         renderValue={(val) => {
