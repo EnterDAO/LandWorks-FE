@@ -13,6 +13,7 @@ import SingleViewParcelProperties from 'modules/land-works/components/land-parce
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 import PromoSceneRedeployment from 'modules/land-works/components/promo-scene-redeployment/PromoSceneRedeployment';
+import { useActiveAssetTransactions } from 'providers/ActiveAssetTransactionsProvider/ActiveAssetTransactionsProvider';
 import { APP_ROUTES, getPropertyPath } from 'router/routes';
 
 import ExternalLink from '../../../../components/custom/external-link';
@@ -60,6 +61,7 @@ const useAssetLastRent = (assetId?: string) => {
 
 const SingleLandView: React.FC = () => {
   const wallet = useWallet();
+  const { addWithdrawTransaction, deleteWithdrawTransaction } = useActiveAssetTransactions();
 
   const { landWorksContract } = useLandworks();
 
@@ -151,15 +153,16 @@ const SingleLandView: React.FC = () => {
       return;
     }
     try {
-      await landWorksContract?.withdraw(asset.id, () => {
+      await landWorksContract?.withdraw(asset.id, (txHash: string) => {
         setWithdrawButtonDisabled(true);
-        localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
+
+        addWithdrawTransaction(asset.metaverseAssetId, txHash);
       });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
       if (isNeedRedirect()) history.push(APP_ROUTES.explore);
     } catch (e) {
-      localStorage.removeItem('WITHDRAW_IN_PROGRESS');
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
+      deleteWithdrawTransaction(asset.metaverseAssetId);
       console.log(e);
     }
   };
@@ -192,10 +195,13 @@ const SingleLandView: React.FC = () => {
     }
 
     try {
-      await landWorksContract?.delist(asset.id, () => {
-        isDirectWithdraw() && localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
+      await landWorksContract?.delist(asset.id, (txHash: string) => {
+        if (isDirectWithdraw()) {
+          addWithdrawTransaction(asset.metaverseAssetId, txHash);
+        }
         disableButtons(true);
       });
+
       showToastNotification(
         ToastType.Success,
         `Property ${isDirectWithdraw() ? 'withdrawn' : 'delisted'} successfully!`
@@ -205,7 +211,7 @@ const SingleLandView: React.FC = () => {
       }
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
-      localStorage.removeItem('WITHDRAW_IN_PROGRESS');
+      deleteWithdrawTransaction(asset.metaverseAssetId);
       console.log(e);
     }
   };

@@ -17,7 +17,7 @@ const LandWorksLoadingCard: React.FC<LoadingCardProps> = ({ title }) => {
         className="card-image"
         name="png/CardLoadingSkeleton"
         width="100%"
-        height="388"
+        height="362"
       />
       <ContainerStyled>
         <Spinner>

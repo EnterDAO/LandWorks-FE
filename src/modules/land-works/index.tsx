@@ -2,6 +2,7 @@ import React, { lazy, useEffect } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Route, Switch } from 'react-router-dom';
 
+import ActiveAssetTransactionsProvider from 'providers/ActiveAssetTransactionsProvider';
 import ListingModalProvider from 'providers/listing-modal-provider';
 import { useWarning } from 'providers/warning-provider';
 import { APP_ROUTES } from 'router/routes';
@@ -26,13 +27,15 @@ const LandworksView: React.FC = () => {
   }, [isMobile]);
 
   return (
-    <ListingModalProvider>
-      <Switch>
-        <Route path={APP_ROUTES.explore} exact component={ExploreView} />
-        <Route path={APP_ROUTES.property} component={SingleLand} />
-        <Route path={APP_ROUTES.myProperties} component={MyPropertiesView} />
-      </Switch>
-    </ListingModalProvider>
+    <ActiveAssetTransactionsProvider>
+      <ListingModalProvider>
+        <Switch>
+          <Route path={APP_ROUTES.explore} exact component={ExploreView} />
+          <Route path={APP_ROUTES.property} component={SingleLand} />
+          <Route path={APP_ROUTES.myProperties} component={MyPropertiesView} />
+        </Switch>
+      </ListingModalProvider>
+    </ActiveAssetTransactionsProvider>
   );
 };
 
