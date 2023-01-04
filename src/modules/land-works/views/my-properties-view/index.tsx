@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useMemo } from 'react';
+import { FC, ReactNode, RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import CardsGrid from 'components/custom/cards-grid';
@@ -11,6 +11,7 @@ import ClaimHistoryTable from 'modules/land-works/components/land-claim-history'
 import ClaimRewardsAlert from 'modules/land-works/components/land-claim-rents-alert';
 import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
 import PropertyCardSkeleton from 'modules/land-works/components/land-works-card-explore-view/PropertyCardSkeleton';
+import { useSyncActiveAssetTransactions } from 'providers/ActiveAssetTransactionsProvider/ActiveAssetTransactionsProvider';
 import { useListingModal } from 'providers/listing-modal-provider';
 import { APP_ROUTES, MY_PROPERTIES_ROUTE_TABS, useMyPropertiesRouteTab } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
@@ -43,13 +44,31 @@ const useActiveTabId = ({ listed, rented, notListed }: Omit<UserAssets, 'unclaim
   }, [routeTab, rented.length, listed.length, notListed.length]);
 };
 
+const useGridNumberOfColumns = (ref: RefObject<HTMLElement | null>, initialNumberOfColumns = 6) => {
+  const [numberOfColumns, setNumberOfColumns] = useState(initialNumberOfColumns);
+
+  useLayoutEffect(() => {
+    if (ref.current) {
+      const { gridTemplateColumns } = window.getComputedStyle(ref.current);
+
+      setNumberOfColumns(gridTemplateColumns.split(' ').length);
+    }
+  }, []);
+
+  return numberOfColumns;
+};
+
 const MyPropertiesView: FC = () => {
   const history = useHistory();
   const wallet = useWallet();
   const listingModal = useListingModal();
   const [metaverse] = useMetaverseQueryParam();
+  const cardGridElRef = useRef<HTMLDivElement | null>(null);
+  const numberOfCardsPerRow = useGridNumberOfColumns(cardGridElRef);
 
   const { data, isLoading } = useGetAllAccountAssetsQuery(wallet.account || '', metaverse);
+
+  useSyncActiveAssetTransactions(data);
 
   const isMetamaskConnected = useIsMetamaskConnected();
 
@@ -170,8 +189,8 @@ const MyPropertiesView: FC = () => {
 
       <Box display="flex" flexWrap="wrap" justifyContent="center" alignItems="flex-start" minHeight={555}>
         {isLoading ? (
-          <CardsGrid>
-            {Array.from({ length: 6 }).map((_, i) => {
+          <CardsGrid ref={cardGridElRef}>
+            {Array.from({ length: numberOfCardsPerRow }).map((_, i) => {
               return <PropertyCardSkeleton key={i} />;
             })}
           </CardsGrid>

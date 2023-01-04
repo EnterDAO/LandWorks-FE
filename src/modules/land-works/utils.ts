@@ -99,20 +99,6 @@ export const isNewLandTxInProgress = (lands: AssetEntity[], method: string): boo
   }
 
   return true;
-  // // should lands still be loading, we don't want to assume the land in progress was loaded into
-  // // lands, since lands could be an empty array until everything is loaded
-  // if (loadingLands) {
-  //   return false;
-  // }
-  // // display the land card since we know lands did load and the land progress was not found in lands
-  // if (shouldDisplayLandCard) {
-  //   return true;
-  // } else {
-  //   // remove the item from local storage since it does exist in lands now
-  //   // and return false since we know the item exists in lands now
-  //   localStorage.removeItem(method);
-  //   return false;
-  // }
 };
 
 export const isExistingLandInProgress = (
