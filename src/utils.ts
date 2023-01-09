@@ -439,3 +439,30 @@ export const clamp = (value: number, min = 0, max = 1): number => Math.min(max, 
 export const inverseLerp = (a: number, b: number, value: number): number => clamp((value - a) / (b - a));
 
 export const swrFetcher = (url: string) => fetch(url).then((res) => res.json());
+
+// local storage
+
+export const localStorageGet = <T = any>(key: string): T | null => {
+  const stored = localStorage.getItem(key);
+
+  if (!stored) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(stored);
+
+    return typeof parsed === 'object' && 'value' in parsed ? parsed.value : null;
+  } catch (e) {
+    return null;
+  }
+};
+
+export const localStorageSet = (key: string, value: any) => {
+  localStorage.setItem(
+    key,
+    JSON.stringify({
+      value,
+    })
+  );
+};
