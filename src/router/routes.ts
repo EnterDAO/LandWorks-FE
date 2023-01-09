@@ -48,9 +48,9 @@ export const MY_PROPERTIES_ROUTE_TABS = {
 export type MyPropertiesRouteTabsKey = keyof typeof MY_PROPERTIES_ROUTE_TABS;
 export type MyPropertiesRouteTabsValue = typeof MY_PROPERTIES_ROUTE_TABS[MyPropertiesRouteTabsKey];
 
-export const useMyPropertiesRouteTab = (): MyPropertiesRouteTabsValue => {
-  const { tab = MY_PROPERTIES_ROUTE_TABS.rented } = useParams<{ tab?: MyPropertiesRouteTabsValue }>();
-  const activeTab = Object.values(MY_PROPERTIES_ROUTE_TABS).includes(tab) ? tab : MY_PROPERTIES_ROUTE_TABS.rented;
+export const useMyPropertiesRouteTab = () => {
+  const { tab } = useParams<{ tab?: MyPropertiesRouteTabsValue }>();
+  const activeTab = tab && Object.values(MY_PROPERTIES_ROUTE_TABS).includes(tab) ? tab : undefined;
 
   return activeTab;
 };
