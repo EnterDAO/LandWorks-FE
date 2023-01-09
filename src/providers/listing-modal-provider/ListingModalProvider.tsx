@@ -42,15 +42,15 @@ const ListingModalProvider: FC = ({ children }) => {
             width: 1,
             maxWidth: {
               xs: 736,
-              '2xl': 858,
+              '3xl': 858,
             },
             height: {
               xs: 736,
-              '2xl': 858,
+              '3xl': 858,
             },
             padding: {
               xs: '32px',
-              '2xl': 8,
+              '3xl': 8,
             },
           }}
           open={isOpened}
