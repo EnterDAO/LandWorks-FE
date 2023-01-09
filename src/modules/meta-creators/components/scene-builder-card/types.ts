@@ -128,7 +128,7 @@ export interface Annotations {
 export interface Type {
   id: string;
   type: string;
-  select: Select;
+  select?: Select;
 }
 
 export interface Select {

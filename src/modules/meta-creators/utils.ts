@@ -11,7 +11,7 @@ export const transformNotionEntityToSceneBuilder = ({ id, properties }: NotionRe
     avatarPhotoLink: properties['Profile Picture'].files[0].file.url,
     builderName: properties['Scene Builder Name'].title[0].plain_text,
     definition: properties.Definition.rich_text[0].plain_text,
-    builderType: properties.Type.select.name,
+    builderType: properties.Type.select?.name || '',
     longDescription: properties['Long Description'].rich_text[0].plain_text,
     shortDescription: properties['Short Description'].rich_text[0].plain_text,
     website: properties.Website.url,
