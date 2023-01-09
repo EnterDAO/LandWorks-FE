@@ -1,11 +1,12 @@
 import React from 'react';
 import { BigNumber } from 'bignumber.js';
+import { fromUnixTime } from 'date-fns';
 import { ethers } from 'ethers';
 import useSWR from 'swr';
 
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
-import { getTokenIconName, timestampSecondsToUTCDate } from 'helpers/helpers';
+import { getTokenIconName } from 'helpers/helpers';
 import { getTokenPriceForDate } from 'providers/known-tokens-provider';
 
 import './index.scss';
@@ -17,19 +18,22 @@ interface ILandTablePriceProps {
   dateTimestamp: string;
 }
 
-const fetchTokenUsdPrice = async (tokenSymbol: string, timestamp: string) => {
-  if (tokenSymbol.toLowerCase() === 'usdc') {
-    return 1;
-  }
+const useGetTokenPriceInUsd = (tokenSymbol: string, timestamp: string) => {
+  const localDate = fromUnixTime(+timestamp);
+  const utcYear = localDate.getUTCFullYear();
+  const utcFormattedDay = `${localDate.getUTCDate()}`.padStart(2, '0');
+  const utcFormattedMonth = `${localDate.getUTCMonth() + 1}`.padStart(2, '0');
+  const utcFormattedDate = `${utcFormattedDay}-${utcFormattedMonth}-${utcYear}`;
 
-  const date = timestampSecondsToUTCDate(timestamp, 'dd-MM-yyyy');
-  const usdPrice = await getTokenPriceForDate(tokenSymbol, date);
-
-  return usdPrice;
+  return useSWR([tokenSymbol, utcFormattedDate], getTokenPriceForDate, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 };
 
 const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDecimals, weiAmount, dateTimestamp }) => {
-  const { data: usdPrice } = useSWR([tokenSymbol, dateTimestamp], fetchTokenUsdPrice);
+  const { data: usdPrice } = useGetTokenPriceInUsd(tokenSymbol, dateTimestamp);
   const amount = new BigNumber(ethers.utils.formatUnits(weiAmount, tokenDecimals));
   const priceInUsd = usdPrice ? amount.multipliedBy(usdPrice) : null;
 
