@@ -1,13 +1,12 @@
 import React from 'react';
 
-import { Box, Typography } from 'design-system';
+import Typography from 'components/common/Typography';
+import { Box } from 'design-system';
 import { Connect } from 'layout/components/connect';
 import Footer from 'layout/components/footer';
 import QuestionAccordion from 'layout/components/quastion-accordion/QuestionAccordion';
 
 import { faq } from './data';
-
-import { GRADIENT_TEXT } from 'themes/theme-constants';
 
 const FAQView: React.FC = () => {
   return (
@@ -22,7 +21,7 @@ const FAQView: React.FC = () => {
       >
         Frequently Asked
         {'\n'}
-        <Typography variant="inherit" component="span" sx={GRADIENT_TEXT}>
+        <Typography variant="inherit" component="span" color="gradient">
           Questions
         </Typography>
       </Typography>

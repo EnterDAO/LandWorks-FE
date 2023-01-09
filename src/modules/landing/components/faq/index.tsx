@@ -1,14 +1,13 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import Typography from 'components/common/Typography';
 import AdaptiveTypography from 'components/custom/adaptive-typography';
-import { Box, Button, Stack, Typography } from 'design-system';
+import { Box, Button, Stack } from 'design-system';
 import QuestionAccordion from 'layout/components/quastion-accordion/QuestionAccordion';
 import { LANDING_ROUTES } from 'router/routes';
 
 import { questionData } from './data';
-
-import { GRADIENT_TEXT } from 'themes/theme-constants';
 
 export const FAQ: React.FC = () => {
   const history = useHistory();
@@ -18,7 +17,7 @@ export const FAQ: React.FC = () => {
       <AdaptiveTypography textAlign="center" variant="h1" component="h2" mb={{ xs: 10, xl: 18 }}>
         Frequently Asked
         <br />
-        <Typography variant="inherit" sx={GRADIENT_TEXT}>
+        <Typography variant="inherit" color="gradient">
           Questions
         </Typography>
       </AdaptiveTypography>

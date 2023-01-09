@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ReactNode } from 'react';
+
 import { AssetEntity, CoordinatesLand } from './land-works/api';
 
 export type Metaverse = 'Decentraland' | 'Voxels';
 export interface Option {
   readonly label: string;
   readonly value: string | number;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
+  tooltip?: ReactNode;
 }
 
 export interface AssetOption {

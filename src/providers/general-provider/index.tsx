@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocalStorage } from 'react-use-storage';
 
 import { JoinPrompt } from 'modules/land-works/components/joinPrompt';
@@ -24,11 +24,11 @@ type Props = {
 };
 
 const GeneralContextProvider: React.FC<Props> = ({ children }) => {
-  const [navOpen, setNavOpen] = React.useState<boolean>(false);
-  const [joinPromptOpen, setJoinPromptOpen] = React.useState<boolean>(false);
+  const [navOpen, setNavOpen] = useState(false);
+  const [joinPromptOpen, setJoinPromptOpen] = useState(false);
   const [theme, setTheme] = useLocalStorage('bb_theme', defaultTheme);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (theme) {
       document.body.setAttribute('data-theme', theme);
     } else {
@@ -36,18 +36,13 @@ const GeneralContextProvider: React.FC<Props> = ({ children }) => {
     }
   }, [theme]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (navOpen) {
       document.body.setAttribute('data-fixed', 'true');
     } else {
       document.body.removeAttribute('data-fixed');
     }
   }, [navOpen]);
-
-  React.useEffect(() => {
-    const isOpenPrompt = localStorage.getItem('join_prompt');
-    isOpenPrompt?.length && setJoinPromptOpen(true);
-  }, []);
 
   return (
     <GeneralContext.Provider
@@ -63,10 +58,8 @@ const GeneralContextProvider: React.FC<Props> = ({ children }) => {
         },
       }}
     >
-      <>
-        {children}
-        {joinPromptOpen && <JoinPrompt />}
-      </>
+      {children}
+      {joinPromptOpen && <JoinPrompt />}
     </GeneralContext.Provider>
   );
 };

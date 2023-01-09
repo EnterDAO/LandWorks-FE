@@ -183,7 +183,7 @@ class Web3Contract extends EventEmitter {
     method: string,
     methodArgs: any[] = [],
     sendArgs: Record<string, any> = {},
-    callback: () => void = () => {},
+    callback: (txHash: string) => void = () => {},
     gasPrice?: number
   ): Promise<any> {
     this.assertAccount();
@@ -221,7 +221,7 @@ class Web3Contract extends EventEmitter {
           state: 'progress',
           txHash,
         });
-        callback();
+        callback(txHash);
       })
       .then((result: any) => {
         this.emit('tx:success', result, {

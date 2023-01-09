@@ -4,7 +4,7 @@ import { Box, Grid, Typography } from '@mui/material';
 import decentralandLandMapSrc from 'assets/img/decentraland-land-map.png';
 import openseaLogoMarkSrc from 'assets/img/opensea-logomark.png';
 import Image from 'components/custom/image';
-import { BaseNFT } from 'modules/interface';
+import { BaseNFT, CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
 
 interface ListCardProps {
   image: string;
@@ -24,7 +24,10 @@ const ListCard = ({ image, title, subtitle, footer, isActive, onClick }: ListCar
 
   return (
     <Box
-      minHeight={210}
+      minHeight={{
+        xs: 188,
+        xxl: 210,
+      }}
       bgcolor="var(--theme-grey200-color)"
       borderRadius="10px"
       p={2}
@@ -59,7 +62,7 @@ const ListCard = ({ image, title, subtitle, footer, isActive, onClick }: ListCar
   );
 };
 
-interface Asset {
+interface MarketplaceAsset {
   id: string;
   image: string;
   name: string;
@@ -73,12 +76,13 @@ interface Asset {
   };
 }
 // paymentToken: PaymentToken & { usdPrice: string };
+type Asset = CryptoVoxelNFT | DecentralandNFT;
 
-interface AssetListCardProps extends Pick<ListCardProps, 'isActive' | 'onClick'> {
-  asset: Asset;
+interface BuyAssetListCardProps extends Pick<ListCardProps, 'isActive' | 'onClick'> {
+  asset: MarketplaceAsset;
 }
 
-const AssetListCard = ({ asset, ...otherProps }: AssetListCardProps) => {
+const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
   const subtitle = (asset?.size || 0) > 0 ? `Lands: ${asset.size}` : `X: ${asset.coords[0]}    Y: ${asset.coords[0]}`;
 
   return (
@@ -116,13 +120,13 @@ const AssetListCard = ({ asset, ...otherProps }: AssetListCardProps) => {
   );
 };
 
-interface LandListProps {
-  assets?: Asset[];
+interface BuyAssetListProps {
+  assets?: MarketplaceAsset[];
   selectedAssetId?: string;
   onSelectAsset?: (asset: BaseNFT) => void;
 }
 
-const mockAsset: Asset = {
+const mockAsset: MarketplaceAsset = {
   id: '1',
   coords: [22, -23],
   name: 'Land (12,-23)',
@@ -142,7 +146,7 @@ const mockAssets = Array.from({ length: 32 }, (_, i) => {
   };
 });
 
-const assetToBaseNft = (asset: Asset): BaseNFT => {
+const assetToBaseNft = (asset: MarketplaceAsset): BaseNFT => {
   return {
     id: asset.id,
     image: asset.image,
@@ -153,16 +157,73 @@ const assetToBaseNft = (asset: Asset): BaseNFT => {
   };
 };
 
-const AssetList = ({ assets = mockAssets, selectedAssetId: activeAssetId, onSelectAsset }: LandListProps) => {
+export const BuyAssetList = ({
+  assets = mockAssets,
+  selectedAssetId: activeAssetId,
+  onSelectAsset,
+}: BuyAssetListProps) => {
   return (
     <Grid container rowSpacing={3} columnSpacing={4}>
       {assets.map((asset) => {
         return (
-          <Grid key={asset.id} item xs={3}>
-            <AssetListCard
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          <Grid key={asset.id} item xs={4} xxl={3}>
+            <BuyAssetListCard
               isActive={asset.id === activeAssetId}
               asset={asset}
               onClick={() => onSelectAsset && onSelectAsset(assetToBaseNft(asset))}
+            />
+          </Grid>
+        );
+      })}
+    </Grid>
+  );
+};
+const getSubtitle = (asset: Asset) => {
+  if (asset.metaverseName === 'Voxels') {
+    return `Location ${asset.place}`;
+  } else if (asset.metaverseName === 'Decentraland') {
+    if (!asset.isLAND) {
+      return `Lands ${asset.size}`;
+    } else {
+      const { 0: x, 1: y } = asset.coords;
+
+      return `Location X:${x} Y:${y}`;
+    }
+  }
+
+  return 'No co-ordinates available';
+};
+
+interface AssetListCardProps extends Pick<ListCardProps, 'isActive' | 'onClick'> {
+  asset: Asset;
+}
+
+const AssetListCard = ({ asset, ...otherProps }: AssetListCardProps) => {
+  const subtitle = getSubtitle(asset);
+
+  return <ListCard image={asset.image} title={asset.name} subtitle={subtitle} {...otherProps} />;
+};
+
+interface AssetListProps {
+  assets: Asset[];
+  selectedAssetId?: string;
+  onSelectAsset?: (asset: Asset) => void;
+}
+
+const AssetList = ({ assets, selectedAssetId: activeAssetId, onSelectAsset }: AssetListProps) => {
+  return (
+    <Grid container rowSpacing={3} columnSpacing={4}>
+      {assets.map((asset) => {
+        return (
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          <Grid key={asset.id} item xs={4} xxl={3}>
+            <AssetListCard
+              isActive={asset.id === activeAssetId}
+              asset={asset}
+              onClick={() => onSelectAsset && onSelectAsset(asset)}
             />
           </Grid>
         );

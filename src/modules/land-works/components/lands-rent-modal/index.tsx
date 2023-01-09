@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Divider, Grid } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import moment, { Moment } from 'moment';
-import { RangeValue } from 'rc-picker/lib/interface';
+import { differenceInSeconds, format, fromUnixTime } from 'date-fns';
 import { ONE_ADDRESS, getEtherscanAddressUrl, getHumanValue } from 'web3/utils';
 
+import Typography from 'components/common/Typography';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import config from 'config';
@@ -14,6 +14,7 @@ import { CalendarIcon, ProfileIcon, WarningIcon } from 'design-system/icons';
 import { ModalProps } from 'design-system/Modal/Modal';
 import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
+import { useActiveAssetTransactions } from 'providers/ActiveAssetTransactionsProvider/ActiveAssetTransactionsProvider';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 import { MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath } from 'router/routes';
@@ -46,24 +47,19 @@ type Props = Omit<ModalProps, 'handleClose'> & {
 const SignTransactionMessage = 'Signing transaction...';
 const RentTransactionMessage = 'Renting property...';
 
+// TODO: refactor
 export const RentModal: React.FC<Props> = (props) => {
-  const {
-    availability,
-    assetId,
-    pricePerSecond,
-    paymentToken,
-    metaverseAssetId,
-    metaverseRegistry,
-    onCancel,
-    onSubmit,
-    ...modalProps
-  } = props;
+  const { availability, assetId, pricePerSecond, paymentToken, metaverseRegistry, onCancel, onSubmit, ...modalProps } =
+    props;
 
   // added one minute each to be able to choose if MIN & MAX
-  const fixedMinStartRentDate = availability?.startRentDate || 0;
-  const minStartDate = moment.unix(fixedMinStartRentDate);
-  const minRentPeriod = moment.unix(availability?.minRentDate || 0);
-  const maxEndDate = moment.unix(availability?.maxRentDate || 0);
+  const { startDate, minEndDate, maxEndDate } = useMemo(() => {
+    return {
+      startDate: fromUnixTime(availability?.startRentDate || 0),
+      minEndDate: fromUnixTime(availability?.minRentDate || 0),
+      maxEndDate: fromUnixTime(availability?.maxRentDate || 0),
+    };
+  }, [availability]);
 
   const { setJoinPromptOpen } = useGeneral();
   const wallet = useWallet();
@@ -76,29 +72,59 @@ export const RentModal: React.FC<Props> = (props) => {
 
   const [modalText, setModalText] = useState<string>(SignTransactionMessage);
   const [editedValue, setEditedValue] = useState<string>(wallet.account || '');
-  const [period, setPeriod] = useState(0);
-  const [endDate, setEndDate] = useState<string>();
+  const [endDate, setEndDate] = useState<Date | undefined>(minEndDate);
   const [totalPrice, setTotalPrice] = useState(new BigNumber(0));
   const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
-  const [errMessage, setErrMessage] = useState<string>('');
   const [isActiveOperatorInput, setIsActiveOperatorInput] = useState<boolean>(false);
   const [transactionLoading, setTransactionLoading] = useState<boolean>(false);
   const [successTrunsaction, setSuccessTrunsaction] = useState<boolean>(false);
 
-  const [value, setValue] = useState(new BigNumber(0));
   const [approveDisabled, setApproveDisabled] = useState(false);
   const [rentDisabled, setRentDisabled] = useState(false);
+  const { addRentingTransaction, deleteRentingTransaction } = useActiveAssetTransactions();
 
-  const handleRentDateChange = (values: RangeValue<Moment>) => {
-    // Those are the start and the end dates, upon ok press
-    const start = (values as Moment[])[0];
-    const end = (values as Moment[])[1];
+  const isEndDateInvalid = !!endDate && isNaN(+endDate);
 
-    setEndDate(end.format('DD MMM YYYY, HH:mm'));
-    const period = end.unix() - start.unix();
+  const period = endDate && !isEndDateInvalid ? differenceInSeconds(endDate, startDate) : -1;
+  const value = new BigNumber(period).multipliedBy(pricePerSecond as BigNumber);
 
-    end.unix() - minRentPeriod.unix() >= 0 ? setPeriod(period) : setPeriod(-1);
-  };
+  const dateErrors = useMemo(() => {
+    const errors: string[] = [];
+
+    if (!endDate) {
+      errors.push('End Date is required.');
+
+      return errors;
+    }
+
+    if (isEndDateInvalid) {
+      errors.push('End Date is invalid.');
+    }
+
+    if (minEndDate > endDate) {
+      errors.push(`End Date should be greater than ${format(minEndDate, 'dd/MM/y p')}`);
+    }
+
+    if (endDate > maxEndDate) {
+      errors.push(`End Date should be less than ${format(maxEndDate, 'dd/MM/y p')}`);
+    }
+
+    return errors;
+  }, [endDate, isEndDateInvalid, minEndDate, maxEndDate]);
+
+  const formErrors = useMemo(() => {
+    const errors = [];
+
+    if (!isValidAddress(editedValue)) {
+      errors.push(editedValue ? 'Operator address is invalid.' : 'Operator address is required.');
+    }
+
+    if (paymentToken?.id !== ONE_ADDRESS && erc20Contract?.balance?.lt(value)) {
+      errors.push('Insufficient balance');
+    }
+
+    return [...dateErrors, ...errors];
+  }, [dateErrors, editedValue, value, erc20Contract?.balance]);
 
   const isYou = () => {
     return wallet.account && wallet.account.toLowerCase() === editedValue.toLowerCase();
@@ -113,9 +139,7 @@ export const RentModal: React.FC<Props> = (props) => {
     setUsdPrice(usdPrice || new BigNumber(0));
   };
 
-  const shouldShowApproveButton = () => {
-    return paymentToken && paymentToken.id !== ONE_ADDRESS;
-  };
+  const shouldShowApproveButton = paymentToken && paymentToken.id !== ONE_ADDRESS;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (e: any) => {
@@ -177,14 +201,13 @@ export const RentModal: React.FC<Props> = (props) => {
   };
 
   const handleRent = async () => {
-    if (!isValidForm() || !assetId || !paymentToken || !metaverseRegistry) {
+    if (hasErrors || !assetId || !paymentToken || !metaverseRegistry) {
       return;
     }
-    try {
-      metaverseAssetId && localStorage.setItem('RENT_IN_PROGRESS', metaverseAssetId);
-      metaverseAssetId && localStorage.setItem('EXIST_RENT_IN_PROGRESS', metaverseAssetId);
 
+    try {
       setTransactionLoading(true);
+
       const bnPeriod = new BigNumber(period);
       const assetLastRentEnd = await fetchAssetLastRentEnd(assetId);
       const maxRentStart = assetLastRentEnd + HOUR_IN_SECONDS;
@@ -198,9 +221,10 @@ export const RentModal: React.FC<Props> = (props) => {
           maxRentStart,
           paymentToken.id,
           value,
-          () => {
+          (txHash: string) => {
             onSubmit();
             setModalText(RentTransactionMessage);
+            addRentingTransaction(assetId, txHash);
           }
         );
       } else {
@@ -212,9 +236,10 @@ export const RentModal: React.FC<Props> = (props) => {
           maxRentStart,
           paymentToken.id,
           value,
-          () => {
+          (txHash: string) => {
             onSubmit();
             setModalText(RentTransactionMessage);
+            addRentingTransaction(assetId, txHash);
           }
         );
         erc20Contract?.loadAllowance(config.contracts.landworksContract);
@@ -222,23 +247,20 @@ export const RentModal: React.FC<Props> = (props) => {
       setTransactionLoading(false);
       setSuccessTrunsaction(true);
     } catch (e) {
-      localStorage.removeItem('RENT_IN_PROGRESS');
-      localStorage.removeItem('EXIST_RENT_IN_PROGRESS');
       showToastNotification(ToastType.Error, 'There was an error while renting the property.');
       setTransactionLoading(false);
+      deleteRentingTransaction(assetId);
+
       console.log(e);
     }
   };
 
-  function isValidForm(): boolean {
-    return isValidAddress(editedValue) && period > 0;
-  }
   const showLoader = () => transactionLoading && !successTrunsaction;
   const showSuccessModal = () => !transactionLoading && successTrunsaction;
 
   useEffect(() => {
     calculatePrices();
-    setValue(new BigNumber(period).multipliedBy(pricePerSecond as BigNumber));
+    // setValue(new BigNumber(period).multipliedBy(pricePerSecond as BigNumber));
   }, [period]);
 
   useEffect(() => {
@@ -251,22 +273,7 @@ export const RentModal: React.FC<Props> = (props) => {
     checkApprovedAmount();
   }, [wallet.account, value]);
 
-  useEffect(() => {
-    if (!isValidAddress(editedValue)) {
-      if (editedValue === '') {
-        setErrMessage('No operator address provided');
-      } else {
-        setErrMessage('Invalid address provided');
-      }
-    }
-    if (paymentToken?.id !== ONE_ADDRESS) {
-      const balance = erc20Contract?.balance;
-      if (balance?.lt(value)) {
-        setErrMessage('Insufficient balance');
-      }
-    }
-    if (value?.isNegative()) setErrMessage('Invalid end date or time');
-  }, [editedValue, value]);
+  const hasErrors = formErrors.length > 0;
 
   return (
     <Modal className="modal-propety" handleClose={onCancel} {...modalProps}>
@@ -274,7 +281,10 @@ export const RentModal: React.FC<Props> = (props) => {
         <Grid container className="rent-modal">
           <Grid item>
             <Grid item>
-              <h1 className="title">Rent Property details</h1>
+              <Typography variant="h3" mb={6} textAlign="center">
+                Rent Property details
+              </Typography>
+
               <Grid container direction="column">
                 <Grid item className="title-period">
                   <CalendarIcon className="profile-icon" />
@@ -286,10 +296,10 @@ export const RentModal: React.FC<Props> = (props) => {
                 <Grid item>
                   <RentDatePicker
                     endDate={endDate}
-                    minStartDate={minStartDate}
-                    minRentPeriod={minRentPeriod}
+                    startDate={startDate}
+                    minEndDate={minEndDate}
                     maxEndDate={maxEndDate}
-                    handleRentDateChange={handleRentDateChange}
+                    onChange={setEndDate}
                   />
                 </Grid>
               </Grid>
@@ -324,7 +334,7 @@ export const RentModal: React.FC<Props> = (props) => {
                     onChange={handleChange}
                   />
                 </Grid>
-                {!isValidForm() && errMessage && <div className="error-wrapper">{errMessage}</div>}
+                {hasErrors && <div className="error-wrapper">{formErrors[0]}</div>}
 
                 <Grid item className="info-warning-container info">
                   <WarningIcon className="warning-icon" />
@@ -341,7 +351,7 @@ export const RentModal: React.FC<Props> = (props) => {
               </Grid>
               <Divider className="divider" />
 
-              {isValidForm() && (
+              {!hasErrors && (
                 <Grid container className="rent-modal-footer">
                   <Grid item className="summary">
                     <p className="light-text">Summary</p>
@@ -349,7 +359,8 @@ export const RentModal: React.FC<Props> = (props) => {
                       <Grid item className="rent-period">
                         <p>Rent period</p>
                         <span>
-                          {minStartDate.format('DD MMM YYYY, HH:mm')} - {endDate}
+                          {format(startDate, 'dd MMM y, hh:mm')} -{' '}
+                          {endDate && !isEndDateInvalid ? format(endDate, 'dd MMM y, hh:mm') : 'Invalid Date'}
                         </span>
                       </Grid>
                       <Grid item className="rent-price">
@@ -375,21 +386,15 @@ export const RentModal: React.FC<Props> = (props) => {
               )}
             </Grid>
             <Grid container className="button-container">
-              {shouldShowApproveButton() && rentDisabled && (
-                <Button
-                  variant="gradient"
-                  className="rent-button"
-                  onClick={handleApprove}
-                  disabled={approveDisabled || !isValidForm()}
-                >
+              {shouldShowApproveButton && rentDisabled && !hasErrors && (
+                <Button variant="gradient" onClick={handleApprove} disabled={approveDisabled}>
                   APPROVE
                 </Button>
               )}
               <Button
                 style={{ display: 'block' }}
-                className="rent-button"
                 variant="gradient"
-                disabled={rentDisabled || !isValidForm()}
+                disabled={rentDisabled || hasErrors}
                 onClick={handleRent}
               >
                 Rent Now

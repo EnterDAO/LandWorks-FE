@@ -64,6 +64,7 @@
     "@mui/lab": "^5.0.0-alpha.85",
     "@mui/material": "^5.8.3",
     "@mui/system": "^5.4.1",
+    "@mui/x-date-pickers": "^5.0.11",
     "@notionhq/client": "^1.0.4",
     "@popperjs/core": "2.9.2",
     "@rooks/use-debounce": "4.10.0",

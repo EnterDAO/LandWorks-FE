@@ -19,7 +19,7 @@ import { StyledQuestion } from './styled';
 export const faq: QuestionData[] = [
   {
     id: 0,
-    question: <StyledQuestion>What is Landworks?</StyledQuestion>,
+    question: <StyledQuestion>What is LandWorks?</StyledQuestion>,
     answer: <WhatIs />,
   },
   {

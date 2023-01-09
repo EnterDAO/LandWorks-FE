@@ -21,6 +21,7 @@ export interface NotionResult {
 }
 
 export interface NotionResultForCard {
+  id: string;
   coverPhotoLink: string;
   avatarPhotoLink: string;
   builderName: string;
@@ -31,12 +32,14 @@ export interface NotionResultForCard {
 }
 
 export interface NotionResultForProfile {
+  id: string;
   coverPhotoLink: string;
   avatarPhotoLink: string;
   builderName: string;
   definition: string;
   builderType: string;
   longDescription: string;
+  shortDescription: string;
   website: string;
   twitter: string;
   discord: string;

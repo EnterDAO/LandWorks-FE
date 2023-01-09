@@ -15,7 +15,6 @@ import { WarningIcon } from 'design-system/icons';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import useGetIsMounted from 'hooks/useGetIsMounted';
 import { BaseNFT, CryptoVoxelNFT, DecentralandNFT, Option } from 'modules/interface';
-import { ListingCard } from 'modules/land-works/components/land-works-list-card';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
 import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
 import { addIconToMetaverse, currencyData } from 'modules/land-works/components/lands-explore-filters/filters-data';
@@ -24,6 +23,7 @@ import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-modal';
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 import { useMetaverseQueryParam } from 'modules/land-works/views/my-properties-view/MetaverseSelect';
+import { useActiveAssetTransactions } from 'providers/ActiveAssetTransactionsProvider/ActiveAssetTransactionsProvider';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 import { MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath } from 'router/routes';
@@ -32,10 +32,10 @@ import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
 import { PaymentToken, createAssetAdvertisement, fetchMetaverses, fetchTokenPayments } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
-import ListingCardSkeleton from '../land-listing-skeleton';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
-import AssetList from './AssetList';
+import AssetList, { BuyAssetList } from './AssetList';
 import BuyAndListConfirmModal from './BuyAndListConfirmModal';
+import LoadingAssetList from './LoadingAssetList';
 import SortSelect, { SortType } from './SortSelect';
 
 import { parseVoxelsAsset } from 'modules/land-works/utils';
@@ -79,6 +79,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const landworks = useLandworks();
   const registry = useContractRegistry();
   const getIsMounted = useGetIsMounted();
+  const { addListingTransaction, deleteListingTransaction } = useActiveAssetTransactions();
 
   const history = useHistory();
 
@@ -353,21 +354,26 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
 
     try {
       setShowSignModal(true);
-      const txReceipt = await landWorksContract?.list(
-        selectedMetaverse,
-        metaverseRegistry,
-        id,
-        minPeriod,
-        maxPeriod,
-        maxFutureTime,
-        paymentToken.id,
-        pricePerSecond.toFixed(0),
-        () => {
-          setListModalMessage(MineTransactionMessage);
-        }
-      );
 
-      localStorage.setItem('LISTING_IN_PROGRESS', id);
+      const txReceipt = await landWorksContract
+        ?.list(
+          selectedMetaverse,
+          metaverseRegistry,
+          id,
+          minPeriod,
+          maxPeriod,
+          maxFutureTime,
+          paymentToken.id,
+          pricePerSecond.toFixed(0),
+          (txHash) => {
+            addListingTransaction(id, txHash);
+
+            setListModalMessage(MineTransactionMessage);
+          }
+        )
+        .then((txReceipt) => {
+          return txReceipt;
+        });
 
       setListedPropertyId(txReceipt.events['List'].returnValues[0]);
 
@@ -379,6 +385,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
       setShowSignModal(false);
       setListDisabled(false);
       showToastNotification(ToastType.Error, 'There was an error while listing the property.');
+      deleteListingTransaction(id);
       console.log(e);
 
       return;
@@ -724,31 +731,37 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
 
   return (
     <section className="list-view">
-      <Grid container direction="column" alignItems="flex-start" justifyContent="space-between" height={'100%'}>
-        <Box mb={5} fontSize="25px" fontWeight={700} textAlign="center" width="100%" color="#F8F8FF">
+      <Stack height={1}>
+        <Typography variant="h3" mb={6} textAlign="center">
           List Property
-        </Box>
-        <Stepper sx={{ width: 1, maxWidth: 600, mb: 8, mx: 'auto' }} activeStep={activeStep}>
+        </Typography>
+
+        <Stepper sx={{ width: 1, maxWidth: 736, mb: 6, mx: 'auto' }} activeStep={activeStep}>
           {steps.map(({ label }) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>
           ))}
         </Stepper>
+
         {(step.title || step.subtitle) && (
-          <Stack width={1} alignItems="center" textAlign="center">
-            <Typography variant="h3" component="h4" mb={1}>
+          <Stack alignItems="center" textAlign="center">
+            <Typography variant="h3" component="h4">
               {activeStep + 1}. {step.title}
             </Typography>
 
-            {step.subtitle && <Typography fontWeight={400}>{step.subtitle}</Typography>}
+            {step.subtitle && (
+              <Typography fontWeight={400} mt={1}>
+                {step.subtitle}
+              </Typography>
+            )}
           </Stack>
         )}
 
-        <Stack width={1} minHeight={370}>
+        <Stack flexGrow={1} minHeight={0} mb={4}>
           {step.id === StepId.Asset && (
             <>
-              <Box display="flex" gap={4} pb={2}>
+              <Box display="flex" gap={4} mb={2}>
                 <ControlledSelect
                   width="290px"
                   value={selectedMetaverse}
@@ -768,27 +781,18 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
 
               <Stack height={470} overflow="auto" p={4} mx={-4}>
                 {isBuying ? (
-                  <AssetList selectedAssetId={selectedProperty?.id} onSelectAsset={setSelectedProperty} />
+                  <BuyAssetList selectedAssetId={selectedProperty?.id} onSelectAsset={setSelectedProperty} />
                 ) : (
                   <>
-                    {loading && <ListingCardSkeleton />}
+                    {loading && <LoadingAssetList />}
 
                     {!loading &&
                       (properties.length > 0 ? (
-                        <Grid container columnSpacing={4} rowSpacing={3}>
-                          {properties.map((property) => {
-                            return (
-                              <Grid key={property.id} item xs={3}>
-                                <ListingCard
-                                  selected={property.name === selectedProperty?.name}
-                                  onClick={handlePropertyChange}
-                                  property={property}
-                                  estateLands={estateGroup}
-                                />
-                              </Grid>
-                            );
-                          })}
-                        </Grid>
+                        <AssetList
+                          assets={properties}
+                          selectedAssetId={selectedProperty?.id}
+                          onSelectAsset={handlePropertyChange}
+                        />
                       ) : (
                         <Stack flexGrow={1} justifyContent="center" alignItems="center">
                           <Box component="img" src={landNotFoundImageSrc} width={170} mb={5} />
@@ -814,7 +818,16 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
           )}
 
           {step.id === StepId.RentPeriod && (
-            <Box maxWidth={350} mx="auto" width={1}>
+            <Box
+              alignSelf="center"
+              maxWidth={{ xxl: 350 }}
+              mt={{ xs: 4, xxl: 6 }}
+              width={1}
+              height={1}
+              overflow="auto"
+              px={2}
+              mx={-2}
+            >
               <RentPeriod
                 isMinPeriodSelected={isMinPeriodSelected}
                 handleMinCheckboxChange={handleMinCheckboxChange}
@@ -839,6 +852,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                 maxError={maxError}
                 atMostError={maxFutureError}
                 withoutSwitch
+                layout="adaptive"
               />
             </Box>
           )}
@@ -861,7 +875,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             </Stack>
           )}
           {step.id === StepId.Advertisement && (
-            <Stack width={1} maxWidth={670} mt={10} mx="auto">
+            <Stack width={1} maxWidth={670} mt={{ xs: 4, xxl: 10 }} mx="auto">
               <Grid container spacing={5}>
                 <Grid item xs={6}>
                   <Image
@@ -909,7 +923,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             </Stack>
           )}
           {step.id === StepId.Summary && selectedProperty && (
-            <Box mx="auto" maxWidth={630} mt={8}>
+            <Box maxWidth={630} alignSelf="center" mt={{ xs: 4, xxl: 8 }}>
               <Grid container wrap="nowrap" p="8px" borderRadius="20px" bgcolor="var(--theme-modal-color)">
                 <SelectedListCard
                   src={selectedProperty.image}
@@ -942,14 +956,17 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
         </Stack>
 
         {step.warning && (
-          <Grid className="warning-info">
-            <WarningIcon />
+          <Grid className="warning-info" mb={{ xs: 2, xxl: 4 }} mx="auto">
+            <WarningIcon style={{ width: 20, height: 20 }} />
             <Grid item>
-              <Typography variant="h4">Keep in mind</Typography>
+              <Typography display={{ xs: 'none', xxl: 'block' }} variant="h4">
+                Keep in mind
+              </Typography>
               <Typography variant="subtitle2">{step.warning}</Typography>
             </Grid>
           </Grid>
         )}
+
         <hr className="divider" />
 
         {step.id !== StepId.Summary && (
@@ -992,7 +1009,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
           </Grid>
         )}
         {step.id === StepId.Summary && (
-          <Grid maxHeight={'50vh'} overflow="auto" container justifyContent="space-between" mt={4}>
+          <Grid container justifyContent="space-between">
             <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep((prev) => prev - 1)}>
               Back
             </Button>
@@ -1043,7 +1060,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
           />
         )}
         <BuyAndListConfirmModal open />
-      </Grid>
+      </Stack>
     </section>
   );
 };

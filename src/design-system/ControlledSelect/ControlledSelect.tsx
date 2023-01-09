@@ -2,7 +2,8 @@ import SelectUnstyled, { SelectUnstyledProps } from '@mui/base/SelectUnstyled';
 import { SxProps } from '@mui/system';
 import { isNull } from 'lodash';
 
-import { Box, RadioButton } from 'design-system';
+import Icon from 'components/custom/icon';
+import { Box, RadioButton, Tooltip } from 'design-system';
 import { Option } from 'modules/interface';
 
 import { StyledButton, StyledListbox, StyledOption, StyledPopper } from './styled';
@@ -29,6 +30,29 @@ interface ControlledSelectProps {
   isActive?: boolean;
   sx?: SxProps;
 }
+
+interface OptionContentProps {
+  option: Option;
+  withCheckbox?: boolean;
+  value?: string | number;
+}
+
+const OptionContent = ({ option, withCheckbox, value }: OptionContentProps) => {
+  return (
+    <Box display="inline-flex" flexGrow={1} alignItems="center">
+      {option.icon && <span style={{ marginRight: '15px', width: '20px' }}>{option.icon}</span>}
+      {withCheckbox && <RadioButton disabled checked={option.value == value} />}
+      {option.label}
+      {option.tooltip && (
+        <Tooltip arrow title={option.tooltip}>
+          <Box component="span" display="inline-flex" ml="auto">
+            <Icon style={{ color: 'var(--theme-subtle-color)', width: '16px', height: '16px' }} name="about" />
+          </Box>
+        </Tooltip>
+      )}
+    </Box>
+  );
+};
 
 const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
   const {
@@ -64,6 +88,20 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
             onChange(e);
           }
         }}
+        renderValue={(val) => {
+          if (!val) {
+            return;
+          }
+          const option = options.find((o) => o.value == val.value);
+
+          if (option) {
+            return (
+              <OptionContent option={{ ...option, tooltip: false }} value={val.value} withCheckbox={withCheckbox} />
+            );
+          }
+
+          return val?.label;
+        }}
       >
         {staticPlaceholder && (
           <StyledOption sx={{ display: 'none' }} value={valueForPlaceholder} disabled>
@@ -72,9 +110,17 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
         )}
         {options.map((o) => (
           <StyledOption key={o.value} value={o.value}>
-            {o.icon && <span style={{ marginRight: '15px', width: '20px' }}>{o.icon}</span>}
+            <OptionContent option={o} withCheckbox={withCheckbox} value={value} />
+            {/* {o.icon && <span style={{ marginRight: '15px', width: '20px' }}>{o.icon}</span>}
             {withCheckbox && <RadioButton disabled checked={o.value == value} />}
             {o.label}
+            {o.tooltip && (
+              <Tooltip title={o.tooltip}>
+                <Box component="span" >
+                  <Icon name="about" color="var(--theme-light-color)" />
+                </Box>
+              </Tooltip>
+            )} */}
           </StyledOption>
         ))}
       </CustomSelect>

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useEffect, useState } from 'react';
+import React, { MouseEvent, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -27,6 +27,7 @@ import UserInfo from './UserInfo/UserInfo';
 
 import s from './s.module.scss';
 
+// TODO: refactor
 const ConnectedWallet: React.FC = () => {
   const wallet = useWallet();
 
@@ -38,9 +39,9 @@ const ConnectedWallet: React.FC = () => {
 
   const [validTxHash, setValidTxHash] = useState(landworksTxHash || txHash || erc20TxHash);
 
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -69,6 +70,11 @@ const ConnectedWallet: React.FC = () => {
         setEns(ensName);
       });
   }, [wallet]);
+
+  const handleDisconnectButtonClick = () => {
+    setAnchorEl(null);
+    wallet.disconnect();
+  };
 
   if (wallet.connecting) {
     return (
@@ -110,7 +116,7 @@ const ConnectedWallet: React.FC = () => {
             </Grid>
             <Divider className={s.divider} style={{ minHeight: 28 }} />
             <Grid padding={24}>
-              <button type="button" className="button button-ghost" onClick={() => wallet.disconnect()}>
+              <button type="button" className="button button-ghost" onClick={handleDisconnectButtonClick}>
                 <span>Disconnect</span>
               </button>
             </Grid>
@@ -135,7 +141,7 @@ const ConnectedWallet: React.FC = () => {
   }
 
   const AccountSection = (
-    <Box ref={containerRef}>
+    <Box height={1} ref={containerRef}>
       <StyledPopover
         anchorOrigin={{
           vertical: 'bottom',
@@ -186,15 +192,19 @@ const ConnectedWallet: React.FC = () => {
             </Grid>
           </Grid>
           <Grid padding={[0, 24, 20]}>
-            <button type="button" className="button-primary-grey" onClick={() => wallet.disconnect()}>
+            <button type="button" className="button-primary-grey" onClick={handleDisconnectButtonClick}>
               <span>Disconnect</span>
             </button>
           </Grid>
         </div>
       </StyledPopover>
-      <Button onClick={handleClick}>
-        <UserInfo open={open} address={ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 10, 3)} />
-      </Button>
+      {/* <Button onClick={handleClick}> */}
+      {/* </Button> */}
+      <UserInfo
+        open={open}
+        address={ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 10, 3)}
+        onClick={handleClick}
+      />
     </Box>
   );
 

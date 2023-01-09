@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, { useEffect } from 'react';
-import { useSessionStorage } from 'react-use-storage';
+import { useLocalStorage } from 'react-use-storage';
 import { Web3Provider } from '@ethersproject/providers';
 import splitbee from '@splitbee/web';
 import { UnsupportedChainIdError, Web3ReactProvider, useWeb3React } from '@web3-react/core';
@@ -12,6 +12,7 @@ import config from 'config';
 import { Loader } from 'design-system';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import { getNetworkName } from 'providers/eth-web3-provider';
+import { useGeneral } from 'providers/general-provider';
 import ConnectWalletModal from 'wallets/components/connect-wallet-modal';
 import InstallMetaMaskModal from 'wallets/components/install-metamask-modal';
 import UnsupportedChainModal from 'wallets/components/unsupported-chain-modal';
@@ -72,7 +73,8 @@ export function useWallet(): Wallet {
 
 const WalletProvider: React.FC = (props) => {
   const web3React = useWeb3React();
-  const [sessionProvider, setSessionProvider, removeSessionProvider] = useSessionStorage<string | undefined>(
+  const { setJoinPromptOpen } = useGeneral();
+  const [sessionProvider, setSessionProvider, removeSessionProvider] = useLocalStorage<string | undefined>(
     'wallet_provider'
   );
 
@@ -97,6 +99,9 @@ const WalletProvider: React.FC = (props) => {
     setActiveProvider(undefined);
     removeSessionProvider();
     localStorage.removeItem('disclaimerShown');
+
+    setJoinPromptOpen(false);
+    localStorage.removeItem('join_prompt');
     setTimeout(() => setDisconnecting(undefined), 0);
   }, [web3React, activeConnector, removeSessionProvider, setConnecting]);
 
@@ -139,6 +144,9 @@ const WalletProvider: React.FC = (props) => {
         connector.getProvider().then(setActiveProvider);
         setActiveConnector(walletConnector);
         setSessionProvider(walletConnector.id);
+
+        setJoinPromptOpen(true);
+        localStorage.setItem('join_prompt', 'true');
       }
 
       activateInjectedProvider('metamask');
@@ -169,6 +177,14 @@ const WalletProvider: React.FC = (props) => {
 
     splitbee.user.set({ account });
   }, [web3React.account]);
+
+  useEffect(() => {
+    const isOpenPrompt = !!localStorage.getItem('join_prompt');
+
+    if (isOpenPrompt && web3React.account) {
+      setJoinPromptOpen(true);
+    }
+  }, [web3React.account, setJoinPromptOpen]);
 
   const value = React.useMemo<Wallet>(
     () => ({

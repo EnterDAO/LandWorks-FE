@@ -75,7 +75,7 @@ const HeaderNavLinks: FC = () => {
       display="flex"
       flexDirection={{ xs: 'column', lg: 'row' }}
       px={{ xs: 3, lg: 0 }}
-      gap={{ xs: 6, xl: 8 }}
+      gap={{ xs: 5, xl: 6, xxl: 8 }}
       flexGrow={{ lg: 1 }}
     >
       {nav.map((mainNavLink, i) => {

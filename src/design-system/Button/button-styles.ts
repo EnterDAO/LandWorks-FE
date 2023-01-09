@@ -115,6 +115,7 @@ export default styled('button')({
   },
   '&.gradient': {
     background: THEME_COLORS.primaryGradient,
+    boxShadow: '0 0 30px rgba(221, 61, 203, 0.6)',
     ...lightOverlayStates,
   },
   '&.primary': {
@@ -133,6 +134,7 @@ export default styled('button')({
   [`&.${buttonUnstyledClasses.disabled}`]: {
     background: THEME_COLORS.grey01,
     color: THEME_COLORS.grey02,
+    boxShadow: 'none',
     cursor: 'not-allowed',
     '&::before': {
       ...OVERLAY_SMALL,

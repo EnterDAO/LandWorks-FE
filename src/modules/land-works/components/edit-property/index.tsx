@@ -463,7 +463,7 @@ const EditProperty: React.FC<Props> = (props) => {
   const estateCoords = selectedProperty?.decentralandData?.coordinates;
 
   return (
-    <section className="list-view">
+    <Box width={800} className="list-view">
       {loading ? (
         <EditFormCardSkeleton />
       ) : (
@@ -638,7 +638,7 @@ const EditProperty: React.FC<Props> = (props) => {
           setShowTxModal(false);
         }}
       />
-    </section>
+    </Box>
   );
 };
 
