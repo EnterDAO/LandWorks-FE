@@ -21,17 +21,16 @@ import './index.scss';
 interface Props {
   land: AssetEntity;
   layout?: 'normal' | 'compact';
+  isActive?: boolean;
   onClick?: (e: MouseEvent<HTMLAnchorElement>, land: AssetEntity) => void;
   onMouseOver?: (e: MouseEvent<HTMLAnchorElement>, land: AssetEntity) => void;
   onMouseOut?: (e: MouseEvent<HTMLAnchorElement>, land: AssetEntity) => void;
 }
 
-const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, onMouseOut, layout = 'normal' }) => {
-  const { clickedLandId } = useLandsMapTile();
+const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, onMouseOut, isActive, layout = 'normal' }) => {
   const did = land.decentralandData
     ? `${land.decentralandData?.coordinates[0]?.x},${land.decentralandData?.coordinates[0]?.y}`
     : land.metaverseAssetId;
-  const isActive = clickedLandId === did;
   const isStaked = land.owner.id == config.contracts.yf.staking;
   const ownerOrConsumer = isStaked ? land.consumer?.id : land.owner.id;
 

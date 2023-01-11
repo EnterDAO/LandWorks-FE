@@ -100,12 +100,14 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
 
     if (selectedId) {
       timeoutIdRef.current = window.setTimeout(() => {
-        if (getIsMounted()) {
-          setActiveLand(land);
+        if (getIsMounted() && setSelectedId) {
+          setSelectedId(land.id);
         }
       }, 500);
     } else {
-      setActiveLand(land);
+      if (setSelectedId) {
+        setSelectedId(land.id);
+      }
     }
   };
 
@@ -219,6 +221,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
           filteredAndListedLands.map((land) => (
             <LandWorkCard
               key={land.id}
+              isActive={selectedId === land.id}
               layout={cardsSize}
               onMouseOver={handleCardMouseOver}
               onMouseOut={handleCardMouseOut}
