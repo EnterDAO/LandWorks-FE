@@ -82,7 +82,7 @@ const ExploreView: React.FC = () => {
   const [lands, setLands] = useState<AssetEntity[]>([]);
   const [clickedLandId, setStateClickedLandId] = useState<AssetEntity['id']>('');
   const [mapTiles, setMapTiles] = useState<Record<string, AtlasTile>>({});
-  const [selectedId, setSelectedId] = useState<string>('');
+  const [selectedId, setSelectedId] = useState<string>();
   const [selectedTile, setSelectedTile] = useState<SelectedTile>({
     id: '',
     type: '',
@@ -206,6 +206,7 @@ const ExploreView: React.FC = () => {
       setLands(sortByHottest || sortBySize ? landsOrder(lands.data, orderColumn, sortDir) : lands.data);
 
       const highlights = getAllLandsCoordinates(lands.data);
+
       setCoordinatesHighlights(highlights);
       setPointMapCentre(highlights);
 
@@ -264,6 +265,8 @@ const ExploreView: React.FC = () => {
     };
   }, [clickedLandId, setClickedLandId, selectedTile, setSelectedTile, showCardPreview, setShowCardPreview]);
 
+  // console.log({ clickedLandId, selectedId });
+
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
       <LandsMapTilesProvider value={landsMapTilesValue}>
@@ -292,11 +295,10 @@ const ExploreView: React.FC = () => {
 
             <ExploreMap
               type={metaverse}
-              positionX={atlasMapX}
-              positionY={atlasMapY}
-              highlights={coordinatesHighlights}
-              lands={lands}
+              assets={lands}
               isMapVisible={isMapVisible}
+              selectedId={selectedId}
+              onSelect={(assetId) => setSelectedId(assetId)}
               onHideMap={() => setIsMapVisible(false)}
               onShowMap={() => setIsMapVisible(true)}
             />
