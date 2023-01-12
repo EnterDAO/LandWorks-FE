@@ -31,6 +31,7 @@ const config = {
   },
   contracts: {
     adsContract: toLowerCase(process.env.REACT_APP_CONTRACT_ADS_ADDR),
+    buyContract: toLowerCase(process.env.REACT_APP_CONTRACT_BUY_ADDR),
     yf: {
       staking: toLowerCase(process.env.REACT_APP_CONTRACT_YF_STAKING_ADDR),
       mana: toLowerCase(process.env.REACT_APP_CONTRACT_YF_MANA_ADDR),
