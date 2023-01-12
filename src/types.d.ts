@@ -18,3 +18,9 @@ declare global {
     ethereum?: any;
   }
 }
+
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    link: true;
+  }
+}

@@ -5,7 +5,7 @@ import { Box, PopperProps, Tooltip, TooltipProps, styled, tooltipClasses } from 
 import { AssetEntity } from 'modules/land-works/api';
 import { getPropertyPath } from 'router/routes';
 
-import LandTooltipContent from './LandTooltipContent';
+import DecentralandMapTileTooltipContent from './DecentralandMapTileTooltipContent';
 
 const DarkTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -24,19 +24,19 @@ const DarkTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 });
 
-interface LandTooltipProps extends Pick<PopperProps, 'container'> {
-  land: AssetEntity;
-  x: number;
-  y: number;
+interface DecentralandMapTileTooltipProps extends Pick<PopperProps, 'container'> {
+  asset: AssetEntity;
+  left: number;
+  top: number;
   open?: boolean;
 }
 
-const LandTooltip = ({ land, open, x, y, container }: LandTooltipProps) => {
+const DecentralandMapTileTooltip = ({ asset, open, left, top, container }: DecentralandMapTileTooltipProps) => {
   const history = useHistory();
 
   const handlePopperClick = () => {
     history.push({
-      pathname: getPropertyPath(land.id),
+      pathname: getPropertyPath(asset.id),
       state: { from: window.location.pathname, title: 'Explore' },
     });
   };
@@ -46,7 +46,7 @@ const LandTooltip = ({ land, open, x, y, container }: LandTooltipProps) => {
       open={open}
       arrow
       placement="top"
-      title={<LandTooltipContent land={land} />}
+      title={<DecentralandMapTileTooltipContent asset={asset} />}
       PopperProps={{
         container,
         onClick: handlePopperClick,
@@ -57,8 +57,8 @@ const LandTooltip = ({ land, open, x, y, container }: LandTooltipProps) => {
         position="absolute"
         width={0}
         height={0}
-        top={y}
-        left={x}
+        top={top}
+        left={left}
         sx={{
           pointerEvents: 'none',
         }}
@@ -67,4 +67,4 @@ const LandTooltip = ({ land, open, x, y, container }: LandTooltipProps) => {
   );
 };
 
-export default LandTooltip;
+export default DecentralandMapTileTooltip;
