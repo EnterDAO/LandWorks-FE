@@ -4,6 +4,7 @@ import useSWRImmutable from 'swr/immutable';
 
 import Typography from 'components/common/Typography';
 import { getENSName } from 'helpers/helpers';
+import useDebouncedValue from 'hooks/useDebounce';
 
 import { DecentralandMapTile } from './DecentralandTileMap';
 
@@ -16,8 +17,10 @@ const useEnsName = (walletAddress: string) => {
 };
 
 const DecentralandMapTileInfo = ({ tile }: DecentralandMapTileInfoProps) => {
-  const { data } = useEnsName(tile.owner || '');
-  const owner = data || tile.owner || '';
+  const tileOwner = tile.owner || '';
+  const debouncedTileOwner = useDebouncedValue(tileOwner, 600);
+  const { data: ownerEnsName, isValidating } = useEnsName(debouncedTileOwner || '');
+  const displayedOwner = !!ownerEnsName && !isValidating && debouncedTileOwner === tileOwner ? ownerEnsName : tileOwner;
 
   return (
     <Box
@@ -42,9 +45,9 @@ const DecentralandMapTileInfo = ({ tile }: DecentralandMapTileInfoProps) => {
           variant="link"
           href={`https://etherscan.io/address/${tile.owner}`}
           target="_blank"
-          title={owner}
+          title={displayedOwner}
         >
-          {owner}
+          {displayedOwner}
         </Typography>
       </Typography>
     </Box>
