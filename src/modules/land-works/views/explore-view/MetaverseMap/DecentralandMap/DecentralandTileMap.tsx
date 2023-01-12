@@ -137,7 +137,14 @@ const DecentralandTileMap = ({
       const highlightedTile = tiles[`${x},${y}`];
       const leftHighlightTile = tiles[`${x - 1},${y}`];
 
-      return !!highlightedTile && highlightedTile.estateId === leftHighlightTile?.estateId;
+      return !!highlightedTile?.estateId && highlightedTile.estateId === leftHighlightTile?.estateId;
+    };
+
+    const isTopLeftHighlighted = (x: number, y: number) => {
+      const highlightedTile = tiles[`${x},${y}`];
+      const topLeftHighlightTile = tiles[`${x - 1},${y + 1}`];
+
+      return !!highlightedTile?.estateId && highlightedTile.estateId === topLeftHighlightTile?.estateId;
     };
 
     const mapLayer = (x: number, y: number) => {
@@ -153,14 +160,11 @@ const DecentralandTileMap = ({
       const isHighlighted = !!highlightedTileIds && id in highlightedTileIds;
 
       if (isHighlighted) {
-        const top = isTopHighlighted(x, y);
-        const left = isLeftHighlighted(x, y);
-
         return {
           color: COLOR_BY_TYPE.highlighted,
-          top,
-          left,
-          topLeft: top || left,
+          top: isTopHighlighted(x, y),
+          left: isLeftHighlighted(x, y),
+          topLeft: isTopLeftHighlighted(x, y),
         };
       }
 
