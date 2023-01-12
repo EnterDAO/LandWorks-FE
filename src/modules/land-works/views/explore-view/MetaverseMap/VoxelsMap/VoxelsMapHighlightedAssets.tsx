@@ -59,7 +59,7 @@ const VoxelsMapHighlightedAssets = ({ selectedId, assets, parcels, onSelect }: V
           setMarkerPosition(e.target.getCenter());
 
           if (onSelect && assets) {
-            const asset = assets.find((asset) => asset.metaverseAssetId === e.target.feature.id);
+            const asset = assets.find((asset) => +asset.metaverseAssetId === +e.target.feature.id);
 
             if (asset) {
               onSelect(asset.id);
@@ -68,7 +68,7 @@ const VoxelsMapHighlightedAssets = ({ selectedId, assets, parcels, onSelect }: V
         },
       });
     },
-    [setMarkerPosition, onSelect]
+    [setMarkerPosition, onSelect, assets]
   );
 
   useLayoutEffect(() => {
@@ -111,7 +111,7 @@ const VoxelsMapHighlightedAssets = ({ selectedId, assets, parcels, onSelect }: V
     const highlightedParcels = assets.reduce((acc, asset) => {
       // TODO: fix hardcoded value
       if (asset.metaverse.name === 'Voxels') {
-        const parcel = parcels.find((tile) => tile.id === +asset.metaverseAssetId);
+        const parcel = parcels.find((parcel) => parcel.id === +asset.metaverseAssetId);
 
         if (parcel) {
           acc.push(parcel);
