@@ -189,7 +189,7 @@ const DecentralandTileMap = ({
         return null;
       }
 
-      return { color: '#ff9990' };
+      return { color: '#ff9990', scale: 1.2 };
     };
 
     const selectedTileStrokeLayer: Layer = (x, y) => {
@@ -199,7 +199,7 @@ const DecentralandTileMap = ({
         return null;
       }
 
-      return { color: '#26ff00', scale: 1.3 };
+      return { color: '#26ff00', scale: 1.5 };
     };
 
     return [mapLayer, selectedTileStrokeLayer, selectedTileFillLayer];
