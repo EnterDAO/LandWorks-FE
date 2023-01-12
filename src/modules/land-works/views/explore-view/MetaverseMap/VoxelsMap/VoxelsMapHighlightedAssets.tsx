@@ -58,8 +58,12 @@ const VoxelsMapHighlightedAssets = ({ selectedId, assets, parcels, onSelect }: V
         click(e) {
           setMarkerPosition(e.target.getCenter());
 
-          if (onSelect) {
-            onSelect(e.target.feature.id);
+          if (onSelect && assets) {
+            const asset = assets.find((asset) => asset.metaverseAssetId === e.target.feature.id);
+
+            if (asset) {
+              onSelect(asset.id);
+            }
           }
         },
       });
@@ -74,24 +78,30 @@ const VoxelsMapHighlightedAssets = ({ selectedId, assets, parcels, onSelect }: V
   }, [assets]);
 
   useEffect(() => {
-    if (!geoJsonRef.current) {
+    if (!geoJsonRef.current || !assets || !selectedId) {
       return;
     }
 
-    const foundLayer = geoJsonRef.current.getLayers().find((layer) => {
-      return (layer as any).feature.id === selectedId;
+    const selectedAsset = assets.find((asset) => asset.id === selectedId);
+
+    if (!selectedAsset) {
+      return;
+    }
+
+    const selectedLayer = geoJsonRef.current.getLayers().find((layer) => {
+      return (layer as any).feature.id === selectedAsset.metaverseAssetId;
     });
 
-    if (!foundLayer) {
+    if (!selectedLayer) {
       return;
     }
 
-    const center: LatLngLiteral = (foundLayer as any).getCenter();
+    const selectedLayerPosition: LatLngLiteral = (selectedLayer as any).getCenter();
 
-    setMarkerPosition(center);
+    setMarkerPosition(selectedLayerPosition);
 
-    map.setView(center, FLY_ZOOM);
-  }, [map, assets, selectedId, setMarkerPosition]);
+    map.setView(selectedLayerPosition, FLY_ZOOM);
+  }, [map, assets, selectedId]);
 
   const highlightedAssetsVoxelsMapCollection = useMemo(() => {
     if (!assets?.length || !parcels) {
