@@ -6,7 +6,6 @@ import Divider from 'components/custom/divider';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { getTokenIconName } from 'helpers/helpers';
-import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { getPropertyPath } from 'router/routes';
 
 import config from '../../../../config';
