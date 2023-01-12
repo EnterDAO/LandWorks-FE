@@ -2,7 +2,7 @@ import React from 'react';
 import { BigNumber } from 'bignumber.js';
 import { fromUnixTime } from 'date-fns';
 import { ethers } from 'ethers';
-import useSWR from 'swr';
+import useSWRImmutable from 'swr/immutable';
 
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
@@ -25,11 +25,7 @@ const useGetTokenPriceInUsd = (tokenSymbol: string, timestamp: string) => {
   const utcFormattedMonth = `${localDate.getUTCMonth() + 1}`.padStart(2, '0');
   const utcFormattedDate = `${utcFormattedDay}-${utcFormattedMonth}-${utcYear}`;
 
-  return useSWR([tokenSymbol, utcFormattedDate], getTokenPriceForDate, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  return useSWRImmutable([tokenSymbol, utcFormattedDate], getTokenPriceForDate);
 };
 
 const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDecimals, weiAmount, dateTimestamp }) => {
