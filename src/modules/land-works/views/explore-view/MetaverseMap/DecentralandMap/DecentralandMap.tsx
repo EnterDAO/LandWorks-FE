@@ -171,15 +171,17 @@ const DecentralandMap = ({ assets, selectedId, isFullScreen = true, children, on
         const x = +rawCoords[0];
         const y = +rawCoords[1];
         const asset = highlightedTileIds[highlightedTileId];
+        const isInView = x >= nw.x && x <= se.x && y >= se.y && y <= nw.y;
 
-        if (x >= nw.x && x <= se.x && y >= se.y && y <= nw.y) {
+        if (isInView) {
           const hw = width / 2;
           const hh = height / 2;
           let left = hw - ((center.x - x) * size + (pan?.x || 0));
           let top = hh - ((y - center.y) * size + (pan?.y || 0));
 
-          if (asset.id in acc && acc[asset.id].left <= left && acc[asset.id].top < top) {
-            left = acc[asset.id].left;
+          // Finding position of the top most left most tile
+          if (asset.id in acc && acc[asset.id].top <= top) {
+            left = acc[asset.id].top < top || acc[asset.id].left < left ? acc[asset.id].left : left;
             top = acc[asset.id].top;
           }
 
