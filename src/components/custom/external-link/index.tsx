@@ -6,7 +6,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = (props) => {
   const { children, className, ...rest } = props;
 
   return (
-    <a className={className} rel="noopener noreferrer" target="_blank" {...rest}>
+    <a className={className} rel="noopener noreferrer nofollow" target="_blank" {...rest}>
       {children}
     </a>
   );

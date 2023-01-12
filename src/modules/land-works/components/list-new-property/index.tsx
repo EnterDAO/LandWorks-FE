@@ -8,6 +8,7 @@ import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import listingAdImgSrc from 'assets/img/listing-ad.jpg';
 import landNotFoundImageSrc from 'assets/land-not-found.svg';
+import ExternalLink from 'components/custom/external-link';
 import Image from 'components/custom/image';
 import Stepper, { Step, StepLabel } from 'components/styled/stepper';
 import { Box, Button, Checkbox, ControlledSelect, Grid, Stack, Typography } from 'design-system';
@@ -708,6 +709,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
               id: StepId.Advertisement,
               title: 'Advertise',
               label: 'Advertise',
+              warning: 'Please note that a wallet signature will popup in order to confirm your choice.',
             },
           ]
         : []),
@@ -868,12 +870,15 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                 </Grid>
                 <Grid item xs={6} display="flex" alignItems="center">
                   <Typography component="p" color={THEME_COLORS.grey03} variant="caption" textAlign="left">
-                    We have partnered up with {'{placeholder}'} to allow for ads to be shown on your property until
-                    someone rents it. By allowing your plot to be used for ads, you will be rewarded additionally for
-                    each unique view that the ad gets. Rewards can be claimed every month.
+                    We have partnered up with <ExternalLink href="https://precisionx.com/en/">PrecisionX</ExternalLink>{' '}
+                    to allow for ads to be displayed on your land until it gets rented. By allowing your plot to be used
+                    for ads, you will be rewarded 0.025 USDC (0.05 USDC if you own a{' '}
+                    <ExternalLink href="https://opensea.io/collection/sharded-minds">Sharded Mind</ExternalLink> NFT)
+                    for each unique view on the ad. Full info on how the ads work can be found{' '}
+                    <ExternalLink href="#">here</ExternalLink>.
                     <br />
                     <br />
-                    Think of it like providing your plot to the ads company until someone actually rents it!
+                    Think of it as providing your land to the an advertiser until it gets rented!
                   </Typography>
                 </Grid>
               </Grid>
