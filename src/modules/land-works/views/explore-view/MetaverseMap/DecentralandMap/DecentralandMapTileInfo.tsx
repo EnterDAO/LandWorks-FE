@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import useSWR from 'swr';
 import useSWRImmutable from 'swr/immutable';
 
 import Typography from 'components/common/Typography';

@@ -1,17 +1,13 @@
 import 'react-tile-map/lib/styles.css';
 
-import { FC, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactNode, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Coord, Layer, TileMap, TileMapProps, renderMap } from 'react-tile-map';
 import { MapRenderer } from 'react-tile-map/lib/src/components/TileMap/TileMap.types';
-import { Box } from '@mui/material';
-import useSWR from 'swr';
 import useSWRImmutable from 'swr/immutable';
-
-import { CoordinatesLand } from 'modules/land-works/api';
 
 import MetaverseMapProvider from '../MetaverseMapProvider';
 
-import { clamp, swrFetcher } from 'utils';
+import { clamp } from 'utils';
 
 import { TILES_URL_DECENTRALEND } from 'modules/land-works/constants';
 
@@ -71,8 +67,6 @@ const useGetDecentralandMapTilesQuery = () => {
     TILES_URL_DECENTRALEND
   );
 
-  console.log({ data, error });
-
   return {
     data: data?.data,
     loading: !data && !error,
@@ -86,6 +80,7 @@ interface DecentralandTileMapProps {
   zoom?: number;
   highlightedTileIds?: Record<string, any>;
   selectedTileIds?: Record<string, any>;
+  selectedTileIdsRef?: RefObject<Record<string, any> | undefined>;
   children?: ReactNode;
   onRender?: MapRenderer;
   onChange?: (data: { zoom: number }) => void;
@@ -94,15 +89,16 @@ interface DecentralandTileMapProps {
   onLoad?: (tiles: Record<string, DecentralandMapTile>) => void;
 }
 
-const TILE_MIN_SIZE = 10;
+const TILE_MIN_SIZE = 8;
 const TILE_MAX_SIZE = 40;
 const MIN_ZOOM = TILE_MIN_SIZE / TILE_MAX_SIZE;
 const MAX_ZOOM = 1;
-const ZOOM_STEP = (MAX_ZOOM - MIN_ZOOM) / 4;
+const ZOOM_STEP = (MAX_ZOOM - MIN_ZOOM) / 6;
 
 const DecentralandTileMap = ({
   highlightedTileIds,
-  selectedTileIds,
+  // selectedTileIds,
+  selectedTileIdsRef,
   onLoad,
   onChange,
   onRender,
@@ -176,30 +172,38 @@ const DecentralandTileMap = ({
       };
     };
 
+    // NOTE: if we change some prop for tile map component it will rerender the map with debounce
+    // to get around this problem and render selected tiles without a delay we are using `selectedTileIdsRef`
+    // instead of `selectedTileIds`to not change reference on `tileMapLayers`.
+    //
+    // It works when map in full screen when we show selecting hovered tile
+    //
+    // TODO: make it work when map isn't in full screen
+    // TODO: come up with better approach or refactor to make it less confusing
+    const isSelectedTile = (tileId: string) => selectedTileIdsRef?.current && tileId in selectedTileIdsRef.current;
+
     const selectedTileFillLayer: Layer = (x, y) => {
       const tileId = `${x},${y}`;
-      const isSelected = selectedTileIds && tileId in selectedTileIds;
 
-      if (!isSelected) {
+      if (!isSelectedTile(tileId)) {
         return null;
       }
 
-      return { color: '#ff9990', scale: 1.5 };
+      return { color: '#ff9990' };
     };
 
     const selectedTileStrokeLayer: Layer = (x, y) => {
       const tileId = `${x},${y}`;
-      const isSelected = selectedTileIds && tileId in selectedTileIds;
 
-      if (!isSelected) {
+      if (!isSelectedTile(tileId)) {
         return null;
       }
 
-      return { color: '#26ff00', scale: 1.9 };
+      return { color: '#26ff00', scale: 1.3 };
     };
 
     return [mapLayer, selectedTileStrokeLayer, selectedTileFillLayer];
-  }, [tiles, highlightedTileIds, selectedTileIds]);
+  }, [tiles, highlightedTileIds]);
 
   const handleChange = useCallback(
     (data: { zoom: number }) => {
@@ -250,8 +254,6 @@ const DecentralandTileMap = ({
   }, []);
 
   const currentZoom = clamp(zoom || zoomRef.current, MIN_ZOOM, MAX_ZOOM);
-
-  console.log({ currentZoom });
 
   return (
     <MetaverseMapProvider minZoom={MIN_ZOOM} maxZoom={MAX_ZOOM} zoom={currentZoom} {...zoomControls}>

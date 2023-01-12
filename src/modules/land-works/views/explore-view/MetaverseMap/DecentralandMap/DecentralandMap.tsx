@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { MapRenderer } from 'react-tile-map/lib/src/components/TileMap/TileMap.types';
 import { Box } from '@mui/material';
 
@@ -17,10 +17,6 @@ const getAssetTileIds = (asset: AssetEntity) => {
   return asset.decentralandData.coordinates.map(({ x, y }: { x: string; y: string }) => `${x},${y}`);
 };
 
-// interface DecentralandMapProps extends MetaverseMapCommonProps {
-
-// }
-
 const DecentralandMap = ({ assets, selectedId, isFullScreen = true, children, onSelect }: MetaverseMapCommonProps) => {
   const tilesRef = useRef<DecentralandMapTiles>({});
   const containerElRef = useRef<HTMLDivElement>(null);
@@ -30,7 +26,8 @@ const DecentralandMap = ({ assets, selectedId, isFullScreen = true, children, on
     tileId: string;
     boundaries: { top: number; left: number };
   } | null>(null);
-  const [hoveredTileId, setHoveredTileId] = useState<string>();
+  const [activeTileId, setActiveTileId] = useState<string>();
+  const selectedTileIdsRef = useRef<Record<string, any>>();
   const [renderedAssetBoundaryRects, setRenderedAssetBoundaryRects] = useState<
     Record<string, { top: number; left: number }>
   >({});
@@ -57,23 +54,45 @@ const DecentralandMap = ({ assets, selectedId, isFullScreen = true, children, on
     }, {} as Record<string, AssetEntity>);
   }, [assets]);
 
+  const getSelectedAssetTileIds = useCallback(
+    (assetId: string) => {
+      if (!assets?.length || !assetId) {
+        return;
+      }
+
+      const selectedAsset = assets.find((asset) => asset.id === assetId);
+
+      if (!selectedAsset?.decentralandData) {
+        return;
+      }
+
+      return getAssetTileIds(selectedAsset).reduce((acc, tileId) => {
+        acc[tileId] = true;
+
+        return acc;
+      }, {} as Record<string, boolean>);
+    },
+    [assets]
+  );
+
   const selectedTileIds = useMemo(() => {
-    if (!assets?.length || !selectedId) {
+    if (!selectedId) {
       return;
     }
 
-    const selectedAsset = assets.find((asset) => asset.id === selectedId);
+    return getSelectedAssetTileIds(selectedId);
+  }, [getSelectedAssetTileIds, selectedId]);
 
-    if (!selectedAsset?.decentralandData) {
-      return;
+  useLayoutEffect(() => {
+    // NOTE: workaround to make selected tiles render immediately after changes
+    selectedTileIdsRef.current = selectedTileIds;
+
+    if (selectedTileIds) {
+      const [tileId] = Object.keys(selectedTileIds);
+
+      setActiveTileId(tileId);
     }
-
-    return getAssetTileIds(selectedAsset).reduce((acc, tileId) => {
-      acc[tileId] = true;
-
-      return acc;
-    }, {} as Record<string, boolean>);
-  }, [assets, selectedId]);
+  }, [selectedTileIds]);
 
   const position = useMemo(() => {
     if (!selectedTileIds || isFullScreen) {
@@ -111,10 +130,15 @@ const DecentralandMap = ({ assets, selectedId, isFullScreen = true, children, on
     (x: number, y: number) => {
       const tileId = `${x},${y}`;
 
-      setHoveredTileId(tileId);
+      setActiveTileId(tileId);
 
       if (isFullScreen && onSelect) {
-        onSelect(tileId in highlightedTileIds ? highlightedTileIds[tileId].id : undefined);
+        const tileAsset = highlightedTileIds[tileId];
+
+        // NOTE: workaround to make selected tiles render immediately after changes
+        selectedTileIdsRef.current = tileAsset ? getSelectedAssetTileIds(tileAsset.id) : undefined;
+
+        onSelect(tileAsset?.id);
       }
     },
     [onSelect, highlightedTileIds, isFullScreen]
@@ -128,8 +152,13 @@ const DecentralandMap = ({ assets, selectedId, isFullScreen = true, children, on
 
       const tileId = `${x},${y}`;
 
-      if (tileId in highlightedTileIds && onSelect) {
-        onSelect(highlightedTileIds[tileId].id);
+      if (onSelect) {
+        const tileAsset = highlightedTileIds[tileId];
+
+        // NOTE: workaround to make selected tiles render immediately after changes
+        selectedTileIdsRef.current = tileAsset ? getSelectedAssetTileIds(tileAsset.id) : undefined;
+
+        onSelect(tileAsset?.id);
       }
     },
     [onSelect, highlightedTileIds, isFullScreen]
@@ -172,28 +201,30 @@ const DecentralandMap = ({ assets, selectedId, isFullScreen = true, children, on
     return containerElRef.current;
   }, []);
 
-  const hoveredTile = hoveredTileId && tilesRef.current[hoveredTileId];
+  const activeTile = activeTileId && tilesRef.current[activeTileId];
 
   const tooltip =
-    hoveredTileId &&
-    highlightedTileIds[hoveredTileId] &&
-    highlightedTileIds[hoveredTileId].id in renderedAssetBoundaryRects
+    activeTileId &&
+    highlightedTileIds[activeTileId] &&
+    highlightedTileIds[activeTileId].id in renderedAssetBoundaryRects
       ? {
-          tileId: hoveredTileId,
-          asset: highlightedTileIds[hoveredTileId],
-          boundaries: renderedAssetBoundaryRects[highlightedTileIds[hoveredTileId].id],
+          tileId: activeTileId,
+          asset: highlightedTileIds[activeTileId],
+          boundaries: renderedAssetBoundaryRects[highlightedTileIds[activeTileId].id],
         }
       : null;
 
   const currentTooltip = tooltip ? (lastTooltipRef.current = tooltip) : lastTooltipRef.current;
   const currentPosition = position ? (lastPositionRef.current = position) : lastPositionRef.current;
-  const tooltipOpened = !!tooltip && tooltip.tileId === hoveredTileId;
+  const tooltipOpened = !!tooltip && tooltip.tileId === activeTileId;
 
   return (
-    <Box ref={containerElRef} width={1} height={1} position="relative">
+    <Box ref={containerElRef} width={1} height={1} overflow="hidden" position="relative">
       <DecentralandTileMap
         highlightedTileIds={highlightedTileIds}
         selectedTileIds={selectedTileIds}
+        // NOTE: workaround to make selected tiles render immediately after changes
+        selectedTileIdsRef={selectedTileIdsRef}
         onClick={handleClick}
         onHover={handleHover}
         onLoad={handleLoad}
@@ -203,7 +234,7 @@ const DecentralandMap = ({ assets, selectedId, isFullScreen = true, children, on
         {children}
       </DecentralandTileMap>
 
-      {hoveredTile && <DecentralandMapTileInfo tile={hoveredTile} />}
+      {activeTile && <DecentralandMapTileInfo tile={activeTile} />}
       {isFullScreen && currentTooltip && (
         <DecentralandMapTileTooltip
           asset={currentTooltip.asset}
