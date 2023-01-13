@@ -25,7 +25,7 @@ const InfoAlertRoot = styled('div')({
 });
 
 interface InfoAlertProps extends Omit<ComponentPropsWithoutRef<typeof InfoAlertRoot>, 'title'> {
-  title: ReactNode;
+  title?: ReactNode;
   description: ReactNode;
   icon?: ReactElement;
   action?: ReactElement;
@@ -39,12 +39,19 @@ const InfoAlert: FC<InfoAlertProps> = ({ icon, title, description, action, ...ot
       </Box>
 
       <Box>
-        <Typography variant="h4" mb={1}>
-          {title}
-        </Typography>
-        <Typography fontWeight={400} color={THEME_COLORS.grey03}>
-          {description}
-        </Typography>
+        {title && (
+          <Typography variant="h4" mb={1}>
+            {title}
+          </Typography>
+        )}
+        {description &&
+          (typeof description === 'string' ? (
+            <Typography fontWeight={400} color={THEME_COLORS.grey03}>
+              {description}
+            </Typography>
+          ) : (
+            description
+          ))}
       </Box>
 
       <Box ml="auto" flexShrink={0}>
