@@ -677,7 +677,12 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
     label: string;
     title?: string;
     subtitle?: string;
-    warning?: string;
+    warning?:
+      | string
+      | {
+          title: string;
+          content: string;
+        };
   }[] = useMemo(() => {
     return [
       ...(!asset
@@ -693,16 +698,22 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
         title: 'Choose rent period',
         label: 'Rent Period',
         subtitle: 'Select the wanted rent period for this property.',
-        warning:
-          'Once you list your property you can edit the entered rent period but you’ll have to pay a network fee.',
+        warning: {
+          title: 'Keep in mind',
+          content:
+            'Once you list your property you can edit the entered rent period but you’ll have to pay a network fee.',
+        },
       },
       {
         id: StepId.RentPrice,
         title: 'Select Rent Price',
         label: 'Rent Price',
         subtitle: 'Select the wanted rent price for this property.',
-        warning:
-          'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
+        warning: {
+          title: 'Keep in mind',
+          content:
+            'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
+        },
       },
       ...(selectedMetaverse === 1
         ? [
@@ -718,12 +729,16 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
         id: StepId.Summary,
         label: 'Summary',
         title: 'Listing Summary',
-        warning: 'There is a network fee in order to list the property.',
+        warning: {
+          title: 'Keep in mind',
+          content: 'There is a network fee in order to list the property.',
+        },
       },
     ];
   }, [selectedMetaverse]);
 
   const step = steps[activeStep];
+  const { warning } = step;
 
   return (
     <section className="list-view">
@@ -871,12 +886,20 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                 </Grid>
                 <Grid item xs={6} display="flex" alignItems="center">
                   <Typography component="p" color={THEME_COLORS.grey03} variant="caption" textAlign="left">
-                    We have partnered up with <ExternalLink href="https://precisionx.com/en/">PrecisionX</ExternalLink>{' '}
+                    We have partnered up with{' '}
+                    <ExternalLink variant="link2" href="https://precisionx.com/en/">
+                      PrecisionX
+                    </ExternalLink>{' '}
                     to allow for ads to be displayed on your land until it gets rented. By allowing your plot to be used
                     for ads, you will be rewarded 0.025 USDC (0.05 USDC if you own a{' '}
-                    <ExternalLink href="https://opensea.io/collection/sharded-minds">Sharded Mind</ExternalLink> NFT)
-                    for each unique view on the ad. Full info on how the ads work can be found{' '}
-                    <ExternalLink href="#">here</ExternalLink>.
+                    <ExternalLink variant="link2" href="https://opensea.io/collection/sharded-minds">
+                      Sharded Mind
+                    </ExternalLink>{' '}
+                    NFT) for each unique view on the ad. Full info on how the ads work can be found{' '}
+                    <ExternalLink variant="link2" href="#">
+                      here
+                    </ExternalLink>
+                    .
                     <br />
                     <br />
                     Think of it as providing your land to the an advertiser until it gets rented!
@@ -942,14 +965,20 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
           )}
         </Stack>
 
-        {step.warning && (
-          <Grid className="warning-info" mb={{ xs: 2, xxl: 4 }} mx="auto">
+        {warning && (
+          <Grid textAlign="left" className="warning-info" mb={{ xs: 2, xxl: 4 }} mx="auto">
             <WarningIcon style={{ width: 20, height: 20 }} />
             <Grid item>
-              <Typography display={{ xs: 'none', xxl: 'block' }} variant="h4">
-                Keep in mind
-              </Typography>
-              <Typography variant="subtitle2">{step.warning}</Typography>
+              {typeof warning === 'string' ? (
+                <Typography variant="subtitle2">{warning}</Typography>
+              ) : (
+                <>
+                  <Typography display={{ xs: 'none', xxl: 'block' }} variant="h4">
+                    {warning.title}
+                  </Typography>
+                  <Typography variant="subtitle2">{warning.content}</Typography>
+                </>
+              )}
             </Grid>
           </Grid>
         )}
