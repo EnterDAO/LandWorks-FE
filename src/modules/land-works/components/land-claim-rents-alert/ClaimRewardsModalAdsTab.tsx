@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 
 import ExternalLink from 'components/custom/external-link';
