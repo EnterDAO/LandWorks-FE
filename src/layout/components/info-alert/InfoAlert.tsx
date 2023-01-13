@@ -38,21 +38,14 @@ const InfoAlert: FC<InfoAlertProps> = ({ icon, title, description, action, ...ot
         {icon || <AlertTriangleIcon />}
       </Box>
 
-      <Box>
+      <Typography component="div" fontWeight={400} color={THEME_COLORS.grey03}>
         {title && (
           <Typography variant="h4" mb={1}>
             {title}
           </Typography>
         )}
-        {description &&
-          (typeof description === 'string' ? (
-            <Typography fontWeight={400} color={THEME_COLORS.grey03}>
-              {description}
-            </Typography>
-          ) : (
-            description
-          ))}
-      </Box>
+        {description}
+      </Typography>
 
       <Box ml="auto" flexShrink={0}>
         {action}
