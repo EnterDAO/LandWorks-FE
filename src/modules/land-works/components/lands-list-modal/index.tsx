@@ -59,7 +59,7 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
   const history = useHistory();
 
   return (
-    <Modal open={showModal} handleClose={handleClose}>
+    <Modal maxHeight={780} open={showModal} handleClose={handleClose}>
       <Stack width={420}>
         <Box mb={4} display="flex" justifyContent="center">
           <SuccessStarIcon />

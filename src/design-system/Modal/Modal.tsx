@@ -23,12 +23,13 @@ export interface ModalProps {
     ariaDescribedby: string;
   };
   width?: number | string;
+  maxHeight?: number | string;
   height?: number | string;
   sx?: SxProps;
 }
 
 const Modal: FC<ModalProps> = (props: ModalProps) => {
-  const { open, title, handleClose, children, accessibility, width, height, className = '', sx } = props;
+  const { open, title, handleClose, maxHeight, children, accessibility, width, height, className = '', sx } = props;
 
   return (
     <StyledModal
@@ -36,9 +37,12 @@ const Modal: FC<ModalProps> = (props: ModalProps) => {
       {...(accessibility?.ariaLabelledby && { 'aria-labelledby': accessibility.ariaLabelledby })}
       {...(accessibility?.ariaDescribedby && { 'aria-labelledby': accessibility.ariaDescribedby })}
       open={open}
+      sx={{
+        maxHeight,
+        height,
+      }}
       onClose={handleClose}
       BackdropComponent={StyledBackdrop}
-      style={{ height: height }}
     >
       <ModalBoxStyled sx={sx} style={{ width: width }}>
         {!!title && <ModalTitleBoxStyled as="div">{title}</ModalTitleBoxStyled>}
