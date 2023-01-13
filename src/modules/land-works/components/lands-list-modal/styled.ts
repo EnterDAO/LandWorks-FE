@@ -5,7 +5,6 @@ export const ShareLink = styled('a')(() => ({
   fontWeight: '500',
   textTransform: 'uppercase',
   color: 'var(--theme-light-color)',
-  marginTop: '10px',
   display: 'flex',
   alignItems: 'center',
   '& span': {
