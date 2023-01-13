@@ -61,8 +61,8 @@ const ClaimRewardsModalAdsTab: FC = () => {
             .
             <br />
             <br />
-            You have <strong>X</strong> listed properties on LandWorks where you have allowed ads to be displayed. The
-            awards available to claim have accrued for <strong>Y</strong> months.
+            You have <b>X</b> listed properties on LandWorks where you have allowed ads to be displayed. The awards
+            available to claim have accrued for <b>Y</b> months.
           </Typography>
         )}
       </Stack>
