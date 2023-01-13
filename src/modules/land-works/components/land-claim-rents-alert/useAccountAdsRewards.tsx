@@ -29,7 +29,7 @@ const useAdsRewardsContract = (contractAddress: string): AdsRewardsContract | un
     adsRewardsContract.setAccount(wallet.account);
 
     return adsRewardsContract;
-  }, [contractAddress, wallet.provider]);
+  }, [contractAddress, wallet.provider, wallet.account]);
 };
 
 const useAccountAdsRewards = () => {
