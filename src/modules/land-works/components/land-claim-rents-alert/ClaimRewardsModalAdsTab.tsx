@@ -12,8 +12,8 @@ import { useClaimRewards } from './ClaimRewardsProvider';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
-const ClaimRewardsModalAdsTab: FC = () => {
-  const { adsReward, isAdsRewardClaiming, adsRewardsPaymentToken, claimAdsReward } = useClaimRewards();
+const ClaimRewardsModalAdsTab = () => {
+  const { adsReward, totalListed, isAdsRewardClaiming, adsRewardsPaymentToken, claimAdsReward } = useClaimRewards();
   const adsTotalRewards = useMemo(() => {
     if (!adsRewardsPaymentToken) {
       return [
@@ -45,7 +45,7 @@ const ClaimRewardsModalAdsTab: FC = () => {
   return (
     <>
       <Stack textAlign="left" height={315}>
-        {isAdsRewardAvailable ? (
+        {!isAdsRewardAvailable ? (
           <ClaimRewardsModalEmpty />
         ) : (
           <Typography component="p" variant="caption" color={THEME_COLORS.grey03}>
@@ -65,8 +65,8 @@ const ClaimRewardsModalAdsTab: FC = () => {
             .
             <br />
             <br />
-            You have <b>X</b> listed properties on LandWorks where you have allowed ads to be displayed. Click the CLAIM
-            button below to transfer the rewards to your wallet.
+            You have <b>{totalListed}</b> listed properties on LandWorks where you have allowed ads to be displayed.
+            Click the CLAIM button below to transfer the rewards to your wallet.
           </Typography>
         )}
       </Stack>
