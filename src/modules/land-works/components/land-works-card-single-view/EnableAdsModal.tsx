@@ -1,8 +1,10 @@
 import React, { FC } from 'react';
 
 import listingAdImgSrc from 'assets/img/listing-ad.jpg';
+import ExternalLink from 'components/custom/external-link';
 import Image from 'components/custom/image';
 import { Box, Button, Modal, Stack, Typography } from 'design-system';
+import InfoAlert from 'layout/components/info-alert';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
@@ -18,7 +20,7 @@ const EnableAdsModal: FC<EnableAdsModalProps> = ({ open = false, actionDisabled,
     <Modal height="100%" handleClose={onClose} open={open}>
       <Stack width={625}>
         <Typography fontSize={25} variant="h2" mb={8}>
-          Allow Advertise?
+          Allow Advertisement?
         </Typography>
         <Box display="flex" gap={5}>
           <Image
@@ -32,18 +34,29 @@ const EnableAdsModal: FC<EnableAdsModalProps> = ({ open = false, actionDisabled,
               borderRadius: '8px',
             }}
           />
-          <Typography component="p" color={THEME_COLORS.grey03} variant="caption" textAlign="left">
-            We have partnered up with {'{placeholder}'} to allow for ads to be shown on your property until someone
-            rents it. By allowing your plot to be used for ads, you will be rewarded additionally for each unique view
-            that the ad gets. Rewards can be claimed every month.
+          <Typography component="p" fontWeight={400} color={THEME_COLORS.grey03} variant="caption" textAlign="left">
+            We have partnered up with <ExternalLink href="https://precisionx.com/en/">PrecisionX</ExternalLink> to allow
+            for ads to be displayed on your land until it gets rented. By allowing your plot to be used for ads, you
+            will be rewarded 0.025 USDC (0.05 USDC if you own a{' '}
+            <ExternalLink href="https://opensea.io/collection/sharded-minds">Sharded Mind</ExternalLink> NFT) for each
+            unique view on the ad. Full info on how the ads work can be found <ExternalLink href="#">here</ExternalLink>
+            .
             <br />
             <br />
-            Think of it like providing your plot to the ads company until someone actually rents it!
+            Think of it as providing your land to the an advertiser until it gets rented!
           </Typography>
         </Box>
-        <Box display="flex" justifyContent="center" mt={16}>
+        <InfoAlert
+          sx={{ mt: 6 }}
+          description={
+            <Typography variant="body2" fontWeight={400} color={THEME_COLORS.grey03}>
+              Please note that a wallet signature will popup in order to confirm your choice.
+            </Typography>
+          }
+        />
+        <Box display="flex" justifyContent="center" mt={6}>
           <Button disabled={actionDisabled} variant="gradient" btnSize="medium" onClick={onConfirm}>
-            sign
+            Sign
           </Button>
         </Box>
       </Stack>
