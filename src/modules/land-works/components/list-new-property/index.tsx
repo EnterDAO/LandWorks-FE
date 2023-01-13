@@ -8,10 +8,11 @@ import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import listingAdImgSrc from 'assets/img/listing-ad.jpg';
 import landNotFoundImageSrc from 'assets/land-not-found.svg';
+import Typography from 'components/common/Typography';
 import ExternalLink from 'components/custom/external-link';
 import Image from 'components/custom/image';
 import Stepper, { Step, StepLabel } from 'components/styled/stepper';
-import { Box, Button, Checkbox, ControlledSelect, Grid, Stack, Typography } from 'design-system';
+import { Box, Button, Checkbox, ControlledSelect, Grid, Stack } from 'design-system';
 import { WarningIcon } from 'design-system/icons';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import useGetIsMounted from 'hooks/useGetIsMounted';
