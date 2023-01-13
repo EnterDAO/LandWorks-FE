@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { getEtherscanAddressUrl } from 'web3/utils';
 
 import Typography from 'components/common/Typography';
