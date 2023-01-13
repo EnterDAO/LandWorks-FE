@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { Collapse } from '@mui/material';
 
 import { Box, Button, IconButton, Typography } from 'design-system';
