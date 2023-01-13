@@ -83,7 +83,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   const sceneDetail = isAdvertisementEnabled
     ? {
         label: 'SCENE',
-        content: 'Partner Name Ads Billboard',
+        content: 'PrecisionX Ads Billboard',
         tooltip: {
           title: 'PrecisionX Ads Billboard',
           description:
