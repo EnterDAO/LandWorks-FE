@@ -70,4 +70,14 @@ export default {
     textDecoration: 'none',
     cursor: 'pointer',
   },
+  link2: {
+    color: 'var(--theme-subtle-color)',
+    fontSize: '16px',
+    lineHeight: 1.5,
+    textDecoration: 'underline',
+    cursor: 'pointer',
+    ':hover': {
+      color: 'var(--theme-subtle-color)',
+    },
+  },
 } as const;

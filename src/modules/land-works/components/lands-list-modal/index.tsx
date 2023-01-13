@@ -25,6 +25,7 @@ interface IProps {
 interface ITxModal extends IProps {
   textMessage: string;
 }
+
 interface ISuccessModal extends IProps {
   showShareButton: boolean;
   listedPropertyId: string;

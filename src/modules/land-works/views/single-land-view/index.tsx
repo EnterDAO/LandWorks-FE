@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useQuery, useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
@@ -59,16 +59,69 @@ const useAssetLastRent = (assetId?: string) => {
   return data ? data.rents[0] : undefined;
 };
 
+const useGetAccountAsset = (assetId: string) => {
+  const {
+    data,
+    loading,
+    error: subscriptionError,
+  } = useSubscription<{ asset: any }>(ASSET_SUBSCRIPTION, {
+    variables: { id: assetId },
+  });
+  const [parsedAsset, setParsedAsset] = useState<AssetEntity>();
+  const [isParsing, setIsParsing] = useState(false);
+  const [parseError, setParseError] = useState<Error>();
+
+  const isLoading = loading && isParsing;
+
+  useLayoutEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    let isCancelled = false;
+
+    setIsParsing(true);
+
+    parseAsset(data.asset)
+      .then((parsed) => {
+        if (!isCancelled) {
+          setParsedAsset(parsed);
+        }
+      })
+      .catch((e) => {
+        if (!isCancelled) {
+          setParseError(e);
+        }
+      })
+      .finally(() => {
+        if (!isCancelled) {
+          setIsParsing(false);
+        }
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [data]);
+
+  return {
+    data: parsedAsset,
+    isLoading,
+    error: subscriptionError || parseError,
+  };
+};
+
+// TODO: refactor
 const SingleLandView: React.FC = () => {
   const wallet = useWallet();
   const { addWithdrawTransaction, deleteWithdrawTransaction } = useActiveAssetTransactions();
-
   const { landWorksContract } = useLandworks();
 
   const history = useHistory();
   const location = useLocation<LocationState>();
   const { tokenId } = useParams<{ tokenId: string }>();
-  const [asset, setAsset] = useState({} as AssetEntity);
+  const [isAdvertisementEnabled, setIsAdvertisementEnabled] = useState(true);
+  const { data: asset = {} as AssetEntity } = useGetAccountAsset(tokenId);
   const [adjacentLands, setAdjacentLands] = useState([] as AssetEntity[]);
   const [paginatedNearbyLands, setPaginatedNearbyLands] = useState([] as AssetEntity[]);
   const [itemsOnPage] = useState(4);
@@ -103,20 +156,6 @@ const SingleLandView: React.FC = () => {
   const hasFeedbackButton = isRenter && !isOwner && !hasRentPassed;
 
   const parselProperties = isCryptovoxel ? asset.attributes : asset.additionalData;
-
-  useSubscription(ASSET_SUBSCRIPTION, {
-    variables: { id: tokenId },
-    onSubscriptionData: async ({ subscriptionData }) => {
-      if (subscriptionData.error) {
-        // TODO:
-      }
-      if (subscriptionData.data.asset === null) {
-        history.push(APP_ROUTES.explore);
-        return;
-      }
-      setAsset(await parseAsset(subscriptionData.data.asset));
-    },
-  });
 
   const shouldShowWithdraw = () => {
     return isOwnerOrConsumer && asset?.status === AssetStatus.DELISTED;
@@ -264,6 +303,7 @@ const SingleLandView: React.FC = () => {
   };
 
   const isNeedRedirect = () => window.location.pathname === getPropertyPath(asset.id);
+
   const breadcrumbs = {
     url: location.state?.previousPage?.from || location.state?.from || APP_ROUTES.explore,
     title: location.state?.previousPage?.title || location.state?.title || 'Explore',
@@ -430,6 +470,7 @@ const SingleLandView: React.FC = () => {
       </Grid>
 
       <SingleViewLandCard
+        onAdsToggle={setIsAdvertisementEnabled}
         isClaimButtonDisabled={claimButtonDisabled}
         isRentButtonDisabled={rentButtonDisabled}
         isUpdateOperatorButtonDisabled={isUpdateOperatorDisabled}
@@ -440,7 +481,7 @@ const SingleLandView: React.FC = () => {
         }}
       />
 
-      {!!asset.id && !!asset.metaverseRegistry?.id && isPromoSceneDeploymentAvailable && (
+      {!!asset.id && !!asset.metaverseRegistry?.id && isPromoSceneDeploymentAvailable && !isAdvertisementEnabled && (
         <Box maxWidth={1000} my={12} mx="auto">
           <PromoSceneRedeployment assetId={asset.id} metaverseRegistryId={asset.metaverseRegistry.id} />
         </Box>

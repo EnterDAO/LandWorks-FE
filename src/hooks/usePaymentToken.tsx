@@ -8,7 +8,7 @@ const usePaymentToken = (tokenAddress: string): PaymentToken | undefined => {
   const { data } = usePaymentTokensQuery();
 
   return useMemo(() => {
-    return data.find(({ id }) => id.toLowerCase() === tokenAddress.toLowerCase());
+    return data.find(({ id }) => id?.toLowerCase() === tokenAddress?.toLowerCase());
   }, [data, tokenAddress]);
 };
 
