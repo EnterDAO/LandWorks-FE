@@ -2,7 +2,7 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 
 import { ReactComponent as AlertIcon } from 'assets/icons/warning.svg';
-import promotionalSceneTooltipThumbnail from 'assets/img/promotional-scene-thumbnail.jpg';
+import promotionalSceneTooltipThumbnail from 'assets/img/listing-ad.jpg';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { Tooltip } from 'design-system';
@@ -87,12 +87,12 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
 
   const sceneDetail = isAdvertisementEnabled
     ? {
-        label: '{placeholder} Ads Scene',
-        content: '{placeholder} Ads Billboard',
+        label: 'SCENE',
+        content: 'PrecisionX Ads Billboard',
         tooltip: {
-          title: '{placeholder} Ads Billboard',
+          title: 'PrecisionX Ads Billboard',
           description:
-            'A billboard showing ads will be placed on this land. You will earn {sum} per unique view. Rewards can be claimed every month.',
+            'A billboard showing ads will be placed on this land. You will earn USDC per unique view. Rewards can be claimed every month. ',
         },
       }
     : {

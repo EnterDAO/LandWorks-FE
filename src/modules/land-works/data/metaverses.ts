@@ -3,4 +3,4 @@ export const METAVERSES = {
   Voxels: '2',
 } as const;
 
-export type MetaverseId = typeof METAVERSES[keyof typeof METAVERSES];
+export type MetaverseId = (typeof METAVERSES)[keyof typeof METAVERSES];

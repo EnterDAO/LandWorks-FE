@@ -1,66 +1,38 @@
-import React, { ComponentType, useLayoutEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import { ReactComponent as MinimizeIcon } from 'assets/icons/minimize.svg';
-import Typography from 'components/common/Typography';
 import { Box, Stack } from 'design-system';
 import { MinusIcon, PlusThinIcon, ViewAllIcon } from 'design-system/icons';
-import { LandsExploreMapBaseProps } from 'modules/interface';
-import LandsExploreMap from 'modules/land-works/components/lands-explore-map';
-import LandsExploreMapVoxels from 'modules/land-works/components/lands-explore-map-voxels';
-import { METAVERSES, MetaverseId } from 'modules/land-works/data/metaverses';
+import MetaverseMap, { MetaverseMapProps } from 'modules/land-works/views/explore-view/MetaverseMap/MetaverseMap';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 
 import MapControlButton from './MapControlButton';
+import { useMetaverseMap } from './MetaverseMap/MetaverseMapProvider';
 import ToggleMapVisibilityButton from './ToggleMapVisibilityButton';
 
-interface ExploreMapProps extends Omit<LandsExploreMapBaseProps, 'zoom' | 'onZoom'> {
-  metaverse: string;
+interface ExploreMapProps extends Omit<MetaverseMapProps, 'isFullScreen'> {
   isMapVisible?: boolean;
   onShowMap?: () => void;
   onHideMap?: () => void;
 }
 
-const ZOOM_STEP = 0.2;
+const MetaverseMapZoomInButton = () => {
+  const { zoom, zoomIn, maxZoom } = useMetaverseMap();
 
-const metaverseMapComponentsById: Record<MetaverseId, ComponentType<LandsExploreMapBaseProps>> = {
-  [METAVERSES.Decentraland]: LandsExploreMap,
-  [METAVERSES.Voxels]: LandsExploreMapVoxels,
+  return <MapControlButton disabled={zoom === maxZoom} onClick={zoomIn} icon={PlusThinIcon} />;
 };
 
-// TODO: refactor
-const ExploreMap = ({ metaverse, isMapVisible, onShowMap, onHideMap, ...mapProps }: ExploreMapProps) => {
+const MetaverseMapZoomOutButton = () => {
+  const { zoom, zoomOut, minZoom } = useMetaverseMap();
+
+  return <MapControlButton disabled={zoom === minZoom} onClick={zoomOut} icon={MinusIcon} />;
+};
+
+const ExploreMap: FC<ExploreMapProps> = ({ isMapVisible, onShowMap, onHideMap, ...metaverseMapProps }) => {
   const stickyOffset = useStickyOffset();
-  const [zoom, setZoom] = useState(0.5);
   const [isMapMaximized, setIsMapMaximized] = useState(false);
 
-  const handleZoom = (newZoom: number) => {
-    setZoom(newZoom);
-  };
-  useLayoutEffect(() => {
-    if (!isMapVisible) {
-      setIsMapMaximized(false);
-    }
-  }, [isMapVisible]);
-
-  const zoomIn = () => {
-    setZoom((prevZoom) => {
-      const nextZoom = prevZoom + ZOOM_STEP;
-
-      return nextZoom > 1 ? 1 : nextZoom;
-    });
-  };
-
-  const zoomOut = () => {
-    setZoom((prevZoom) => {
-      const nextZoom = prevZoom - ZOOM_STEP;
-
-      return nextZoom < 0 ? 0 : nextZoom;
-    });
-  };
-
   const toggleIsMapMaximized = () => setIsMapMaximized((prevIsMapMaximized) => !prevIsMapMaximized);
-
-  const MapComponent = metaverseMapComponentsById[metaverse as MetaverseId];
 
   const mapOffsetTop = stickyOffset.offsets.filter + stickyOffset.offsets.header;
 
@@ -119,21 +91,13 @@ const ExploreMap = ({ metaverse, isMapVisible, onShowMap, onHideMap, ...mapProps
             zIndex={0}
             bgcolor="var(--theme-card-color)"
           >
-            {MapComponent ? (
-              <>
-                <MapComponent {...mapProps} enableTooltips={isMapMaximized} zoom={zoom} onZoom={handleZoom} />
-
-                <Stack spacing={2} position="absolute" right={20} top={20}>
-                  <MapControlButton disabled={zoom === 1} onClick={zoomIn} icon={PlusThinIcon} />
-                  <MapControlButton disabled={zoom === 0} onClick={zoomOut} icon={MinusIcon} />
-                  <MapControlButton onClick={toggleIsMapMaximized} icon={isMapMaximized ? MinimizeIcon : ViewAllIcon} />
-                </Stack>
-              </>
-            ) : (
-              <Typography position="absolute" top={0} left={0} right={0} bottom={0} margin="auto">
-                Map is not implemented yet
-              </Typography>
-            )}
+            <MetaverseMap isFullScreen={isMapMaximized} {...metaverseMapProps}>
+              <Stack spacing={2} position="absolute" right={20} top={20}>
+                <MetaverseMapZoomInButton />
+                <MetaverseMapZoomOutButton />
+                <MapControlButton onClick={toggleIsMapMaximized} icon={isMapMaximized ? MinimizeIcon : ViewAllIcon} />
+              </Stack>
+            </MetaverseMap>
           </Box>
         )}
       </Box>

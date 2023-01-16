@@ -18,21 +18,13 @@ import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-
 
 import {
   AssetEntity,
-  CoordinatesLand,
   PaymentToken,
   fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   fetchTokenPayments,
 } from '../../api';
 import ExploreMap from './ExploreMap';
 
-import {
-  filterByMoreFilters,
-  getAllLandsCoordinates,
-  getMaxArea,
-  getMaxHeight,
-  getMaxLandSize,
-  landsOrder,
-} from 'modules/land-works/utils';
+import { filterByMoreFilters, getMaxArea, getMaxHeight, getMaxLandSize, landsOrder } from 'modules/land-works/utils';
 import { getNowTs, sessionStorageHandler } from 'utils';
 import { DAY_IN_SECONDS } from 'utils/date';
 
@@ -83,7 +75,7 @@ const ExploreView: React.FC = () => {
   const [lands, setLands] = useState<AssetEntity[]>([]);
   const [clickedLandId, setStateClickedLandId] = useState<AssetEntity['id']>('');
   const [mapTiles, setMapTiles] = useState<Record<string, AtlasTile>>({});
-  const [selectedId, setSelectedId] = useState<string>('');
+  const [selectedId, setSelectedId] = useState<string>();
   const [selectedTile, setSelectedTile] = useState<SelectedTile>({
     id: '',
     type: '',
@@ -96,7 +88,6 @@ const ExploreView: React.FC = () => {
   const [sortDir, setSortDir] = useState(sortDirections[orderFilter]);
   const [sortColumn, setSortColumn] = useState(sortColumns[orderFilter]);
 
-  const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
   const [rentStatus] = useRentStatusQueryParam();
   const [isMapVisible, setIsMapVisible] = useQueryParam('map', IsMapVisibleParam);
   const [priceParams] = usePriceQueryParams();
@@ -104,9 +95,6 @@ const ExploreView: React.FC = () => {
   const lastRentEnd = useMemo(() => {
     return rentStatus !== RentStatus.All ? getNowTs().toString() : DEFAULT_LAST_RENT_END;
   }, [rentStatus]);
-
-  const [atlasMapX, setAtlasMapX] = useState(0);
-  const [atlasMapY, setAtlasMapY] = useState(0);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -149,15 +137,6 @@ const ExploreView: React.FC = () => {
     },
     [lands]
   );
-
-  const setPointMapCentre = (lands: CoordinatesLand[]) => {
-    if (lands[0]) {
-      const { x, y } = lands[0];
-
-      setAtlasMapX(Number(x));
-      setAtlasMapY(Number(y));
-    }
-  };
 
   const onChangeFiltersSortDirection = (value: number) => {
     const sortIndex = Number(value) - 1;
@@ -204,10 +183,6 @@ const ExploreView: React.FC = () => {
       );
 
       setLands(sortByHottest || sortBySize ? landsOrder(lands.data, orderColumn, sortDir) : lands.data);
-
-      const highlights = getAllLandsCoordinates(lands.data);
-      setCoordinatesHighlights(highlights);
-      setPointMapCentre(highlights);
 
       // TODO: refactor it to support new metaverses
       if (metaverse === METAVERSES.Decentraland) {
@@ -280,23 +255,23 @@ const ExploreView: React.FC = () => {
             <Box className="content-container content-container--explore-view" maxWidth="none !important">
               <Box width={{ lg: isMapVisible ? 0.5 : 1 }} pr={{ lg: isMapVisible ? 2 : 0 }}>
                 <LandsExploreList
+                  selectedAssetId={selectedId}
+                  onSelectAsset={setSelectedId}
                   isMapVisible={isMapVisible}
                   lastRentEnd={lastRentEnd}
                   loading={loading}
                   lands={filteredLands || lands}
-                  setPointMapCentre={setPointMapCentre}
                 />
                 <LayoutFooter isWrapped={false} />
               </Box>
             </Box>
 
             <ExploreMap
-              metaverse={metaverse}
-              positionX={atlasMapX}
-              positionY={atlasMapY}
-              highlights={coordinatesHighlights}
-              lands={lands}
+              type={metaverse}
+              assets={lands}
               isMapVisible={isMapVisible}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
               onHideMap={() => setIsMapVisible(false)}
               onShowMap={() => setIsMapVisible(true)}
             />

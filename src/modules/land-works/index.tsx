@@ -5,6 +5,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { Loader } from 'design-system';
 import useGetAllMetaversesQuery from 'hooks/useGetAllMetaversesQuery';
 import useGetAllPaymentTokensQuery from 'hooks/useGetAllPaymentTokensQuery';
+import ActiveAssetTransactionsProvider from 'providers/ActiveAssetTransactionsProvider';
 import ListingModalProvider from 'providers/listing-modal-provider';
 import { useWarning } from 'providers/warning-provider';
 import { APP_ROUTES, LANDING_ROUTES } from 'router/routes';
@@ -66,17 +67,19 @@ const LandworksView = () => {
   }
 
   return (
-    <MetaversesProvider value={metaverses}>
-      <PaymentTokensProvider value={paymentTokens}>
-        <ListingModalProvider>
-          <Switch>
-            <Route path={APP_ROUTES.explore} exact component={ExploreView} />
-            <Route path={APP_ROUTES.property} component={SingleLand} />
-            <Route path={APP_ROUTES.myProperties} component={MyPropertiesView} />
-          </Switch>
-        </ListingModalProvider>
-      </PaymentTokensProvider>
-    </MetaversesProvider>
+    <ActiveAssetTransactionsProvider>
+      <MetaversesProvider value={metaverses}>
+        <PaymentTokensProvider value={paymentTokens}>
+          <ListingModalProvider>
+            <Switch>
+              <Route path={APP_ROUTES.explore} exact component={ExploreView} />
+              <Route path={APP_ROUTES.property} component={SingleLand} />
+              <Route path={APP_ROUTES.myProperties} component={MyPropertiesView} />
+            </Switch>
+          </ListingModalProvider>
+        </PaymentTokensProvider>
+      </MetaversesProvider>
+    </ActiveAssetTransactionsProvider>
   );
 };
 

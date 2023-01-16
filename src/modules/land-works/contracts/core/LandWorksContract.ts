@@ -41,7 +41,7 @@ export default class LandWorksContract extends Web3Contract {
     maxFutureTime: BigNumber,
     paymentToken: string,
     pricePerSecond: BigNumber | string,
-    callback: () => void = () => {}
+    callback: (txHash: string) => void = () => {}
   ): Promise<any> {
     if (!this.account) {
       return Promise.reject();
@@ -105,7 +105,7 @@ export default class LandWorksContract extends Web3Contract {
    * @param assetId The target asset.
    * @param callback Function, executed once the transaction has been submitted
    */
-  delist(assetId: BigNumber | string, callback: () => void = () => {}): Promise<void> {
+  delist(assetId: BigNumber | string, callback: (txHash: string) => void): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
@@ -124,7 +124,7 @@ export default class LandWorksContract extends Web3Contract {
    * @param assetId The target asset.
    * @param callback Function, executed once the transaction has been submitted
    */
-  withdraw(assetId: BigNumber | string, callback: () => void = () => {}): Promise<void> {
+  withdraw(assetId: BigNumber | string, callback: (txHash: string) => void): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
@@ -178,7 +178,7 @@ export default class LandWorksContract extends Web3Contract {
     maxRentStart: number,
     paymentToken: string,
     value: BigNumber,
-    callback: () => void = () => {}
+    callback: (txHash: string) => void = () => {}
   ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
@@ -214,7 +214,7 @@ export default class LandWorksContract extends Web3Contract {
     maxRentStart: number,
     paymentToken: string,
     value: BigNumber,
-    callback: () => void = () => {}
+    callback: (txHash: string) => void = () => {}
   ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
