@@ -16,12 +16,7 @@ import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers
 import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 
-import {
-  AssetEntity,
-  PaymentToken,
-  fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
-  fetchTokenPayments,
-} from '../../api';
+import { AssetEntity, PaymentToken, fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder } from '../../api';
 import ExploreMap from './ExploreMap';
 
 import { filterByMoreFilters, getMaxArea, getMaxHeight, getMaxLandSize, landsOrder } from 'modules/land-works/utils';
@@ -44,26 +39,6 @@ const IsMapVisibleParam = withDefault(BooleanParam, true);
 
 const parsePriceToNonHuman = (price: number, decimals = 0) => {
   return getNonHumanValue(price, decimals).dividedBy(DAY_IN_SECONDS).toFixed(0);
-};
-
-const usePaymentTokens = () => {
-  const [paymentTokens, setPaymentTokens] = useState<PaymentToken[]>([]);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    fetchTokenPayments().then((tokens) => {
-      if (isMounted) {
-        setPaymentTokens(tokens);
-      }
-    });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  return paymentTokens;
 };
 
 const ExploreView: React.FC = () => {
@@ -100,11 +75,7 @@ const ExploreView: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showCardPreview, setShowCardPreview] = useState(false);
 
-  const paymentTokens = usePaymentTokens();
-
-  const paymentToken = useMemo(() => {
-    return priceParams.currency !== 0 && paymentTokens.length > 0 ? paymentTokens[priceParams.currency - 1] : undefined;
-  }, [paymentTokens, priceParams.currency]);
+  const paymentToken = priceParams.paymentToken;
 
   const [maxLandSize, setMaxLandSize] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
@@ -187,7 +158,7 @@ const ExploreView: React.FC = () => {
       // TODO: refactor it to support new metaverses
       if (metaverse === METAVERSES.Decentraland) {
         setMaxLandSize(getMaxLandSize(lands.data));
-      } else {
+      } else if (metaverse === METAVERSES.Voxels) {
         setMaxHeight(getMaxHeight(lands.data));
         setMaxArea(getMaxArea(lands.data));
       }

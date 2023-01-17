@@ -27,6 +27,7 @@ const GrantsProgram = lazy(() => import('modules/grants-program'));
 
 const client = GraphClient._getWsClient();
 
+// TODO: refactor
 const LayoutView: React.FC = () => {
   const isGrandProgramRoute = useRouteMatch({
     path: [APP_ROUTES.grantsProgram, LANDING_ROUTES.grantsProgram],

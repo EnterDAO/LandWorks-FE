@@ -35,6 +35,7 @@ const LandworksView = () => {
 
   const error = metaversesQueryError || paymentTokensQueryError;
   const isLoading = areMetaversesLoading || arePaymentTokensLoading;
+
   useEffect(() => {
     if (!isMobile) {
       return;
