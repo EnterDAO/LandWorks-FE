@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Stack, ToggleButton } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import classNames from 'classnames';
 import { formatUSD } from 'web3/utils';
 
 import { Button } from 'design-system';
+import { usePaymentTokens } from 'modules/land-works';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 
-import { currencyData } from '../lands-explore-filters/filters-data';
+import PaymentTokenIcon from '../PaymentTokenIcon';
 import {
   ButtonGroup,
   ErrorText,
@@ -26,16 +27,20 @@ interface IProps {
   onSubmit?: (currency: number, minValue: number | null, maxValue: number | null) => void;
 }
 
+const ALL_CURRENCIES_ID = '';
+
+// TODO: refactor
 export const PricePopover: React.FC<IProps> = ({ text }) => {
+  const paymentTokens = usePaymentTokens();
+
   const [disableApply, setDisableApply] = useState(true);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
   const [priceParams, setPriceParams] = usePriceQueryParams();
 
-  const [currency, setCurrency] = useState<number>(priceParams.currency);
-  const [minPrice, setMinPrice] = useState<string | number | null>(priceParams.minPrice || null);
-  const [maxPrice, setMaxPrice] = useState<string | number | null>(priceParams.maxPrice || null);
-  const [error, setError] = useState<string>('');
+  const [currency, setCurrency] = useState(priceParams.paymentToken?.symbol.toLowerCase() || ALL_CURRENCIES_ID);
+  const [minPrice, setMinPrice] = useState<string | undefined>(priceParams.minPrice?.toString());
+  const [maxPrice, setMaxPrice] = useState<string | undefined>(priceParams.maxPrice?.toString());
 
   const openPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -45,47 +50,55 @@ export const PricePopover: React.FC<IProps> = ({ text }) => {
     setAnchorEl(null);
   };
 
-  const handleCurrency = (event: React.MouseEvent<HTMLElement>, cur: number | null) => {
-    cur !== null && setCurrency(cur);
-    cur == 0 && resetPrice();
+  const handleCurrency = (event: React.MouseEvent<HTMLElement>, id: string | null) => {
+    if (id === null) {
+      return;
+    }
+
+    setCurrency(id);
+
+    if (id === ALL_CURRENCIES_ID) {
+      resetPrice();
+    }
+
     setDisableApply(false);
   };
 
   const onInput = (value: string, type: 'min' | 'max') => {
-    type === 'min' ? setMinPrice(value) : setMaxPrice(value);
-    disableApply && setDisableApply(false);
+    const setter = type === 'min' ? setMinPrice : setMaxPrice;
+
+    setter(value);
+
+    if (disableApply) {
+      setDisableApply(false);
+    }
   };
 
   const resetPrice = () => {
-    setMinPrice(null);
-    setMaxPrice(null);
+    setMinPrice('');
+    setMaxPrice('');
   };
 
   const getUsdPrice = (price: string | number | BigNumber) => {
-    const symbol = currency ? currencyData[currency].label : 'ETH';
+    const symbol = currency !== ALL_CURRENCIES_ID ? currency : 'eth';
     const ethPrice = new BigNumber(getTokenPrice(symbol) || '0');
     const ethToUsdPrice = ethPrice.multipliedBy(price);
 
     return ethToUsdPrice.toFixed();
   };
 
-  useEffect(() => {
-    const isNegativeMin = minPrice !== null && +minPrice <= 0;
-    const isNegativeMax = maxPrice !== null && +maxPrice <= 0;
+  const error = useMemo(() => {
+    const parsedMinPrice = minPrice ? +minPrice : undefined;
+    const parsedMaxPrice = maxPrice ? +maxPrice : undefined;
+    const isNegativeMin = typeof parsedMinPrice === 'number' && parsedMinPrice <= 0;
+    const isNegativeMax = typeof parsedMaxPrice === 'number' && parsedMaxPrice <= 0;
 
     if (isNegativeMin) {
-      setError('Price cannot be negative or equal zero');
-      return;
-    }
-    if (isNegativeMax) {
-      setError('Price cannot be negative or equal zero');
-      return;
-    }
-    if (minPrice && maxPrice && minPrice >= maxPrice) {
-      setError('Min should be > than Max');
-      return;
-    } else {
-      setError('');
+      return 'Price cannot be negative or equal zero';
+    } else if (isNegativeMax) {
+      return 'Price cannot be negative or equal zero';
+    } else if (parsedMinPrice && parsedMaxPrice && parsedMinPrice >= parsedMaxPrice) {
+      return 'Min should be > than Max';
     }
   }, [minPrice, maxPrice]);
 
@@ -100,13 +113,28 @@ export const PricePopover: React.FC<IProps> = ({ text }) => {
     setDisableApply(true);
   };
 
-  const disableInput = currency == 0;
+  const disableInput = currency === ALL_CURRENCIES_ID;
+
+  const currencyOptions = useMemo(() => {
+    return [
+      {
+        id: ALL_CURRENCIES_ID,
+        label: 'All',
+      },
+      ...paymentTokens.map((paymentToken) => {
+        return {
+          id: paymentToken.symbol.toLowerCase(),
+          label: paymentToken.symbol,
+        };
+      }),
+    ];
+  }, [paymentTokens]);
 
   return (
     <div>
       <PopoverButton
         className={classNames({ 'Mui-expanded': !!anchorEl })}
-        isActive={priceParams.currency !== 0}
+        isActive={!!priceParams.paymentToken}
         onClick={openPopover}
       >
         {text}
@@ -124,10 +152,10 @@ export const PricePopover: React.FC<IProps> = ({ text }) => {
         <>
           <StyledTypography>Currency</StyledTypography>
           <ButtonGroup exclusive value={currency} onChange={handleCurrency}>
-            {currencyData.map((cur, index) => (
-              <ToggleButton value={cur.value} key={cur.value}>
-                {cur.icon && <span>{cur.icon}</span>}
-                <span>{index === 0 ? cur.label.split(' ')[0] : cur.label}</span>
+            {currencyOptions.map((options) => (
+              <ToggleButton value={options.id} key={options.id}>
+                {options.id !== ALL_CURRENCIES_ID && <PaymentTokenIcon symbol={options.id} />}
+                <span>{options.label}</span>
               </ToggleButton>
             ))}
           </ButtonGroup>
@@ -167,7 +195,7 @@ export const PricePopover: React.FC<IProps> = ({ text }) => {
               }}
               onClick={resetPrice}
               btnSize="xsmall"
-              disabled={!minPrice || !maxPrice}
+              disabled={!minPrice && !maxPrice}
               variant="tertiary"
             >
               Clear
