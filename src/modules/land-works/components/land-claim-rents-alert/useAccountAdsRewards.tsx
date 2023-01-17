@@ -14,6 +14,7 @@ const initialData = {
   contractAddress: '',
   proof: [],
   token: config.contracts.adsContract,
+  totalListed: 0,
 };
 
 const useAdsRewardsContract = (contractAddress: string): AdsRewardsContract | undefined => {
@@ -29,7 +30,7 @@ const useAdsRewardsContract = (contractAddress: string): AdsRewardsContract | un
     adsRewardsContract.setAccount(wallet.account);
 
     return adsRewardsContract;
-  }, [contractAddress, wallet.provider]);
+  }, [contractAddress, wallet.provider, wallet.account]);
 };
 
 const useAccountAdsRewards = () => {
@@ -58,6 +59,7 @@ const useAccountAdsRewards = () => {
 
   return {
     paymentTokenAddress: data.token,
+    totalListed: data.totalListed,
     amount,
     claim,
     ...other,

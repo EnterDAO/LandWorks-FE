@@ -1,6 +1,7 @@
-import React, { FC, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 
+import ExternalLink from 'components/custom/external-link';
 import { Box, Button, Stack, Typography } from 'design-system';
 import { PaymentToken } from 'modules/land-works/api';
 import { UsdcToken } from 'providers/known-tokens-provider';
@@ -11,8 +12,8 @@ import { useClaimRewards } from './ClaimRewardsProvider';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
-const ClaimRewardsModalAdsTab: FC = () => {
-  const { adsReward, isAdsRewardClaiming, adsRewardsPaymentToken, claimAdsReward } = useClaimRewards();
+const ClaimRewardsModalAdsTab = () => {
+  const { adsReward, totalListed, isAdsRewardClaiming, adsRewardsPaymentToken, claimAdsReward } = useClaimRewards();
   const adsTotalRewards = useMemo(() => {
     if (!adsRewardsPaymentToken) {
       return [
@@ -48,21 +49,24 @@ const ClaimRewardsModalAdsTab: FC = () => {
           <ClaimRewardsModalEmpty />
         ) : (
           <Typography component="p" variant="caption" color={THEME_COLORS.grey03}>
-            You have awards to claim from the ads that have been displayed on your listed properties. Ads are displayed
-            on the properties while listed on LandWorks until they get rented.
+            You have pending awards from the ads that have been displayed on your land(s) while listed on LandWorks.
             <br />
             <br />
-            The awards are paid out based on the unique views the ad accumulated until the last day of each month. Each
-            unique view pays a 0.05 USDC. For a more detailed split of the accumulated unique views of your listed
-            properties or if you have any questions, please reach out on our{' '}
-            <a href="https://discord.com/invite/7QJvEctG2G" target="_blank">
+            The awards are paid out based on the unique views the ad(s) accumulate within a given month. Each unique
+            view pays 0.025 USDC (0.05 USDC if you own a{' '}
+            <ExternalLink variant="link2" href="https://opensea.io/collection/sharded-minds">
+              Sharded Minds
+            </ExternalLink>{' '}
+            NFT). Full info on how the ads work can be found here. For a more detailed split of the accumulated unique
+            views of your listed land(s) or if you have any questions, please reach out on our{' '}
+            <ExternalLink variant="link2" href="https://discord.com/invite/7QJvEctG2G">
               Discord server
-            </a>
+            </ExternalLink>
             .
             <br />
             <br />
-            You have <strong>X</strong> listed properties on LandWorks where you have allowed ads to be displayed. The
-            awards available to claim have accrued for <strong>Y</strong> months.
+            You have <b>{totalListed}</b> listed properties on LandWorks where you have allowed ads to be displayed.
+            Click the CLAIM button below to transfer the rewards to your wallet.
           </Typography>
         )}
       </Stack>

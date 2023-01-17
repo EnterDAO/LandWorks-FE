@@ -1,10 +1,8 @@
 import React, { FC, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { Collapse } from '@mui/material';
 
 import { Box, Button, IconButton, Typography } from 'design-system';
 import { CloseIcon } from 'design-system/icons';
-import { LANDING_ROUTES } from 'router/routes';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
@@ -12,7 +10,6 @@ const IS_AGITATION_BAR_HIDDEN_STORAGE_KEY = 'is-agitation-bar-hidden';
 
 export const HeaderAgitaionBar: FC = () => {
   const [show, setShow] = useState(() => !sessionStorage.getItem(IS_AGITATION_BAR_HIDDEN_STORAGE_KEY));
-  const history = useHistory();
 
   const handleCloseButtonClick = () => {
     setShow(false);
@@ -35,7 +32,7 @@ export const HeaderAgitaionBar: FC = () => {
           fontSize={{ xs: 12, lg: 14 }}
           lineHeight={{ xs: '18px', lg: '21px' }}
         >
-          Apply for our Grant Program and win up to $10,000!
+          We have partnered up with PrecisionX to bring an additional layer of monetization for landlords!
         </Typography>
         <Button
           sx={{
@@ -44,7 +41,7 @@ export const HeaderAgitaionBar: FC = () => {
           }}
           variant="primary"
           btnSize="xsmall"
-          onClick={() => history.push(LANDING_ROUTES.grantsProgram)}
+          // TODO: add click handler
         >
           Read more
         </Button>

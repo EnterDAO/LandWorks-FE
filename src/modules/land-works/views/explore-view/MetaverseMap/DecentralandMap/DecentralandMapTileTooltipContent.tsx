@@ -6,25 +6,24 @@ import Icon from 'components/custom/icon';
 import { Typography } from 'design-system';
 import { getTokenIconName } from 'helpers/helpers';
 import { AssetEntity } from 'modules/land-works/api';
-
-import LandCardAvailability from '../land-works-card-availability';
+import LandCardAvailability from 'modules/land-works/components/land-works-card-availability';
 
 import { formatBigNumber } from 'utils';
 
-interface LandTooltipContentProps {
-  land: AssetEntity;
+interface DecentralandMapTileTooltipContentProps {
+  asset: AssetEntity;
 }
 
-const LandTooltipContent = ({ land }: LandTooltipContentProps) => {
-  const usdPrice = (land.pricePerMagnitude.usdPrice || ZERO_BIG_NUMBER).toFixed();
+const DecentralandMapTileTooltipContent = ({ asset }: DecentralandMapTileTooltipContentProps) => {
+  const usdPrice = (asset.pricePerMagnitude.usdPrice || ZERO_BIG_NUMBER).toFixed();
   const formattedUsdPrice = formatUSD(usdPrice);
-  const price = land.pricePerMagnitude.price.toFixed();
-  const formattedPrice = formatBigNumber(land.pricePerMagnitude.price);
+  const price = asset.pricePerMagnitude.price.toFixed();
+  const formattedPrice = formatBigNumber(asset.pricePerMagnitude.price);
 
   return (
     <>
       <Typography mb={2} noWrap variant="body2" color="var(--theme-light-color)">
-        {land.name}
+        {asset.name}
       </Typography>
 
       <Typography variant="body2" display="flex" alignItems="center" noWrap gap={1}>
@@ -37,7 +36,7 @@ const LandTooltipContent = ({ land }: LandTooltipContentProps) => {
           gap="2px"
           component="span"
         >
-          <Icon width={15} height={15} name={getTokenIconName(land.paymentToken.symbol)} />
+          <Icon width={15} height={15} name={getTokenIconName(asset.paymentToken.symbol)} />
           <Typography component="span" title={price} variant="inherit" noWrap display="block">
             {formattedPrice}
           </Typography>
@@ -54,7 +53,7 @@ const LandTooltipContent = ({ land }: LandTooltipContentProps) => {
           <Typography component="span" variant="inherit" noWrap display="block">
             {formattedUsdPrice}
           </Typography>
-          /{land.pricePerMagnitude.magnitude}
+          /{asset.pricePerMagnitude.magnitude}
         </Typography>
       </Typography>
 
@@ -66,16 +65,16 @@ const LandTooltipContent = ({ land }: LandTooltipContentProps) => {
             Rent period
           </Typography>
           <Typography textTransform="uppercase" variant="body2" color="var(--theme-light-color)">
-            {land.minPeriodTimedType}-{land.maxPeriodTimedType}
+            {asset.minPeriodTimedType}-{asset.maxPeriodTimedType}
           </Typography>
         </Box>
 
         <Box mx={1}>
-          <LandCardAvailability layout="compact" land={land} />
+          <LandCardAvailability layout="compact" land={asset} />
         </Box>
       </Box>
     </>
   );
 };
 
-export default LandTooltipContent;
+export default DecentralandMapTileTooltipContent;

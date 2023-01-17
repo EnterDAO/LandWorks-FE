@@ -19,7 +19,7 @@ const ClaimRewardsAlert: FC = () => {
   const location = useLocation<LocationState>();
   const wallet = useWallet();
   const [isClaimRewardsModalOpen, setIsClaimRewardsModalOpen] = useState(false);
-  const { amount, claim, paymentTokenAddress } = useAccountAdsRewards();
+  const { amount, totalListed, claim, paymentTokenAddress } = useAccountAdsRewards();
   const { data: unclaimedRentAssets } = useGetAccountUnclaimedAssetsQuery(wallet.account || '');
   const adsRewardsPaymentToken = usePaymentToken(paymentTokenAddress);
 
@@ -38,6 +38,7 @@ const ClaimRewardsAlert: FC = () => {
   return (
     <>
       <ClaimRewardsProvider
+        totalListed={totalListed}
         onClaim={() => setIsClaimRewardsModalOpen(false)}
         unclaimedAssets={unclaimedRentAssets}
         adsReward={amount}
