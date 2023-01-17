@@ -12,16 +12,24 @@ import EnableAdsModal from './EnableAdsModal';
 
 interface AdsToggleProps {
   asset: AssetEntity;
+  onChange?: (value: boolean) => void;
 }
 
-const AdsToggle: FC<AdsToggleProps> = ({ asset }) => {
+// TODO: refactor
+const AdsToggle: FC<AdsToggleProps> = ({ asset, onChange }) => {
   const getIsMounted = useGetIsMounted();
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(true);
   const [isAllowAdvertiseModalOpen, setIsAllowAdvertiseModalOpen] = useState(false);
   const [isDisableAdvertiseModalOpen, setIsDisableAdvertiseModalOpen] = useState(false);
   const { networkId, account = '', provider } = useWallet();
   const [isLoading, setIsLoading] = useState(false);
   const [isTokenRefreshing, setIsTokenRefreshing] = useState(false);
+
+  useEffect(() => {
+    if (onChange) {
+      onChange(isActive);
+    }
+  }, [isActive, onChange]);
 
   useEffect(() => {
     if (!networkId || !asset.metaverseRegistry) {

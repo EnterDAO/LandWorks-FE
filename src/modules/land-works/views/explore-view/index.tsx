@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import BigNumber from 'bignumber.js';
 import { getUnixTime } from 'date-fns';
@@ -17,7 +17,7 @@ import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers
 import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
 
-import { AssetEntity, CoordinatesLand, GET_TOKEN_PAYMENTS, PaymentToken, fetchAssets } from '../../api';
+import { AssetEntity, GET_TOKEN_PAYMENTS, PaymentToken, fetchAssets } from '../../api';
 import { useMetaverseQueryParam } from '../my-properties-view/MetaverseSelect';
 import ExploreMap from './ExploreMap';
 
@@ -65,7 +65,7 @@ const ExploreView: React.FC = () => {
 
   const [clickedLandId, setStateClickedLandId] = useState<AssetEntity['id']>('');
   const [mapTiles, setMapTiles] = useState<Record<string, AtlasTile>>({});
-  const [selectedId, setSelectedId] = useState<string>('');
+  const [selectedId, setSelectedId] = useState<string>();
   const [selectedTile, setSelectedTile] = useState<SelectedTile>({
     id: '',
     type: '',
@@ -84,9 +84,6 @@ const ExploreView: React.FC = () => {
   const lastRentEnd = useMemo(() => {
     return rentStatus !== RentStatus.All ? getNowTs().toString() : DEFAULT_LAST_RENT_END;
   }, [rentStatus]);
-
-  const [atlasMapX, setAtlasMapX] = useState(0);
-  const [atlasMapY, setAtlasMapY] = useState(0);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [showCardPreview, setShowCardPreview] = useState(false);
@@ -161,11 +158,9 @@ const ExploreView: React.FC = () => {
     });
   }, [filteredAssets, sortType]);
 
-  console.log('selected paymenttoken', paymentToken);
-
   const [moreFilters, setMoreFilters] = useState<Partial<MoreFiltersType> | null>(null);
 
-  const { lands, coordinatesHighlights, maxArea, maxHeight, maxLandSize } = useMemo(() => {
+  const { lands, maxArea, maxHeight, maxLandSize } = useMemo(() => {
     const coordinatesHighlights = getAllLandsCoordinates(sortedAssets);
 
     const maxValues = sortedAssets.reduce(
@@ -212,19 +207,6 @@ const ExploreView: React.FC = () => {
     [lands]
   );
 
-  const setPointMapCentre = useCallback((lands: CoordinatesLand[]) => {
-    if (lands[0]) {
-      const { x, y } = lands[0];
-
-      setAtlasMapX(Number(x));
-      setAtlasMapY(Number(y));
-    }
-  }, []);
-
-  useEffect(() => {
-    setPointMapCentre(coordinatesHighlights);
-  }, [setPointMapCentre, coordinatesHighlights]);
-
   const onChangeFiltersSortDirection = (value: number) => {
     setSortType(Number(value) - 1);
   };
@@ -270,11 +252,12 @@ const ExploreView: React.FC = () => {
             <Box className="content-container content-container--explore-view" maxWidth="none !important">
               <Box width={{ lg: isMapVisible ? 0.5 : 1 }} pr={{ lg: isMapVisible ? 2 : 0 }}>
                 <LandsExploreList
+                  selectedAssetId={selectedId}
+                  onSelectAsset={setSelectedId}
                   isMapVisible={isMapVisible}
                   lastRentEnd={lastRentEnd}
                   loading={isLoading}
                   lands={filteredLands || lands}
-                  setPointMapCentre={setPointMapCentre}
                 />
                 <LayoutFooter isWrapped={false} />
               </Box>
@@ -282,11 +265,10 @@ const ExploreView: React.FC = () => {
 
             <ExploreMap
               type={metaverse}
-              positionX={atlasMapX}
-              positionY={atlasMapY}
-              highlights={coordinatesHighlights}
-              lands={lands}
+              assets={lands}
               isMapVisible={isMapVisible}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
               onHideMap={() => setIsMapVisible(false)}
               onShowMap={() => setIsMapVisible(true)}
             />

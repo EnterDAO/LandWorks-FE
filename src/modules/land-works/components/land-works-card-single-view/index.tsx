@@ -40,12 +40,14 @@ type SingleLandProps = {
   isClaimButtonDisabled: boolean;
   isRentButtonDisabled: boolean;
   isUpdateOperatorButtonDisabled: boolean;
+  onAdsToggle?: (value: boolean) => void;
   asset?: AssetEntity;
   onClaimSubmit: () => void;
 };
 
 const SingleViewLandCard: React.FC<SingleLandProps> = ({
   setShowRentModal,
+  onAdsToggle,
   isClaimButtonDisabled,
   isUpdateOperatorButtonDisabled,
   isRentButtonDisabled,
@@ -285,7 +287,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
       _details.push({
         label: 'Allow advertising',
         tooltip: 'Toggle to allow advertising on your land.',
-        content: <AdsToggle asset={asset} />,
+        content: <AdsToggle onChange={onAdsToggle} asset={asset} />,
       });
     }
 
