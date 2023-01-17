@@ -1,12 +1,12 @@
 import React, { ComponentType, ReactNode } from 'react';
+import { Box } from '@mui/material';
 
+import Typography from 'components/common/Typography';
 import { AssetEntity } from 'modules/land-works/api';
-import { MetaverseId } from 'modules/land-works/data/metaverses';
+import { METAVERSES, MetaverseId } from 'modules/land-works/data/metaverses';
 
 import DecentralandMap from './DecentralandMap';
 import VoxelsMap from './VoxelsMap';
-
-import { DECENTRALAND_METAVERSE, VOXEL_METAVERSE } from 'modules/land-works/constants';
 
 export interface MetaverseMapCommonProps {
   onSelect?: (assetId?: string) => void;
@@ -21,8 +21,8 @@ export interface MetaverseMapProps extends MetaverseMapCommonProps {
 }
 
 const metaverseMapByType: Record<MetaverseId, ComponentType<MetaverseMapCommonProps>> = {
-  [DECENTRALAND_METAVERSE]: DecentralandMap,
-  [VOXEL_METAVERSE]: VoxelsMap,
+  [METAVERSES.Decentraland]: DecentralandMap,
+  [METAVERSES.Voxels]: VoxelsMap,
 };
 
 const MetaverseMap = ({ type, ...otherProps }: MetaverseMapProps) => {
@@ -32,7 +32,13 @@ const MetaverseMap = ({ type, ...otherProps }: MetaverseMapProps) => {
     return <SpecificMap {...otherProps} />;
   }
 
-  return null;
+  return (
+    <Box position="relative" width={1} height={1}>
+      <Typography position="absolute" top={0} left={0} right={0} bottom={0} margin="auto">
+        Map is not implemented yet.
+      </Typography>
+    </Box>
+  );
 };
 
 export default MetaverseMap;
