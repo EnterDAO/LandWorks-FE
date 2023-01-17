@@ -6,7 +6,7 @@ export type ContextProps = {
   mapTiles?: Record<string, AtlasTile> | undefined;
   setMapTiles?: Dispatch<SetStateAction<Record<string, AtlasTile>>>;
   selectedId?: string;
-  setSelectedId?: Dispatch<SetStateAction<string>>;
+  setSelectedId?: (id?: string) => void;
 };
 
 export const LandsMapTilesContext = createContext<ContextProps>({});
