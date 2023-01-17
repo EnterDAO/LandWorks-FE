@@ -1,13 +1,7 @@
-import {
-  DecodedValueMap,
-  QueryParamConfig,
-  SetQuery,
-  decodeNumber,
-  encodeNumber,
-  useQueryParams,
-} from 'use-query-params';
+import { useCallback } from 'react';
+import { NumberParam, StringParam, useQueryParams } from 'use-query-params';
 
-import { currencyData } from '../lands-explore-filters/filters-data';
+import { usePaymentTokens } from 'modules/land-works';
 
 import { sessionStorageHandler } from 'utils';
 
@@ -17,71 +11,51 @@ const CURRENCY_QUERY_PARAM_KEY = 'currency';
 const MIN_PRICE_QUERY_PARAM_KEY = 'minPrice';
 const MAX_PRICE_QUERY_PARAM_KEY = 'maxPrice';
 
-const isValidCurrency = (currency: number | null | undefined) => {
-  return typeof currency === 'number' && !!currencyData.find(({ value }) => value === currency);
-};
-
-const CurrencyParam: QueryParamConfig<number, number> = {
-  encode: (value) => {
-    sessionStorageHandler('set', 'explore-filters', CURRENCY_QUERY_PARAM_KEY, value);
-
-    return encodeNumber(value);
-  },
-  decode: (value) => {
-    const decodedValue = decodeNumber(value);
-
-    if (isValidCurrency(decodedValue)) {
-      return decodedValue;
-    }
-
-    const storedValue = sessionStorageHandler('get', 'explore-filters', CURRENCY_QUERY_PARAM_KEY);
-
-    if (isValidCurrency(storedValue)) {
-      return storedValue;
-    }
-
-    return currencyData[0].value;
-  },
-};
-
-const getPriceLimitParamConfig = (queryKey: string): QueryParamConfig<number, number> => {
-  return {
-    encode: (value) => {
-      sessionStorageHandler('set', 'explore-filters', queryKey, value);
-
-      const encodedValue = encodeNumber(value);
-
-      return encodedValue;
-    },
-    decode: (value) => {
-      const decodedValue = decodeNumber(value);
-
-      if (typeof decodedValue === 'number') {
-        return decodedValue;
-      }
-
-      const storedValue = sessionStorageHandler('get', 'explore-filters', queryKey);
-
-      if (typeof storedValue === 'number') {
-        return storedValue;
-      }
-
-      return 0;
-    },
-  };
-};
-
-const MinPriceParam = getPriceLimitParamConfig(MIN_PRICE_QUERY_PARAM_KEY);
-const MaxPriceParam = getPriceLimitParamConfig(MAX_PRICE_QUERY_PARAM_KEY);
-
 const paramConfigMap = {
-  [CURRENCY_QUERY_PARAM_KEY]: CurrencyParam,
-  [MIN_PRICE_QUERY_PARAM_KEY]: MinPriceParam,
-  [MAX_PRICE_QUERY_PARAM_KEY]: MaxPriceParam,
+  [CURRENCY_QUERY_PARAM_KEY]: StringParam,
+  [MIN_PRICE_QUERY_PARAM_KEY]: NumberParam,
+  [MAX_PRICE_QUERY_PARAM_KEY]: NumberParam,
 };
 
-const usePriceQueryParams = (): [DecodedValueMap<typeof paramConfigMap>, SetQuery<typeof paramConfigMap>] => {
-  return useQueryParams(paramConfigMap);
+const usePriceQueryParams = () => {
+  const paymentTokens = usePaymentTokens();
+  const [priceQueryParams, setPriceQueryParams] = useQueryParams(paramConfigMap);
+  const storedCurrency = sessionStorageHandler('get', 'explore-filters', CURRENCY_QUERY_PARAM_KEY);
+  const storedMinPrice = +sessionStorageHandler('get', 'explore-filters', MIN_PRICE_QUERY_PARAM_KEY);
+  const storedMaxPrice = +sessionStorageHandler('get', 'explore-filters', MAX_PRICE_QUERY_PARAM_KEY);
+
+  const currency = priceQueryParams[CURRENCY_QUERY_PARAM_KEY] || storedCurrency || undefined;
+  const minPrice = priceQueryParams[MIN_PRICE_QUERY_PARAM_KEY] || storedMinPrice || undefined;
+  const maxPrice = priceQueryParams[MAX_PRICE_QUERY_PARAM_KEY] || storedMaxPrice || undefined;
+
+  const paymentToken =
+    currency && typeof currency === 'string'
+      ? paymentTokens.find((paymentToken) => paymentToken.symbol.toLowerCase() === currency.toLowerCase())
+      : undefined;
+
+  const setPrice = useCallback(
+    ({ currency, minPrice, maxPrice }: { currency?: string; minPrice?: number; maxPrice?: number }) => {
+      sessionStorageHandler('set', 'explore-filters', CURRENCY_QUERY_PARAM_KEY, currency);
+      sessionStorageHandler('set', 'explore-filters', MIN_PRICE_QUERY_PARAM_KEY, minPrice);
+      sessionStorageHandler('set', 'explore-filters', MAX_PRICE_QUERY_PARAM_KEY, maxPrice);
+
+      setPriceQueryParams({
+        currency: currency || null,
+        minPrice,
+        maxPrice,
+      });
+    },
+    []
+  );
+
+  return [
+    {
+      paymentToken,
+      minPrice,
+      maxPrice,
+    },
+    setPrice,
+  ] as const;
 };
 
 export default usePriceQueryParams;
