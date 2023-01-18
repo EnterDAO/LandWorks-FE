@@ -1,6 +1,6 @@
 import { getEtherscanTxUrl, shortenAddr } from 'web3/utils';
 
-import { HashLink } from './styled';
+import ExternalLink from 'components/custom/external-link';
 
 interface ILandTableTxHashProps {
   txHash: string;
@@ -9,9 +9,9 @@ interface ILandTableTxHashProps {
 
 const LandTableTxHash: React.FC<ILandTableTxHashProps> = ({ txHash, firstSymbolsLength }) => {
   return (
-    <HashLink href={getEtherscanTxUrl(txHash)} target="_blank" rel="noreferrer">
+    <ExternalLink fontSize="inherit" href={getEtherscanTxUrl(txHash)}>
       {shortenAddr(txHash, firstSymbolsLength)}
-    </HashLink>
+    </ExternalLink>
   );
 };
 
