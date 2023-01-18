@@ -131,7 +131,7 @@ const TableInput: React.FC<Iprops> = ({ operator, assetId, metaverseRegistry, re
 
   return (
     <div className="operator">
-      <ExternalLink className="operator-input-link" target="_blank" href={getEtherscanAddressUrl(operator)}>
+      <ExternalLink className="operator-input-link" href={getEtherscanAddressUrl(operator)}>
         {ens || shortedOperator}
       </ExternalLink>
       {!canEditOperator ? (
