@@ -13,8 +13,9 @@ import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import config from 'config';
 import { Box, Button, Stack, Tooltip, Typography } from 'design-system';
 import { CopyIcon, MessageIcon } from 'design-system/icons';
-import { getENSName, getTokenIconName } from 'helpers/helpers';
+import { getTokenIconName } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
+import useEnsName from 'hooks/useEnsName';
 import InfoAlert from 'layout/components/info-alert';
 
 import { ReactComponent as WarningIcon } from '../../../../resources/svg/warning.svg';
@@ -181,25 +182,13 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     window.open(`https://chat.blockscan.com/index?a=${address}`, '_blank');
   };
 
-  const [ens, setEns] = useState<string>();
-  const [ensOperator, setEnsOperator] = useState<string>();
+  const { data: ensOwnerOrConsumer } = useEnsName(ownerOrConsumer ? ownerOrConsumer : null);
+  const { data: ensOperator } = useEnsName(asset?.operator ? asset?.operator : null);
 
   useEffect(() => {
     if (asset?.id) {
       setLoading(false);
     }
-  }, [asset]);
-
-  useEffect(() => {
-    if (ownerOrConsumer) {
-      getENSName(ownerOrConsumer).then((ensName) => {
-        setEns(ensName);
-      });
-    }
-    if (asset?.operator)
-      getENSName(asset?.operator).then((ensName) => {
-        setEnsOperator(ensName);
-      });
   }, [asset]);
 
   const isOwner = wallet.account && wallet.account?.toLowerCase() === asset?.owner?.id.toLowerCase();
@@ -211,7 +200,9 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
         content: (
           <Box display="flex" alignItems="center">
             <ExternalLink href={getEtherscanAddressUrl(ownerOrConsumer)} className="land-owner-address">
-              {ens && ens !== ownerOrConsumer ? ens : shortenAddr(ownerOrConsumer, 25, 4)}
+              {ensOwnerOrConsumer && ensOwnerOrConsumer !== ownerOrConsumer
+                ? ensOwnerOrConsumer
+                : shortenAddr(ownerOrConsumer, 25, 4)}
             </ExternalLink>
 
             <Box display="flex">
@@ -226,7 +217,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                 placement="right"
                 title={'Copied!'}
               >
-                <StyledButton onClick={() => hadleTooltip(`${ens || ownerOrConsumer}`, 'owner')}>
+                <StyledButton onClick={() => hadleTooltip(`${ensOwnerOrConsumer || ownerOrConsumer}`, 'owner')}>
                   <CopyIcon />
                 </StyledButton>
               </Tooltip>
@@ -234,7 +225,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                 <div>
                   <StyledButton
                     disabled={ownerOrConsumer?.toLowerCase() == wallet.account?.toLowerCase()}
-                    onClick={() => openChat(ens || ownerOrConsumer)}
+                    onClick={() => openChat(ensOwnerOrConsumer || ownerOrConsumer)}
                   >
                     <MessageIcon />
                   </StyledButton>
@@ -262,7 +253,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
                 disableHoverListener
                 disableTouchListener
                 placement="right"
-                title={'Copied!'}
+                title="Copied!"
               >
                 <StyledButton onClick={() => hadleTooltip(`${ensOperator || asset?.operator}`, 'operator')}>
                   <CopyIcon />
@@ -292,7 +283,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
     }
 
     return _details;
-  }, [ens, ownerOrConsumer, openOperatorTooltip, wallet?.account, isOwner, asset]);
+  }, [ensOwnerOrConsumer, ensOperator, ownerOrConsumer, openOperatorTooltip, wallet?.account, isOwner, asset]);
 
   const hashtags = [asset?.type, asset?.metaverse?.name];
 
