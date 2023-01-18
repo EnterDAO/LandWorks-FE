@@ -9,13 +9,15 @@ import { Option } from 'modules/interface';
 import { StyledButton, StyledListbox, StyledOption, StyledPopper } from './styled';
 
 function CustomSelect(props: SelectUnstyledProps<number>) {
+  //@ts-ignore
   const components: SelectUnstyledProps<number>['components'] = {
     Root: StyledButton,
     Listbox: StyledListbox,
     Popper: StyledPopper,
-    ...props.components,
+    ...(props as any).components,
   };
 
+  //@ts-ignore
   return <SelectUnstyled {...props} components={components} />;
 }
 
@@ -73,6 +75,7 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
       <CustomSelect
         disabled={disabled}
         value={staticPlaceholder ? valueForPlaceholder : value}
+        //@ts-ignore
         componentsProps={{
           root: {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -83,7 +86,7 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
             },
           },
         }}
-        onChange={(e) => {
+        onChange={(e: any) => {
           if (!isNull(e)) {
             onChange(e);
           }

@@ -43,7 +43,7 @@ const SearchInput = forwardRef((props: SearchInputProps, ref) => {
         onClick={handleExpandClick}
       />
       <Collapse in={expanded} orientation="horizontal" sx={searchInputStyles.collapseEl}>
-        <Input placeholder="Search for games, events..." {...inputProps} type="text" />
+        <Input placeholder="Search for games, events..." {...(inputProps as any)} type="text" />
       </Collapse>
     </Box>
   );

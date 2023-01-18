@@ -46,7 +46,7 @@ export const MY_PROPERTIES_ROUTE_TABS = {
   notListed: 'not-listed',
 } as const;
 export type MyPropertiesRouteTabsKey = keyof typeof MY_PROPERTIES_ROUTE_TABS;
-export type MyPropertiesRouteTabsValue = typeof MY_PROPERTIES_ROUTE_TABS[MyPropertiesRouteTabsKey];
+export type MyPropertiesRouteTabsValue = (typeof MY_PROPERTIES_ROUTE_TABS)[MyPropertiesRouteTabsKey];
 
 export const useMyPropertiesRouteTab = () => {
   const { tab } = useParams<{ tab?: MyPropertiesRouteTabsValue }>();

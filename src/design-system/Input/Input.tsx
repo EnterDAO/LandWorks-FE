@@ -11,14 +11,15 @@ import { THEME_COLORS } from '../../themes/theme-constants';
 
 import { PasswordStrengthEnum, PasswordStrengthTypes } from './password-strength-types';
 
-export interface InputProps extends InputUnstyledProps {
+export type InputProps = InputUnstyledProps & {
   error?: boolean;
   showPasswordStrength?: boolean;
   startAdornment?: ReactNode;
   endAdornment?: ReactNode;
-}
+};
 
 const Input = React.forwardRef<HTMLDivElement, InputProps>((props, ref) => {
+  //@ts-ignore
   const { type, showPasswordStrength, onChange, onFocus, onBlur, startAdornment, endAdornment } = props;
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -75,13 +76,17 @@ const Input = React.forwardRef<HTMLDivElement, InputProps>((props, ref) => {
   const copyProps = { ...props };
   delete copyProps.showPasswordStrength;
 
+  const componentsProps = {
+    components: {
+      Root: StyledInputRoot,
+      Input: StyledInput,
+    },
+  } as any;
+
   return (
     <>
       <InputUnstyled
-        components={{
-          Root: StyledInputRoot,
-          Input: StyledInput,
-        }}
+        {...componentsProps}
         {...copyProps}
         ref={ref}
         {...(type === 'password' && {

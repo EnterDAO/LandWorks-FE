@@ -566,7 +566,6 @@ const SingleLandView: React.FC = () => {
           metaverseAssetId={asset.metaverseAssetId}
           metaverseRegistry={asset.metaverseRegistry?.id}
           assetId={asset.id}
-          children={<></>}
           pricePerSecond={asset.pricePerSecond}
           paymentToken={asset.paymentToken}
         />

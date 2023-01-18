@@ -20,7 +20,7 @@ import { NotionResultForProfile } from 'modules/scene-builder/components/scene-b
 
 const tabs = [SCENE_BUILDER_TAB_STATE_ALL, SCENE_BUILDER_TAB_STATE_INDIVIDUAL, SCENE_BUILDER_TAB_STATE_STUDIO] as const;
 
-type TabType = typeof tabs[number];
+type TabType = (typeof tabs)[number];
 
 export const useSceneBuilders = () => {
   const { getSceneProviders } = useNotion();

@@ -1,8 +1,9 @@
 import 'react-tile-map/lib/styles.css';
 
 import { ReactNode, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+//@ts-ignore
 import { Coord, Layer, TileMap, TileMapProps, renderMap } from 'react-tile-map';
-import { MapRenderer } from 'react-tile-map/lib/src/components/TileMap/TileMap.types';
+import { MapRenderer } from 'react-tile-map/lib/components/TileMap/TileMap.types';
 import useSWRImmutable from 'swr/immutable';
 
 import MetaverseMapProvider from '../MetaverseMapProvider';
@@ -186,6 +187,7 @@ const DecentralandTileMap = ({
     // TODO: come up with better approach or refactor to make it less confusing
     const isSelectedTile = (tileId: string) => selectedTileIdsRef?.current && tileId in selectedTileIdsRef.current;
 
+    //@ts-ignore
     const selectedTileFillLayer: Layer = (x, y) => {
       const tileId = `${x},${y}`;
 
@@ -196,6 +198,7 @@ const DecentralandTileMap = ({
       return { color: '#ff9990', scale: 1.2 };
     };
 
+    //@ts-ignore
     const selectedTileStrokeLayer: Layer = (x, y) => {
       const tileId = `${x},${y}`;
 

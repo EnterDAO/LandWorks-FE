@@ -1,6 +1,7 @@
 import 'react-tile-map/lib/styles.css';
 
 import { FC } from 'react';
+//@ts-ignore
 import { Coord, Layer, TileMap, TileMapProps } from 'react-tile-map';
 
 export type AtlasTile = {
@@ -54,6 +55,7 @@ const COLOR_BY_TYPE: Record<number | string, string> = {
 const Atlas: FC<AtlasProps> = (props) => {
   const { tiles, layers = [], ...rest } = props;
 
+  //@ts-ignore
   const layer: Layer = (x, y) => {
     const id = x + ',' + y;
     if (tiles && id in tiles) {

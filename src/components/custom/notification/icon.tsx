@@ -20,7 +20,7 @@ const NotificationIcon: React.FC<NotificationIconType> = ({ rgbVarName, children
           height: childHeight,
           x: (width - childWidth) / 2,
           y: (height - childHeight) / 2,
-        })}
+        } as any)}
     </svg>
   );
 };

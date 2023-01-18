@@ -82,6 +82,7 @@ const ClaimRewardsModalRentsTab: FC = () => {
 
                 return (
                   <Box
+                    key={asset.id}
                     component="label"
                     display="flex"
                     alignItems="center"

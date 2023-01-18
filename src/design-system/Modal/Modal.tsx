@@ -10,8 +10,6 @@ import {
   StyledModal,
 } from './modal-styles';
 
-// import { SxProps, Sx } from '@mui/system';
-
 export interface ModalProps {
   open: boolean;
   title?: ReactNode;
@@ -31,6 +29,11 @@ export interface ModalProps {
 const Modal: FC<ModalProps> = (props: ModalProps) => {
   const { open, title, handleClose, maxHeight, children, accessibility, width, height, className = '', sx } = props;
 
+  // NOTE: workaround to pass BackdropComponent prop
+  const componentsProps = {
+    BackdropComponent: StyledBackdrop,
+  } as any;
+
   return (
     <StyledModal
       className={className}
@@ -42,7 +45,7 @@ const Modal: FC<ModalProps> = (props: ModalProps) => {
         height,
       }}
       onClose={handleClose}
-      BackdropComponent={StyledBackdrop}
+      {...componentsProps}
     >
       <ModalBoxStyled sx={sx} style={{ width: width }}>
         {!!title && <ModalTitleBoxStyled as="div">{title}</ModalTitleBoxStyled>}

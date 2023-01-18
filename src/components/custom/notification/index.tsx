@@ -52,180 +52,217 @@ function getRelativeTime(seconds: number) {
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-function getData(n: NotificationType, reload: Function): [IconNames, [string, string], React.ReactNode] {
+function getData(n: any, reload: Function): { iconName: IconNames; colors: [string, string]; content: JSX.Element } {
   switch (n.notificationType) {
     case 'proposal-created':
-      return [
-        'add-file',
-        colorPairs.blue,
-        <>
-          <Text type="p2" weight="semibold" color="secondary" className="mb-16">
-            Proposal {getProposalLink(n.metadata.proposalId)} has been created by{' '}
-            {getStrongText(shortenAddr(n.metadata.proposer))} and entered the warm-up phase. You have{' '}
-            {getStrongText(getRelativeTime(n.metadata.displayDuration))} to stake your {EnterToken.symbol}
-          </Text>
-          <Link to="/governance/wallet/deposit" className="button-primary">
-            Deposit now
-          </Link>
-        </>,
-      ];
+      return {
+        iconName: 'add-file',
+        colors: colorPairs.blue,
+        content: (
+          <>
+            <Text type="p2" weight="semibold" color="secondary" className="mb-16">
+              Proposal {getProposalLink(n.metadata.proposalId)} has been created by{' '}
+              {getStrongText(shortenAddr(n.metadata.proposer))} and entered the warm-up phase. You have{' '}
+              {getStrongText(getRelativeTime(n.metadata.displayDuration))} to stake your {EnterToken.symbol}
+            </Text>
+            <Link to="/governance/wallet/deposit" className="button-primary">
+              Deposit now
+            </Link>
+          </>
+        ),
+      };
     case 'proposal-activating-soon':
-      return [
-        'stopwatch',
-        colorPairs.blue,
-        <Text type="p2" weight="semibold" color="secondary">
-          Voting on proposal {getProposalLink(n.metadata.proposalId)} starts in {getStrongText('5 minutes')}
-        </Text>,
-      ];
+      return {
+        iconName: 'stopwatch',
+        colors: colorPairs.blue,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Voting on proposal {getProposalLink(n.metadata.proposalId)} starts in {getStrongText('5 minutes')}
+          </Text>
+        ),
+      };
     case 'proposal-canceled':
-      return [
-        'file-deleted',
-        colorPairs.red,
-        <Text type="p2" weight="semibold" color="secondary">
-          Proposal {getProposalLink(n.metadata.proposalId)} has been cancelled by{' '}
-          <ExternalLink href={getEtherscanAddressUrl(n.metadata.caller)} className="link-blue">
-            {shortenAddr(n.metadata.caller)}
-          </ExternalLink>
-        </Text>,
-      ];
+      return {
+        iconName: 'file-deleted',
+        colors: colorPairs.red,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Proposal {getProposalLink(n.metadata.proposalId)} has been cancelled by{' '}
+            <ExternalLink href={getEtherscanAddressUrl(n.metadata.caller)} className="link-blue">
+              {shortenAddr(n.metadata.caller)}
+            </ExternalLink>
+          </Text>
+        ),
+      };
     case 'proposal-voting-open':
-      return [
-        'judge',
-        colorPairs.blue,
-        <Text type="p2" weight="semibold" color="secondary">
-          Proposal {getProposalLink(n.metadata.proposalId)} has entered the voting period. You have{' '}
-          {getStrongText(getRelativeTime(n.metadata.displayDuration))} to cast your vote
-        </Text>,
-      ];
+      return {
+        iconName: 'judge',
+        colors: colorPairs.blue,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Proposal {getProposalLink(n.metadata.proposalId)} has entered the voting period. You have{' '}
+            {getStrongText(getRelativeTime(n.metadata.displayDuration))} to cast your vote
+          </Text>
+        ),
+      };
     case 'proposal-voting-ending-soon':
-      return [
-        'judge',
-        colorPairs.red,
-        <Text type="p2" weight="semibold" color="secondary">
-          Voting on proposal {getProposalLink(n.metadata.proposalId)} ends in {getStrongText('5 minutes')}
-        </Text>,
-      ];
+      return {
+        iconName: 'judge',
+        colors: colorPairs.red,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Voting on proposal {getProposalLink(n.metadata.proposalId)} ends in {getStrongText('5 minutes')}
+          </Text>
+        ),
+      };
     case 'proposal-outcome':
-      return [
-        'file-clock',
-        colorPairs.blue,
-        <Text type="p2" weight="semibold" color="secondary">
-          {n.message}
-        </Text>,
-      ];
+      return {
+        iconName: 'file-clock',
+        colors: colorPairs.blue,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            {n.message}
+          </Text>
+        ),
+      };
     case 'proposal-accepted':
-      return [
-        'file-clock',
-        colorPairs.blue,
-        <Text type="p2" weight="semibold" color="secondary">
-          Proposal {getProposalLink(n.metadata.proposalId)} has been accepted with{' '}
-          {getStrongText(`${n.metadata.votedRatio}%`)} votes for. You have{' '}
-          {getStrongText(getRelativeTime(n.metadata.displayDuration))} to queue it for execution
-        </Text>,
-      ];
+      return {
+        iconName: 'file-clock',
+        colors: colorPairs.blue,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Proposal {getProposalLink(n.metadata.proposalId)} has been accepted with{' '}
+            {getStrongText(`${n.metadata.votedRatio}%`)} votes for. You have{' '}
+            {getStrongText(getRelativeTime(n.metadata.displayDuration))} to queue it for execution
+          </Text>
+        ),
+      };
     case 'proposal-failed-quorum':
-      return [
-        'file-deleted',
-        colorPairs.red,
-        <Text type="p2" weight="semibold" color="secondary">
-          Proposal {getProposalLink(n.metadata.proposalId)} has not met quorum and has been rejected
-        </Text>,
-      ];
+      return {
+        iconName: 'file-deleted',
+        colors: colorPairs.red,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Proposal {getProposalLink(n.metadata.proposalId)} has not met quorum and has been rejected
+          </Text>
+        ),
+      };
     case 'proposal-failed-votes':
-      return [
-        'file-deleted',
-        colorPairs.red,
-        <Text type="p2" weight="semibold" color="secondary">
-          Proposal {getProposalLink(n.metadata.proposalId)} has been rejected with {n.metadata.votedRatio}% votes
-          against
-        </Text>,
-      ];
+      return {
+        iconName: 'file-deleted',
+        colors: colorPairs.red,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Proposal {getProposalLink(n.metadata.proposalId)} has been rejected with {n.metadata.votedRatio}% votes
+            against
+          </Text>
+        ),
+      };
     case 'proposal-queued':
-      return [
-        'queue',
-        colorPairs.blue,
-        <Text type="p2" weight="semibold" color="secondary">
-          Proposal {getProposalLink(n.metadata.proposalId)} has been queued for execution by{' '}
-          {getStrongText(shortenAddr(n.metadata.caller))}. You have{' '}
-          {getStrongText(getRelativeTime(n.metadata.displayDuration))} to create an abrogation proposal
-        </Text>,
-      ];
+      return {
+        iconName: 'queue',
+        colors: colorPairs.blue,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Proposal {getProposalLink(n.metadata.proposalId)} has been queued for execution by{' '}
+            {getStrongText(shortenAddr(n.metadata.caller))}. You have{' '}
+            {getStrongText(getRelativeTime(n.metadata.displayDuration))} to create an abrogation proposal
+          </Text>
+        ),
+      };
     case 'proposal-queue-ending-soon':
-      return [
-        'queue',
-        colorPairs.red,
-        <Text type="p2" weight="semibold" color="secondary">
-          Queue period on proposal {getProposalLink(n.metadata.proposalId)} ends in {getStrongText('5 minutes')}
-        </Text>,
-      ];
+      return {
+        iconName: 'queue',
+        colors: colorPairs.red,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Queue period on proposal {getProposalLink(n.metadata.proposalId)} ends in {getStrongText('5 minutes')}
+          </Text>
+        ),
+      };
     case 'proposal-grace':
-      return [
-        'gear',
-        colorPairs.blue,
-        <Text type="p2" weight="semibold" color="secondary">
-          Proposal {getProposalLink(n.metadata.proposalId)} has passed the queue period. You have{' '}
-          {getStrongText(getRelativeTime(n.metadata.displayDuration))} to execute it
-        </Text>,
-      ];
+      return {
+        iconName: 'gear',
+        colors: colorPairs.blue,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Proposal {getProposalLink(n.metadata.proposalId)} has passed the queue period. You have{' '}
+            {getStrongText(getRelativeTime(n.metadata.displayDuration))} to execute it
+          </Text>
+        ),
+      };
     case 'proposal-executed':
-      return [
-        'file-added',
-        colorPairs.green,
-        <Text type="p2" weight="semibold" color="secondary">
-          Proposal {getProposalLink(n.metadata.proposalId)} has been executed by{' '}
-          {getStrongText(shortenAddr(n.metadata.caller))}
-        </Text>,
-      ];
+      return {
+        iconName: 'file-added',
+        colors: colorPairs.green,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Proposal {getProposalLink(n.metadata.proposalId)} has been executed by{' '}
+            {getStrongText(shortenAddr(n.metadata.caller))}
+          </Text>
+        ),
+      };
     case 'proposal-expires-soon':
-      return [
-        'file',
-        colorPairs.red,
-        <Text type="p2" weight="semibold" color="secondary">
-          Proposal {getProposalLink(n.metadata.proposalId)} expires in {getStrongText('5 minutes')}
-        </Text>,
-      ];
+      return {
+        iconName: 'file',
+        colors: colorPairs.red,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Proposal {getProposalLink(n.metadata.proposalId)} expires in {getStrongText('5 minutes')}
+          </Text>
+        ),
+      };
     case 'proposal-expired':
-      return [
-        'file-deleted',
-        colorPairs.red,
-        <Text type="p2" weight="semibold" color="secondary">
-          Proposal {getProposalLink(n.metadata.proposalId)} has expired
-        </Text>,
-      ];
+      return {
+        iconName: 'file-deleted',
+        colors: colorPairs.red,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Proposal {getProposalLink(n.metadata.proposalId)} has expired
+          </Text>
+        ),
+      };
     case 'abrogation-proposal-created':
-      return [
-        'file-times',
-        colorPairs.blue,
-        <Text type="p2" weight="semibold" color="secondary">
-          Abrogation proposal for proposal {getProposalLink(n.metadata.proposalId)} has been created by{' '}
-          {getStrongText(shortenAddr(n.metadata.proposer))}. You have{' '}
-          {getStrongText(getRelativeTime(n.metadata.displayDuration))} to vote on the abrogation proposal
-        </Text>,
-      ];
+      return {
+        iconName: 'file-times',
+        colors: colorPairs.blue,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Abrogation proposal for proposal {getProposalLink(n.metadata.proposalId)} has been created by{' '}
+            {getStrongText(shortenAddr(n.metadata.proposer))}. You have{' '}
+            {getStrongText(getRelativeTime(n.metadata.displayDuration))} to vote on the abrogation proposal
+          </Text>
+        ),
+      };
     case 'proposal-abrogated':
-      return [
-        'file-deleted',
-        colorPairs.red,
-        <Text type="p2" weight="semibold" color="secondary">
-          Proposal {getProposalLink(n.metadata.proposalId)} has been abrogated
-        </Text>,
-      ];
+      return {
+        iconName: 'file-deleted',
+        colors: colorPairs.red,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            Proposal {getProposalLink(n.metadata.proposalId)} has been abrogated
+          </Text>
+        ),
+      };
     case 'delegate-start':
-      return [
-        'handshake',
-        colorPairs.blue,
-        <Text type="p2" weight="semibold" color="secondary">
-          {getStrongText(
-            `${getHumanValue(new BigNumber(n.metadata.amount ?? 0), EnterToken.decimals)?.toFixed()} v${
-              EnterToken.symbol
-            }`
-          )}{' '}
-          has been delegated to you from{' '}
-          <ExternalLink href={getEtherscanAddressUrl(n.metadata.from)} className="link-blue">
-            {shortenAddr(n.metadata.from)}
-          </ExternalLink>
-        </Text>,
-      ];
+      return {
+        iconName: 'handshake',
+        colors: colorPairs.blue,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            {getStrongText(
+              `${getHumanValue(new BigNumber(n.metadata.amount ?? 0), EnterToken.decimals)?.toFixed()} v${
+                EnterToken.symbol
+              }`
+            )}{' '}
+            has been delegated to you from{' '}
+            <ExternalLink href={getEtherscanAddressUrl(n.metadata.from)} className="link-blue">
+              {shortenAddr(n.metadata.from)}
+            </ExternalLink>
+          </Text>
+        ),
+      };
+
     case 'smart-yield-token-bought': {
       const contract = getSessionContractByAddress(n.metadata.syPoolAddress);
       if (!contract || !contract.symbol) {
@@ -239,34 +276,38 @@ function getData(n: NotificationType, reload: Function): [IconNames, [string, st
           }
         });
       }
-      return [
-        'stake',
-        colorPairs.blue,
-        <>
-          <Text type="p2" weight="semibold" color="secondary" className="mb-16">
-            Stake your{' '}
-            {getStrongText(`${Intl.NumberFormat('en').format(Number(n.metadata.amount))} ${contract?.symbol ?? ''}`)} to
-            earn extra yield
-          </Text>
-          <Link
-            to={`/smart-yield/pool?m=${n.metadata.protocolId}&t=${n.metadata.underlyingSymbol}`}
-            className="button-primary"
-          >
-            Stake now
-          </Link>
-        </>,
-      ];
+      return {
+        iconName: 'stake',
+        colors: colorPairs.blue,
+        content: (
+          <>
+            <Text type="p2" weight="semibold" color="secondary" className="mb-16">
+              Stake your{' '}
+              {getStrongText(`${Intl.NumberFormat('en').format(Number(n.metadata.amount))} ${contract?.symbol ?? ''}`)}{' '}
+              to earn extra yield
+            </Text>
+            <Link
+              to={`/smart-yield/pool?m=${n.metadata.protocolId}&t=${n.metadata.underlyingSymbol}`}
+              className="button-primary"
+            >
+              Stake now
+            </Link>
+          </>
+        ),
+      };
     }
     default:
       console.log(`Unsupported notification type: ${JSON.stringify(n)}`);
-      return [
-        'notification',
-        colorPairs.blue,
-        <Text type="p2" weight="semibold" color="secondary">
-          {/* @ts-ignore */}
-          {n.message}
-        </Text>,
-      ];
+      return {
+        iconName: 'notification',
+        colors: colorPairs.blue,
+        content: (
+          <Text type="p2" weight="semibold" color="secondary">
+            {/* @ts-ignore */}
+            {n.message}
+          </Text>
+        ),
+      };
   }
 }
 
@@ -299,7 +340,7 @@ type Props = {
 export const Notification: React.FC<Props> = ({ n }) => {
   const { notificationsReadUntil } = useNotifications();
   const [reload] = useReload();
-  const [iconName, colors, content] = getData(n, reload);
+  const { iconName, colors, content } = getData(n, reload);
   const date = new Date(n.startsOn * 1000);
   const isUnread = notificationsReadUntil ? notificationsReadUntil < n.startsOn : false;
 
@@ -322,7 +363,7 @@ type ToastProps = {
 
 export const Toast: React.FC<ToastProps> = ({ n, onClose, timeout }) => {
   const [reload] = useReload();
-  const [iconName, colors, content] = getData(n, reload);
+  const { iconName, colors, content } = getData(n, reload);
   useEffect(() => {
     if (timeout && timeout !== Infinity) {
       setTimeout(onClose, timeout, n.id);

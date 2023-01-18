@@ -6,17 +6,15 @@ import { StyledTextarea, StyledTextareaRoot } from './textarea-styles';
 type TextareaProps = InputUnstyledProps;
 
 const Textarea = (props: TextareaProps, ref: Ref<HTMLDivElement>) => {
-  return (
-    <InputUnstyled
-      {...props}
-      components={{
-        Root: StyledTextareaRoot,
-        Textarea: StyledTextarea,
-      }}
-      multiline
-      ref={ref}
-    />
-  );
+  // NOTE: workaround to pass components prop
+  const additionalProps = {
+    components: {
+      Root: StyledTextareaRoot,
+      Textarea: StyledTextarea,
+    },
+  } as any;
+
+  return <InputUnstyled {...props} {...additionalProps} multiline ref={ref} />;
 };
 
 export default React.forwardRef<HTMLDivElement, InputUnstyledProps>(Textarea);

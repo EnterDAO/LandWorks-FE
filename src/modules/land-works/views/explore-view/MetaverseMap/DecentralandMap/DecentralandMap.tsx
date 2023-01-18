@@ -1,5 +1,5 @@
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { MapRenderer } from 'react-tile-map/lib/src/components/TileMap/TileMap.types';
+import { MapRenderer } from 'react-tile-map/lib/components/TileMap/TileMap.types';
 import { Box } from '@mui/material';
 
 import { AssetEntity } from 'modules/land-works/api';
