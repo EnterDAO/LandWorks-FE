@@ -8,9 +8,11 @@ import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import listingAdImgSrc from 'assets/img/listing-ad.jpg';
 import landNotFoundImageSrc from 'assets/land-not-found.svg';
+import Typography from 'components/common/Typography';
+import ExternalLink from 'components/custom/external-link';
 import Image from 'components/custom/image';
 import Stepper, { Step, StepLabel } from 'components/styled/stepper';
-import { Box, Button, Checkbox, ControlledSelect, Grid, Stack, Typography } from 'design-system';
+import { Box, Button, Checkbox, ControlledSelect, Grid, Stack } from 'design-system';
 import { WarningIcon } from 'design-system/icons';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import useGetIsMounted from 'hooks/useGetIsMounted';
@@ -23,6 +25,7 @@ import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-modal';
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
 import { useMetaverseQueryParam } from 'modules/land-works/views/my-properties-view/MetaverseSelect';
+import { useActiveAssetTransactions } from 'providers/ActiveAssetTransactionsProvider/ActiveAssetTransactionsProvider';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 import { MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath } from 'router/routes';
@@ -75,6 +78,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const landworks = useLandworks();
   const registry = useContractRegistry();
   const getIsMounted = useGetIsMounted();
+  const { addListingTransaction, deleteListingTransaction } = useActiveAssetTransactions();
 
   const history = useHistory();
 
@@ -347,21 +351,26 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
 
     try {
       setShowSignModal(true);
-      const txReceipt = await landWorksContract?.list(
-        selectedMetaverse,
-        metaverseRegistry,
-        id,
-        minPeriod,
-        maxPeriod,
-        maxFutureTime,
-        paymentToken.id,
-        pricePerSecond.toFixed(0),
-        () => {
-          setListModalMessage(MineTransactionMessage);
-        }
-      );
 
-      localStorage.setItem('LISTING_IN_PROGRESS', id);
+      const txReceipt = await landWorksContract
+        ?.list(
+          selectedMetaverse,
+          metaverseRegistry,
+          id,
+          minPeriod,
+          maxPeriod,
+          maxFutureTime,
+          paymentToken.id,
+          pricePerSecond.toFixed(0),
+          (txHash) => {
+            addListingTransaction(id, txHash);
+
+            setListModalMessage(MineTransactionMessage);
+          }
+        )
+        .then((txReceipt) => {
+          return txReceipt;
+        });
 
       setListedPropertyId(txReceipt.events['List'].returnValues[0]);
 
@@ -373,6 +382,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
       setShowSignModal(false);
       setListDisabled(false);
       showToastNotification(ToastType.Error, 'There was an error while listing the property.');
+      deleteListingTransaction(id);
       console.log(e);
 
       return;
@@ -667,7 +677,12 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
     label: string;
     title?: string;
     subtitle?: string;
-    warning?: string;
+    warning?:
+      | string
+      | {
+          title: string;
+          content: string;
+        };
   }[] = useMemo(() => {
     return [
       ...(!asset
@@ -683,16 +698,22 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
         title: 'Choose rent period',
         label: 'Rent Period',
         subtitle: 'Select the wanted rent period for this property.',
-        warning:
-          'Once you list your property you can edit the entered rent period but you’ll have to pay a network fee.',
+        warning: {
+          title: 'Keep in mind',
+          content:
+            'Once you list your property you can edit the entered rent period but you’ll have to pay a network fee.',
+        },
       },
       {
         id: StepId.RentPrice,
         title: 'Select Rent Price',
         label: 'Rent Price',
         subtitle: 'Select the wanted rent price for this property.',
-        warning:
-          'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
+        warning: {
+          title: 'Keep in mind',
+          content:
+            'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
+        },
       },
       ...(selectedMetaverse === 1
         ? [
@@ -700,6 +721,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
               id: StepId.Advertisement,
               title: 'Advertise',
               label: 'Advertise',
+              warning: 'Please note that a wallet signature will popup in order to confirm your choice.',
             },
           ]
         : []),
@@ -707,12 +729,16 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
         id: StepId.Summary,
         label: 'Summary',
         title: 'Listing Summary',
-        warning: 'There is a network fee in order to list the property.',
+        warning: {
+          title: 'Keep in mind',
+          content: 'There is a network fee in order to list the property.',
+        },
       },
     ];
   }, [selectedMetaverse]);
 
   const step = steps[activeStep];
+  const { warning } = step;
 
   return (
     <section className="list-view">
@@ -860,12 +886,26 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                 </Grid>
                 <Grid item xs={6} display="flex" alignItems="center">
                   <Typography component="p" color={THEME_COLORS.grey03} variant="caption" textAlign="left">
-                    We have partnered up with {'{placeholder}'} to allow for ads to be shown on your property until
-                    someone rents it. By allowing your plot to be used for ads, you will be rewarded additionally for
-                    each unique view that the ad gets. Rewards can be claimed every month.
+                    We have partnered up with{' '}
+                    <ExternalLink variant="link2" href="https://precisionx.com/en/">
+                      PrecisionX
+                    </ExternalLink>{' '}
+                    to allow for ads to be displayed on your land until it gets rented. By allowing your plot to be used
+                    for ads, you will be rewarded 0.025 USDC (0.05 USDC if you own a{' '}
+                    <ExternalLink variant="link2" href="https://opensea.io/collection/sharded-minds">
+                      Sharded Mind
+                    </ExternalLink>{' '}
+                    NFT) for each unique view on the ad. Full info on how the ads work can be found{' '}
+                    <ExternalLink
+                      variant="link2"
+                      href="https://medium.com/enterdao/new-passive-income-stream-for-metaverse-landlords-8c72c68c7bb5"
+                    >
+                      here
+                    </ExternalLink>
+                    .
                     <br />
                     <br />
-                    Think of it like providing your plot to the ads company until someone actually rents it!
+                    Think of it as providing your land to the an advertiser until it gets rented!
                   </Typography>
                 </Grid>
               </Grid>
@@ -928,14 +968,20 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
           )}
         </Stack>
 
-        {step.warning && (
-          <Grid className="warning-info" mb={{ xs: 2, xxl: 4 }} mx="auto">
+        {warning && (
+          <Grid textAlign="left" className="warning-info" mb={{ xs: 2, xxl: 4 }} mx="auto">
             <WarningIcon style={{ width: 20, height: 20 }} />
             <Grid item>
-              <Typography display={{ xs: 'none', xxl: 'block' }} variant="h4">
-                Keep in mind
-              </Typography>
-              <Typography variant="subtitle2">{step.warning}</Typography>
+              {typeof warning === 'string' ? (
+                <Typography variant="subtitle2">{warning}</Typography>
+              ) : (
+                <>
+                  <Typography display={{ xs: 'none', xxl: 'block' }} variant="h4">
+                    {warning.title}
+                  </Typography>
+                  <Typography variant="subtitle2">{warning.content}</Typography>
+                </>
+              )}
             </Grid>
           </Grid>
         )}

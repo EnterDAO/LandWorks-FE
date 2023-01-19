@@ -172,12 +172,12 @@ export const voxelTypes = [
   {
     value: 2,
     title: 'Unit',
-    desc: 'Units are appartments and tend not to be at ground level. In other words, units are usually in a tower.',
+    desc: 'Units are apartments and tend not to be at ground level. In other words, units are usually in a tower.',
   },
   {
     value: 3,
     title: 'Inner',
-    desc: 'Turn-key parcels which come prebuilt directly form Voxels.',
+    desc: 'Turn-key parcels which come prebuilt directly from Voxels.',
   },
 ];
 

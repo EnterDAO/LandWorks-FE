@@ -6,6 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import splitbee from '@splitbee/web';
+import { SWRConfig } from 'swr';
 import { QueryParamProvider } from 'use-query-params';
 import { ReactRouter5Adapter } from 'use-query-params/adapters/react-router-5';
 
@@ -31,29 +32,35 @@ window.process = {} as any;
 const App: FC = () => {
   return (
     <ErrorBoundary>
-      <StaticSprite />
-      <WindowStateProvider>
-        <ThemeProvider theme={appTheme}>
-          <CssBaseline />
-          <GeneralContextProvider>
-            <EthWeb3Provider>
-              <Web3WalletProvider>
-                <KnownTokensProvider>
-                  <Router>
-                    <QueryParamProvider adapter={ReactRouter5Adapter}>
-                      <ScrollToTop />
-                      <ToastContainer theme="dark" />
-                      <NotificationsProvider>
-                        <LayoutView />
-                      </NotificationsProvider>
-                    </QueryParamProvider>
-                  </Router>
-                </KnownTokensProvider>
-              </Web3WalletProvider>
-            </EthWeb3Provider>
-          </GeneralContextProvider>
-        </ThemeProvider>
-      </WindowStateProvider>
+      <SWRConfig
+        value={{
+          fetcher: (resource, init) => fetch(resource, init).then((res) => res.json()),
+        }}
+      >
+        <StaticSprite />
+        <WindowStateProvider>
+          <ThemeProvider theme={appTheme}>
+            <CssBaseline />
+            <GeneralContextProvider>
+              <EthWeb3Provider>
+                <Web3WalletProvider>
+                  <KnownTokensProvider>
+                    <Router>
+                      <QueryParamProvider adapter={ReactRouter5Adapter}>
+                        <ScrollToTop />
+                        <ToastContainer theme="dark" />
+                        <NotificationsProvider>
+                          <LayoutView />
+                        </NotificationsProvider>
+                      </QueryParamProvider>
+                    </Router>
+                  </KnownTokensProvider>
+                </Web3WalletProvider>
+              </EthWeb3Provider>
+            </GeneralContextProvider>
+          </ThemeProvider>
+        </WindowStateProvider>
+      </SWRConfig>
     </ErrorBoundary>
   );
 };

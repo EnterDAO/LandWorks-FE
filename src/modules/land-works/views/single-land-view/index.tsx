@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useQuery, useSubscription } from '@apollo/client';
 import usePagination from '@mui/material/usePagination/usePagination';
@@ -13,6 +13,7 @@ import SingleViewParcelProperties from 'modules/land-works/components/land-parce
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
 import { ShareLink } from 'modules/land-works/components/lands-list-modal/styled';
 import PromoSceneRedeployment from 'modules/land-works/components/promo-scene-redeployment/PromoSceneRedeployment';
+import { useActiveAssetTransactions } from 'providers/ActiveAssetTransactionsProvider/ActiveAssetTransactionsProvider';
 import { APP_ROUTES, getPropertyPath } from 'router/routes';
 
 import ExternalLink from '../../../../components/custom/external-link';
@@ -58,15 +59,69 @@ const useAssetLastRent = (assetId?: string) => {
   return data ? data.rents[0] : undefined;
 };
 
+const useGetAccountAsset = (assetId: string) => {
+  const {
+    data,
+    loading,
+    error: subscriptionError,
+  } = useSubscription<{ asset: any }>(ASSET_SUBSCRIPTION, {
+    variables: { id: assetId },
+  });
+  const [parsedAsset, setParsedAsset] = useState<AssetEntity>();
+  const [isParsing, setIsParsing] = useState(false);
+  const [parseError, setParseError] = useState<Error>();
+
+  const isLoading = loading && isParsing;
+
+  useLayoutEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    let isCancelled = false;
+
+    setIsParsing(true);
+
+    parseAsset(data.asset)
+      .then((parsed) => {
+        if (!isCancelled) {
+          setParsedAsset(parsed);
+        }
+      })
+      .catch((e) => {
+        if (!isCancelled) {
+          setParseError(e);
+        }
+      })
+      .finally(() => {
+        if (!isCancelled) {
+          setIsParsing(false);
+        }
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [data]);
+
+  return {
+    data: parsedAsset,
+    isLoading,
+    error: subscriptionError || parseError,
+  };
+};
+
+// TODO: refactor
 const SingleLandView: React.FC = () => {
   const wallet = useWallet();
-
+  const { addWithdrawTransaction, deleteWithdrawTransaction } = useActiveAssetTransactions();
   const { landWorksContract } = useLandworks();
 
   const history = useHistory();
   const location = useLocation<LocationState>();
   const { tokenId } = useParams<{ tokenId: string }>();
-  const [asset, setAsset] = useState({} as AssetEntity);
+  const [isAdvertisementEnabled, setIsAdvertisementEnabled] = useState(true);
+  const { data: asset = {} as AssetEntity } = useGetAccountAsset(tokenId);
   const [adjacentLands, setAdjacentLands] = useState([] as AssetEntity[]);
   const [paginatedNearbyLands, setPaginatedNearbyLands] = useState([] as AssetEntity[]);
   const [itemsOnPage] = useState(4);
@@ -101,20 +156,6 @@ const SingleLandView: React.FC = () => {
   const hasFeedbackButton = isRenter && !isOwner && !hasRentPassed;
 
   const parselProperties = isCryptovoxel ? asset.attributes : asset.additionalData;
-
-  useSubscription(ASSET_SUBSCRIPTION, {
-    variables: { id: tokenId },
-    onSubscriptionData: async ({ subscriptionData }) => {
-      if (subscriptionData.error) {
-        // TODO:
-      }
-      if (subscriptionData.data.asset === null) {
-        history.push(APP_ROUTES.explore);
-        return;
-      }
-      setAsset(await parseAsset(subscriptionData.data.asset));
-    },
-  });
 
   const shouldShowWithdraw = () => {
     return isOwnerOrConsumer && asset?.status === AssetStatus.DELISTED;
@@ -151,15 +192,16 @@ const SingleLandView: React.FC = () => {
       return;
     }
     try {
-      await landWorksContract?.withdraw(asset.id, () => {
+      await landWorksContract?.withdraw(asset.id, (txHash: string) => {
         setWithdrawButtonDisabled(true);
-        localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
+
+        addWithdrawTransaction(asset.metaverseAssetId, txHash);
       });
       showToastNotification(ToastType.Success, 'Property withdrawn successfully!');
       if (isNeedRedirect()) history.push(APP_ROUTES.explore);
     } catch (e) {
-      localStorage.removeItem('WITHDRAW_IN_PROGRESS');
       showToastNotification(ToastType.Error, 'There was an error while withdrawing the property.');
+      deleteWithdrawTransaction(asset.metaverseAssetId);
       console.log(e);
     }
   };
@@ -192,10 +234,13 @@ const SingleLandView: React.FC = () => {
     }
 
     try {
-      await landWorksContract?.delist(asset.id, () => {
-        isDirectWithdraw() && localStorage.setItem('WITHDRAW_IN_PROGRESS', asset.metaverseAssetId);
+      await landWorksContract?.delist(asset.id, (txHash: string) => {
+        if (isDirectWithdraw()) {
+          addWithdrawTransaction(asset.metaverseAssetId, txHash);
+        }
         disableButtons(true);
       });
+
       showToastNotification(
         ToastType.Success,
         `Property ${isDirectWithdraw() ? 'withdrawn' : 'delisted'} successfully!`
@@ -205,7 +250,7 @@ const SingleLandView: React.FC = () => {
       }
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while delisting the property.');
-      localStorage.removeItem('WITHDRAW_IN_PROGRESS');
+      deleteWithdrawTransaction(asset.metaverseAssetId);
       console.log(e);
     }
   };
@@ -258,6 +303,7 @@ const SingleLandView: React.FC = () => {
   };
 
   const isNeedRedirect = () => window.location.pathname === getPropertyPath(asset.id);
+
   const breadcrumbs = {
     url: location.state?.previousPage?.from || location.state?.from || APP_ROUTES.explore,
     title: location.state?.previousPage?.title || location.state?.title || 'Explore',
@@ -424,6 +470,7 @@ const SingleLandView: React.FC = () => {
       </Grid>
 
       <SingleViewLandCard
+        onAdsToggle={setIsAdvertisementEnabled}
         isClaimButtonDisabled={claimButtonDisabled}
         isRentButtonDisabled={rentButtonDisabled}
         isUpdateOperatorButtonDisabled={isUpdateOperatorDisabled}
@@ -434,7 +481,7 @@ const SingleLandView: React.FC = () => {
         }}
       />
 
-      {!!asset.id && !!asset.metaverseRegistry?.id && isPromoSceneDeploymentAvailable && (
+      {!!asset.id && !!asset.metaverseRegistry?.id && isPromoSceneDeploymentAvailable && !isAdvertisementEnabled && (
         <Box maxWidth={1000} my={12} mx="auto">
           <PromoSceneRedeployment assetId={asset.id} metaverseRegistryId={asset.metaverseRegistry.id} />
         </Box>
