@@ -3,7 +3,7 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 
 import ErrorBoundary from 'components/custom/error-boundary';
-import { Box, Loader } from 'design-system';
+import { Box } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
 import LayoutHeader from 'layout/components/layout-header';
 import ContractProvider from 'modules/land-works/providers/contract-provider';
@@ -16,6 +16,7 @@ import NotionProvider from '../api/notion/client';
 import Erc20Provider from '../modules/land-works/providers/erc20-provider';
 import NotFoundView from '../modules/land-works/views/not-found-view';
 import { GraphClient } from '../web3/graph/client';
+import LoadingView from './components/LoadingView';
 
 import classes from './layout.module.scss';
 
@@ -61,19 +62,7 @@ const LayoutView: React.FC = () => {
                       <LayoutHeader />
                       <main className={classes.main}>
                         <ErrorBoundary>
-                          <Suspense
-                            fallback={
-                              <Loader
-                                sx={{
-                                  position: 'fixed',
-                                  top: '50%',
-                                  left: '50%',
-                                  zoom: '0.5',
-                                  transform: 'translate(-50%, -50%)',
-                                }}
-                              />
-                            }
-                          >
+                          <Suspense fallback={<LoadingView />}>
                             <Switch>
                               <Redirect from={LANDING_ROUTES.property} to={APP_ROUTES.property} />
                               <Redirect from={LANDING_ROUTES.myProperties} to={APP_ROUTES.myProperties} />

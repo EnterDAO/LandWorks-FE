@@ -54,15 +54,19 @@ export const Advantages: React.FC = () => {
         <Box position="absolute" width={1} height={1} display="flex" alignItems="center" justifyContent="center">
           <Image src={blurredLightsImgSrc} width={2596} height={1798} sx={{ width: 1 }} />
         </Box>
-        <Box
-          border="5px solid #27273A"
-          borderRadius="30px"
-          overflow="hidden"
-          display="flex"
-          sx={{ filter: 'drop-shadow(0px 0px 80px #040D1E)' }}
-        >
-          <Image src={exploreScreenImgSrc} width={1440} height={1024} sx={{ width: 1, maxWidth: 740 }} />
-        </Box>
+        <Image
+          src={exploreScreenImgSrc}
+          width={1440}
+          height={1024}
+          sx={{
+            borderRadius: '30px',
+            border: '5px solid #27273A',
+            bgcolor: '#27273A',
+            width: 1,
+            maxWidth: 740,
+            filter: 'drop-shadow(0px 0px 80px #040D1E)',
+          }}
+        />
       </Box>
 
       <Grid container rowSpacing={{ xs: 5, lg: 8 }} columnSpacing={18} justifyContent="space-around">

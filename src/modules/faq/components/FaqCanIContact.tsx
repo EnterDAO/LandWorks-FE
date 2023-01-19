@@ -16,8 +16,12 @@ const FaqCanIContact = () => {
       <img src={contactToOwnerImgSrc} />
 
       <p>
-        Or you can send them a message in our Discord server in channel{' '}
-        <a href="https://discord.gg/JW5se6dG" target="_blank">
+        Or you can send them a message in our{' '}
+        <a href="https://discord.com/invite/7QJvEctG2G" target="_blank" rel="nofollow">
+          Discord server
+        </a>{' '}
+        in channel{' '}
+        <a href="https://discord.gg/JW5se6dG" target="_blank" rel="nofollow">
           #landlords-meet-tenants
         </a>
         .
