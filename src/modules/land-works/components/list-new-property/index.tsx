@@ -1095,7 +1095,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             }}
           />
         )}
-        <BuyAndListConfirmModal open />
+        <BuyAndListConfirmModal open={false} />
       </Stack>
     </section>
   );
