@@ -60,15 +60,10 @@ export const About: React.FC = () => {
   return (
     <Box position="relative" pt={{ xs: 10, xl: 18 }} pb={{ xs: 10, xl: 21 }} className="about-wrapper">
       <Box py={0} className="content-container">
-        <Box textAlign="center" mb={10}>
-          <Typography variant="body2" color="var(--theme-accent-color)" mb={2}>
-            IS IT FOR YOU?
-          </Typography>
-          <AdaptiveTypography variant="h2" mb={2}>
-            There are a Lot of Opportunities
-          </AdaptiveTypography>
-          <Typography>You can either lend yours or rent a new Land that you want.</Typography>
-        </Box>
+        <AdaptiveTypography variant="h2" textAlign="center" mb={16} maxWidth={675} mx="auto">
+          LandWorks offers a myriad of opportunities for both landlords and tenants!
+        </AdaptiveTypography>
+
         <Grid container rowSpacing={3} columnSpacing={8}>
           <Grid item xs={12} md={6} display="flex">
             <Card
@@ -77,8 +72,8 @@ export const About: React.FC = () => {
                   Are you a <LandOwner>Land Owner</LandOwner>?
                 </>
               }
-              description="Earn passive income on your land by turning it into a productive asset."
-              actionButtonLabel="List now"
+              description="Earn passive income through your land by turning it into a productive asset."
+              actionButtonLabel="List your land now"
               to={APP_ROUTES.explore}
               background={listImgSrc}
             />
@@ -87,11 +82,11 @@ export const About: React.FC = () => {
             <Card
               title={
                 <>
-                  Do you seek to <Rent>Rent</Rent>?
+                  Are you looking to <Rent>Rent</Rent>?
                 </>
               }
-              description="Leverage the power of metaverse games by renting in-game land instead of buying."
-              actionButtonLabel="Start renting"
+              description="Rent lands at affordable prices and flexible terms instead of buying."
+              actionButtonLabel="Browse Lands"
               to={APP_ROUTES.explore}
               background={rentImgSrc}
             />

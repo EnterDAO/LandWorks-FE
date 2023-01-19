@@ -39,7 +39,7 @@ const HeaderNavLinkRoot = styled('a')(({ theme }) => ({
     opacity: 0,
     transition: 'all 0.2s',
     borderRadius: '2px 2px 0 0',
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up(1130)]: {
       display: 'block',
     },
   },

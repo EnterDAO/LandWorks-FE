@@ -1,7 +1,6 @@
 import 'react-tile-map/lib/styles.css';
 
 import { FC } from 'react';
-//@ts-ignore
 import { Coord, Layer, TileMap, TileMapProps } from 'react-tile-map';
 
 export type AtlasTile = {

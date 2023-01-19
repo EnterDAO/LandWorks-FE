@@ -13,6 +13,7 @@ import usePriceQueryParams from 'modules/land-works/components/price-popover/use
 import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-tile';
 import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
+import { useWallet } from 'wallets/wallet';
 
 import {
   AssetEntity,
@@ -98,6 +99,8 @@ const ExploreView: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [showCardPreview, setShowCardPreview] = useState(false);
+
+  const wallet = useWallet();
 
   const paymentTokens = usePaymentTokens();
 
@@ -195,6 +198,19 @@ const ExploreView: React.FC = () => {
     },
     []
   );
+
+  useEffect(() => {
+    if (wallet.account) {
+      return;
+    }
+    const timeoutId = window.setTimeout(() => {
+      wallet.showWalletsModal();
+    }, 500);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [wallet.account, wallet.showWalletsModal]);
 
   useEffect(() => {
     getLands(

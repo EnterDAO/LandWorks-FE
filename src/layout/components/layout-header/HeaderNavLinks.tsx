@@ -30,8 +30,8 @@ const landingNav: HeaderNavLinkProps[] = [
     label: 'FAQ',
   },
   {
-    to: LANDING_ROUTES.sceneBuilder,
-    label: 'Scene Builder',
+    to: LANDING_ROUTES.metaCreators,
+    label: 'MetaCreators',
   },
   {
     to: LANDING_ROUTES.grantsProgram,
@@ -51,8 +51,8 @@ const appNav: HeaderNavLinkProps[] = [
     label: 'My properties',
   },
   {
-    to: APP_ROUTES.sceneBuilder,
-    label: 'Scene Builder',
+    to: APP_ROUTES.metaCreators,
+    label: 'MetaCreators',
   },
   {
     to: APP_ROUTES.faq,
@@ -73,10 +73,17 @@ const HeaderNavLinks: FC = () => {
       component="nav"
       height={{ lg: 1 }}
       display="flex"
-      flexDirection={{ xs: 'column', lg: 'row' }}
       px={{ xs: 3, lg: 0 }}
       gap={{ xs: 5, xl: 6, xxl: 8 }}
       flexGrow={{ lg: 1 }}
+      sx={(theme) => {
+        return {
+          flexDirection: 'column',
+          [theme.breakpoints.up(1130)]: {
+            flexDirection: 'row',
+          },
+        };
+      }}
     >
       {nav.map((mainNavLink, i) => {
         return <HeaderNavLink key={i} {...mainNavLink} />;

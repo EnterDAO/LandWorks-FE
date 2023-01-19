@@ -99,6 +99,8 @@ const AssetList = ({ assets, selectedAssetId: activeAssetId, onSelectAsset }: La
     <Grid container rowSpacing={3} columnSpacing={4}>
       {assets.map((asset) => {
         return (
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
           <Grid key={asset.id} item xs={4} xxl={3}>
             <AssetListCard
               isActive={asset.id === activeAssetId}

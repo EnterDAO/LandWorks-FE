@@ -9,7 +9,7 @@ import useIsMetamaskConnected from 'hooks/useIsMetamaskConnected';
 import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
 import ClaimHistoryTable from 'modules/land-works/components/land-claim-history';
 import ClaimRewardsAlert from 'modules/land-works/components/land-claim-rents-alert';
-import MyPropetiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
+import MyPropertiesHistoryTable from 'modules/land-works/components/land-my-properties-history';
 import PropertyCardSkeleton from 'modules/land-works/components/land-works-card-explore-view/PropertyCardSkeleton';
 import { useSyncActiveAssetTransactions } from 'providers/ActiveAssetTransactionsProvider/ActiveAssetTransactionsProvider';
 import { useListingModal } from 'providers/listing-modal-provider';
@@ -202,7 +202,7 @@ const MyPropertiesView: FC = () => {
       {(isListedTab || isRentedTab) && (
         <Box mt={15}>
           {isListedTab && <ClaimHistoryTable metaverse={metaverse} />}
-          {isRentedTab && <MyPropetiesHistoryTable metaverse={metaverse} />}
+          {isRentedTab && <MyPropertiesHistoryTable metaverse={metaverse} />}
         </Box>
       )}
     </Container>

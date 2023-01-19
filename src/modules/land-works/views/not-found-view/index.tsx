@@ -1,14 +1,15 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import notFoundImage from 'assets/404.png';
-import { Box, Button, Stack, Typography } from 'design-system';
+import Image from 'components/custom/image';
+import { Button, Stack, Typography } from 'design-system';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 import { APP_ROUTES } from 'router/routes';
 
 import { THEME_COLORS } from 'themes/theme-constants';
 
-const NotFoundView: FC = () => {
+const NotFoundView = () => {
   const stickyOffset = useStickyOffset();
   const history = useHistory();
 
@@ -23,7 +24,7 @@ const NotFoundView: FC = () => {
       textAlign="center"
       top={-stickyOffset.offsets.header}
     >
-      <Box component="img" width={1} maxWidth={600} src={notFoundImage} />
+      <Image width={1270} height={1114} src={notFoundImage} sx={{ width: 1, maxWidth: 600 }} />
 
       <Typography mb={2} variant="h1">
         Error 404 ... Can't find a page to land!

@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { BigNumber } from 'bignumber.js';
+import { fromUnixTime } from 'date-fns';
 import { ethers } from 'ethers';
+import useSWRImmutable from 'swr/immutable';
 
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
-import { getTokenIconName, timestampSecondsToUTCDate } from 'helpers/helpers';
+import { getTokenIconName } from 'helpers/helpers';
 import { getTokenPriceForDate } from 'providers/known-tokens-provider';
 
 import './index.scss';
@@ -15,46 +17,34 @@ interface ILandTablePriceProps {
   weiAmount: string;
   dateTimestamp: string;
 }
+
+const useGetTokenPriceInUsd = (tokenSymbol: string, timestamp: string) => {
+  const localDate = fromUnixTime(+timestamp);
+  const utcYear = localDate.getUTCFullYear();
+  const utcFormattedDay = `${localDate.getUTCDate()}`.padStart(2, '0');
+  const utcFormattedMonth = `${localDate.getUTCMonth() + 1}`.padStart(2, '0');
+  const utcFormattedDate = `${utcFormattedDay}-${utcFormattedMonth}-${utcYear}`;
+
+  return useSWRImmutable([tokenSymbol, utcFormattedDate], getTokenPriceForDate);
+};
+
 const LandTablePrice: React.FC<ILandTablePriceProps> = ({ tokenSymbol, tokenDecimals, weiAmount, dateTimestamp }) => {
-  const coingeckoApiDateFormat = 'dd-MM-yyyy';
-  const [formatedAmount, setFormattedAmount] = useState<BigNumber | null>(null);
-  const [usdPrice, setUsdPrice] = useState<BigNumber | null>(null);
-
-  useEffect(() => {
-    getTokenPrice();
-    return () => {
-      setUsdPrice(new BigNumber(0));
-    };
-  }, []);
-
-  const getTokenPrice = async () => {
-    const date = timestampSecondsToUTCDate(dateTimestamp, coingeckoApiDateFormat);
-    const ethAmount = ethers.utils.formatUnits(weiAmount, tokenDecimals);
-    const formatedAmount = new BigNumber(ethAmount);
-    setFormattedAmount(formatedAmount);
-
-    if (tokenSymbol.toLowerCase() === 'usdc') {
-      setUsdPrice(formatedAmount);
-    } else {
-      const usdEthPrice = await getTokenPriceForDate(tokenSymbol, date);
-      const usdPrice = formatedAmount.multipliedBy(usdEthPrice);
-      setUsdPrice(usdPrice);
-    }
-  };
+  const { data: usdPrice } = useGetTokenPriceInUsd(tokenSymbol, dateTimestamp);
+  const amount = new BigNumber(ethers.utils.formatUnits(weiAmount, tokenDecimals));
+  const priceInUsd = usdPrice ? amount.multipliedBy(usdPrice) : null;
 
   return (
     <span className="amount-container">
-      {formatedAmount && usdPrice ? (
-        <>
-          <SmallAmountTooltip
-            className="amount-text"
-            icon={<Icon style={{ width: 16, height: 16 }} name={getTokenIconName(tokenSymbol)} />}
-            amount={formatedAmount}
-          />
-          <SmallAmountTooltip className="usd-price" symbol="$" amount={usdPrice} />
-        </>
+      <SmallAmountTooltip
+        className="amount-text"
+        icon={<Icon style={{ width: 16, height: 16 }} name={getTokenIconName(tokenSymbol)} />}
+        amount={amount}
+      />
+
+      {priceInUsd ? (
+        <SmallAmountTooltip className="usd-price" symbol="$" amount={priceInUsd} />
       ) : (
-        <span>Calculating price</span>
+        <span className="usd-price">-</span>
       )}
     </span>
   );
