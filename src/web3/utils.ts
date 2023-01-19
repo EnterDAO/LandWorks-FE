@@ -161,7 +161,7 @@ export function getHumanValue(value: BigNumber, decimals = 0): BigNumber {
   return value.div(getExponentValue(decimals));
 }
 
-export function getNonHumanValue(value: BigNumber | number, decimals = 0): BigNumber {
+export function getNonHumanValue(value: BigNumber.Value, decimals = 0): BigNumber {
   return new BigNumber(value).multipliedBy(getExponentValue(decimals));
 }
 
