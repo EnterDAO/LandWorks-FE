@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, MouseEvent, useEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import useDebounce from '@rooks/use-debounce';
 
@@ -13,10 +13,8 @@ import LoadMoreButton from 'layout/components/load-more-button';
 import useLoadMoreButton from 'layout/components/load-more-button/useLoadMoreButton';
 import SplitBeeListButton from 'layout/metric/SplitBeeListButton';
 import { LocationState } from 'modules/interface';
-import { AssetEntity, CoordinatesLand } from 'modules/land-works/api';
+import { AssetEntity } from 'modules/land-works/api';
 import LandWorkCard from 'modules/land-works/components/land-works-card-explore-view';
-import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
-import { useLandsMapTiles } from 'modules/land-works/providers/lands-map-tiles';
 import { useListingModal } from 'providers/listing-modal-provider';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 import { getPropertyPath } from 'router/routes';
@@ -24,12 +22,7 @@ import { getPropertyPath } from 'router/routes';
 import PropertyCardSkeleton from '../land-works-card-explore-view/PropertyCardSkeleton';
 import { StyledButton } from './styled';
 
-import {
-  filterLandsByAvailability,
-  filterLandsByQuery,
-  getAllLandsCoordinates,
-  getOwnerOrConsumerId,
-} from 'modules/land-works/utils';
+import { filterLandsByAvailability, filterLandsByQuery } from 'modules/land-works/utils';
 import { sessionStorageHandler } from 'utils';
 
 import { THEME_COLORS } from 'themes/theme-constants';
@@ -38,19 +31,18 @@ interface Props {
   lastRentEnd: string;
   loading: boolean;
   lands: AssetEntity[];
-  setPointMapCentre: (lands: CoordinatesLand[]) => void;
+  selectedAssetId?: string;
+  onSelectAsset: (assetId: string) => void;
   isMapVisible: boolean;
 }
 
 const NUMBER_OF_CARDS_PER_LOAD = 18;
 
-const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRentEnd, isMapVisible }) => {
+const LandsExploreList: FC<Props> = ({ loading, lands, selectedAssetId, onSelectAsset, lastRentEnd, isMapVisible }) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
   const stickyOffset = useStickyOffset();
-  const { setClickedLandId, setSelectedTile } = useLandsMapTile();
   const [searchQuery] = useSearchBar();
-  const { mapTiles, selectedId, setSelectedId } = useLandsMapTiles();
   const getIsMounted = useGetIsMounted();
   const timeoutIdRef = useRef<number>();
   const listingModal = useListingModal();
@@ -63,49 +55,17 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
     isMapVisible ? (cardsSize === 'compact' ? 10 : 6) : 18
   );
 
-  const setActiveLand = useCallback(
-    (land: AssetEntity) => {
-      const [landCoords] = getAllLandsCoordinates([land]);
-
-      if (landCoords) {
-        setPointMapCentre([{ id: land.id, x: landCoords.x, y: landCoords.y }]);
-
-        if (setSelectedId) {
-          setSelectedId(land.id);
-        }
-
-        if (setClickedLandId) {
-          setClickedLandId(landCoords.x, landCoords.y);
-        }
-
-        const id = `${landCoords.x},${landCoords.y}`;
-
-        if (mapTiles && mapTiles[id] && setSelectedTile) {
-          setSelectedTile({
-            id,
-            type: mapTiles[id].type || '',
-            owner: getOwnerOrConsumerId(land?.decentralandData?.asset)?.toLowerCase() || '',
-          });
-        }
-      } else if (setSelectedId && setClickedLandId) {
-        setSelectedId(land.metaverseAssetId);
-        setClickedLandId(land.metaverseAssetId);
-      }
-    },
-    [mapTiles]
-  );
-
-  const handleCardMouseOver = (e: MouseEvent<HTMLAnchorElement>, land: AssetEntity) => {
+  const handleCardMouseOver = (e: MouseEvent<HTMLAnchorElement>, asset: AssetEntity) => {
     window.clearTimeout(timeoutIdRef.current);
 
-    if (selectedId) {
+    if (selectedAssetId) {
       timeoutIdRef.current = window.setTimeout(() => {
-        if (getIsMounted()) {
-          setActiveLand(land);
+        if (getIsMounted() && selectedAssetId) {
+          onSelectAsset(asset.id);
         }
       }, 500);
     } else {
-      setActiveLand(land);
+      onSelectAsset(asset.id);
     }
   };
 
@@ -219,6 +179,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, setPointMapCentre, lastRe
           filteredAndListedLands.map((land) => (
             <LandWorkCard
               key={land.id}
+              isActive={selectedAssetId === land.id}
               layout={cardsSize}
               onMouseOver={handleCardMouseOver}
               onMouseOut={handleCardMouseOut}

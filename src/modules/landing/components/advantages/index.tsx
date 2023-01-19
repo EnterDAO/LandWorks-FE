@@ -1,10 +1,14 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
+import { ReactComponent as ClockIcon } from 'assets/icons/clock-01.svg';
+import { ReactComponent as CoinUnbrokenIcon } from 'assets/icons/coin-unbroken.svg';
+import { ReactComponent as EyeOpenIcon } from 'assets/icons/eye-open.svg';
+import { ReactComponent as ShieldIcon } from 'assets/icons/shield-01.svg';
 import blurredLightsImgSrc from 'assets/img/advantages-blurred-lights.png';
 import exploreScreenImgSrc from 'assets/img/advantages-explore-screen.png';
-import { ReactComponent as CirclePlusIcon } from 'assets/img/circle-plus-icon.svg';
 import AdaptiveTypography from 'components/custom/adaptive-typography';
+import Image from 'components/custom/image';
 import { Grid, Typography } from 'design-system';
 
 import { THEME_COLORS } from 'themes/theme-constants';
@@ -12,34 +16,32 @@ import { THEME_COLORS } from 'themes/theme-constants';
 const cards = [
   {
     title: 'Affordability',
-    description: 'You can rent a land that you cannot afford otherwise.',
+    description: 'Rent land in the Metaverse for as low as $2 per day!',
+    Icon: CoinUnbrokenIcon,
   },
   {
-    title: 'Accessibility',
-    description: 'You can rent a land that otherwise is unavailable to take.',
+    title: 'Security',
+    description: 'Audited three times and battle-tested by more than 300 rents.',
+    Icon: ShieldIcon,
   },
   {
-    title: 'Trust-less',
-    description: 'Renting is fully decentralised by utilizing our audited protocol. No middleman. No hassle.',
+    title: 'Trustless',
+    description: 'Decentralized renting. No middleman. No hassle.',
+    Icon: EyeOpenIcon,
   },
   {
     title: 'Flexibility',
     description: 'Rent for as short as a day to host an event or as long as an year!',
+    Icon: ClockIcon,
   },
 ];
 
 export const Advantages: React.FC = () => {
   return (
     <Box id="why" className="content-container why" py={{ xs: 10, lg: 20 }}>
-      <Box textAlign="center">
-        <Typography variant="body2" color="var(--theme-accent-color)" mb={2}>
-          IS IT FOR YOU?
-        </Typography>
-        <AdaptiveTypography variant="h2" mb={2}>
-          There are a Lot of Opportunities
-        </AdaptiveTypography>
-        <Typography>You can either lend yours or rent a new Land that you want.</Typography>
-      </Box>
+      <AdaptiveTypography textAlign="center" variant="h2" mb={8}>
+        Advantages of Renting
+      </AdaptiveTypography>
 
       <Box
         position="relative"
@@ -50,26 +52,25 @@ export const Advantages: React.FC = () => {
         pb={{ xs: 8, sm: 28 }}
       >
         <Box position="absolute" width={1} height={1} display="flex" alignItems="center" justifyContent="center">
-          <img src={blurredLightsImgSrc} width={2596} height={1798} style={{ width: '100%', height: 'auto' }} />
+          <Image src={blurredLightsImgSrc} width={2596} height={1798} sx={{ width: 1 }} />
         </Box>
-        <Box
-          border="5px solid #27273A"
-          borderRadius="30px"
-          overflow="hidden"
-          display="flex"
-          sx={{ filter: 'drop-shadow(0px 0px 80px #040D1E)' }}
-        >
-          <img
-            src={exploreScreenImgSrc}
-            width={1482}
-            height={1086}
-            style={{ width: '100%', height: 'auto', maxWidth: 740 }}
-          />
-        </Box>
+        <Image
+          src={exploreScreenImgSrc}
+          width={1440}
+          height={1024}
+          sx={{
+            borderRadius: '30px',
+            border: '5px solid #27273A',
+            bgcolor: '#27273A',
+            width: 1,
+            maxWidth: 740,
+            filter: 'drop-shadow(0px 0px 80px #040D1E)',
+          }}
+        />
       </Box>
 
       <Grid container rowSpacing={{ xs: 5, lg: 8 }} columnSpacing={18} justifyContent="space-around">
-        {cards.map(({ title, description }) => {
+        {cards.map(({ title, description, Icon }) => {
           return (
             <Grid key={title} item xs={12} lg={6} display="flex" gap={3}>
               <Box
@@ -83,7 +84,7 @@ export const Advantages: React.FC = () => {
                 height={{ xs: 60, lg: 80 }}
                 color={THEME_COLORS.light}
               >
-                <CirclePlusIcon />
+                <Icon />
               </Box>
               <Box>
                 <Typography variant="h4" component="p" mb={1}>

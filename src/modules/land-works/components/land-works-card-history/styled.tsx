@@ -30,6 +30,7 @@ export const StyledTableCell = styled(TableCell)(() => ({
     fontSize: '14px',
     fontWeight: '600',
     lineHeight: '30px',
+    whiteSpace: 'nowrap',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: '13px',

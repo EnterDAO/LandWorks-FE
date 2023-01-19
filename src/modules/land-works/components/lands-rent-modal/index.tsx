@@ -77,7 +77,7 @@ export const RentModal: React.FC<Props> = (props) => {
   const [usdPrice, setUsdPrice] = useState(new BigNumber(0));
   const [isActiveOperatorInput, setIsActiveOperatorInput] = useState<boolean>(false);
   const [transactionLoading, setTransactionLoading] = useState<boolean>(false);
-  const [successTrunsaction, setSuccessTrunsaction] = useState<boolean>(false);
+  const [successTransaction, setSuccessTransaction] = useState<boolean>(false);
 
   const [approveDisabled, setApproveDisabled] = useState(false);
   const [rentDisabled, setRentDisabled] = useState(false);
@@ -245,7 +245,7 @@ export const RentModal: React.FC<Props> = (props) => {
         erc20Contract?.loadAllowance(config.contracts.landworksContract);
       }
       setTransactionLoading(false);
-      setSuccessTrunsaction(true);
+      setSuccessTransaction(true);
     } catch (e) {
       showToastNotification(ToastType.Error, 'There was an error while renting the property.');
       setTransactionLoading(false);
@@ -254,9 +254,6 @@ export const RentModal: React.FC<Props> = (props) => {
       console.log(e);
     }
   };
-
-  const showLoader = () => transactionLoading && !successTrunsaction;
-  const showSuccessModal = () => !transactionLoading && successTrunsaction;
 
   useEffect(() => {
     calculatePrices();
@@ -277,7 +274,7 @@ export const RentModal: React.FC<Props> = (props) => {
 
   return (
     <Modal className="modal-propety" handleClose={onCancel} {...modalProps}>
-      {!transactionLoading && !successTrunsaction && (
+      {!transactionLoading && !successTransaction && (
         <Grid container className="rent-modal">
           <Grid item>
             <Grid item>
@@ -403,7 +400,7 @@ export const RentModal: React.FC<Props> = (props) => {
           </Grid>
         </Grid>
       )}
-      {showSuccessModal() && (
+      {!transactionLoading && successTransaction && (
         <ModalSuccess
           title="Successfully Rented!"
           buttonText="go to my properties"
@@ -411,11 +408,15 @@ export const RentModal: React.FC<Props> = (props) => {
           buttonEvent={() => {
             setJoinPromptOpen(true);
             localStorage.setItem('join_prompt', 'true');
+            onCancel();
+            setSuccessTransaction(false);
             history.push(getMyPropertiesPath(MY_PROPERTIES_ROUTE_TABS.rented));
           }}
         />
       )}
-      {showLoader() && <ModalLoader text={modalText} href={getEtherscanAddressUrl(wallet.account) || ''} />}
+      {transactionLoading && !successTransaction && (
+        <ModalLoader text={modalText} href={getEtherscanAddressUrl(wallet.account) || ''} />
+      )}
     </Modal>
   );
 };

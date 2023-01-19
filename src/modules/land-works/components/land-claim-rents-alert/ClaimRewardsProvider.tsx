@@ -12,6 +12,7 @@ interface ClaimRewardsProviderProps {
   unclaimedAssets: AssetEntity[];
   adsReward: BigNumber;
   adsRewardsPaymentToken?: PaymentToken;
+  totalListed: number;
   claimAdsReward: () => Promise<void>;
   onClaim?: () => void;
 }
@@ -24,6 +25,7 @@ interface ContextValue {
   selectedAssetIds: string[];
   claimedAssetIds: string[];
   adsRewardsPaymentToken?: PaymentToken;
+  totalListed: number;
   claimRentReward: () => Promise<void>;
   claimAdsReward: () => Promise<void>;
   toggleSelectedAssetById: (assetId: string) => void;
@@ -39,6 +41,7 @@ const ClaimRewardsProvider: React.FC<ClaimRewardsProviderProps> = ({
   adsRewardsPaymentToken,
   unclaimedAssets,
   children,
+  totalListed,
   claimAdsReward: claimAds,
   onClaim,
 }) => {
@@ -126,6 +129,7 @@ const ClaimRewardsProvider: React.FC<ClaimRewardsProviderProps> = ({
       toggleSelectedAssetById,
       claimRentReward,
       claimAdsReward,
+      totalListed,
     };
   }, [
     actualUnclaimedAssets,
@@ -139,6 +143,7 @@ const ClaimRewardsProvider: React.FC<ClaimRewardsProviderProps> = ({
     toggleSelectedAssetById,
     claimRentReward,
     claimAdsReward,
+    totalListed,
   ]);
 
   return <Context.Provider value={value}>{children}</Context.Provider>;

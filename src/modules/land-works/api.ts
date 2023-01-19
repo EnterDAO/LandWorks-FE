@@ -1086,11 +1086,11 @@ export function fetchUserRents(address: string, availableOnly = false, metaverse
     },
   })
     .then(async (response) => {
-      return response.data;
+      return response.data.rents;
     })
     .catch((e) => {
       console.log(e);
-      return {} as UserEntity;
+      return [];
     });
 }
 
@@ -1731,8 +1731,13 @@ export function getAssetAdvertisement({
   return fetch(`${config.backend.apiUrl}/scene/${metaverseRegistry}/${metaverseAssetId}`).then((res) => res.json());
 }
 
-export function getAccountAdsRewards(
-  walletAddress: string
-): Promise<{ amount: string; claimedAmount: string; contractAddress: string; proof: string[]; token: string }> {
+export function getAccountAdsRewards(walletAddress: string): Promise<{
+  amount: string;
+  claimedAmount: string;
+  contractAddress: string;
+  proof: string[];
+  token: string;
+  totalListed: number;
+}> {
   return fetch(`${config.backend.apiUrl}/distribution/${walletAddress}`).then((res) => res.json());
 }
