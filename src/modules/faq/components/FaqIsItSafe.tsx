@@ -1,15 +1,19 @@
 import React from 'react';
 
-export const IsItSafe: React.FC = () => {
+const FaqIsItSafe = () => {
   return (
-    <span>
-      Yes! LandWorks has been audited twice. <br />
-      Initially by Omega in December 2021 and later on by Quantstamp in March of 2022. <br />
+    <p>
+      Yes! LandWorks has been audited twice.
+      <br />
+      Initially by Omega in December 2021 and later on by Quantstamp in March of 2022.
+      <br />
       High and medium risk issues from both audits have been addressed. You can check out both audits{' '}
       <a href="https://github.com/EnterDAO/LandWorks-protocol/tree/main/audits" target="_blank">
         here
       </a>
       .
-    </span>
+    </p>
   );
 };
+
+export default FaqIsItSafe;
