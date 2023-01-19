@@ -16,7 +16,6 @@ import usePriceQueryParams from 'modules/land-works/components/price-popover/use
 import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-tile';
 import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
-import { useWallet } from 'wallets/wallet';
 
 import { AssetEntity, GET_TOKEN_PAYMENTS, PaymentToken, fetchAssets } from '../../api';
 import { useMetaverseQueryParam } from '../my-properties-view/MetaverseSelect';
@@ -204,8 +203,6 @@ const ExploreView: React.FC = () => {
       } else {
         setStateClickedLandId(`${x}`);
       }
-
-      setLoading(false);
     },
     [lands]
   );
