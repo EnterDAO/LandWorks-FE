@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { FC, createContext, useContext } from 'react';
+import { FC, createContext, useCallback, useContext } from 'react';
 import { Client } from '@notionhq/client';
 import { GetPageResponse } from '@notionhq/client/build/src/api-endpoints';
 
 import config from '../../config';
 
-import { transformNotionEntityToSceneBuilder } from 'modules/scene-builder/utils';
+import { transformNotionEntityToSceneBuilder } from 'modules/meta-creators/utils';
 
-import { NotionResultForProfile } from 'modules/scene-builder/components/scene-builder-card/types';
+import { NotionResultForProfile } from 'modules/meta-creators/components/scene-builder-card/types';
 
 export interface INotionService {
   getSceneProviders: () => Promise<NotionResultForProfile[]>;
@@ -22,14 +22,12 @@ export function useNotion(): INotionService {
   return useContext(NotionServiceContext);
 }
 
-const NotionProvider: FC = (props) => {
-  const { children } = props;
+const notion = new Client({
+  auth: config.notion.apiKey,
+  baseUrl: config.notion.baseUrl,
+});
 
-  const notion = new Client({
-    auth: config.notion.apiKey,
-    baseUrl: config.notion.baseUrl,
-  });
-
+const NotionProvider: FC = ({ children }) => {
   const sceneProviderFilters = config.isProd
     ? [
         {
@@ -54,7 +52,7 @@ const NotionProvider: FC = (props) => {
         },
       ];
 
-  const getSceneProviders = async () => {
+  const getSceneProviders = useCallback(async () => {
     const response = await notion.databases.query({
       database_id: config.notion.databaseId,
       filter: {
@@ -71,7 +69,7 @@ const NotionProvider: FC = (props) => {
     return response.results.map((result) => {
       return transformNotionEntityToSceneBuilder(result as any);
     });
-  };
+  }, []);
 
   const getPage = async function (id: string): Promise<GetPageResponse> {
     return notion.pages.retrieve({
@@ -84,11 +82,7 @@ const NotionProvider: FC = (props) => {
     getPage,
   };
 
-  return (
-    <>
-      <NotionServiceContext.Provider value={value}>{children}</NotionServiceContext.Provider>
-    </>
-  );
+  return <NotionServiceContext.Provider value={value}>{children}</NotionServiceContext.Provider>;
 };
 
 export default NotionProvider;

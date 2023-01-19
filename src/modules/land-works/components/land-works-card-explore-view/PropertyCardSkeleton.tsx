@@ -44,9 +44,9 @@ const PropertyCardSkeleton = ({ layout }: PropertyCardSkeletonProps) => {
 
       <Divider sx={{ my: 3 }} />
 
-      <Box display="flex" justifyContent="space-between" height={42}>
+      <Box display="flex" alignItems="center" justifyContent="space-between" height={42}>
         <Skeleton variant="rectangular" height="100%" width="100px" />
-        <Skeleton variant="rectangular" height="100%" width="85px" />
+        <Skeleton variant="rectangular" height="28px" width="85px" />
       </Box>
 
       <Skeleton variant="rectangular" height="18px" width="180px" sx={{ mt: 'auto' }} />

@@ -1,8 +1,11 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 
-import Icon from 'components/custom/icon';
+import Typography from 'components/common/Typography';
 import { Button } from 'design-system';
+import { SuccessStarIcon } from 'design-system/icons';
+
+import { THEME_COLORS } from 'themes/theme-constants';
 
 import './index.scss';
 
@@ -15,13 +18,24 @@ interface ModalProps {
 
 export const ModalSuccess: React.FC<ModalProps> = ({ title, description, buttonEvent, buttonText }) => {
   return (
-    <Grid container className="rent-modal-succes">
-      <Icon name="success" className="success-icon" />
-      <p>{title}</p>
-      <span>{description}</span>
-      <Button variant="gradient" onClick={buttonEvent}>
-        {buttonText}
-      </Button>
-    </Grid>
+    <Stack width={420}>
+      <Box mb={4} display="flex" justifyContent="center">
+        <SuccessStarIcon />
+      </Box>
+
+      <Typography fontSize={25} variant="h2" mb={2}>
+        {title}
+      </Typography>
+
+      <Typography component="p" color={THEME_COLORS.grey03} variant="caption" mb={8}>
+        {description}
+      </Typography>
+
+      <Stack display="flex" alignItems="center" gap={6}>
+        <Button variant="gradient" btnSize="medium" onClick={buttonEvent}>
+          {buttonText}
+        </Button>
+      </Stack>
+    </Stack>
   );
 };

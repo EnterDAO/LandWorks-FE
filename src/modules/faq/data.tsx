@@ -1,90 +1,82 @@
-import { QuestionData } from 'layout/components/quastion-accordion/QuestionAccordion';
+import { ReactNode } from 'react';
 
-import { CanIContact } from './components/CanIContact';
-import { CanIHave } from './components/CanIHave';
-import { CanIHire } from './components/CanIHire';
-import { HowDo } from './components/HowDo';
-import { HowItWorks } from './components/HowItWorks';
-import { HowList } from './components/HowList';
-import { HowRemove } from './components/HowRemove';
-import { HowRent } from './components/HowRent';
-import { IsItSafe } from './components/IsItSafe';
-import { Support } from './components/Support';
-import { WhatDo } from './components/WhatDo';
-import { WhatIs } from './components/WhatIs';
-import { WhyError } from './components/WhyError';
-import { WhyHaveToPay } from './components/WhyHaveToPay';
-import { StyledQuestion } from './styled';
+import FaqBuildForMe from './components/FaqBuildForMe';
+import FaqCanIContact from './components/FaqCanIContact';
+import FaqCanIHire from './components/FaqCanIHire';
+import FaqHowDoesLandWorksWork from './components/FaqHowDoesLandWorksWork';
+import FaqHowListLand from './components/FaqHowListLand';
+import FaqHowToBuildOnLand from './components/FaqHowToBuildOnLand';
+import FaqHowToRemoveLand from './components/FaqHowToRemoveLand';
+import FaqHowToRentLand from './components/FaqHowToRentLand';
+import FaqIsItSafe from './components/FaqIsItSafe';
+import FaqSupport from './components/FaqSupport';
+import FaqWhatIsLandWorks from './components/FaqWhatIsLandWorks';
+import FaqWhatToDoWithLand from './components/FaqWhatToDoWithLand';
+import FaqWhyError from './components/FaqWhyError';
+import FaqWhyHaveToPayNetworkFee from './components/FaqWhyHaveToPayNetworkFee';
 
-export const faq: QuestionData[] = [
+export const FAQ_HOW_DOES_IT_WORK_ANCHOR_ID = 'how-does-it-work';
+
+export const faq: {
+  id?: string;
+  question: string;
+  answer: ReactNode;
+}[] = [
   {
-    id: 0,
-    question: <StyledQuestion>What is LandWorks?</StyledQuestion>,
-    answer: <WhatIs />,
+    question: 'What is LandWorks?',
+    answer: <FaqWhatIsLandWorks />,
   },
   {
-    id: 1,
-    question: <StyledQuestion>How does it work?</StyledQuestion>,
-    answer: <HowItWorks />,
+    id: FAQ_HOW_DOES_IT_WORK_ANCHOR_ID,
+    question: 'How does it work?',
+    answer: <FaqHowDoesLandWorksWork />,
   },
   {
-    id: 2,
-    question: <StyledQuestion>How do I list my land?</StyledQuestion>,
-    answer: <HowList />,
+    question: 'How do I list my land?',
+    answer: <FaqHowListLand />,
   },
   {
-    id: 3,
-    question: <StyledQuestion>How do I rent land?</StyledQuestion>,
-    answer: <HowRent />,
+    answer: <FaqHowToRentLand />,
+    question: 'How do I rent land?',
   },
   {
-    id: 4,
-    question: <StyledQuestion>Is it safe?</StyledQuestion>,
-    answer: <IsItSafe />,
+    question: 'Is it safe?',
+    answer: <FaqIsItSafe />,
   },
   {
-    id: 5,
-    question: <StyledQuestion>What do I do with the land?</StyledQuestion>,
-    answer: <WhatDo />,
+    question: 'What do I do with the land?',
+    answer: <FaqWhatToDoWithLand />,
   },
   {
-    id: 6,
-    question: <StyledQuestion>How do I build?</StyledQuestion>,
-    answer: <HowDo />,
+    question: 'How do I build?',
+    answer: <FaqHowToBuildOnLand />,
   },
   {
-    id: 7,
-    question: <StyledQuestion>Can I have someone else build my project for me?</StyledQuestion>,
-    answer: <CanIHave />,
+    question: 'Can I have someone else build my project for me?',
+    answer: <FaqBuildForMe />,
   },
   {
-    id: 8,
-    question: <StyledQuestion>Can I hire someone to build my project for me?</StyledQuestion>,
-    answer: <CanIHire />,
+    question: 'Can I hire someone to build my project for me?',
+    answer: <FaqCanIHire />,
   },
   {
-    id: 9,
-    question: <StyledQuestion>Can I contact the owner?</StyledQuestion>,
-    answer: <CanIContact />,
+    question: 'Can I contact the owner?',
+    answer: <FaqCanIContact />,
   },
   {
-    id: 10,
-    question: <StyledQuestion>How do I remove my land from LandWorks?</StyledQuestion>,
-    answer: <HowRemove />,
+    question: 'How do I remove my land from LandWorks?',
+    answer: <FaqHowToRemoveLand />,
   },
   {
-    id: 11,
-    question: <StyledQuestion>Why do I get an error when I try to rent?</StyledQuestion>,
-    answer: <WhyError />,
+    question: 'Why do I get an error when I try to rent?',
+    answer: <FaqWhyError />,
   },
   {
-    id: 12,
-    question: <StyledQuestion>Why do I have to pay a network fee?</StyledQuestion>,
-    answer: <WhyHaveToPay />,
+    question: 'Why do I have to pay a network fee?',
+    answer: <FaqWhyHaveToPayNetworkFee />,
   },
   {
-    id: 13,
-    question: <StyledQuestion>Is there support available?</StyledQuestion>,
-    answer: <Support />,
+    question: 'Is there support available?',
+    answer: <FaqSupport />,
   },
 ];
