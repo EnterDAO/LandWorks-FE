@@ -4,12 +4,18 @@ export const LANDING_ROUTES = {
   home: '/',
   docs: '/docs',
   faq: '/faq',
-  sceneBuilder: '/scene-builder',
-  sceneBuilderJoin: '/scene-builder/join',
+  metaCreators: '/meta-creators',
+  metaCreatorsJoin: '/meta-creators/join',
+  metaCreatorsCreator: '/meta-creators/creator/:metaCreatorId',
   myProperties: '/my-properties/:tab?',
-  sceneBuilderBuilder: '/scene-builder/builder/:builderName',
   grantsProgram: '/grants-program',
   property: '/property/:tokenId',
+  notFound: '/404',
+
+  // old routes
+  sceneBuilder: '/scene-builder',
+  sceneBuilderJoin: '/scene-builder/join',
+  sceneBuilderBuilder: '/scene-builder/builder/:builderName',
 };
 
 export const APP_ROOT_ROUTE = '/app';
@@ -19,18 +25,34 @@ export const APP_ROUTES = {
   myProperties: APP_ROOT_ROUTE + LANDING_ROUTES.myProperties,
   property: APP_ROOT_ROUTE + LANDING_ROUTES.property,
   faq: APP_ROOT_ROUTE + LANDING_ROUTES.faq,
+  grantsProgram: APP_ROOT_ROUTE + LANDING_ROUTES.grantsProgram,
+  notFound: APP_ROOT_ROUTE + LANDING_ROUTES.notFound,
+
+  metaCreators: APP_ROOT_ROUTE + LANDING_ROUTES.metaCreators,
+  metaCreatorsJoin: APP_ROOT_ROUTE + LANDING_ROUTES.metaCreatorsJoin,
+  metaCreatorsCreator: APP_ROOT_ROUTE + LANDING_ROUTES.metaCreatorsCreator,
+
+  // old routes
   sceneBuilder: APP_ROOT_ROUTE + LANDING_ROUTES.sceneBuilder,
   sceneBuilderJoin: APP_ROOT_ROUTE + LANDING_ROUTES.sceneBuilderJoin,
   sceneBuilderBuilder: APP_ROOT_ROUTE + LANDING_ROUTES.sceneBuilderBuilder,
-  grantsProgram: APP_ROOT_ROUTE + LANDING_ROUTES.grantsProgram,
 };
 
+export const redirects = [
+  [LANDING_ROUTES.sceneBuilder, LANDING_ROUTES.metaCreators],
+  [LANDING_ROUTES.sceneBuilderJoin, LANDING_ROUTES.metaCreatorsJoin],
+  [LANDING_ROUTES.sceneBuilderBuilder, LANDING_ROUTES.metaCreatorsCreator],
+  [APP_ROUTES.sceneBuilder, APP_ROUTES.metaCreators],
+  [APP_ROUTES.sceneBuilderJoin, APP_ROUTES.metaCreatorsJoin],
+  [APP_ROUTES.sceneBuilderBuilder, APP_ROUTES.metaCreatorsCreator],
+];
+
 export const useIsAppRoute = (): boolean => !!useRouteMatch(APP_ROOT_ROUTE);
-export const useSceneBuilderBuilderPath = (builderName: string): string => {
+export const useMetaCreatorsCreatorPath = (metaCreatorId: string): string => {
   const isAppRoute = useIsAppRoute();
 
-  return generatePath(isAppRoute ? APP_ROUTES.sceneBuilderBuilder : LANDING_ROUTES.sceneBuilderBuilder, {
-    builderName,
+  return generatePath(isAppRoute ? APP_ROUTES.metaCreatorsCreator : LANDING_ROUTES.metaCreatorsCreator, {
+    metaCreatorId,
   });
 };
 
