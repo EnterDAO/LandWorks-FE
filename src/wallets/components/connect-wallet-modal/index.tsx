@@ -1,3 +1,4 @@
+import splitbee from '@splitbee/web';
 import { activateInjectedProvider } from 'web3/utils';
 
 import { IconWallet } from 'components/custom/icon-wallet';
@@ -38,6 +39,10 @@ const ConnectWalletModal: React.FC<ConnectWalletModalProps> = (props) => {
     if (wallet.isActive) {
       return;
     }
+
+    splitbee.track('Sign in with', {
+      connector: connector.id,
+    });
 
     if (connector.id === 'ledger') {
       setState({

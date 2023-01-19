@@ -1,30 +1,44 @@
-import { QuestionData } from 'layout/components/quastion-accordion/QuestionAccordion';
+import howDoesItWorksImgSrc from 'assets/img/HowItWorks.png';
+import { FAQ_HOW_DOES_IT_WORK_ANCHOR_ID } from 'modules/faq/data';
 
-export const questionData: QuestionData[] = [
+export const faq = [
   {
-    id: 1,
-    question: <span>What is LandWorks?</span>,
-    answer: <span>It aims to provide renting infrastructure for the metaverse and lower the barrier to entry.</span>,
-  },
-  {
-    id: 2,
-    question: <span>How does it work?</span>,
+    question: 'What is LandWorks?',
     answer: (
-      <span>
-        LandWorks uses a trustless protocol that enables renting by introducing the role of the consumer. The consumer
-        is an actor that does not have transfer permissions, but has rights for “consuming” the NFT (e.g building a
-        scene/experience on top of a land NFT).
-      </span>
+      <p>
+        LandWorks is a renting marketplace enabling period-based renting of land in several Web3 Metaverse games.
+        LandWorks is part of the portfolio of products developed and maintained by the EnterDAO community and aims to
+        democratize real estate in the Metaverse.
+      </p>
     ),
   },
   {
-    id: 3,
-    question: <span>Is it safe?</span>,
+    question: 'How does it work?',
     answer: (
-      <span>
-        Yes! LandWorks has been audited twice. Initially by Omega in December 2021 and later on by Quantstamp in March
-        of 2022.
-      </span>
+      <>
+        <p>
+          Read more{' '}
+          <a href={`/faq#${FAQ_HOW_DOES_IT_WORK_ANCHOR_ID}`} target="_blank">
+            here
+          </a>
+          .
+        </p>
+
+        <img src={howDoesItWorksImgSrc} alt="" />
+      </>
+    ),
+  },
+  {
+    question: 'Is it safe?',
+    answer: (
+      <p>
+        Yes! Landworks has more than 300 successful rents and has been audited 3 times. Twice by Omega and once by
+        Qunatstamp. Find the audit reports{' '}
+        <a href="https://github.com/EnterDAO/LandWorks-protocol/tree/main/audits" target="_blank">
+          here
+        </a>
+        .
+      </p>
     ),
   },
 ];

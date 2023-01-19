@@ -1,12 +1,13 @@
 import React from 'react';
 
-export const WhyHaveToPay: React.FC = () => {
+export const FaqWhyHaveToPayNetworkFee = () => {
   return (
     <>
-      <span>
+      <p>
         Network fees are usually needed when a certain action emits a transaction on the blockchain or gives access?
-        Here is a list of all the possible network fees you might be asked to pay in LandWorks:
-      </span>
+      </p>
+      <p>Here is a list of all the possible network fees you might be asked to pay in LandWorks:</p>
+
       <ul>
         <li>Give LandWorks access to your wallet when listing a land.</li>
         <li>Listing land for rent</li>
@@ -20,3 +21,5 @@ export const WhyHaveToPay: React.FC = () => {
     </>
   );
 };
+
+export default FaqWhyHaveToPayNetworkFee;

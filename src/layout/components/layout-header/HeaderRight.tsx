@@ -19,11 +19,11 @@ const HeaderRight: FC = () => {
       ) : (
         <HeaderActionButton
           onClick={() => {
-            splitbee.track('Explore button click');
+            splitbee.track('Header connect button click');
             history.push(APP_ROUTES.explore);
           }}
         >
-          EXPLORE
+          Connect wallet
         </HeaderActionButton>
       )}
     </Box>
