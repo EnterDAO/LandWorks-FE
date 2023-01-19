@@ -872,7 +872,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                       Sharded Mind
                     </ExternalLink>{' '}
                     NFT) for each unique view on the ad. Full info on how the ads work can be found{' '}
-                    <ExternalLink variant="link2" href="#">
+                    <ExternalLink
+                      variant="link2"
+                      href="https://medium.com/enterdao/new-passive-income-stream-for-metaverse-landlords-8c72c68c7bb5"
+                    >
                       here
                     </ExternalLink>
                     .

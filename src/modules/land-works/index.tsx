@@ -11,6 +11,7 @@ import { useWarning } from 'providers/warning-provider';
 import { APP_ROUTES, LANDING_ROUTES } from 'router/routes';
 
 import { PaymentToken } from './api';
+import NotFoundView from './views/not-found-view';
 
 import { createDataProvider } from 'utils/context';
 
@@ -76,6 +77,7 @@ const LandworksView = () => {
               <Route path={APP_ROUTES.explore} exact component={ExploreView} />
               <Route path={APP_ROUTES.property} component={SingleLand} />
               <Route path={APP_ROUTES.myProperties} component={MyPropertiesView} />
+              <Route path={[APP_ROUTES.notFound, '*']} component={NotFoundView} />
             </Switch>
           </ListingModalProvider>
         </PaymentTokensProvider>

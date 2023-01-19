@@ -1,20 +1,15 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import useSWRImmutable from 'swr/immutable';
 
 import Typography from 'components/common/Typography';
-import { getENSName } from 'helpers/helpers';
 import useDebouncedValue from 'hooks/useDebounce';
+import useEnsName from 'hooks/useEnsName';
 
 import { DecentralandMapTile } from './DecentralandTileMap';
 
 interface DecentralandMapTileInfoProps {
   tile: DecentralandMapTile;
 }
-
-const useEnsName = (walletAddress: string) => {
-  return useSWRImmutable(walletAddress, getENSName);
-};
 
 const DecentralandMapTileInfo = ({ tile }: DecentralandMapTileInfoProps) => {
   const tileOwner = tile.owner || '';

@@ -15,6 +15,7 @@ import { METAVERSES } from 'modules/land-works/data/metaverses';
 import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-tile';
 import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
+import { useWallet } from 'wallets/wallet';
 
 import { AssetEntity, PaymentToken, fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder } from '../../api';
 import ExploreMap from './ExploreMap';
@@ -76,6 +77,7 @@ const ExploreView: React.FC = () => {
   const [showCardPreview, setShowCardPreview] = useState(false);
 
   const paymentToken = priceParams.paymentToken;
+  const wallet = useWallet();
 
   const [maxLandSize, setMaxLandSize] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
@@ -167,6 +169,19 @@ const ExploreView: React.FC = () => {
     },
     []
   );
+
+  useEffect(() => {
+    if (wallet.account) {
+      return;
+    }
+    const timeoutId = window.setTimeout(() => {
+      wallet.showWalletsModal();
+    }, 500);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [wallet.account, wallet.showWalletsModal]);
 
   useEffect(() => {
     getLands(

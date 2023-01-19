@@ -45,7 +45,11 @@ const EnableAdsModal: FC<EnableAdsModalProps> = ({ open = false, actionDisabled,
               Sharded Mind
             </ExternalLink>{' '}
             NFT) for each unique view on the ad. Full info on how the ads work can be found{' '}
-            <ExternalLink fontSize="inherit" variant="link2" href="#">
+            <ExternalLink
+              fontSize="inherit"
+              variant="link2"
+              href="https://medium.com/enterdao/new-passive-income-stream-for-metaverse-landlords-8c72c68c7bb5"
+            >
               here
             </ExternalLink>
             .

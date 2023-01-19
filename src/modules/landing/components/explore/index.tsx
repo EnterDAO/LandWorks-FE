@@ -11,7 +11,7 @@ import { APP_ROUTES } from 'router/routes';
 export const Explore: React.FC = () => {
   const history = useHistory();
   return (
-    <Box py={{ xs: 10, lg: 20 }} className="content-container">
+    <Box py={{ xs: 20, lg: 40 }} className="content-container">
       <Box
         display="flex"
         flexDirection={{ xs: 'column', lg: 'row' }}
@@ -33,7 +33,7 @@ export const Explore: React.FC = () => {
             Explore <br /> Our Marketplace
           </AdaptiveTypography>
           <Typography maxWidth={300} mb={9}>
-            Rent a land or list your property for renting - we make it easy for you.
+            Rent a land or list yours for renting - LandWorks takes care of the rest.
           </Typography>
           <Button onClick={() => history.push(APP_ROUTES.explore)} btnSize="medium" variant="gradient">
             Explore
