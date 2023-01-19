@@ -30,6 +30,7 @@ const config = {
     usdcEntrSLP: toLowerCase(process.env.REACT_APP_TOKEN_USDC_ENTR_SUSHI_LP),
   },
   contracts: {
+    adsContract: toLowerCase(process.env.REACT_APP_CONTRACT_ADS_ADDR),
     yf: {
       staking: toLowerCase(process.env.REACT_APP_CONTRACT_YF_STAKING_ADDR),
       mana: toLowerCase(process.env.REACT_APP_CONTRACT_YF_MANA_ADDR),
@@ -91,6 +92,9 @@ const config = {
     apiKey: String(process.env.REACT_APP_NOTION_API_KEY),
     baseUrl: String(process.env.REACT_APP_NOTION_BASE_URL),
     databaseId: String(process.env.REACT_APP_NOTION_DATABASE_ID),
+  },
+  backend: {
+    apiUrl: process.env.REACT_APP_LANDWORKS_API_URL,
   },
 };
 

@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import useDebounce from '@rooks/use-debounce';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { BooleanParam, useQueryParam, withDefault } from 'use-query-params';
 import { getNonHumanValue } from 'web3/utils';
 
@@ -17,26 +16,18 @@ import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-
 
 import {
   AssetEntity,
-  CoordinatesLand,
   PaymentToken,
   fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
   fetchTokenPayments,
 } from '../../api';
+import { useMetaverseQueryParam } from '../my-properties-view/MetaverseSelect';
 import ExploreMap from './ExploreMap';
 
-import {
-  filterByMoreFilters,
-  getAllLandsCoordinates,
-  getMaxArea,
-  getMaxHeight,
-  getMaxLandSize,
-  landsOrder,
-} from 'modules/land-works/utils';
+import { filterByMoreFilters, getMaxArea, getMaxHeight, getMaxLandSize, landsOrder } from 'modules/land-works/utils';
 import { getNowTs, sessionStorageHandler } from 'utils';
 import { DAY_IN_SECONDS } from 'utils/date';
 
 import {
-  DECENTRALAND_METAVERSE,
   DEFAULT_LAST_RENT_END,
   DEFAULT_TOKEN_ADDRESS,
   RentStatus,
@@ -78,25 +69,24 @@ const ExploreView: React.FC = () => {
   const sessionFilters = {
     order: sessionStorageHandler('get', 'explore-filters', 'order'),
     owner: sessionStorageHandler('get', 'explore-filters', 'owner'),
-    metaverse: sessionStorageHandler('get', 'general', 'metaverse'),
   };
 
   const [lands, setLands] = useState<AssetEntity[]>([]);
   const [clickedLandId, setStateClickedLandId] = useState<AssetEntity['id']>('');
   const [mapTiles, setMapTiles] = useState<Record<string, AtlasTile>>({});
-  const [selectedId, setSelectedId] = useState<string>('');
+  const [selectedId, setSelectedId] = useState<string>();
   const [selectedTile, setSelectedTile] = useState<SelectedTile>({
     id: '',
     type: '',
     owner: '',
   });
-  const [metaverse, setMetaverse] = useState(sessionFilters.metaverse || DECENTRALAND_METAVERSE);
+
+  const [metaverse, setMetaverse] = useMetaverseQueryParam();
   const orderFilter =
     sessionFilters.order && sessionFilters.order[`${metaverse}`] ? sessionFilters.order[`${metaverse}`] - 1 : 0;
   const [sortDir, setSortDir] = useState(sortDirections[orderFilter]);
   const [sortColumn, setSortColumn] = useState(sortColumns[orderFilter]);
 
-  const [coordinatesHighlights, setCoordinatesHighlights] = useState<CoordinatesLand[]>([]);
   const [rentStatus] = useRentStatusQueryParam();
   const [isMapVisible, setIsMapVisible] = useQueryParam('map', IsMapVisibleParam);
   const [priceParams] = usePriceQueryParams();
@@ -104,9 +94,6 @@ const ExploreView: React.FC = () => {
   const lastRentEnd = useMemo(() => {
     return rentStatus !== RentStatus.All ? getNowTs().toString() : DEFAULT_LAST_RENT_END;
   }, [rentStatus]);
-
-  const [atlasMapX, setAtlasMapX] = useState(0);
-  const [atlasMapY, setAtlasMapY] = useState(0);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -128,32 +115,27 @@ const ExploreView: React.FC = () => {
     return moreFilters ? filterByMoreFilters(lands, moreFilters, metaverse) : lands;
   }, [lands, moreFilters, metaverse]);
 
-  const setClickedLandId = (x: number | string, y?: number | string | undefined) => {
-    if (x && y) {
-      let landId = `${x},${y}`;
+  const setClickedLandId = useCallback(
+    (x: number | string, y?: number | string | undefined) => {
+      if (x && y) {
+        let landId = `${x},${y}`;
 
-      // Look for the first coordinate for land estate.
-      lands.forEach((land) => {
-        land.decentralandData?.coordinates.forEach((coord, coordIndex) => {
-          if (coordIndex > 0 && coord.id === landId.replace(',', '-')) {
-            landId = `${land.decentralandData?.coordinates[0].x},${land.decentralandData?.coordinates[0].y}`;
-          }
+        // Look for the first coordinate for land estate.
+        lands.forEach((land) => {
+          land.decentralandData?.coordinates.forEach((coord, coordIndex) => {
+            if (coordIndex > 0 && coord.id === landId.replace(',', '-')) {
+              landId = `${land.decentralandData?.coordinates[0].x},${land.decentralandData?.coordinates[0].y}`;
+            }
+          });
         });
-      });
 
-      return setStateClickedLandId(landId);
-    }
-    if (x) setStateClickedLandId(`${x}`);
-  };
-
-  const setPointMapCentre = (lands: CoordinatesLand[]) => {
-    if (lands[0]) {
-      const { x, y } = lands[0];
-
-      setAtlasMapX(Number(x));
-      setAtlasMapY(Number(y));
-    }
-  };
+        return setStateClickedLandId(landId);
+      } else {
+        setStateClickedLandId(`${x}`);
+      }
+    },
+    [lands]
+  );
 
   const onChangeFiltersSortDirection = (value: number) => {
     const sortIndex = Number(value) - 1;
@@ -162,21 +144,24 @@ const ExploreView: React.FC = () => {
   };
 
   const onChangeMetaverse = (index: string) => {
-    setMetaverse(index);
+    setMetaverse(+index);
     setMoreFilters(null);
   };
 
-  const getLands = useDebounce(
+  const getLands = useCallback(
     async (
       metaverse: number,
       orderColumn: string,
       sortDir: 'asc' | 'desc',
       lastRentEnd: string,
-      paymentToken: PaymentToken,
+      rentStatus: RentStatus,
+      paymentToken?: PaymentToken,
       minPrice?: number | null,
       maxPrice?: number | null
     ) => {
       setLoading(true);
+      setLands([]);
+
       const sortBySize = orderColumn == 'size';
       const sortByHottest = orderColumn == 'totalRents';
 
@@ -199,20 +184,16 @@ const ExploreView: React.FC = () => {
 
       setLands(sortByHottest || sortBySize ? landsOrder(lands.data, orderColumn, sortDir) : lands.data);
 
-      setLoading(false);
-
-      const highlights = getAllLandsCoordinates(lands.data);
-      setCoordinatesHighlights(highlights);
-      setPointMapCentre(highlights);
-
       if (metaverse === 1) {
         setMaxLandSize(getMaxLandSize(lands.data));
       } else {
         setMaxHeight(getMaxHeight(lands.data));
         setMaxArea(getMaxArea(lands.data));
       }
+
+      setLoading(false);
     },
-    500
+    []
   );
 
   useEffect(() => {
@@ -221,25 +202,47 @@ const ExploreView: React.FC = () => {
       sortColumn,
       sortDir,
       lastRentEnd,
+      rentStatus,
       paymentToken,
       priceParams.minPrice,
       priceParams.maxPrice
     );
-  }, [sortColumn, sortDir, lastRentEnd, paymentToken, metaverse, priceParams.minPrice, priceParams.maxPrice]);
+  }, [
+    getLands,
+    sortColumn,
+    sortDir,
+    rentStatus,
+    lastRentEnd,
+    paymentToken,
+    metaverse,
+    priceParams.minPrice,
+    priceParams.maxPrice,
+  ]);
+
+  const landsMapTilesValue = useMemo(() => {
+    return {
+      mapTiles,
+      setMapTiles,
+      selectedId,
+      setSelectedId,
+    };
+  }, [mapTiles, setMapTiles, selectedId, setSelectedId]);
+
+  const landsMapTileValue = useMemo(() => {
+    return {
+      clickedLandId,
+      setClickedLandId,
+      selectedTile,
+      setSelectedTile,
+      showCardPreview,
+      setShowCardPreview,
+    };
+  }, [clickedLandId, setClickedLandId, selectedTile, setSelectedTile, showCardPreview, setShowCardPreview]);
 
   return (
     <LandsSearchQueryProvider value={{ searchQuery, setSearchQuery }}>
-      <LandsMapTilesProvider value={{ mapTiles, setMapTiles, selectedId, setSelectedId }}>
-        <LandsMapTileProvider
-          value={{
-            clickedLandId,
-            setClickedLandId,
-            selectedTile,
-            setSelectedTile,
-            showCardPreview,
-            setShowCardPreview,
-          }}
-        >
+      <LandsMapTilesProvider value={landsMapTilesValue}>
+        <LandsMapTileProvider value={landsMapTileValue}>
           <LandsExploreFilters
             handleMoreFilter={setMoreFilters}
             onChangeSortDirection={onChangeFiltersSortDirection}
@@ -252,11 +255,12 @@ const ExploreView: React.FC = () => {
             <Box className="content-container content-container--explore-view" maxWidth="none !important">
               <Box width={{ lg: isMapVisible ? 0.5 : 1 }} pr={{ lg: isMapVisible ? 2 : 0 }}>
                 <LandsExploreList
+                  selectedAssetId={selectedId}
+                  onSelectAsset={setSelectedId}
                   isMapVisible={isMapVisible}
                   lastRentEnd={lastRentEnd}
                   loading={loading}
                   lands={filteredLands || lands}
-                  setPointMapCentre={setPointMapCentre}
                 />
                 <LayoutFooter isWrapped={false} />
               </Box>
@@ -264,11 +268,10 @@ const ExploreView: React.FC = () => {
 
             <ExploreMap
               type={metaverse}
-              positionX={atlasMapX}
-              positionY={atlasMapY}
-              highlights={coordinatesHighlights}
-              lands={lands}
+              assets={lands}
               isMapVisible={isMapVisible}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
               onHideMap={() => setIsMapVisible(false)}
               onShowMap={() => setIsMapVisible(true)}
             />

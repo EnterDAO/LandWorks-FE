@@ -1,3 +1,6 @@
+import splitbee from '@splitbee/web';
+import { activateInjectedProvider } from 'web3/utils';
+
 import { IconWallet } from 'components/custom/icon-wallet';
 import { Text } from 'components/custom/typography';
 import { Grid, Modal } from 'design-system';
@@ -37,6 +40,10 @@ const ConnectWalletModal: React.FC<ConnectWalletModalProps> = (props) => {
       return;
     }
 
+    splitbee.track('Sign in with', {
+      connector: connector.id,
+    });
+
     if (connector.id === 'ledger') {
       setState({
         showLedgerModal: true,
@@ -51,6 +58,8 @@ const ConnectWalletModal: React.FC<ConnectWalletModalProps> = (props) => {
         darkMode: isDarkTheme,
       } as CoinbaseWalletArgs;
     }
+
+    activateInjectedProvider(connector.id);
 
     wallet.connect(connector, args).catch(Error);
   }

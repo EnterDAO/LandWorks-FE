@@ -67,14 +67,15 @@ export function formatBigNumberInput(value: BigNumber): string {
 }
 
 export function formatShortDescription(desc: string): string {
-  const limitStringLength = desc.slice(0, 105);
-  const cutOff = limitStringLength.lastIndexOf(' ');
-  const shortenedDescription = limitStringLength.substring(0, cutOff);
-  if (desc.length > 105) {
+  if (desc.length > 90) {
+    const limitStringLength = desc.slice(0, 90);
+    const cutOff = limitStringLength.lastIndexOf(' ');
+    const shortenedDescription = limitStringLength.substring(0, cutOff);
+
     return `${shortenedDescription}...`;
-  } else {
-    return desc;
   }
+
+  return desc;
 }
 
 export function getFormattedDuration(value?: number, endValue?: number): string | undefined {
@@ -436,3 +437,32 @@ export const lerp = (a: number, b: number, amount: number): number => {
 export const clamp = (value: number, min = 0, max = 1): number => Math.min(max, Math.max(min, value));
 
 export const inverseLerp = (a: number, b: number, value: number): number => clamp((value - a) / (b - a));
+
+export const swrFetcher = (url: string) => fetch(url).then((res) => res.json());
+
+// local storage
+
+export const localStorageGet = <T = any>(key: string): T | null => {
+  const stored = localStorage.getItem(key);
+
+  if (!stored) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(stored);
+
+    return typeof parsed === 'object' && 'value' in parsed ? parsed.value : null;
+  } catch (e) {
+    return null;
+  }
+};
+
+export const localStorageSet = (key: string, value: any) => {
+  localStorage.setItem(
+    key,
+    JSON.stringify({
+      value,
+    })
+  );
+};

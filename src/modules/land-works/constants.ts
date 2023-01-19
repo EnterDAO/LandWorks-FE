@@ -172,12 +172,12 @@ export const voxelTypes = [
   {
     value: 2,
     title: 'Unit',
-    desc: 'Units are appartments and tend not to be at ground level. In other words, units are usually in a tower.',
+    desc: 'Units are apartments and tend not to be at ground level. In other words, units are usually in a tower.',
   },
   {
     value: 3,
     title: 'Inner',
-    desc: 'Turn-key parcels which come prebuilt directly form Voxels.',
+    desc: 'Turn-key parcels which come prebuilt directly from Voxels.',
   },
 ];
 
@@ -203,6 +203,7 @@ export const listNotificationMessage = [
   '',
   'Once you list your property you can edit the entered rent period but you’ll have to pay a network fee.',
   'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
+  '',
   'There is a network fee in order to list the property.',
 ];
 

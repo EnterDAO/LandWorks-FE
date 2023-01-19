@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useLayoutEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
 import { ONE_ADDRESS } from 'web3/utils';
@@ -60,7 +60,7 @@ const EditProperty: React.FC<Props> = (props) => {
   const [asset, setAsset] = useState<AssetEntity>({} as AssetEntity);
 
   const { tokenId } = useParams<{ tokenId: string }>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [minPeriod, setMinPeriod] = useState(new BigNumber(DAY_IN_SECONDS));
   const [isMinPeriodSelected, setMinPeriodSelected] = useState(false);
@@ -185,6 +185,8 @@ const EditProperty: React.FC<Props> = (props) => {
       setTokenCost(new BigNumber(formatBigNumberInput(asset.pricePerMagnitude.price) || 0));
     }
   }, [asset]);
+
+  const defaultCost = asset?.pricePerMagnitude?.price ? +formatBigNumberInput(asset.pricePerMagnitude.price) : 0;
 
   const handleMinCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMinPeriodSelected(e.target.checked);
@@ -429,7 +431,7 @@ const EditProperty: React.FC<Props> = (props) => {
     }
   }, [paymentToken, tokenCost]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     getAsset();
   }, [tokenId]);
 
@@ -461,7 +463,7 @@ const EditProperty: React.FC<Props> = (props) => {
   const estateCoords = selectedProperty?.decentralandData?.coordinates;
 
   return (
-    <section className="list-view">
+    <Box width={800} className="list-view">
       {loading ? (
         <EditFormCardSkeleton />
       ) : (
@@ -523,7 +525,7 @@ const EditProperty: React.FC<Props> = (props) => {
                     feePercentage={feePercentage}
                     options={currencyData}
                     optionsValue={selectedCurrency}
-                    inputValue={tokenCost.toNumber()}
+                    inputValue={defaultCost}
                     error={priceError}
                   />
                 </>
@@ -552,7 +554,7 @@ const EditProperty: React.FC<Props> = (props) => {
                           src={getEstateImageUrl(selectedProperty)}
                           name={selectedProperty.name}
                           coordinatesChild={estateCoords?.map((co) => (
-                            <span key={`${co[0]}-${co[1]}`} style={{ marginRight: '8px' }}>
+                            <span key={`${co.x}-${co.y}`} style={{ marginRight: '8px' }}>
                               X: {co.x} Y: {co.y}
                             </span>
                           ))}
@@ -592,18 +594,12 @@ const EditProperty: React.FC<Props> = (props) => {
 
           <hr className="divider" />
 
-          <Grid container direction="row" alignItems="center" justifyContent="space-between">
+          <Box width={1} display="flex" alignItems="center" justifyContent="space-between">
             <Button variant="secondary" btnSize="medium" onClick={closeModal}>
               Back
             </Button>
-            <Grid direction="row" alignItems="center" justifyContent="space-between">
-              <Button
-                disabled={false}
-                variant="tertiary"
-                btnSize="medium"
-                onClick={openDelistPrompt}
-                style={{ marginRight: 25 }}
-              >
+            <Box display="flex" gap={5}>
+              <Button disabled={false} variant="tertiary" btnSize="medium" onClick={openDelistPrompt}>
                 {delistText}
               </Button>
               <Button
@@ -614,8 +610,8 @@ const EditProperty: React.FC<Props> = (props) => {
               >
                 Save Changes
               </Button>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
 
           <Modal height={'100%'} handleClose={() => setShowWarningModal(false)} open={showWarningModal}>
             <Grid container width="410px" direction="column">
@@ -642,7 +638,7 @@ const EditProperty: React.FC<Props> = (props) => {
           setShowTxModal(false);
         }}
       />
-    </section>
+    </Box>
   );
 };
 

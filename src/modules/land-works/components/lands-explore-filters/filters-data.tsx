@@ -7,6 +7,7 @@ export const sortData = [
   {
     label: 'Hottest first',
     value: 1,
+    tooltip: 'Lands rented multiple times',
   },
   {
     label: 'Price: low first',

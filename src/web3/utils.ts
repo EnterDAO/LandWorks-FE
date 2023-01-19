@@ -157,8 +157,8 @@ export function getExponentValue(decimals = 0): BigNumber {
   return new BigNumber(10).pow(decimals);
 }
 
-export function getHumanValue(value?: BigNumber, decimals = 0): BigNumber | undefined {
-  return value?.div(getExponentValue(decimals));
+export function getHumanValue(value: BigNumber, decimals = 0): BigNumber {
+  return value.div(getExponentValue(decimals));
 }
 
 export function getNonHumanValue(value: BigNumber | number, decimals = 0): BigNumber {
@@ -378,3 +378,26 @@ export function fetchGasPrice(): Promise<GasPriceResult> {
       };
     });
 }
+
+export const activateInjectedProvider = (providerName: string) => {
+  const { ethereum } = window;
+
+  if (!ethereum?.providers) {
+    return;
+  }
+
+  let provider;
+
+  switch (providerName) {
+    case 'coinbase':
+      provider = ethereum.providers.find(({ isCoinbaseWallet }: { isCoinbaseWallet?: boolean }) => isCoinbaseWallet);
+      break;
+    case 'metamask':
+      provider = ethereum.providers.find(({ isMetaMask }: { isMetaMask?: boolean }) => isMetaMask);
+      break;
+  }
+
+  if (provider) {
+    ethereum.setSelectedProvider(provider);
+  }
+};

@@ -4,7 +4,9 @@
 import { gql } from '@apollo/client';
 import BigNumber from 'bignumber.js';
 import { constants } from 'ethers';
+import { getWeb3Token } from 'web3/token';
 
+import config from 'config';
 import { getCryptoVoxelsAsset, getLandImageUrl } from 'helpers/helpers';
 import { getUsdPrice } from 'providers/known-tokens-provider';
 
@@ -522,6 +524,18 @@ export const USER_ASSET_RENTS_SUBSCRIPTION = gql`
   }
 `;
 
+export const GET_TOKEN_PAYMENTS = gql`
+  query GetTokenPayments {
+    paymentTokens {
+      id
+      name
+      symbol
+      decimals
+      feePercentage
+    }
+  }
+`;
+
 type PaginatedResult<T extends Record<string, any>> = {
   data: T[];
   meta: {
@@ -633,6 +647,7 @@ export type AssetEntity = {
   rents: RentEntity[];
   hasUpcomingRents: boolean;
   lastRentEnd: string;
+  lastRentTimestamp: string;
   isAvailable: boolean;
   isEmptyEstate: boolean;
   additionalData: AdditionalDecantralandData;
@@ -838,17 +853,7 @@ export function fetchAdjacentDecentralandAssets(coordinates: string[]): Promise<
  */
 export function fetchTokenPayments(): Promise<PaymentToken[]> {
   return GraphClient.get({
-    query: gql`
-      query GetTokenPayments {
-        paymentTokens {
-          id
-          name
-          symbol
-          decimals
-          feePercentage
-        }
-      }
-    `,
+    query: GET_TOKEN_PAYMENTS,
   })
     .then(async (response) => {
       return [...response.data.paymentTokens];
@@ -1676,4 +1681,63 @@ function parseAdditionalAttributes(data: additionalAttributes[]): any {
     parsedAttributes[fixedType] = item.value;
   });
   return parsedAttributes;
+}
+
+interface AssetAdvertisement {
+  id: number;
+  hasAgreedForAds: boolean;
+  metaverseRegistry: string;
+  metaverseAssetId: string;
+  owner: string;
+  chainId: number;
+}
+
+export function createAssetAdvertisement(args: {
+  metaverseRegistry: string;
+  metaverseAssetId: string;
+  hasAgreedForAds: boolean;
+}): Promise<AssetAdvertisement> {
+  return fetch(`${config.backend.apiUrl}/scene`, {
+    method: 'POST',
+    body: JSON.stringify(args),
+    headers: {
+      Authorization: `Bearer ${getWeb3Token()}`,
+      'Content-Type': 'application/json',
+    },
+  }).then((res) => res.json());
+}
+
+export function updateAssetAdvertisement(args: {
+  assetId: string;
+  hasAgreedForAds: boolean;
+}): Promise<AssetAdvertisement> {
+  return fetch(`${config.backend.apiUrl}/scene`, {
+    method: 'PUT',
+    body: JSON.stringify(args),
+    headers: {
+      Authorization: `Bearer ${getWeb3Token()}`,
+      'Content-Type': 'application/json',
+    },
+  }).then((res) => res.json());
+}
+
+export function getAssetAdvertisement({
+  metaverseAssetId,
+  metaverseRegistry,
+}: {
+  metaverseRegistry: string;
+  metaverseAssetId: string;
+}): Promise<Omit<AssetAdvertisement, 'id'>> {
+  return fetch(`${config.backend.apiUrl}/scene/${metaverseRegistry}/${metaverseAssetId}`).then((res) => res.json());
+}
+
+export function getAccountAdsRewards(walletAddress: string): Promise<{
+  amount: string;
+  claimedAmount: string;
+  contractAddress: string;
+  proof: string[];
+  token: string;
+  totalListed: number;
+}> {
+  return fetch(`${config.backend.apiUrl}/distribution/${walletAddress}`).then((res) => res.json());
 }

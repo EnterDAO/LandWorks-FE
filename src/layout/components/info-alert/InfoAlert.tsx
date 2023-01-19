@@ -25,7 +25,7 @@ const InfoAlertRoot = styled('div')({
 });
 
 interface InfoAlertProps extends Omit<ComponentPropsWithoutRef<typeof InfoAlertRoot>, 'title'> {
-  title: ReactNode;
+  title?: ReactNode;
   description: ReactNode;
   icon?: ReactElement;
   action?: ReactElement;
@@ -34,18 +34,18 @@ interface InfoAlertProps extends Omit<ComponentPropsWithoutRef<typeof InfoAlertR
 const InfoAlert: FC<InfoAlertProps> = ({ icon, title, description, action, ...otherProps }) => {
   return (
     <InfoAlertRoot {...otherProps}>
-      <Box flexShrink={0} display="flex" color="var(--theme-blue-color)">
+      <Box alignSelf="flex-start" flexShrink={0} display="flex" color="var(--theme-accent-color)">
         {icon || <AlertTriangleIcon />}
       </Box>
 
-      <Box>
-        <Typography variant="h4" mb={1}>
-          {title}
-        </Typography>
-        <Typography fontWeight={400} color={THEME_COLORS.grey03}>
-          {description}
-        </Typography>
-      </Box>
+      <Typography component="div" fontWeight={400} color={THEME_COLORS.grey03}>
+        {title && (
+          <Typography variant="h4" mb={1}>
+            {title}
+          </Typography>
+        )}
+        {description}
+      </Typography>
 
       <Box ml="auto" flexShrink={0}>
         {action}

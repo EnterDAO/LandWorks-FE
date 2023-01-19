@@ -13,13 +13,12 @@ import { ReactComponent as QuantStampLogo } from 'assets/img/quantstamp-logo.svg
 import { ReactComponent as QuantStamp } from 'assets/img/quantstamp.svg';
 import { ReactComponent as TrianglesIcon } from 'assets/img/triangles-icon.svg';
 import { ReactComponent as VoxelsLogo } from 'assets/img/voxels-logo.svg';
+import Typography from 'components/common/Typography';
 import AdaptiveTypography from 'components/custom/adaptive-typography';
 import Chip from 'components/custom/chip';
-import { Box, Button, Grid, Typography } from 'design-system';
+import { Box, Button, Grid } from 'design-system';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 import { APP_ROUTES } from 'router/routes';
-
-import { GRADIENT_TEXT } from 'themes/theme-constants';
 
 import './index.scss';
 
@@ -53,7 +52,7 @@ export const Hero: React.FC = () => {
             <Chip icon={<TrianglesIcon />}>METAVERSE LAND RENTING MARKETPLACE</Chip>
 
             <AdaptiveTypography variant="h1" mt={4} mb={{ xs: 3, xl: 2 }}>
-              <Typography variant="inherit" component="span" sx={GRADIENT_TEXT} mb="4px">
+              <Typography variant="inherit" component="span" color="gradient" mb="4px">
                 Renting Land
               </Typography>
               <br />

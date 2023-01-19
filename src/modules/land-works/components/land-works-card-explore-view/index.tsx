@@ -2,10 +2,10 @@ import React, { MouseEvent } from 'react';
 import classNames from 'classnames';
 import { ZERO_BIG_NUMBER } from 'web3/utils';
 
+import Divider from 'components/custom/divider';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
 import { getTokenIconName } from 'helpers/helpers';
-import { useLandsMapTile } from 'modules/land-works/providers/lands-map-tile';
 import { getPropertyPath } from 'router/routes';
 
 import config from '../../../../config';
@@ -20,17 +20,16 @@ import './index.scss';
 interface Props {
   land: AssetEntity;
   layout?: 'normal' | 'compact';
+  isActive?: boolean;
   onClick?: (e: MouseEvent<HTMLAnchorElement>, land: AssetEntity) => void;
   onMouseOver?: (e: MouseEvent<HTMLAnchorElement>, land: AssetEntity) => void;
   onMouseOut?: (e: MouseEvent<HTMLAnchorElement>, land: AssetEntity) => void;
 }
 
-const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, onMouseOut, layout = 'normal' }) => {
-  const { clickedLandId } = useLandsMapTile();
+const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, onMouseOut, isActive, layout = 'normal' }) => {
   const did = land.decentralandData
     ? `${land.decentralandData?.coordinates[0]?.x},${land.decentralandData?.coordinates[0]?.y}`
     : land.metaverseAssetId;
-  const isActive = clickedLandId === did;
   const isStaked = land.owner.id == config.contracts.yf.staking;
   const ownerOrConsumer = isStaked ? land.consumer?.id : land.owner.id;
 
@@ -92,7 +91,7 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, onMouseOut
           </div>
         </div>
 
-        <div className="land-explore-divider" />
+        <Divider sx={{ my: layout === 'compact' ? 2 : 3 }} />
 
         <div className="land-explore-card__rent land-explore-row">
           <div className="land-explore-card__rent-period">

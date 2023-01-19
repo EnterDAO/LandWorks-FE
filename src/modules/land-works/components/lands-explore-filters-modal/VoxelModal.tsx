@@ -32,7 +32,7 @@ type Props = Omit<ModalProps, 'handleClose'> & {
 
 export const VoxelFiltersModal: React.FC<Props> = (props) => {
   const MAX_VALUE = 9;
-  const { onCancel, handleSubmit, ...modalProps } = props;
+  const { onCancel, handleSubmit, maxHeight: maxHeightLimit, maxArea: maxAreaLimit, ...modalProps } = props;
   const [selectedType, setSelectedType] = useState<number>(0);
   const [minArea, setMinArea] = useState<number>(1);
   const [maxArea, setMaxArea] = useState<number>(MAX_VALUE);
@@ -76,8 +76,8 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
     setIsDisabledAdditions(true);
     setMinArea(1);
     setMinHeight(1);
-    setMaxArea(props.maxArea);
-    setMaxHeight(props.maxHeight);
+    setMaxArea(maxAreaLimit);
+    setMaxHeight(maxHeightLimit);
     setIsWaterfront(false);
     setHasBasement(false);
   };
@@ -87,11 +87,11 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
       type: voxelTypes[selectedType].title,
       area: {
         min: minArea || 1,
-        max: maxArea || props.maxArea,
+        max: maxArea || maxAreaLimit,
       },
       height: {
         min: minHeight || 1,
-        max: maxHeight || props.maxHeight,
+        max: maxHeight || maxHeightLimit,
       },
       hasBasement,
       isWaterFront,
@@ -106,26 +106,23 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    setMaxArea(props.maxArea);
-    setMaxHeight(props.maxHeight);
-  }, [props.maxHeight, props.maxArea]);
+    setMaxArea(maxAreaLimit);
+    setMaxHeight(maxHeightLimit);
+  }, [maxAreaLimit, maxHeightLimit]);
 
   return (
-    <Modal width={540} handleClose={onCancel} {...modalProps}>
+    <Modal
+      width={540}
+      handleClose={onCancel}
+      {...modalProps}
+      sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+    >
       <StyledTitle>More filters</StyledTitle>
 
       <StyledRoot>
         <StyledGrid container>
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
             <StyledSubtitle>Type</StyledSubtitle>
-            <Button
-              disabled={typeof selectedType !== 'number'}
-              btnSize="xsmall"
-              onClick={() => setSelectedType(0)}
-              variant="tertiary"
-            >
-              Clear
-            </Button>
           </Grid>
           {voxelTypes.map((type) => (
             <CheckboxContainer key={type.value} onClick={() => typeHandler(type.value)} container>
@@ -154,7 +151,7 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
                 Thumb: ThumbComponent,
               }}
               min={1}
-              max={props.maxArea}
+              max={maxAreaLimit}
               onChange={areaHandler}
               value={[minArea, maxArea]}
             />
@@ -178,7 +175,7 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
                   type="number"
                   onChange={(e) => {
                     const value = +e.target.value;
-                    value >= minArea && value <= props.maxArea && setMaxArea(value);
+                    value >= minArea && value <= maxAreaLimit && setMaxArea(value);
                   }}
                   style={{ width: '100%' }}
                   value={maxArea}
@@ -202,7 +199,7 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
                 Thumb: ThumbComponent,
               }}
               min={1}
-              max={props.maxHeight}
+              max={maxHeightLimit}
               onChange={heightHandler}
               value={[minHeight, maxHeight]}
             />
@@ -227,7 +224,7 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
                   style={{ width: '100%' }}
                   onChange={(e) => {
                     const value = +e.target.value;
-                    value >= minHeight && value <= props.maxHeight && setMaxHeight(value);
+                    value >= minHeight && value <= maxHeightLimit && setMaxHeight(value);
                   }}
                   value={maxHeight}
                 />
@@ -255,16 +252,15 @@ export const VoxelFiltersModal: React.FC<Props> = (props) => {
             </Grid>
           </Grid>
         </StyledGrid>
-
-        <ButtonRow container justifyContent="space-between">
-          <Button onClick={resetAll} variant="tertiary">
-            Clear all
-          </Button>
-          <Button onClick={onSubmit} btnSize="medium" variant="gradient">
-            Save
-          </Button>
-        </ButtonRow>
       </StyledRoot>
+      <ButtonRow container justifyContent="space-between">
+        <Button onClick={resetAll} variant="tertiary">
+          Clear all
+        </Button>
+        <Button onClick={onSubmit} btnSize="medium" variant="gradient">
+          Save
+        </Button>
+      </ButtonRow>
     </Modal>
   );
 };

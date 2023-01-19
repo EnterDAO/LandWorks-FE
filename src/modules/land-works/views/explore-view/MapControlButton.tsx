@@ -25,6 +25,7 @@ const MapControlButton: FC<MapControlButtonProps> = ({ icon: SpecificIcon, disab
         display: 'inline-flex',
         justifyContent: 'center',
         alignItems: 'center',
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
         '& > span': {
           display: 'flex',
         },

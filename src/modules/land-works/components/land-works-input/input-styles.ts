@@ -11,7 +11,6 @@ const styles = {
   input: {
     backgroundColor: 'none',
     width: '225px',
-    // width: '100%',
   },
 
   userDetails: {

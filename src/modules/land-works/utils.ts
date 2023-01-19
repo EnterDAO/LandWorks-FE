@@ -99,20 +99,6 @@ export const isNewLandTxInProgress = (lands: AssetEntity[], method: string): boo
   }
 
   return true;
-  // // should lands still be loading, we don't want to assume the land in progress was loaded into
-  // // lands, since lands could be an empty array until everything is loaded
-  // if (loadingLands) {
-  //   return false;
-  // }
-  // // display the land card since we know lands did load and the land progress was not found in lands
-  // if (shouldDisplayLandCard) {
-  //   return true;
-  // } else {
-  //   // remove the item from local storage since it does exist in lands now
-  //   // and return false since we know the item exists in lands now
-  //   localStorage.removeItem(method);
-  //   return false;
-  // }
 };
 
 export const isExistingLandInProgress = (
@@ -194,6 +180,28 @@ export const parceVoxelsMapAsset = async (
   return collection;
 };
 
+const voxelsTilesToVoxelsMapCollectionFeatures = (
+  voxelsTiles: VoxelsTileType[]
+): { type: 'Feature'; id: string; geometry: { type: string; coordinates: number[][][] } }[] => {
+  return voxelsTiles.map((tile) => {
+    return {
+      type: 'Feature',
+      id: String(tile.id),
+      geometry: {
+        type: tile.geometry.type,
+        coordinates: tile.geometry.coordinates,
+      },
+    };
+  });
+};
+
+export const voxelsTilesToVoxelsMapCollection = (voxelsTiles: VoxelsTileType[]): VoxelsMapCollection => {
+  return {
+    type: 'FeatureCollection',
+    features: voxelsTilesToVoxelsMapCollectionFeatures(voxelsTiles),
+  };
+};
+
 export const landsOrder = (lands: AssetEntity[], orderCol: string, orderDir: 'asc' | 'desc'): AssetEntity[] => {
   return orderBy(lands, [orderEnum[orderCol]], [orderDir]);
 };
@@ -213,7 +221,7 @@ export const getMaxHeight = (lands: AssetEntity[]): number => {
 export const filterByMoreFilters = (
   lands: AssetEntity[],
   filters: Partial<MoreFiltersType>,
-  metaverse: string
+  metaverse: string | number
 ): AssetEntity[] => {
   return lands.filter((item) => {
     return +metaverse === 1 ? decentralandFilter(item, filters) : voxelsFilter(item, filters);
@@ -224,7 +232,7 @@ const isBetween = (value: number, minMax: { min: number; max: number }): boolean
   minMax.min <= value && value <= minMax.max;
 
 const isFilteredByBetween = (value: number | undefined, minMax?: { min: number; max: number }) => {
-  return isUndefined(minMax) || isUndefined(value) || isBetween(value, minMax);
+  return isUndefined(minMax) || (!isUndefined(value) && isBetween(value, minMax));
 };
 
 const decentralandFilter = (item: AssetEntity, filters: Partial<MoreFiltersType>) => {

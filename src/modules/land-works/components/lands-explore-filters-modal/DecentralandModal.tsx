@@ -35,11 +35,11 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
   const [selectedType, setSelectedType] = useState<number>(0);
   const [minSize, setMinSize] = useState<number>(1);
   const [maxSize, setMaxSize] = useState<number>(maxLandSize || 10);
-  const [minDistanceToPlaza, setMinDistanceToPlaza] = useState<number>(1);
+  const [minDistanceToPlaza, setMinDistanceToPlaza] = useState<number>(0);
   const [maxDistanceToPlaza, setMaxDistanceToPlaza] = useState<number>(MAX_DISTANCE);
-  const [minDistanceToRoad, setMinDistanceToRoad] = useState<number>(1);
+  const [minDistanceToRoad, setMinDistanceToRoad] = useState<number>(0);
   const [maxDistanceToRoad, setMaxDistanceToRoad] = useState<number>(MAX_DISTANCE);
-  const [minDistanceToDistrict, setMinDistanceToDistrict] = useState<number>(1);
+  const [minDistanceToDistrict, setMinDistanceToDistrict] = useState<number>(0);
   const [maxDistanceToDistrict, setMaxDistanceToDistrict] = useState<number>(MAX_DISTANCE);
   const [isDisableSize, setIsDisableSize] = useState(true);
   const [isDisabledDistanceToPlaza, setIsDisabledDistanceToPlaza] = useState(true);
@@ -94,11 +94,11 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
     setIsDisabledDistanceToDistrict(true);
     setMaxSize(maxLandSize);
     setMinSize(1);
-    setMinDistanceToRoad(1);
+    setMinDistanceToRoad(0);
     setMaxDistanceToRoad(MAX_DISTANCE);
-    setMinDistanceToPlaza(1);
+    setMinDistanceToPlaza(0);
     setMaxDistanceToPlaza(MAX_DISTANCE);
-    setMinDistanceToDistrict(1);
+    setMinDistanceToDistrict(0);
     setMaxDistanceToDistrict(MAX_DISTANCE);
   };
 
@@ -135,21 +135,17 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
   }, [maxLandSize]);
 
   return (
-    <Modal width={540} handleClose={onCancel} {...modalProps}>
+    <Modal
+      width={540}
+      sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+      handleClose={onCancel}
+      {...modalProps}
+    >
       <StyledTitle>More filters</StyledTitle>
-
       <StyledRoot>
         <StyledGrid container>
           <Grid container direction="row" alignItems="center" justifyContent="space-between">
             <StyledSubtitle>Type</StyledSubtitle>
-            <Button
-              disabled={typeof selectedType !== 'number'}
-              btnSize="xsmall"
-              onClick={() => setSelectedType(0)}
-              variant="tertiary"
-            >
-              Clear
-            </Button>
           </Grid>
           {landTypes.map((type) => (
             <CheckboxContainer key={type.value} onClick={() => typeHandler(type.value)} container>
@@ -230,7 +226,7 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
               components={{
                 Thumb: ThumbComponent,
               }}
-              min={1}
+              min={0}
               max={MAX_DISTANCE}
               onChange={distanceToPlazaHandler}
               value={[minDistanceToPlaza, maxDistanceToPlaza]}
@@ -280,7 +276,7 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
               components={{
                 Thumb: ThumbComponent,
               }}
-              min={1}
+              min={0}
               max={MAX_DISTANCE}
               onChange={distanceToRoadHandler}
               value={[minDistanceToRoad, maxDistanceToRoad]}
@@ -332,7 +328,7 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
               components={{
                 Thumb: ThumbComponent,
               }}
-              min={1}
+              min={0}
               max={MAX_DISTANCE}
               onChange={distanceToDistrictHandler}
               value={[minDistanceToDistrict, maxDistanceToDistrict]}
@@ -366,16 +362,16 @@ export const DecentralandFiltersModal: React.FC<Props> = (props) => {
             </Grid>
           </Grid>
         </StyledGrid>
-
-        <ButtonRow container justifyContent="space-between">
-          <Button onClick={resetAll} variant="tertiary">
-            Clear all
-          </Button>
-          <Button onClick={onSubmit} btnSize="medium" variant="gradient">
-            Save
-          </Button>
-        </ButtonRow>
       </StyledRoot>
+
+      <ButtonRow container justifyContent="space-between">
+        <Button onClick={resetAll} variant="tertiary">
+          Clear all
+        </Button>
+        <Button onClick={onSubmit} btnSize="medium" variant="gradient">
+          Save
+        </Button>
+      </ButtonRow>
     </Modal>
   );
 };

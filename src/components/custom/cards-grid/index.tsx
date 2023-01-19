@@ -1,25 +1,28 @@
-import React, { FC } from 'react';
+import React, { ReactNode, Ref, forwardRef } from 'react';
 import { SxProps } from '@mui/system';
 
 import { Box } from 'design-system';
 
 interface CardsGrid {
-  layout?: 'normal' | 'compact';
+  minWidth?: string | undefined;
   sx?: SxProps;
+  children?: ReactNode;
 }
 
-const CardsGrid: FC<CardsGrid> = ({ children, layout, sx }) => {
+const CardsGrid = ({ children, minWidth = '300px', sx }: CardsGrid, ref: Ref<HTMLDivElement>) => {
   return (
     <Box
+      ref={ref}
       flexGrow={1}
       display="grid"
       gap={4}
       sx={sx}
-      gridTemplateColumns={`repeat(auto-fill, minmax(${layout === 'compact' ? 190 : 300}px, 1fr))`}
+      width={1}
+      gridTemplateColumns={`repeat(auto-fill, minmax(min(${minWidth}, 100%), 1fr))`}
     >
       {children}
     </Box>
   );
 };
 
-export default CardsGrid;
+export default forwardRef(CardsGrid);
