@@ -647,7 +647,6 @@ export type AssetEntity = {
   rents: RentEntity[];
   hasUpcomingRents: boolean;
   lastRentEnd: string;
-  lastRentTimestamp: string;
   isAvailable: boolean;
   isEmptyEstate: boolean;
   additionalData: AdditionalDecantralandData;
