@@ -57,8 +57,15 @@ const ClaimRewardsModalAdsTab = () => {
             <ExternalLink variant="link2" href="https://opensea.io/collection/sharded-minds">
               Sharded Minds
             </ExternalLink>{' '}
-            NFT). Full info on how the ads work can be found here. For a more detailed split of the accumulated unique
-            views of your listed land(s) or if you have any questions, please reach out on our{' '}
+            NFT). Full info on how the ads work can be found{' '}
+            <ExternalLink
+              variant="link2"
+              href="https://medium.com/enterdao/new-passive-income-stream-for-metaverse-landlords-8c72c68c7bb5"
+            >
+              here
+            </ExternalLink>
+            . For a more detailed split of the accumulated unique views of your listed land(s) or if you have any
+            questions, please reach out on our{' '}
             <ExternalLink variant="link2" href="https://discord.com/invite/7QJvEctG2G">
               Discord server
             </ExternalLink>

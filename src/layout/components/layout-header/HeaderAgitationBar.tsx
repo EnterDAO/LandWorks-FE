@@ -41,7 +41,12 @@ export const HeaderAgitaionBar: FC = () => {
           }}
           variant="primary"
           btnSize="xsmall"
-          // TODO: add click handler
+          onClick={() => {
+            window.open(
+              'https://medium.com/enterdao/new-passive-income-stream-for-metaverse-landlords-8c72c68c7bb5',
+              '_blank'
+            );
+          }}
         >
           Read more
         </Button>
