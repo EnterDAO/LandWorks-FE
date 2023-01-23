@@ -1579,7 +1579,6 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
     liteAsset.name = data.name;
     liteAsset.type = data.attributes?.title === 'plot' ? 'Parcels' : data.attributes.title;
     liteAsset.imageUrl = data.image;
-    console.log('cryptovoxesl attrs', data.attributes);
     liteAsset.attributes = {
       ...data.attributes,
       has_basement: data.attributes.has_basement === 'yes',
