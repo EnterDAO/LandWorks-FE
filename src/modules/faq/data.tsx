@@ -14,6 +14,7 @@ import FaqWhatIsLandWorks from './components/FaqWhatIsLandWorks';
 import FaqWhatToDoWithLand from './components/FaqWhatToDoWithLand';
 import FaqWhyError from './components/FaqWhyError';
 import FaqWhyHaveToPayNetworkFee from './components/FaqWhyHaveToPayNetworkFee';
+import FaqWhyMetamaskAskPermissionToCollection from './components/FaqWhyMetamaskAskPermissionToCollection';
 
 export const FAQ_HOW_DOES_IT_WORK_ANCHOR_ID = 'how-does-it-work';
 
@@ -74,6 +75,10 @@ export const faq: {
   {
     question: 'Why do I have to pay a network fee?',
     answer: <FaqWhyHaveToPayNetworkFee />,
+  },
+  {
+    question: 'Why does Metamask ask for permission to the whole collection in my wallet?',
+    answer: <FaqWhyMetamaskAskPermissionToCollection />,
   },
   {
     question: 'Is there support available?',

@@ -274,7 +274,7 @@ const SingleViewLandCard: React.FC<SingleLandProps> = ({
 
     const isDecentraland = asset?.metaverse?.name === 'Decentraland';
 
-    if (isOwner && isDecentraland) {
+    if (isOwnerOrConsumer && isDecentraland) {
       _details.push({
         label: 'Allow advertising',
         tooltip: 'Toggle to allow advertising on your land.',
