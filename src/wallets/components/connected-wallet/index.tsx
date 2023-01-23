@@ -161,8 +161,24 @@ const ConnectedWallet: React.FC = () => {
           <Grid className={s.identicon} flow="col" gap={16} align="center" justify="center">
             <Identicon address={wallet.account} width={40} height={40} />
           </Grid>
-          <Grid flow="col" gap={16} align="center" justify="center">
-            <ExternalLink className={s.externalLink} href={getEtherscanAddressUrl(wallet.account!)}>
+          <Grid flow="col" padding={[0, 30]} gap={16} align="center" justify="center">
+            <ExternalLink
+              sx={{
+                height: 34,
+                borderRadius: '5px',
+                display: 'flex',
+                alignItems: 'center',
+                padding: '5px 12px',
+                bgcolor: 'var(--theme-modal-color)',
+                fontSize: '12px',
+                fontWeight: 500,
+                gap: 3,
+                textDecoration: 'none',
+                lineHeight: 1,
+              }}
+              variant="link2"
+              href={getEtherscanAddressUrl(wallet.account!)}
+            >
               {ens && ens !== wallet.account ? ens : shortenAddr(wallet.account, 18, 3)}
               <ExternalLinkIcon className={s.link} />
             </ExternalLink>
