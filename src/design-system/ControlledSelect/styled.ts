@@ -34,7 +34,7 @@ export const StyledButton = styled('button')(
   background: ${THEME_COLORS.grey01};
   border: 1px solid ${THEME_COLORS.grey01};
   border-radius: 10px;
-  padding: 10px 20px;
+  padding: 10px 10px 10px 20px;
   text-align: left;
   line-height: 1.5;
   width: 100%;

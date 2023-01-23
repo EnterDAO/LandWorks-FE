@@ -76,8 +76,9 @@ export default {
     lineHeight: 1.5,
     textDecoration: 'underline',
     cursor: 'pointer',
+    transition: '0.15s color',
     ':hover': {
-      color: 'var(--theme-subtle-color)',
+      color: 'var(--theme-grey900-color)',
     },
   },
 } as const;

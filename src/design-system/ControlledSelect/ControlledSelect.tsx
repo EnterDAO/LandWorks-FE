@@ -111,16 +111,6 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
         {options.map((o) => (
           <StyledOption key={o.value} value={o.value}>
             <OptionContent option={o} withCheckbox={withCheckbox} value={value} />
-            {/* {o.icon && <span style={{ marginRight: '15px', width: '20px' }}>{o.icon}</span>}
-            {withCheckbox && <RadioButton disabled checked={o.value == value} />}
-            {o.label}
-            {o.tooltip && (
-              <Tooltip title={o.tooltip}>
-                <Box component="span" >
-                  <Icon name="about" color="var(--theme-light-color)" />
-                </Box>
-              </Tooltip>
-            )} */}
           </StyledOption>
         ))}
       </CustomSelect>
