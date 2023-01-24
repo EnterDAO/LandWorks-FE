@@ -7,7 +7,7 @@ import s from './s.module.scss';
 interface ISelectedListCard {
   src: string;
   name: string;
-  coordinatesChild: React.ReactNode;
+  coordinatesChild?: React.ReactNode;
   withoutInfo?: boolean;
 }
 

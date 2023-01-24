@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { useSubscription } from '@apollo/client';
 
 import { AssetEntity, USER_SUBSCRIPTION, UserEntity, parseUser } from 'modules/land-works/api';
@@ -47,17 +47,37 @@ const useGetAccountAssetsQuery = (
     };
   }, []);
 
+  useLayoutEffect(() => {
+    setData(undefined);
+  }, [account, metaverse]);
+
   useEffect(() => {
-    if (!rawUserData?.user) {
+    if (!rawUserData) {
       return;
     }
 
-    getUserAssets(rawUserData.user)
-      .then((assets) => {
-        setData(assets);
-        setError(undefined);
-      })
-      .catch(setError);
+    if (rawUserData.user) {
+      let isCancelled = false;
+
+      getUserAssets(rawUserData.user)
+        .then((assets) => {
+          if (!isCancelled) {
+            setData(assets || initialUserAssets);
+            setError(undefined);
+          }
+        })
+        .catch((e) => {
+          if (!isCancelled) {
+            setError(e);
+          }
+        });
+
+      return () => {
+        isCancelled = true;
+      };
+    } else {
+      setData(initialUserAssets);
+    }
   }, [rawUserData]);
 
   const isLoading = !data && !error;
