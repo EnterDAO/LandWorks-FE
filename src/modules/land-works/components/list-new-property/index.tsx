@@ -653,8 +653,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const step = steps[activeStep];
   const { warning } = step;
 
-  console.log({ assets, selectedProperty });
-
   return (
     <section className="list-view">
       <Stack height={1}>
