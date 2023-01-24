@@ -36,6 +36,19 @@ const ExploreMap: FC<ExploreMapProps> = ({ isMapVisible, onShowMap, onHideMap, .
 
   const mapOffsetTop = stickyOffset.offsets.filter + stickyOffset.offsets.header;
 
+  const handleToggleMapView = () => {
+    if (isMapVisible) {
+      if (onHideMap) {
+        onHideMap();
+      }
+      setIsMapMaximized(false);
+    } else {
+      if (onShowMap) {
+        onShowMap();
+      }
+    }
+  };
+
   return (
     <Box
       display={{
@@ -79,7 +92,7 @@ const ExploreMap: FC<ExploreMapProps> = ({ isMapVisible, onShowMap, onHideMap, .
               }
         }
       >
-        <ToggleMapVisibilityButton active={isMapVisible} onClick={isMapVisible ? onHideMap : onShowMap} />
+        <ToggleMapVisibilityButton active={isMapVisible} onClick={handleToggleMapView} />
 
         {isMapVisible && (
           <Box
