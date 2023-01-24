@@ -34,7 +34,7 @@ const MetaCreatorsCreatorView = () => {
             <div className="button-icon">
               <BackIcon style={{ width: '20px' }} />
             </div>
-            <span>Back to MetaCreators</span>
+            <span>Back to Meta Creators</span>
           </Link>
         </BreadCrumbs>
       </StyledBreadcrumbsGrid>

@@ -28,7 +28,7 @@ const MetaCreatorsViewHero = () => {
   const handleBecomeCreatorButtonClick = () => {
     history.push({
       pathname: isAppRoute ? APP_ROUTES.metaCreatorsJoin : LANDING_ROUTES.metaCreatorsJoin,
-      state: { from: window.location.pathname, title: 'MetaCreators' },
+      state: { from: window.location.pathname, title: 'Meta Creators' },
     });
   };
 

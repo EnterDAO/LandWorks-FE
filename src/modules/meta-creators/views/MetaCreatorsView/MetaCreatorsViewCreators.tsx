@@ -52,7 +52,7 @@ const MetaCreatorsViewCreators = () => {
   return (
     <Container id={META_CREATORS_VIEW_CREATORS_SECTION_ID} component="section" pt={20} pb={12}>
       <Typography variant="h2" textAlign="center" mb={6}>
-        MetaCreators
+        Meta Creators
       </Typography>
 
       <Box display="flex" justifyContent="center" mb={10}>

@@ -31,7 +31,7 @@ const landingNav: HeaderNavLinkProps[] = [
   },
   {
     to: LANDING_ROUTES.metaCreators,
-    label: 'MetaCreators',
+    label: 'Meta Creators',
   },
   {
     to: LANDING_ROUTES.grantsProgram,
@@ -52,7 +52,7 @@ const appNav: HeaderNavLinkProps[] = [
   },
   {
     to: APP_ROUTES.metaCreators,
-    label: 'MetaCreators',
+    label: 'Meta Creators',
   },
   {
     to: APP_ROUTES.faq,
