@@ -120,11 +120,17 @@ interface PriceFieldProps extends ComponentPropsWithoutRef<'input'> {
   right: ReactNode;
 }
 
-export const PriceField: FC<PriceFieldProps> = ({ label, right, placeholder = '...', ...inputProps }) => {
+export const PriceField: FC<PriceFieldProps> = ({ label, right, placeholder = '...', disabled, ...inputProps }) => {
   return (
     <div>
       <Subtitle>{label}</Subtitle>
-      <Box display="flex" alignItems="center" borderRadius="5px" bgcolor="var(--theme-card-color)" height={42}>
+      <Box
+        display="flex"
+        alignItems="center"
+        borderRadius="5px"
+        bgcolor={disabled ? '#3C3C4E' : 'var(--theme-card-color)'}
+        height={42}
+      >
         <Box
           component="input"
           border="none"
@@ -141,6 +147,7 @@ export const PriceField: FC<PriceFieldProps> = ({ label, right, placeholder = '.
             },
           }}
           placeholder={placeholder}
+          disabled={disabled}
           {...inputProps}
         />
 
