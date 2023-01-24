@@ -85,7 +85,7 @@ const SceneBuilderCard: FC<SceneBuilderCardProps> = ({ builder }) => {
 
       <TypeChip sx={{ mb: 3, mx: 'auto' }}>{builder.builderType}</TypeChip>
 
-      <Typography variant="caption" mb="auto" color="var(--theme-subtle-color)">
+      <Typography variant="caption" mb="auto" color="var(--theme-subtle-color)" textAlign="center">
         {formatShortDescription(builder.shortDescription)}
       </Typography>
 
