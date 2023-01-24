@@ -7,7 +7,6 @@ import s from './s.module.scss';
 
 interface ISelectedFeatureCoords {
   asset: DecentralandNFT | Estate;
-  estateLands?: DecentralandNFT[] | undefined;
   isListing?: boolean;
 }
 
@@ -26,53 +25,27 @@ const LandCoordinates: React.FC<{ x: string; y: string; isListing?: boolean }> =
   );
 };
 
+// TODO: refactor
 const EstateCoordinates: React.FC<{
-  assetCoords: { x: string; y: string }[];
-  estateLands: DecentralandNFT[];
-  isListing?: boolean;
-}> = ({ estateLands, isListing }) => {
-  const coords = estateLands && estateLands.map((i: DecentralandNFT) => i.coords);
+  size: string | number;
+}> = ({ size }) => {
   return (
-    <>
-      {isListing ? (
-        <Grid className={s.details}>
-          <span>{estateLands.length}</span>
-        </Grid>
-      ) : (
-        <Grid className={s.details}>
-          {estateLands && estateLands?.length > 3
-            ? coords?.slice(0, 3).map((co) => {
-                return (
-                  <>
-                    <span key={`${co[0]}-${co[1]}`} style={{ marginRight: '8px' }}>
-                      X: {co[0]} Y: {co[1]}
-                      {''}
-                    </span>
-                    <span>. . .</span>
-                  </>
-                );
-              })
-            : coords?.map((co) => {
-                return (
-                  <span key={`${co[0]}-${co[1]}`} style={{ marginRight: '8px' }}>
-                    X: {co[0]} Y: {co[1]}
-                    {''}
-                  </span>
-                );
-              })}
-        </Grid>
-      )}
-    </>
+    <Grid className={s.details}>
+      <span>{size}</span>
+    </Grid>
   );
 };
 
-const SelectedFeatureCoords: React.FC<ISelectedFeatureCoords> = ({ asset, estateLands, isListing }) => {
+// TODO: refactor
+const SelectedFeatureCoords: React.FC<ISelectedFeatureCoords> = ({ asset, isListing }) => {
   if (asset.isLAND) {
     return <LandCoordinates x={asset.coords[0]} y={asset.coords[1]} isListing={isListing} />;
   }
 
-  if (!asset.isLAND && estateLands && estateLands.length > 0) {
-    return <EstateCoordinates assetCoords={asset.coords} estateLands={estateLands} isListing={isListing} />;
+  const estateSize = (asset as any)?.landIds?.estateSize || null;
+
+  if (!asset.isLAND && estateSize) {
+    return <EstateCoordinates size={estateSize} />;
   }
 
   return <>No co-ordinates available</>;

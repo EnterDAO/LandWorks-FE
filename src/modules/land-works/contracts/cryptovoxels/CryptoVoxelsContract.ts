@@ -36,6 +36,7 @@ export default class CryptoVoxelsContract extends ERC721Contract {
       name: metadata.name,
       image: metadata.image,
       contractAddress: this.address,
+      type: metadata.attributes.title === 'plot' ? 'Parcel' : metadata.attributes.title,
       place,
       formattedCoords,
       metaverseName: 'Voxels',
