@@ -9,6 +9,7 @@ const StyledSpan = styled('span')({
   color: 'var(--theme-light-color)',
   cursor: 'pointer',
   textDecoration: 'underline',
+  whiteSpace: 'nowrap',
 });
 
 export const ReadMore: FC<Props> = ({ children }) => {
