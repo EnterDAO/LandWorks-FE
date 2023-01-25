@@ -647,10 +647,12 @@ export type AssetEntity = {
   rents: RentEntity[];
   hasUpcomingRents: boolean;
   lastRentEnd: string;
-  lastRentTimestamp: string;
   isAvailable: boolean;
   isEmptyEstate: boolean;
   additionalData: AdditionalDecantralandData;
+  totalRents: number;
+  size: number;
+  lastRentTimestamp: string;
 };
 
 export type AdditionalDecantralandData = {
@@ -1086,11 +1088,11 @@ export function fetchUserRents(address: string, availableOnly = false, metaverse
     },
   })
     .then(async (response) => {
-      return response.data;
+      return response.data.rents;
     })
     .catch((e) => {
       console.log(e);
-      return {} as UserEntity;
+      return [];
     });
 }
 
@@ -1197,6 +1199,66 @@ export const GET_USER_RENTS_QUERY = gql`
   }
 `;
 
+export const GET_ALL_ASSETS_QUERY = gql`
+  query GetAssets($metaverseId: String) {
+    assets(where: { status_not: WITHDRAWN, metaverse: $metaverseId }) {
+      id
+      metaverseAssetId
+      metaverse {
+        name
+      }
+      metaverseRegistry {
+        id
+      }
+      owner {
+        id
+      }
+      consumer {
+        id
+      }
+      minPeriod
+      maxPeriod
+      maxFutureTime
+      pricePerSecond
+      lastRentTimestamp
+      rents {
+        start
+        end
+      }
+      paymentToken {
+        id
+        name
+        symbol
+        decimals
+      }
+      decentralandData {
+        asset {
+          owner {
+            id
+          }
+          consumer {
+            id
+            consumerTo {
+              id
+            }
+          }
+        }
+        metadata
+        isLAND
+        coordinates {
+          id
+          x
+          y
+        }
+      }
+      lastRentEnd
+      timestamp
+      totalRents
+      status
+    }
+  }
+`;
+
 export function fetchUserAssetsByRents(address: string, metaverse: string): Promise<PaginatedResult<AssetEntity>> {
   return GraphClient.get({
     query: GET_USER_RENTS_QUERY,
@@ -1253,6 +1315,16 @@ export function fetchUserAssetsByRents(address: string, metaverse: string): Prom
     });
 }
 
+export function fetchAssets(metaverseId?: string) {
+  return GraphClient.get({
+    query: GET_ALL_ASSETS_QUERY,
+    variables: {
+      metaverseId,
+    },
+  }).then((response) => parseAssets(response.data.assets));
+}
+
+// TODO: refactor
 /**
  * Gets Listed Assets by metaverse id, and lt (less than) than the last rent end (if provided)
  * excluding those with status WITHDRAWN,
@@ -1367,14 +1439,10 @@ export function fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
     },
   })
     .then(async (response) => {
-      let parsedAssets = await parseAssets(response.data.assets);
+      const parsedAssets = await parseAssets(response.data.assets);
 
       if (orderColumn === 'pricePerSecond') {
-        if (orderDirection === 'asc') {
-          parsedAssets = parsedAssets.sort(sortAssetsByAscendingUsdPrice);
-        } else {
-          parsedAssets = parsedAssets.sort(sortAssetsByDescendingUsdPrice);
-        }
+        parsedAssets.sort(orderDirection === 'asc' ? sortAssetsByAscendingUsdPrice : sortAssetsByDescendingUsdPrice);
       }
 
       return {
@@ -1481,6 +1549,7 @@ export async function parseAssets(assets: any[]): Promise<AssetEntity[]> {
   return parsedAssets.filter((asset: AssetEntity) => !asset.isEmptyEstate);
 }
 
+// TODO: refactor
 export async function parseAsset(asset: any): Promise<AssetEntity> {
   const liteAsset: AssetEntity = { ...asset };
   liteAsset.hasUpcomingRents = hasUpcomingRents(asset);
@@ -1491,6 +1560,9 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
   liteAsset.minPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.minPeriod));
   liteAsset.maxPeriodTimedType = getTimeTypeStr(secondsToDuration(asset.maxPeriod));
   liteAsset.maxFutureTimeTimedType = getTimeTypeStr(secondsToDuration(asset.maxFutureTime));
+  liteAsset.totalRents = +asset?.totalRents || 0;
+  liteAsset.lastRentTimestamp = asset.lastRentTimestamp;
+
   if (isDecentralandMetaverseRegistry(asset?.metaverseRegistry?.id)) {
     liteAsset.additionalData = await getAdditionalDecentralandData(
       asset.metaverseAssetId,
@@ -1501,6 +1573,7 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
     liteAsset.imageUrl = getLandImageUrl(asset);
     liteAsset.externalUrl = getDecentralandPlayUrl(asset?.decentralandData?.coordinates);
     liteAsset.isEmptyEstate = asset.decentralandData?.coordinates.length == 0;
+    liteAsset.size = liteAsset.additionalData.size;
   } else {
     const data = await getCryptoVoxelsAsset(asset.metaverseAssetId);
     liteAsset.name = data.name;
@@ -1511,6 +1584,7 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
       has_basement: data.attributes.has_basement === 'yes',
       waterfront: data.attributes.waterfront === 'yes',
     };
+    liteAsset.size = data.attributes.area;
     liteAsset.externalUrl = getCryptoVexelsPlayUrl(asset?.metaverseAssetId);
     liteAsset.place = data?.attributes ? [data?.attributes?.island, data?.attributes?.suburb] : null;
   }
@@ -1518,7 +1592,6 @@ export async function parseAsset(asset: any): Promise<AssetEntity> {
   // const now = getNowTs();
   //  const startRent = Math.max(now, Number(asset.lastRentEnd));
   // liteAsset.isAvailable = new BigNumber(startRent).plus(asset.minPeriod).lt(new BigNumber(now).plus(asset.maxFutureTime));
-
   liteAsset.isAvailable = asset.status === AssetStatus.LISTED;
   liteAsset.availability = getAvailability(liteAsset);
   liteAsset.isHot = asset.totalRents > 1 || liteAsset.hasUpcomingRents;

@@ -7,7 +7,7 @@ export interface StickyOffsetContextValue<T extends string = string> {
 
 const StickyOffsetContext = createContext<StickyOffsetContextValue | null>(null);
 
-export const useStickyOffset = (): StickyOffsetContextValue<'header' | 'filter'> => {
+export const useStickyOffset = (): StickyOffsetContextValue<'header' | 'filter' | 'exploreHeader'> => {
   const context = useContext(StickyOffsetContext);
 
   if (context === null) {
@@ -60,7 +60,7 @@ const StickyOffsetProvider: FC = ({ children }) => {
       setOffset(name, el.offsetHeight);
 
       const resizeObserver = new ResizeObserver(([entry]) => {
-        setOffset(name, entry.contentRect.height);
+        setOffset(name, entry.borderBoxSize[0].blockSize);
       });
 
       resizeObserver.observe(el);

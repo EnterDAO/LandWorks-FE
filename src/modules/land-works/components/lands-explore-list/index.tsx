@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useEffect, useRef, useState } from 'react';
+import { FC, MouseEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import useDebounce from '@rooks/use-debounce';
 
@@ -47,6 +47,8 @@ const LandsExploreList: FC<Props> = ({ loading, lands, selectedAssetId, onSelect
   const timeoutIdRef = useRef<number>();
   const listingModal = useListingModal();
   const isMetamaskConnected = useIsMetamaskConnected();
+  const selectedAssetCardElRef = useRef<HTMLAnchorElement | null>(null);
+  const headerElRef = useRef<HTMLDivElement | null>(null);
 
   const [cardsSize, setCardsSize] = useState<'compact' | 'normal'>('normal');
 
@@ -54,6 +56,42 @@ const LandsExploreList: FC<Props> = ({ loading, lands, selectedAssetId, onSelect
     sessionStorageHandler('get', 'explore-page', 'listed') || 0,
     isMapVisible ? (cardsSize === 'compact' ? 10 : 6) : 18
   );
+
+  const offsetsSumRef = useRef(stickyOffset.offsets.filter + stickyOffset.offsets.header);
+
+  useEffect(() => {
+    offsetsSumRef.current = stickyOffset.offsets.filter + stickyOffset.offsets.header;
+  }, [stickyOffset.offsets]);
+
+  useLayoutEffect(() => {
+    if (!selectedAssetCardElRef.current || !headerElRef.current) {
+      return;
+    }
+
+    window.scrollTo(0, selectedAssetCardElRef.current.offsetTop - headerElRef.current.offsetHeight);
+  }, [cardsSize]);
+
+  useEffect(() => {
+    if (!selectedAssetCardElRef.current || !headerElRef.current) {
+      return;
+    }
+
+    const activeRect = selectedAssetCardElRef.current.getBoundingClientRect();
+
+    const gap = 20;
+    const bottomOffset = Math.max(0, Math.floor(activeRect.top + activeRect.height + gap - window.innerHeight));
+    const topOffset = Math.min(
+      0,
+      Math.floor(activeRect.top - (offsetsSumRef.current + headerElRef.current.offsetHeight))
+    );
+    const top = Math.abs(topOffset) > Math.abs(bottomOffset) ? topOffset : bottomOffset;
+
+    window.scrollBy({
+      left: 0,
+      top,
+      behavior: 'smooth',
+    });
+  }, [selectedAssetId]);
 
   const handleCardMouseOver = (e: MouseEvent<HTMLAnchorElement>, asset: AssetEntity) => {
     window.clearTimeout(timeoutIdRef.current);
@@ -123,6 +161,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, selectedAssetId, onSelect
       <Box
         position="sticky"
         top={stickyOffset.offsets.filter + stickyOffset.offsets.header}
+        ref={headerElRef}
         zIndex={2}
         px={4}
         mx={-4}
@@ -179,6 +218,7 @@ const LandsExploreList: FC<Props> = ({ loading, lands, selectedAssetId, onSelect
           filteredAndListedLands.map((land) => (
             <LandWorkCard
               key={land.id}
+              ref={selectedAssetId === land.id ? selectedAssetCardElRef : undefined}
               isActive={selectedAssetId === land.id}
               layout={cardsSize}
               onMouseOver={handleCardMouseOver}

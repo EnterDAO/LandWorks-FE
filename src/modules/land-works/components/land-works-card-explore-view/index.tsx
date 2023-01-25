@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react';
+import React, { MouseEvent, Ref, forwardRef } from 'react';
 import classNames from 'classnames';
 import { ZERO_BIG_NUMBER } from 'web3/utils';
 
@@ -26,10 +26,11 @@ interface Props {
   onMouseOut?: (e: MouseEvent<HTMLAnchorElement>, land: AssetEntity) => void;
 }
 
-const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, onMouseOut, isActive, layout = 'normal' }) => {
-  const did = land.decentralandData
-    ? `${land.decentralandData?.coordinates[0]?.x},${land.decentralandData?.coordinates[0]?.y}`
-    : land.metaverseAssetId;
+// TODO: refactor
+const LandWorksCard = (
+  { land, isActive, onClick, onMouseOver, onMouseOut, layout = 'normal' }: Props,
+  ref: Ref<HTMLAnchorElement>
+) => {
   const isStaked = land.owner.id == config.contracts.yf.staking;
   const ownerOrConsumer = isStaked ? land.consumer?.id : land.owner.id;
 
@@ -43,11 +44,11 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, onMouseOut
 
   return (
     <a
+      ref={ref}
       className={classNames('land-explore-card', `land-explore-card--layout-${layout}`, isActive && 'active')}
       onClick={handleClick}
       onMouseOver={(e) => onMouseOver && onMouseOver(e, land)}
       onMouseOut={(e) => onMouseOut && onMouseOut(e, land)}
-      id={`land-explore-card--${did}`}
       href={getPropertyPath(land.id)}
     >
       <div>
@@ -113,4 +114,4 @@ const LandWorksCard: React.FC<Props> = ({ land, onClick, onMouseOver, onMouseOut
   );
 };
 
-export default LandWorksCard;
+export default forwardRef(LandWorksCard);

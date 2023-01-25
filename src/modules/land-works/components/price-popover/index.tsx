@@ -70,8 +70,8 @@ export const PricePopover: React.FC<IProps> = ({ text }) => {
   };
 
   useEffect(() => {
-    const isNegativeMin = minPrice !== null && +minPrice <= 0;
-    const isNegativeMax = maxPrice !== null && +maxPrice <= 0;
+    const isNegativeMin = minPrice !== null && !!minPrice && +minPrice <= 0;
+    const isNegativeMax = maxPrice !== null && !!maxPrice && +maxPrice <= 0;
 
     if (isNegativeMin) {
       setError('Price cannot be negative or equal zero');

@@ -1,14 +1,17 @@
 import React from 'react';
 
+import Accordion from 'components/common/Accordion';
 import Typography from 'components/common/Typography';
 import { Box } from 'design-system';
+import useAutoScrollToAnchor from 'hooks/useAutoScrollToAnchor';
 import { Connect } from 'layout/components/connect';
 import Footer from 'layout/components/footer';
-import QuestionAccordion from 'layout/components/quastion-accordion/QuestionAccordion';
 
 import { faq } from './data';
 
-const FAQView: React.FC = () => {
+const FAQView = () => {
+  const anchorId = useAutoScrollToAnchor();
+
   return (
     <Box pt={{ xs: 12, xl: 26 }} pb={0} className="content-container">
       <Typography
@@ -31,8 +34,14 @@ const FAQView: React.FC = () => {
       </Typography>
 
       <Box mx="auto" maxWidth={680} mb={{ xs: 10, xl: 16 }}>
-        {faq.map((question) => (
-          <QuestionAccordion question={question} key={question.id} />
+        {faq.map((faqItem, i) => (
+          <Accordion
+            defaultExpanded={!!faqItem.id && anchorId === faqItem.id}
+            id={faqItem.id}
+            key={i}
+            title={faqItem.question}
+            content={faqItem.answer}
+          />
         ))}
       </Box>
 

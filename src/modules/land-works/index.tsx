@@ -7,6 +7,8 @@ import ListingModalProvider from 'providers/listing-modal-provider';
 import { useWarning } from 'providers/warning-provider';
 import { APP_ROUTES } from 'router/routes';
 
+import NotFoundView from './views/not-found-view';
+
 const ExploreView = lazy(() => import('./views/explore-view'));
 const MyPropertiesView = lazy(() => import('./views/my-properties-view'));
 const SingleLand = lazy(() => import('./views/single-land-view'));
@@ -33,6 +35,7 @@ const LandworksView: React.FC = () => {
           <Route path={APP_ROUTES.explore} exact component={ExploreView} />
           <Route path={APP_ROUTES.property} component={SingleLand} />
           <Route path={APP_ROUTES.myProperties} component={MyPropertiesView} />
+          <Route path={[APP_ROUTES.notFound, '*']} component={NotFoundView} />
         </Switch>
       </ListingModalProvider>
     </ActiveAssetTransactionsProvider>
