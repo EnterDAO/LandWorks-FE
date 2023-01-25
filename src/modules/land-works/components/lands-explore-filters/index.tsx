@@ -45,7 +45,6 @@ const LandWorksFilters: FC<Props> = ({
   const [openVoxelFiltersModal, setOpenVoxelFilterModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [metaverses, setMetaverses] = useState<Option[]>(landsData);
-  const voxelsSortData = sortData.slice(0, sortData.length - 1);
 
   const onChangePlaceHandler = (value: number) => {
     sessionStorageHandler('set', 'general', 'metaverse', value);
@@ -112,7 +111,7 @@ const LandWorksFilters: FC<Props> = ({
               width="12.5rem"
               value={selectedOrder}
               onChange={onChangeSortDirectionHandler}
-              options={selectedMetaverse == 1 ? sortData : voxelsSortData}
+              options={sortData}
             />
           </Box>
 

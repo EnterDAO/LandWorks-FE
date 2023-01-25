@@ -1,4 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useQuery } from '@apollo/client';
+import BigNumber from 'bignumber.js';
+import { getUnixTime } from 'date-fns';
+import useSWR from 'swr';
 import { BooleanParam, useQueryParam, withDefault } from 'use-query-params';
 import { getNonHumanValue } from 'web3/utils';
 
@@ -6,35 +10,22 @@ import { Box } from 'design-system';
 import LayoutFooter from 'layout/components/layout-footer';
 import { AtlasTile } from 'modules/land-works/components/atlas';
 import LandsExploreFilters from 'modules/land-works/components/lands-explore-filters';
-import { statusData } from 'modules/land-works/components/lands-explore-filters/filters-data';
 import { useRentStatusQueryParam } from 'modules/land-works/components/lands-explore-filters/rent-status-select';
 import LandsExploreList from 'modules/land-works/components/lands-explore-list';
 import usePriceQueryParams from 'modules/land-works/components/price-popover/usePriceQueryParams';
 import LandsMapTileProvider, { SelectedTile } from 'modules/land-works/providers/lands-map-tile';
 import LandsMapTilesProvider from 'modules/land-works/providers/lands-map-tiles';
 import LandsSearchQueryProvider from 'modules/land-works/providers/lands-search-query';
-import { useWallet } from 'wallets/wallet';
 
-import {
-  AssetEntity,
-  PaymentToken,
-  fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder,
-  fetchTokenPayments,
-} from '../../api';
+import { AssetEntity, GET_TOKEN_PAYMENTS, PaymentToken, fetchAssets } from '../../api';
 import { useMetaverseQueryParam } from '../my-properties-view/MetaverseSelect';
 import ExploreMap from './ExploreMap';
 
-import { filterByMoreFilters, getMaxArea, getMaxHeight, getMaxLandSize, landsOrder } from 'modules/land-works/utils';
+import { filterByMoreFilters, getAllLandsCoordinates } from 'modules/land-works/utils';
 import { getNowTs, sessionStorageHandler } from 'utils';
 import { DAY_IN_SECONDS } from 'utils/date';
 
-import {
-  DEFAULT_LAST_RENT_END,
-  DEFAULT_TOKEN_ADDRESS,
-  RentStatus,
-  sortColumns,
-  sortDirections,
-} from 'modules/land-works/constants';
+import { DEFAULT_LAST_RENT_END, RentStatus, sortColumns, sortDirections } from 'modules/land-works/constants';
 
 import './explore-view.scss';
 
@@ -46,33 +37,32 @@ const parsePriceToNonHuman = (price: number, decimals = 0) => {
   return getNonHumanValue(price, decimals).dividedBy(DAY_IN_SECONDS).toFixed(0);
 };
 
-const usePaymentTokens = () => {
-  const [paymentTokens, setPaymentTokens] = useState<PaymentToken[]>([]);
+const useGetPaymentTokensQuery = () => {
+  const { data, ...other } = useQuery<{ paymentTokens: PaymentToken[] }>(GET_TOKEN_PAYMENTS);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    fetchTokenPayments().then((tokens) => {
-      if (isMounted) {
-        setPaymentTokens(tokens);
-      }
-    });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  return paymentTokens;
+  return {
+    data: data?.paymentTokens,
+    ...other,
+  };
 };
 
+const useGetAllAssetsQuery = (metaverseId?: string) => {
+  const { data, error } = useSWR(metaverseId ? [metaverseId, 'metaverse-assets'] : null, fetchAssets);
+
+  return {
+    data,
+    loading: !data && !error,
+    error,
+  };
+};
+
+// TODO: refactor
 const ExploreView: React.FC = () => {
   const sessionFilters = {
     order: sessionStorageHandler('get', 'explore-filters', 'order'),
     owner: sessionStorageHandler('get', 'explore-filters', 'owner'),
   };
 
-  const [lands, setLands] = useState<AssetEntity[]>([]);
   const [clickedLandId, setStateClickedLandId] = useState<AssetEntity['id']>('');
   const [mapTiles, setMapTiles] = useState<Record<string, AtlasTile>>({});
   const [selectedId, setSelectedId] = useState<string>();
@@ -83,10 +73,9 @@ const ExploreView: React.FC = () => {
   });
 
   const [metaverse, setMetaverse] = useMetaverseQueryParam();
-  const orderFilter =
-    sessionFilters.order && sessionFilters.order[`${metaverse}`] ? sessionFilters.order[`${metaverse}`] - 1 : 0;
-  const [sortDir, setSortDir] = useState(sortDirections[orderFilter]);
-  const [sortColumn, setSortColumn] = useState(sortColumns[orderFilter]);
+  const [sortType, setSortType] = useState(
+    sessionFilters.order && sessionFilters.order[`${metaverse}`] ? sessionFilters.order[`${metaverse}`] - 1 : 0
+  );
 
   const [rentStatus] = useRentStatusQueryParam();
   const [isMapVisible, setIsMapVisible] = useQueryParam('map', IsMapVisibleParam);
@@ -97,22 +86,100 @@ const ExploreView: React.FC = () => {
   }, [rentStatus]);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(true);
   const [showCardPreview, setShowCardPreview] = useState(false);
 
-  const wallet = useWallet();
-
-  const paymentTokens = usePaymentTokens();
+  const { data: paymentTokens, loading: arePaymentTokensLoading } = useGetPaymentTokensQuery();
+  const { data: assets, loading: areAssetsLoading } = useGetAllAssetsQuery(metaverse.toString());
+  const isLoading = arePaymentTokensLoading || areAssetsLoading;
 
   const paymentToken = useMemo(() => {
-    return priceParams.currency !== 0 && paymentTokens.length > 0 ? paymentTokens[priceParams.currency - 1] : undefined;
+    return priceParams.currency !== 0 && paymentTokens && paymentTokens.length > 0
+      ? paymentTokens[priceParams.currency - 1]
+      : undefined;
   }, [paymentTokens, priceParams.currency]);
 
-  const [maxLandSize, setMaxLandSize] = useState(0);
-  const [maxHeight, setMaxHeight] = useState(0);
-  const [maxArea, setMaxArea] = useState(0);
+  const filteredAssets = useMemo(() => {
+    if (!assets) {
+      return [];
+    }
+
+    const isFilteredByStatus = (asset: AssetEntity) => {
+      const lastRentEnd = +asset.lastRentEnd;
+      const nowUnixTime = getUnixTime(new Date());
+
+      if (rentStatus === RentStatus.Available) {
+        return nowUnixTime >= lastRentEnd;
+      } else if (rentStatus === RentStatus.Rented) {
+        return nowUnixTime < lastRentEnd;
+      }
+
+      return true;
+    };
+
+    const isFilteredByPaymentToken = (asset: AssetEntity) => {
+      return !paymentToken || asset.paymentToken.id === paymentToken.id;
+    };
+
+    const isFilteredByMinPrice = (asset: AssetEntity) => {
+      if (!priceParams.minPrice || !paymentToken) {
+        return true;
+      }
+
+      const normalizedMinPrice = parsePriceToNonHuman(priceParams.minPrice, paymentToken.decimals);
+
+      return new BigNumber(asset.pricePerSecond).gte(normalizedMinPrice);
+    };
+
+    const isFilteredByMaxPrice = (asset: AssetEntity) => {
+      if (!priceParams.maxPrice || !paymentToken) {
+        return true;
+      }
+
+      const normalizedMaxPrice = parsePriceToNonHuman(priceParams.maxPrice, paymentToken.decimals);
+
+      return new BigNumber(asset.pricePerSecond).lte(normalizedMaxPrice);
+    };
+
+    return assets.filter((asset) => {
+      return (
+        isFilteredByPaymentToken(asset) &&
+        isFilteredByStatus(asset) &&
+        isFilteredByMinPrice(asset) &&
+        isFilteredByMaxPrice(asset)
+      );
+    });
+  }, [assets, paymentToken, rentStatus, priceParams.minPrice, priceParams.maxPrice]);
+
+  const sortedAssets = useMemo(() => {
+    const dir = sortDirections[sortType] === 'desc' ? -1 : 1;
+    const field = sortColumns[sortType] as keyof AssetEntity;
+    return [...filteredAssets].sort((a, b) => {
+      return new BigNumber(a[field] as string).comparedTo(b[field] as string) * dir;
+    });
+  }, [filteredAssets, sortType]);
 
   const [moreFilters, setMoreFilters] = useState<Partial<MoreFiltersType> | null>(null);
+
+  const { lands, maxArea, maxHeight, maxLandSize } = useMemo(() => {
+    const coordinatesHighlights = getAllLandsCoordinates(sortedAssets);
+
+    const maxValues = sortedAssets.reduce(
+      (acc, land) => {
+        acc.maxLandSize += land.additionalData?.size || 0;
+        acc.maxArea += (land.additionalData as any)?.area || 0;
+        acc.maxHeight += (land.additionalData as any)?.height || 0;
+
+        return acc;
+      },
+      { maxLandSize: 0, maxArea: 0, maxHeight: 0 }
+    );
+
+    return {
+      lands: sortedAssets,
+      coordinatesHighlights,
+      ...maxValues,
+    };
+  }, [sortedAssets]);
 
   const filteredLands = useMemo(() => {
     return moreFilters ? filterByMoreFilters(lands, moreFilters, metaverse) : lands;
@@ -141,99 +208,13 @@ const ExploreView: React.FC = () => {
   );
 
   const onChangeFiltersSortDirection = (value: number) => {
-    const sortIndex = Number(value) - 1;
-    setSortDir(sortDirections[sortIndex]);
-    setSortColumn(sortColumns[sortIndex]);
+    setSortType(Number(value) - 1);
   };
 
   const onChangeMetaverse = (index: string) => {
     setMetaverse(+index);
     setMoreFilters(null);
   };
-
-  const getLands = useCallback(
-    async (
-      metaverse: number,
-      orderColumn: string,
-      sortDir: 'asc' | 'desc',
-      lastRentEnd: string,
-      rentStatus: RentStatus,
-      paymentToken?: PaymentToken,
-      minPrice?: number | null,
-      maxPrice?: number | null
-    ) => {
-      setLoading(true);
-      setLands([]);
-
-      const sortBySize = orderColumn == 'size';
-      const sortByHottest = orderColumn == 'totalRents';
-
-      const statusFilter = statusData.find(({ value }) => value === rentStatus)?.filter;
-      const paymentTokenId = paymentToken ? paymentToken.id : DEFAULT_TOKEN_ADDRESS;
-
-      const normalizedMinPrice = minPrice ? parsePriceToNonHuman(minPrice, paymentToken?.decimals) : undefined;
-      const normalizedMaxPrice = maxPrice ? parsePriceToNonHuman(maxPrice, paymentToken?.decimals) : undefined;
-
-      const lands = await fetchAllListedAssetsByMetaverseAndGetLastRentEndWithOrder(
-        String(metaverse),
-        lastRentEnd,
-        sortBySize ? 'totalRents' : orderColumn,
-        sortDir,
-        paymentTokenId,
-        statusFilter,
-        normalizedMinPrice,
-        normalizedMaxPrice
-      );
-
-      setLands(sortByHottest || sortBySize ? landsOrder(lands.data, orderColumn, sortDir) : lands.data);
-
-      if (metaverse === 1) {
-        setMaxLandSize(getMaxLandSize(lands.data));
-      } else {
-        setMaxHeight(getMaxHeight(lands.data));
-        setMaxArea(getMaxArea(lands.data));
-      }
-
-      setLoading(false);
-    },
-    []
-  );
-
-  useEffect(() => {
-    if (wallet.account) {
-      return;
-    }
-    const timeoutId = window.setTimeout(() => {
-      wallet.showWalletsModal();
-    }, 500);
-
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
-  }, [wallet.account, wallet.showWalletsModal]);
-
-  useEffect(() => {
-    getLands(
-      Number(metaverse),
-      sortColumn,
-      sortDir,
-      lastRentEnd,
-      rentStatus,
-      paymentToken,
-      priceParams.minPrice,
-      priceParams.maxPrice
-    );
-  }, [
-    getLands,
-    sortColumn,
-    sortDir,
-    rentStatus,
-    lastRentEnd,
-    paymentToken,
-    metaverse,
-    priceParams.minPrice,
-    priceParams.maxPrice,
-  ]);
 
   const landsMapTilesValue = useMemo(() => {
     return {
@@ -275,7 +256,7 @@ const ExploreView: React.FC = () => {
                   onSelectAsset={setSelectedId}
                   isMapVisible={isMapVisible}
                   lastRentEnd={lastRentEnd}
-                  loading={loading}
+                  loading={isLoading}
                   lands={filteredLands || lands}
                 />
                 <LayoutFooter isWrapped={false} />

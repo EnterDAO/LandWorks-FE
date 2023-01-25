@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect } from 'react';
 import { useLocalStorage } from 'react-use-storage';
 import { Web3Provider } from '@ethersproject/providers';
 import splitbee from '@splitbee/web';
@@ -141,7 +141,14 @@ const WalletProvider: React.FC = (props) => {
         }
 
         walletConnector.onConnect?.(connector, args);
-        connector.getProvider().then(setActiveProvider);
+
+        connector.once('Web3ReactDeactivate', () => {
+          setSessionProvider('');
+        });
+
+        connector.getProvider().then((provider) => {
+          setActiveProvider(provider);
+        });
         setActiveConnector(walletConnector);
         setSessionProvider(walletConnector.id);
 
@@ -158,18 +165,24 @@ const WalletProvider: React.FC = (props) => {
     [web3React, connectingRef, setConnecting, setSessionProvider, disconnect]
   );
 
-  useEffect(() => {
-    (async () => {
-      if (sessionProvider) {
-        const walletConnector = WalletConnectors.find((c) => c.id === sessionProvider);
+  useLayoutEffect(() => {
+    if (sessionProvider) {
+      const walletConnector = WalletConnectors.find((c) => c.id === sessionProvider);
 
-        if (walletConnector) {
-          connect(walletConnector).catch(Error);
-        }
+      if (walletConnector) {
+        connect(walletConnector)
+          .catch((e) => {
+            console.log(e);
+          })
+          .finally(() => {
+            setInitialized(true);
+          });
+
+        return;
       }
+    }
 
-      setInitialized(true);
-    })();
+    setInitialized(true);
   }, []);
 
   useEffect(() => {
