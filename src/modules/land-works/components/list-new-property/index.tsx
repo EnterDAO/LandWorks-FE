@@ -38,7 +38,6 @@ import { PaymentToken, createAssetAdvertisement, fetchMetaverses, fetchTokenPaym
 import { useLandworks } from '../../providers/landworks-provider';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
 import AssetList, { BuyAssetList } from './AssetList';
-import BuyAndListConfirmModal from './BuyAndListConfirmModal';
 import ListingBuyAssetSummaryStep from './ListitingBuyAssetSummaryStep';
 import LoadingAssetList from './LoadingAssetList';
 

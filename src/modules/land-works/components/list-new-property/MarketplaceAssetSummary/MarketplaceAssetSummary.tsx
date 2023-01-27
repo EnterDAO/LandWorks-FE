@@ -41,7 +41,6 @@ const MarketplaceAssetSummary = ({
   maxPeriodSelectedOption,
   maxFutureSelectedOption,
   paymentToken,
-  metaverse,
   asset,
 }: MarketplaceAssetSummaryProps) => {
   const min = minRentPeriod?.toNumber();
