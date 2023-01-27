@@ -1,10 +1,12 @@
 import React, { MouseEvent, ReactNode } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 
-import decentralandLandMapSrc from 'assets/img/decentraland-land-map.png';
-import openseaLogoMarkSrc from 'assets/img/opensea-logomark.png';
 import Image from 'components/custom/image';
-import { BaseNFT, CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
+import useGetAssetsForBuyingQuery, { MarketplaceAsset } from 'hooks/useGetAssetsForBuyingQuery';
+import { CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
+
+import LoadingAssetList from './LoadingAssetList';
+import { SortType } from './SortSelect';
 
 interface ListCardProps {
   image: string;
@@ -62,20 +64,6 @@ const ListCard = ({ image, title, subtitle, footer, isActive, onClick }: ListCar
   );
 };
 
-interface MarketplaceAsset {
-  id: string;
-  image: string;
-  name: string;
-  metaverse: number;
-  coords: [number, number];
-  size?: number;
-  url: string;
-  marketplace: {
-    id: string;
-    name: string;
-  };
-}
-// paymentToken: PaymentToken & { usdPrice: string };
 type Asset = CryptoVoxelNFT | DecentralandNFT;
 
 interface BuyAssetListCardProps extends Pick<ListCardProps, 'isActive' | 'onClick'> {
@@ -83,7 +71,9 @@ interface BuyAssetListCardProps extends Pick<ListCardProps, 'isActive' | 'onClic
 }
 
 const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
-  const subtitle = (asset?.size || 0) > 0 ? `Lands: ${asset.size}` : `X: ${asset.coords[0]}    Y: ${asset.coords[0]}`;
+  const subtitle = asset.metadata.coords
+    ? `X: ${asset.metadata.coords.x}    Y: ${asset.metadata.coords.y}`
+    : `Lands: ${asset.metadata.size}`;
 
   return (
     <ListCard
@@ -93,23 +83,32 @@ const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
       footer={
         <Box display="flex" alignItems="center" overflow="hidden" gap={2}>
           <Typography variant="body2" minWidth={0} display="flex" flex="1 1 auto" gap="4px">
-            <Typography variant="inherit" component="span" maxWidth="50%" color="var(--theme-light-color)" noWrap>
+            <Typography
+              display="flex"
+              overflow="hidden"
+              variant="inherit"
+              component="span"
+              maxWidth="50%"
+              color="var(--theme-light-color)"
+              title={`${asset.price.amount.native} ${asset.price.currency.symbol}`}
+            >
               <Typography variant="inherit" component="span" noWrap>
-                1.5
+                {asset.price.amount.native}
               </Typography>{' '}
-              ETH
+              <Typography variant="inherit" component="span">
+                {asset.price.currency.symbol}
+              </Typography>
             </Typography>
-            <Typography variant="inherit" component="span" noWrap color="var(--theme-subtle-color)">
+            {/* <Typography variant="inherit" component="span" noWrap color="var(--theme-subtle-color)">
               $1234.56
-            </Typography>
+            </Typography> */}
           </Typography>
 
-          <Box component="a" ml="auto" target="_blank" flexShrink={0} href={asset.url}>
-            {/* TODO: make dynamic */}
+          <Box component="a" ml="auto" target="_blank" flexShrink={0} href={'' /* TODO: add url */}>
             <Image
-              alt="OpenSea"
-              title="OpenSea"
-              src={openseaLogoMarkSrc}
+              alt={asset.source.name}
+              title={asset.source.name}
+              src={asset.source.icon}
               sx={{ width: 15, height: 15, display: 'block' }}
             />
           </Box>
@@ -123,48 +122,27 @@ const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
 interface BuyAssetListProps {
   assets?: MarketplaceAsset[];
   selectedAssetId?: string;
-  onSelectAsset?: (asset: BaseNFT) => void;
+  onSelectAsset?: (assetId: string) => void;
 }
 
-const mockAsset: MarketplaceAsset = {
-  id: '1',
-  coords: [22, -23],
-  name: 'Land (12,-23)',
-  url: '',
-  metaverse: 1,
-  image: decentralandLandMapSrc,
-  marketplace: {
-    id: '1',
-    name: 'OpenSea',
-  },
-};
+export const BuyAssetList = ({ selectedAssetId: activeAssetId, onSelectAsset, assets }: BuyAssetListProps) => {
+  // const { data: assetsForBuying, error } = useGetAssetsForBuyingQuery();
 
-const mockAssets = Array.from({ length: 32 }, (_, i) => {
-  return {
-    ...mockAsset,
-    id: i.toString(),
-  };
-});
+  // const loading = !assetsForBuying && !error;
 
-const assetToBaseNft = (asset: MarketplaceAsset): BaseNFT => {
-  return {
-    id: asset.id,
-    image: asset.image,
-    name: asset.name,
-    contractAddress: '',
-    metaverseName: asset.metaverse === 1 ? 'Decentraland' : 'Voxels',
-    place: '',
-  };
-};
+  // console.log(assetsForBuying, error);
+  // // loading
+  // if (loading) {
+  //   return <LoadingAssetList />;
+  // }
 
-export const BuyAssetList = ({
-  assets = mockAssets,
-  selectedAssetId: activeAssetId,
-  onSelectAsset,
-}: BuyAssetListProps) => {
+  // if (!assetsForBuying || !assetsForBuying.assets.length) {
+  //   return <>Assets not found</>;
+  // }
+
   return (
     <Grid container rowSpacing={3} columnSpacing={4}>
-      {assets.map((asset) => {
+      {assets?.map((asset) => {
         return (
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore
@@ -172,7 +150,7 @@ export const BuyAssetList = ({
             <BuyAssetListCard
               isActive={asset.id === activeAssetId}
               asset={asset}
-              onClick={() => onSelectAsset && onSelectAsset(assetToBaseNft(asset))}
+              onClick={onSelectAsset?.bind(null, asset.id)}
             />
           </Grid>
         );
