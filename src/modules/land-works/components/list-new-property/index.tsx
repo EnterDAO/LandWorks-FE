@@ -1,14 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { ChangeEvent, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
-import useSWR from 'swr';
-import Web3 from 'web3';
-import ERC20Contract from 'web3/contracts/ERC20Contract';
-import Erc20Contract from 'web3/erc20Contract';
 import { refreshWeb3Token } from 'web3/token';
-import { DEFAULT_ADDRESS, ONE_ADDRESS, ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
+import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import listingAdImgSrc from 'assets/img/listing-ad.jpg';
 import landNotFoundImageSrc from 'assets/land-not-found.svg';
@@ -19,7 +15,7 @@ import Stepper, { Step, StepLabel } from 'components/styled/stepper';
 import { Box, Button, Checkbox, ControlledSelect, Grid, Stack } from 'design-system';
 import { WarningIcon } from 'design-system/icons';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import useGetAssetsForBuyingQuery, { MarketplaceAsset } from 'hooks/useGetAssetsForBuyingQuery';
+import useGetAssetsForBuyingQuery from 'hooks/useGetAssetsForBuyingQuery';
 import useGetIsMounted from 'hooks/useGetIsMounted';
 import { BaseNFT, CryptoVoxelNFT, DecentralandNFT, Option } from 'modules/interface';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
@@ -29,11 +25,9 @@ import RentPeriod from 'modules/land-works/components/lands-input-rent-period';
 import RentPrice from 'modules/land-works/components/lands-input-rent-price';
 import { SuccessModal, TxModal } from 'modules/land-works/components/lands-list-modal';
 import { useContractRegistry } from 'modules/land-works/providers/contract-provider';
-import { useErc20 } from 'modules/land-works/providers/erc20-provider';
 import { useMetaverseQueryParam } from 'modules/land-works/views/my-properties-view/MetaverseSelect';
 import useGetAccountNonListedAssetsQuery from 'modules/land-works/views/my-properties-view/useGetAccountNotListedAssets';
 import { useActiveAssetTransactions } from 'providers/ActiveAssetTransactionsProvider/ActiveAssetTransactionsProvider';
-import { useEthWeb3 } from 'providers/eth-web3-provider';
 import { useGeneral } from 'providers/general-provider';
 import { getTokenPrice } from 'providers/known-tokens-provider';
 import { MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath } from 'router/routes';
@@ -47,8 +41,6 @@ import AssetList, { BuyAssetList } from './AssetList';
 import BuyAndListConfirmModal from './BuyAndListConfirmModal';
 import ListingBuyAssetSummaryStep from './ListitingBuyAssetSummaryStep';
 import LoadingAssetList from './LoadingAssetList';
-import MarketplaceAssetSummary from './MarketplaceAssetSummary/MarketplaceAssetSummary';
-import SortSelect, { SortType } from './SortSelect';
 
 import { getTimeType, secondsToDuration, sessionStorageHandler } from 'utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
@@ -82,48 +74,6 @@ interface IProps {
   closeModal?: () => void;
   asset?: BaseNFT;
 }
-
-const useAccountBalance = (account: string) => {
-  const { web3 } = useEthWeb3();
-  const { data, error } = useSWR(account || null, web3.eth.getBalance);
-
-  return {
-    data: data || '0',
-    isLoading: !data && !error,
-    error,
-  };
-};
-
-const useERC20Contract = (contractAddress?: string) => {
-  const { web3 } = useEthWeb3();
-
-  return useMemo(() => (contractAddress ? new ERC20Contract(web3, contractAddress) : null), [contractAddress, web3]);
-};
-
-// const useAccountERC20 = (erc20ContractAddress: string, account: string) => {
-//   const { web3 } = useEthWeb3();
-
-//   const contract = useMemo(() => new ERC20Contract(web3, erc20ContractAddress), [erc20ContractAddress, web3]);
-
-//   const { data: balance } = useSWR(account, (a) => contract.balanceOf(a));
-//   const { data: allowance } = useSWR()
-
-//   return {
-//     balance,
-//   }
-// }
-
-const useAccountERC20Balance = (account: string, contract: ERC20Contract) => {
-  const { data, error } = useSWR(account, (a) => contract.balanceOf(a));
-
-  return {
-    data: data || '0',
-    isLoading: !data && !error,
-    error,
-  };
-};
-
-// const useAccountERC20Allowance = (contract: ERC20Contract, )
 
 // TODO: refactor
 const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
@@ -187,12 +137,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const [isCreatingAssetAdvertisement, setIsCreatingAssetAdvertisement] = useState(false);
 
   const [listModalMessage, setListModalMessage] = useState(SignTransactionMessage);
-  const [sort, setSort] = useState<SortType>(SortType.PriceLowFirst);
   const [isBuying, setIsBuying] = useState(false);
   const [selectedAssetIdForBuying, setSelectedAssetIdForBuying] = useState<string>();
   const { data: assetsForBuying, error } = useGetAssetsForBuyingQuery();
   const areAssetsForBuyingLoading = !assetsForBuying && !error;
-  const { data: balance } = useAccountBalance(walletCtx.account || '');
 
   const { data: assets, isLoading: loading } = useGetAccountNonListedAssetsQuery(
     walletCtx.account || '',
@@ -629,71 +577,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
     return filteredAssetsForBuying.find((asset) => asset.id === selectedAssetIdForBuying);
   }, [selectedAssetIdForBuying, filteredAssetsForBuying]);
 
-  const erc20Contract = useERC20Contract(selectedAssetForBuying?.price.currency.contract);
-
-  const shouldShowApproveButton =
-    selectedAssetForBuying && selectedAssetForBuying.price.currency.contract !== ONE_ADDRESS;
-
-  // const checkApprovedAmount = async () => {
-  //   if(!isBuying || !selectedAssetForBuying) {
-  //     return;
-  //   }
-
-  //   if (selectedAssetForBuying.price.currency.contract === ONE_ADDRESS) {
-  //     setListDisabled(false);
-  //   } else {
-  //     const balance = erc20Contract?.balance;
-
-  //     if (balance == null) {
-  //       setApproveDisabled(true);
-  //       setListDisabled(true);
-  //       return;
-  //     }
-  //     if (balance.lt(balance)) {
-  //       setApproveDisabled(true);
-  //       setListDisabled(true);
-  //       return;
-  //     }
-
-  //     const allowance = erc20Contract?.getAllowanceOf(config.contracts.landworksContract);
-
-  //     if (allowance == null) {
-  //       setApproveDisabled(false);
-  //       setListDisabled(true);
-  //     } else {
-  //       if (value.lte(allowance)) {
-  //         setApproveDisabled(true);
-  //         setListDisabled(false);
-  //       } else {
-  //         setApproveDisabled(false);
-  //         setListDisabled(true);
-  //       }
-  //     }
-  //   }
-  // };
-
-  // const handleApprove = async () => {
-  //   if (!selectedAssetForBuying || selectedAssetForBuying.price.currency.contract === ONE_ADDRESS) {
-  //     return;
-  //   }
-
-  //   try {
-  //     setTransactionLoading(true);
-  //     await erc20Contract?.approveAmount(value, config.contracts.landworksContract, () => {
-  //       setApproveDisabled(true);
-  //     });
-  //     setTransactionLoading(false);
-  //     showToastNotification(ToastType.Success, `${paymentToken.symbol} approved successfully.`);
-
-  //     erc20Contract?.loadAllowance(config.contracts.landworksContract).catch(Error);
-  //     checkApprovedAmount();
-  //   } catch (e) {
-  //     console.log(e);
-  //     setTransactionLoading(false);
-  //     showToastNotification(ToastType.Error, 'There was an error while approviing');
-  //   }
-  // };
-
   const handleNextButtonClick = async () => {
     if (step.id === StepId.Advertisement) {
       setIsCreatingAssetAdvertisement(true);
@@ -831,6 +714,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             maxFuturePeriod={maxFutureTime}
             rentPrice={tokenCost || BigNumber.ZERO}
             paymentToken={paymentToken}
+            pricePerSecond={pricePerSecond}
           />
         ) : (
           <>
@@ -1210,7 +1094,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             }}
           />
         )}
-        <BuyAndListConfirmModal open={false} />
       </Stack>
     </section>
   );
