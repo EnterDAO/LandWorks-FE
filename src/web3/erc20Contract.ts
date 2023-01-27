@@ -124,6 +124,8 @@ export default class Erc20Contract extends Web3Contract {
     return this.call('balanceOf', [addr]).then((value) => {
       this.balances.set(addr, new BigNumber(value));
       this.emit(Web3Contract.UPDATE_DATA);
+
+      return value;
     });
   }
 
@@ -137,6 +139,8 @@ export default class Erc20Contract extends Web3Contract {
     return this.call('allowance', [addr, spenderAddress]).then((value) => {
       this.allowances.set(spenderAddress, new BigNumber(value));
       this.emit(Web3Contract.UPDATE_DATA);
+
+      return value;
     });
   }
 
@@ -157,7 +161,12 @@ export default class Erc20Contract extends Web3Contract {
     ).then(() => this.loadAllowance(spenderAddress));
   }
 
-  approveAmount(amount: BigNumber | number | string, spenderAddress: string, callback: () => void): Promise<void> {
+  approveAmount(
+    amount: BigNumber | number | string,
+    spenderAddress: string,
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    callback: () => void = () => {}
+  ): Promise<void> {
     if (!this.account) {
       return Promise.reject();
     }
