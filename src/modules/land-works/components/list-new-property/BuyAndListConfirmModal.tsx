@@ -4,12 +4,14 @@ import { ReactComponent as AlertIcon } from 'assets/icons/alert.svg';
 import { Box, Button, Divider, Icon, Modal, Typography } from 'design-system';
 
 export interface BuyAndListConfirmModalProps {
+  metaverse: string;
+  price: string;
   open: boolean;
   onConfirm?: () => void;
   onClose?: () => void;
 }
 
-const BuyAndListConfirmModal: FC<BuyAndListConfirmModalProps> = ({ onClose, onConfirm, open }) => {
+const BuyAndListConfirmModal: FC<BuyAndListConfirmModalProps> = ({ onClose, onConfirm, metaverse, price, open }) => {
   return (
     <Modal width={680} open={open} handleClose={onClose}>
       <Icon iconSize={160} iconElement={<AlertIcon />} color="var(--theme-accent-color)" sx={{ mt: 12, mb: 5 }} />
@@ -19,11 +21,11 @@ const BuyAndListConfirmModal: FC<BuyAndListConfirmModalProps> = ({ onClose, onCo
       <Typography mx="auto" maxWidth={600}>
         By confirming this transaction you will purchase a{' '}
         <Typography component="span" variant="inherit" fontWeight={600} color="var(--theme-light-color)">
-          {'{metaverse}'}
+          {metaverse}
         </Typography>{' '}
         land NFT for{' '}
         <Typography component="span" variant="inherit" fontWeight={600} color="var(--theme-light-color)">
-          {'{price}'}
+          {price}
         </Typography>{' '}
         and list the property on LandWorks. By Listing the property on LandWorks, the purchased NFT will be transferred
         to the LandWorks protocol and a new LandWorks NFT will be minted to your wallet. The LandWorks NFT is a
