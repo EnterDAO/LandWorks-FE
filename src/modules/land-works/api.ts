@@ -663,7 +663,7 @@ export type AdditionalDecantralandData = {
   attributes: parsedAdditionalAttributes;
 };
 
-type TraitType = 'X' | 'Y' | 'size' | 'district' | 'plaza' | 'road';
+type TraitType = 'x' | 'y' | 'size' | 'district' | 'plaza' | 'road';
 
 type parsedAdditionalAttributes = {
   [key in TraitType]: number;
@@ -1727,7 +1727,7 @@ function sortAssetsByDescendingUsdPrice(a: AssetEntity, b: AssetEntity): number 
   }
 }
 
-function getAdditionalDecentralandData(id: string, isLand: boolean): Promise<AdditionalDecantralandData> {
+export function getAdditionalDecentralandData(id: string, isLand: boolean): Promise<AdditionalDecantralandData> {
   const decentralandRegistryAddress = isLand
     ? '0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d'
     : '0x959e104e1a4db6317fa58f8295f586e1a978c297';
@@ -1737,6 +1737,7 @@ function getAdditionalDecentralandData(id: string, isLand: boolean): Promise<Add
     .then((data) => {
       const { id, external_url, description, attributes } = data;
       const parsedAttributes = parseAdditionalAttributes(attributes);
+
       return {
         tokenId: id,
         externalUrl: external_url,
