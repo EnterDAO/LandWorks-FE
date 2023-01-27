@@ -2,11 +2,8 @@ import React, { MouseEvent, ReactNode } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 
 import Image from 'components/custom/image';
-import useGetAssetsForBuyingQuery, { MarketplaceAsset } from 'hooks/useGetAssetsForBuyingQuery';
+import { MarketplaceAsset } from 'hooks/useGetAssetsForBuyingQuery';
 import { CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
-
-import LoadingAssetList from './LoadingAssetList';
-import { SortType } from './SortSelect';
 
 interface ListCardProps {
   image: string;
@@ -126,20 +123,6 @@ interface BuyAssetListProps {
 }
 
 export const BuyAssetList = ({ selectedAssetId: activeAssetId, onSelectAsset, assets }: BuyAssetListProps) => {
-  // const { data: assetsForBuying, error } = useGetAssetsForBuyingQuery();
-
-  // const loading = !assetsForBuying && !error;
-
-  // console.log(assetsForBuying, error);
-  // // loading
-  // if (loading) {
-  //   return <LoadingAssetList />;
-  // }
-
-  // if (!assetsForBuying || !assetsForBuying.assets.length) {
-  //   return <>Assets not found</>;
-  // }
-
   return (
     <Grid container rowSpacing={3} columnSpacing={4}>
       {assets?.map((asset) => {
