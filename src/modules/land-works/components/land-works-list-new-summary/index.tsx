@@ -37,6 +37,7 @@ interface IListNewSummary {
   isBuying?: boolean;
 }
 
+// TODO: refactor
 const ListNewSummary: React.FC<IListNewSummary> = ({
   minRentPeriod,
   maxRentPeriod,
@@ -197,7 +198,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
                 </Box>
               </Grid>
             )}
-            {metaverse?.value == 1 && (
+            {metaverse?.value == 1 && !isBuying && (
               <Grid item xs={12} display="flex" flexDirection="column">
                 <Typography variant="inherit" component="span" display="inline-flex" alignItems="center" gap="4px">
                   {sceneDetail.label}
