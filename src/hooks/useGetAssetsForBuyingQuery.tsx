@@ -1,4 +1,5 @@
-import useSWR from 'swr';
+import { useCallback, useEffect, useMemo } from 'react';
+import useSWRInfinite from 'swr/infinite';
 
 import config from 'config';
 import { getDecentralandEstateImgUrlById, getDecentralandLandImgUrlByCoords } from 'helpers/helpers';
@@ -49,8 +50,6 @@ export interface MarketplaceAsset extends Omit<AssetForBuying, 'criteria'> {
     } | null;
   };
 }
-
-const contracts = [config.contracts.decentraland.estateRegistry, config.contracts.decentraland.landRegistry];
 
 const fetchAssetsForBuying = async (url: string) => {
   const data: {
@@ -112,12 +111,67 @@ const fetchAssetsForBuying = async (url: string) => {
   };
 };
 
-const url = `${config.reservoir.apiUrl}/orders/asks/v4?${contracts
-  .map((contract) => `contracts=${contract}`)
-  .join('&')}&source=opensea.io&sortBy=price`;
+const url = `${config.reservoir.apiUrl}/orders/asks/v4?source=opensea.io&sortBy=price`;
 
-const useGetAssetsForBuyingQuery = () => {
-  return useSWR(url, fetchAssetsForBuying);
+const LIMIT = 16;
+
+export enum AssetType {
+  All = 0,
+  Land = 1,
+  Estate = 2,
+}
+
+const useGetAssetsForBuyingQuery = (type?: AssetType) => {
+  const { data, error, size, setSize } = useSWRInfinite((pageIndex, prevData) => {
+    if (prevData && !prevData.continuation) {
+      return null;
+    }
+
+    let contracts = [config.contracts.decentraland.landRegistry, config.contracts.decentraland.estateRegistry];
+
+    if (type === AssetType.Land) {
+      contracts = [config.contracts.decentraland.landRegistry];
+    } else if (type === AssetType.Estate) {
+      contracts = [config.contracts.decentraland.estateRegistry];
+    }
+
+    const key = `${url}&${contracts.map((contract) => `contracts=${contract}`).join('&')}`;
+
+    if (pageIndex === 0 || !prevData) {
+      return `${key}&limit=${LIMIT}`;
+    }
+
+    return `${key}&continuation=${prevData.continuation}&limit=${LIMIT}`;
+  }, fetchAssetsForBuying);
+
+  const assets = useMemo(() => {
+    if (!data) {
+      return [] as MarketplaceAsset[];
+    }
+
+    return data.reduce((acc, { assets }) => acc.concat(assets), [] as MarketplaceAsset[]);
+  }, [data]);
+
+  const loadMore = useCallback(() => setSize((prevSize) => prevSize + 1), [setSize]);
+
+  useEffect(() => {
+    setSize(1);
+  }, [type]);
+
+  const isLoadingInitialData = !data && !error;
+  const isLoadingMore = size > 0 && data && typeof data[size - 1] === 'undefined';
+  const isEmpty = data?.[0]?.assets.length === 0;
+  const isReachedEnd = isEmpty || (data && !data[data.length - 1]?.continuation);
+
+  return {
+    data: assets,
+    isLoadingInitialData,
+    isLoadingMore,
+    isEmpty,
+    isReachedEnd,
+    loadMore,
+    error,
+  };
 };
 
 export default useGetAssetsForBuyingQuery;
