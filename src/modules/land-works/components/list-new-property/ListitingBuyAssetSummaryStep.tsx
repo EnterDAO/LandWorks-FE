@@ -19,6 +19,7 @@ import { useEthWeb3 } from 'providers/eth-web3-provider';
 import config from '../../../../config';
 import { useWallet } from '../../../../wallets/wallet';
 import { PaymentToken } from '../../api';
+import { TxModal } from '../lands-list-modal';
 import BuyAndListConfirmModal from './BuyAndListConfirmModal';
 import MarketplaceAssetSummary from './MarketplaceAssetSummary/MarketplaceAssetSummary';
 
@@ -36,7 +37,7 @@ interface ListingBuyAssetSummaryStepProps {
   pricePerSecond: BigNumber;
   paymentToken: PaymentToken;
   onBack: () => void;
-  onComplete?: () => void;
+  onSuccess?: (data: { tokenId: string; contract: string }) => void;
 }
 
 const fetchBuyDetails = ({
@@ -86,6 +87,7 @@ const fetchBuyDetails = ({
 // TODO: refactor
 const ListingBuyAssetSummaryStep = ({
   onBack,
+  onSuccess,
   asset,
   pricePerSecond,
   ...summaryProps
@@ -96,6 +98,7 @@ const ListingBuyAssetSummaryStep = ({
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const getIsMounted = useGetIsMounted();
   const [isApproving, setIsApproving] = useState(false);
+  const [isTxProcessingModalOpen, setIsTxProcessingModalOpen] = useState(false);
   const isNativeCurrency = asset.price.currency.contract === DEFAULT_ADDRESS;
   const { data: nativeBalance, error: errorBalance } = useSWR(
     wallet.account && isNativeCurrency ? wallet.account : null,
@@ -157,6 +160,7 @@ const ListingBuyAssetSummaryStep = ({
 
   const handleApprove = async () => {
     setIsApproving(true);
+    setIsTxProcessingModalOpen(true);
 
     try {
       const approvedAmount = (await erc20Contract.approveAmount(
@@ -171,6 +175,7 @@ const ListingBuyAssetSummaryStep = ({
     } finally {
       if (getIsMounted()) {
         setIsApproving(false);
+        setIsTxProcessingModalOpen(false);
       }
     }
   };
@@ -182,6 +187,7 @@ const ListingBuyAssetSummaryStep = ({
   const handleBuyAndList = async () => {
     setIsConfirmModalOpen(false);
     setIsBuying(true);
+    setIsTxProcessingModalOpen(true);
 
     try {
       const buyDetails = await fetchBuyDetails({
@@ -209,21 +215,28 @@ const ListingBuyAssetSummaryStep = ({
         referrer: DEFAULT_ADDRESS,
       };
 
-      if (isNativeCurrency) {
-        await buyDCLContract.buyETH(
-          rentConfig,
-          asset.price.amount.raw,
-          buyDetails.steps[1].items[0].data.to,
-          buyDetails.steps[1].items[0].data.data
-        );
-      } else {
-        await buyDCLContract.buyERC20(
-          rentConfig,
-          asset.price.currency.contract,
-          asset.price.amount.raw,
-          buyDetails.steps[1].items[0].data.to,
-          buyDetails.steps[1].items[0].data.data
-        );
+      const result = await (isNativeCurrency
+        ? buyDCLContract.buyETH(
+            rentConfig,
+            asset.price.amount.raw,
+            buyDetails.steps[1].items[0].data.to,
+            buyDetails.steps[1].items[0].data.data
+          )
+        : buyDCLContract.buyERC20(
+            rentConfig,
+            asset.price.currency.contract,
+            asset.price.amount.raw,
+            buyDetails.steps[1].items[0].data.to,
+            buyDetails.steps[1].items[0].data.data
+          ));
+
+      const tokenId: string = result.events.BuyList.returnValues[0];
+
+      if (onSuccess) {
+        onSuccess({
+          tokenId,
+          contract: asset.contract,
+        });
       }
     } catch (e: any) {
       console.log(e);
@@ -231,9 +244,18 @@ const ListingBuyAssetSummaryStep = ({
     } finally {
       if (getIsMounted()) {
         setIsBuying(false);
+        setIsTxProcessingModalOpen(false);
       }
     }
   };
+
+  let txProcessingModalMessage = 'Processing...';
+
+  if (isApproving) {
+    txProcessingModalMessage = 'Approving...';
+  } else if (isBuying) {
+    txProcessingModalMessage = 'Buying and Listing...';
+  }
 
   const hasError = !!error;
 
@@ -324,6 +346,14 @@ const ListingBuyAssetSummaryStep = ({
           </Button>
         </Box>
       </Grid>
+
+      <TxModal
+        textMessage={txProcessingModalMessage}
+        showModal={isTxProcessingModalOpen}
+        handleClose={() => {
+          setIsTxProcessingModalOpen(false);
+        }}
+      />
 
       <BuyAndListConfirmModal
         metaverse="Decentraland"
