@@ -1,15 +1,18 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
+import { formatUSD } from 'web3/utils';
 
 import promotionalSceneTooltipThumbnail from 'assets/img/promotional-scene-thumbnail.jpg';
 import Icon from 'components/custom/icon';
-import TokenIcon from 'components/custom/token-icon';
 import { Stack, Tooltip } from 'design-system';
 import { Box, Grid, Typography } from 'design-system';
 import { getTokenIconName } from 'helpers/helpers';
 import { MarketplaceAsset } from 'hooks/useGetAssetsForBuyingQuery';
+import useGetTokenPriceInUsdQuery from 'hooks/useGetTokenPriceInUsdQuery';
 import { Option } from 'modules/interface';
 import { PaymentToken } from 'modules/land-works/api';
+
+import TokenIcon from '../../token-icon/TokenIcon';
 
 import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
 
@@ -46,6 +49,10 @@ const MarketplaceAssetSummary = ({
   const min = minRentPeriod?.toNumber();
   const max = maxRentPeriod?.toNumber();
   const maxFuture = maxFuturePeriod?.toNumber();
+
+  const { data: assetTokenPriceInUsd, isLoading: isAssetTokenPriceInUsdLoading } = useGetTokenPriceInUsdQuery(
+    asset.price.currency.symbol
+  );
 
   const mins = MINUTE_IN_SECONDS;
   const hours = HOUR_IN_SECONDS;
@@ -91,13 +98,15 @@ const MarketplaceAssetSummary = ({
           >
             Buy from {asset.source.name} for:
             <Typography component="span" variant="inherit" color="var(--theme-light-color)" display="flex" gap="2px">
-              <TokenIcon name={asset.price.currency.symbol.toLowerCase()} size={15} />
+              <TokenIcon symbol={asset.price.currency.symbol} size={15} />
               <Typography component="span" variant="inherit" noWrap maxWidth={60}>
                 {asset.price.amount.native}
               </Typography>
             </Typography>
             <Typography component="span" variant="inherit" color="var(--theme-subtle-color)" noWrap maxWidth={60}>
-              $1234.56
+              {!isAssetTokenPriceInUsdLoading && assetTokenPriceInUsd
+                ? formatUSD(new BigNumber(asset.price.amount.native).multipliedBy(assetTokenPriceInUsd))
+                : '-'}
             </Typography>
           </Typography>
         </Stack>
