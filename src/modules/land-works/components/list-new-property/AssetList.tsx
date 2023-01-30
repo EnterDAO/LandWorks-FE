@@ -1,9 +1,19 @@
 import React, { MouseEvent, ReactNode } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
+import { BigNumber } from 'bignumber.js';
+import { formatUSD } from 'web3/utils';
 
+import ExternalLink from 'components/custom/external-link';
 import Image from 'components/custom/image';
-import { MarketplaceAsset } from 'hooks/useGetAssetsForBuyingQuery';
+import config from 'config';
+import { Button } from 'design-system';
+import useGetAssetsForBuyingQuery, { MarketplaceAsset } from 'hooks/useGetAssetsForBuyingQuery';
+import useGetTokenPriceInUsdQuery from 'hooks/useGetTokenPriceInUsdQuery';
 import { CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
+import { useWallet } from 'wallets/wallet';
+
+import EmptyAssetsList from './EmptyAssetsList';
+import LoadingAssetList from './LoadingAssetList';
 
 interface ListCardProps {
   image: string;
@@ -68,9 +78,17 @@ interface BuyAssetListCardProps extends Pick<ListCardProps, 'isActive' | 'onClic
 }
 
 const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
+  const { networkName } = useWallet();
   const subtitle = asset.metadata.coords
     ? `X: ${asset.metadata.coords.x}    Y: ${asset.metadata.coords.y}`
     : `Lands: ${asset.metadata.size}`;
+  const { data: assetTokenPriceInUsd, isLoading: isAssetTokenPriceInUsdLoading } = useGetTokenPriceInUsdQuery(
+    asset.price.currency.symbol
+  );
+
+  const marketplaceUrl = `https://${config.isDev ? 'testnets.' : ''}opensea.io/assets/${
+    networkName?.toLowerCase() || ''
+  }/${asset.contract}/${asset.tokenId}`;
 
   return (
     <ListCard
@@ -85,30 +103,41 @@ const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
               overflow="hidden"
               variant="inherit"
               component="span"
-              maxWidth="50%"
+              maxWidth="70%"
               color="var(--theme-light-color)"
               title={`${asset.price.amount.native} ${asset.price.currency.symbol}`}
             >
               <Typography variant="inherit" component="span" noWrap>
                 {asset.price.amount.native}
-              </Typography>{' '}
+              </Typography>
+              &nbsp;
               <Typography variant="inherit" component="span">
                 {asset.price.currency.symbol}
               </Typography>
             </Typography>
-            {/* <Typography variant="inherit" component="span" noWrap color="var(--theme-subtle-color)">
-              $1234.56
-            </Typography> */}
+            <Typography variant="inherit" component="span" noWrap color="var(--theme-subtle-color)">
+              {!isAssetTokenPriceInUsdLoading && assetTokenPriceInUsd
+                ? formatUSD(new BigNumber(asset.price.amount.native).multipliedBy(assetTokenPriceInUsd))
+                : '-'}
+            </Typography>
           </Typography>
 
-          <Box component="a" ml="auto" target="_blank" flexShrink={0} href={'' /* TODO: add url */}>
+          <ExternalLink
+            sx={{
+              ml: 'auto',
+              display: 'block',
+              textDecoration: 'none',
+              flexShrink: 0,
+            }}
+            href={marketplaceUrl}
+          >
             <Image
               alt={asset.source.name}
               title={asset.source.name}
               src={asset.source.icon}
               sx={{ width: 15, height: 15, display: 'block' }}
             />
-          </Box>
+          </ExternalLink>
         </Box>
       }
       {...otherProps}
@@ -116,29 +145,57 @@ const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
   );
 };
 
-interface BuyAssetListProps {
+interface BuyAssetListProps extends Omit<ReturnType<typeof useGetAssetsForBuyingQuery>, 'data'> {
   assets?: MarketplaceAsset[];
   selectedAssetId?: string;
   onSelectAsset?: (assetId: string) => void;
+  allAssets: MarketplaceAsset[];
 }
 
-export const BuyAssetList = ({ selectedAssetId: activeAssetId, onSelectAsset, assets }: BuyAssetListProps) => {
+export const BuyAssetList = ({
+  selectedAssetId: activeAssetId,
+  loadMore,
+  isLoadingInitialData,
+  isLoadingMore,
+  isReachedEnd,
+  isEmpty,
+  onSelectAsset,
+  assets,
+}: BuyAssetListProps) => {
+  if (isLoadingInitialData) {
+    return <LoadingAssetList />;
+  }
+
+  if (isEmpty) {
+    return <EmptyAssetsList title="Lands not found." subtitle="It seems that there are no lands for buying." />;
+  }
+
   return (
-    <Grid container rowSpacing={3} columnSpacing={4}>
-      {assets?.map((asset) => {
-        return (
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //@ts-ignore
-          <Grid key={asset.id} item xs={4} xxl={3}>
-            <BuyAssetListCard
-              isActive={asset.id === activeAssetId}
-              asset={asset}
-              onClick={onSelectAsset?.bind(null, asset.id)}
-            />
-          </Grid>
-        );
-      })}
-    </Grid>
+    <>
+      <Grid container rowSpacing={3} columnSpacing={4}>
+        {assets?.map((asset) => {
+          return (
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore
+            <Grid key={asset.id} item xs={4} xxl={3}>
+              <BuyAssetListCard
+                isActive={asset.id === activeAssetId}
+                asset={asset}
+                onClick={onSelectAsset?.bind(null, asset.id)}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
+
+      {!isReachedEnd && (
+        <Box mt={6}>
+          <Button onClick={loadMore} variant="gradient" btnSize="medium" disabled={isLoadingMore}>
+            {isLoadingMore ? 'Loading...' : 'Load More'}
+          </Button>
+        </Box>
+      )}
+    </>
   );
 };
 const getSubtitle = (asset: Asset) => {
