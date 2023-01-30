@@ -7,7 +7,6 @@ import { refreshWeb3Token } from 'web3/token';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import listingAdImgSrc from 'assets/img/listing-ad.jpg';
-import landNotFoundImageSrc from 'assets/land-not-found.svg';
 import Typography from 'components/common/Typography';
 import ExternalLink from 'components/custom/external-link';
 import Image from 'components/custom/image';
@@ -38,6 +37,7 @@ import { PaymentToken, createAssetAdvertisement, fetchMetaverses, fetchTokenPaym
 import { useLandworks } from '../../providers/landworks-provider';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
 import AssetList, { BuyAssetList } from './AssetList';
+import EmptyAssetsList from './EmptyAssetsList';
 import ListingBuyAssetSummaryStep from './ListitingBuyAssetSummaryStep';
 import LoadingAssetList from './LoadingAssetList';
 
@@ -130,16 +130,16 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSignModal, setShowSignModal] = useState(false);
-  const [listedPropertyId, setListedPropertyId] = useState('');
   const [landType, setLandType] = useState(0);
   const [isLandProvidedForAdvertisement, setIsLandProvidedForAdvertisement] = useState(true);
   const [isCreatingAssetAdvertisement, setIsCreatingAssetAdvertisement] = useState(false);
 
+  const [listedToken, setListedToken] = useState<{ id: string; metaverseContract: string }>();
+
   const [listModalMessage, setListModalMessage] = useState(SignTransactionMessage);
   const [isBuying, setIsBuying] = useState(false);
   const [selectedAssetIdForBuying, setSelectedAssetIdForBuying] = useState<string>();
-  const { data: assetsForBuying, error } = useGetAssetsForBuyingQuery();
-  const areAssetsForBuyingLoading = !assetsForBuying && !error;
+  const { data: assetsForBuying, ...assetsForBuyingQuery } = useGetAssetsForBuyingQuery(landType);
 
   const { data: assets, isLoading: loading } = useGetAccountNonListedAssetsQuery(
     walletCtx.account || '',
@@ -375,7 +375,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
           return txReceipt;
         });
 
-      setListedPropertyId(txReceipt.events['List'].returnValues[0]);
+      setListedToken({
+        id: txReceipt.events['List'].returnValues[0],
+        metaverseContract: metaverseRegistry,
+      });
 
       setShowApproveModal(false);
       setShowSignModal(false);
@@ -509,7 +512,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
 
   useEffect(() => {
     calculateTotalAndFeePrecision();
-    // calculatePricePerSecond();
     getUsdPrice(paymentToken.symbol, tokenCost?.toNumber() || 0);
   }, [paymentToken, tokenCost]);
 
@@ -563,14 +565,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   }, [assets, landType, selectedMetaverse]);
 
   const filteredAssetsForBuying = useMemo(() => {
-    if (!assetsForBuying?.assets.length) {
-      return [];
-    }
-
-    return assetsForBuying.assets.filter((asset) => {
+    return assetsForBuying.filter((asset) => {
       return landType === 0 || (landType === 1 && asset.isLand) || (landType === 2 && !asset.isLand);
     });
-  }, [assetsForBuying?.assets, landType]);
+  }, [assetsForBuying, landType]);
 
   const selectedAssetForBuying = useMemo(() => {
     return filteredAssetsForBuying.find((asset) => asset.id === selectedAssetIdForBuying);
@@ -602,6 +600,14 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
     } else {
       setActiveStep((prev) => prev + 1);
     }
+  };
+
+  const handleBuyAndListSuccess = ({ tokenId, contract }: { tokenId: string; contract: string }) => {
+    setListedToken({
+      id: tokenId,
+      metaverseContract: contract,
+    });
+    setShowSuccessModal(true);
   };
 
   const steps: {
@@ -704,6 +710,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
         {isBuying && step.id === StepId.Summary && selectedAssetForBuying ? (
           <ListingBuyAssetSummaryStep
             onBack={() => setActiveStep((prev) => prev - 1)}
+            onSuccess={handleBuyAndListSuccess}
             asset={selectedAssetForBuying}
             minPeriodSelectedOption={minPeriodSelectedOption.label}
             maxPeriodSelectedOption={maxPeriodSelectedOption.label}
@@ -739,19 +746,13 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
 
                   <Stack height={470} overflow="auto" p={4} mx={-4}>
                     {isBuying ? (
-                      <>
-                        {areAssetsForBuyingLoading && <LoadingAssetList />}
-
-                        {!areAssetsForBuyingLoading && !!assetsForBuying?.assets.length ? (
-                          <BuyAssetList
-                            assets={filteredAssetsForBuying}
-                            selectedAssetId={selectedAssetIdForBuying}
-                            onSelectAsset={setSelectedAssetIdForBuying}
-                          />
-                        ) : (
-                          'not found'
-                        )}
-                      </>
+                      <BuyAssetList
+                        allAssets={assetsForBuying}
+                        assets={filteredAssetsForBuying}
+                        selectedAssetId={selectedAssetIdForBuying}
+                        onSelectAsset={setSelectedAssetIdForBuying}
+                        {...assetsForBuyingQuery}
+                      />
                     ) : (
                       <>
                         {loading && <LoadingAssetList />}
@@ -764,30 +765,26 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                               onSelectAsset={handlePropertyChange}
                             />
                           ) : (
-                            <Stack flexGrow={1} justifyContent="center" alignItems="center">
-                              <Box component="img" src={landNotFoundImageSrc} width={170} mb={5} />
-                              <Typography variant="h1" component="p" mb={2}>
-                                Land not found
-                              </Typography>
+                            <EmptyAssetsList
+                              title="Land not found"
+                              subtitle={
+                                selectedMetaverse === 1 ? (
+                                  <>
+                                    <Typography variant="subtitle2" mb={5}>
+                                      It seems that you don’t have any land in your wallet.
+                                      <br />
+                                      Do you want to buy land and list it for sale?
+                                    </Typography>
 
-                              {selectedMetaverse === 1 ? (
-                                <>
-                                  <Typography variant="subtitle2" mb={5}>
-                                    It seems that you don’t have any land in your wallet.
-                                    <br />
-                                    Do you want to buy land and list it for sale?
-                                  </Typography>
-
-                                  <Button variant="accentblue" btnSize="small" onClick={() => setIsBuying(true)}>
-                                    buy LAND
-                                  </Button>
-                                </>
-                              ) : (
-                                <Typography variant="subtitle2">
-                                  It seems that you don’t have any land in your wallet.
-                                </Typography>
-                              )}
-                            </Stack>
+                                    <Button variant="accentblue" btnSize="small" onClick={() => setIsBuying(true)}>
+                                      buy LAND
+                                    </Button>
+                                  </>
+                                ) : (
+                                  'It seems that you don’t have any land in your wallet.'
+                                )
+                              }
+                            />
                           ))}
                       </>
                     )}
@@ -1077,10 +1074,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             setShowSignModal(false);
           }}
         />
-        {showSuccessModal && (
+        {showSuccessModal && listedToken && (
           <SuccessModal
-            listedPropertyId={listedPropertyId}
-            metaverseRegistry={selectedProperty?.contractAddress || ''}
+            listedPropertyId={listedToken.id}
+            metaverseRegistry={listedToken.metaverseContract}
             showShareButton={true}
             showModal={showSuccessModal}
             handleClose={() => {

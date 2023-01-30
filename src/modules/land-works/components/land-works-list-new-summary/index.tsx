@@ -112,7 +112,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
               <Typography color="var(--theme-light-color)" fontWeight={600}>
                 {name}
               </Typography>
-              <Typography variant="body2" color="var(--theme-grey700-color)">
+              <Typography variant="body2" color="var(--theme-grey700-color)" display="flex">
                 {isEstate ? 'Lands' : 'Location'}:&nbsp;{coordinatesChild}
               </Typography>
               {isBuying && (
