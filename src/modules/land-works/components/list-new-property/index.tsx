@@ -1084,7 +1084,9 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
               sessionStorageHandler('set', 'general', 'metaverse', selectedMetaverse);
               localStorage.setItem('join_prompt', 'true');
               setShowSuccessModal(false);
-              closeModal && closeModal();
+              if (closeModal) {
+                closeModal();
+              }
               history.push(getMyPropertiesPath(MY_PROPERTIES_ROUTE_TABS.listed));
               setJoinPromptOpen(true);
             }}
