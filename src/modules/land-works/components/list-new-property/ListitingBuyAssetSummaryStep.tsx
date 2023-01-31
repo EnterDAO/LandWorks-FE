@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useMemo, useState } from 'react';
 import BigNumber from 'bignumber.js';
+import { utils } from 'ethers';
 import useSWR from 'swr';
 import Erc20Contract from 'web3/erc20Contract';
 import { DEFAULT_ADDRESS } from 'web3/utils';
@@ -14,6 +15,7 @@ import { MarketplaceAsset } from 'hooks/useGetAssetsForBuyingQuery';
 import useGetIsMounted from 'hooks/useGetIsMounted';
 import SelectedListCard from 'modules/land-works/components/land-works-selected-feature-card';
 import BuyDCLContract from 'modules/land-works/contracts/buy/BuyDCLContract';
+import * as SeaportABI from 'modules/land-works/contracts/buy/seaport.json';
 import { useEthWeb3 } from 'providers/eth-web3-provider';
 
 import config from '../../../../config';
@@ -104,6 +106,8 @@ const ListingBuyAssetSummaryStep = ({
     wallet.account && isNativeCurrency ? wallet.account : null,
     web3.eth.getBalance
   );
+
+  const seaportABI = new utils.Interface(SeaportABI.abi);
 
   const erc20Contract = useMemo(() => {
     const contract = new Erc20Contract([], asset.price.currency.contract);
@@ -203,10 +207,11 @@ const ListingBuyAssetSummaryStep = ({
         return;
       }
 
-      const rentConfig = {
+      const seaportEncodedData = buyDetails.steps[1].items[0].data.data;
+      const seaportDecodedData = seaportABI.decodeFunctionData('fulfillBasicOrder', seaportEncodedData);
+
+      const listConfig = {
         metaverseId: 1,
-        metaverseRegistry: asset.contract,
-        metaverseAssetId: asset.tokenId,
         minPeriod: summaryProps.minRentPeriod.toFixed(0),
         maxPeriod: summaryProps.maxRentPeriod.toFixed(0),
         maxFutureTime: summaryProps.maxFuturePeriod.toFixed(0),
@@ -216,21 +221,10 @@ const ListingBuyAssetSummaryStep = ({
       };
 
       const result = await (isNativeCurrency
-        ? buyDCLContract.buyETH(
-            rentConfig,
-            asset.price.amount.raw,
-            buyDetails.steps[1].items[0].data.to,
-            buyDetails.steps[1].items[0].data.data
-          )
-        : buyDCLContract.buyERC20(
-            rentConfig,
-            asset.price.currency.contract,
-            asset.price.amount.raw,
-            buyDetails.steps[1].items[0].data.to,
-            buyDetails.steps[1].items[0].data.data
-          ));
+        ? buyDCLContract.buyETH(listConfig, seaportDecodedData[0], asset.price.amount.raw)
+        : buyDCLContract.buyERC20(listConfig, seaportDecodedData[0], asset.price.amount.raw));
 
-      const tokenId: string = result.events.BuyList.returnValues[0];
+      const tokenId: string = result.events.BuyList.returnValues[4];
 
       if (onSuccess) {
         onSuccess({
