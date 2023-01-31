@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 
 import { Box, Grid } from 'design-system';
-import { getDecentralandNftImageUrl } from 'helpers/helpers';
+import { getDecentralandLandImgUrlByCoords } from 'helpers/helpers';
 import { BaseNFT, CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
 
 import s from './s.module.scss';
@@ -46,7 +46,7 @@ export const LandListingCard: React.FC<ILandCardProps> = ({ land, handleClick, i
               height: '100%',
             }}
             alt="The property from the offer."
-            src={getDecentralandNftImageUrl(land)}
+            src={getDecentralandLandImgUrlByCoords(land.coords[0], land.coords[1])}
           />
         </Grid>
         <Grid flexDirection="column" alignContent="flex-start" textAlign="left">

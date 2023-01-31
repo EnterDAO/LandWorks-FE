@@ -53,6 +53,7 @@ const config = {
       landRegistry: toLowerCase(process.env.REACT_APP_CONTRACT_DECENTRALAND_LAND_REGISTRY_ADDR),
     },
     cryptoVoxelsContract: toLowerCase(process.env.REACT_APP_CONTRACT_CRYPTO_VOXELS_ADDR),
+    buyContract: toLowerCase(process.env.REACT_APP_CONTRACT_BUY_ADDR),
   },
   web3: {
     chainId: Number(process.env.REACT_APP_WEB3_CHAIN_ID),
@@ -95,6 +96,9 @@ const config = {
   },
   backend: {
     apiUrl: process.env.REACT_APP_LANDWORKS_API_URL,
+  },
+  reservoir: {
+    apiUrl: process.env.REACT_APP_RESERVOIR_API_URL,
   },
 };
 

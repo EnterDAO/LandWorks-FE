@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import { AbiItem } from 'web3-utils';
 import { Web3ContractAbiItem } from 'web3/web3Contract';
 
-import { getLANDImageUrl } from '../../../../../helpers/helpers';
+import { getDecentralandLandImgUrlByCoords } from '../../../../../helpers/helpers';
 import { DecentralandNFT } from '../../../../interface';
 import ERC721Contract from '../../erc721/ERC721Contract';
 import LANDRegistryABI from './abi.json';
@@ -56,7 +56,7 @@ export default class LANDRegistryContract extends ERC721Contract {
     return {
       id: tokenId.toString(),
       name: name,
-      image: getLANDImageUrl(data[1][0], data[1][1]),
+      image: getDecentralandLandImgUrlByCoords(data[1][0], data[1][1]),
       contractAddress: this.address,
       coords: data[1],
       isLAND: true,
