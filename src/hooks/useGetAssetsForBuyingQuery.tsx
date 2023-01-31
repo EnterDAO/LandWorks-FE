@@ -68,11 +68,8 @@ const fetchAssetsForBuying = async (url: string) => {
     continuation: null | string;
   } = await fetch(url).then((res) => res.json());
 
-  const continuation = data.tokens.length < LIMIT ? null : data.continuation;
-  const tokens = data.tokens.filter((v) => v.market.floorAsk.source.domain === 'opensea.io');
-
   const ordersWithMetadata = await Promise.all(
-    tokens.map((order) => {
+    data.tokens.map((order) => {
       const isLand = order.token.contract.toLowerCase() === config.contracts.decentraland.landRegistry;
 
       return getAdditionalDecentralandData(order.token.tokenId, isLand).then((metadata) => {
@@ -118,11 +115,11 @@ const fetchAssetsForBuying = async (url: string) => {
 
   return {
     assets,
-    continuation,
+    continuation: data.continuation,
   };
 };
 
-const url = `${config.reservoir.apiUrl}/tokens/v5?sortBy=floorAskPrice&sortDirection=asc&normalizeRoyalties=true`;
+const url = `${config.reservoir.apiUrl}/tokens/v5?sortBy=floorAskPrice&sortDirection=asc&normalizeRoyalties=true&source=opensea.io`;
 
 const LIMIT = 16;
 
@@ -134,7 +131,7 @@ export enum AssetType {
 
 const useGetAssetsForBuyingQuery = (type?: AssetType) => {
   const { data, error, size, setSize } = useSWRInfinite((pageIndex, prevData) => {
-    if (prevData && (!prevData.continuation || !prevData.assets.length)) {
+    if (prevData && !prevData.continuation) {
       return null;
     }
 
@@ -167,13 +164,10 @@ const useGetAssetsForBuyingQuery = (type?: AssetType) => {
     setSize(1);
   }, [type]);
 
-  console.log({ size, data });
-
   const isLoadingInitialData = !data && !error;
   const isLoadingMore = size > 0 && data && typeof data[size - 1] === 'undefined';
   const isEmpty = data?.[0]?.assets.length === 0;
-  const isReachedEnd =
-    isEmpty || (data && (!data[data.length - 1]?.continuation || !data[data.length - 1]?.assets.length));
+  const isReachedEnd = isEmpty || (data && !data[data.length - 1]?.continuation);
 
   return {
     data: assets,
