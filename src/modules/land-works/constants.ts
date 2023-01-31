@@ -224,7 +224,7 @@ export const listTypes = [
 
 export const buyingListTypes = [
   { value: 1, label: 'Land' },
-  { value: 2, label: 'Estate' },
+  // { value: 2, label: 'Estate' },
 ];
 
 export enum RentStatus {

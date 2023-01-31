@@ -141,11 +141,11 @@ const useGetAssetsForBuyingQuery = (type?: AssetType) => {
       return null;
     }
 
-    let contract = config.contracts.decentraland.landRegistry;
-
-    if (type === AssetType.Estate) {
-      contract = config.contracts.decentraland.estateRegistry;
-    }
+    const contract = config.contracts.decentraland.landRegistry;
+    //
+    // if (type === AssetType.Estate) {
+    //   contract = config.contracts.decentraland.estateRegistry;
+    // }
 
     const key = `${url}&collection=${contract}`;
 
