@@ -68,14 +68,14 @@ const fetchAssetsForBuying = async (url: string) => {
     continuation: null | string;
   } = await fetch(url).then((res) => res.json());
 
-  data.tokens = data.tokens.filter((v) => v.market.floorAsk.source.domain === 'opensea.io');
+  const continuation = data.tokens.length < LIMIT ? null : data.continuation;
+  const tokens = data.tokens.filter((v) => v.market.floorAsk.source.domain === 'opensea.io');
 
   const ordersWithMetadata = await Promise.all(
-    data.tokens.map((order) => {
-      return getAdditionalDecentralandData(
-        order.token.tokenId,
-        order.token.contract.toLowerCase() === config.contracts.decentraland.landRegistry
-      ).then((metadata) => {
+    tokens.map((order) => {
+      const isLand = order.token.contract.toLowerCase() === config.contracts.decentraland.landRegistry;
+
+      return getAdditionalDecentralandData(order.token.tokenId, isLand).then((metadata) => {
         return {
           order,
           metadata,
@@ -118,7 +118,7 @@ const fetchAssetsForBuying = async (url: string) => {
 
   return {
     assets,
-    continuation: data.continuation,
+    continuation,
   };
 };
 
@@ -134,15 +134,13 @@ export enum AssetType {
 
 const useGetAssetsForBuyingQuery = (type?: AssetType) => {
   const { data, error, size, setSize } = useSWRInfinite((pageIndex, prevData) => {
-    if (prevData && !prevData.continuation) {
+    if (prevData && (!prevData.continuation || !prevData.assets.length)) {
       return null;
     }
 
     let contract = config.contracts.decentraland.landRegistry;
 
-    if (type === AssetType.Land) {
-      contract = config.contracts.decentraland.landRegistry;
-    } else if (type === AssetType.Estate) {
+    if (type === AssetType.Estate) {
       contract = config.contracts.decentraland.estateRegistry;
     }
 
@@ -169,10 +167,13 @@ const useGetAssetsForBuyingQuery = (type?: AssetType) => {
     setSize(1);
   }, [type]);
 
+  console.log({ size, data });
+
   const isLoadingInitialData = !data && !error;
   const isLoadingMore = size > 0 && data && typeof data[size - 1] === 'undefined';
   const isEmpty = data?.[0]?.assets.length === 0;
-  const isReachedEnd = isEmpty || (data && !data[data.length - 1]?.continuation);
+  const isReachedEnd =
+    isEmpty || (data && (!data[data.length - 1]?.continuation || !data[data.length - 1]?.assets.length));
 
   return {
     data: assets,

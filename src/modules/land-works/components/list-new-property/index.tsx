@@ -52,6 +52,7 @@ import {
   FEE_PRECISION,
   MaxRentPeriodOptions,
   MinRentPeriodOptions,
+  buyingListTypes,
   listTypes,
 } from 'modules/land-works/constants';
 import { THEME_COLORS } from 'themes/theme-constants';
@@ -740,7 +741,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                       width="190px"
                       value={landType}
                       onChange={onChangeType}
-                      options={listTypes[selectedMetaverse]}
+                      options={isBuying ? buyingListTypes : listTypes[selectedMetaverse]}
                     />
                   </Box>
 
@@ -776,7 +777,14 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                                       Do you want to buy land and list it for sale?
                                     </Typography>
 
-                                    <Button variant="accentblue" btnSize="small" onClick={() => setIsBuying(true)}>
+                                    <Button
+                                      variant="accentblue"
+                                      btnSize="small"
+                                      onClick={() => {
+                                        setIsBuying(true);
+                                        setLandType(1);
+                                      }}
+                                    >
                                       buy LAND
                                     </Button>
                                   </>
