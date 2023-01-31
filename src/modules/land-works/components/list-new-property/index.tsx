@@ -41,7 +41,7 @@ import EmptyAssetsList from './EmptyAssetsList';
 import ListingBuyAssetSummaryStep from './ListitingBuyAssetSummaryStep';
 import LoadingAssetList from './LoadingAssetList';
 
-import { getTimeType, secondsToDuration, sessionStorageHandler } from 'utils';
+import { getTimeType, secondsToDuration } from 'utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
 
 import {
