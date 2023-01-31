@@ -114,11 +114,11 @@ export default class Erc20Contract extends Web3Contract {
     });
   }
 
-  async loadBalance(address?: string): Promise<void> {
+  async loadBalance(address?: string): Promise<string> {
     const addr = address ?? this.account;
 
     if (!addr) {
-      return;
+      return '0';
     }
 
     return this.call('balanceOf', [addr]).then((value) => {
@@ -129,11 +129,11 @@ export default class Erc20Contract extends Web3Contract {
     });
   }
 
-  async loadAllowance(spenderAddress: string, address?: string): Promise<void> {
+  async loadAllowance(spenderAddress: string, address?: string): Promise<string> {
     const addr = address ?? this.account;
 
     if (!addr) {
-      return;
+      return '0';
     }
 
     return this.call('allowance', [addr, spenderAddress]).then((value) => {
@@ -144,7 +144,7 @@ export default class Erc20Contract extends Web3Contract {
     });
   }
 
-  approve(enable: boolean, spenderAddress: string, callback: () => void): Promise<void> {
+  approve(enable: boolean, spenderAddress: string, callback: () => void): Promise<string> {
     if (!this.account) {
       return Promise.reject();
     }
@@ -166,7 +166,7 @@ export default class Erc20Contract extends Web3Contract {
     spenderAddress: string,
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     callback: () => void = () => {}
-  ): Promise<void> {
+  ): Promise<string> {
     if (!this.account) {
       return Promise.reject();
     }
