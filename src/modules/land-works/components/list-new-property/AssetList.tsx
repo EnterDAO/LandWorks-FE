@@ -86,9 +86,15 @@ const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
     asset.price.currency.symbol
   );
 
-  const marketplaceUrl = `https://${config.isDev ? 'testnets.' : ''}opensea.io/assets/${
-    networkName?.toLowerCase() || ''
-  }/${asset.contract}/${asset.tokenId}`;
+  let network = networkName?.toLowerCase() || 'ethereum';
+
+  if (network === 'mainnet') {
+    network = 'ethereum';
+  }
+
+  const marketplaceUrl = `https://${config.isDev ? 'testnets.' : ''}opensea.io/assets/${network}/${asset.contract}/${
+    asset.tokenId
+  }`;
 
   return (
     <ListCard
