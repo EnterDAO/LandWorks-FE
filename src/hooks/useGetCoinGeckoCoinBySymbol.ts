@@ -26,7 +26,6 @@ const useGetCoinGeckoCoinBySymbol = (symbol: string) => {
   } = useGetCoinGeckoSupportedCoinsGroupedBySymbolQuery();
   const supportedCoinsBySymbol = supportedCoins[symbol.toLowerCase()];
 
-  console.log(supportedCoinsBySymbol);
   const { data, error } = useSWRImmutable<CoinGeckoCoin>(
     // NOTE coingecko can have multiple coins with the same symbol
     supportedCoinsBySymbol
