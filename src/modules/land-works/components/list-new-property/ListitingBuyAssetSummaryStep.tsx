@@ -224,7 +224,7 @@ const ListingBuyAssetSummaryStep = ({
         ? buyDCLContract.buyETH(listConfig, seaportDecodedData[0], asset.price.amount.raw)
         : buyDCLContract.buyERC20(listConfig, seaportDecodedData[0], asset.price.amount.raw));
 
-      const tokenId: string = result.events.BuyList.returnValues[0];
+      const tokenId: string = result.events.BuyList.returnValues[4];
 
       if (onSuccess) {
         onSuccess({
