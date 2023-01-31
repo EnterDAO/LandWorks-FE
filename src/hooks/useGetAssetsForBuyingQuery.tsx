@@ -68,8 +68,11 @@ const fetchAssetsForBuying = async (url: string) => {
     continuation: null | string;
   } = await fetch(url).then((res) => res.json());
 
-  const continuation = data.tokens.length < LIMIT ? null : data.continuation;
-  const tokens = data.tokens.filter((v) => v.market.floorAsk.source.domain === 'opensea.io');
+  const continuation =
+    data.tokens.length < LIMIT || data.tokens.some((t) => t.market.floorAsk.id === null) ? null : data.continuation;
+  const tokens = data.tokens.filter(
+    (v) => v.market.floorAsk.id !== null && v.market.floorAsk.source.domain === 'opensea.io'
+  );
 
   const ordersWithMetadata = await Promise.all(
     tokens.map((order) => {
@@ -166,8 +169,6 @@ const useGetAssetsForBuyingQuery = (type?: AssetType) => {
   useEffect(() => {
     setSize(1);
   }, [type]);
-
-  console.log({ size, data });
 
   const isLoadingInitialData = !data && !error;
   const isLoadingMore = size > 0 && data && typeof data[size - 1] === 'undefined';
