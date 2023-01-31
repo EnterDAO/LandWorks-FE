@@ -34,7 +34,6 @@ interface IListNewSummary {
   name?: string;
   isEstate?: boolean;
   isAdvertisementEnabled?: boolean;
-  isBuying?: boolean;
 }
 
 // TODO: refactor
@@ -55,7 +54,6 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   name,
   isEstate,
   isAdvertisementEnabled,
-  isBuying,
 }) => {
   const min = minRentPeriod?.toNumber();
   const max = maxRentPeriod?.toNumber();
@@ -115,33 +113,6 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
               <Typography variant="body2" color="var(--theme-grey700-color)" display="flex">
                 {isEstate ? 'Lands' : 'Location'}:&nbsp;{coordinatesChild}
               </Typography>
-              {isBuying && (
-                <Typography
-                  variant="body2"
-                  color="var(--theme-grey700-color)"
-                  display="flex"
-                  alignItems="center"
-                  gap="4px"
-                  noWrap
-                >
-                  Buy from Opensea for:
-                  <Typography
-                    component="span"
-                    variant="inherit"
-                    color="var(--theme-light-color)"
-                    display="flex"
-                    gap="2px"
-                  >
-                    <Icon name="png/eth" style={{ width: '15px', height: '15px' }} />
-                    <Typography component="span" variant="inherit" noWrap maxWidth={60}>
-                      1.5
-                    </Typography>
-                  </Typography>
-                  <Typography component="span" variant="inherit" color="var(--theme-subtle-color)" noWrap maxWidth={60}>
-                    $1234.56
-                  </Typography>
-                </Typography>
-              )}
             </Stack>
             <div className={s.divider} />
           </>
@@ -198,7 +169,7 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
                 </Box>
               </Grid>
             )}
-            {metaverse?.value == 1 && !isBuying && (
+            {metaverse?.value == 1 && (
               <Grid item xs={12} display="flex" flexDirection="column">
                 <Typography variant="inherit" component="span" display="inline-flex" alignItems="center" gap="4px">
                   {sceneDetail.label}
