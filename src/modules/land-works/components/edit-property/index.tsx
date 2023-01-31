@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import { ONE_ADDRESS } from 'web3/utils';
 
 import { Box, Button, Grid, Modal, Typography } from 'design-system';
-import { getDecentralandDataImageUrl, getEstateImageUrl } from 'helpers/helpers';
+import { getDecentralandLandImgUrlByCoords, getEstateImageUrl } from 'helpers/helpers';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
 import DropdownSection from 'modules/land-works/components/land-works-list-input-dropdown';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
@@ -538,7 +538,10 @@ const EditProperty: React.FC<Props> = (props) => {
                     <>
                       {selectedProperty.decentralandData.isLAND ? (
                         <SelectedListCard
-                          src={getDecentralandDataImageUrl(selectedProperty.decentralandData)}
+                          src={getDecentralandLandImgUrlByCoords(
+                            selectedProperty.decentralandData.coordinates[0],
+                            selectedProperty.decentralandData.coordinates[1]
+                          )}
                           name={selectedProperty.name}
                           coordinatesChild={
                             // TODO: WHEN APPROVE FUNCTION IS SET UP

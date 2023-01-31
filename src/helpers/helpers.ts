@@ -4,8 +4,7 @@ import format from 'date-fns/format';
 import fromUnixTime from 'date-fns/fromUnixTime';
 
 import defaultLandImage from 'assets/img/land.png';
-import { DecentralandNFT } from 'modules/interface';
-import { AssetEntity, CryptoVoxelsType, DecentralandData } from 'modules/land-works/api';
+import { AssetEntity, CryptoVoxelsType } from 'modules/land-works/api';
 
 import { BASE_URL_DECENTRALEND } from 'modules/land-works/constants';
 
@@ -55,27 +54,12 @@ export const getLandImageUrl = (land: AssetEntity | undefined) => {
   }
 };
 
-export const getLANDImageUrl = (x: number, y: number) => {
-  const imageUrl = `${BASE_URL_DECENTRALEND}/parcels/${x}/${y}/map.png`;
-  return imageUrl;
-};
-
-export const getDecentralandNftImageUrl = (land: DecentralandNFT) => {
-  const imageUrl = `${BASE_URL_DECENTRALEND}/parcels/${land.coords[0]}/${land.coords[1]}/map.png`;
-  return imageUrl;
-};
-
 export const getDecentralandLandImgUrlByCoords = (x: number, y: number) => {
   return `${BASE_URL_DECENTRALEND}/parcels/${x}/${y}/map.png`;
 };
 
 export const getDecentralandEstateImgUrlById = (assetId: string) => {
   return `${BASE_URL_DECENTRALEND}/estates/${assetId}/map.png`;
-};
-
-export const getDecentralandDataImageUrl = (land: DecentralandData) => {
-  const imageUrl = `${BASE_URL_DECENTRALEND}/parcels/${land.coordinates[0]}/${land.coordinates[1]}/map.png`;
-  return imageUrl;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
