@@ -1081,7 +1081,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             showShareButton={true}
             showModal={showSuccessModal}
             handleClose={() => {
-              sessionStorageHandler('set', 'general', 'metaverse', selectedMetaverse);
               localStorage.setItem('join_prompt', 'true');
               setShowSuccessModal(false);
               if (closeModal) {

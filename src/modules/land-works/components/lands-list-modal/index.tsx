@@ -1,12 +1,11 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { getEtherscanAddressUrl } from 'web3/utils';
 
 import Typography from 'components/common/Typography';
 import ExternalLink from 'components/custom/external-link';
 import { Box, Button, Icon, Modal, Stack } from 'design-system';
 import { Spinner, SuccessStarIcon, TwitterIcon } from 'design-system/icons';
-import { MY_PROPERTIES_ROUTE_TABS, getMyPropertiesPath, getPropertyPath } from 'router/routes';
+import { getPropertyPath } from 'router/routes';
 import { useWallet } from 'wallets/wallet';
 
 import { ShareLink } from './styled';
@@ -57,8 +56,6 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
   listedPropertyId,
   metaverseRegistry,
 }) => {
-  const history = useHistory();
-
   return (
     <Modal maxHeight={780} open={showModal} handleClose={handleClose}>
       <Stack width={420}>
@@ -75,11 +72,7 @@ export const SuccessModal: React.FC<ISuccessModal> = ({
         </Typography>
 
         <Stack display="flex" alignItems="center" gap={6}>
-          <Button
-            variant="gradient"
-            btnSize="medium"
-            onClick={() => history.push(getMyPropertiesPath(MY_PROPERTIES_ROUTE_TABS.listed))}
-          >
+          <Button variant="gradient" btnSize="medium" onClick={handleClose}>
             Go to my properties
           </Button>
 
