@@ -100,12 +100,12 @@ const MarketplaceAssetSummary = ({
             <Typography component="span" variant="inherit" color="var(--theme-light-color)" display="flex" gap="2px">
               <TokenIcon symbol={asset.price.currency.symbol} size={15} />
               <Typography component="span" variant="inherit" noWrap maxWidth={60}>
-                {asset.price.amount.native}
+                {asset.price.amount.decimal}
               </Typography>
             </Typography>
             <Typography component="span" variant="inherit" color="var(--theme-subtle-color)" noWrap maxWidth={60}>
               {!isAssetTokenPriceInUsdLoading && assetTokenPriceInUsd
-                ? formatUSD(new BigNumber(asset.price.amount.native).multipliedBy(assetTokenPriceInUsd))
+                ? formatUSD(new BigNumber(asset.price.amount.decimal).multipliedBy(assetTokenPriceInUsd))
                 : '-'}
             </Typography>
           </Typography>

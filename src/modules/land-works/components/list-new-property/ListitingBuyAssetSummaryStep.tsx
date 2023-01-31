@@ -351,7 +351,7 @@ const ListingBuyAssetSummaryStep = ({
 
       <BuyAndListConfirmModal
         metaverse="Decentraland"
-        price={`${asset.price.amount.native} ${asset.price.currency.symbol}`}
+        price={`${asset.price.amount.decimal} ${asset.price.currency.symbol}`}
         onClose={() => setIsConfirmModalOpen(false)}
         open={isConfirmModalOpen}
         onConfirm={handleBuyAndList}

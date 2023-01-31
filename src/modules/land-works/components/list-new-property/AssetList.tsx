@@ -105,10 +105,10 @@ const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
               component="span"
               maxWidth="70%"
               color="var(--theme-light-color)"
-              title={`${asset.price.amount.native} ${asset.price.currency.symbol}`}
+              title={`${asset.price.amount.decimal} ${asset.price.currency.symbol}`}
             >
               <Typography variant="inherit" component="span" noWrap>
-                {asset.price.amount.native}
+                {asset.price.amount.decimal}
               </Typography>
               &nbsp;
               <Typography variant="inherit" component="span">
@@ -117,7 +117,7 @@ const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
             </Typography>
             <Typography variant="inherit" component="span" noWrap color="var(--theme-subtle-color)">
               {!isAssetTokenPriceInUsdLoading && assetTokenPriceInUsd
-                ? formatUSD(new BigNumber(asset.price.amount.native).multipliedBy(assetTokenPriceInUsd))
+                ? formatUSD(new BigNumber(asset.price.amount.decimal).multipliedBy(assetTokenPriceInUsd))
                 : '-'}
             </Typography>
           </Typography>
