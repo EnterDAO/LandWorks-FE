@@ -101,7 +101,7 @@ const ListingBuyAssetSummaryStep = ({
   const getIsMounted = useGetIsMounted();
   const [isApproving, setIsApproving] = useState(false);
   const [isTxProcessingModalOpen, setIsTxProcessingModalOpen] = useState(false);
-  const isNativeCurrency = asset.price.currency.contract === DEFAULT_ADDRESS;
+  const isNativeCurrency = asset.market.floorAsk.price.currency.contract === DEFAULT_ADDRESS;
   const { data: nativeBalance, error: errorBalance } = useSWR(
     wallet.account && isNativeCurrency ? wallet.account : null,
     web3.eth.getBalance
@@ -110,13 +110,13 @@ const ListingBuyAssetSummaryStep = ({
   const seaportABI = new utils.Interface(SeaportABI.abi);
 
   const erc20Contract = useMemo(() => {
-    const contract = new Erc20Contract([], asset.price.currency.contract);
+    const contract = new Erc20Contract([], asset.market.floorAsk.price.currency.contract);
 
     contract.setProvider(wallet.provider);
     contract.setAccount(wallet.account);
 
     return contract;
-  }, [asset.price.currency.contract, wallet.provider, wallet.account]);
+  }, [asset.market.floorAsk.price.currency.contract, wallet.provider, wallet.account]);
 
   const buyDCLContract = useMemo(() => {
     const contract = new BuyDCLContract(config.contracts.buyContract);
@@ -152,9 +152,11 @@ const ListingBuyAssetSummaryStep = ({
   const isBalanceLoading = isNativeCurrency ? isNativeBalanceLoading : isErc20BalanceLoading;
   const balance = (isNativeCurrency ? nativeBalance : erc20Balance) || '0';
 
-  const hasInsufficientBalance = !isBalanceLoading && new BigNumber(balance).lt(asset.price.amount.raw);
+  const hasInsufficientBalance = !isBalanceLoading && new BigNumber(balance).lt(asset.market.floorAsk.price.amount.raw);
   const hasInsufficientAllowance =
-    !isNativeCurrency && !isErc20AllowanceLoading && new BigNumber(erc20Allowance || '0').lt(asset.price.amount.raw);
+    !isNativeCurrency &&
+    !isErc20AllowanceLoading &&
+    new BigNumber(erc20Allowance || '0').lt(asset.market.floorAsk.price.amount.raw);
 
   const error = useMemo(() => {
     if (hasInsufficientBalance) {
@@ -168,7 +170,7 @@ const ListingBuyAssetSummaryStep = ({
 
     try {
       const approvedAmount = (await erc20Contract.approveAmount(
-        asset.price.amount.raw,
+        asset.market.floorAsk.price.amount.raw,
         config.contracts.buyContract
       )) as any as string;
 
@@ -195,10 +197,10 @@ const ListingBuyAssetSummaryStep = ({
 
     try {
       const buyDetails = await fetchBuyDetails({
-        contract: asset.contract,
-        tokenId: asset.tokenId,
+        contract: asset.token.contract,
+        tokenId: asset.token.tokenId,
         buyer: wallet.account || '',
-        sourceDomain: asset.source.domain,
+        sourceDomain: asset.market.floorAsk.source.domain,
       });
 
       if ('error' in buyDetails) {
@@ -221,15 +223,15 @@ const ListingBuyAssetSummaryStep = ({
       };
 
       const result = await (isNativeCurrency
-        ? buyDCLContract.buyETH(listConfig, seaportDecodedData[0], asset.price.amount.raw)
-        : buyDCLContract.buyERC20(listConfig, seaportDecodedData[0], asset.price.amount.raw));
+        ? buyDCLContract.buyETH(listConfig, seaportDecodedData[0], asset.market.floorAsk.price.amount.raw)
+        : buyDCLContract.buyERC20(listConfig, seaportDecodedData[0], asset.market.floorAsk.price.amount.raw));
 
       const tokenId: string = result.events.BuyList.returnValues[4];
 
       if (onSuccess) {
         onSuccess({
           tokenId,
-          contract: asset.contract,
+          contract: asset.token.contract,
         });
       }
     } catch (e: any) {
@@ -351,7 +353,7 @@ const ListingBuyAssetSummaryStep = ({
 
       <BuyAndListConfirmModal
         metaverse="Decentraland"
-        price={`${asset.price.amount.decimal} ${asset.price.currency.symbol}`}
+        price={`${asset.market.floorAsk.price.amount.decimal} ${asset.market.floorAsk.price.currency.symbol}`}
         onClose={() => setIsConfirmModalOpen(false)}
         open={isConfirmModalOpen}
         onConfirm={handleBuyAndList}

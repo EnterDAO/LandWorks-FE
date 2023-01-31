@@ -51,7 +51,7 @@ const MarketplaceAssetSummary = ({
   const maxFuture = maxFuturePeriod?.toNumber();
 
   const { data: assetTokenPriceInUsd, isLoading: isAssetTokenPriceInUsdLoading } = useGetTokenPriceInUsdQuery(
-    asset.price.currency.symbol
+    asset.market.floorAsk.price.currency.symbol
   );
 
   const mins = MINUTE_IN_SECONDS;
@@ -96,16 +96,18 @@ const MarketplaceAssetSummary = ({
             gap="4px"
             noWrap
           >
-            Buy from {asset.source.name} for:
+            Buy from {asset.market.floorAsk.source.name} for:
             <Typography component="span" variant="inherit" color="var(--theme-light-color)" display="flex" gap="2px">
-              <TokenIcon symbol={asset.price.currency.symbol} size={15} />
+              <TokenIcon symbol={asset.market.floorAsk.price.currency.symbol} size={15} />
               <Typography component="span" variant="inherit" noWrap maxWidth={60}>
-                {asset.price.amount.decimal}
+                {asset.market.floorAsk.price.amount.decimal}
               </Typography>
             </Typography>
             <Typography component="span" variant="inherit" color="var(--theme-subtle-color)" noWrap maxWidth={60}>
               {!isAssetTokenPriceInUsdLoading && assetTokenPriceInUsd
-                ? formatUSD(new BigNumber(asset.price.amount.decimal).multipliedBy(assetTokenPriceInUsd))
+                ? formatUSD(
+                    new BigNumber(asset.market.floorAsk.price.amount.decimal).multipliedBy(assetTokenPriceInUsd)
+                  )
                 : '-'}
             </Typography>
           </Typography>

@@ -5,39 +5,50 @@ import config from 'config';
 import { getDecentralandEstateImgUrlById, getDecentralandLandImgUrlByCoords } from 'helpers/helpers';
 import { getAdditionalDecentralandData } from 'modules/land-works/api';
 
-interface AssetForBuying {
-  id: string;
+interface TokensForBuying {
+  token: TokenForBuying;
+  market: MarketForBuying;
+}
+
+interface TokenForBuying {
   contract: string;
-  criteria: {
-    kind: string;
-    data: {
-      token: {
-        tokenId: string;
-      };
-    };
-  };
-  price: {
-    currency: {
-      contract: string;
-      name: string;
-      symbol: string;
-      decimals: number;
-    };
-    amount: {
-      raw: string;
-      decimal: number;
-      native: number;
-    };
-  };
-  source: {
+  tokenId: string;
+  name: string;
+  collection: {
     id: string;
-    domain: string;
     name: string;
-    icon: string;
+    image: string;
+    slug: string;
   };
 }
 
-export interface MarketplaceAsset extends Omit<AssetForBuying, 'criteria'> {
+interface MarketForBuying {
+  floorAsk: {
+    id: string;
+    price: {
+      currency: {
+        contract: string;
+        name: string;
+        symbol: string;
+        decimals: number;
+      };
+      amount: {
+        raw: string;
+        decimal: number;
+        native: number;
+      };
+    };
+    source: {
+      id: string;
+      domain: string;
+      name: string;
+      icon: string;
+    };
+  };
+}
+
+export interface MarketplaceAsset extends TokensForBuying {
+  id: string;
   tokenId: string;
   name: string;
   image: string;
@@ -53,15 +64,17 @@ export interface MarketplaceAsset extends Omit<AssetForBuying, 'criteria'> {
 
 const fetchAssetsForBuying = async (url: string) => {
   const data: {
-    orders: AssetForBuying[];
+    tokens: TokensForBuying[];
     continuation: null | string;
   } = await fetch(url).then((res) => res.json());
 
+  data.tokens = data.tokens.filter((v) => v.market.floorAsk.source.domain === 'opensea.io');
+
   const ordersWithMetadata = await Promise.all(
-    data.orders.map((order) => {
+    data.tokens.map((order) => {
       return getAdditionalDecentralandData(
-        order.criteria.data.token.tokenId,
-        order.contract.toLowerCase() === config.contracts.decentraland.landRegistry
+        order.token.tokenId,
+        order.token.contract.toLowerCase() === config.contracts.decentraland.landRegistry
       ).then((metadata) => {
         return {
           order,
@@ -90,11 +103,7 @@ const fetchAssetsForBuying = async (url: string) => {
         : getDecentralandEstateImgUrlById(metadata.tokenId);
 
       return {
-        id: order.id,
-        source: order.source,
-        price: order.price,
-        contract: order.contract,
-        tokenId: order.criteria.data.token.tokenId,
+        id: order.market.floorAsk.id,
         image,
         isLand,
         name: coords ? `Land (${coords.x}, ${coords.y})` : `Estate (${metadata.size} Lands)`,
@@ -102,6 +111,8 @@ const fetchAssetsForBuying = async (url: string) => {
           size: metadata.size,
           coords,
         },
+        token: order.token,
+        market: order.market,
       } as MarketplaceAsset;
     });
 
@@ -111,7 +122,7 @@ const fetchAssetsForBuying = async (url: string) => {
   };
 };
 
-const url = `${config.reservoir.apiUrl}/orders/asks/v4?source=opensea.io&sortBy=price`;
+const url = `${config.reservoir.apiUrl}/tokens/v5?sortBy=floorAskPrice&sortDirection=asc&normalizeRoyalties=true`;
 
 const LIMIT = 16;
 
@@ -127,15 +138,15 @@ const useGetAssetsForBuyingQuery = (type?: AssetType) => {
       return null;
     }
 
-    let contracts = [config.contracts.decentraland.landRegistry, config.contracts.decentraland.estateRegistry];
+    let contract = config.contracts.decentraland.landRegistry;
 
     if (type === AssetType.Land) {
-      contracts = [config.contracts.decentraland.landRegistry];
+      contract = config.contracts.decentraland.landRegistry;
     } else if (type === AssetType.Estate) {
-      contracts = [config.contracts.decentraland.estateRegistry];
+      contract = config.contracts.decentraland.estateRegistry;
     }
 
-    const key = `${url}&${contracts.map((contract) => `contracts=${contract}`).join('&')}`;
+    const key = `${url}&collection=${contract}`;
 
     if (pageIndex === 0 || !prevData) {
       return `${key}&limit=${LIMIT}`;

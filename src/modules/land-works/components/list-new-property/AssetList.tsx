@@ -83,7 +83,7 @@ const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
     ? `X: ${asset.metadata.coords.x}    Y: ${asset.metadata.coords.y}`
     : `Lands: ${asset.metadata.size}`;
   const { data: assetTokenPriceInUsd, isLoading: isAssetTokenPriceInUsdLoading } = useGetTokenPriceInUsdQuery(
-    asset.price.currency.symbol
+    asset.market.floorAsk.price.currency.symbol
   );
 
   let network = networkName?.toLowerCase() || 'ethereum';
@@ -92,9 +92,9 @@ const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
     network = 'ethereum';
   }
 
-  const marketplaceUrl = `https://${config.isDev ? 'testnets.' : ''}opensea.io/assets/${network}/${asset.contract}/${
-    asset.tokenId
-  }`;
+  const marketplaceUrl = `https://${config.isDev ? 'testnets.' : ''}opensea.io/assets/${network}/${
+    asset.token.contract
+  }/${asset.tokenId}`;
 
   return (
     <ListCard
@@ -111,19 +111,21 @@ const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
               component="span"
               maxWidth="70%"
               color="var(--theme-light-color)"
-              title={`${asset.price.amount.decimal} ${asset.price.currency.symbol}`}
+              title={`${asset.market.floorAsk.price.amount.decimal} ${asset.market.floorAsk.price.currency.symbol}`}
             >
               <Typography variant="inherit" component="span" noWrap>
-                {asset.price.amount.decimal}
+                {asset.market.floorAsk.price.amount.decimal}
               </Typography>
               &nbsp;
               <Typography variant="inherit" component="span">
-                {asset.price.currency.symbol}
+                {asset.market.floorAsk.price.currency.symbol}
               </Typography>
             </Typography>
             <Typography variant="inherit" component="span" noWrap color="var(--theme-subtle-color)">
               {!isAssetTokenPriceInUsdLoading && assetTokenPriceInUsd
-                ? formatUSD(new BigNumber(asset.price.amount.decimal).multipliedBy(assetTokenPriceInUsd))
+                ? formatUSD(
+                    new BigNumber(asset.market.floorAsk.price.amount.decimal).multipliedBy(assetTokenPriceInUsd)
+                  )
                 : '-'}
             </Typography>
           </Typography>
@@ -138,9 +140,9 @@ const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
             href={marketplaceUrl}
           >
             <Image
-              alt={asset.source.name}
-              title={asset.source.name}
-              src={asset.source.icon}
+              alt={asset.market.floorAsk.source.name}
+              title={asset.market.floorAsk.source.name}
+              src={asset.market.floorAsk.source.icon}
               sx={{ width: 15, height: 15, display: 'block' }}
             />
           </ExternalLink>
