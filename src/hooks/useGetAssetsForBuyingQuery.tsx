@@ -49,7 +49,6 @@ interface MarketForBuying {
 
 export interface MarketplaceAsset extends TokensForBuying {
   id: string;
-  tokenId: string;
   name: string;
   image: string;
   isLand: boolean;

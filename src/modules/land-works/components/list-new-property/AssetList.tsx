@@ -94,7 +94,7 @@ const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
 
   const marketplaceUrl = `https://${config.isDev ? 'testnets.' : ''}opensea.io/assets/${network}/${
     asset.token.contract
-  }/${asset.tokenId}`;
+  }/${asset.token.tokenId}`;
 
   return (
     <ListCard
