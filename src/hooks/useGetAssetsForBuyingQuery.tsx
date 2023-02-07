@@ -124,7 +124,7 @@ const fetchAssetsForBuying = async (url: string) => {
   };
 };
 
-const url = `${config.reservoir.apiUrl}/tokens/v5?sortBy=floorAskPrice&sortDirection=asc&normalizeRoyalties=true`;
+const url = `${config.reservoir.apiUrl}/tokens/v5?sortBy=floorAskPrice&sortDirection=asc&normalizeRoyalties=false`;
 
 const LIMIT = 16;
 

@@ -774,7 +774,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                                     <Typography variant="subtitle2" mb={5}>
                                       It seems that you don’t have any land in your wallet.
                                       <br />
-                                      Do you want to buy land and list it for sale?
+                                      Do you want to buy land and list it for rent?
                                     </Typography>
 
                                     <Button
