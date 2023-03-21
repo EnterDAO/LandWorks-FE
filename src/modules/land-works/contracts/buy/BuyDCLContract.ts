@@ -24,12 +24,14 @@ export default class BuyDCLContract extends Web3Contract {
   /**
    * Executes buyETH contract function, which buys and lists an ERC-721 into LandWorks with ERC-20.
    * @param listArgs LandWorks listing arguments.
+   * @param seaport Seaport contract address.
    * @param seaportParams Seaport fulfillBasicOrder arguments.
    * @param paymentAmount The amount of ERC-20
    * @param callback Function, executed once the transaction has been submitted
    */
   buyERC20(
     listArgs: ILandWorksList,
+    seaport: string,
     seaportParams: string,
     paymentAmount: string,
     callback: (txHash: string) => void = () => {}
@@ -38,7 +40,7 @@ export default class BuyDCLContract extends Web3Contract {
 
     return this.send(
       'buyList',
-      [listArgs, seaportParams, paymentAmount],
+      [listArgs, seaport, seaportParams, paymentAmount],
       {
         from: this.account,
       },
@@ -49,12 +51,14 @@ export default class BuyDCLContract extends Web3Contract {
   /**
    * Executes buyETH contract function, which buys and lists an ERC-721 into LandWorks with ETH.
    * @param listArgs LandWorks listing arguments.
+   * @param seaport Seaport contract address.
    * @param seaportParams Seaport fulfillBasicOrder arguments.
    * @param paymentAmount Amount to be paid to the buyContract.
    * @param callback Function, executed once the transaction has been submitted
    */
   buyETH(
     listArgs: ILandWorksList,
+    seaport: string,
     seaportParams: string,
     paymentAmount: BigNumber | string,
     callback: (txHash: string) => void = () => {}
@@ -63,7 +67,7 @@ export default class BuyDCLContract extends Web3Contract {
 
     return this.send(
       'buyList',
-      [listArgs, seaportParams, paymentAmount],
+      [listArgs, seaport, seaportParams, paymentAmount],
       {
         from: this.account,
         value: paymentAmount,

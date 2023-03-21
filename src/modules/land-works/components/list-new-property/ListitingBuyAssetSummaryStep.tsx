@@ -209,7 +209,8 @@ const ListingBuyAssetSummaryStep = ({
         return;
       }
 
-      const seaportEncodedData = buyDetails.steps[1].items[0].data.data;
+      const seaport = buyDetails.steps[2].items[0].data.to;
+      const seaportEncodedData = buyDetails.steps[2].items[0].data.data;
       const seaportDecodedData = seaportABI.decodeFunctionData('fulfillBasicOrder', seaportEncodedData);
 
       const listConfig = {
@@ -223,8 +224,8 @@ const ListingBuyAssetSummaryStep = ({
       };
 
       const result = await (isNativeCurrency
-        ? buyDCLContract.buyETH(listConfig, seaportDecodedData[0], asset.market.floorAsk.price.amount.raw)
-        : buyDCLContract.buyERC20(listConfig, seaportDecodedData[0], asset.market.floorAsk.price.amount.raw));
+        ? buyDCLContract.buyETH(listConfig, seaport, seaportDecodedData[0], asset.market.floorAsk.price.amount.raw)
+        : buyDCLContract.buyERC20(listConfig, seaport, seaportDecodedData[0], asset.market.floorAsk.price.amount.raw));
 
       const tokenId: string = result.events.BuyList.returnValues[4];
 

@@ -5,11 +5,6 @@
         "internalType": "contract ILandWorks",
         "name": "_landWorks",
         "type": "address"
-      },
-      {
-        "internalType": "contract ISeaport",
-        "name": "_seaport",
-        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -120,6 +115,11 @@
         "internalType": "struct ILandWorks.LWListingParams",
         "name": "lwParams",
         "type": "tuple"
+      },
+      {
+        "internalType": "contract ISeaport",
+        "name": "seaport",
+        "type": "address"
       },
       {
         "components": [
@@ -292,19 +292,6 @@
       }
     ],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "seaport",
-    "outputs": [
-      {
-        "internalType": "contract ISeaport",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   }
 ]
