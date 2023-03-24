@@ -99,6 +99,7 @@ const config = {
   },
   reservoir: {
     apiUrl: process.env.REACT_APP_RESERVOIR_API_URL,
+    apiKey: process.env.REACT_APP_RESERVOIR_API_KEY,
   },
 };
 

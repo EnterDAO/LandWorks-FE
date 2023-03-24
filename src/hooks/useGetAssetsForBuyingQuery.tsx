@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useCallback, useEffect, useMemo } from 'react';
 import useSWRInfinite from 'swr/infinite';
 
@@ -65,7 +66,12 @@ const fetchAssetsForBuying = async (url: string) => {
   const data: {
     tokens: TokensForBuying[];
     continuation: null | string;
-  } = await fetch(url).then((res) => res.json());
+  } = await fetch(url, {
+    headers: {
+      Accept: '*/*',
+      'x-api-key': config.reservoir.apiKey!,
+    },
+  }).then((res) => res.json());
 
   const continuation =
     data.tokens.length < LIMIT || data.tokens.some((t) => t.market.floorAsk.id === null) ? null : data.continuation;

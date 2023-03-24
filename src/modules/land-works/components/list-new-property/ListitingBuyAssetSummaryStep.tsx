@@ -73,6 +73,7 @@ const fetchBuyDetails = ({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'x-api-key': config.reservoir.apiKey!,
     },
     body: JSON.stringify({
       tokens: [`${contract}:${tokenId}`],
