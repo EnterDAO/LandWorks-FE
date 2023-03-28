@@ -56,6 +56,7 @@ const fetchBuyDetails = ({
   | {
       path: Record<string, any>[];
       steps: {
+        id: string;
         items: {
           data: {
             data: string;
@@ -210,8 +211,15 @@ const ListingBuyAssetSummaryStep = ({
         return;
       }
 
-      const seaport = buyDetails.steps[2].items[0].data.to;
-      const seaportEncodedData = buyDetails.steps[2].items[0].data.data;
+      const step = buyDetails.steps.find((step) => step.id === 'sale');
+      if (step == null) {
+        showToastNotification(ToastType.Error, 'Buy details not found');
+
+        return;
+      }
+
+      const seaport = step.items[0].data.to;
+      const seaportEncodedData = step.items[0].data.data;
       const seaportDecodedData = seaportABI.decodeFunctionData('fulfillBasicOrder', seaportEncodedData);
 
       const listConfig = {
