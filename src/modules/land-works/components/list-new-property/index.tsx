@@ -7,7 +7,6 @@ import { refreshWeb3Token } from 'web3/token';
 import { ZERO_BIG_NUMBER, getNonHumanValue } from 'web3/utils';
 
 import listingAdImgSrc from 'assets/img/listing-ad.jpg';
-import landNotFoundImageSrc from 'assets/land-not-found.svg';
 import Typography from 'components/common/Typography';
 import ExternalLink from 'components/custom/external-link';
 import Image from 'components/custom/image';
@@ -15,6 +14,7 @@ import Stepper, { Step, StepLabel } from 'components/styled/stepper';
 import { Box, Button, Checkbox, ControlledSelect, Grid, Stack } from 'design-system';
 import { WarningIcon } from 'design-system/icons';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
+import useGetAssetsForBuyingQuery, { AssetType } from 'hooks/useGetAssetsForBuyingQuery';
 import useGetIsMounted from 'hooks/useGetIsMounted';
 import { BaseNFT, CryptoVoxelNFT, DecentralandNFT, Option } from 'modules/interface';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
@@ -36,10 +36,12 @@ import { useWallet } from '../../../../wallets/wallet';
 import { PaymentToken, createAssetAdvertisement, fetchMetaverses, fetchTokenPayments } from '../../api';
 import { useLandworks } from '../../providers/landworks-provider';
 import SelectedFeatureCoords from '../land-works-selected-feature-coords';
-import AssetList from './AssetList';
+import AssetList, { BuyAssetList } from './AssetList';
+import EmptyAssetsList from './EmptyAssetsList';
+import ListingBuyAssetSummaryStep from './ListitingBuyAssetSummaryStep';
 import LoadingAssetList from './LoadingAssetList';
 
-import { getTimeType, secondsToDuration, sessionStorageHandler } from 'utils';
+import { getTimeType, secondsToDuration } from 'utils';
 import { DAY_IN_SECONDS, MONTH_IN_SECONDS, WEEK_IN_SECONDS } from 'utils/date';
 
 import {
@@ -50,6 +52,7 @@ import {
   FEE_PRECISION,
   MaxRentPeriodOptions,
   MinRentPeriodOptions,
+  buyingListTypes,
   listTypes,
 } from 'modules/land-works/constants';
 import { THEME_COLORS } from 'themes/theme-constants';
@@ -82,7 +85,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const { addListingTransaction, deleteListingTransaction } = useActiveAssetTransactions();
 
   const history = useHistory();
-
   const { landWorksContract } = landworks;
   const { landRegistryContract, estateRegistryContract, cryptoVoxelsContract } = registry;
 
@@ -129,12 +131,16 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSignModal, setShowSignModal] = useState(false);
-  const [listedPropertyId, setListedPropertyId] = useState('');
-  const [landType, setLandType] = useState(0);
+  const [landType, setLandType] = useState(AssetType.All);
   const [isLandProvidedForAdvertisement, setIsLandProvidedForAdvertisement] = useState(true);
   const [isCreatingAssetAdvertisement, setIsCreatingAssetAdvertisement] = useState(false);
 
+  const [listedToken, setListedToken] = useState<{ id: string; metaverseContract: string }>();
+
   const [listModalMessage, setListModalMessage] = useState(SignTransactionMessage);
+  const [isBuying, setIsBuying] = useState(false);
+  const [selectedAssetIdForBuying, setSelectedAssetIdForBuying] = useState<string>();
+  const { data: assetsForBuying, ...assetsForBuyingQuery } = useGetAssetsForBuyingQuery(landType);
 
   const { data: assets, isLoading: loading } = useGetAccountNonListedAssetsQuery(
     walletCtx.account || '',
@@ -370,7 +376,10 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
           return txReceipt;
         });
 
-      setListedPropertyId(txReceipt.events['List'].returnValues[0]);
+      setListedToken({
+        id: txReceipt.events['List'].returnValues[0],
+        metaverseContract: metaverseRegistry,
+      });
 
       setShowApproveModal(false);
       setShowSignModal(false);
@@ -504,7 +513,6 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
 
   useEffect(() => {
     calculateTotalAndFeePrecision();
-    // calculatePricePerSecond();
     getUsdPrice(paymentToken.symbol, tokenCost?.toNumber() || 0);
   }, [paymentToken, tokenCost]);
 
@@ -557,6 +565,16 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
     return assets;
   }, [assets, landType, selectedMetaverse]);
 
+  const filteredAssetsForBuying = useMemo(() => {
+    return assetsForBuying.filter((asset) => {
+      return landType === 0 || (landType === 1 && asset.isLand) || (landType === 2 && !asset.isLand);
+    });
+  }, [assetsForBuying, landType]);
+
+  const selectedAssetForBuying = useMemo(() => {
+    return filteredAssetsForBuying.find((asset) => asset.id === selectedAssetIdForBuying);
+  }, [selectedAssetIdForBuying, filteredAssetsForBuying]);
+
   const handleNextButtonClick = async () => {
     if (step.id === StepId.Advertisement) {
       setIsCreatingAssetAdvertisement(true);
@@ -583,6 +601,14 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
     } else {
       setActiveStep((prev) => prev + 1);
     }
+  };
+
+  const handleBuyAndListSuccess = ({ tokenId, contract }: { tokenId: string; contract: string }) => {
+    setListedToken({
+      id: tokenId,
+      metaverseContract: contract,
+    });
+    setShowSuccessModal(true);
   };
 
   const steps: {
@@ -628,7 +654,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             'Once you list your property you can edit the entered rent price but you’ll have to pay a network fee.',
         },
       },
-      ...(selectedMetaverse === 1
+      ...(selectedMetaverse === 1 && !isBuying
         ? [
             {
               id: StepId.Advertisement,
@@ -648,7 +674,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
         },
       },
     ];
-  }, [selectedMetaverse]);
+  }, [selectedMetaverse, isBuying]);
 
   const step = steps[activeStep];
   const { warning } = step;
@@ -682,176 +708,221 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
           </Stack>
         )}
 
-        <Stack flexGrow={1} minHeight={0} mb={4}>
-          {step.id === StepId.Asset && (
-            <>
-              <Box display="flex" gap={4} mb={2}>
-                <ControlledSelect
-                  width="290px"
-                  value={selectedMetaverse}
-                  onChange={onChangeMetaverse}
-                  options={availableMetaverses}
-                />
-                <Box>
-                  <ControlledSelect
-                    width="190px"
-                    value={landType}
-                    onChange={onChangeType}
-                    options={listTypes[selectedMetaverse]}
+        {isBuying && step.id === StepId.Summary && selectedAssetForBuying ? (
+          <ListingBuyAssetSummaryStep
+            onBack={() => setActiveStep((prev) => prev - 1)}
+            onSuccess={handleBuyAndListSuccess}
+            asset={selectedAssetForBuying}
+            minPeriodSelectedOption={minPeriodSelectedOption.label}
+            maxPeriodSelectedOption={maxPeriodSelectedOption.label}
+            maxFutureSelectedOption={maxFutureSelectedOption.label}
+            minRentPeriod={minPeriod}
+            maxRentPeriod={maxPeriod}
+            maxFuturePeriod={maxFutureTime}
+            rentPrice={tokenCost || BigNumber.ZERO}
+            paymentToken={paymentToken}
+            pricePerSecond={pricePerSecond}
+          />
+        ) : (
+          <>
+            <Stack flexGrow={1} minHeight={0} mb={4}>
+              {step.id === StepId.Asset && (
+                <>
+                  <Box display="flex" gap={4} mb={2}>
+                    <ControlledSelect
+                      width="290px"
+                      value={selectedMetaverse}
+                      onChange={onChangeMetaverse}
+                      options={availableMetaverses}
+                      disabled={isBuying}
+                    />
+
+                    <ControlledSelect
+                      width="190px"
+                      value={landType}
+                      onChange={onChangeType}
+                      options={isBuying ? buyingListTypes : listTypes[selectedMetaverse]}
+                    />
+                  </Box>
+
+                  <Stack height={470} overflow="auto" p={4} mx={-4}>
+                    {isBuying ? (
+                      <BuyAssetList
+                        allAssets={assetsForBuying}
+                        assets={filteredAssetsForBuying}
+                        selectedAssetId={selectedAssetIdForBuying}
+                        onSelectAsset={setSelectedAssetIdForBuying}
+                        {...assetsForBuyingQuery}
+                      />
+                    ) : (
+                      <>
+                        {loading && <LoadingAssetList />}
+
+                        {!loading &&
+                          (filteredAssets.length > 0 ? (
+                            <AssetList
+                              assets={filteredAssets as any}
+                              selectedAssetId={selectedProperty?.id}
+                              onSelectAsset={handlePropertyChange}
+                            />
+                          ) : (
+                            <EmptyAssetsList
+                              title="Land not found"
+                              subtitle={
+                                selectedMetaverse === 1 ? (
+                                  <>
+                                    <Typography variant="subtitle2" mb={5}>
+                                      It seems that you don’t have any land in your wallet.
+                                      <br />
+                                      Do you want to buy land and list it for rent?
+                                    </Typography>
+
+                                    <Button
+                                      variant="accentblue"
+                                      btnSize="small"
+                                      onClick={() => {
+                                        setIsBuying(true);
+                                        setLandType(1);
+                                      }}
+                                    >
+                                      buy LAND
+                                    </Button>
+                                  </>
+                                ) : (
+                                  'It seems that you don’t have any land in your wallet.'
+                                )
+                              }
+                            />
+                          ))}
+                      </>
+                    )}
+                  </Stack>
+                </>
+              )}
+
+              {step.id === StepId.RentPeriod && (
+                <Box
+                  alignSelf="center"
+                  maxWidth={{ xxl: 350 }}
+                  mt={{ xs: 4, xxl: 6 }}
+                  width={1}
+                  height={1}
+                  overflow="auto"
+                  px={2}
+                  mx={-2}
+                >
+                  <RentPeriod
+                    isMinPeriodSelected={isMinPeriodSelected}
+                    handleMinCheckboxChange={handleMinCheckboxChange}
+                    handleMinSelectChange={handleMinSelectChange}
+                    handleMinInputChange={handleMinInputChange}
+                    isMaxPeriodSelected={isMaxPeriodSelected}
+                    handleMaxCheckboxChange={handleMaxCheckboxChange}
+                    handleMaxSelectChange={handleMaxSelectChange}
+                    handleMaxInputChange={handleMaxInputChange}
+                    handleAtMostInputChange={handleAtMostInputChange}
+                    handleAtMostSelectChange={handleAtMostSelectChange}
+                    minOptions={MinRentPeriodOptions}
+                    maxOptions={MaxRentPeriodOptions}
+                    atMostOptions={AtMostRentPeriodOptions}
+                    minOptionsValue={minPeriodSelectedOption.value}
+                    maxOptionsValue={maxPeriodSelectedOption.value}
+                    atMostOptionsValue={maxFutureSelectedOption.value}
+                    minInputValue={minInput?.toNumber()}
+                    maxInputValue={maxInput?.toNumber()}
+                    atMostInputValue={maxFutureTimeInput?.toNumber()}
+                    minError={minError}
+                    maxError={maxError}
+                    atMostError={maxFutureError}
+                    withoutSwitch
+                    layout="adaptive"
                   />
                 </Box>
-              </Box>
+              )}
 
-              <Stack height={1} overflow="auto" p={2} mx={-2}>
-                {loading && <LoadingAssetList />}
-
-                {!loading &&
-                  (filteredAssets.length > 0 ? (
-                    <AssetList
-                      assets={filteredAssets as any}
-                      selectedAssetId={selectedProperty?.id}
-                      onSelectAsset={handlePropertyChange}
-                    />
-                  ) : (
-                    <Stack flexGrow={1} justifyContent="center" alignItems="center">
-                      <Box component="img" src={landNotFoundImageSrc} width={{ xs: 128, xxl: 170 }} mb={5} />
-                      <Typography variant="h1" component="p" mb={2}>
-                        Land not found
-                      </Typography>
-
-                      <Typography variant="subtitle2">It seems that you don’t have any land in your wallet.</Typography>
-                    </Stack>
-                  ))}
-              </Stack>
-            </>
-          )}
-
-          {step.id === StepId.RentPeriod && (
-            <Box
-              alignSelf="center"
-              maxWidth={{ xxl: 350 }}
-              mt={{ xs: 4, xxl: 6 }}
-              width={1}
-              height={1}
-              overflow="auto"
-              px={2}
-              mx={-2}
-            >
-              <RentPeriod
-                isMinPeriodSelected={isMinPeriodSelected}
-                handleMinCheckboxChange={handleMinCheckboxChange}
-                handleMinSelectChange={handleMinSelectChange}
-                handleMinInputChange={handleMinInputChange}
-                isMaxPeriodSelected={isMaxPeriodSelected}
-                handleMaxCheckboxChange={handleMaxCheckboxChange}
-                handleMaxSelectChange={handleMaxSelectChange}
-                handleMaxInputChange={handleMaxInputChange}
-                handleAtMostInputChange={handleAtMostInputChange}
-                handleAtMostSelectChange={handleAtMostSelectChange}
-                minOptions={MinRentPeriodOptions}
-                maxOptions={MaxRentPeriodOptions}
-                atMostOptions={AtMostRentPeriodOptions}
-                minOptionsValue={minPeriodSelectedOption.value}
-                maxOptionsValue={maxPeriodSelectedOption.value}
-                atMostOptionsValue={maxFutureSelectedOption.value}
-                minInputValue={minInput?.toNumber()}
-                maxInputValue={maxInput?.toNumber()}
-                atMostInputValue={maxFutureTimeInput?.toNumber()}
-                minError={minError}
-                maxError={maxError}
-                atMostError={maxFutureError}
-                withoutSwitch
-                layout="adaptive"
-              />
-            </Box>
-          )}
-
-          {step.id === StepId.RentPrice && (
-            <Stack mx="auto" maxWidth={350} width={1}>
-              <RentPrice
-                handleCostEthChange={handleCostEthChange}
-                handleCurrencyChange={handleCurrencyChange}
-                showPriceInUsd={showPriceInUsd}
-                paymentToken={paymentToken}
-                earnings={earnings}
-                protocolFee={protocolFee}
-                feePercentage={feePercentage}
-                options={currencyData}
-                optionsValue={selectedCurrency}
-                inputValue={tokenCost ? tokenCost.toNumber() : ''}
-                error={priceError}
-              />
-            </Stack>
-          )}
-          {step.id === StepId.Advertisement && (
-            <Stack width={1} maxWidth={670} mt={{ xs: 4, xxl: 10 }} mx="auto">
-              <Grid container spacing={5}>
-                <Grid item xs={6}>
-                  <Image
-                    width={640}
-                    height={480}
-                    src={listingAdImgSrc}
-                    sx={{
-                      width: 1,
-                      borderRadius: '8px',
-                    }}
+              {step.id === StepId.RentPrice && (
+                <Stack mx="auto" maxWidth={350} width={1}>
+                  <RentPrice
+                    handleCostEthChange={handleCostEthChange}
+                    handleCurrencyChange={handleCurrencyChange}
+                    showPriceInUsd={showPriceInUsd}
+                    paymentToken={paymentToken}
+                    earnings={earnings}
+                    protocolFee={protocolFee}
+                    feePercentage={feePercentage}
+                    options={currencyData}
+                    optionsValue={selectedCurrency}
+                    inputValue={tokenCost ? tokenCost.toNumber() : ''}
+                    error={priceError}
                   />
-                </Grid>
-                <Grid item xs={6} display="flex" alignItems="center">
-                  <Typography component="p" color={THEME_COLORS.grey03} variant="caption" textAlign="left">
-                    We have partnered up with{' '}
-                    <ExternalLink variant="link2" href="https://precisionx.com/en/">
-                      PrecisionX
-                    </ExternalLink>{' '}
-                    to allow for ads to be displayed on your land until it gets rented. By allowing your plot to be used
-                    for ads, you will be rewarded 0.025 USDC (0.05 USDC if you own a{' '}
-                    <ExternalLink variant="link2" href="https://opensea.io/collection/sharded-minds">
-                      Sharded Mind
-                    </ExternalLink>{' '}
-                    NFT) for each unique view on the ad. Full info on how the ads work can be found{' '}
-                    <ExternalLink
-                      variant="link2"
-                      href="https://medium.com/enterdao/new-passive-income-stream-for-metaverse-landlords-8c72c68c7bb5"
-                    >
-                      here
-                    </ExternalLink>
-                    .
-                    <br />
-                    <br />
-                    Think of it as providing your land to the an advertiser until it gets rented!
+                </Stack>
+              )}
+              {step.id === StepId.Advertisement && (
+                <Stack width={1} maxWidth={670} mt={{ xs: 4, xxl: 10 }} mx="auto">
+                  <Grid container spacing={5}>
+                    <Grid item xs={6}>
+                      <Image
+                        width={640}
+                        height={480}
+                        src={listingAdImgSrc}
+                        sx={{
+                          width: 1,
+                          borderRadius: '8px',
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={6} display="flex" alignItems="center">
+                      <Typography component="p" color={THEME_COLORS.grey03} variant="caption" textAlign="left">
+                        We have partnered up with{' '}
+                        <ExternalLink variant="link2" href="https://precisionx.com/en/">
+                          PrecisionX
+                        </ExternalLink>{' '}
+                        to allow for ads to be displayed on your land until it gets rented. By allowing your plot to be
+                        used for ads, you will be rewarded 0.025 USDC (0.05 USDC if you own a{' '}
+                        <ExternalLink variant="link2" href="https://opensea.io/collection/sharded-minds">
+                          Sharded Mind
+                        </ExternalLink>{' '}
+                        NFT) for each unique view on the ad. Full info on how the ads work can be found{' '}
+                        <ExternalLink
+                          variant="link2"
+                          href="https://medium.com/enterdao/new-passive-income-stream-for-metaverse-landlords-8c72c68c7bb5"
+                        >
+                          here
+                        </ExternalLink>
+                        .
+                        <br />
+                        <br />
+                        Think of it as providing your land to the an advertiser until it gets rented!
+                      </Typography>
+                    </Grid>
+                  </Grid>
+
+                  <Typography
+                    variant="button"
+                    component="label"
+                    display="flex"
+                    alignItems="center"
+                    minHeight={45}
+                    borderRadius="10px"
+                    bgcolor="rgba(93, 143, 240, 0.12)"
+                    p="12px"
+                    mt={8}
+                    sx={{
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <Checkbox
+                      checked={isLandProvidedForAdvertisement}
+                      onChange={(e, value) => setIsLandProvidedForAdvertisement(value)}
+                    />
+                    Provide land for advertising purposes until it gets rented.
                   </Typography>
-                </Grid>
-              </Grid>
-
-              <Typography
-                variant="button"
-                component="label"
-                display="flex"
-                alignItems="center"
-                minHeight={45}
-                borderRadius="10px"
-                bgcolor="rgba(93, 143, 240, 0.12)"
-                p="12px"
-                mt={8}
-                sx={{
-                  cursor: 'pointer',
-                }}
-              >
-                <Checkbox
-                  checked={isLandProvidedForAdvertisement}
-                  onChange={(e, value) => setIsLandProvidedForAdvertisement(value)}
-                />
-                Provide land for advertising purposes until it gets rented.
-              </Typography>
-            </Stack>
-          )}
-          {step.id === StepId.Summary && (
-            <Box maxWidth={630} alignSelf="center" mt={{ xs: 4, xxl: 8 }}>
-              <Grid container wrap="nowrap" p="8px" className="summaryWrapper" flexDirection="row">
-                {selectedProperty && (
-                  <>
+                </Stack>
+              )}
+              {step.id === StepId.Summary && selectedProperty && (
+                <Box maxWidth={630} alignSelf="center" mt={{ xs: 4, xxl: 8 }}>
+                  <Grid container wrap="nowrap" p="8px" borderRadius="20px" bgcolor="var(--theme-modal-color)">
                     <SelectedListCard src={selectedProperty.image} name={selectedProperty.name} withoutInfo />
-
                     <ListNewSummary
                       isAdvertisementEnabled={isLandProvidedForAdvertisement}
                       minPeriodSelectedOption={minPeriodSelectedOption.label}
@@ -872,96 +943,130 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                         !(selectedProperty as DecentralandNFT).isLAND
                       }
                     />
-                  </>
-                )}
-              </Grid>
-            </Box>
-          )}
-        </Stack>
-
-        {warning && (
-          <Grid textAlign="left" className="warning-info" mb={{ xs: 2, xxl: 4 }} mx="auto">
-            <WarningIcon style={{ width: 20, height: 20 }} />
-            <Grid item>
-              {typeof warning === 'string' ? (
-                <Typography variant="subtitle2">{warning}</Typography>
-              ) : (
-                <>
-                  <Typography display={{ xs: 'none', xxl: 'block' }} variant="h4">
-                    {warning.title}
-                  </Typography>
-                  <Typography variant="subtitle2">{warning.content}</Typography>
-                </>
+                  </Grid>
+                </Box>
               )}
-            </Grid>
-          </Grid>
-        )}
+            </Stack>
 
-        <hr className="divider" />
-
-        {step.id !== StepId.Summary && (
-          <Grid container direction="row" alignItems="center" justifyContent="space-between">
-            {step.id === StepId.Asset ? (
-              <Typography variant="body2" color="var(--theme-subtle-color)">
-                Found in Wallet{' '}
-                <Typography component="span" variant="inherit" color="var(--theme-light-color)">
-                  {filteredAssets.length} Lands
-                </Typography>
-              </Typography>
-            ) : (
-              <Button
-                variant="secondary"
-                disabled={isCreatingAssetAdvertisement}
-                btnSize="medium"
-                onClick={() => {
-                  if (asset && activeStep === 0) {
-                    if (closeModal) {
-                      closeModal();
-                    }
-
-                    return;
-                  }
-
-                  setActiveStep((prev) => prev - 1);
-                }}
-              >
-                {asset && activeStep === 0 ? 'Close' : 'Back'}
-              </Button>
+            {warning && (
+              <Grid textAlign="left" className="warning-info" mb={{ xs: 2, xxl: 4 }} mx="auto">
+                <WarningIcon style={{ width: 20, height: 20 }} />
+                <Grid item>
+                  {typeof warning === 'string' ? (
+                    <Typography variant="subtitle2">{warning}</Typography>
+                  ) : (
+                    <>
+                      <Typography display={{ xs: 'none', xxl: 'block' }} variant="h4">
+                        {warning.title}
+                      </Typography>
+                      <Typography variant="subtitle2">{warning.content}</Typography>
+                    </>
+                  )}
+                </Grid>
+              </Grid>
             )}
-            <Button
-              disabled={
-                selectedProperty === null ||
-                (step.id === StepId.RentPrice && (Boolean(priceError.length) || !tokenCost)) ||
-                isCreatingAssetAdvertisement
-              }
-              variant="gradient"
-              btnSize="medium"
-              onClick={handleNextButtonClick}
-            >
-              {isCreatingAssetAdvertisement ? 'Loading...' : 'Next Step'}
-            </Button>
-          </Grid>
-        )}
-        {step.id === StepId.Summary && (
-          <Grid container justifyContent="space-between">
-            <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep((prev) => prev - 1)}>
-              Back
-            </Button>
-            <Grid alignItems="center" justifyContent="space-between">
-              <Button
-                disabled={approveDisabled}
-                variant="gradient"
-                btnSize="medium"
-                onClick={handleApprove}
-                style={{ marginRight: 15 }}
-              >
-                Approve
-              </Button>
-              <Button disabled={listDisabled} variant="gradient" btnSize="medium" onClick={handleConfirmListing}>
-                Confirm Listing
-              </Button>
-            </Grid>
-          </Grid>
+
+            <hr className="divider" />
+
+            {step.id !== StepId.Summary && (
+              <Grid container direction="row" alignItems="center" justifyContent="space-between">
+                {step.id === StepId.Asset && !isBuying ? (
+                  <Typography variant="body2" color="var(--theme-subtle-color)">
+                    Found in Wallet{' '}
+                    <Typography component="span" variant="inherit" color="var(--theme-light-color)">
+                      {filteredAssets.length} Lands
+                    </Typography>
+                  </Typography>
+                ) : (
+                  <Button
+                    variant="secondary"
+                    disabled={isCreatingAssetAdvertisement}
+                    btnSize="medium"
+                    onClick={() => {
+                      if (activeStep === 0) {
+                        if (asset && closeModal) {
+                          closeModal();
+
+                          return;
+                        } else if (isBuying) {
+                          setIsBuying(false);
+
+                          return;
+                        }
+                      }
+
+                      setActiveStep((prev) => prev - 1);
+                    }}
+                  >
+                    {asset && activeStep === 0 ? 'Close' : 'Back'}
+                  </Button>
+                )}
+                <Button
+                  disabled={
+                    (!isBuying && selectedProperty === null) ||
+                    (isBuying && !selectedAssetForBuying) ||
+                    (step.id === StepId.RentPrice && (Boolean(priceError.length) || !tokenCost)) ||
+                    isCreatingAssetAdvertisement
+                  }
+                  variant="gradient"
+                  btnSize="medium"
+                  onClick={handleNextButtonClick}
+                >
+                  {isCreatingAssetAdvertisement ? 'Loading...' : 'Next Step'}
+                </Button>
+              </Grid>
+            )}
+            {step.id === StepId.Summary && (
+              <Grid container justifyContent="space-between">
+                <Button variant="secondary" btnSize="medium" onClick={() => setActiveStep((prev) => prev - 1)}>
+                  Back
+                </Button>
+                <Grid alignItems="center" justifyContent="space-between">
+                  {isBuying ? (
+                    <>
+                      <Button
+                        disabled={approveDisabled}
+                        variant="gradient"
+                        btnSize="medium"
+                        onClick={handleApprove}
+                        style={{ marginRight: 15 }}
+                      >
+                        Approve
+                      </Button>
+                      <Button
+                        disabled={listDisabled}
+                        variant="gradient"
+                        btnSize="medium"
+                        onClick={handleConfirmListing}
+                      >
+                        Buy and list property
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        disabled={approveDisabled}
+                        variant="gradient"
+                        btnSize="medium"
+                        onClick={handleApprove}
+                        style={{ marginRight: 15 }}
+                      >
+                        Approve
+                      </Button>
+                      <Button
+                        disabled={listDisabled}
+                        variant="gradient"
+                        btnSize="medium"
+                        onClick={handleConfirmListing}
+                      >
+                        Confirm Listing
+                      </Button>
+                    </>
+                  )}
+                </Grid>
+              </Grid>
+            )}
+          </>
         )}
         <TxModal
           textMessage="Approving..."
@@ -977,17 +1082,18 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
             setShowSignModal(false);
           }}
         />
-        {showSuccessModal && (
+        {showSuccessModal && listedToken && (
           <SuccessModal
-            listedPropertyId={listedPropertyId}
-            metaverseRegistry={selectedProperty?.contractAddress || ''}
+            listedPropertyId={listedToken.id}
+            metaverseRegistry={listedToken.metaverseContract}
             showShareButton={true}
             showModal={showSuccessModal}
             handleClose={() => {
-              sessionStorageHandler('set', 'general', 'metaverse', selectedMetaverse);
               localStorage.setItem('join_prompt', 'true');
               setShowSuccessModal(false);
-              closeModal && closeModal();
+              if (closeModal) {
+                closeModal();
+              }
               history.push(getMyPropertiesPath(MY_PROPERTIES_ROUTE_TABS.listed));
               setJoinPromptOpen(true);
             }}

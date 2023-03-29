@@ -5,7 +5,7 @@ import { ReactComponent as AlertIcon } from 'assets/icons/warning.svg';
 import promotionalSceneTooltipThumbnail from 'assets/img/listing-ad.jpg';
 import Icon from 'components/custom/icon';
 import SmallAmountTooltip from 'components/custom/small-amount-tooltip';
-import { Tooltip } from 'design-system';
+import { Stack, Tooltip } from 'design-system';
 import { Box, Grid, Typography } from 'design-system';
 import { getTokenIconName } from 'helpers/helpers';
 import { Option } from 'modules/interface';
@@ -36,6 +36,7 @@ interface IListNewSummary {
   isAdvertisementEnabled?: boolean;
 }
 
+// TODO: refactor
 const ListNewSummary: React.FC<IListNewSummary> = ({
   minRentPeriod,
   maxRentPeriod,
@@ -101,24 +102,26 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
       };
 
   return (
-    <Grid className={s.wrapper} mt={metaverse ? 0 : 4} item>
+    <Grid className={s.wrapper} mt={metaverse ? 0 : 4} zeroMinWidth item>
       <Grid className={s.card}>
         {name && coordinatesChild && (
-          <Grid container flexDirection="column">
-            <Grid item textAlign="left" className={s.name}>
-              <span>{name}</span>
-            </Grid>
-            <Grid item className={s.title}>
-              {isEstate ? 'Lands' : 'Location'}:&nbsp;{coordinatesChild}
-            </Grid>
+          <>
+            <Stack textAlign="left" gap="4px">
+              <Typography color="var(--theme-light-color)" fontWeight={600}>
+                {name}
+              </Typography>
+              <Typography variant="body2" color="var(--theme-grey700-color)" display="flex">
+                {isEstate ? 'Lands' : 'Location'}:&nbsp;{coordinatesChild}
+              </Typography>
+            </Stack>
             <div className={s.divider} />
-          </Grid>
+          </>
         )}
         <Grid flexDirection="column" alignContent="flex-start" textAlign="left">
           <Grid textAlign="left" className={s.subtitle}>
             <span>{metaverse ? 'Rent Details' : 'Summary'}</span>
           </Grid>
-          <Grid container textAlign="left" spacing={3} className={s.details}>
+          <Grid container textAlign="left" spacing={2} className={s.details}>
             <Grid item xs={6} display="flex" flexDirection="column">
               Rent Period
               <p>

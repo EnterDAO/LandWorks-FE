@@ -10,6 +10,9 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
       - name: Install Dependencies
         run: npm install
       - name: Create .env file

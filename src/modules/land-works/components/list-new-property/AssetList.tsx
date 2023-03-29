@@ -1,8 +1,19 @@
 import React, { MouseEvent, ReactNode } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
+import { BigNumber } from 'bignumber.js';
+import { formatUSD } from 'web3/utils';
 
+import ExternalLink from 'components/custom/external-link';
 import Image from 'components/custom/image';
+import config from 'config';
+import { Button } from 'design-system';
+import useGetAssetsForBuyingQuery, { MarketplaceAsset } from 'hooks/useGetAssetsForBuyingQuery';
+import useGetTokenPriceInUsdQuery from 'hooks/useGetTokenPriceInUsdQuery';
 import { CryptoVoxelNFT, DecentralandNFT } from 'modules/interface';
+import { useWallet } from 'wallets/wallet';
+
+import EmptyAssetsList from './EmptyAssetsList';
+import LoadingAssetList from './LoadingAssetList';
 
 interface ListCardProps {
   image: string;
@@ -62,10 +73,139 @@ const ListCard = ({ image, title, subtitle, footer, isActive, onClick }: ListCar
 
 type Asset = CryptoVoxelNFT | DecentralandNFT;
 
-interface AssetListCardProps extends Pick<ListCardProps, 'isActive' | 'onClick'> {
-  asset: Asset;
+interface BuyAssetListCardProps extends Pick<ListCardProps, 'isActive' | 'onClick'> {
+  asset: MarketplaceAsset;
 }
 
+const BuyAssetListCard = ({ asset, ...otherProps }: BuyAssetListCardProps) => {
+  const { networkName } = useWallet();
+  const subtitle = asset.metadata.coords
+    ? `X: ${asset.metadata.coords.x}    Y: ${asset.metadata.coords.y}`
+    : `Lands: ${asset.metadata.size}`;
+  const { data: assetTokenPriceInUsd, isLoading: isAssetTokenPriceInUsdLoading } = useGetTokenPriceInUsdQuery(
+    asset.market.floorAsk.price.currency.symbol
+  );
+
+  let network = networkName?.toLowerCase() || 'ethereum';
+
+  if (network === 'mainnet') {
+    network = 'ethereum';
+  }
+
+  const marketplaceUrl = `https://${config.isDev ? 'testnets.' : ''}opensea.io/assets/${network}/${
+    asset.token.contract
+  }/${asset.token.tokenId}`;
+
+  return (
+    <ListCard
+      image={asset.image}
+      title={asset.name}
+      subtitle={subtitle}
+      footer={
+        <Box display="flex" alignItems="center" overflow="hidden" gap={2}>
+          <Typography variant="body2" minWidth={0} display="flex" flex="1 1 auto" gap="4px">
+            <Typography
+              display="flex"
+              overflow="hidden"
+              variant="inherit"
+              component="span"
+              maxWidth="70%"
+              color="var(--theme-light-color)"
+              title={`${asset.market.floorAsk.price.amount.decimal} ${asset.market.floorAsk.price.currency.symbol}`}
+            >
+              <Typography variant="inherit" component="span" noWrap>
+                {asset.market.floorAsk.price.amount.decimal}
+              </Typography>
+              &nbsp;
+              <Typography variant="inherit" component="span">
+                {asset.market.floorAsk.price.currency.symbol}
+              </Typography>
+            </Typography>
+            <Typography variant="inherit" component="span" noWrap color="var(--theme-subtle-color)">
+              {!isAssetTokenPriceInUsdLoading && assetTokenPriceInUsd
+                ? formatUSD(
+                    new BigNumber(asset.market.floorAsk.price.amount.decimal).multipliedBy(assetTokenPriceInUsd)
+                  )
+                : '-'}
+            </Typography>
+          </Typography>
+
+          <ExternalLink
+            sx={{
+              ml: 'auto',
+              display: 'block',
+              textDecoration: 'none',
+              flexShrink: 0,
+            }}
+            href={marketplaceUrl}
+          >
+            <Image
+              alt={asset.market.floorAsk.source.name}
+              title={asset.market.floorAsk.source.name}
+              src={asset.market.floorAsk.source.icon}
+              sx={{ width: 15, height: 15, display: 'block' }}
+            />
+          </ExternalLink>
+        </Box>
+      }
+      {...otherProps}
+    />
+  );
+};
+
+interface BuyAssetListProps extends Omit<ReturnType<typeof useGetAssetsForBuyingQuery>, 'data'> {
+  assets?: MarketplaceAsset[];
+  selectedAssetId?: string;
+  onSelectAsset?: (assetId: string) => void;
+  allAssets: MarketplaceAsset[];
+}
+
+export const BuyAssetList = ({
+  selectedAssetId: activeAssetId,
+  loadMore,
+  isLoadingInitialData,
+  isLoadingMore,
+  isReachedEnd,
+  isEmpty,
+  onSelectAsset,
+  assets,
+}: BuyAssetListProps) => {
+  if (isLoadingInitialData) {
+    return <LoadingAssetList />;
+  }
+
+  if (isEmpty) {
+    return <EmptyAssetsList title="Lands not found." subtitle="It seems that there are no lands for buying." />;
+  }
+
+  return (
+    <>
+      <Grid container rowSpacing={3} columnSpacing={4}>
+        {assets?.map((asset) => {
+          return (
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore
+            <Grid key={asset.id} item xs={4} xxl={3}>
+              <BuyAssetListCard
+                isActive={asset.id === activeAssetId}
+                asset={asset}
+                onClick={onSelectAsset?.bind(null, asset.id)}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
+
+      {!isReachedEnd && (
+        <Box mt={6}>
+          <Button onClick={loadMore} variant="gradient" btnSize="medium" disabled={isLoadingMore}>
+            {isLoadingMore ? 'Loading...' : 'Load More'}
+          </Button>
+        </Box>
+      )}
+    </>
+  );
+};
 const getSubtitle = (asset: Asset) => {
   if (asset.metaverseName === 'Voxels') {
     return `Location ${asset.place}`;
@@ -82,26 +222,30 @@ const getSubtitle = (asset: Asset) => {
   return 'No co-ordinates available';
 };
 
+interface AssetListCardProps extends Pick<ListCardProps, 'isActive' | 'onClick'> {
+  asset: Asset;
+}
+
 const AssetListCard = ({ asset, ...otherProps }: AssetListCardProps) => {
   const subtitle = getSubtitle(asset);
 
   return <ListCard image={asset.image} title={asset.name} subtitle={subtitle} {...otherProps} />;
 };
 
-interface LandListProps {
+interface AssetListProps {
   assets: Asset[];
   selectedAssetId?: string;
   onSelectAsset?: (asset: Asset) => void;
 }
 
-const AssetList = ({ assets, selectedAssetId: activeAssetId, onSelectAsset }: LandListProps) => {
+const AssetList = ({ assets, selectedAssetId: activeAssetId, onSelectAsset }: AssetListProps) => {
   return (
     <Grid container rowSpacing={3} columnSpacing={4}>
       {assets.map((asset) => {
         return (
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore
-          <Grid key={asset.id} item item xs={4} xxl={3}>
+          <Grid key={asset.id} item xs={4} xxl={3}>
             <AssetListCard
               isActive={asset.id === activeAssetId}
               asset={asset}

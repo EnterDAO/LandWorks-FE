@@ -114,33 +114,37 @@ export default class Erc20Contract extends Web3Contract {
     });
   }
 
-  async loadBalance(address?: string): Promise<void> {
+  async loadBalance(address?: string): Promise<string> {
     const addr = address ?? this.account;
 
     if (!addr) {
-      return;
+      return '0';
     }
 
     return this.call('balanceOf', [addr]).then((value) => {
       this.balances.set(addr, new BigNumber(value));
       this.emit(Web3Contract.UPDATE_DATA);
+
+      return value;
     });
   }
 
-  async loadAllowance(spenderAddress: string, address?: string): Promise<void> {
+  async loadAllowance(spenderAddress: string, address?: string): Promise<string> {
     const addr = address ?? this.account;
 
     if (!addr) {
-      return;
+      return '0';
     }
 
     return this.call('allowance', [addr, spenderAddress]).then((value) => {
       this.allowances.set(spenderAddress, new BigNumber(value));
       this.emit(Web3Contract.UPDATE_DATA);
+
+      return value;
     });
   }
 
-  approve(enable: boolean, spenderAddress: string, callback: () => void): Promise<void> {
+  approve(enable: boolean, spenderAddress: string, callback: () => void): Promise<string> {
     if (!this.account) {
       return Promise.reject();
     }
@@ -157,7 +161,12 @@ export default class Erc20Contract extends Web3Contract {
     ).then(() => this.loadAllowance(spenderAddress));
   }
 
-  approveAmount(amount: BigNumber | number | string, spenderAddress: string, callback: () => void): Promise<void> {
+  approveAmount(
+    amount: BigNumber | number | string,
+    spenderAddress: string,
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    callback: () => void = () => {}
+  ): Promise<string> {
     if (!this.account) {
       return Promise.reject();
     }

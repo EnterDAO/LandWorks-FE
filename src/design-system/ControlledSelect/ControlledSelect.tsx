@@ -20,7 +20,7 @@ function CustomSelect(props: SelectUnstyledProps<number>) {
 }
 
 interface ControlledSelectProps {
-  onChange: (value: number) => void;
+  onChange?: (value: number) => void;
   value?: number;
   options: Option[];
   width?: string;
@@ -84,7 +84,7 @@ const ControlledSelect: React.FC<ControlledSelectProps> = (props) => {
           },
         }}
         onChange={(e) => {
-          if (!isNull(e)) {
+          if (!isNull(e) && onChange) {
             onChange(e);
           }
         }}

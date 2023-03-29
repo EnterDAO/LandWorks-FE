@@ -16,7 +16,7 @@ export interface ModalProps {
   open: boolean;
   title?: ReactNode;
   className?: string;
-  handleClose: () => void;
+  handleClose?: () => void;
   children?: ReactNode;
   accessibility?: {
     ariaLabelledby: string;

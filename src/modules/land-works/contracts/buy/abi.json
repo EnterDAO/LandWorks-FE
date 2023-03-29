@@ -1,0 +1,297 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "contract ILandWorks",
+        "name": "_landWorks",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidMsgValue",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OrderNotFulfilled",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TH_SAFE_APPROVE",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TH_SAFE_APPROVE_RESET",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TH_SAFE_TRANSFER_FROM_FAILED",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "payment",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "lwAssetId",
+        "type": "uint256"
+      }
+    ],
+    "name": "BuyList",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "metaverseId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minPeriod",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxPeriod",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxFutureTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "paymentToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pricePerSecond",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "referrer",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct ILandWorks.LWListingParams",
+        "name": "lwParams",
+        "type": "tuple"
+      },
+      {
+        "internalType": "contract ISeaport",
+        "name": "seaport",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "considerationToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "considerationIdentifier",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "considerationAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address payable",
+            "name": "offerer",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "zone",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "offerToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "offerIdentifier",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "offerAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum ISeaport.BasicOrderType",
+            "name": "basicOrderType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "zoneHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "salt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "offererConduitKey",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "fulfillerConduitKey",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalOriginalAdditionalRecipients",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "address payable",
+                "name": "recipient",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct ISeaport.AdditionalRecipient[]",
+            "name": "additionalRecipients",
+            "type": "tuple[]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "signature",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct ISeaport.BasicOrderParameters",
+        "name": "seaportParams",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "buyList",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "assetId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "landWorks",
+    "outputs": [
+      {
+        "internalType": "contract ILandWorks",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "onERC721Received",
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
