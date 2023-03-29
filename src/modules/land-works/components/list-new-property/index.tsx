@@ -14,7 +14,7 @@ import Stepper, { Step, StepLabel } from 'components/styled/stepper';
 import { Box, Button, Checkbox, ControlledSelect, Grid, Stack } from 'design-system';
 import { WarningIcon } from 'design-system/icons';
 import { ToastType, showToastNotification } from 'helpers/toast-notifcations';
-import useGetAssetsForBuyingQuery from 'hooks/useGetAssetsForBuyingQuery';
+import useGetAssetsForBuyingQuery, { AssetType } from 'hooks/useGetAssetsForBuyingQuery';
 import useGetIsMounted from 'hooks/useGetIsMounted';
 import { BaseNFT, CryptoVoxelNFT, DecentralandNFT, Option } from 'modules/interface';
 import ListNewSummary from 'modules/land-works/components/land-works-list-new-summary';
@@ -131,7 +131,7 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSignModal, setShowSignModal] = useState(false);
-  const [landType, setLandType] = useState(0);
+  const [landType, setLandType] = useState(AssetType.All);
   const [isLandProvidedForAdvertisement, setIsLandProvidedForAdvertisement] = useState(true);
   const [isCreatingAssetAdvertisement, setIsCreatingAssetAdvertisement] = useState(false);
 
