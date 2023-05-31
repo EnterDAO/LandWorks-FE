@@ -873,12 +873,8 @@ const ListNewProperty: React.FC<IProps> = ({ closeModal, asset }) => {
                     </Grid>
                     <Grid item xs={6} display="flex" alignItems="center">
                       <Typography component="p" color={THEME_COLORS.grey03} variant="caption" textAlign="left">
-                        We have partnered up with{' '}
-                        <ExternalLink variant="link2" href="https://precisionx.com/en/">
-                          PrecisionX
-                        </ExternalLink>{' '}
-                        to allow for ads to be displayed on your land until it gets rented. By allowing your plot to be
-                        used for ads, you will be rewarded 0.025 USDC (0.05 USDC if you own a{' '}
+                        You can allow advertisements to be displayed on your land until it gets rented. By allowing your
+                        plot to be used for ads, you will be rewarded 0.025 USDC (0.05 USDC if you own a{' '}
                         <ExternalLink variant="link2" href="https://opensea.io/collection/sharded-minds">
                           Sharded Mind
                         </ExternalLink>{' '}
