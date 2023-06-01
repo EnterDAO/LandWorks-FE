@@ -84,11 +84,11 @@ const ListNewSummary: React.FC<IListNewSummary> = ({
   const sceneDetail = isAdvertisementEnabled
     ? {
         label: 'SCENE',
-        content: 'PrecisionX Ads Billboard',
+        content: 'Advertisement Scene',
         tooltip: {
-          title: 'PrecisionX Ads Billboard',
+          title: 'Advertisement Scene',
           description:
-            'A billboard showing ads will be placed on this land. You will earn USDC per unique view. Rewards can be claimed every month. ',
+            'An advertisement scene will be placed on this land. You will earn USDC per unique view. Rewards can be claimed every month. ',
         },
       }
     : {

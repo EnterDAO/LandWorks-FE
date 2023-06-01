@@ -35,12 +35,8 @@ const EnableAdsModal: FC<EnableAdsModalProps> = ({ open = false, actionDisabled,
             }}
           />
           <Typography component="p" fontWeight={400} color={THEME_COLORS.grey03} variant="caption" textAlign="left">
-            We have partnered up with{' '}
-            <ExternalLink fontSize="inherit" variant="link2" href="https://precisionx.com/en/">
-              PrecisionX
-            </ExternalLink>{' '}
-            to allow for ads to be displayed on your land until it gets rented. By allowing your plot to be used for
-            ads, you will be rewarded 0.025 USDC (0.05 USDC if you own a{' '}
+            You can allow advertisements to be displayed on your land until it gets rented. By allowing your plot to be
+            used for ads, you will be rewarded 0.025 USDC (0.05 USDC if you own a{' '}
             <ExternalLink fontSize="inherit" variant="link2" href="https://opensea.io/collection/sharded-minds">
               Sharded Mind
             </ExternalLink>{' '}

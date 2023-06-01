@@ -4,7 +4,6 @@ import { useMediaQuery } from '@mui/material';
 import { Box } from 'design-system';
 import { useStickyOffset } from 'providers/sticky-offset-provider';
 
-import { HeaderAgitaionBar } from './HeaderAgitationBar';
 import HeaderDesktopNav from './HeaderDesktopNav';
 import HeaderLogo from './HeaderLogo';
 import HeaderMobileNav from './HeaderMobileNav';
@@ -25,7 +24,7 @@ const LayoutHeader: FC = () => {
       width={1}
       zIndex={999}
     >
-      <HeaderAgitaionBar />
+      {/*<HeaderAgitaionBar />*/}
       <Box bgcolor={THEME_COLORS.darkBlue01} px={{ xs: 3, lg: 15 }}>
         <Box
           display="flex"
